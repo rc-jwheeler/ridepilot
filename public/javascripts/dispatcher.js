@@ -55,10 +55,15 @@ function Dispatcher (tree_id, map_id) {
             self._tree_elem.jstree("open_all", -1);
             self._tree_elem.jstree("check_all");
             $('#' + tree_id + ' li[rel="device"]').each(function() {
-              if ($(this).find(".inactive").length) self._tree_elem.jstree("uncheck_node", this);
+              if (!self.wasSelected($(this).data().id) ||
+                  $(this).find(".inactive").length) {
+                self._tree_elem.jstree("uncheck_node", this);
+                self.markers[$(this).data().id].setMap(null);
+              }
             });            
             $('#' + tree_id + ' li[rel="device_pool"], #' + tree_id + ' li[rel="provider"]').each(function() {
-              if (!$(this).find(".jstree-checked").length) self._tree_elem.jstree("close_node",this,true);
+              if (!$(this).find(".jstree-checked").length)
+                self._tree_elem.jstree("close_node", this, true);
             });
           }, 1);
         }        
@@ -166,6 +171,7 @@ function Dispatcher (tree_id, map_id) {
       
       var node = $(this).parents("li").first(); 
       if (node.data().lat) { // it's a marker
+        self.updateSelection();
         if (node.hasClass("jstree-checked"))
           return self.showMarkers( [self.markers[node.data().id.toString()]] );
         else
@@ -181,6 +187,43 @@ function Dispatcher (tree_id, map_id) {
     });
     
   },
+
+  // Remember selected checkboxes for later
+  this.updateSelection = function() {
+    var selected = localStorage.getItem("selected_markers");
+    if (selected) {
+      selected = selected.split(" ");
+    } else {
+      selected = new Array();
+    }
+    $('#' + tree_id + ' li[rel="device"]').each(function() {
+      var checked = $(this).hasClass("jstree-checked");
+      var id = $(this).data().id.toString();
+      if (checked && selected.indexOf(id) == -1) {
+        selected.push(id);
+      } else if (!checked) {
+        var index = selected.indexOf(id);
+        while (index != -1) {
+          selected.splice(index, 1);
+          index = selected.indexOf(id);
+        }
+      }
+    });
+    selected = selected.join(" ");
+    localStorage.setItem("selected_markers", selected);
+  }
+
+  // Default: Select all
+  this.wasSelected = function(id) {
+    var selected = localStorage.getItem("selected_markers");
+    if (selected) {
+      selected = selected.split(" ");
+    }
+    if (selected && selected.indexOf(id.toString()) == -1) {
+      return false;
+    }
+    return true;
+  }
   
   this.hideMarkers = function(markers){
     $.each(markers, function(){
