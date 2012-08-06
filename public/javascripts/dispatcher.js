@@ -156,36 +156,52 @@ function Dispatcher (tree_id, map_id) {
   this.createNodeListeners = function(){   
     // Driver name click   
     self._tree_elem.delegate("a", "click.jstree", function(e) { 
+      // Only handle clicks on the name, and not the inner checkbox element
+      if (!$(e.target).is("a")) {
+        return;
+      }
+      // Markers that aren't shown shouldn't be clickable
       var node = $(this).parents("li").first();
-      
+      if (!node.hasClass("jstree-checked")) {
+        return;
+      }
+      // Show the detail window
       if (node.data().lat) { // it's a marker
         var marker = self.markers[node.data().id];
         self.map.setCenter( marker.getPosition() );
         self._open_window_for_marker( marker );
+        e.stopImmediatePropagation();
       }
     });
     
-    // Checkbox click
-    self._tree_elem.delegate("ins", "click.jstree", function(e) { 
-      e.stopImmediatePropagation();
-      
-      var node = $(this).parents("li").first(); 
-      if (node.data().lat) { // it's a marker
+    // Checkbox toggle events
+    self._tree_elem.bind("change_state.jstree", function(e, d) {
+      var tagName = d.args[0].tagName;
+      console.log(tagName);
+      var refreshing = d.inst.data.core.refreshing;
+      if (refreshing == true && refreshing == "undefined") {
+        return;
+      }
+      if (tagName == "INS") {
+        var node = d.rslt;
         self.updateSelection();
-        if (node.hasClass("jstree-checked"))
-          return self.showMarkers( [self.markers[node.data().id.toString()]] );
-        else
-          return self.hideMarkers( [self.markers[node.data().id.toString()]] );
-      } else {
-        $.each( node.find("[rel=device]"), function(){
+        if (node.data().lat) {
+          // Individual marker toggle
           if (node.hasClass("jstree-checked"))
-            return self.showMarkers( [self.markers[$(this).data().id.toString()]] );
+            return self.showMarkers( [self.markers[node.data().id.toString()]] );
           else
-            return self.hideMarkers( [self.markers[$(this).data().id.toString()]] );
-        });
+            return self.hideMarkers( [self.markers[node.data().id.toString()]] );
+        } else {
+          // Parent node toggle
+          $.each( node.find("[rel=device]"), function(){
+            if (node.hasClass("jstree-checked"))
+              return self.showMarkers( [self.markers[$(this).data().id.toString()]] );
+            else
+              return self.hideMarkers( [self.markers[$(this).data().id.toString()]] );
+          });
+        }
       }
     });
-    
   },
 
   // Remember selected checkboxes for later
@@ -211,7 +227,7 @@ function Dispatcher (tree_id, map_id) {
     });
     selected = selected.join(" ");
     localStorage.setItem("selected_markers", selected);
-  }
+  };
 
   // Default: Select all
   this.wasSelected = function(id) {
@@ -223,7 +239,7 @@ function Dispatcher (tree_id, map_id) {
       return false;
     }
     return true;
-  }
+  };
   
   this.hideMarkers = function(markers){
     $.each(markers, function(){
