@@ -1352,6 +1352,40 @@ body.trips div.repeats>li {
  margin: 4px 0 0 10px;
  height: 25px;
  width: 25px;
+ visibility: hidden;
+}
+
+.dispatch #search-message {
+ display: block;
+ float: right;
+ margin: 10px;
+}
+
+.dispatch div.search-results {
+ background-color: #ffffff;
+ border: 1px solid #a0a0a0;
+ display: block;
+ min-width: 300px;
+ z-index: 100;
+ position: absolute;
+}
+
+.dispatch .search-result {
+ color: #0081cc;
+ cursor: pointer;
+ display: block;
+ margin: 1em;
+}
+
+.dispatch .search-result:hover {
+ color: #009ffb;
+ text-decoration: underline;
+}
+
+.dispatch .search-result.selected {
+ color: #000000;
+ cursor: auto;
+ text-decoration: none;
 }
 
 .dispatch .left_column {

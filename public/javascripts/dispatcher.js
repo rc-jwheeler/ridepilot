@@ -257,27 +257,63 @@ function Dispatcher (tree_id, map_id) {
   };
 
   this.locateAddress = function(address) {
-    $("#search-spinner").show();
+    $("#search-spinner").css("visibility", "visible");
+    $("#search-message").html("");
+    self.clearSearchResult();
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode({'address': address}, function(results, status) {
-      $("#search-spinner").hide();
+      $("#search-spinner").css("visibility", "hidden");
       if (status == google.maps.GeocoderStatus.OK) {
-        self.displaySearchResult(results[0]);
-        /* TODO: Handle multiple results.
+        self.showSearchResult(results[0]);
         if (results.length > 1) {
-        } */
+          $("#search-message").html("(Additional matches)");
+          $("#search-message").css("color", "#0081cc");
+          $("#search-message").hover(function() {
+            $("#search-message .search-results").show();
+          }, function() {
+            $("#search-message .search-results").hide();
+          });
+          self.displaySearchResults(results);
+        }
       } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
-        alert("No results found.");
+        $("#search-message").html("No results found.");
+        $("#search-message").css("color", "#e5004d");
       } else {
-        alert("Error locating address: " + status);
+        $("#search-message").html("Unable to locate address: " + status);
+        $("#search-message").css("color", "#e5004d");
       }
     });
   };
 
-  this.displaySearchResult = function(result) {
-    if (self.search_marker) {
-      self.search_marker.setMap(null);
+  this.displaySearchResults = function(results) {
+    var div = $('<div class="search-results"></div>');
+    $("#search-message").append(div);
+    var build_result_node = function(result, i) {
+      var node = $('<span class="search-result" id="search-result-' + i + '">' +
+                   result.formatted_address + '</span>');
+      div.append(node);
+      if (i == 0) {
+        node.addClass("selected");
+      }
+      node.click(function() {
+        if (node.hasClass("selected")) {
+          return;
+        }
+        $(".search-result").each(function() {
+          $(this).removeClass("selected");
+        });
+        self.showSearchResult(result);
+        node.addClass("selected");
+      });
     }
+    for (var i in results) {
+      build_result_node(results[i], i);
+    }
+    div.hide();
+  }
+
+  this.showSearchResult = function(result) {
+    self.clearSearchResult();
     self.map.setCenter(result.geometry.location);
     self.search_marker = new google.maps.Marker({
       map: self.map,
@@ -292,6 +328,12 @@ function Dispatcher (tree_id, map_id) {
     });
     self._open_window_for_marker(self.search_marker);
   };
-  
+
+  this.clearSearchResult = function() {
+    if (self.search_marker) {
+      self.search_marker.setMap(null);
+    }
+  };
+
   this.init(map_id);
 }
