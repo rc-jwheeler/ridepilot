@@ -8,6 +8,7 @@ function Dispatcher (tree_id, map_id) {
   this._tree_elem  = $("#" + tree_id),
   this._map_elem = $("#" + map_id),
   this._timeout  = null,
+  this.search_marker = null,
   
   this.init = function(map_id){
     $(window).resize(self.adjustMapHeight).resize();
@@ -253,6 +254,43 @@ function Dispatcher (tree_id, map_id) {
       var marker = this;
       marker.setMap(self.map);
     })
+  };
+
+  this.locateAddress = function(address) {
+    $("#search-spinner").show();
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({'address': address}, function(results, status) {
+      $("#search-spinner").hide();
+      if (status == google.maps.GeocoderStatus.OK) {
+        self.displaySearchResult(results[0]);
+        /* TODO: Handle multiple results.
+        if (results.length > 1) {
+        } */
+      } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
+        alert("No results found.");
+      } else {
+        alert("Error locating address: " + status);
+      }
+    });
+  };
+
+  this.displaySearchResult = function(result) {
+    if (self.search_marker) {
+      self.search_marker.setMap(null);
+    }
+    self.map.setCenter(result.geometry.location);
+    self.search_marker = new google.maps.Marker({
+      map: self.map,
+      position: result.geometry.location
+    });
+    self.search_marker.html = '<div class="marker_detail">' +
+                              '<h2>Search Result:</h2>' +
+                              '<h3>' + result.formatted_address +
+                              '</h3></div>';
+    google.maps.event.addListener(self.search_marker, "click", function(){
+      self._open_window_for_marker(self.search_marker);
+    });
+    self._open_window_for_marker(self.search_marker);
   };
   
   this.init(map_id);

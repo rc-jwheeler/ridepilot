@@ -324,3 +324,28 @@ $(function() {
     constrainInput: false
   });
 });
+
+/* Show the 'title' attribute of a field as a hint. */
+function hinted_field(f) {
+  if (f.length) {
+    var dval = f.attr('title');
+    if (dval) {
+      if (!f.val().length) {
+        f.val(dval);
+        f.addClass("hint");
+      }
+      f.focus(function() {
+        if(f.val() == dval) {
+          f.val('');
+          f.removeClass("hint");
+        }
+      }).blur(function() {
+        if(!f.val().length) {
+          f.val(dval);
+          f.addClass("hint");
+        }
+      });
+    }
+  }
+}
+

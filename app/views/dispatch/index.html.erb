@@ -6,7 +6,15 @@
 
 <div id="page-header">
   <h1>Dispatcher</h1>
+  <form id="search" class="">
+    <div class="actions" style="border:0;">
+      <%= text_field_tag "address", nil, :title => "Locate Address" -%>
+      <%= submit_tag "Search", :onclick => "locate(); return false;" -%>
+      <span id="search-spinner" style="display: none;"></span>
+    </div>
+  </form>
 </div>
+<div class="clearfix"></div>
 
 <div class="left_column">
   <div id="tree">
@@ -32,5 +40,16 @@
 <%= stylesheet_link_tag "jstree-apple/style.css" %>
 
 <script type="text/javascript" charset="utf-8">
-  var d = new Dispatcher("tree", "map-container");
+  function locate() {
+    f = $("#address");
+    if (f.val() == f.attr("title")) {
+      return false;
+    }
+    d.locateAddress(f.val());
+  }
+
+  $(document).ready(function() {
+    d = new Dispatcher("tree", "map-container");
+    hinted_field($("#address"));
+  });
 </script>

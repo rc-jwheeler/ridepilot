@@ -1325,6 +1325,35 @@ body.trips div.repeats>li {
  margin-bottom: 10px;
 }
 
+.dispatch #page-header h1 {
+ float: left;
+ width: 20%;
+ margin: 0 1% 0 0;
+}
+
+.dispatch #page-header form {
+ float: left;
+ margin-top: -0.6em;
+}
+
+.dispatch input.hint {
+ color: #909090;
+}
+
+.dispatch #address {
+ height: 1.5em;
+ width: 250px;
+}
+
+.dispatch #search-spinner {
+ background-image: url(images/spinner.gif);
+ display: block;
+ float: right;
+ margin: 4px 0 0 10px;
+ height: 25px;
+ width: 25px;
+}
+
 .dispatch .left_column {
  width: 20%;
  margin: 0 1% 0 0;
