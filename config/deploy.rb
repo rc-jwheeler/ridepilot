@@ -12,7 +12,7 @@ set :stages, %w(staging production)
 require 'capistrano/ext/multistage'
 
 set :application, "RidePilot"
-set :repository,  "http://github.com/openplans/ridepilot.git"
+set :repository,  "git://github.com/rideconnection/ridepilot.git"
 
 set :scm, :git
 set :deploy_via, :remote_cache
