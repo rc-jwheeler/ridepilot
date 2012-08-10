@@ -349,3 +349,37 @@ function hinted_field(f) {
   }
 }
 
+/* Display a map region in the given jQuery object. */
+function display_region(object, bounds) {
+  // Validate bounds
+  errors = []
+  if (bounds.north < bounds.south)
+    errors.push('North latitude must be greater than south.');
+  if (bounds.east < bounds.west)
+    errors.push('East longitude must be greater than west.');
+  if (Math.abs(bounds.north) > 90)
+    errors.push('North latitude is invalid.');
+  if (Math.abs(bounds.west) > 180)
+    errors.push('West longitude is invalid.');
+  if (Math.abs(bounds.south) > 90)
+    errors.push('South latitude is invalid.');
+  if (Math.abs(bounds.east) > 180)
+    errors.push('East longitude is invalid.');
+  if (errors.length > 0)
+    return errors;
+
+  // Create a locked down map view
+  var map = new google.maps.Map(object.get(0), {
+    disableDefaultUI: true,
+    disableDoubleClickZoom: true,
+    draggable: false,
+    keyboardShortcuts: false,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    scrollwheel: false
+  });
+  var nw = new google.maps.LatLng(bounds.north, bounds.west);
+  var se = new google.maps.LatLng(bounds.south, bounds.east);
+  var bounds = new google.maps.LatLngBounds(nw, se);
+  map.fitBounds(bounds);
+  return null;
+}

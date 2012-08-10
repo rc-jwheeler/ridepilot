@@ -1216,6 +1216,26 @@ body.providers span.device-pool-color {
 body.monthlies a.new-report {
     background: #eee url(images/report--plus.png) 0.8em center no-repeat scroll;
 }
+body.providers #region-form {
+  float: left;
+  width: 40%;
+}
+body.providers #region-preview {
+  float: left;
+  margin-left: 20px;
+}
+body.providers #region .hint {
+  color: #606060;
+  font-size: 90%;
+  margin-left: 1em;
+}
+body.providers #region-preview {
+  border: 1px solid #999;
+  width: 300px;
+}
+body.providers #region-preview.error {
+  color: #e5004d;
+}
 
 /*
  *

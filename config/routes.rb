@@ -42,6 +42,7 @@ Ridepilot::Application.routes.draw do
     member do
       post :change_dispatch
       post :change_scheduling
+      post :save_region
     end
   end
 

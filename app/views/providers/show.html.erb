@@ -2,6 +2,71 @@
   <h1>Provider: <%= @provider.name %></h1>
 </div>
 
+<h2 class="section-header">Region Boundaries</h2>
+
+<div id="region">
+  <fieldset>
+    <div id="region-form">
+      <% if @provider.region_nw_corner
+           nw_y = @provider.region_nw_corner.y
+           nw_x = @provider.region_nw_corner.x
+         else
+           nw_y = ''
+           nw_x = ''
+         end
+         if @provider.region_se_corner
+           se_y = @provider.region_se_corner.y
+           se_x = @provider.region_se_corner.x
+         else
+           se_y = ''
+           se_x = ''
+         end
+      %>
+      <% form_tag save_region_provider_path do %>
+        <table>
+        <tr><td><h3>Northwest Corner</h4></td></tr>
+        <tr>
+          <td><%= label_tag "Latitude:" %></td>
+          <td>
+            <%= text_field_tag :region_north, nw_y %>
+            <span class="hint">(e.g. 45.971)</span>
+          </td>
+        <tr>
+          <td><%= label_tag "Longitude:" %></td>
+          <td>
+            <%= text_field_tag :region_west, nw_x %>
+            <span class="hint">(e.g. -123.358)</span>
+          </td>
+        </tr>
+        <tr><td><h3>Southeast Corner</h4></td></tr>
+        <tr>
+          <td><%= label_tag "Latitude:" %></td>
+          <td>
+            <%= text_field_tag :region_south, se_y %>
+            <span class="hint">(e.g. 45.342)</span>
+          </td>
+        </tr>
+        <tr>
+          <td><%= label_tag "Longitude:" %></td>
+          <td>
+            <%= text_field_tag :region_east, se_x %>
+            <span class="hint">(e.g. -121.922)</span>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><%= submit_tag "Save" %></td>
+        </tr>
+        </table>
+      <% end %>
+    </div>
+    <% if @provider.region_nw_corner and @provider.region_se_corner %>
+      <div id="region-preview"></div>
+    <% end %>
+  </fieldset>
+</div>
+<div class="clearfix"></div>
+
 <h2 class="section-header">Addresses</h2>
 
 <% form_tag search_addresses_path, :method => :get, :remote => true, :id => "search_addresses" do %>
@@ -280,3 +345,33 @@
 
 <hr />
 
+<% if @provider.region_nw_corner and @provider.region_se_corner %>
+<script type="text/javascript" charset="utf-8">
+  if ( window.location.protocol == "https:" )
+    document.write('<scr' + 'ipt type="text/javascript" src="https://maps-api-ssl.google.com/maps/api/js?sensor=false"></scr' + 'ipt>');
+  else
+    document.write('<scr' + 'ipt type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></scr' + 'ipt>');
+
+  $(document).ready(function() {
+    // Size the map to be the same as the form height.
+    $("#region-preview").height($("#region-form").height() - 15);
+
+    errors = display_region($("#region-preview"), {
+      north: <%= @provider.region_nw_corner.y %>,
+      west:  <%= @provider.region_nw_corner.x %>,
+      south: <%= @provider.region_se_corner.y %>,
+      east:  <%= @provider.region_se_corner.x %>
+    });
+    if (errors) {
+      html = "<h3>Boundary Errors</h3><ul>";
+      for (i in errors) {
+        html += '<li>' + errors[i] + '</li>';
+      }
+      html += '</ul>';
+      $("#region-preview").css("border", "none");
+      $("#region-preview").addClass("error");
+      $("#region-preview").append(html);
+    }
+  });
+</script>
+<% end %>
