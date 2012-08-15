@@ -8,8 +8,7 @@ class User < ActiveRecord::Base
   validates :password, :confirmation => true
   validates :email, :uniqueness => true
   
-  # Let Devise handle the length requirement. Regexp tested at
-  # http://www.rubular.com/r/ns7ftUQhFb
+  # Let Devise handle the length requirement.
   validates_format_of :password, :if => :password_required?,
             :with => /^(?=.*[0-9])(?=.*[\W])(?=.*[a-zA-Z])(.*)$/,
             :message => "must have at least one number and at least one " +
