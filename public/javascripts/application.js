@@ -352,19 +352,7 @@ function hinted_field(f) {
 /* Display a map region in the given jQuery object. */
 function display_region(object, bounds) {
   // Validate bounds
-  errors = []
-  if (bounds.north < bounds.south)
-    errors.push('North latitude must be greater than south.');
-  if (bounds.east < bounds.west)
-    errors.push('East longitude must be greater than west.');
-  if (Math.abs(bounds.north) > 90)
-    errors.push('North latitude is invalid.');
-  if (Math.abs(bounds.west) > 180)
-    errors.push('West longitude is invalid.');
-  if (Math.abs(bounds.south) > 90)
-    errors.push('South latitude is invalid.');
-  if (Math.abs(bounds.east) > 180)
-    errors.push('East longitude is invalid.');
+  errors = validate_bounds(bounds);
   if (errors.length > 0)
     return errors;
 
@@ -382,4 +370,21 @@ function display_region(object, bounds) {
   var bounds = new google.maps.LatLngBounds(nw, se);
   map.fitBounds(bounds);
   return null;
+}
+
+function validate_bounds(bounds) {
+  errors = []
+  if (bounds.north < bounds.south)
+    errors.push('North latitude must be greater than south.');
+  if (bounds.east < bounds.west)
+    errors.push('East longitude must be greater than west.');
+  if (Math.abs(bounds.north) > 90)
+    errors.push('North latitude is invalid.');
+  if (Math.abs(bounds.west) > 180)
+    errors.push('West longitude is invalid.');
+  if (Math.abs(bounds.south) > 90)
+    errors.push('South latitude is invalid.');
+  if (Math.abs(bounds.east) > 180)
+    errors.push('East longitude is invalid.');
+  return errors;
 }

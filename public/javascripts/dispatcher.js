@@ -1,7 +1,8 @@
-function Dispatcher (tree_id, map_id) {
+function Dispatcher (tree_id, map_id, bounds) {
   self           = this,
   this.tree      = null,
   this.map       = null,
+  this.bounds    = null,
   this.markers   = {},
   this._data     = null, 
   this._infoWindow = new google.maps.InfoWindow({ content : "" }),
@@ -10,7 +11,7 @@ function Dispatcher (tree_id, map_id) {
   this._timeout  = null,
   this.search_marker = null,
   
-  this.init = function(map_id){
+  this.init = function(map_id, bounds){
     $(window).resize(self.adjustMapHeight).resize();
     
     self.map = new google.maps.Map( document.getElementById(map_id), {
@@ -187,7 +188,6 @@ function Dispatcher (tree_id, map_id) {
     // Checkbox toggle events
     self._tree_elem.bind("change_state.jstree", function(e, d) {
       var tagName = d.args[0].tagName;
-      console.log(tagName);
       var refreshing = d.inst.data.core.refreshing;
       if (refreshing == true && refreshing == "undefined") {
         return;
@@ -345,5 +345,5 @@ function Dispatcher (tree_id, map_id) {
     }
   };
 
-  this.init(map_id);
+  this.init(map_id, bounds);
 }

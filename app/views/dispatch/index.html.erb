@@ -50,7 +50,17 @@
   }
 
   $(document).ready(function() {
-    d = new Dispatcher("tree", "map-container");
+    var bounds = null;
+    <% if current_user.current_provider.region_nw_corner &&
+          current_user.current_provider.region_se_corner %>
+    bounds = {
+      north: <%= current_user.current_provider.region_nw_corner.y %>,
+      west:  <%= current_user.current_provider.region_nw_corner.x %>,
+      south: <%= current_user.current_provider.region_se_corner.y %>,
+      east:  <%= current_user.current_provider.region_se_corner.x %>
+    };
+    <% end %>
+    d = new Dispatcher("tree", "map-container", bounds);
     hinted_field($("#address"));
   });
 </script>
