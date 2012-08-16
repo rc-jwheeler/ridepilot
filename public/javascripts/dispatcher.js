@@ -18,7 +18,16 @@ function Dispatcher (tree_id, map_id) {
       mapTypeId : google.maps.MapTypeId.ROADMAP, 
       center    : new google.maps.LatLng(45.5234515, -122.6762071)
     });
-    
+
+    if (bounds && validate_bounds(bounds).length == 0) {
+      // Save bounds as a Google LatLngBounds
+      self.bounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(bounds.south, bounds.west),
+        new google.maps.LatLng(bounds.north, bounds.east));
+    } else {
+      self.bounds = null;
+    }
+
     google.maps.event.addListener(self.map, "click", function(){
       self._infoWindow.close();
     });
@@ -261,7 +270,8 @@ function Dispatcher (tree_id, map_id) {
     $("#search-message").html("");
     self.clearSearchResult();
     var geocoder = new google.maps.Geocoder();
-    geocoder.geocode({'address': address}, function(results, status) {
+    geocoder.geocode({address: address, bounds: self.bounds},
+                     function(results, status) {
       $("#search-spinner").css("visibility", "hidden");
       if (status == google.maps.GeocoderStatus.OK) {
         self.showSearchResult(results[0]);
