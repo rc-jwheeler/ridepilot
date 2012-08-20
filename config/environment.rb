@@ -13,8 +13,10 @@ TRIP_PURPOSES = ["Life-Sustaining Medical", "Medical", "Nutrition", "Personal/Su
 
 TRIP_VERIFICATION_DISPLAY_OPTIONS = ['All Trips','Cab Trips','Not Cab Trips']
 
-DEFAULT_RUN_START_HOUR = 7
-DEFAULT_RUN_END_HOUR = 18
+BUSINESS_HOURS = {
+  :start => 7,
+  :end => 18,
+}
 
 PER_PAGE = 30
 

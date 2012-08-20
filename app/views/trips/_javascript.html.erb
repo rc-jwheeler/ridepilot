@@ -109,7 +109,10 @@
         timeslotsPerHour: 4,
         daysToShow: 5,
         firstDayOfWeek: 1,
-        businessHours: {start: 7, end: 18, limitDisplay: true},
+        businessHours: {
+          start: RidePilot.business_hours.start,
+          end: RidePilot.business_hours.end,
+          limitDisplay: true},
         allowCalEventOverlap: true,
         overlapEventsSeparate: true,
         headerSeparator: ", ",
