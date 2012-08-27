@@ -107,8 +107,9 @@
     $('#calendar').weekCalendar({
         date: <%= @start && @start > 0 ? @start * 1000 : "new Date()" %>,
         timeslotsPerHour: 4,
-        daysToShow: 5,
-        firstDayOfWeek: 1,
+        daysToShow: getDaysToShow(),
+        startOnFirstDayOfWeek: true,
+        firstDayOfWeek: getFirstDayOfWeek,
         businessHours: {
           start: RidePilot.business_hours.start,
           end: RidePilot.business_hours.end,
@@ -274,6 +275,81 @@
         })
       })
     });
+
+    function getFirstDayOfWeek() {
+      var val = localStorage.getItem('firstDayOfWeek');
+      val = parseInt(val);
+      if (val >= 0 && val < 7) {
+        return val;
+      }
+      // Default: Monday
+      return 1;
+    }
+
+    function getDaysToShow() {
+      var val = localStorage.getItem('daysToShow');
+      val = parseInt(val);
+      if (val > 0 && val <= 7) {
+        return val;
+      }
+      // Default: 5
+      return 5;
+    }
+
+    function refreshCalendar() {
+      var vf = $('#vehicle_filter').remove();
+      var ec = $('#expand_calendar').remove();
+      $('#calendar').weekCalendar('setDaysToShow', getDaysToShow());
+      vf.appendTo('div.wc-toolbar').show();
+      ec.appendTo('div.wc-toolbar').show();
+    }
+
+    function initWeekdaySelect() {
+      $('#weekday_select').buttonset();
+      buttons = $('#weekday_select input');
+      for (var i = getFirstDayOfWeek();
+           i < getFirstDayOfWeek() + getDaysToShow(); ++i) {
+        $(buttons.get(i)).attr('checked', 'checked');
+      }
+      $('#weekday_select input').bind("click", updateWeekdays);
+      $('#weekday_select').buttonset('refresh');
+      refreshCalendar();
+    }
+
+    function updateWeekdays() {
+      // Determine first and last days selected
+      var buttons = $('#weekday_select input');
+      var firstDayOfWeek = -1;
+      var daysToShow = 0;
+      for (var i = 0; i < 7; i++) {
+        if ($(buttons.get(i)).attr('checked')) {
+          if (firstDayOfWeek === -1) {
+            firstDayOfWeek = i;
+          }
+          daysToShow = i - firstDayOfWeek + 1;
+        }
+      }
+      // Nothign selected, restore M-F default
+      if (firstDayOfWeek == -1) {
+        firstDayOfWeek = 1;
+        daysToShow = 5;
+      }
+      // Enforce consecutive selection rule
+      for (var i = 0; i < 7; ++i) {
+        if (i >= firstDayOfWeek && i < firstDayOfWeek + daysToShow) {
+          $(buttons.get(i)).attr('checked', 'checked');
+        } else {
+          $(buttons.get(i)).removeAttr('checked');
+        }
+      }
+      $('#weekday_select').buttonset('refresh');
+      localStorage.setItem("firstDayOfWeek", firstDayOfWeek);
+      localStorage.setItem("daysToShow", daysToShow);
+      refreshCalendar();
+    }
+
+    initWeekdaySelect();
+
   });
 
 </script>

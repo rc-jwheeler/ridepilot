@@ -1299,6 +1299,10 @@ body.trips div.wc-toolbar {
   position : relative;
 }
 
+body.trips #weekday_select {
+  margin: 0.5em 0;
+}
+
 body.trips div.wc-toolbar div#vehicle_filter {
   position : absolute;
   right    : 50px;

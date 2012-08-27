@@ -2,6 +2,8 @@
   <h1>View Trips</h1>
 </div>
 
+<%= render :partial => 'weekday_select' %>
+
 <div id="calendar" data-start-time="<%= @week_start.to_i * 1000 %>"></div>
 
 <%= render :partial => 'list' %>
