@@ -282,6 +282,7 @@ class Trip < ActiveRecord::Base
     return if !pickup_address or !dropoff_address
 
     self.in_district = pickup_address.in_district && dropoff_address.in_district
+    return true
   end
 
   def compute_run    
