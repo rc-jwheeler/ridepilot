@@ -3,5 +3,10 @@ var RidePilot = {
   business_hours: {
     start: <%= BUSINESS_HOURS[:start] %>,
     end:   <%= BUSINESS_HOURS[:end] %>
+  },
+  urls: {
+    check_session: "<%= check_session_path %>",
+    touch_session: "<%= touch_session_path %>",
+    sign_out:      "<%= destroy_user_session_path %>"
   }
 };

@@ -350,6 +350,22 @@ body.reports #primary-nav li.vehicles-drivers-users a:hover, body.reports #prima
     color: #009FFB; 
     }
 
+#session-timeout-warning {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    padding: 1.3em 0;
+    font-weight: bold;
+    background: #e5f2ff;
+    text-align: center;
+    border-bottom: 1px solid #598FEF;
+    z-index: 2000;
+}
+
+#session-timeout-warning span {
+    color: #e5004d;
+}
 
 /* subnav - section navigation */
 #subnav {

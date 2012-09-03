@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+  before_filter :do_not_track
   before_filter :authenticate_user!
   before_filter :get_providers
   include Userstamp
@@ -36,5 +37,13 @@ class ApplicationController < ActionController::Base
 
   def current_provider
     return current_user.current_provider
+  end
+
+  def do_not_track
+    # Devise is supposed to recognize this header, I thought. Unfortunately,
+    # I'm having to check it manually.
+    if request.headers['devise.skip_trackable']
+      request.env['devise.skip_trackable'] = true
+    end
   end
 end

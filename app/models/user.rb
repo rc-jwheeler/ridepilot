@@ -15,10 +15,9 @@ class User < ActiveRecord::Base
                         "non-alphanumeric character"
   
   # Include default devise modules. Others available are:
-  # :rememberable, :token_authenticatable, :confirmable, :lockable and
-  # :timeoutable
+  # :rememberable, :token_authenticatable, :confirmable, :lockable
   devise :database_authenticatable, 
-         :recoverable, :trackable, :validatable
+         :recoverable, :trackable, :validatable, :timeoutable
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation

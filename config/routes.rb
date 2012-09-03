@@ -10,6 +10,8 @@ Ridepilot::Application.routes.draw do
     post "change_provider" => "users#change_provider"
     get "show_change_password" => "users#show_change_password"
     match "change_password"  => "users#change_password"
+    get "check_session" => "users#check_session"
+    get "touch_session" => "users#touch_session"
   end
 
   resources :customers do

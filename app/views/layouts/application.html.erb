@@ -17,10 +17,16 @@
   <%= javascript_include_tag "jquery-ui-timepicker-addon.js" %>
   <%= javascript_include_tag "dateFormat.js" %>
   <%= javascript_include_tag "jquery.colorPicker.js" %>
+  <%= javascript_include_tag "idletimeout.js" %>
   <%= csrf_meta_tag %>
 </head>
 <body class="<%= bodytag_class %>">
 
+  <div id="session-timeout-warning" style="display: none;">
+    You will be logged off in <span><!-- countdown place holder
+    --></span>&nbsp;seconds due to inactivity.
+    <a id="session-resume" href="#">Click here to stay logged in.</a>
+  </div>
   <div id="header">
     <div class="wrap selfclear">
       <%= link_to "RidePilot", root_path, :id => "logo" %>
@@ -79,6 +85,15 @@
     <%= content_for?(:menu_bar) ? yield(:menu_bar) : '' %>
     <%= yield %>
   </div>
+
+<% if current_user %>
+  <script type="text/JavaScript">
+    $(document).ready(function() {
+      idleTimer = new IdleTimer();
+      idleTimer.start();
+    });
+  </script>
+<% end %>
 
 </body>
 </html>

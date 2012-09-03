@@ -1,6 +1,6 @@
 class UsersController < Devise::SessionsController
   require 'new_user_mailer'
-  
+
   def new
     #hooked up to sign_in
     if User.count == 0
@@ -89,6 +89,20 @@ class UsersController < Devise::SessionsController
       current_user.save!
     end
     redirect_to params[:come_from]
+  end
+
+  def check_session
+    last_request_at = session['warden.user.user.session']['last_request_at']
+    timeout_time = last_request_at + Rails.configuration.devise.timeout_in
+    timeout_in = (timeout_time - Time.current).to_i
+    render :json => {
+      'last_request_at' => last_request_at,
+      'timeout_in' => timeout_in,
+    }
+  end
+
+  def touch_session
+    render :text => 'OK'
   end
 
 end
