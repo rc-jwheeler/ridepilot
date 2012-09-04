@@ -1236,6 +1236,10 @@ body.providers #region-form {
   float: left;
   width: 40%;
 }
+body.providers #region-form th,
+body.providers #region-form td {
+  padding: 0.7em 1em;
+}
 body.providers #region-preview {
   float: left;
   margin-left: 20px;
@@ -1247,7 +1251,7 @@ body.providers #region .hint {
 }
 body.providers #region-preview {
   border: 1px solid #999;
-  width: 300px;
+  width: 400px;
 }
 body.providers #region-preview.error {
   color: #e5004d;

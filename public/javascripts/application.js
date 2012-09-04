@@ -358,17 +358,29 @@ function display_region(object, bounds) {
 
   // Create a locked down map view
   var map = new google.maps.Map(object.get(0), {
-    disableDefaultUI: true,
-    disableDoubleClickZoom: true,
-    draggable: false,
-    keyboardShortcuts: false,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
-    scrollwheel: false
   });
   var nw = new google.maps.LatLng(bounds.north, bounds.west);
   var se = new google.maps.LatLng(bounds.south, bounds.east);
   var bounds = new google.maps.LatLngBounds(nw, se);
   map.fitBounds(bounds);
+
+  rectangle = new google.maps.Rectangle();
+  google.maps.event.addListener(map, 'zoom_changed', function() {
+
+    // Get the current bounds, which reflect the bounds before the zoom.
+    var rectOptions = {
+      strokeColor: "#598FEF",
+      strokeOpacity: 1,
+      strokeWeight: 2,
+      fillColor: "#E5F2FF",
+      fillOpacity: 0.3,
+      map: map,
+      bounds: bounds
+    };
+    rectangle.setOptions(rectOptions);
+  });
+
   return null;
 }
 
