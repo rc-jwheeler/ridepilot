@@ -305,13 +305,13 @@
     }
 
     function initWeekdaySelect() {
+      $('#weekday_select').buttonset();
       $("#weekday_select").hover($.noop, function() {
         $("#weekday_select_buttons").slideUp();
       });
       $("#weekday_select").click(function() {
         $("#weekday_select_buttons").slideDown();
       });
-      $('#weekday_select').buttonset();
       buttons = $('#weekday_select input');
       for (var i = getFirstDayOfWeek();
            i < getFirstDayOfWeek() + getDaysToShow(); ++i) {

@@ -1325,6 +1325,8 @@ body.trips #page-header h1 {
 
 body.trips #weekday_select {
   float: left;
+  white-space: nowrap;
+  width: 500px; /* Wide enough for all 7 buttons without wrapping. */
 }
 
 body.trips #weekday_select p {
