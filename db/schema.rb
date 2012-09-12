@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120815201934) do
+ActiveRecord::Schema.define(:version => 20120912055603) do
 
   create_table "addresses", :force => true do |t|
     t.string   "name"
@@ -136,6 +136,8 @@ ActiveRecord::Schema.define(:version => 20120815201934) do
     t.boolean  "scheduling"
     t.point    "region_nw_corner",  :limit => nil
     t.point    "region_se_corner",  :limit => nil
+    t.point    "viewport_center",   :limit => nil
+    t.integer  "viewport_zoom"
   end
 
   create_table "regions", :force => true do |t|

@@ -1257,6 +1257,31 @@ body.providers #region-preview.error {
   color: #e5004d;
 }
 
+body.providers #viewport-form {
+  float: left;
+  width: 40%;
+}
+body.providers #viewport-form th,
+body.providers #viewport-form td {
+  padding: 0.7em 1em;
+}
+body.providers #viewport-preview {
+  float: left;
+  margin-left: 20px;
+}
+body.providers #viewport .hint {
+  color: #606060;
+  font-size: 90%;
+  margin-left: 1em;
+}
+body.providers #viewport-preview {
+  border: 1px solid #999;
+  width: 400px;
+}
+body.providers #viewport-preview.error {
+  color: #e5004d;
+}
+
 /*
  *
  * Color picker

@@ -15,6 +15,11 @@ class ProvidersController < ApplicationController
   def show
     @unassigned_drivers = Driver.unassigned(@provider)
     @unassigned_vehicles = Vehicle.unassigned(@provider)
+    array = (0..19).zip(0..19).map()
+    @zoom_choices = array.inject({}) do |memo, values|
+      memo[values.first.to_s] = values.last.to_s
+      memo
+    end
   end
 
   # POST /providers/:id/save_region
@@ -32,6 +37,25 @@ class ProvidersController < ApplicationController
       @provider.region_se_corner = nil
     else
       @provider.region_se_corner = Point.from_x_y(east, south)
+    end
+    @provider.save!
+    redirect_to provider_path(@provider)
+  end
+
+  # POST /providers/:id/save_viewport
+  def save_viewport
+    lat = params[:viewport_lat].to_f
+    lng = params[:viewport_lng].to_f
+    zoom = params[:viewport_zoom][@provider.viewport_zoom.to_s].to_i
+    if zoom < 0 or zoom >= 20
+      flash[:alert] = 'Zoom must be between 0 and 19.'
+      redirect_to provider_path(@provider)
+    end
+    @provider.viewport_zoom = zoom
+    if lat == 0.0 and lng == 0.0
+      @provider.viewport_center = nil
+    else
+      @provider.viewport_center = Point.from_x_y(lng, lat)
     end
     @provider.save!
     redirect_to provider_path(@provider)

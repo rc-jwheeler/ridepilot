@@ -344,13 +344,68 @@
 
 <hr />
 
-<% if @provider.region_nw_corner and @provider.region_se_corner %>
+<h2 class="section-header">Dispatch View</h2>
+
+<div id="viewport">
+  <div id="viewport-form">
+    <% if @provider.viewport_center
+         center_lat = @provider.viewport_center.y
+         center_lng = @provider.viewport_center.x
+       else
+         center_lat = ''
+         center_lng = ''
+       end
+    %>
+    <% form_tag save_viewport_provider_path do %>
+      <table>
+      <tr><th colspan="2"><h3>Map Center</h4></th></tr>
+      <tr>
+        <td><%= label_tag "Latitude:" %></td>
+        <td>
+          <%= text_field_tag :viewport_lat, center_lat %>
+          <span class="hint">(e.g. 45.523)</span>
+        </td>
+      <tr>
+        <td><%= label_tag "Longitude:" %></td>
+        <td>
+          <%= text_field_tag :viewport_lng, center_lng %>
+          <span class="hint">(e.g. -122.676)</span>
+        </td>
+      </tr>
+      <tr>
+        <th colspan="2">Zoom Level</th>
+      </tr>
+      <tr>
+        <td><%= label_tag "Zoom:" %></td>
+        <td>
+          <%= select :viewport_zoom, @provider.viewport_zoom,
+                     options_for_select(@zoom_choices,
+                                        @provider.viewport_zoom) %>
+          <span class="hint">(e.g. 11)</span>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><%= submit_tag "Save Viewport" %></td>
+      </tr>
+      </table>
+    <% end %>
+  </div>
+  <% if @provider.viewport_center and @provider.viewport_zoom %>
+    <div id="viewport-preview"></div>
+  <% end %>
+</div>
+<div class="clearfix"></div>
+
 <script type="text/javascript" charset="utf-8">
   if ( window.location.protocol == "https:" )
     document.write('<scr' + 'ipt type="text/javascript" src="https://maps-api-ssl.google.com/maps/api/js?sensor=false"></scr' + 'ipt>');
   else
     document.write('<scr' + 'ipt type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></scr' + 'ipt>');
+</script>
 
+<% if @provider.region_nw_corner and @provider.region_se_corner %>
+<script type="text/JavaScript" charset="utf-8">
   $(document).ready(function() {
     // Size the map to be the same as the form height.
     $("#region-preview").height($("#region-form").height() - 15);
@@ -370,6 +425,30 @@
       $("#region-preview").css("border", "none");
       $("#region-preview").addClass("error");
       $("#region-preview").append(html);
+    }
+  });
+</script>
+<% end %>
+
+<% if @provider.viewport_center and @provider.viewport_zoom %>
+<script type="text/JavaScript" charset="utf-8">
+  $(document).ready(function() {
+    $("#viewport-preview").height($("#viewport-form").height() - 15);
+
+    errors = display_viewport($("#viewport-preview"), {
+      center_lat: <%= @provider.viewport_center.y %>,
+      center_lng: <%= @provider.viewport_center.x %>,
+      zoom:       <%= @provider.viewport_zoom %>
+    });
+    if (errors) {
+      html = '<h3>Viewport Errors</h3><ul>';
+      for (i in errors) {
+        html += '<li>' + errors[i] + '</li>';
+      }
+      html += '</ul>';
+      $('#viewport-preview').css('border', 'none');
+      $('#viewport-preview').addClass('error');
+      $('#viewport-preview').append(html);
     }
   });
 </script>

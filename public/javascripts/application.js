@@ -356,7 +356,7 @@ function display_region(object, bounds) {
   if (errors.length > 0)
     return errors;
 
-  // Create a locked down map view
+  // Create map view
   var map = new google.maps.Map(object.get(0), {
     mapTypeId: google.maps.MapTypeId.ROADMAP,
   });
@@ -398,5 +398,38 @@ function validate_bounds(bounds) {
     errors.push('South latitude is invalid.');
   if (Math.abs(bounds.east) > 180)
     errors.push('East longitude is invalid.');
+  return errors;
+}
+
+function display_viewport(object, viewport) {
+  errors = validate_viewport(viewport);
+  if (errors.length > 0)
+    return errors;
+
+  // Create map view
+  center = new google.maps.LatLng(viewport.center_lat, viewport.center_lng);
+  var map = new google.maps.Map(object.get(0), {
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    center:    center,
+    zoom:      viewport.zoom
+  });
+
+  // Mark the center
+  var marker = new google.maps.Marker({
+    map: map,
+    position: center
+  });
+
+  return null;
+}
+
+function validate_viewport(viewport) {
+  errors = []
+  if (Math.abs(viewport.center_lat) > 90)
+    errors.push('Center latitude is invalid.')
+  if (Math.abs(viewport.center_lng) > 180)
+    errors.push('Center longitude is invalid.')
+  if (viewport.zoom < 0 || viewport.zoom >= 20)
+    errors.push('Zoom must be between 0 and 19.');
   return errors;
 }

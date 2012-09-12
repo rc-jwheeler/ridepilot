@@ -1,8 +1,9 @@
-function Dispatcher (tree_id, map_id, bounds) {
+function Dispatcher (tree_id, map_id, bounds, viewport) {
   self           = this,
   this.tree      = null,
   this.map       = null,
   this.bounds    = null,
+  this.viewport  = null,
   this.markers   = {},
   this._data     = null, 
   this._infoWindow = new google.maps.InfoWindow({ content : "" }),
@@ -11,15 +12,9 @@ function Dispatcher (tree_id, map_id, bounds) {
   this._timeout  = null,
   this.search_marker = null,
   
-  this.init = function(map_id, bounds){
+  this.init = function(map_id, bounds, viewport){
     $(window).resize(self.adjustMapHeight).resize();
     
-    self.map = new google.maps.Map( document.getElementById(map_id), {
-      zoom      : 11,
-      mapTypeId : google.maps.MapTypeId.ROADMAP, 
-      center    : new google.maps.LatLng(45.5234515, -122.6762071)
-    });
-
     if (bounds && validate_bounds(bounds).length == 0) {
       // Save bounds as a Google LatLngBounds
       self.bounds = new google.maps.LatLngBounds(
@@ -28,6 +23,24 @@ function Dispatcher (tree_id, map_id, bounds) {
     } else {
       self.bounds = null;
     }
+    if (viewport) {
+      self.viewport = {
+        center:new google.maps.LatLng(viewport.center_lat, viewport.center_lng),
+        zoom: viewport.zoom
+      };
+    } else {
+      // If not provided, use Portland area as default
+      self.viewport = {
+        center: new google.maps.LatLng(45.523, -122.676),
+        zoom: 11
+      };
+    }
+
+    self.map = new google.maps.Map( document.getElementById(map_id), {
+      zoom      : self.viewport.zoom,
+      mapTypeId : google.maps.MapTypeId.ROADMAP,
+      center    : self.viewport.center
+    });
 
     google.maps.event.addListener(self.map, "click", function(){
       self._infoWindow.close();
@@ -345,5 +358,5 @@ function Dispatcher (tree_id, map_id, bounds) {
     }
   };
 
-  this.init(map_id, bounds);
+  this.init(map_id, bounds, viewport);
 }

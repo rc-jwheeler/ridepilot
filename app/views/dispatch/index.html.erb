@@ -51,6 +51,7 @@
 
   $(document).ready(function() {
     var bounds = null;
+    var viewport = null;
     <% if current_user.current_provider.region_nw_corner &&
           current_user.current_provider.region_se_corner %>
     bounds = {
@@ -60,7 +61,15 @@
       east:  <%= current_user.current_provider.region_se_corner.x %>
     };
     <% end %>
-    d = new Dispatcher("tree", "map-container", bounds);
+    <% if current_user.current_provider.viewport_center &&
+          current_user.current_provider.viewport_zoom %>
+    viewport = {
+      center_lat: <%= current_user.current_provider.viewport_center.y %>,
+      center_lng: <%= current_user.current_provider.viewport_center.x %>,
+      zoom:       <%= current_user.current_provider.viewport_zoom %>
+    };
+    <% end %>
+    d = new Dispatcher("tree", "map-container", bounds, viewport);
     hinted_field($("#address"));
   });
 </script>

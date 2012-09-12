@@ -45,6 +45,7 @@ Ridepilot::Application.routes.draw do
       post :change_dispatch
       post :change_scheduling
       post :save_region
+      post :save_viewport
     end
   end
 
