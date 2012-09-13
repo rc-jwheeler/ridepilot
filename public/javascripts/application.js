@@ -190,8 +190,10 @@ $(function() {
       new_start = parseInt($(".wc-nav").attr("data-current-week-start"))/1000
       new_end = new Date(new_start * 1000);
       new_end.setDate(new_end.getDate() + 6);
-      range = {start: new_start, end: new_end.getTime()/1000};
-      load_index_runs(range, false);
+      if (new_start && new_end) {
+        range = {start: new_start, end: new_end.getTime()/1000};
+        load_index_runs(range, false);
+      }
     }
   };
  
