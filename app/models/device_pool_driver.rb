@@ -83,7 +83,7 @@ private
   end
 
   def update_status
-    if self.posted_at < Timeout.ago
+    if self.active? and self.posted_at < Timeout.ago
       self.status = 'timedout'
       self.save
     end
