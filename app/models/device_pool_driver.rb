@@ -6,7 +6,8 @@ class DevicePoolDriver < ActiveRecord::Base
   belongs_to :vehicle
   has_one    :user, :through => :driver
   
-  Statuses = %w{inactive active break}
+  Statuses = %w{inactive active break timedout}
+  Timeout = 15.minutes
   
   validates :driver_id, :uniqueness => true, :allow_nil => true
   validates :vehicle_id, :uniqueness => true, :allow_nil => true
@@ -23,6 +24,7 @@ class DevicePoolDriver < ActiveRecord::Base
   end
   
   def as_tree_json
+    update_status
     {
       :data     => active? ? name : "<span class='inactive'>#{name}</span>",
       :attr     => { :rel => "device" },
@@ -31,6 +33,7 @@ class DevicePoolDriver < ActiveRecord::Base
   end
   
   def as_json
+    update_status
     { 
       :id             => id, 
       :name           => name,
@@ -46,6 +49,7 @@ class DevicePoolDriver < ActiveRecord::Base
   end
   
   def as_mobile_json
+    update_status
     {
       :lat        => lat, 
       :lng        => lng, 
@@ -75,6 +79,13 @@ private
   def require_driver_or_vehicle
     unless (vehicle_id.present? || driver_id.present?) && !(vehicle_id.present? && driver_id.present?)
       errors.add(:base, "Record must have either an associated driver or an associated vehicle") 
+    end
+  end
+
+  def update_status
+    if self.posted_at < Timeout.ago
+      self.status = 'timedout'
+      self.save
     end
   end
 
