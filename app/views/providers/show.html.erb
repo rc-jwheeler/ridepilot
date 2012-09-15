@@ -378,9 +378,8 @@
       <tr>
         <td><%= label_tag "Zoom:" %></td>
         <td>
-          <%= select :viewport_zoom, @provider.viewport_zoom,
-                     options_for_select(@zoom_choices,
-                                        @provider.viewport_zoom) %>
+          <%= select_tag :viewport_zoom, options_for_select(@zoom_choices,
+                [@provider.viewport_zoom.to_s, @provider.viewport_zoom.to_s]) %>
           <span class="hint">(e.g. 11)</span>
         </td>
       </tr>

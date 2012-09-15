@@ -46,7 +46,7 @@ class ProvidersController < ApplicationController
   def save_viewport
     lat = params[:viewport_lat].to_f
     lng = params[:viewport_lng].to_f
-    zoom = params[:viewport_zoom][@provider.viewport_zoom.to_s].to_i
+    zoom = params[:viewport_zoom].to_i
     if zoom < 0 or zoom >= 20
       flash[:alert] = 'Zoom must be between 0 and 19.'
       redirect_to provider_path(@provider)
@@ -54,6 +54,7 @@ class ProvidersController < ApplicationController
     @provider.viewport_zoom = zoom
     if lat == 0.0 and lng == 0.0
       @provider.viewport_center = nil
+      @provider.viewport_zoom = nil
     else
       @provider.viewport_center = Point.from_x_y(lng, lat)
     end
