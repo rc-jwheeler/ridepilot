@@ -4,7 +4,7 @@ class Vehicle < ActiveRecord::Base
   belongs_to :updated_by, :foreign_key => :updated_by_id, :class_name=>'User'
   belongs_to :default_driver, :class_name => "Driver"
   
-  has_one :device_pool_driver
+  has_one :device_pool_driver, :dependent => :destroy
   has_one :device_pool, :through => :device_pool_driver
   
   has_many :vehicle_maintenance_events
