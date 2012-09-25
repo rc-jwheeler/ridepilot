@@ -177,6 +177,8 @@ GEM
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     rubyzip (0.9.4)
+    rvm-capistrano (1.2.7)
+      capistrano (>= 2.0.0)
     selenium-webdriver (0.2.2)
       childprocess (>= 0.1.9)
       ffi (>= 1.0.7)
@@ -225,6 +227,7 @@ DEPENDENCIES
   rails3-jquery-autocomplete!
   rspec-rails
   ruby-debug19
+  rvm-capistrano
   schedule_atts!
   spatial_adapter
   sqlite3
