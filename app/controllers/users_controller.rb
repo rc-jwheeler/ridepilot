@@ -24,7 +24,7 @@ class UsersController < Devise::SessionsController
     @user = User.where(:email=>params[:user][:email]).first
     if not @user
       @user = User.new params[:user] 
-      @user.password = User.reset_password_token
+      @user.password = User.generate_password
       @user.reset_password_token = User.reset_password_token
       @user.current_provider_id = current_provider_id
       @user.save!

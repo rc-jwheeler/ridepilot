@@ -37,6 +37,22 @@ class User < ActiveRecord::Base
     super(conditions) 
   end
   
+  # Generate a password that will validate properly for User
+  def self.generate_password(length = 8)
+    # Filter commonly confused characters
+    charset = (('a'..'z').to_a + ('A'..'Z').to_a) - %w(i I l o O)
+    result = (1..length).collect{|a| charset[rand(charset.size)]}.join
+    # Pick two indices to replace with number and symbol
+    indices = (0..length-1).to_a
+    n = indices.sample
+    m = (indices - [n]).sample
+    # At least one number
+    result[n] = '23456789'.chars.to_a.sample
+    # At least one special character
+    result[m] = '@#$%^&*()'.chars.to_a.sample
+    return result
+  end
+
   def update_password(params)
     unless params[:password].blank?
       self.update_with_password(params)
