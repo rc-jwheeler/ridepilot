@@ -1095,6 +1095,9 @@ body.reports #report-footer,
 body.reports th.table-header.print-only {
   display: none;
 }
+body.reports td.center {
+  text-align: center;
+}
 
 body.service-summary table th {
   background-color: inherit;

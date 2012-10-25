@@ -36,6 +36,9 @@ class Query
       elsif params["end_date(1i)"]
         @end_date = convert_date(params, :end_date)
         @before_end_date = @end_date - 1
+      else
+        @before_end_date = start_date.next_month - 1
+        @end_date = start_date.next_month
       end
       if params["vehicle_id"]
         @vehicle_id = params["vehicle_id"].to_i
@@ -220,7 +223,7 @@ class ReportsController < ApplicationController
     query_params = params[:query] || {}
     @query = Query.new(query_params)
 
-    @trips = Trip.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).for_cab.order(:pickup_time)
+    @trips = Trip.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).for_cab.completed.order(:pickup_time)
   end
 
   def age_and_ethnicity

@@ -1,9 +1,10 @@
 <div id="page-header">
   <h1>Reports: Cab Log</h1>
+  <h3><%= @query.start_date.strftime("%B %Y") %></h3>
 </div>
 
 <%= form_for @query, :url=>url_for(:action=>:cab), :html=>{:method=>:get} do |f| %>
-  <fieldset>
+  <fieldset class="select-month">
     <p>
       <%= f.date_select  :start_date, :discard_day=>true %>
       <%= f.submit "Report" %>
@@ -12,23 +13,32 @@
 <% end %>
 
 <table>
-<tr>
-<th>Date</th>
-<th>Name</th>
-<th>Trip purpose</th>
-<th>Pick-Up Point</th>
-<th>Destination</th>
-<th>Time</th>
-</tr>
-<% for trip in @trips %>
-<tr>
-<td><%= trip.pickup_time.to_date %></td>
-<td><%= trip.customer.name %></td>
-<td><%= trip.trip_purpose %></td>
-<td><%= trip.pickup_address.try(:text) || '(Unspecified Address)' %></td>
-<td><%= trip.dropoff_address.try(:text) || '(Unspecified Address)' %></td>
-<td><%= trip.pickup_time.time %></td>
-</tr>
-
-<% end %>
+  <tr>
+    <th>Date & Time</th>
+    <th>Return</th>
+    <th>Name</th>
+    <th>Trip purpose</th>
+    <th>Pick-Up Point</th>
+    <th>Destination</th>
+  </tr>
+  <% for trip in @trips %>
+    <tr>
+      <td><%= trip.pickup_time.time %></td>
+      <td></td>
+      <td><%= trip.customer.name %></td>
+      <td><%= trip.trip_purpose %></td>
+      <td><%= trip.pickup_address.try(:text) || '(Unspecified Address)' %></td>
+      <td><%= trip.dropoff_address.try(:text) || '(Unspecified Address)' %></td>
+    </tr>
+    <% if trip.round_trip %>
+      <tr>
+        <td><%= trip.pickup_time.time %></td>
+        <td class="center">&#x2713;</td>
+        <td><%= trip.customer.name %></td>
+        <td><%= trip.trip_purpose %></td>
+        <td><%= trip.dropoff_address.try(:text) || '(Unspecified Address)' %></td>
+        <td><%= trip.pickup_address.try(:text) || '(Unspecified Address)' %></td>
+      </tr>
+    <% end %>
+  <% end %>
 </table>

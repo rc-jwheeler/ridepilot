@@ -160,6 +160,10 @@ body.reports table.trip td.mobility {
   font-style: italic;
 }
 
+body.reports td.center {
+  text-align: center;
+}
+
 body.service-summary div#page-header, 
 body.vehicles-monthly div#page-header, 
 body.age-and-ethnicity div#page-header {
