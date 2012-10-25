@@ -59,7 +59,6 @@ GEM
       activemodel (= 3.0.12)
       activesupport (= 3.0.12)
     activesupport (3.0.12)
-    archive-tar-minitar (0.5.2)
     arel (2.0.10)
     attribute_normalizer (0.3.1)
     bartt-ssl_requirement (1.2.7)
@@ -85,7 +84,14 @@ GEM
       ffi (~> 1.0.6)
     chronic (0.5.0)
     cocaine (0.1.0)
-    columnize (0.3.4)
+    columnize (0.3.6)
+    debugger (1.2.1)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.1.1)
+      debugger-ruby_core_source (~> 1.1.4)
+    debugger-linecache (1.1.2)
+      debugger-ruby_core_source (>= 1.1.1)
+    debugger-ruby_core_source (1.1.4)
     devise (1.5.3)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.0.3)
@@ -107,8 +113,6 @@ GEM
       thor (~> 0.14)
     json (1.6.6)
     json_pure (1.5.3)
-    linecache19 (0.5.12)
-      ruby_core_source (>= 0.1.4)
     mail (2.2.19)
       activesupport (>= 2.3.6)
       i18n (>= 0.4.0)
@@ -166,16 +170,6 @@ GEM
       activesupport (~> 3.0)
       railties (~> 3.0)
       rspec (~> 2.6.0)
-    ruby-debug-base19 (0.11.25)
-      columnize (>= 0.3.1)
-      linecache19 (>= 0.5.11)
-      ruby_core_source (>= 0.1.4)
-    ruby-debug19 (0.11.6)
-      columnize (>= 0.3.1)
-      linecache19 (>= 0.5.11)
-      ruby-debug-base19 (>= 0.11.19)
-    ruby_core_source (0.1.5)
-      archive-tar-minitar (>= 0.5.2)
     rubyzip (0.9.4)
     rvm-capistrano (1.2.7)
       capistrano (>= 2.0.0)
@@ -215,6 +209,7 @@ DEPENDENCIES
   capistrano
   capistrano-ext
   capybara
+  debugger
   devise
   escape_utils
   exception_notification!
@@ -226,7 +221,6 @@ DEPENDENCIES
   rails (= 3.0.12)
   rails3-jquery-autocomplete!
   rspec-rails
-  ruby-debug19
   rvm-capistrano
   schedule_atts!
   spatial_adapter

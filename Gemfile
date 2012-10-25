@@ -31,5 +31,5 @@ group :test, :development do
   gem "capybara"
   gem "fixjour"
   gem "faker"
-  gem 'ruby-debug19'
+  gem 'debugger'
 end
