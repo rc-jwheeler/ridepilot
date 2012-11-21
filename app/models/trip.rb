@@ -38,8 +38,8 @@ class Trip < ActiveRecord::Base
   scope :for_cab, where(:cab => true)
   scope :not_for_cab, where(:cab => false)
   scope :for_provider, lambda { |provider_id| where( :provider_id => provider_id ) }
-  scope :for_date, lambda{|date| where('trips.pickup_time >= ? AND trips.pickup_time < ?', date.to_time_in_current_zone.utc, (date + 1).to_time_in_current_zone.utc) }
-  scope :for_date_range, lambda{|start_date, end_date| where('trips.pickup_time >= ? AND trips.pickup_time < ?', start_date.to_time_in_current_zone.utc, end_date.to_time_in_current_zone.utc) }
+  scope :for_date, lambda{|date| where('trips.pickup_time >= ? AND trips.pickup_time < ?', date.to_datetime.to_time_in_current_zone.utc, (date + 1).to_datetime.to_time_in_current_zone.utc) }
+  scope :for_date_range, lambda{|start_date, end_date| where('trips.pickup_time >= ? AND trips.pickup_time < ?', start_date.to_datetime.to_time_in_current_zone.utc, end_date.to_datetime.to_time_in_current_zone.utc) }
   scope :for_driver, lambda{|driver_id| not_for_cab.where(:runs => {:driver_id => driver_id}).joins(:run) }
   scope :for_vehicle, lambda{|vehicle_id| not_for_cab.where(:runs => {:vehicle_id => vehicle_id}).joins(:run) }
   scope :scheduled, where("trips.trip_result = '' OR trips.trip_result = 'COMP'")
@@ -47,8 +47,8 @@ class Trip < ActiveRecord::Base
   scope :turned_down, where(:trip_result => 'TD')
   scope :today_and_prior, where('CAST(trips.pickup_time AS date) <= ?', Date.today.to_time_in_current_zone.utc)
   scope :after_today, where('CAST(trips.pickup_time AS date) > ?', Date.today.to_time_in_current_zone.utc)
-  scope :prior_to, lambda{|pickup_time| where('trips.pickup_time < ?', pickup_time.to_time_in_current_zone.utc)}
-  scope :after, lambda{|pickup_time| where('trips.pickup_time > ?', pickup_time.to_time_in_current_zone.utc)}
+  scope :prior_to, lambda{|pickup_time| where('trips.pickup_time < ?', pickup_time.to_datetime.to_time_in_current_zone.utc)}
+  scope :after, lambda{|pickup_time| where('trips.pickup_time > ?', pickup_time.to_datetime.to_time_in_current_zone.utc)}
   scope :repeating_based_on, lambda{|repeating_trip| where(:repeating_trip_id => repeating_trip.id)}
   scope :called_back, where('called_back_at IS NOT NULL')
   scope :not_called_back, where('called_back_at IS NULL')
