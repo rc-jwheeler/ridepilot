@@ -13,7 +13,6 @@ class Provider < ActiveRecord::Base
   
   validate :name, :length => { :minimum => 2 }
 
-  validates_attachment_presence :logo
   validates_attachment_size :logo, :less_than => 200.kilobytes
   validates_attachment_content_type :logo, :content_type => ['image/jpeg', 'image/png', 'image/gif']
   
