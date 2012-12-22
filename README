@@ -53,3 +53,32 @@ Then do rake db:create
 
 You will also need ImageMagick (for no good reason, but Paperclip,
 which we use for attachments, requires it)
+
+Deployment
+==========
+
+This application uses capistrano for deployment.  Check out config/deploy.rb 
+and config/deploy/ for basic deployment recipes and configuration.
+
+Deployment uses key-based authentication. To deploy, you'll need to add your 
+public key on the staging/production servers so you can run commands as the 
+"deployer" user.
+
+To set this up, talk to another developer to get your public key on the 
+machines. If you need to do system administration on the servers, you'll need 
+your own user accout set up as well.
+
+Once you have SSH access as deployer, you can deploy:
+
+ run: `cap [staging|production] deploy`
+
+Remember to push your changes to the main repository first, since the deploy
+process pulls from there.  Database migrations are currently performed by hand
+after deploying.
+
+Deployment gotchas: 
+
+Ridepilot staging is on the production server. That means when you go into 
+rails/ridepilot-staging, you actually have to set RAILS_ENV=production if 
+you're going to run any commands. It will not affect the real production 
+app if you're in the right directory.
