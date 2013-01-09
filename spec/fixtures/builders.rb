@@ -22,8 +22,8 @@ Fixjour :verify => false do
   define_builder(User) do |klass, overrides|
     user = klass.new({
       :email                 => Faker::Internet.email,
-      :password              => 'password',
-      :password_confirmation => 'password'
+      :password              => 'password#1',
+      :password_confirmation => 'password#1'
     })
     
     user.current_provider = overrides[:current_provider] || new_provider
