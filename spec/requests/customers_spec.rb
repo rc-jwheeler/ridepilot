@@ -8,7 +8,7 @@ describe "Customers" do
       @user = create_role(:level => 100).user
       visit new_user_session_path
       fill_in 'user_email', :with => user.email
-      fill_in 'Password', :with => 'password'
+      fill_in 'Password', :with => 'password#1'
       click_button 'Sign in'
     end
     
@@ -102,7 +102,7 @@ describe "Customers" do
       @user = create_role(:level => 50).user
       visit new_user_session_path
       fill_in 'user_email', :with => user.email
-      fill_in 'Password', :with => 'password'
+      fill_in 'Password', :with => 'password#1'
       click_button 'Sign in'
     end
     

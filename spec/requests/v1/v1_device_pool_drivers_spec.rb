@@ -7,14 +7,14 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user
       
       before do
-        @user = create_user :password => "password", :password_confirmation => "password"
+        @user = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool        
       end
       
       it "raises routing error" do
         lambda {
-          post v1_device_pool_drivers_path(:user => { :email => user.email, :password => "password" }, :secure => false, :format => "json")        
+          post v1_device_pool_drivers_path(:user => { :email => user.email, :password => "password#1" }, :secure => false, :format => "json")        
         }.should raise_error(ActionController::RoutingError)        
       end
     end
@@ -23,7 +23,7 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user
       
       before do
-        @user = create_user :password => "password", :password_confirmation => "password"
+        @user = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
           
@@ -43,7 +43,7 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user
       
       before do
-        @user = create_user :password => "password", :password_confirmation => "password"
+        @user = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
           
@@ -63,14 +63,14 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user, :current_user
 
       before do
-        @current_user       = create_user :password => "password", :password_confirmation => "password"
-        @user               = create_user :password => "password", :password_confirmation => "password"
+        @current_user       = create_user :password => "password#1", :password_confirmation => "password#1"
+        @user               = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => current_user
         create_role :level => 0, :user => user
         
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
 
-        post v1_device_pool_drivers_path(:user => { :email => current_user.email, :password => "password" }, :secure => true, :format => "json")
+        post v1_device_pool_drivers_path(:user => { :email => current_user.email, :password => "password#1" }, :secure => true, :format => "json")
       end
 
       it "returns 401" do
@@ -86,12 +86,12 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user
 
       before do
-        @user               = create_user :password => "password", :password_confirmation => "password"
+        @user               = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => user
         
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
 
-        post v1_device_pool_drivers_path(:user => { :email => user.email.upcase, :password => "password" }, :secure => true, :format => "json")
+        post v1_device_pool_drivers_path(:user => { :email => user.email.upcase, :password => "password#1" }, :secure => true, :format => "json")
       end
 
       it "returns 200" do
@@ -103,12 +103,12 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user
 
       before do
-        @user               = create_user :password => "password", :password_confirmation => "password"
+        @user               = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => user
         
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
 
-        post v1_device_pool_drivers_path(:user => { :email => user.email, :password => "password" }, :secure => true, :format => "json")
+        post v1_device_pool_drivers_path(:user => { :email => user.email, :password => "password#1" }, :secure => true, :format => "json")
       end
 
       it "returns 200" do
@@ -126,14 +126,14 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user
       
       before do
-        @user = create_user :password => "password", :password_confirmation => "password"
+        @user = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool        
       end
       
       it "raises routing error" do
         lambda {
-          post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password" }, :device_pool_driver => { :status => "XXX" }, :secure => false, :format => "json")        
+          post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "XXX" }, :secure => false, :format => "json")        
         }.should raise_error(ActionController::RoutingError)        
       end
     end
@@ -160,7 +160,7 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user
       
       before do
-        @user               = create_user :password => "password", :password_confirmation => "password"
+        @user               = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => user
         
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
@@ -181,14 +181,14 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user, :current_user
 
       before do
-        @current_user       = create_user :password => "password", :password_confirmation => "password"
-        @user               = create_user :password => "password", :password_confirmation => "password"
+        @current_user       = create_user :password => "password#1", :password_confirmation => "password#1"
+        @user               = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => current_user
         create_role :level => 0, :user => user
         
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
 
-        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => current_user.email, :password => "password" }, :secure => true, :format => "json")
+        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => current_user.email, :password => "password#1" }, :secure => true, :format => "json")
       end
 
       it "returns 401" do
@@ -204,11 +204,11 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user
       
       before do
-        @user = create_user :password => "password", :password_confirmation => "password"
+        @user = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
         
-        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password" }, :device_pool_driver => { :status => "break", :lat => "45.5", :lng => "-122.6" }, :secure => true, :format => "json")
+        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "break", :lat => "45.5", :lng => "-122.6" }, :secure => true, :format => "json")
       end
       
       it "returns 200" do
@@ -224,11 +224,11 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user
       
       before do
-        @user = create_user :password => "password", :password_confirmation => "password"
+        @user = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool, :lat => 45.5, :lng => -122.6
         
-        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password" }, :device_pool_driver => { :status => "break", :lat => "", :lng => "" }, :secure => true, :format => "json")
+        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "break", :lat => "", :lng => "" }, :secure => true, :format => "json")
       end
       
       it "returns 200" do
@@ -245,11 +245,11 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user
       
       before do
-        @user = create_user :password => "password", :password_confirmation => "password"
+        @user = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
                 
-        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password" }, :device_pool_driver => { :status => "XXX" }, :secure => true, :format => "json")        
+        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "XXX" }, :secure => true, :format => "json")        
       end
       
       it "returns 400" do
@@ -266,11 +266,11 @@ describe "V1::device_pool_drivers" do
       attr_reader :device_pool_driver, :user
 
       before do
-        @user = create_user :password => "password", :password_confirmation => "password"
+        @user = create_user :password => "password#1", :password_confirmation => "password#1"
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
         
-        post v1_device_pool_driver_path(:id => 0, :user => { :email => user.email, :password => "password" }, :device_pool_driver => { :status => DevicePoolDriver::Statuses.first }, :secure => true, :format => "json")        
+        post v1_device_pool_driver_path(:id => 0, :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => DevicePoolDriver::Statuses.first }, :secure => true, :format => "json")        
       end
       
       it "returns 404" do
