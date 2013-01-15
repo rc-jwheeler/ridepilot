@@ -13,8 +13,8 @@ class Run < ActiveRecord::Base
   
   accepts_nested_attributes_for :trips
   
-  validates_datetime :scheduled_end_time, :after => :scheduled_start_time, :allow_nil => true
-  validates_datetime :actual_end_time, :after => :actual_start_time, :allow_nil => true
+  validates_datetime :scheduled_end_time, :after => :scheduled_start_time, :allow_blank => true
+  validates_datetime :actual_end_time, :after => :actual_start_time, :allow_blank => true
   validates_date :date
   validates_numericality_of :start_odometer, :allow_nil => true
   validates_numericality_of :end_odometer, :allow_nil => true
