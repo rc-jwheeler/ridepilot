@@ -165,7 +165,8 @@ class ReportsController < ApplicationController
     @trip_results = TRIP_RESULT_CODES.map { |k,v| [v,k] }
     
     unless @trips.present?
-      @trips = Trip.for_provider(current_provider_id).for_date_range(@query.start_date,@query.end_date) 
+      @trips = Trip.for_provider(current_provider_id).for_date_range(@query.start_date,@query.end_date).
+                includes(:customer,:run,:pickup_address,:dropoff_address) 
       @trips = @trips.for_cab     if @query.trip_display == "Cab Trips"
       @trips = @trips.not_for_cab if @query.trip_display == "Not Cab Trips"
     end
