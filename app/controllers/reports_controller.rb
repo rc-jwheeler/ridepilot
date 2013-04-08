@@ -116,7 +116,7 @@ class ReportsController < ApplicationController
 
     #computes number of trips in and out of district by purpose
     counts_by_purpose = Trip.for_provider(current_provider_id).for_date_range(@start_date, @end_date)
-        .includes(:customer).completed
+        .includes(:customer, :pickup_address, :dropoff_address).completed
     
     by_purpose = {}
     TRIP_PURPOSES.each do |purpose| 
@@ -128,7 +128,7 @@ class ReportsController < ApplicationController
       purpose = row.trip_purpose
       next unless by_purpose.member?(purpose)
 
-      if row.in_district 
+      if row.is_in_district?
         by_purpose[purpose]['in_district'] += row.trip_count
         @total['in_district'] += row.trip_count
       else

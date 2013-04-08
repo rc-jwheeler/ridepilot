@@ -13,7 +13,6 @@ class Trip < ActiveRecord::Base
   belongs_to :created_by, :foreign_key => :created_by_id, :class_name=>'User'
   belongs_to :updated_by, :foreign_key => :updated_by_id, :class_name=>'User'
 
-  before_validation :compute_in_district
   before_validation :compute_run
   before_create :create_repeating_trip
   before_update :update_repeating_trip
@@ -185,6 +184,10 @@ class Trip < ActiveRecord::Base
       repeats_sundays
       ))
   end
+
+  def is_in_district?
+    pickup_address.try(:in_district) && dropoff_address.try(:in_district)
+  end
   
   private
   
@@ -276,13 +279,6 @@ class Trip < ActiveRecord::Base
     if self.run.try(:driver_id).present? && self.driver_id.present? && self.run.driver_id.to_i != self.driver_id.to_i
       errors[:driver_id] << "is not the driver for the selected vehicle during this vehicle's run."
     end
-  end
-
-  def compute_in_district
-    return if !pickup_address or !dropoff_address
-
-    self.in_district = pickup_address.in_district && dropoff_address.in_district
-    return true
   end
 
   def compute_run    

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120912055603) do
+ActiveRecord::Schema.define(:version => 20130408184524) do
 
   create_table "addresses", :force => true do |t|
     t.string   "name"
@@ -27,10 +27,10 @@ ActiveRecord::Schema.define(:version => 20120912055603) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "lock_version",                        :default => 0
+    t.point    "the_geom",             :limit => nil,                    :srid => 4326
     t.string   "phone_number"
     t.boolean  "inactive",                            :default => false
     t.string   "default_trip_purpose"
-    t.point    "the_geom",             :limit => nil,                    :srid => 4326
   end
 
   add_index "addresses", ["the_geom"], :name => "index_addresses_on_the_geom", :spatial => true
@@ -234,7 +234,6 @@ ActiveRecord::Schema.define(:version => 20120912055603) do
     t.boolean  "cab",                                               :default => false
     t.boolean  "cab_notified",                                      :default => false
     t.text     "guests"
-    t.boolean  "in_district"
     t.integer  "called_back_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
