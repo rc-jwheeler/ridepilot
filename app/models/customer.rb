@@ -62,14 +62,16 @@ class Customer < ActiveRecord::Base
   end
   
   def replace_with!(other_customer_id)
-    return false unless other_customer_id.present? && self.class.exists?(other_customer_id) && id != other_customer_id
-    
-    self.trips.each do |trip|
-      trip.update_attribute :customer_id, other_customer_id
+    if other_customer_id.present? && self.class.exists?(other_customer_id.to_i) && id != other_customer_id.to_i
+      self.trips.each do |trip|
+        trip.update_attribute :customer_id, other_customer_id
+      end
+      
+      self.destroy
+      self.class.find other_customer_id
+    else
+      false
     end
-    
-    self.destroy
-    self.class.find other_customer_id
   end
   
   def self.by_term( term, limit = nil )
