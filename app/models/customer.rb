@@ -62,7 +62,7 @@ class Customer < ActiveRecord::Base
   end
   
   def replace_with!(other_customer_id)
-    return false unless other_customer_id.present? && self.class.exists?(other_customer_id)
+    return false unless other_customer_id.present? && self.class.exists?(other_customer_id) && id != other_customer_id
     
     self.trips.each do |trip|
       trip.update_attribute :customer_id, other_customer_id

@@ -60,6 +60,18 @@ describe Customer do
 
         end
       end
+      
+      context "when other_customer_id is the same as customer.id" do
+        before do
+          @customer = create_customer
+          @other_customer = create_customer
+        end
+        
+        it "should return false" do
+          @customer.replace_with!(@customer.id).should be_false
+          @customer.replace_with!(@other_customer.id).should_not be_false
+        end
+      end
     end
   end
 end
