@@ -1,6 +1,17 @@
 require 'spec_helper'
 
 describe Trip do
+  describe "medicaid_eligible" do
+    it "should be a boolean field" do
+      t = Trip.new
+      t.should respond_to(:medicaid_eligible)
+      t.medicaid_eligible = "1"
+      t.medicaid_eligible.should be_true
+      t.medicaid_eligible = "0"
+      t.medicaid_eligible.should be_false
+    end
+  end
+
   describe "before validation" do
     context "when there are no runs yet" do
       before do

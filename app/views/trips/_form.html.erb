@@ -42,6 +42,7 @@
         <%= autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:text), autocomplete_addresses_path, :size => 30, :id_element => "#trip_pickup_address_id", :class => "full", "data-original-value" => @trip.pickup_address.try(:text), "data-original-id" => @trip.pickup_address.try(:id) %>
         <%= f.hidden_field :pickup_address_id %>
       </li>
+      
       <li class="selfclear">
         <%= f.fields_for :customer do |c| %>
           <%= c.label :phone_number_1, "Customer Phone:" %>
@@ -107,7 +108,6 @@
           </ul>
         </li>
       </div>
-
     </ol>
     
     <ol class="section second">
@@ -163,6 +163,11 @@
       <li class="selfclear">
         <%= f.label :driver_id, "Driver:" %>
         <%= f.select :driver_id, options_from_collection_for_select( @drivers, :id, :name, @trip.run.present? ? nil : @trip.driver_id ), :include_blank => true %>
+      </li>
+
+      <li class="selfclear">
+        <%= f.label :medicaid_eligible, "Medicaid Eligible:" %>
+        <%= f.check_box :medicaid_eligible %>
       </li>
 
       <li class="selfclear">
