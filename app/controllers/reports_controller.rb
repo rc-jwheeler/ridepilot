@@ -1,3 +1,5 @@
+require 'csv'
+
 class Query
   extend ActiveModel::Naming
   include ActiveModel::Conversion
@@ -344,6 +346,24 @@ class ReportsController < ApplicationController
     @date = @query.start_date
 
     @trips = Trip.for_provider(current_provider_id).for_date(@date).includes(:pickup_address,:dropoff_address,:customer,:mobility,{:run => :driver}).order(:pickup_time)
+  end
+  
+  def export_trips_in_range
+    @query = Query.new(params[:query])
+    date_range = @query.start_date..@query.end_date 
+    columns = Trip.column_names.map{|c| "\"#{Trip.table_name}\".\"#{c}\" as \"#{Trip.table_name}.#{c}\""} + Customer.column_names.map{|c| "\"#{Customer.table_name}\".\"#{c}\" as \"#{Customer.table_name}.#{c}\""}
+    sql = Trip.select(columns.join(',')).joins(:customer).where(:pickup_time => date_range).order(:pickup_time).to_sql
+    trips = ActiveRecord::Base.connection.select_all(sql)
+    csv_string = CSV.generate do |csv|
+      csv << columns.collect{|c| c.split(' as ').last.strip.gsub("\"", "") }
+      unless trips.empty?
+        trips.each do |t|
+          csv << t.values
+        end
+      end
+    end
+    
+    render :text => csv_string, :content_type => Mime::CSV
   end
 
   private
