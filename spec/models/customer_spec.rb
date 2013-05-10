@@ -12,6 +12,15 @@ describe Customer do
     end
   end
   
+  describe "prime_number" do
+    it "should be a string field" do
+      c = Customer.new
+      c.should respond_to(:prime_number)
+      c.prime_number = "abc"
+      c.prime_number.should == "abc"
+    end
+  end
+  
   describe "replace_with!" do
     context "when no customer id" do
       attr_reader :customer

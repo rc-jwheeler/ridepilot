@@ -67,7 +67,7 @@
 
     <ol class="section second">
       <%= f.fields_for :address, @customer.address do |address_form| %>
-      <%= render 'addresses/form', :form=>address_form, :editing_address => false %>
+        <%= render 'addresses/form', :form=>address_form, :editing_address => false %>
       <% end %>
 
       <li class="selfclear">
@@ -87,6 +87,11 @@
     </ol>
 
     <ol class="section third">
+      <li class="selfclear">
+        <%= f.label :prime_number, "Prime Number:" %>
+        <%= f.text_field :prime_number %>
+      </li>
+
       <li class="selfclear">
         <%= f.label :emergency_contact_notes, "Emergency Contact Notes:" %>
         <%= f.text_area :emergency_contact_notes %>

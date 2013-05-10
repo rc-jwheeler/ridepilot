@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130510124547) do
+ActiveRecord::Schema.define(:version => 20130510151226) do
 
   create_table "addresses", :force => true do |t|
     t.string   "name"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(:version => 20130510124547) do
     t.integer  "updated_by_id"
     t.integer  "lock_version",            :default => 0
     t.boolean  "medicaid_eligible"
+    t.string   "prime_number"
   end
 
   create_table "device_pool_drivers", :force => true do |t|
