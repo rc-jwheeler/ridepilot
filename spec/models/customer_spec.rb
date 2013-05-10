@@ -1,6 +1,17 @@
 require 'spec_helper'
 
 describe Customer do
+  describe "medicaid_eligible" do
+    it "should be a boolean field" do
+      c = Customer.new
+      c.should respond_to(:medicaid_eligible)
+      c.medicaid_eligible = "1"
+      c.medicaid_eligible.should be_true
+      c.medicaid_eligible = "0"
+      c.medicaid_eligible.should be_false
+    end
+  end
+  
   describe "replace_with!" do
     context "when no customer id" do
       attr_reader :customer

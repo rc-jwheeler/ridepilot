@@ -61,7 +61,7 @@
 
       <li class="selfclear">
         <%= f.label :ethnicity, "Ethnicity:" %>
-	<%= f.select :ethnicity, @ethnicities %>
+        <%= f.select :ethnicity, @ethnicities %>
       </li>
     </ol>
 
@@ -78,6 +78,11 @@
       <li class="selfclear">
         <%= f.label :mobility_notes, "Mobility Notes:" %>
         <%= f.text_area :mobility_notes %>
+      </li>
+
+      <li class="selfclear">
+        <%= f.label :medicaid_eligible, "Medicaid Eligible:" %>
+        <%= f.check_box :medicaid_eligible %>
       </li>
     </ol>
 
