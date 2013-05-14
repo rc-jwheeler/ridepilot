@@ -96,7 +96,7 @@ describe Trip do
         Trip.where(:repeating_trip_id => trip.repeating_trip_id).where("id <> ?",trip.id).each do |t|
           count += 1 if t.pickup_time.strftime("%u") == "2"
         end
-        count.should == 2
+        count.should == 1
       end
 
       it "should have no child trips on the old day" do
@@ -139,7 +139,7 @@ describe Trip do
         Trip.where(:repeating_trip_id => trip.repeating_trip_id).where("id <> ?",trip.id).each do |t|
           count += 1 if t.pickup_time.strftime("%u") == "2"
         end
-        count.should == 3
+        count.should == 2
       end
 
       it "should have no child trips on the old day" do
