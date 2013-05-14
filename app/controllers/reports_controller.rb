@@ -349,6 +349,8 @@ class ReportsController < ApplicationController
   end
   
   def export_trips_in_range
+    authorize! :read, Trip
+
     @query = Query.new(params[:query])
     date_range = @query.start_date..@query.end_date
     columns = Trip.column_names.map{|c| "\"#{Trip.table_name}\".\"#{c}\" as \"#{Trip.table_name}.#{c}\""} + Customer.column_names.map{|c| "\"#{Customer.table_name}\".\"#{c}\" as \"#{Customer.table_name}.#{c}\""}
@@ -371,6 +373,14 @@ class ReportsController < ApplicationController
       buffer_size: 4096
     }
     send_data(csv_string, attrs)
+  end
+  
+  def customer_receiving_trips_in_range
+    authorize! :read, Trip
+
+    @query = Query.new(params[:query])
+    date_range = @query.start_date..@query.end_date    
+    @customers = Customer.joins(:trips).where('trips.pickup_time' => date_range).includes(:trips).uniq()
   end
 
   private
