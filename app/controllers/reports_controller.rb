@@ -350,7 +350,7 @@ class ReportsController < ApplicationController
   
   def export_trips_in_range
     @query = Query.new(params[:query])
-    date_range = @query.start_date..@query.end_date 
+    date_range = @query.start_date..@query.end_date
     columns = Trip.column_names.map{|c| "\"#{Trip.table_name}\".\"#{c}\" as \"#{Trip.table_name}.#{c}\""} + Customer.column_names.map{|c| "\"#{Customer.table_name}\".\"#{c}\" as \"#{Customer.table_name}.#{c}\""}
     sql = Trip.select(columns.join(',')).joins(:customer).where(:pickup_time => date_range).order(:pickup_time).to_sql
     trips = ActiveRecord::Base.connection.select_all(sql)
@@ -362,8 +362,15 @@ class ReportsController < ApplicationController
         end
       end
     end
-    
-    render :text => csv_string, :content_type => Mime::CSV
+  
+    attrs = {
+      filename:    "export_trips_in_range-#{@query.start_date.strftime('%b %d %Y').downcase.parameterize}-#{@query.end_date.strftime('%b %d %Y').downcase.parameterize}.csv",
+      type:        Mime::CSV,
+      disposition: "attachment",
+      streaming:   "true",
+      buffer_size: 4096
+    }
+    send_data(csv_string, attrs)
   end
 
   private
