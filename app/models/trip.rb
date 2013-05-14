@@ -30,6 +30,7 @@ class Trip < ActiveRecord::Base
   validates_associated :dropoff_address
   validates_numericality_of :guest_count, :greater_than_or_equal_to => 0
   validates_numericality_of :attendant_count, :greater_than_or_equal_to => 0
+  validates_numericality_of :mileage, :greater_than => 0, :allow_blank => true
   accepts_nested_attributes_for :customer
 
   stampable :creator_attribute => :created_by_id, :updater_attribute => :updated_by_id

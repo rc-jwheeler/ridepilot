@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130510154717) do
+ActiveRecord::Schema.define(:version => 20130514160053) do
 
   create_table "addresses", :force => true do |t|
     t.string   "name"
@@ -244,6 +244,7 @@ ActiveRecord::Schema.define(:version => 20130510154717) do
     t.integer  "lock_version",                                      :default => 0
     t.boolean  "round_trip"
     t.boolean  "medicaid_eligible"
+    t.integer  "mileage"
   end
 
   add_index "trips", ["provider_id", "appointment_time"], :name => "index_trips_on_provider_id_and_appointment_time"

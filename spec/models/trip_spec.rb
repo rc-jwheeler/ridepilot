@@ -1,6 +1,29 @@
 require 'spec_helper'
 
 describe Trip do
+  describe "mileage" do
+    it "should be an integer" do
+      t = Trip.new
+      t.should respond_to(:mileage)
+      t.mileage = "1"
+      t.mileage.should eq 1
+      t.mileage = "0"
+      t.mileage.should eq 0
+    end
+    
+    it "should only allow integers greater than 0" do
+      t = Trip.new
+      t.mileage = 0
+      t.valid?
+      t.errors.keys.include?(:mileage).should be_true
+      t.errors[:mileage].should include "must be greater than 0"
+      
+      t.mileage = 1
+      t.valid?
+      t.errors.keys.include?(:mileage).should_not be_true
+    end
+  end
+
   describe "medicaid_eligible" do
     it "should be a boolean field" do
       t = Trip.new
