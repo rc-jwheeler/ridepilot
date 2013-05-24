@@ -35,7 +35,6 @@
       $("table.trips").show();
       $('a.new').show(); 
       $('a.new').prev("hr").show();
-      // console.log ('scroll_positions in load_index_trips', scroll_positions);
       if (start_time) $("#calendar").weekCalendar("gotoWeek", start_time);
       $("#page-header h1").html("View Trips");
     }
@@ -53,17 +52,14 @@
     }
     
     function push_index_state() {
-      // console.log ('scroll_positions in push_index_state', scroll_positions);
       if (supports_history_api()) history.pushState({index: calendar_range, scroll_positions: scroll_positions}, "list trips", "<%= trips_path %>?" + $.param(calendar_range));
     }
     
     function replace_index_state() {
-      // console.log ('scroll_positions in replace_index_state', scroll_positions);
       if (supports_history_api()) history.replaceState({index: calendar_range, scroll_positions: scroll_positions}, "list trips", "<%= trips_path %>?" + $.param(calendar_range));
     }
     
     function push_edit_state(path) {
-      // console.log ('scroll_positions in push_edit_state', scroll_positions);
       if (supports_history_api()) history.pushState({edit: path}, "edit trip", path);
     }
     
@@ -73,7 +69,6 @@
 
     window.onpopstate = function(event) {
       if (event.state) {
-        // console.log('event.state in onpopstate', event.state);
         scroll_positions = event.state['scroll_positions'];
         if (event.state['index']) load_index_trips(event.state['index'].start * 1000);
         if (event.state.edit) $.get(event.state.edit, function(data){ load_edit_trip(data.form) }, "json");
@@ -158,7 +153,6 @@
           $.getJSON('<%= trips_path :json %>',
             calendar_range,
             function(data, textStatus, jqXHR){  
-              // console.log ('scroll_positions in getJSON', scroll_positions);
               
               // we probably didn't have the right range before, so now  we should update the state
               if ( on_trip_index() ) replace_index_state();
@@ -254,7 +248,6 @@
     
     $('tr.trip a[data-remote]').live('ajax:success', function(e, data, status, xhr){
       scroll_positions = {scrollX: $(window).scrollLeft(), scrollY: $(window).scrollTop()};
-      // console.log ('scroll_positions after setting', scroll_positions);
       replace_index_state(); // make sure the scrollstate is recorded
       push_edit_state($(this).attr("href"));
       load_edit_trip(data.form);
