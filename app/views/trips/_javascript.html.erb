@@ -130,10 +130,22 @@
           $("#expand_calendar").remove().appendTo("div.wc-toolbar").show();
         },
         height: function($calendar){
-          if ( $("#calendar")[0].$expanded )
-            return ($(".wc-hour-header").eq(0).height() + 8) * 11 - 7;
-          else
-            return ($(window).height() * 0.3 + 40);
+          state = $("#calendar")[0].$state;
+          console.log('state inside weekCalendar.height()', state);
+          if(state == 0) {
+            console.log('collapse calendar');
+            $('.wc-scrollable-grid').hide();
+            $('.wc-header').hide();
+            return 0;
+          } else {
+            $('.wc-scrollable-grid').show();
+            $('.wc-header').show();
+            if(state == 2) {
+              return ($(".wc-hour-header").eq(0).height() + 8) * 11 - 7;
+            } else {
+              return ($(window).height() * 0.3 + 40);
+            }
+          }
         },
         timeFormat: "h:ia",
         textSize: 10,
@@ -230,15 +242,31 @@
     makeDialogs();
 
     $("#expand_calendar button").live("click", function(e){
-      var cal       = $("#calendar")[0];
-      cal.$expanded = !cal.$expanded; // toggle expanded state
+      var $this    = $(this);
+      var $ui_icon = $this.find(".ui-icon");
+      var $cal     = $("#calendar")[0];
+      if($ui_icon.is('.ui-icon-arrowthickstop-1-n')) {
+        // Collapsing calendar
+        $cal.$state = 0;
+        
+        // Next state is small calendar
+        $ui_icon.toggleClass("ui-icon-arrowthickstop-1-n ui-icon-triangle-1-s");
+        $(this).attr("title", "Small Calendar");
+      } else if($ui_icon.is('.ui-icon-triangle-1-s')) {
+        // Make calendar small
+        $cal.$state = 1; 
 
-      // toggle class on expander button
-      $(this).find(".ui-icon").
-        toggleClass("ui-icon-arrowthickstop-1-s").
-        toggleClass("ui-icon-arrowthickstop-1-n");
+        // Next state is large calendar
+        $ui_icon.toggleClass("ui-icon-triangle-1-s ui-icon-arrowthickstop-1-s");
+        $(this).attr("title", "Large Calendar");
+      } else if($ui_icon.is('.ui-icon-arrowthickstop-1-s')) {
+        // Make calendar large
+        $cal.$state = 2;
 
-      $(this).attr("title", cal.$expanded ? "Shrink" : "Expand" );
+        // Next state is collapsed calendar
+        $ui_icon.toggleClass("ui-icon-arrowthickstop-1-s ui-icon-arrowthickstop-1-n");
+        $(this).attr("title", "Collapse Calendar");
+      }
 
       // Trigger window resize so calendar is resized properly
       $(window).trigger("resize");
