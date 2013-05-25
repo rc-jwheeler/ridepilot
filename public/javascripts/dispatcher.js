@@ -64,7 +64,7 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
   this.initTree = function(){
     self.tree = self._tree_elem.jstree({
       core      : { html_titles : true },
-      plugins   : [ "json_data", "themes", "checkbox"],
+      plugins   : [ "json_data", "themes", "checkbox", "contextmenu"],
       themes    : { theme : "apple", url : "../stylesheets/jstree-apple/style.css", icons : false },
       json_data : { ajax : {
         url : window.location.pathname,
@@ -90,9 +90,52 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
                 self._tree_elem.jstree("close_node", this, true);
             });
           }, 1);
-        }        
-      } }
+        }
+      } },
+      contextmenu : {
+        items : self.jsTreeContextMenu
+      }
     });
+  },
+  
+  this.jsTreeContextMenu = function(node) {
+    if ($(node).attr("rel") == "device_pool") {
+      return {
+        // Some key
+        "delete" : {
+          // The item label
+          "label" : "Delete Device Pool",
+          // The function to execute upon a click
+          "action" : self.jsTreeRemoveNode,
+          // All below are optional 
+          "_disabled" : false, // clicking the item won't do a thing
+          "_class" : "", // class is applied to the item LI node
+          "separator_before" : false, // Insert a separator before the item
+          "separator_after" : false, // Insert a separator after the item
+          "icon" : false, // false or string - if does not contain `/` - used as classname
+        }
+      };
+    } else {
+      return false;
+    }
+  },
+  
+  this.jsTreeRemoveNode = function(node) {
+    if (confirm("Are you sure you want to delete this device pool?")) {
+      $.ajax({
+          url: '/device_pools/' + $(node).data("id"),
+          type: 'DELETE',
+          dataType: 'json',
+          data: {"id": $(node).data("id")},
+          success: function(result) {
+            self._tree_elem.jstree("delete_node", node);
+          },
+          error: function(result) {
+            console.log("jsTreeRemoveNode error", result);
+            alert("Could not delete the selected device pool. Please try again.");
+          }
+      });
+    }
   },
   
   this.positionMarkers = function() {

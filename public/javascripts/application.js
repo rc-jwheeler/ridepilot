@@ -269,7 +269,10 @@ $(function() {
           $("select.new_device_pool_driver option[value=" + select.val() + "]").remove();
           
           link.parent("p").hide().prev("p").show();          
-        } else console.log(data);
+        } else {
+          console.log("add_driver_to_pool error", data);
+          alert("Could not add the selected driver to the device pool. Please try again.");
+        }
       }, "json"
     );
     
@@ -290,7 +293,10 @@ $(function() {
           $("select.new_device_pool_vehicle option[value=" + select.val() + "]").remove();
           
           link.parent("p").hide().prev("p").show();          
-        } else console.log(data);
+        } else {
+          console.log("add_vehicle_to_pool error", data);
+          alert("Could not add the selected vehicle to the device pool. Please try again.");
+        }
       }, "json"
     );
     
