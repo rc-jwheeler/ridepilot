@@ -1,10 +1,10 @@
 <form id="refresh" class="">
-  <div class="actions" style="border:0;">
+  <div class="actions" style="border:0; z-index: 1000">
     <%= submit_tag "Refresh", :onclick => "d.refresh(); return false;" -%>
   </div>
 </form>
 
-<div id="page-header">
+<div id="page-header" style="min-height: 35px">
   <h1>Dispatcher</h1>
   <form id="search" class="">
     <div class="actions" style="border:0;">
@@ -17,15 +17,12 @@
 </div>
 <div class="clearfix"></div>
 
-<div class="left_column">
-  <div id="tree">
-    Loading...
+<div class="column_wrapper">
+  <div class="left_column ui-layout-west">
+    <div id="tree">Loading...</div> &nbsp;
   </div>
-  &nbsp;
-</div>
 
-<div id="map-container">
-  
+  <div id="map-container" class="ui-layout-center">&nbsp;</div>
 </div>
 
 <script type="text/javascript" charset="utf-8">
@@ -37,8 +34,10 @@
 
 <%= javascript_include_tag "styledmarker.js" %>
 <%= javascript_include_tag "jquery.jstree.js" %>
+<%= javascript_include_tag "jquery.layout.min-1.2.0.js" %>
 <%= javascript_include_tag "dispatcher.js" %>
 <%= stylesheet_link_tag "jstree-apple/style.css" %>
+<%= stylesheet_link_tag "jquery-layout-default.css" %>
 
 <script type="text/javascript" charset="utf-8">
   function locate() {
@@ -48,8 +47,16 @@
     }
     d.locateAddress(f.val());
   }
-
+  
+  var myLayout
+  
   $(document).ready(function() {
+    myLayout = $('.column_wrapper').layout({ 
+      applyDefaultStyles: false, 
+      size: 300,
+      minSize: 200
+    });
+    
     var bounds = null;
     var viewport = null;
     <% if current_user.current_provider.region_nw_corner &&

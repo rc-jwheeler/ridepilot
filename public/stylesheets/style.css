@@ -1475,13 +1475,18 @@ body.trips div.repeats>li {
  text-decoration: none;
 }
 
-.dispatch .left_column {
+.dispatch .column_wrapper {
+  min-height : 300px;
+}
+
+.dispatch .column_wrapper .left_column {
  width: 20%;
  margin: 0 1% 0 0;
+ min-height : 300px;
  float : left;
 }
 
-.dispatch #map-container {
+.dispatch .column_wrapper #map-container {
  width : 79%;
  min-height : 300px;
 }

@@ -52,13 +52,15 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
   },
   
   this.adjustMapHeight = function() {
-    self._map_elem.css("height", function(){
-      return $(window).height() -
-      $("#header").outerHeight() -
-      $("#crossbar").outerHeight() -
-      ( $("#main").outerHeight() - $("#main").height() ) -
-      $("#page-header").outerHeight() - 21 + "px"
-    });
+    var height = $(window).height() -
+      $("#header").outerHeight(true) -
+      $("#crossbar").outerHeight(true) -
+      ( $("#main").outerHeight(true) - $("#main").height() ) -
+      $("#page-header").outerHeight(true) - 
+      $("#main > .clearfix").outerHeight(true) - 
+      $("#main > .notice").outerHeight(true) + "px";
+    self._map_elem.css("height", height);
+    $('.column_wrapper').css("height", height);
   },
   
   this.initTree = function(){
