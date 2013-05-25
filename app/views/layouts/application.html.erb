@@ -62,14 +62,11 @@
         <% if show_dispatch?   %><li class="dispatch"><%= link_to "Dispatch", dispatch_path %></li><% end %>
       </ul>
       <ul id="secondary-nav" class="selfclear">
+        <% if current_user && can?(:read, current_user) %>
+          <li class="admin"><%= link_to "Admin", root_path %></li>
+        <% end %>
         <% if current_user && can?(:read, Provider) %>
-          <li class="vehicles-drivers-users"><%= link_to "Admin", provider_path(current_user.current_provider) %></li>
-        <% end %>
-        <% if current_user && can?(:create, Provider) %>
-          <li class="providers"><%= link_to "Providers", providers_path %></li>
-        <% end %>
-        <% if show_scheduling? && current_user && can?(:edit, FundingSource) %>
-          <li class="funding-sources"><%= link_to "Funding Sources", funding_sources_path %></li>
+          <li class="vehicles-drivers-users"><%= link_to "Settings", provider_path(current_user.current_provider) %></li>
         <% end %>
       </ul>
     </div><!-- /.wrap -->
