@@ -2,7 +2,6 @@
 
 function makeDatePickers () {
   $('#trip_pickup_time, #trip_appointment_time').datetimepicker({
-        ampm: true,
         buttonImage: "<%=  image_path 'calendar-clock.png' %>",
         buttonImageOnly: true,
         constrainInput: false,
@@ -12,11 +11,9 @@ function makeDatePickers () {
         hourMin: RidePilot.business_hours.start,
         minuteGrid: 15,
         showOn: "button",
-        showTimezone: false,
         stepHour: 1,
         stepMinute: 15,
-        timeFormat: 'hh:mm tt Z',
-        timezone: RidePilot.timezone.name,
+        timeFormat: 'hh:mm tt',
   });
 }
 

@@ -263,9 +263,8 @@ class Trip < ActiveRecord::Base
   end
 
   def format_datetime(datetime)
-    debugger
     if datetime.is_a?( String ) 
-      Time.parse(datetime.gsub(/\b(a|p)\b/i, '\1m').upcase)
+      Time.zone.parse(datetime.gsub(/\b(a|p)\b/i, '\1m').upcase)
     else
       datetime
     end
