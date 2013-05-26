@@ -263,12 +263,9 @@ class Trip < ActiveRecord::Base
   end
 
   def format_datetime(datetime)
+    debugger
     if datetime.is_a?( String ) 
-      if %w{a p}.include?( datetime.last.downcase ) 
-        Time.parse("#{datetime}m")
-      else
-        Time.parse(datetime)
-      end
+      Time.parse(datetime.gsub(/\b(a|p)\b/i, '\1m').upcase)
     else
       datetime
     end

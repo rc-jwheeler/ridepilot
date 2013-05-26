@@ -1,4 +1,5 @@
 function ISODateFormatToDateObject(str) {
+  console.log("ISODateFormatToDateObject", str);
   if(str === null) return null;
 
   var parts = str.split(' ');
@@ -110,9 +111,10 @@ $(function() {
   // when trip pickup time is changed, update appointment time and displayed week
   $('#trip_pickup_time').live('change', function() {
     var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time').attr("value") );
-    var appointmentTimeDate = new Date(pickupTimeDate.getTime() + (1000 * 60 * 30));    
+    console.log("'trip_pickup_time').live('change')", pickupTimeDate.getTime());
+    var appointmentTimeDate = new Date(pickupTimeDate.getTime() + (1000 * 60 * 30));
 
-    $('#trip_appointment_time').attr( "value", appointmentTimeDate.format("ddd yyyy-mm-dd hh:MM t") );
+    $('#trip_appointment_time').attr( "value", appointmentTimeDate.format("ddd yyyy-mm-dd hh:MM tt") + " " +  (appointmentTimeDate.is_dst() ? RidePilot.timezone.dst_offset : RidePilot.timezone.std_offset));
     
     if ( week_differs(appointmentTimeDate.getTime()) ) {
       $("#calendar").weekCalendar("gotoWeek", appointmentTimeDate.getTime());

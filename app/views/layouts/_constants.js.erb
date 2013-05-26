@@ -8,5 +8,10 @@ var RidePilot = {
     check_session: "<%= check_session_path %>",
     touch_session: "<%= touch_session_path %>",
     sign_out:      "<%= destroy_user_session_path %>"
+  },
+  timezone: {
+    std_offset: "<%= Time.zone.parse("#{Date.current.year}-01-01").strftime('%z')[0,3] %>:00",
+    dst_offset: "<%= Time.zone.parse("#{Date.current.year}-06-01").strftime('%z')[0,3] %>:00",
+    name: "<%= Time.zone.now.strftime('%Z') %>"
   }
 };
