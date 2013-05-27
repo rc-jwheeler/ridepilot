@@ -133,7 +133,6 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
             self._tree_elem.jstree("delete_node", node);
           },
           error: function(result) {
-            console.log("jsTreeRemoveNode error", result);
             alert("Could not delete the selected device pool. Please try again.");
           }
       });

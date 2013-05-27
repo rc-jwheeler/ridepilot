@@ -72,7 +72,6 @@ var IdleTimer = function(user_options) {
   };
 
   this.onIdle = function() {
-    console.log(self);
     self.checkSession(function(session_timeout) {
       if (session_timeout <= options.countdown_length+options.session_buffer) {
         self.startCountdown();

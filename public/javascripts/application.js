@@ -1,5 +1,4 @@
 function ISODateFormatToDateObject(str) {
-  console.log("ISODateFormatToDateObject", str);
   if(str === null) return null;
 
   var parts = str.split(' ');
@@ -111,7 +110,6 @@ $(function() {
   // when trip pickup time is changed, update appointment time and displayed week
   $('#trip_pickup_time').live('change', function() {
     var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time').attr("value") );
-    console.log("'trip_pickup_time').live('change')", pickupTimeDate.getTime());
     var appointmentTimeDate = new Date(pickupTimeDate.getTime() + (1000 * 60 * 30));
 
     $('#trip_appointment_time').attr( "value", appointmentTimeDate.format("ddd yyyy-mm-dd hh:MM tt"));
@@ -272,7 +270,6 @@ $(function() {
           
           link.parent("p").hide().prev("p").show();          
         } else {
-          console.log("add_driver_to_pool error", data);
           alert("Could not add the selected driver to the device pool. Please try again.");
         }
       }, "json"
@@ -296,7 +293,6 @@ $(function() {
           
           link.parent("p").hide().prev("p").show();          
         } else {
-          console.log("add_vehicle_to_pool error", data);
           alert("Could not add the selected vehicle to the device pool. Please try again.");
         }
       }, "json"
