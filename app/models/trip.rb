@@ -20,10 +20,10 @@ class Trip < ActiveRecord::Base
   
   serialize :guests
 
-  validates_presence_of :pickup_address
-  validates_presence_of :dropoff_address
-  validates_presence_of :pickup_time
-  validates_presence_of :appointment_time
+  validates_presence_of :pickup_address,   :unless => lambda { self.run.present? }
+  validates_presence_of :dropoff_address,  :unless => lambda { self.run.present? }
+  validates_presence_of :pickup_time,      :unless => lambda { self.run.present? }
+  validates_presence_of :appointment_time, :unless => lambda { self.run.present? }
   validates_presence_of :trip_purpose
   validate :driver_is_valid_for_vehicle
   validates_associated :pickup_address
