@@ -48,7 +48,7 @@
           <%= c.label :phone_number_1, "Customer Phone:" %>
           <%= c.text_field :phone_number_1, :class => :full %>
         <% end %>
-        <% if @trip.customer.id.blank? %>
+        <% if @trip.customer.try(:id).blank? %>
           <input id="trip_customer_attributes_id" type="hidden" name="trip[customer_attributes][id]">
         <% end %>
       </li>
@@ -117,7 +117,7 @@
       </li>
 
       <li class="selfclear passengers group_size">
-        <% if @customer %>
+        <% if @customer.try(:id).present? %>
           <% if @customer.group %>
             <%= f.label :group_size, "Group Size:" %>
             <%= f.text_field :group_size %>
@@ -131,18 +131,18 @@
             </ul>
           <% end %>
         <% else %>
-          <%= hidden_field_tag "trip_group" %>
-          <%= f.label :group_size, "Group Size:" %>
-          <%= f.text_field :group_size %>
-        </li>
-        <li class="selfclear passengers">
-          <%= f.label :guest_count, "Passengers:" %>
-          <ul>
-            <li>
-              <span class="nobreak"><%= f.text_field :guest_count %>&nbsp;Guests&nbsp;</span>
-              <span class="nobreak"><%= f.text_field :attendant_count %>&nbsp;Attendants</span>
-            </li>
-          </ul>
+            <%= hidden_field_tag "trip_group" %>
+            <%= f.label :group_size, "Group Size:" %>
+            <%= f.text_field :group_size %>
+          </li>
+          <li class="selfclear passengers">
+            <%= f.label :guest_count, "Passengers:" %>
+            <ul>
+              <li>
+                <span class="nobreak"><%= f.text_field :guest_count %>&nbsp;Guests&nbsp;</span>
+                <span class="nobreak"><%= f.text_field :attendant_count %>&nbsp;Attendants</span>
+              </li>
+            </ul>
         <% end %>
       </li>
       

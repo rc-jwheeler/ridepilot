@@ -111,7 +111,6 @@ class TripsController < ApplicationController
       @trip.funding_source_id = customer.default_funding_source_id 
     else
       @trip = Trip.new(:provider_id=>current_provider_id)
-      @trip.customer = Customer.new
     end
 
     prep_view
