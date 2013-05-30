@@ -7,15 +7,16 @@
 <%= autocomplete_field_tag 'customer_name', @customer.try(:name), autocomplete_customers_path, 
     :size => 30, 
     :update_elements => {
-      :id              => '#trip_customer_id,#trip_customer_attributes_id',
-      :phone_number_1  => '#trip_customer_attributes_phone_number_1', 
-      :phone_number_2  => '#alt_phone',
-      :mobility_notes  => '#mobility_notes',
-      :mobility_id     => '#trip_mobility_id',
-      :private_notes   => '#customer_private_notes',
-      :group           => '#trip_group',
-      :address_id      => "#trip_pickup_address_id",
-      :address         => "#pickup_search_address"
+      :id                        => '#trip_customer_id,#trip_customer_attributes_id',
+      :phone_number_1            => '#trip_customer_attributes_phone_number_1', 
+      :phone_number_2            => '#alt_phone',
+      :mobility_notes            => '#mobility_notes',
+      :mobility_id               => '#trip_mobility_id',
+      :private_notes             => '#customer_private_notes',
+      :group                     => '#trip_group',
+      :address_id                => "#trip_pickup_address_id",
+      :address                   => "#pickup_search_address",
+      :default_funding_source_id => "#trip_funding_source_id"
     },
     :style => @customer.id.present? ? 'display: none' : ''
 %>

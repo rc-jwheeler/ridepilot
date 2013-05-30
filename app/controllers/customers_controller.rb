@@ -67,8 +67,7 @@ class CustomersController < ApplicationController
   def new
     @customer = Customer.new name_options
     @customer.address ||= @customer.build_address :provider => current_provider
-    @mobilities = Mobility.all
-    @ethnicities = ETHNICITIES
+    prep_edit
 
     respond_to do |format|
       format.html # new.html.erb
@@ -78,8 +77,7 @@ class CustomersController < ApplicationController
 
   def edit
     @customer = Customer.find(params[:id])
-    @mobilities = Mobility.all
-    @ethnicities = ETHNICITIES
+    prep_edit
   end
 
   def create
@@ -149,7 +147,7 @@ first_name, first_name, first_name, first_name,
 
   def update
     @customer = Customer.find(params[:id])
-
+    
     respond_to do |format|
       if @customer.update_attributes(params[:customer])
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
@@ -192,5 +190,10 @@ first_name, first_name, first_name, first_name,
       atts
     end || {}
   end
-
+  
+  def prep_edit
+    @mobilities = Mobility.all
+    @ethnicities = ETHNICITIES
+    @funding_sources = FundingSource.by_provider(current_provider)
+  end
 end

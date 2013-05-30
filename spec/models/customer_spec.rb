@@ -1,6 +1,17 @@
 require 'spec_helper'
 
 describe Customer do
+  describe "default_funding_source_id" do
+    it "should be an integer field" do
+      c = Customer.new
+      c.should respond_to(:default_funding_source_id)
+      c.default_funding_source_id = "1"
+      c.default_funding_source_id.should eq 1
+      c.default_funding_source_id = "0"
+      c.default_funding_source_id.should eq 0
+    end
+  end
+  
   describe "medicaid_eligible" do
     it "should be a boolean field" do
       c = Customer.new

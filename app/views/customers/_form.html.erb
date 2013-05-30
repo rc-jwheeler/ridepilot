@@ -88,6 +88,11 @@
 
     <ol class="section third">
       <li class="selfclear">
+        <%= f.label :default_funding_source_id, "Default Funding Source:" %>
+        <%= f.collection_select :default_funding_source_id, @funding_sources, :id, :name, :include_blank => true %>
+      </li>
+
+      <li class="selfclear">
         <%= f.label :prime_number, "Prime Number:" %>
         <%= f.text_field :prime_number %>
       </li>

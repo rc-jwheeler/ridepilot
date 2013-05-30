@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130514160053) do
+ActiveRecord::Schema.define(:version => 20130530203929) do
 
   create_table "addresses", :force => true do |t|
     t.string   "name"
@@ -54,14 +54,15 @@ ActiveRecord::Schema.define(:version => 20130514160053) do
     t.text     "private_notes"
     t.text     "public_notes"
     t.integer  "provider_id"
-    t.boolean  "group",                   :default => false
+    t.boolean  "group",                     :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
-    t.integer  "lock_version",            :default => 0
+    t.integer  "lock_version",              :default => 0
     t.boolean  "medicaid_eligible"
     t.string   "prime_number"
+    t.integer  "default_funding_source_id"
   end
 
   create_table "device_pool_drivers", :force => true do |t|
@@ -137,9 +138,10 @@ ActiveRecord::Schema.define(:version => 20130514160053) do
     t.boolean  "dispatch"
     t.boolean  "scheduling"
     t.integer  "viewport_zoom"
-    t.point    "region_nw_corner",  :limit => nil, :srid => 0
-    t.point    "region_se_corner",  :limit => nil, :srid => 0
-    t.point    "viewport_center",   :limit => nil, :srid => 0
+    t.point    "region_nw_corner",                :limit => nil, :srid => 0
+    t.point    "region_se_corner",                :limit => nil, :srid => 0
+    t.point    "viewport_center",                 :limit => nil, :srid => 0
+    t.boolean  "allow_trip_entry_from_runs_page"
   end
 
   create_table "regions", :force => true do |t|

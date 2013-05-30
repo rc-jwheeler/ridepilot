@@ -78,6 +78,9 @@
 </dl>
 
 <dl>
+  <dt>Default Funding Source:</dt>
+  <dd><%= @customer.default_funding_source.try(:name) %></dd>
+  
   <dt>Ethnicity:</dt>
   <dd><%= @customer.ethnicity %></dd>
   

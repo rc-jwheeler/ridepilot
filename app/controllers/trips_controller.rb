@@ -108,6 +108,7 @@ class TripsController < ApplicationController
       customer = Customer.find(params[:customer_id])
       @trip.pickup_address_id = customer.address_id
       @trip.mobility_id = customer.mobility_id 
+      @trip.funding_source_id = customer.default_funding_source_id 
     else
       @trip = Trip.new(:provider_id=>current_provider_id)
       @trip.customer = Customer.new
