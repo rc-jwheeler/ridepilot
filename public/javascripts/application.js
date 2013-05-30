@@ -93,10 +93,10 @@ $(function() {
   // hide middle/last names for group customer
   var updateGroupField = function() {
     if ( $('input#customer_group').is(':checked') ){
-      $('li.middlename, li.lastname').hide();
+      $('li.middlename, li.lastname, li.ethnicity, li.birth_date').hide();
       $('li.firstname label').html("Group Name:");
     } else {
-      $('li.middlename, li.lastname').show();
+      $('li.middlename, li.lastname, li.ethnicity, li.birth_date').show();
       $('li.firstname label').html("First Name:");
     }
   };

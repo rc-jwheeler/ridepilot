@@ -32,14 +32,19 @@
 <div class="customer-profile selfclear">
 
 <dl>
-  <dt>First name:</dt>
-  <dd><%= @customer.first_name %></dd>
+  <% if @customer.group %>
+    <dt>Group name:</dt>
+    <dd><%= @customer.first_name %></dd>
+  <% else %>
+    <dt>First name:</dt>
+    <dd><%= @customer.first_name %></dd>
 
-  <dt>Middle initial:</dt>
-  <dd><%= @customer.middle_initial %></dd>
+    <dt>Middle initial:</dt>
+    <dd><%= @customer.middle_initial %></dd>
 
-  <dt>Last name:</dt>
-  <dd><%= @customer.last_name %></dd>
+    <dt>Last name:</dt>
+    <dd><%= @customer.last_name %></dd>
+  <% end %>
 
   <dt>Phone number 1:</dt>
   <dd><%= @customer.phone_number_1 %></dd>
@@ -64,8 +69,10 @@
   <dt>Inactivated reason:</dt>
   <dd><%= @customer.inactivated_reason %></dd>
 
-  <dt>Birth date:</dt>
-  <dd><%= @customer.birth_date %></dd>
+  <% unless @customer.group %>
+    <dt>Birth date:</dt>
+    <dd><%= @customer.birth_date %></dd>
+  <% end %>
 
   <dt>Mobility:</dt>
   <dd><%= @customer.mobility.name if @customer.mobility %></dd>
@@ -81,8 +88,10 @@
   <dt>Default Funding Source:</dt>
   <dd><%= @customer.default_funding_source.try(:name) %></dd>
   
-  <dt>Ethnicity:</dt>
-  <dd><%= @customer.ethnicity %></dd>
+  <% unless @customer.group %>
+    <dt>Ethnicity:</dt>
+    <dd><%= @customer.ethnicity %></dd>
+  <% end %>
   
   <dt>Prime number:</dt>
   <dd><%= @customer.prime_number %></dd>

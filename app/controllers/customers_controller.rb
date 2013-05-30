@@ -127,8 +127,7 @@ first_name, first_name, first_name, first_name,
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
-        @mobilities  = Mobility.all
-        @ethnicities = current_provider.ethnicities
+        prep_edit
         format.html { render :action => "new" }
         format.xml  { render :xml => @customer.errors, :status => :unprocessable_entity }
       end

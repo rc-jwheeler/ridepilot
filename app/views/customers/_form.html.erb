@@ -54,12 +54,12 @@
         <%= f.text_field :email %>
       </li>
 
-      <li class="selfclear">
+      <li class="selfclear birth_date">
         <%= f.label :birth_date, "Date Of Birth" %>
         <%= f.date_select :birth_date, :start_year => 1896, :include_blank => true %>
       </li>
 
-      <li class="selfclear">
+      <li class="selfclear ethnicity">
         <%= f.label :ethnicity, "Ethnicity:" %>
         <%= f.collection_select :ethnicity, @ethnicities, :name, :name %>
       </li>
