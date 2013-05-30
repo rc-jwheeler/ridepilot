@@ -1,0 +1,25 @@
+class ImportProviderEthnicites < ActiveRecord::Migration
+  class Provider  < ActiveRecord::Base
+    has_many :ethnicities, :class_name => 'ImportProviderEthnicites::ProviderEthnicity'
+  end
+
+  class ProviderEthnicity < ActiveRecord::Base
+    attr_accessible :name
+  end
+  
+  ETHNICITIES = ['Caucasian','African American','Asian','Asian Indian','Chinese','Filipino','Hispanic','Japanese','Korean','Vietnamese','Pacific Islander','American Indian/Alaska Native','Native Hawaiian','Guamanian or Chamorrow','Samoan','Russian','Unknown','Refused','Other']
+
+  def self.up
+    transaction do
+      Provider.all.each do |provider|
+        ETHNICITIES.each do |ethnicity|
+          provider.ethnicities.create :name => ethnicity
+        end
+      end
+    end
+  end
+
+  def self.down
+    ProviderEthnicity.where(:name => ETHNICITIES).destroy_all
+  end
+end

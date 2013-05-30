@@ -1,0 +1,24 @@
+<div id="page-header">
+  <h1>Ethnicity Details</h1>
+</div>
+
+<p class="profile-actions selfclear">
+  <% if can? :edit, @provider_ethnicity %>
+  <%= link_to "Edit Ethnicity", edit_provider_ethnicity_path(@provider_ethnicity), :class=>'edit edit-provider-ethnicity' %>
+  <% end %>
+</p>
+
+<div class="provider-ethnicity-profile selfclear">
+
+<dl>
+  <dt>Provider:</dt>
+  <dd><%= @provider_ethnicity.provider_id %></dd>
+
+  <dt>Name:</dt>
+  <dd><%= @provider_ethnicity.name %></dd>
+</dl>
+
+<% if current_user && can?(:edit, Provider) %>
+<hr />
+<%= link_to 'Back', provider_path(current_user.current_provider), :class=>'action-bttn' %>
+<% end %>

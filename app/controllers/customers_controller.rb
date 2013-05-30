@@ -117,7 +117,7 @@ first_name, first_name, first_name, first_name,
         flash[:alert] = "There is already a customer with a similar name or the same email address: <a href=\"#{url_for :action=>:show, :id=>dup.id}\">#{dup.name}</a> (dob #{dup.birth_date}).  If this is truly a different customer, check the 'ignore duplicates' box to continue creating this customer.".html_safe
         @dup = true
         @mobilities = Mobility.all
-        @ethnicities = ETHNICITIES
+        @ethnicities = current_provider.ethnicities
         return render :action=>"new"
       end
     end
@@ -128,7 +128,7 @@ first_name, first_name, first_name, first_name,
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
         @mobilities  = Mobility.all
-        @ethnicities = ETHNICITIES
+        @ethnicities = current_provider.ethnicities
         format.html { render :action => "new" }
         format.xml  { render :xml => @customer.errors, :status => :unprocessable_entity }
       end
@@ -193,7 +193,7 @@ first_name, first_name, first_name, first_name,
   
   def prep_edit
     @mobilities = Mobility.all
-    @ethnicities = ETHNICITIES
+    @ethnicities = current_provider.ethnicities
     @funding_sources = FundingSource.by_provider(current_provider)
   end
 end

@@ -1200,7 +1200,8 @@ a.action-bttn:active {
     color: #009FFB;
 }
 body.trips.index a.action-bttn.new,
-body.runs.index a.action-bttn.new {
+body.runs.index a.action-bttn.new,
+body.providers.show a.action-bttn.new {
     background: #eee url(images/plus.png) 0.8em center no-repeat scroll;
 }
 /* funding sources */
