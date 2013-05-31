@@ -45,8 +45,10 @@ class Customer < ActiveRecord::Base
   
   def as_autocomplete
     if address.present?
-      address_text = address.text 
-      address_id = address.id 
+      address_text = address.text.gsub(/\s+/, ' ')
+      address_id = address.id
+      address_data = address.attributes
+      address_data[:label] = address_text
     end
 
     { :label           => name, 
@@ -58,7 +60,8 @@ class Customer < ActiveRecord::Base
       :address         => address_text,
       :address_id      => address_id,
       :private_notes   => private_notes,
-      :group           => group
+      :group           => group,
+      :address_data    => address_data
     }
   end
   

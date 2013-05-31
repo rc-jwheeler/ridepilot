@@ -39,8 +39,9 @@
 
       <li class="selfclear">
         <%= f.label :pickup_address_label, "Pickup Address:" %>
-        <%= autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:text), autocomplete_addresses_path, :size => 30, :id_element => "#trip_pickup_address_id", :class => "full", "data-original-value" => @trip.pickup_address.try(:text), "data-original-id" => @trip.pickup_address.try(:id) %>
+        <%= autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:text), autocomplete_addresses_path, :size => 30, :id_element => "#trip_pickup_address_id", :class => "nearly-full", "data-original-value" => @trip.pickup_address.try(:text), "data-original-id" => @trip.pickup_address.try(:id) %>
         <%= f.hidden_field :pickup_address_id %>
+        <a href="javascript:edit_pickup_address();" class="pickup_address_details details" style="display: <%= @trip.pickup_address.try(:id).present? ? "inline" : "none" %>"></a>
       </li>
       
       <li class="selfclear">
@@ -61,10 +62,11 @@
             :id                   => '#trip_dropoff_address_id',
             :default_trip_purpose => '#trip_trip_purpose'
           },
-          :class                => "full", 
+          :class                => "nearly-full", 
           "data-original-value" => @trip.dropoff_address.try(:text), 
           "data-original-id"    => @trip.dropoff_address.try(:id) %>
         <%= f.hidden_field :dropoff_address_id %>
+        <a href="javascript:edit_dropoff_address();" class="dropoff_address_details details" style="display: <%= @trip.dropoff_address.try(:id).present? ? "inline" : "none" %>"></a>
       </li>
 
       <li class="selfclear">
@@ -240,7 +242,6 @@
 <div id="pickup-address-form" class="address-form">
   <%= render :partial=>'find_or_create_address', :locals=>{:prefix=>'pickup', :address => @trip.pickup_address || @trip.build_pickup_address } %>
 </div>
-
 
 <div id="dropoff-address-form" class="address-form">
   <%= render :partial=>'find_or_create_address', :locals=>{:prefix=>'dropoff', :address => @trip.dropoff_address || @trip.build_dropoff_address } %>

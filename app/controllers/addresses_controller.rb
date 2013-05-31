@@ -95,25 +95,32 @@ class AddressesController < ApplicationController
   end
 
   def create
-    authorize! :new, Address
-    
     the_geom       = params[:lat].to_s.size > 0 ? Point.from_x_y(params[:lon].to_f, params[:lat].to_f, 4326) : nil
     prefix         = params['prefix']
     address_params = {}
-    
+  
     for param in ['name', 'building_name', 'address', 'city', 'state', 'zip', 'phone_number', 'in_district', 'default_trip_purpose']
       address_params[param] = params[prefix + "_" + param]
     end
-    
+  
     address_params[:provider_id] = current_provider_id
     address_params[:the_geom]    = the_geom
-    
-    address = Address.new(address_params)
+  
+    if params[:address_id].present?
+      address = Address.find(params[:address_id])
+      authorize! :edit, address
+      address.attributes = address_params
+    else
+      authorize! :new, Address
+      address = Address.new(address_params)
+    end
     
     if address.save
-      address_json = {'id' => address.id, 'label' => address.text}
-      address_json.merge!( 'phone_number' => address.phone_number, 'trip_purpose' => address.default_trip_purpose ) if prefix == "dropoff"
-      render :json => address_json
+      attrs = address.attributes
+      attrs[:label] = address.text.gsub(/\s+/, ' ')
+      attrs[:prefix] = prefix
+      attrs.merge!('phone_number' => address.phone_number, 'trip_purpose' => address.default_trip_purpose ) if prefix == "dropoff"
+      render :json => attrs.to_json
     else
       errors = address.errors.clone
       errors['prefix'] = prefix

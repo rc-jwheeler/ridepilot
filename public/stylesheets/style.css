@@ -554,6 +554,9 @@ fieldset ol.fourth li textarea {
 fieldset ol.section li input.full {
     width: 60%;
 }
+fieldset ol.section li input.nearly-full {
+    width: 55%;
+}
 fieldset ol.section li.passengers input {
     max-width: 3em;
 }

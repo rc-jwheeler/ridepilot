@@ -1,4 +1,5 @@
 <%= form_tag addresses_path, :class=>'address-search', :method=>:post, :remote=>true, 'data-id-element' => "#trip_#{prefix}_address_id", 'data-label-element' => "##{prefix}_search_address" do %> 
+  <%= hidden_field_tag 'address_id', address.id %>
   <%= hidden_field_tag 'prefix', prefix %>
   <%= hidden_field_tag 'lat' %>
   <%= hidden_field_tag 'lon' %>
@@ -41,12 +42,12 @@
   
   <li class="selfclear">
     <%= label_tag "#{prefix}_default_trip_purpose", "Default Trip Purpose:" %>
-    <%= select_tag "#{prefix}_default_trip_purpose", options_for_select(TRIP_PURPOSES), :include_blank => true %>
+    <%= select_tag "#{prefix}_default_trip_purpose", options_for_select(TRIP_PURPOSES, address.default_trip_purpose), :include_blank => true %>
   </li>
 
   <li class="selfclear">
     <%= label_tag "#{prefix}_in_district", "In TriMet District:" %>
-    <%= select_tag "#{prefix}_in_district", options_for_select([["Yes", "true"], ["No", "false"]]) %>
+    <%= select_tag "#{prefix}_in_district", options_for_select([["Yes", "true"], ["No", "false"]], address.in_district ? "true" : "false") %>
   </li>
   </ol>
   </fieldset>
