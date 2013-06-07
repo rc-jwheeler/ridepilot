@@ -122,6 +122,22 @@
   <% end %>
 <% end %>
 
+<hr />
+
+<h2 class="section-header">Add Trips from Runs Pages</h2>
+<% if can? :edit, @provider %>
+  <%= form_tag change_allow_trip_entry_from_runs_page_provider_path(@provider) do %>
+    <fieldset>
+      <ol class="section fourth">
+        <li>
+          <%= label_tag "Enabled?" %>
+          <%= select_tag "allow_trip_entry_from_runs_page", options_for_select( [["No", false], ["Yes", true]], @provider.allow_trip_entry_from_runs_page? ), { :onchange => "form.submit();" } %>
+        </li>
+      </ol>
+    </fieldset>
+  <% end %>
+<% end %>
+
 <% if @provider.dispatch? && can?(:edit, DevicePool) %>
   <% if @provider.device_pools.size == 0 %>
     <p>No device pools yet.</p>

@@ -103,7 +103,14 @@ class TripsController < ApplicationController
   end
 
   def new
-    if params[:customer_id]
+    if params[:run_id]
+      run = Run.find(params[:run_id])
+      @trip = Trip.new(:provider_id=>current_provider_id, :run_id=>run.id)
+      d = run.date
+      t = run.scheduled_start_time || (d.at_midnight + 12.hours)
+      @trip.pickup_time = Time.zone.local(d.year, d.month, d.day, t.hour, t.min, 0)
+      @trip.appointment_time = @trip.pickup_time + 30.minutes
+    elsif params[:customer_id]
       @trip = Trip.new(:provider_id=>current_provider_id, :customer_id=>params[:customer_id])
       customer = Customer.find(params[:customer_id])
       @trip.pickup_address_id = customer.address_id
@@ -119,6 +126,7 @@ class TripsController < ApplicationController
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @trip }
+      format.js   { @remote = true; render :json => {:form => render_to_string(:partial => 'form') }, :content_type => "text/json" }
     end
   end
 
@@ -142,7 +150,11 @@ class TripsController < ApplicationController
 
     @trip = Trip.new(trip_params)
     if @trip.save
-      redirect_to(trips_path(:start => @trip.pickup_time.to_i), :notice => 'Trip was successfully created.') 
+      if params[:run_id].present?
+        redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
+      else
+        redirect_to(trips_path(:start => @trip.pickup_time.to_i), :notice => 'Trip was successfully created.') 
+      end
     else
       prep_view
       render :action => "new" 

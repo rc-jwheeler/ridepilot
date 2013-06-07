@@ -1,4 +1,3 @@
-<% via_run_page ||= false %>
 <%= form_for @trip, :html => (@remote ? {"data-remote" => true} : {} ) do |f| %>
   <% if @trip.errors.any? %>
     <div id="error_explanation">
@@ -14,6 +13,7 @@
 
   <!-- the customer id needs to be passed in this action -->
   <%= f.hidden_field :customer_id %>
+  <%= hidden_field_tag :run_id, add_new_trip_via_run_page? ? params[:run_id] : "0" %>
 
   <fieldset class="new-trip">
 
@@ -21,19 +21,19 @@
       <li class="selfclear">
         <label for="customer">Customer:</label>
         <%= render "customer", :f => f, :trip => @trip %>
-      </li>
+      </li> 
       
-      <% if via_run_page %>
-        <li class="selfclear timepicker">
-          <%= f.label :pickup_time, "Pickup Time:" %>
-          <%= f.text_field :pickup_time, :value => @trip.pickup_time.try(:to_s, :form) %>
-        </li>
+      <li class="selfclear timepicker">
+        <%= f.label :pickup_time, "Pickup Time:" %>
+        <%= f.text_field :pickup_time, :value => @trip.pickup_time.try(:to_s, :form) %>
+      </li>
 
-        <li class="selfclear timepicker">
-          <%= f.label :appointment_time, "Appointment Time:" %>
-          <%= f.text_field :appointment_time, :value => @trip.appointment_time.try(:to_s, :form) %>
-        </li>
+      <li class="selfclear timepicker">
+        <%= f.label :appointment_time, "Appointment Time:" %>
+        <%= f.text_field :appointment_time, :value => @trip.appointment_time.try(:to_s, :form) %>
+      </li>
 
+      <% unless add_new_trip_via_run_page? %>
         <li class="selfclear">
           <%= f.label :round_trip, "Round Trip:" %>
           <%= f.check_box :round_trip %>
@@ -45,17 +45,21 @@
           <%= f.hidden_field :pickup_address_id %>
           <a href="javascript:edit_pickup_address();" class="pickup_address_details details" style="display: <%= @trip.pickup_address.try(:id).present? ? "inline" : "none" %>"></a>
         </li>
-      
-        <li class="selfclear">
-          <%= f.fields_for :customer do |c| %>
-            <%= c.label :phone_number_1, "Customer Phone:" %>
-            <%= c.text_field :phone_number_1, :class => :full %>
-          <% end %>
-          <% if @trip.customer.try(:id).blank? %>
-            <input id="trip_customer_attributes_id" type="hidden" name="trip[customer_attributes][id]">
-          <% end %>
-        </li>
+      <% end %>
 
+      <li class="selfclear">
+        <%= f.fields_for :customer do |c| %>
+          <%= c.label :phone_number_1, "Customer Phone:" %>
+          <%= c.text_field :phone_number_1, :class => :full %>
+        <% end %>
+        <% if @trip.customer.try(:id).blank? %>
+          <input id="trip_customer_attributes_id" type="hidden" name="trip[customer_attributes][id]">
+        <% end %>
+      </li>
+
+      <% if add_new_trip_via_run_page? %>
+        <div style="height: 200px"><!-- just a spacer to keep the columns in line -->&nbsp;</div>
+      <% else %>
         <li class="selfclear">
           <%= f.label :dropoff_address_label, "Dropoff Address:" %>
           <%= autocomplete_field_tag "dropoff_search_address", @trip.dropoff_address.try(:text), autocomplete_addresses_path, 
@@ -67,7 +71,7 @@
             :class                => "nearly-full", 
             "data-original-value" => @trip.dropoff_address.try(:text), 
             "data-original-id"    => @trip.dropoff_address.try(:id) %>
-          <%= f.hidden_field :dropoff_address_id %>
+          
           <a href="javascript:edit_dropoff_address();" class="dropoff_address_details details" style="display: <%= @trip.dropoff_address.try(:id).present? ? "inline" : "none" %>"></a>
         </li>
 
@@ -75,44 +79,44 @@
           <label for="dropoff_phone">Dropoff Phone:</label>
           <input type="text" size="30" name="dropoff_phone" id="dropoff_phone" value="<%= @trip.dropoff_address.try(:phone_number) %>" readonly="readonly" class="full"/>
         </li>
-      <% end %>
       
-      <div class="repeats">
-        <li class="selfclear">
-          <!-- we need some complexity, because this form handles 
-               both trips and repeating trips.
-               So, we'll just put all the repeating stuff into
-               plain params and handle it in the controller
-            -->
-          <label for="repeats_id">Repetition:</label>
-          <ul>
-            <li>
-              <%= f.check_box :repeats_mondays %> M&nbsp;
-              <%= f.check_box :repeats_tuesdays %> T&nbsp;
-              <%= f.check_box :repeats_wednesdays %> W&nbsp;
-              <%= f.check_box :repeats_thursdays %> R&nbsp;
-              <%= f.check_box :repeats_fridays %> F&nbsp;
-            </li>
-            <li>
-              every <%= f.text_field :repetition_interval, :size => 2 %> week(s)
-            </li>
+        <div class="repeats">
+          <li class="selfclear">
+            <!-- we need some complexity, because this form handles 
+                 both trips and repeating trips.
+                 So, we'll just put all the repeating stuff into
+                 plain params and handle it in the controller
+              -->
+            <label for="repeats_id">Repetition:</label>
+            <ul>
+              <li>
+                <%= f.check_box :repeats_mondays %> M&nbsp;
+                <%= f.check_box :repeats_tuesdays %> T&nbsp;
+                <%= f.check_box :repeats_wednesdays %> W&nbsp;
+                <%= f.check_box :repeats_thursdays %> R&nbsp;
+                <%= f.check_box :repeats_fridays %> F&nbsp;
+              </li>
+              <li>
+                every <%= f.text_field :repetition_interval, :size => 2 %> week(s)
+              </li>
 
-            <li class="selfclear">
-              <%= f.label :repetition_vehicle_id, "Vehicle:" %>
-              <%= f.collection_select :repetition_vehicle_id, @repeating_vehicles, :id, :name, :include_blank => true %>
-            </li>
-            <li class="selfclear">
-              <%= f.label :repetition_driver_id, "Driver:" %>
-              <%= f.collection_select :repetition_driver_id, @drivers, :id, :name, :include_blank => true %>
-            </li>
-            <li class="selfclear">
-              <%= f.label :repetition_customer_informed, "Mark as Called Back:" %>
-              <%= f.check_box :repetition_customer_informed %>
-            </li>
+              <li class="selfclear">
+                <%= f.label :repetition_vehicle_id, "Vehicle:" %>
+                <%= f.collection_select :repetition_vehicle_id, @repeating_vehicles, :id, :name, :include_blank => true %>
+              </li>
+              <li class="selfclear">
+                <%= f.label :repetition_driver_id, "Driver:" %>
+                <%= f.collection_select :repetition_driver_id, @drivers, :id, :name, :include_blank => true %>
+              </li>
+              <li class="selfclear">
+                <%= f.label :repetition_customer_informed, "Mark as Called Back:" %>
+                <%= f.check_box :repetition_customer_informed %>
+              </li>
 
-          </ul>
-        </li>
-      </div>
+            </ul>
+          </li>
+        </div>
+      <% end %>
     </ol>
     
     <ol class="section second">
@@ -151,24 +155,32 @@
         <% end %>
       </li>
       
-      <li class="selfclear">
-        <%= f.label :run_id, "Run:" %>
-        <%= f.collection_select :run_id, @runs, :id, :label, :include_blank => true %>
-        <%= link_to_if @trip.run.present?, "", [:edit, @trip.run], :class => :details, :onclick => "window.open(this.href); return false;"  %>
-        <strong>OR</strong>
-      </li>
+      <% if add_new_trip_via_run_page? %>
+        <li class="selfclear">
+          <%= f.label :run_id, "Run:" %>
+          <span><%= @trip.run.try(:label) %></span>
+          <%= f.hidden_field :run_id %>
+        </li>      
+      <% else %>
+        <li class="selfclear">
+          <%= f.label :run_id, "Run:" %>
+          <%= f.collection_select :run_id, @runs, :id, :label, :include_blank => true %>
+          <%= link_to_if @trip.run.present?, "", [:edit, @trip.run], :class => :details, :onclick => "window.open(this.href); return false;"  %>
+          <strong>OR</strong>
+        </li>
+      
+        <li class="selfclear">
+          <%= f.label :vehicle_id, "Vehicle:" %>
+          <%= f.select :vehicle_id,
+              options_for_select( @vehicles.map { |v| [v.name, v.id, {'data-driver-id' => v.try(:default_driver_id) } ] }, @trip.run.present? ? nil : @trip.vehicle_id ),
+              :include_blank => true %>
+        </li>
 
-      <li class="selfclear">
-        <%= f.label :vehicle_id, "Vehicle:" %>
-        <%= f.select :vehicle_id,
-            options_for_select( @vehicles.map { |v| [v.name, v.id, {'data-driver-id' => v.try(:default_driver_id) } ] }, @trip.run.present? ? nil : @trip.vehicle_id ),
-            :include_blank => true %>
-      </li>
-
-      <li class="selfclear">
-        <%= f.label :driver_id, "Driver:" %>
-        <%= f.select :driver_id, options_from_collection_for_select( @drivers, :id, :name, @trip.run.present? ? nil : @trip.driver_id ), :include_blank => true %>
-      </li>
+        <li class="selfclear">
+          <%= f.label :driver_id, "Driver:" %>
+          <%= f.select :driver_id, options_from_collection_for_select( @drivers, :id, :name, @trip.run.present? ? nil : @trip.driver_id ), :include_blank => true %>
+        </li>
+      <% end %>
 
       <li class="selfclear">
         <%= f.label :mileage, "Cab Mileage:" %>
@@ -242,10 +254,12 @@
   
 <% end %>
 
-<div id="pickup-address-form" class="address-form">
-  <%= render :partial=>'find_or_create_address', :locals=>{:prefix=>'pickup', :address => @trip.pickup_address || @trip.build_pickup_address } %>
-</div>
+<% if add_new_trip_via_run_page? %>
+  <div id="pickup-address-form" class="address-form">
+    <%= render :partial=>'find_or_create_address', :locals=>{:prefix=>'pickup', :address => @trip.pickup_address || @trip.build_pickup_address } %>
+  </div>
 
-<div id="dropoff-address-form" class="address-form">
-  <%= render :partial=>'find_or_create_address', :locals=>{:prefix=>'dropoff', :address => @trip.dropoff_address || @trip.build_dropoff_address } %>
-</div>
+  <div id="dropoff-address-form" class="address-form">
+    <%= render :partial=>'find_or_create_address', :locals=>{:prefix=>'dropoff', :address => @trip.dropoff_address || @trip.build_dropoff_address } %>
+  </div>
+<% end %>

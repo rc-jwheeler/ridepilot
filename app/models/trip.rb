@@ -20,10 +20,10 @@ class Trip < ActiveRecord::Base
   
   serialize :guests
 
-  validates_presence_of :pickup_address,   :unless => lambda { self.run.present? }
-  validates_presence_of :dropoff_address,  :unless => lambda { self.run.present? }
-  validates_presence_of :pickup_time,      :unless => lambda { self.run.present? }
-  validates_presence_of :appointment_time, :unless => lambda { self.run.present? }
+  validates_presence_of :pickup_address,   :unless => :allow_addressless_trip?
+  validates_presence_of :dropoff_address,  :unless => :allow_addressless_trip?
+  validates_presence_of :pickup_time,      :unless => :allow_addressless_trip?
+  validates_presence_of :appointment_time, :unless => :allow_addressless_trip?
   validates_presence_of :trip_purpose
   validate :driver_is_valid_for_vehicle
   validates_associated :pickup_address
@@ -190,7 +190,11 @@ class Trip < ActiveRecord::Base
     pickup_address.try(:in_district) && dropoff_address.try(:in_district)
   end
   
-  private
+  def allow_addressless_trip?
+    provider.present? && provider.allow_trip_entry_from_runs_page && run.present?
+  end
+    
+private
   
   def create_repeating_trip
     if is_repeating_trip? && !via_repeating_trip

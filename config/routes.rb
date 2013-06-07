@@ -44,6 +44,7 @@ Ridepilot::Application.routes.draw do
     member do
       post :change_dispatch
       post :change_scheduling
+      post :change_allow_trip_entry_from_runs_page
       post :save_region
       post :save_viewport
     end

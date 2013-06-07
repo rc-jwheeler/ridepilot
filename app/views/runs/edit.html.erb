@@ -4,6 +4,7 @@
 
 <%= form_for @run do |f| %>
   <%= render "form", :f => f %>
+  
   <fieldset>
     <table>
       <tr>
@@ -23,6 +24,9 @@
         <% end %>
       <% end %>
     </table>
+    <hr />
+    <%= link_to 'New Trip', new_trip_path(:start => @run.date.to_time.to_i, :run_id => @run.id), :class=>'action-bttn new', 'data-start' => @run.date.to_time.to_i, 'data-run-id' => @run.id %>
+    <div class="new_trip"></div>
   </fieldset>
 
   <div class="actions">
