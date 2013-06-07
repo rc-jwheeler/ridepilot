@@ -192,7 +192,7 @@ first_name, first_name, first_name, first_name,
   
   def prep_edit
     @mobilities = Mobility.all
-    @ethnicities = current_provider.ethnicities
+    @ethnicity_names = (current_provider.ethnicities.collect(&:name) + [@customer.ethnicity]).compact.sort
     @funding_sources = FundingSource.by_provider(current_provider)
   end
 end
