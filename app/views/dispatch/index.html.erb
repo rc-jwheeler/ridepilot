@@ -10,6 +10,9 @@
     <div class="actions" style="border:0;">
       <%= text_field_tag "address", nil, :title => "Locate Address" -%>
       <%= submit_tag "Search", :onclick => "locate(); return false;" -%>
+      <span>
+        <small>[<a href="javascript:d.clearSearchMarkers()">Clear All Markers</a>]</small>
+      </span>
       <span id="search-message"></span>
       <span id="search-spinner"></span>
     </div>

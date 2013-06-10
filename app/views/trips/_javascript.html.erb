@@ -2,7 +2,6 @@
 <script type='text/javascript'>
 
   function autocompleted(address, field) {
-    console.log("autocompleted data", address);
     if (address.id) {
       populate_address_form(field, address);
       update_address_fields(field, address);
@@ -265,7 +264,6 @@
               var field  = $( "#" + prefix + "_search_address" );
               field.val( field.attr("data-original-value") );
               $("#trip_" + prefix + "_address_id").val(field.attr("data-original-id"));
-              console.dir(field);
               if (parseInt(field.attr("data-original-id")) > 0)
                   $("." + prefix + "_address_details").show();
           }

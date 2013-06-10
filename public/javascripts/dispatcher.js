@@ -10,7 +10,8 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
   this._tree_elem  = $("#" + tree_id),
   this._map_elem = $("#" + map_id),
   this._timeout  = null,
-  this.search_marker = null,
+  this.last_search_marker = null,
+  this.search_markers = [],
   
   this.init = function(map_id, bounds, viewport){
     $(window).resize(self.adjustMapHeight).resize();
@@ -197,6 +198,7 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
   },
   
   this._open_window_for_marker = function(marker) {
+    self.last_search_marker = marker;
     self._infoWindow.setContent(marker.html);
     self._infoWindow.open(self.map, marker);
   },
@@ -325,7 +327,6 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
   this.locateAddress = function(address) {
     $("#search-spinner").css("visibility", "visible");
     $("#search-message").html("");
-    self.clearSearchResult();
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode({address: address, bounds: self.bounds},
                      function(results, status) {
@@ -380,25 +381,43 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
   }
 
   this.showSearchResult = function(result) {
-    self.clearSearchResult();
+    var _search_marker;
     self.map.setCenter(result.geometry.location);
-    self.search_marker = new google.maps.Marker({
+    _search_marker = new google.maps.Marker({
       map: self.map,
       position: result.geometry.location
     });
-    self.search_marker.html = '<div class="marker_detail">' +
+    _search_marker.html = '<div class="marker_detail">' +
                               '<h2>Search Result:</h2>' +
                               '<h3>' + result.formatted_address +
-                              '</h3></div>';
-    google.maps.event.addListener(self.search_marker, "click", function(){
-      self._open_window_for_marker(self.search_marker);
+                              '</h3><p><small><a href="javascript:d.clearSearchResult()">' +
+                              'Remove Marker</a></small></p></div>';
+    google.maps.event.addListener(_search_marker, "click", function(){
+      self._open_window_for_marker(_search_marker);
     });
-    self._open_window_for_marker(self.search_marker);
+    self._open_window_for_marker(_search_marker);
+    self.search_markers.push(_search_marker);
   };
 
   this.clearSearchResult = function() {
-    if (self.search_marker) {
-      self.search_marker.setMap(null);
+    var index = self.search_markers.indexOf(self.last_search_marker);
+    if (index > -1) {
+      self.clearSearchMarkerAtIndex(index);
+    }
+  };
+
+  this.clearSearchMarkers = function() {
+    for (var i=self.search_markers.length - 1; i>=0; i--) {
+      self.clearSearchMarkerAtIndex(i);
+    }
+    self.search_markers = [];
+  };
+
+  this.clearSearchMarkerAtIndex = function(index) {
+    if (self.search_markers[index]) {
+      self.search_markers[index].setMap(null);
+      self.search_markers.splice(index, 1);
+      self.last_search_marker = null;
     }
   };
 

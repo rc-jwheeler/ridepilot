@@ -160,8 +160,6 @@ $(function() {
   });
   
   $('.new_trip #customer_name, .edit_trip #customer_name').bind('railsAutocomplete.select', function(event, data){ 
-    console.log(data);
-
     if (parseInt(data.address_id) > 0)
       autocompleted(data.address_data, 'pickup');
   });
