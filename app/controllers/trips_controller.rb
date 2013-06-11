@@ -103,21 +103,21 @@ class TripsController < ApplicationController
   end
 
   def new
-    if params[:run_id]
-      run = Run.find(params[:run_id])
-      @trip = Trip.new(:provider_id=>current_provider_id, :run_id=>run.id)
+    @trip = Trip.new(:provider_id=>current_provider_id)
+
+    if params[:run_id] && run = Run.find_by_id(params[:run_id])
       d = run.date
       t = run.scheduled_start_time || (d.at_midnight + 12.hours)
+      @trip.run_id = run.id
       @trip.pickup_time = Time.zone.local(d.year, d.month, d.day, t.hour, t.min, 0)
       @trip.appointment_time = @trip.pickup_time + 30.minutes
-    elsif params[:customer_id]
-      @trip = Trip.new(:provider_id=>current_provider_id, :customer_id=>params[:customer_id])
-      customer = Customer.find(params[:customer_id])
+    end
+
+    if params[:customer_id] && customer = Customer.find_by_id(params[:customer_id])
+      @trip.customer_id = customer.id
       @trip.pickup_address_id = customer.address_id
       @trip.mobility_id = customer.mobility_id 
       @trip.funding_source_id = customer.default_funding_source_id 
-    else
-      @trip = Trip.new(:provider_id=>current_provider_id)
     end
 
     prep_view
@@ -142,13 +142,16 @@ class TripsController < ApplicationController
 
   def create
     trip_params = params[:trip]
-    @customer = Customer.find(trip_params[:customer_id])
-    authorize! :read, @customer
-    trip_params[:provider_id] = @customer.provider.id if @customer.provider.present?
+    if trip_params[:customer_id] && @customer = Customer.find_by_id(trip_params[:customer_id])
+      authorize! :read, @customer
+      trip_params[:provider_id] = @customer.provider.id if @customer.provider.present?
+    else
+      @customer = nil
+    end    
     handle_trip_params trip_params
-    authorize! :manage, Trip.new(trip_params)
-
     @trip = Trip.new(trip_params)
+    authorize! :manage, @trip
+    
     if @trip.save
       if params[:run_id].present?
         redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       

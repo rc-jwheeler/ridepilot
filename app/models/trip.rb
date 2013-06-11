@@ -20,12 +20,14 @@ class Trip < ActiveRecord::Base
   
   serialize :guests
 
+  validates_presence_of :customer
   validates_presence_of :pickup_address,   :unless => :allow_addressless_trip?
   validates_presence_of :dropoff_address,  :unless => :allow_addressless_trip?
   validates_presence_of :pickup_time,      :unless => :allow_addressless_trip?
   validates_presence_of :appointment_time, :unless => :allow_addressless_trip?
   validates_presence_of :trip_purpose
   validate :driver_is_valid_for_vehicle
+  validates_associated :customer
   validates_associated :pickup_address
   validates_associated :dropoff_address
   validates_numericality_of :guest_count, :greater_than_or_equal_to => 0
@@ -269,8 +271,10 @@ private
   def format_datetime(datetime)
     if datetime.is_a?( String ) 
       Time.zone.parse(datetime.gsub(/\b(a|p)\b/i, '\1m').upcase)
-    else
+    elsif datetime.present?
       datetime
+    else
+      nil
     end
   end
 
