@@ -385,7 +385,9 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
     self.map.setCenter(result.geometry.location);
     _search_marker = new google.maps.Marker({
       map: self.map,
-      position: result.geometry.location
+      position: result.geometry.location,
+      animation: google.maps.Animation.DROP,
+      title: result.formatted_address
     });
     _search_marker.html = '<div class="marker_detail">' +
                               '<h2>Search Result:</h2>' +
@@ -395,6 +397,7 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
     google.maps.event.addListener(_search_marker, "click", function(){
       self._open_window_for_marker(_search_marker);
     });
+    self.map.panTo(result.geometry.location);
     self._open_window_for_marker(_search_marker);
     self.search_markers.push(_search_marker);
   };
@@ -404,6 +407,7 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
     if (index > -1) {
       self.clearSearchMarkerAtIndex(index);
     }
+    self.centerMap();
   };
 
   this.clearSearchMarkers = function() {
@@ -411,6 +415,7 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
       self.clearSearchMarkerAtIndex(i);
     }
     self.search_markers = [];
+    self.centerMap();
   };
 
   this.clearSearchMarkerAtIndex = function(index) {
@@ -420,6 +425,21 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
       self.last_search_marker = null;
     }
   };
+  
+  this.centerMap = function() {
+    var p, m;
+    if (self.last_search_marker) {
+      m = self.last_search_marker;
+      p = m.getPosition();
+    } else if (self.search_markers.length) {
+      m = self.search_markers[self.search_markers.length-1];
+      p = m.getPosition();
+    } else {
+      p = self.viewport.center;
+    }
+    self.map.panTo(p);
+    if (m) self._open_window_for_marker(m);
+  },
 
   this.init(map_id, bounds, viewport);
 }
