@@ -261,7 +261,7 @@
   
 <% end %>
 
-<% if add_new_trip_via_run_page? %>
+<% unless add_new_trip_via_run_page? %>
   <div id="pickup-address-form" class="address-form">
     <%= render :partial=>'find_or_create_address', :locals=>{:prefix=>'pickup', :address => @trip.pickup_address || @trip.build_pickup_address } %>
   </div>
