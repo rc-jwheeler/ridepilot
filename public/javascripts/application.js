@@ -177,8 +177,8 @@ $(function() {
     var new_end   = new Date(parseInt(range['end']) * 1000);
      
     $.get(window.location.href, range, function(data) {
-      $("#runs tr").not(".head").remove();
-      $("#runs").append(data.rows.join(""));
+      $("#runs tr, #cab_runs tr").not(".head").remove();
+      $("#runs, #cab_runs").append(data.rows.join(""));
       $(".wc-nav").attr("data-start-time", new_start.getTime());
       $("#start_date").html((new_start.getMonth()+1) + "-" + new_start.getDate() + "-" + new_start.getFullYear());
       $("#end_date").html((new_end.getMonth()+1) + "-" + new_end.getDate() + "-" + new_end.getFullYear());  
@@ -202,7 +202,7 @@ $(function() {
     }
   };
  
-  $("body.runs .wc-nav button").click(function(e){
+  $("body.runs .wc-nav button, body.cab-runs .wc-nav button").click(function(e){
     var current_start, new_start, new_end;
     var target    = $(this);
     var week_nav  = target.parent(".wc-nav");

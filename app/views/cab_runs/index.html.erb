@@ -1,0 +1,53 @@
+<div id="page-header">
+  <h1>Listing cab runs</h1>
+</div>
+
+<div class="wc-nav ui-buttonset" data-current-week-start="<%= @week_start.to_i * 1000 %>" data-start-time="<%= @week_start.to_i * 1000 %>">
+  <button class="wc-prev ui-button ui-widget ui-state-default ui-button-text-icon-primary ui-button-icon-only ui-corner-left" role="button" aria-disabled="false" title="previous">
+    <span class="ui-button-icon-primary ui-icon ui-icon-seek-prev"></span>
+    <span class="ui-button-text">previous</span>
+  </button>
+  <button class="wc-today ui-button ui-widget ui-state-default ui-button-text-icon-primary" role="button" aria-disabled="false">
+    <span class="ui-button-icon-primary ui-icon ui-icon-home"></span>
+    <span class="ui-button-text">This Week</span>
+  </button>
+  <button class="wc-next ui-button ui-widget ui-state-default ui-button-text-icon-primary ui-button-icon-only ui-corner-right" role="button" aria-disabled="false" title="next">
+    <span class="ui-button-icon-primary ui-icon ui-icon-seek-next"></span>
+    <span class="ui-button-text">next</span>
+  </button>
+</div>
+
+
+<h2>
+  Cab runs between 
+  <span id="start_date">
+    <%= @week_start.strftime "%m-%d-%Y" %>
+  </span> and 
+  <span id="end_date">
+    <%= @week_end.strftime "%m-%d-%Y" %>
+  </span>
+</h2>
+
+<%= form_tag update_multiple_cab_runs_path, :method => :put do %>
+  <table id="cab_runs">
+    <tr class="head">
+      <th>Pickup Time</th>
+      <th>Customer Name</th>
+      <th>In Distict?</th>
+      <th>Purpose</th>
+      <th>Round Trip?</th>
+      <th>Guest Count</th>
+      <th>Attendant Count</th>
+      <th>Result</th>
+      <th></th>
+    </tr>
+    <% if @cab_runs.size > 0 %>
+      <%= render "cab_runs" %>
+    <% else %>
+      <%= render "no_runs" %>
+    <% end %>
+  </table>
+  <div class="actions">
+    <%= submit_tag "Update cab runs" %>
+  </div>
+<% end %>
