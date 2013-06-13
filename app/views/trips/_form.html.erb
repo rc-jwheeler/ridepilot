@@ -222,6 +222,11 @@
       </li>
 
       <li class="selfclear">
+        <%= f.label :service_level, "Service Level:" %>
+        <%= f.select :service_level, @service_levels, :include_blank => true %>
+      </li>
+
+      <li class="selfclear">
         <%= f.label :mobility_id, "Mobility Req.:" %>
         <%= f.collection_select :mobility_id, @mobilities, :id, :name %>
       </li>

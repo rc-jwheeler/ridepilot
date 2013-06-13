@@ -117,7 +117,8 @@ class TripsController < ApplicationController
       @trip.customer_id = customer.id
       @trip.pickup_address_id = customer.address_id
       @trip.mobility_id = customer.mobility_id 
-      @trip.funding_source_id = customer.default_funding_source_id 
+      @trip.funding_source_id = customer.default_funding_source_id
+      @trip.service_level = customer.default_service_level
     end
 
     prep_view
@@ -248,6 +249,7 @@ class TripsController < ApplicationController
     @trips              = [] if @trips.nil?
     @vehicles           = add_cab(Vehicle.active.for_provider(@trip.provider_id))
     @repeating_vehicles = @vehicles 
+    @service_levels     = SERVICE_LEVELS
 
     @trip.run_id = -1 if @trip.cab
 

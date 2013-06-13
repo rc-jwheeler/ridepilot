@@ -9,7 +9,9 @@ TRIP_RESULT_CODES = {
   "UNMET" => "Unmet Need"   # a trip that was outside of the service parameters (too early, too late, too far, etc).
 }
 
-TRIP_PURPOSES = ["Life-Sustaining Medical", "Medical", "Nutrition", "Personal/Support Services", "Recreation", "School/Work", "Shopping", "Volunteer Work"]
+TRIP_PURPOSES = ["Life-Sustaining Medical", "Medical", "Nutrition", "Personal/Support Services", "Recreation", "School/Work", "Shopping", "Volunteer Work", "Center"]
+
+SERVICE_LEVELS = ["Wheelchair", "Ambulatory"]
 
 TRIP_VERIFICATION_DISPLAY_OPTIONS = ['All Trips','Cab Trips','Not Cab Trips']
 

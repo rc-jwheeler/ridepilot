@@ -1,6 +1,15 @@
 require 'spec_helper'
 
 describe Customer do
+  describe "default_service_level" do
+    it "should be a string field" do
+      c = Customer.new
+      c.should respond_to(:default_service_level)
+      c.default_service_level = "abc"
+      c.default_service_level.should == "abc"
+    end
+  end
+  
   describe "default_funding_source_id" do
     it "should be an integer field" do
       c = Customer.new
@@ -9,6 +18,17 @@ describe Customer do
       c.default_funding_source_id.should eq 1
       c.default_funding_source_id = "0"
       c.default_funding_source_id.should eq 0
+    end
+  end
+  
+  describe "ada_eligible" do
+    it "should be a boolean field" do
+      c = Customer.new
+      c.should respond_to(:ada_eligible)
+      c.ada_eligible = "1"
+      c.ada_eligible.should be_true
+      c.ada_eligible = "0"
+      c.ada_eligible.should be_false
     end
   end
   

@@ -58,14 +58,16 @@ Fixjour :verify => false do
   define_builder(Trip) do |klass, overrides|
     pickup_time      = overrides[:pickup_time]      || Time.now + 1.week
     appointment_time = overrides[:appointment_time] || pickup_time + 30.minutes
+    customer         = overrides[:customer] || create_customer
+    trip_purpose     = overrides[:trip_purpose] || "Medical"
     
     klass.new({
       :pickup_address   => new_address,
       :dropoff_address  => new_address,
       :pickup_time      => pickup_time,
       :appointment_time => appointment_time,
-      :trip_purpose     => 'Medical',
-      :customer         => create_customer
+      :trip_purpose     => trip_purpose,
+      :customer         => customer
     })
   end
   

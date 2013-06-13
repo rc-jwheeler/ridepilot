@@ -16,7 +16,8 @@
       :group                     => '#trip_group',
       :address_id                => "#trip_pickup_address_id",
       :address                   => "#pickup_search_address",
-      :default_funding_source_id => "#trip_funding_source_id"
+      :default_funding_source_id => "#trip_funding_source_id",
+      :default_service_level     => "#trip_service_level"
     },
     :style => @customer.try(:id).present? ? 'display: none' : ''
 %>

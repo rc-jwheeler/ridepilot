@@ -82,11 +82,17 @@
 
   <dt>Medicaid eligible:</dt>
   <dd><%= @customer.medicaid_eligible %></dd>
+
+  <dt>ADA eligible:</dt>
+  <dd><%= @customer.ada_eligible %></dd>
 </dl>
 
 <dl>
   <dt>Default Funding Source:</dt>
   <dd><%= @customer.default_funding_source.try(:name) %></dd>
+  
+  <dt>Default Service Level:</dt>
+  <dd><%= @customer.default_service_level %></dd>
   
   <% unless @customer.group %>
     <dt>Ethnicity:</dt>

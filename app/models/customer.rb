@@ -53,17 +53,19 @@ class Customer < ActiveRecord::Base
       address_data[:label] = address_text
     end
 
-    { :label           => name, 
-      :id              => id,
-      :phone_number_1  => phone_number_1, 
-      :phone_number_2  => phone_number_2,
-      :mobility_notes  => mobility_notes,
-      :mobility_id     => mobility_id,
-      :address         => address_text,
-      :address_id      => address_id,
-      :private_notes   => private_notes,
-      :group           => group,
-      :address_data    => address_data
+    { :label                     => name, 
+      :id                        => id,
+      :phone_number_1            => phone_number_1, 
+      :phone_number_2            => phone_number_2,
+      :mobility_notes            => mobility_notes,
+      :mobility_id               => mobility_id,
+      :address                   => address_text,
+      :address_id                => address_id,
+      :private_notes             => private_notes,
+      :group                     => group,
+      :address_data              => address_data,
+      :default_funding_source_id => default_funding_source_id,
+      :default_service_level     => default_service_level
     }
   end
   

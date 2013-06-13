@@ -12,7 +12,30 @@ class Provider < ActiveRecord::Base
 
   has_attached_file :logo, :styles => { :small => "150x150>" }
   
+  REIMBURSEMENT_ATTRIBUTES = [
+    :oaa3b_per_ride_reimbursement_rate,
+    :ride_connection_per_ride_reimbursement_rate,
+    :trimet_per_ride_reimbursement_rate,
+    :sdsd_per_ride_reimbursement_rate,
+    :stf_van_per_ride_reimbursement_rate,
+    :stf_taxi_per_ride_administrative_fee,
+    :stf_taxi_per_ride_ambulatory_load_fee,
+    :stf_taxi_per_ride_wheelchair_load_fee,
+    :stf_taxi_per_mile_ambulatory_reimbursement_rate,
+    :stf_taxi_per_mile_wheelchair_reimbursement_rate
+  ]
+  
   validate :name, :length => { :minimum => 2 }
+  validates_numericality_of :oaa3b_per_ride_reimbursement_rate,               :greater_than => 0, :allow_blank => true
+  validates_numericality_of :ride_connection_per_ride_reimbursement_rate,     :greater_than => 0, :allow_blank => true
+  validates_numericality_of :trimet_per_ride_reimbursement_rate,              :greater_than => 0, :allow_blank => true
+  validates_numericality_of :sdsd_per_ride_reimbursement_rate,                :greater_than => 0, :allow_blank => true
+  validates_numericality_of :stf_van_per_ride_reimbursement_rate,             :greater_than => 0, :allow_blank => true
+  validates_numericality_of :stf_taxi_per_ride_administrative_fee,            :greater_than => 0, :allow_blank => true
+  validates_numericality_of :stf_taxi_per_ride_ambulatory_load_fee,           :greater_than => 0, :allow_blank => true
+  validates_numericality_of :stf_taxi_per_ride_wheelchair_load_fee,           :greater_than => 0, :allow_blank => true
+  validates_numericality_of :stf_taxi_per_mile_ambulatory_reimbursement_rate, :greater_than => 0, :allow_blank => true
+  validates_numericality_of :stf_taxi_per_mile_wheelchair_reimbursement_rate, :greater_than => 0, :allow_blank => true
 
   validates_attachment_size :logo, :less_than => 200.kilobytes
   validates_attachment_content_type :logo, :content_type => ['image/jpeg', 'image/png', 'image/gif']

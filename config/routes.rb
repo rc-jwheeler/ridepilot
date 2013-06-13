@@ -43,6 +43,7 @@ Ridepilot::Application.routes.draw do
     post :delete_role
     member do
       post :change_dispatch
+      post :change_reimbursement_rates
       post :change_scheduling
       post :change_allow_trip_entry_from_runs_page
       post :save_region

@@ -24,6 +24,15 @@ describe Trip do
     end
   end
 
+  describe "service_level" do
+    it "should be a string field" do
+      t = Trip.new
+      t.should respond_to(:service_level)
+      t.service_level = "abc"
+      t.service_level.should == "abc"
+    end
+  end
+
   describe "medicaid_eligible" do
     it "should be a boolean field" do
       t = Trip.new
