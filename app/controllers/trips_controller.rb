@@ -136,32 +136,39 @@ class TripsController < ApplicationController
     
     respond_to do |format|
       format.html 
-      format.js  { @remote = true; render :json => {:form => render_to_string(:partial => 'form') }, :content_type => "text/json" }
+      format.js  { @remote = true; render :json => {:form => render_to_string(:partial => 'form')}, :content_type => "text/json" }
     end
   end
 
   def create
     trip_params = params[:trip]
-    if trip_params[:customer_id] && @customer = Customer.find_by_id(trip_params[:customer_id])
-      authorize! :read, @customer
-      trip_params[:provider_id] = @customer.provider.id if @customer.provider.present?
+    if trip_params[:customer_id] && customer = Customer.find_by_id(trip_params[:customer_id])
+      authorize! :read, customer
+      trip_params[:provider_id] = customer.provider.id if customer.provider.present?
     else
-      @customer = nil
+      trip_params[:customer_id] = ""
     end    
     handle_trip_params trip_params
     @trip = Trip.new(trip_params)
     authorize! :manage, @trip
     
-    if @trip.save
-      if params[:run_id].present?
-        redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
-      else
-        redirect_to(trips_path(:start => @trip.pickup_time.to_i), :notice => 'Trip was successfully created.') 
-      end
-    else
+    respond_to do |format|
       prep_view
-      render :action => "new" 
+      if @trip.save
+        format.html {
+          if params[:run_id].present?
+            redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
+          else
+            redirect_to(trips_path(:start => @trip.pickup_time.to_i), :notice => 'Trip was successfully created.') 
+          end
+        }
+        format.js { render :json => {:status => "success", :trip => render_to_string(:partial => 'runs/trip', :locals => {:trip => @trip})}, :content_type => "text/json" }
+      else
+        format.html { render :action => "new" }
+        format.js   { @remote = true; render :json => {:status => "error", :form => render_to_string(:partial => 'form')}, :content_type => "text/json" }
+      end
     end
+
   end
 
   def update

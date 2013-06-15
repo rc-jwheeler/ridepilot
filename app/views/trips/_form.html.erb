@@ -254,7 +254,7 @@
   </fieldset>
   <hr />
   <% if @remote %>
-    <%= link_to "Back to View Trips", trips_path, :class => 'action-bttn', :onclick => "window.history.back();return false;" %>
+    <%= link_to "Back to View Trips", trips_path, :class => 'action-bttn', :onclick => "window.history.back(); return false;" %>
   <% else %>
     <%= link_to 'Back to View Trips', trips_path, :class=>'action-bttn' %>
   <% end %>

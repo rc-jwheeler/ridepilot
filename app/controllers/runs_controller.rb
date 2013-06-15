@@ -72,7 +72,16 @@ class RunsController < ApplicationController
     run_params = params[:run]
     authorize! :manage, current_provider
     run_params[:provider_id] = current_provider_id
-
+    
+    # Massage trip_attributes. We're not using a nested form so that we can use the partial for
+    # AJAX requests, and as a result we need to reset the keys in the trips_attributes hash and
+    # add the trip id. If there's a Rails-way to do this, I couldn't find it.
+    corrected_trip_attributes = {}
+    params[:trips_attributes].each do |key, values|
+      corrected_trip_attributes[corrected_trip_attributes.size.to_s] = values.merge({"id" => key})
+    end
+    run_params[:trips_attributes] = corrected_trip_attributes
+    
     respond_to do |format|
       if @run.update_attributes(run_params)
         format.html { redirect_to(runs_path(date_range(@run)), :notice => 'Run was successfully updated.') }
@@ -81,6 +90,7 @@ class RunsController < ApplicationController
         @drivers = Driver.where(:provider_id=>@run.provider_id)
         @vehicles = Vehicle.active.where(:provider_id=>@run.provider_id)
         @trip_results = TRIP_RESULT_CODES.map { |k,v| [v,k] }
+        
         format.html { render :action => "edit" }
         format.xml  { render :xml => @run.errors, :status => :unprocessable_entity }
       end

@@ -35,8 +35,7 @@
     <th>Vehicle</th>
     <th>Driver</th>
     <th>Complete</th>
-    <% if can? :edit, Run %><th></th><% end %>
-    <% if can?(:create, Trip) && current_user.current_provider.allow_trip_entry_from_runs_page %><th></th><% end %>
+    <th></th>
   </tr>
   <% if @runs.size > 0 %>
     <% @runs.each do |run| %>

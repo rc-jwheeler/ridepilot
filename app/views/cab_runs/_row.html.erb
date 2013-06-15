@@ -6,5 +6,5 @@
   <td><%= run.driver  ? run.driver.name : 'no driver' %></td>
   <td><%= run.complete ? 'Complete' : 'Incomplete' %></td>
   <td><% if can? :edit, run %><%= link_to 'Edit', edit_run_path(run), :class => :edit %><% end %></td>
-  <td><% if can?(:create, run.trips.new) && current_user.current_provider.allow_trip_entry_from_runs_page %><%= link_to 'Create Trip', new_trip_path(:start => run.date.to_time.to_i, :run_id => run.id), :class => "new-trip" %><% end %></td>
+  <td><% if can?(:create, run.trips.new) && current_user.current_provider.allow_trip_entry_from_runs_page? %><%= link_to 'Create Trip', new_trip_path(:start => run.date.to_time.to_i, :run_id => run.id), :class => "new-trip" %><% end %></td>
 </tr>

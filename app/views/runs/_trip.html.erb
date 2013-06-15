@@ -1,0 +1,3 @@
+<%= fields_for 'trips_attributes[]', trip do |trip_fields| %>
+  <%= render :partial => 'trips/trip_form', :locals => {:trip_fields => trip_fields, :trip => trip, :show_edit_run_link => false} %>
+<% end %>

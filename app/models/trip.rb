@@ -193,7 +193,10 @@ class Trip < ActiveRecord::Base
   end
   
   def allow_addressless_trip?
-    provider.present? && provider.allow_trip_entry_from_runs_page && run.present?
+    # The provider_id is assigned via the customer. If the customer isn't present,
+    # then the whole trip is invalid. So in that case, ignore the address errors
+    # until there is a customer.
+    (customer.blank? || customer.id.blank? || (provider.present? && provider.allow_trip_entry_from_runs_page)) && run.present?
   end
     
 private
