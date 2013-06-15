@@ -31,16 +31,16 @@
         <%= link_to customer.name, customer %>
       </td>
       <td>
-        <%= customer.birth_date %>
+        <%= customer.birth_date.strftime('%m-%d-%Y') %>
       </td>
       <td>
         <%= customer.trips.count %>
       </td>
       <td>
-        <%= customer.trips.collect(&:trip_purpose).compact.join(', ') %>
+        <%= customer.trips.collect(&:trip_purpose).compact.uniq.sort.join(', ') %>
       </td>
       <td>
-        <%= customer.trips.collect{|t| t.funding_source.try(:name)}.compact.join(', ') %>
+        <%= customer.trips.collect{|t| t.funding_source.try(:name)}.compact.uniq.sort.join(', ') %>
       </td>
     </tr>
   <% end %>
