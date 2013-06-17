@@ -413,18 +413,20 @@
       var firstDayOfWeek = -1;
       var daysToShow = 0;
       for (var i = 0; i < 7; i++) {
-        if ($(buttons.get(i)).attr('checked')) {
+        if ($(buttons.get(i)).is(':checked')) {
           if (firstDayOfWeek === -1) {
             firstDayOfWeek = i;
           }
           daysToShow = i - firstDayOfWeek + 1;
         }
       }
-      // Nothign selected, restore M-F default
+      
+      // Nothing selected, restore M-F default
       if (firstDayOfWeek == -1) {
         firstDayOfWeek = 1;
         daysToShow = 5;
       }
+      
       // Enforce consecutive selection rule
       for (var i = 0; i < 7; ++i) {
         if (i >= firstDayOfWeek && i < firstDayOfWeek + daysToShow) {
@@ -440,7 +442,5 @@
     }
 
     initWeekdaySelect();
-
   });
-
 </script>
