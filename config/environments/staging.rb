@@ -48,7 +48,7 @@ Ridepilot::Application.configure do
   config.active_support.deprecation = :notify
 
   # Needed for sending new users' confirmation email
-  config.action_mailer.default_url_options = { :host => 'apps.rideconnection.org/ridepilot' }
+  config.action_mailer.default_url_options = { :host => 'ridestage.panopticdev.com/ridepilot' }
 
 end
 
