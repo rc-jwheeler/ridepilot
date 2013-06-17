@@ -14,12 +14,17 @@ var RidePilot = {
       name: "<%= Time.zone.now.strftime('%Z') %>",
       std_offset: "<%= Time.zone.parse("#{Date.current.year}-01-01").strftime('%z')[0,3] %>00",
       dst_offset: "<%= Time.zone.parse("#{Date.current.year}-06-01").strftime('%z')[0,3] %>00",
-      current_offset: "" // This be set at bottom of application.html.erb
+      current_offset: "",
+      current_offset_in_seconds: ""
     },
     browser: {
-      // Both of these will be set at bottom of application.html.erb
-      name: "",
-      current_offset: ""
+      name: (new Date()).format('Z'),
+      current_offset: (new Date()).format('o'),
+      current_offset_in_seconds: (new Date()).getTimezoneOffset() * 60 * -1,
+      current_offset_from_server: ""
     }
   }
 };
+RidePilot.timezone.server.current_offset = (new Date()).is_dst() ? RidePilot.timezone.server.dst_offset : RidePilot.timezone.server.std_offset;
+RidePilot.timezone.server.current_offset_in_seconds = parseInt(RidePilot.timezone.server.current_offset.replace(/00$/, "")) * 60 * 60;
+RidePilot.timezone.browser.current_offset_from_server = RidePilot.timezone.server.current_offset_in_seconds - RidePilot.timezone.browser.current_offset_in_seconds;

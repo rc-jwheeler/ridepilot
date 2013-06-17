@@ -61,7 +61,7 @@
     $(search_field).attr("data-original-id", address.id);
   }
 
-  $(function() {
+  $(document).ready(function() {
     
     function load_index_trips(start_time) {
       $("form.edit_trip").remove();
@@ -141,9 +141,9 @@
     })
     
     var calendar_range, scroll_positions;
-
+    
     $('#calendar').weekCalendar({
-        date: <%= @start && @start > 0 ? @start * 1000 : "new Date()" %>,
+        date: new Date(<%= @start && @start > 0 ? @start * 1000 : "Date.now()" %> + (RidePilot.timezone.browser.current_offset_from_server * 1000)),
         timeslotsPerHour: 4,
         daysToShow: getDaysToShow(),
         startOnFirstDayOfWeek: true,
@@ -195,7 +195,16 @@
         },
         data: function(start, end, callback){
           $("#vehicle_filter #vehicle_id").val("");
-          calendar_range = { start:start.getTime()/1000, end:end.getTime()/1000 };
+          /*
+          console.log("start", start);
+          console.log("end", end);
+          calendar_range = { 
+            start: (new Date(start.getTime() - (RidePilot.timezone.browser.current_offset_from_server * 1000))).getTime() / 1000,
+            end: (new Date(end.getTime()  - (RidePilot.timezone.browser.current_offset_from_server * 1000))).getTime() / 1000
+          };
+          console.log("calendar_range", calendar_range);
+          */
+          calendar_range = {start: start.getTime()/1000, end: end.getTime()/1000};
           
           $.getJSON('<%= trips_path :json %>',
             calendar_range,

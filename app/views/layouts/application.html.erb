@@ -10,15 +10,15 @@
   <%= stylesheet_link_tag "jquery.weekcalendar.css" %>
   <%= stylesheet_link_tag "jquery-ui-timepicker-addon.css" %>
   <%= javascript_include_tag :defaults %>
-  <%= javascript_tag do %>
-    <%= render :partial => "layouts/constants.js" %>
-  <% end %>
   <%= javascript_include_tag "autocomplete-rails.js" %>
   <%= javascript_include_tag "jquery.weekcalendar.js" %>
   <%= javascript_include_tag "jquery-ui-timepicker-addon.js" %>
   <%= javascript_include_tag "dateFormat.js" %>
   <%= javascript_include_tag "jquery.colorPicker.js" %>
   <%= javascript_include_tag "idletimeout.js" %>
+  <%= javascript_tag do %>
+    <%= render :partial => "layouts/constants.js" %>
+  <% end %>
   <%= csrf_meta_tag %>
 </head>
 <body class="<%= bodytag_class %>">
@@ -85,17 +85,13 @@
     <%= yield %>
   </div>
 
-  <%= javascript_tag do %>
-    $(document).ready(function(){
-      RidePilot.timezone.server.current_offset = (new Date()).is_dst() ? RidePilot.timezone.server.dst_offset : RidePilot.timezone.server.std_offset;
-      RidePilot.timezone.browser.name = (new Date()).format('Z');
-      RidePilot.timezone.browser.current_offset = (new Date()).format('o');
-
-      <% if current_user %>
+  <% if current_user %>
+    <%= javascript_tag do %>
+      $(document).ready(function(){
         idleTimer = new IdleTimer();
         idleTimer.start();
-      <% end %>
-    });
+      });
+    <% end %>
   <% end %>
 </body>
 </html>
