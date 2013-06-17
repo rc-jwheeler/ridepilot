@@ -8,5 +8,18 @@ var RidePilot = {
     check_session: "<%= check_session_path %>",
     touch_session: "<%= touch_session_path %>",
     sign_out:      "<%= destroy_user_session_path %>"
+  },
+  timezone: {
+    server: {
+      name: "<%= Time.zone.now.strftime('%Z') %>",
+      std_offset: "<%= Time.zone.parse("#{Date.current.year}-01-01").strftime('%z')[0,3] %>00",
+      dst_offset: "<%= Time.zone.parse("#{Date.current.year}-06-01").strftime('%z')[0,3] %>00",
+      current_offset: "" // This be set at bottom of application.html.erb
+    },
+    browser: {
+      // Both of these will be set at bottom of application.html.erb
+      name: "",
+      current_offset: ""
+    }
   }
 };

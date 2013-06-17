@@ -85,14 +85,17 @@
     <%= yield %>
   </div>
 
-<% if current_user %>
-  <script type="text/JavaScript">
-    $(document).ready(function() {
-      idleTimer = new IdleTimer();
-      idleTimer.start();
-    });
-  </script>
-<% end %>
+  <%= javascript_tag do %>
+    $(document).ready(function(){
+      RidePilot.timezone.server.current_offset = (new Date()).is_dst() ? RidePilot.timezone.server.dst_offset : RidePilot.timezone.server.std_offset;
+      RidePilot.timezone.browser.name = (new Date()).format('Z');
+      RidePilot.timezone.browser.current_offset = (new Date()).format('o');
 
+      <% if current_user %>
+        idleTimer = new IdleTimer();
+        idleTimer.start();
+      <% end %>
+    });
+  <% end %>
 </body>
 </html>

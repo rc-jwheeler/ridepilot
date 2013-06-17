@@ -202,8 +202,20 @@
             function(data, textStatus, jqXHR){  
               // we probably didn't have the right range before, so now  we should update the state
               if ( on_trip_index() ) replace_index_state();
-                          
-              callback(data.events);              
+              
+              // massage date values to account for browser timezone differences. We should ALWAYS
+              // be showing the date as set for the server timezone, i.e. if an event comes from the
+              // server as 4pm PDT and the user is in EDT, it should still show up as 4pm.
+              for(i=0; i < data.events.length; i++) {
+                event = data.events[i];
+                event.original_start = event.start;
+                event.original_end = event.end;
+                event.start = event.start.replace(new RegExp(RidePilot.timezone.server.current_offset + "$"), RidePilot.timezone.browser.current_offset);
+                event.end = event.end.replace(new RegExp(RidePilot.timezone.server.current_offset + "$"), RidePilot.timezone.browser.current_offset);
+                data.events[i] = event;
+              }
+              
+              callback(data.events);
 
               var table = $("#calendar").next("table");
               table.find("tr.trip").remove();
