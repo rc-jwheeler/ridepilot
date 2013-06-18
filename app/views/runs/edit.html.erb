@@ -27,7 +27,7 @@
       </tbody>
     </table>
     <hr />
-    <% if can?(:create, @run.trips.new) && current_user.current_provider.allow_trip_entry_from_runs_page? %>
+    <% if can?(:create, Trip) && current_user.current_provider.allow_trip_entry_from_runs_page? %>
       <%= link_to 'New Trip', new_trip_path(:start => @run.date.to_time.to_i, :run_id => @run.id), :class=>'action-bttn new', :id => 'trip_entry_from_run_page' %>
       <span id="search-spinner"></span>
     <% end %>
