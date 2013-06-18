@@ -46,8 +46,10 @@
   $(document).ready(function() {
     $('#new_trip_from_run_page').dialog({
       autoOpen: false,
-      // height: 526,
-      width: 1688,
+      height: 'auto',
+      minHeight: 450,
+      width: 'auto',
+      minWidth: 1200,
       modal: true,
       draggable: false,
       title: "New Trip for <%= j @run.label %>",
