@@ -475,8 +475,8 @@ class ReportsController < ApplicationController
             stf: trip_queries[:in_range][:stf][:all].for_customers_under_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
           },
           ada_eligible: {
-            over_60:  trip_queries[:in_range][:all].for_customers_over_60(@end_date).for_ada_eligible_customers.where(customer_id: new_customer_ids).unique_customer_count,
-            under_60: trip_queries[:in_range][:all].for_customers_under_60(@end_date).for_ada_eligible_customers.where(customer_id: new_customer_ids).unique_customer_count,
+            over_60:  trip_queries[:in_range][:all].where(funding_source_id: [FundingSource.pick_id_by_name("Ride Connection"), FundingSource.pick_id_by_name("STF")]).for_customers_over_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
+            under_60: trip_queries[:in_range][:all].where(funding_source_id: [FundingSource.pick_id_by_name("Ride Connection"), FundingSource.pick_id_by_name("STF")]).for_customers_under_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
           },
         },
         riders_ytd: {
@@ -489,8 +489,8 @@ class ReportsController < ApplicationController
             stf: trip_queries[:ytd][:stf].for_customers_under_60(@end_date).unique_customer_count,
           },
           ada_eligible: {
-            over_60:  trip_queries[:ytd][:all].for_customers_over_60(@end_date).for_ada_eligible_customers.unique_customer_count,
-            under_60: trip_queries[:ytd][:all].for_customers_under_60(@end_date).for_ada_eligible_customers.unique_customer_count,
+            over_60:  trip_queries[:ytd][:all].where(funding_source_id: [FundingSource.pick_id_by_name("Ride Connection"), FundingSource.pick_id_by_name("STF")]).for_customers_over_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
+            under_60: trip_queries[:ytd][:all].where(funding_source_id: [FundingSource.pick_id_by_name("Ride Connection"), FundingSource.pick_id_by_name("STF")]).for_customers_under_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
           },
         },
       },

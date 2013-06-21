@@ -122,8 +122,8 @@ describe ReportsController do
           assigns(:report)[:rider_information][:riders_new_this_month][:under_60][:stf].should eq(2)
           assigns(:report)[:rider_information][:riders_new_this_month][:under_60][:rc].should eq(2)
 
-          assigns(:report)[:rider_information][:riders_new_this_month][:ada_eligible][:over_60].should eq(1)
-          assigns(:report)[:rider_information][:riders_new_this_month][:ada_eligible][:under_60].should eq(1)
+          assigns(:report)[:rider_information][:riders_new_this_month][:ada_eligible][:over_60].should eq(2)
+          assigns(:report)[:rider_information][:riders_new_this_month][:ada_eligible][:under_60].should eq(2)
         end        
       end
 
