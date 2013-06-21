@@ -61,6 +61,7 @@ describe Trip do
 
   describe "after validation for trips with repetition:" do
     attr_accessor :trip
+    
     before do
       @trip = new_trip(
         :repeats_mondays => true, 
@@ -77,7 +78,6 @@ describe Trip do
     end
 
     context "when creating a trip with repeating trip data" do
-
       it "should accept repeating trip values" do
         trip.repeats_mondays.should == true
         trip.repeats_tuesdays.should == false

@@ -75,6 +75,9 @@ class Customer < ActiveRecord::Base
         trip.update_attribute :customer_id, other_customer_id
       end
       
+      # reload the trips array so we don't destroy the still-attached dependents
+      self.trips(true)
+      
       self.destroy
       self.class.find other_customer_id
     else
