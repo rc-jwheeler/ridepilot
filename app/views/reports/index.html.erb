@@ -9,7 +9,6 @@
   <li><%= link_to "Donations", :action=>:donations %></li>
   <li><%= link_to "Cab Log", :action=>:cab %></li>
   <li><%= link_to "Monthly Miscellaneous Data", monthlies_path %></li>
-  <li><%= link_to "Clackamas County Transportation Consortium Summary Report", :action=>:cctc_summary_report %></li>
 </ul>
 
 <hr />
@@ -22,6 +21,17 @@
     through 
     <%= f.date_select  :before_end_date, :order => [:month,:day,:year] %>
     <%= f.submit "Export" %>
+  </fieldset>
+<% end %>
+
+<hr />
+
+<h2 class="section-header">Clackamas County Transportation Consortium Summary Report</h2>
+
+<%= form_for @trips_query, :url=>url_for(:action=>:cctc_summary_report), :html=>{:method=>:get} do |f| %>
+  <fieldset>
+    <%= f.date_select :start_date, :order => [:month,:year] %>
+    <%= f.submit "Show" %>
   </fieldset>
 <% end %>
 
