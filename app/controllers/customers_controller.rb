@@ -36,14 +36,6 @@ class CustomersController < ApplicationController
     render :action => :index
   end
 
-  def search
-    @customers = Customer.for_provider(current_provider_id).by_term( params[:term].downcase ).
-      accessible_by( current_ability ).
-      paginate( :page => params[:page], :per_page => PER_PAGE )
-
-    render :action => :index
-  end
-
   def all
     @show_inactivated_date = true
     @customers = Customer.for_provider(current_provider_id).accessible_by(current_ability)
@@ -116,8 +108,7 @@ first_name, first_name, first_name, first_name,
         dup = dup_customers[0]
         flash[:alert] = "There is already a customer with a similar name or the same email address: <a href=\"#{url_for :action=>:show, :id=>dup.id}\">#{dup.name}</a> (dob #{dup.birth_date}).  If this is truly a different customer, check the 'ignore duplicates' box to continue creating this customer.".html_safe
         @dup = true
-        @mobilities = Mobility.all
-        @ethnicities = current_provider.ethnicities
+        prep_edit
         return render :action=>"new"
       end
     end
