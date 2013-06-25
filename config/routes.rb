@@ -76,11 +76,10 @@ Ridepilot::Application.routes.draw do
     end
   end
   
-  resources :cab_runs, :only => [:index] do
+  resources :cab_trips, :only => [:index] do
     collection do
+      get :edit_multiple
       put :update_multiple
-      get :for_date
-      get :uncompleted_runs
     end
   end
 

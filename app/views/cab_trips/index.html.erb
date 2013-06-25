@@ -28,8 +28,8 @@
   </span>
 </h2>
 
-<%= form_tag update_multiple_cab_runs_path, :method => :put do %>
-  <table id="cab_runs">
+<%= form_tag update_multiple_cab_trips_path, :method => :put do %>
+  <table id="cab_trips">
     <tr class="head">
       <th>Pickup Time</th>
       <th>Customer Name</th>
@@ -41,8 +41,8 @@
       <th>Result</th>
       <th></th>
     </tr>
-    <% if @cab_runs.size > 0 %>
-      <%= render "cab_runs" %>
+    <% if @cab_trips.size > 0 %>
+      <%= render "cab_trips" %>
     <% else %>
       <%= render "no_runs" %>
     <% end %>

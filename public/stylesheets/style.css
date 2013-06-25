@@ -311,8 +311,8 @@ button {width: auto; overflow: visible;}
   background: #fff;
   color: #009FFB;
 }
-body.cab-runs #primary-nav li.cab_runs a:link, 
-body.cab-runs #primary-nav li.cab_runs a:visited,
+body.cab-runs #primary-nav li.cab_trips a:link, 
+body.cab-runs #primary-nav li.cab_trips a:visited,
 body.trips #primary-nav li.trips a:link, 
 body.trips #primary-nav li.trips a:visited,
 body.runs #primary-nav li.runs a:link, 

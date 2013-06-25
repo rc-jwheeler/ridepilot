@@ -1,5 +1,5 @@
-<% @cab_runs.each do |trip| %>
-  <%= fields_for 'cab_runs[]', trip do |trip_fields| %>
+<% @cab_trips.each do |trip| %>
+  <%= fields_for 'cab_trips[]', trip do |trip_fields| %>
     <%= render :partial => 'trips/trip_form', :locals => {:trip_fields => trip_fields, :trip => trip, :show_edit_run_link => false} %>
   <% end %>
 <% end %>
