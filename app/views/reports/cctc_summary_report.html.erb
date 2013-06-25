@@ -1,5 +1,3 @@
-<%= content_for :title, "Clackamas County Transportation Consortium Summary Report: #{@provider.name}, #{1.month.ago.strftime("%B %Y")}" %>
-
 <%= content_for :head do %>
 <style>
   table {
@@ -43,6 +41,22 @@
   
   .b {font-weight: bold}
 </style>
+<% end %>
+
+<%= content_for :title, "Clackamas County Transportation Consortium Summary Report: #{@provider.name}, #{@start_date.strftime("%B %Y")}" %>
+<div id="page-header">
+  <h1>Clackamas County Transportation Consortium Summary Report: <%= @provider.name %>, <%= @start_date.strftime("%B %Y") %></h1>
+</div>
+
+<% if @query %> 
+  <%= form_for @query, :url=>url_for(:action=>:cctc_summary_report), :html=>{:method=>:get} do |f| %>
+    <fieldset class="select-month">
+      <p>
+        <%= f.date_select :start_date, :order => [:month,:year] %>
+        <%= f.submit "Update" %>
+      </p>
+    </fieldset>
+  <% end %>
 <% end %>
 
 <div style="text-align: center">
@@ -141,29 +155,35 @@
       <tr>
         <td rowspan="2">&nbsp;</td>
         <td class="a_l">Per Ride Reimbursement Rate</td>
-        <td><%= number_to_currency(@provider.oaa3b_per_ride_reimbursement_rate, :precesion => 2) %></td>
-        <td><%= number_to_currency(@provider.ride_connection_per_ride_reimbursement_rate, :precesion => 2) %></td>
-        <td><%= number_to_currency(@provider.trimet_per_ride_reimbursement_rate, :precesion => 2) %></td>
+        <td><%= reimbursement_rate(@provider.oaa3b_per_ride_reimbursement_rate) %></td>
+        <td><%= reimbursement_rate(@provider.ride_connection_per_ride_reimbursement_rate) %></td>
+        <td><%= reimbursement_rate(@provider.trimet_per_ride_reimbursement_rate) %></td>
         <td class="s_50">&nbsp;</td>
-        <td><%= number_to_currency(@provider.stf_van_per_ride_reimbursement_rate, :precesion => 2) %></td>
+        <td><%= reimbursement_rate(@provider.stf_van_per_ride_reimbursement_rate) %></td>
         <td class="s_50">&nbsp;</td>
         <td class="s_50">&nbsp;</td>
         <td class="s_50">&nbsp;</td>
       </tr>
         <td class="a_l b">Reimbursement Due</td>
-        <td><%= number_to_currency(@report[:trip_purposes][:reimbursements_due][:oaa3b], :precesion => 2) %></td>
-        <td><%= number_to_currency(@report[:trip_purposes][:reimbursements_due][:rc], :precesion => 2) %></td>
-        <td><%= number_to_currency(@report[:trip_purposes][:reimbursements_due][:trimet], :precesion => 2) %></td>
+        <td><%= reimbursement_due(@report[:trip_purposes][:reimbursements_due][:oaa3b], @provider.oaa3b_per_ride_reimbursement_rate) %></td>
+        <td><%= reimbursement_due(@report[:trip_purposes][:reimbursements_due][:rc], @provider.ride_connection_per_ride_reimbursement_rate) %></td>
+        <td><%= reimbursement_due(@report[:trip_purposes][:reimbursements_due][:trimet], @provider.trimet_per_ride_reimbursement_rate) %></td>
         <td class="s_50">&nbsp;</td>
-        <td><%= number_to_currency(@report[:trip_purposes][:reimbursements_due][:stf_van], :precesion => 2) %></td>
-        <td><%= number_to_currency(@report[:trip_purposes][:reimbursements_due][:stf_taxi], :precesion => 2) %></td>
+        <td><%= reimbursement_due(@report[:trip_purposes][:reimbursements_due][:stf_van], @provider.stf_van_per_ride_reimbursement_rate) %></td>
+        <td><%= reimbursement_due(@report[:trip_purposes][:reimbursements_due][:stf_taxi], [
+          @provider.stf_taxi_per_ride_administrative_fee, 
+          @provider.stf_taxi_per_ride_ambulatory_load_fee, 
+          @provider.stf_taxi_per_mile_ambulatory_reimbursement_rate, 
+          @provider.stf_taxi_per_ride_wheelchair_load_fee, 
+          @provider.stf_taxi_per_mile_wheelchair_reimbursement_rate
+        ]) %></td>
         <td class="s_50">&nbsp;</td>
         <td class="s_50">&nbsp;</td>
       </tr>
     </tbody>
   </table>
-  <p>Ambulatory STF Taxi Rides Reimbursed at Admin Fee (<%= number_to_currency(@provider.stf_taxi_per_ride_administrative_fee, :precesion => 2) %>/ride) + Load Fee (<%= number_to_currency(@provider.stf_taxi_per_ride_ambulatory_load_fee, :precesion => 2) %>/ride) + Mileage (<%= number_to_currency(@provider.stf_taxi_per_mile_ambulatory_reimbursement_rate, :precesion => 2) %>/mile)</p>
-  <p>Wheelchair STF Taxi Rides Reimbursed at Admin Fee (<%= number_to_currency(@provider.stf_taxi_per_ride_administrative_fee, :precesion => 2) %>/ride) + Load Fee (<%= number_to_currency(@provider.stf_taxi_per_ride_wheelchair_load_fee, :precesion => 2) %>/ride) + Mileage (<%= number_to_currency(@provider.stf_taxi_per_mile_wheelchair_reimbursement_rate, :precesion => 2) %>/mile)</p>
+  <p>Ambulatory STF Taxi Rides Reimbursed at Admin Fee (<%= reimbursement_rate(@provider.stf_taxi_per_ride_administrative_fee) %>/ride) + Load Fee (<%= reimbursement_rate(@provider.stf_taxi_per_ride_ambulatory_load_fee) %>/ride) + Mileage (<%= reimbursement_rate(@provider.stf_taxi_per_mile_ambulatory_reimbursement_rate) %>/mile)</p>
+  <p>Wheelchair STF Taxi Rides Reimbursed at Admin Fee (<%= reimbursement_rate(@provider.stf_taxi_per_ride_administrative_fee) %>/ride) + Load Fee (<%= reimbursement_rate(@provider.stf_taxi_per_ride_wheelchair_load_fee) %>/ride) + Mileage (<%= reimbursement_rate(@provider.stf_taxi_per_mile_wheelchair_reimbursement_rate) %>/mile)</p>
   <p><sup>*</sup> Calculations require reimbursement rates not provided in system.</p>
   
   <hr>

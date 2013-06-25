@@ -431,9 +431,9 @@ class ReportsController < ApplicationController
       hours.sum
     end
     
-    @trips_query = Query.new(params[:query] || {})
-    @start_date = @trips_query.start_date
-    @end_date = @trips_query.end_date
+    @query = Query.new(params[:query] || {})
+    @start_date = @query.start_date
+    @end_date = @query.end_date
     
     @provider = Provider.find(current_provider_id)
     new_customer_ids = ActiveRecord::Base.connection.select_values(Customer.select('DISTINCT "customers"."id"').joins("LEFT JOIN \"trips\" \"previous_months_trips\" ON \"customers\".\"id\" = \"previous_months_trips\".\"customer_id\" AND (#{ActiveRecord::Base.send(:sanitize_sql_array, ['"previous_months_trips"."pickup_time" < ?', @start_date.to_datetime.to_time_in_current_zone.utc])})", "LEFT JOIN \"trips\" \"current_months_trips\" ON \"customers\".\"id\" = \"current_months_trips\".\"customer_id\" AND (#{ActiveRecord::Base.send(:sanitize_sql_array, ['"current_months_trips"."pickup_time" >= ? AND "current_months_trips"."pickup_time" < ?', @start_date.to_datetime.to_time_in_current_zone.utc, @end_date.to_datetime.to_time_in_current_zone.utc])})").group('"customers"."id"').having('COUNT("previous_months_trips"."id") = 0 AND COUNT("current_months_trips"."id") > 0').except(:order).to_sql)

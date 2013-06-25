@@ -16,7 +16,6 @@ class Provider < ActiveRecord::Base
     :oaa3b_per_ride_reimbursement_rate,
     :ride_connection_per_ride_reimbursement_rate,
     :trimet_per_ride_reimbursement_rate,
-    :sdsd_per_ride_reimbursement_rate,
     :stf_van_per_ride_reimbursement_rate,
     :stf_taxi_per_ride_administrative_fee,
     :stf_taxi_per_ride_ambulatory_load_fee,
@@ -29,7 +28,6 @@ class Provider < ActiveRecord::Base
   validates_numericality_of :oaa3b_per_ride_reimbursement_rate,               :greater_than => 0, :allow_blank => true
   validates_numericality_of :ride_connection_per_ride_reimbursement_rate,     :greater_than => 0, :allow_blank => true
   validates_numericality_of :trimet_per_ride_reimbursement_rate,              :greater_than => 0, :allow_blank => true
-  validates_numericality_of :sdsd_per_ride_reimbursement_rate,                :greater_than => 0, :allow_blank => true
   validates_numericality_of :stf_van_per_ride_reimbursement_rate,             :greater_than => 0, :allow_blank => true
   validates_numericality_of :stf_taxi_per_ride_administrative_fee,            :greater_than => 0, :allow_blank => true
   validates_numericality_of :stf_taxi_per_ride_ambulatory_load_fee,           :greater_than => 0, :allow_blank => true

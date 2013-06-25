@@ -71,29 +71,6 @@ describe Provider do
       end
     end
 
-    describe "sdsd_per_ride_reimbursement_rate" do
-      it "should be an integer field" do
-        p = Provider.new
-        p.should respond_to(:sdsd_per_ride_reimbursement_rate)
-        p.sdsd_per_ride_reimbursement_rate = "1"
-        p.sdsd_per_ride_reimbursement_rate.should eq 1.0
-        p.sdsd_per_ride_reimbursement_rate = "0.12"
-        p.sdsd_per_ride_reimbursement_rate.should eq 0.12
-      end
-    
-      it "should only allow values greater than 0" do
-        p = Provider.new
-        p.sdsd_per_ride_reimbursement_rate = 0
-        p.valid?
-        p.errors.keys.include?(:sdsd_per_ride_reimbursement_rate).should be_true
-        p.errors[:sdsd_per_ride_reimbursement_rate].should include "must be greater than 0"
-      
-        p.sdsd_per_ride_reimbursement_rate = 1
-        p.valid?
-        p.errors.keys.include?(:sdsd_per_ride_reimbursement_rate).should_not be_true
-      end
-    end
-
     describe "stf_van_per_ride_reimbursement_rate" do
       it "should be an integer field" do
         p = Provider.new

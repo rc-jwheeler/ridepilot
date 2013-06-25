@@ -157,10 +157,6 @@
           <%= number_field_tag :trimet_per_ride_reimbursement_rate, number_with_precision(@provider.trimet_per_ride_reimbursement_rate, :precision => 2), :size => 4, :min => "0", :max => "9999", :step => "0.01" %>
         </li>
         <li>
-          <%= label_tag :sdsd_per_ride_reimbursement_rate, "SDSD" %>
-          <%= number_field_tag :sdsd_per_ride_reimbursement_rate, number_with_precision(@provider.sdsd_per_ride_reimbursement_rate, :precision => 2), :size => 4, :min => "0", :max => "9999", :step => "0.01" %>
-        </li>
-        <li>
           <%= label_tag :stf_van_per_ride_reimbursement_rate, "USDOT STF Van" %>
           <%= number_field_tag :stf_van_per_ride_reimbursement_rate, number_with_precision(@provider.stf_van_per_ride_reimbursement_rate, :precision => 2), :size => 4, :min => "0", :max => "9999", :step => "0.01" %>
         </li>
