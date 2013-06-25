@@ -17,7 +17,6 @@
   </button>
 </div>
 
-
 <h2>
   Cab runs between 
   <span id="start_date">
@@ -28,26 +27,14 @@
   </span>
 </h2>
 
-<%= form_tag update_multiple_cab_trips_path, :method => :put do %>
-  <table id="cab_trips">
+<table id="cab_trips">
+  <thead>
     <tr class="head">
-      <th>Pickup Time</th>
-      <th>Customer Name</th>
-      <th>In Distict?</th>
-      <th>Purpose</th>
-      <th>Round Trip?</th>
-      <th>Guest Count</th>
-      <th>Attendant Count</th>
-      <th>Result</th>
+      <th>Date</th>
       <th></th>
     </tr>
-    <% if @cab_trips.size > 0 %>
-      <%= render "cab_trips" %>
-    <% else %>
-      <%= render "no_runs" %>
-    <% end %>
-  </table>
-  <div class="actions">
-    <%= submit_tag "Update cab runs" %>
-  </div>
-<% end %>
+  </thead>
+  <tbody>
+    <%= render "grouped_cab_trips" %>
+  </tbody>
+</table>

@@ -1,0 +1,14 @@
+<% @dates_in_range.each do |day| %>
+  <tr class="<%= cycle("odd", "") -%>">
+    <td>
+      <%= format_time_for_listing_day day %>
+    </td>
+    <td>
+      <% if @grouped_cab_trips.has_key?(day.to_s) && @grouped_cab_trips[day.to_s].size %>
+        <%= link_to "Edit #{pluralize(@grouped_cab_trips[day.to_s].size, "cab trip")}", edit_multiple_cab_trips_path(for_date: day.to_time_in_current_zone.to_i) %>
+      <% else %>
+        No trips
+      <% end %>
+    </td>
+  </tr>
+<% end %>

@@ -1,25 +1,25 @@
 class CabTripsController < ApplicationController
-  before_filter :filter_cab_trips, :only => :index
+  before_filter :set_date_params
 
   def index
     authorize! :manage, current_provider
-    @drivers      = Driver.where(:provider_id=>current_provider_id)
-    @vehicles     = Vehicle.active.where(:provider_id=>current_provider_id)
-    @trip_results = TRIP_RESULT_CODES.map { |k,v| [v,k] }
+    @dates_in_range = (@week_start.to_date..@week_end.to_date).to_a
+    @cab_trips = Trip.for_provider(current_provider_id).for_cab.for_date_range(@week_start, @week_end)
+    @grouped_cab_trips = @cab_trips.group_by{|t| t.date.to_s}
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @cab_trips }
       format.js {
-        render :json => { :rows => (@cab_trips.present? ? 
-          [render_to_string(:partial => "cab_trips.html")] : 
-          [render_to_string(:partial => "no_runs.html")]
-        )}
+        render :json => { :rows => [render_to_string(:partial => "grouped_cab_trips.html")] }
       }
     end
   end
   
   def edit_multiple
     authorize! :manage, current_provider
+    @drivers = Driver.where(:provider_id=>current_provider_id)
+    @vehicles = Vehicle.active.where(:provider_id=>current_provider_id)
+    @trip_results = TRIP_RESULT_CODES.map { |k,v| [v,k] }
     @cab_trips = Trip.for_provider(current_provider_id).for_cab.for_date(Time.at params[:start].to_i)
     respond_to do |format|
       format.html
@@ -44,7 +44,7 @@ class CabTripsController < ApplicationController
   
   private
   
-  def filter_cab_trips
+  def set_date_params
     if params[:end].present? && params[:start].present?
       @week_start = Time.at params[:start].to_i
       @week_end   = Time.at params[:end].to_i
@@ -53,8 +53,6 @@ class CabTripsController < ApplicationController
       @week_start = time.beginning_of_week
       @week_end   = @week_start + 6.days
     end
-    
-    @cab_trips = Trip.for_provider(current_provider_id).for_cab.for_date_range(@week_start, @week_end)
   end
 
   def date_range(cab_trip)
