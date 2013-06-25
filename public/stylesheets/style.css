@@ -311,8 +311,8 @@ button {width: auto; overflow: visible;}
   background: #fff;
   color: #009FFB;
 }
-body.cab-runs #primary-nav li.cab_trips a:link, 
-body.cab-runs #primary-nav li.cab_trips a:visited,
+body.cab-trips #primary-nav li.cab_trips a:link, 
+body.cab-trips #primary-nav li.cab_trips a:visited,
 body.trips #primary-nav li.trips a:link, 
 body.trips #primary-nav li.trips a:visited,
 body.runs #primary-nav li.runs a:link, 
@@ -1211,7 +1211,7 @@ a.action-bttn:active {
   color: #009FFB;
 }
 body.trips.index a.action-bttn.new,
-body.cab-runs.index a.action-bttn.new,
+body.cab-trips.index a.action-bttn.new,
 body.runs.index a.action-bttn.new,
 body.runs.edit a.action-bttn.new,
 body.providers.show a.action-bttn.new {
@@ -1342,7 +1342,7 @@ div.color_swatch {
  * Runs
  *
  */
-body.cab-runs .wc-nav,
+body.cab-trips .wc-nav,
 body.runs .wc-nav {
   margin-bottom: 20px;
 }

@@ -33,10 +33,10 @@ class CabTripsController < ApplicationController
     @errors = @trips.delete_if { |t| t.errors.any? }
     respond_to do |format|
       if @trips.any?      
-        format.html { redirect_to(cab_trips_path(date_range(@trips.first)), :notice => ActionController::Base.helpers.pluralize(@trips.size, 'cab run') + ' updated successfully') }
+        format.html { redirect_to(cab_trips_path(date_range(@trips.first)), :notice => ActionController::Base.helpers.pluralize(@trips.size, 'cab trip') + ' updated successfully') }
         format.xml  { head :ok }
       else
-        format.html { redirect_to(cab_trips_path(date_range(@trips.first)), :alert => ActionController::Base.helpers.pluralize(@errors.size, 'cab run') + ' could not be updated') }
+        format.html { redirect_to(cab_trips_path(date_range(@trips.first)), :alert => ActionController::Base.helpers.pluralize(@errors.size, 'cab trip') + ' could not be updated') }
         format.xml  { render :xml => @errors, :status => :unprocessable_entity }
       end
     end

@@ -202,7 +202,7 @@ $(function() {
     }
   };
  
-  $("body.runs .wc-nav button, body.cab-runs .wc-nav button").click(function(e){
+  $("body.runs .wc-nav button, body.cab-trips .wc-nav button").click(function(e){
     var current_start, new_start, new_end;
     var target    = $(this);
     var week_nav  = target.parent(".wc-nav");
