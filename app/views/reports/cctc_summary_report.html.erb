@@ -40,6 +40,36 @@
   .v_m, .v_m td, .v_m th {vertical-align: middle}
   
   .b {font-weight: bold}
+  
+  @media print {
+    #session-timeout-warning, #header, #crossbar, #page-header, #new_query, p.notice {
+      display: none;
+    }
+    
+    /* Unfortunately, it is still not possible for us to reasonably support 
+     * precise printing of page-breaks across web browsers.
+     */
+    
+    #cctc-report table {
+      page-break-inside: auto;
+    }
+    
+    #cctc-report table tr, #cctc-report table td {
+      page-break-after: avoid;
+      page-break-before: avoid;
+      page-break-inside: avoid;
+    }
+    
+    #cctc-report table tr.separator {
+      page-break-after:  auto;
+    }
+    
+    #cctc-report hr {
+      page-break-after: always;
+      height: 0;
+      border-width: 0;
+    }
+  }
 </style>
 <% end %>
 
@@ -59,7 +89,7 @@
   <% end %>
 <% end %>
 
-<div style="text-align: center">
+<div style="text-align: center" id="cctc-report">
   <h2>Clackamas County Transportation Consortium</h2>
   
   <h2>Monthly Report</h2>
@@ -192,7 +222,7 @@
   
   <p class="b">This form has totals of information for all vehicles. All are current reporting period numbers, not YTD, unless specified.</p>
   
-  <table align="center">
+  <table>
     <tr>
       <td rowspan="2" colspan="5" class="b a_l">Total miles driven for all rides provided during month:</td>
       <td colspan="2" class="a_l">Ride Connection:</td>
@@ -206,7 +236,7 @@
       <td>&nbsp;</td>
       <td>&nbsp;</td>
     </tr>
-    <tr>
+    <tr class="separator">
       <td colspan="10">&nbsp;</td>
     </tr>
     <tr>
@@ -251,7 +281,7 @@
       <td class="b_full"><%= @report[:rider_information][:riders_ytd][:ada_eligible][:over_60] %></td>
       <td class="b_full"><%= @report[:rider_information][:riders_ytd][:ada_eligible][:under_60] %></td>
     </tr>
-    <tr>
+    <tr class="separator">
       <td colspan="10">&nbsp;</td>
     </tr>
     <tr>
@@ -280,7 +310,7 @@
         <td>&nbsp;</td>
       </tr>
     <% end %>
-    <tr>
+    <tr class="separator">
       <td colspan="10">&nbsp;</td>
     </tr>
     <tr>
@@ -364,7 +394,7 @@
       <td>&nbsp;</td>
       <td>&nbsp;</td>
     </tr>
-    <tr>
+    <tr class="separator">
       <td colspan="10">&nbsp;</td>
     </tr>
     <tr>
@@ -407,7 +437,7 @@
       <td>&nbsp;</td>
       <td>&nbsp;</td>
     </tr>
-    <tr>
+    <tr class="separator">
       <td colspan="10">&nbsp;</td>
     </tr>
     <tr>
@@ -420,7 +450,7 @@
       <td>&nbsp;</td>
       <td>&nbsp;</td>
     </tr>
-    <tr>
+    <tr class="separator">
       <td colspan="10">&nbsp;</td>
     </tr>
     <tr>
