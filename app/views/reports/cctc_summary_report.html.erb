@@ -50,18 +50,8 @@
      * precise printing of page-breaks across web browsers.
      */
     
-    #cctc-report table {
-      page-break-inside: auto;
-    }
-    
-    #cctc-report table tr, #cctc-report table td {
-      page-break-after: avoid;
-      page-break-before: avoid;
+    #cctc-report table, #cctc-report table tr, #cctc-report table td {
       page-break-inside: avoid;
-    }
-    
-    #cctc-report table tr.separator {
-      page-break-after:  auto;
     }
     
     #cctc-report hr {
@@ -223,6 +213,18 @@
   <p class="b">This form has totals of information for all vehicles. All are current reporting period numbers, not YTD, unless specified.</p>
   
   <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+    </tr>
     <tr>
       <td rowspan="2" colspan="5" class="b a_l">Total miles driven for all rides provided during month:</td>
       <td colspan="2" class="a_l">Ride Connection:</td>
@@ -236,8 +238,20 @@
       <td>&nbsp;</td>
       <td>&nbsp;</td>
     </tr>
-    <tr class="separator">
-      <td colspan="10">&nbsp;</td>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
     </tr>
     <tr>
       <td colspan="4">&nbsp;</td>
@@ -246,16 +260,16 @@
       <td colspan="2" class="b">ADA Eligible</td>
     </tr>
     <tr>
-      <td style="width: 15px">&nbsp;</td>
-      <td style="width: 200px" class="b">Rider Information</td>
-      <td style="width: 75px" class="b b_full2">RC</td>
-      <td style="width: 75px" class="b b_full2">STF</td>
-      <td style="width: 75px" class="b b_full2">RC</td>
-      <td style="width: 75px" class="b b_full2">STF</td>
-      <td style="width: 75px" class="b b_full2">RC</td>
-      <td style="width: 75px" class="b b_full2">STF</td>
-      <td style="width: 75px" class="b b_full2">Over 60</td>
-      <td style="width: 75px" class="b b_full2">Under 60</td>
+      <td>&nbsp;</td>
+      <td class="b">Rider Information</td>
+      <td class="b b_full2">RC</td>
+      <td class="b b_full2">STF</td>
+      <td class="b b_full2">RC</td>
+      <td class="b b_full2">STF</td>
+      <td class="b b_full2">RC</td>
+      <td class="b b_full2">STF</td>
+      <td class="b b_full2">Over 60</td>
+      <td class="b b_full2">Under 60</td>
     </tr>
     <tr>
       <td>1.</td>
@@ -281,8 +295,20 @@
       <td class="b_full"><%= @report[:rider_information][:riders_ytd][:ada_eligible][:over_60] %></td>
       <td class="b_full"><%= @report[:rider_information][:riders_ytd][:ada_eligible][:under_60] %></td>
     </tr>
-    <tr class="separator">
-      <td colspan="10">&nbsp;</td>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
     </tr>
     <tr>
       <td>&nbsp;</td>
@@ -310,8 +336,20 @@
         <td>&nbsp;</td>
       </tr>
     <% end %>
-    <tr class="separator">
-      <td colspan="10">&nbsp;</td>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
     </tr>
     <tr>
       <td>&nbsp;</td>
@@ -394,8 +432,20 @@
       <td>&nbsp;</td>
       <td>&nbsp;</td>
     </tr>
-    <tr class="separator">
-      <td colspan="10">&nbsp;</td>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
     </tr>
     <tr>
       <td>&nbsp;</td>
@@ -437,8 +487,20 @@
       <td>&nbsp;</td>
       <td>&nbsp;</td>
     </tr>
-    <tr class="separator">
-      <td colspan="10">&nbsp;</td>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
     </tr>
     <tr>
       <td>&nbsp;</td>
@@ -450,8 +512,20 @@
       <td>&nbsp;</td>
       <td>&nbsp;</td>
     </tr>
-    <tr class="separator">
-      <td colspan="10">&nbsp;</td>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
     </tr>
     <tr>
       <td class="b_b2 v_b a_l" colspan="4"><%= current_user.email %></td>
