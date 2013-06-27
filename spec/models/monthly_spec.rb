@@ -97,7 +97,7 @@ describe Monthly do
       m2 = Monthly.new(start_date: start_date, provider: @p1, funding_source: @f1, volunteer_escort_hours: 0, volunteer_admin_hours: 0)
       m2.valid?.should be_false
       m2.errors.keys.should include(:start_date)
-      m2.errors[:start_date].should include "has already been taken"
+      m2.errors[:start_date].should include "has already been used for the given provider and funding source"
       
       m2.provider = @p2
       m2.funding_source = @f1

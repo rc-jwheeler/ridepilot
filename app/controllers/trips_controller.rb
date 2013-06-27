@@ -242,7 +242,7 @@ class TripsController < ApplicationController
     authorize! :read, @trip
     @customer           = @trip.customer
     @mobilities         = Mobility.order(:name).all
-    @funding_sources    = FundingSource.all
+    @funding_sources    = FundingSource.by_provider(current_provider)
     @trip_results       = TRIP_RESULT_CODES.map { |k,v| [v,k] }
     @trip_purposes      = TRIP_PURPOSES
     @drivers            = Driver.active.for_provider @trip.provider_id

@@ -9,6 +9,11 @@
         <%= f.label :start_date, "Month" %>
         <%= f.date_select :start_date, :order => [:month, :year] %>    
       </li>
+
+      <li>
+        <%= f.label :funding_source_id, "Funding Source:" %>
+        <%= f.collection_select :funding_source_id, @funding_sources, :id, :name %>
+      </li>
     </ol>
 
     <ol class="section second">

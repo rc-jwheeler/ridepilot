@@ -1,5 +1,6 @@
 class MonthliesController < ApplicationController
   load_and_authorize_resource
+  before_filter :prep_edit
 
   def new; end
 
@@ -28,5 +29,10 @@ class MonthliesController < ApplicationController
       render :new
     end
   end
-
+  
+  private
+  
+  def prep_edit
+    @funding_sources = FundingSource.by_provider(current_provider)
+  end
 end
