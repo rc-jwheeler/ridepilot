@@ -1,17 +1,13 @@
 class MonthliesController < ApplicationController
   load_and_authorize_resource
 
-  def new
-
-  end
+  def new; end
 
   def index
     @monthlies = @monthlies.order(:start_date)
   end
 
-  def edit
-
-  end
+  def edit; end
 
   def update
     @monthly.update_attributes(params[:monthly])
