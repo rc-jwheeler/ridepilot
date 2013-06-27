@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130618195429) do
+ActiveRecord::Schema.define(:version => 20130627143200) do
 
   create_table "addresses", :force => true do |t|
     t.string   "name"
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(:version => 20130618195429) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "lock_version",           :default => 0
+    t.integer  "funding_source_id"
   end
 
   create_table "provider_ethnicities", :force => true do |t|
@@ -154,7 +155,6 @@ ActiveRecord::Schema.define(:version => 20130618195429) do
     t.decimal  "oaa3b_per_ride_reimbursement_rate",                              :precision => 8, :scale => 2
     t.decimal  "ride_connection_per_ride_reimbursement_rate",                    :precision => 8, :scale => 2
     t.decimal  "trimet_per_ride_reimbursement_rate",                             :precision => 8, :scale => 2
-    t.decimal  "sdsd_per_ride_reimbursement_rate",                               :precision => 8, :scale => 2
     t.decimal  "stf_van_per_ride_reimbursement_rate",                            :precision => 8, :scale => 2
     t.decimal  "stf_taxi_per_ride_administrative_fee",                           :precision => 8, :scale => 2
     t.decimal  "stf_taxi_per_ride_ambulatory_load_fee",                          :precision => 8, :scale => 2
