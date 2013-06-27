@@ -454,7 +454,7 @@ class ReportsController < ApplicationController
     @provider = Provider.find(current_provider_id)
     new_customer_ids = ActiveRecord::Base.connection.select_values(Customer.select('DISTINCT "customers"."id"').joins("LEFT JOIN \"trips\" \"previous_months_trips\" ON \"customers\".\"id\" = \"previous_months_trips\".\"customer_id\" AND (#{ActiveRecord::Base.send(:sanitize_sql_array, ['"previous_months_trips"."pickup_time" < ?', @start_date.to_datetime.to_time_in_current_zone.utc])})", "LEFT JOIN \"trips\" \"current_months_trips\" ON \"customers\".\"id\" = \"current_months_trips\".\"customer_id\" AND (#{ActiveRecord::Base.send(:sanitize_sql_array, ['"current_months_trips"."pickup_time" >= ? AND "current_months_trips"."pickup_time" < ?', @start_date.to_datetime.to_time_in_current_zone.utc, @end_date.to_datetime.to_time_in_current_zone.utc])})").group('"customers"."id"').having('COUNT("previous_months_trips"."id") = 0 AND COUNT("current_months_trips"."id") > 0').except(:order).to_sql)
     new_driver_ids = ActiveRecord::Base.connection.select_values(Driver.select('DISTINCT "drivers"."id"').joins("LEFT JOIN \"runs\" \"previous_months_runs\" ON \"drivers\".\"id\" = \"previous_months_runs\".\"driver_id\" AND (#{ActiveRecord::Base.send(:sanitize_sql_array, ['"previous_months_runs"."date" < ?', @start_date.to_datetime.to_time_in_current_zone.utc])})", "LEFT JOIN \"runs\" \"current_months_runs\" ON \"drivers\".\"id\" = \"current_months_runs\".\"driver_id\" AND (#{ActiveRecord::Base.send(:sanitize_sql_array, ['"current_months_runs"."date" >= ? AND "current_months_runs"."date" < ?', @start_date.to_datetime.to_time_in_current_zone.utc, @end_date.to_datetime.to_time_in_current_zone.utc])})").group('"drivers"."id"').having('COUNT("previous_months_runs"."id") = 0 AND COUNT("current_months_runs"."id") > 0').except(:order).to_sql)
-    monthly = Monthly.where('provider_id = ? AND start_date >= ? AND end_date < ?', @provider.id, @end_date, @start_date).first || Monthly.new
+    monthly_base_query = Monthly.where(provider_id: @provider.id, start_date: @start_date..@end_date)
 
     trip_queries = {
       in_range: {
@@ -541,8 +541,14 @@ class ReportsController < ApplicationController
             stf: Run.for_volunteer_driver.for_trips_collection(trip_queries[:in_range][:stf][:all]).where(driver_id: new_driver_ids).unique_driver_count,
           },
         },
-        escort_hours: monthly.volunteer_escort_hours,
-        administrative_hours: monthly.volunteer_admin_hours,
+        escort_hours: {
+          rc:  monthly_base_query.where(funding_source_id: FundingSource.pick_id_by_name("Ride Connection")).first.try(:volunteer_escort_hours),
+          stf:  monthly_base_query.where(funding_source_id: FundingSource.pick_id_by_name("STF")).first.try(:volunteer_escort_hours),
+        },
+        administrative_hours: {
+          rc:  monthly_base_query.where(funding_source_id: FundingSource.pick_id_by_name("Ride Connection")).first.try(:volunteer_admin_hours),
+          stf:  monthly_base_query.where(funding_source_id: FundingSource.pick_id_by_name("STF")).first.try(:volunteer_admin_hours),
+        },
       },
       rides_not_given: {
         turndowns: {
