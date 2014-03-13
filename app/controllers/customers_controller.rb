@@ -36,14 +36,6 @@ class CustomersController < ApplicationController
     render :action => :index
   end
 
-  def search
-    @customers = Customer.for_provider(current_provider_id).by_term( params[:term].downcase ).
-      accessible_by( current_ability ).
-      paginate( :page => params[:page], :per_page => PER_PAGE )
-
-    render :action => :index
-  end
-
   def all
     @show_inactivated_date = true
     @customers = Customer.for_provider(current_provider_id).accessible_by(current_ability)
@@ -67,8 +59,7 @@ class CustomersController < ApplicationController
   def new
     @customer = Customer.new name_options
     @customer.address ||= @customer.build_address :provider => current_provider
-    @mobilities = Mobility.all
-    @ethnicities = ETHNICITIES
+    prep_edit
 
     respond_to do |format|
       format.html # new.html.erb
@@ -78,8 +69,7 @@ class CustomersController < ApplicationController
 
   def edit
     @customer = Customer.find(params[:id])
-    @mobilities = Mobility.all
-    @ethnicities = ETHNICITIES
+    prep_edit
   end
 
   def create
@@ -118,8 +108,7 @@ first_name, first_name, first_name, first_name,
         dup = dup_customers[0]
         flash[:alert] = "There is already a customer with a similar name or the same email address: <a href=\"#{url_for :action=>:show, :id=>dup.id}\">#{dup.name}</a> (dob #{dup.birth_date}).  If this is truly a different customer, check the 'ignore duplicates' box to continue creating this customer.".html_safe
         @dup = true
-        @mobilities = Mobility.all
-        @ethnicities = ETHNICITIES
+        prep_edit
         return render :action=>"new"
       end
     end
@@ -129,8 +118,7 @@ first_name, first_name, first_name, first_name,
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
-        @mobilities  = Mobility.all
-        @ethnicities = ETHNICITIES
+        prep_edit
         format.html { render :action => "new" }
         format.xml  { render :xml => @customer.errors, :status => :unprocessable_entity }
       end
@@ -149,7 +137,7 @@ first_name, first_name, first_name, first_name,
 
   def update
     @customer = Customer.find(params[:id])
-
+    
     respond_to do |format|
       if @customer.update_attributes(params[:customer])
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
@@ -192,5 +180,11 @@ first_name, first_name, first_name, first_name,
       atts
     end || {}
   end
-
+  
+  def prep_edit
+    @mobilities = Mobility.all
+    @ethnicity_names = (current_provider.ethnicities.collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
+    @funding_sources = FundingSource.by_provider(current_provider)
+    @service_levels = SERVICE_LEVELS
+  end
 end

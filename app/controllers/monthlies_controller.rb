@@ -1,17 +1,14 @@
 class MonthliesController < ApplicationController
   load_and_authorize_resource
+  before_filter :prep_edit
 
-  def new
-
-  end
+  def new; end
 
   def index
     @monthlies = @monthlies.order(:start_date)
   end
 
-  def edit
-
-  end
+  def edit; end
 
   def update
     @monthly.update_attributes(params[:monthly])
@@ -32,5 +29,10 @@ class MonthliesController < ApplicationController
       render :new
     end
   end
-
+  
+  private
+  
+  def prep_edit
+    @funding_sources = FundingSource.by_provider(current_provider)
+  end
 end

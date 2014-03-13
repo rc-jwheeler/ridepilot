@@ -3,9 +3,14 @@
 </div>
 
 <%= form_for @user, :url=>url_for(:action=>:create_user) do |f| %>
-  <% if @errors %>
+  <% if @user.errors.any? || @errors.any? %>
     <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count + @errors.try(:count).try(:to_i), "error") %> prohibited this run from being saved:</h2>
+
       <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
       <% @errors.each do |field, msg| %>
         <li><%= msg %></li>
       <% end %>
@@ -14,7 +19,6 @@
   <% end %>
 
   <fieldset>
-
     <ol class="section first">
       <li>
         <%= f.label :email, "Email:" %>
@@ -30,7 +34,5 @@
     <div class="actions">
       <%= f.submit "Create User" %>
     </div>
-
   </fieldset>
-
 <% end %>

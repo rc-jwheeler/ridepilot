@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130408184524) do
+ActiveRecord::Schema.define(:version => 20130627201334) do
 
   create_table "addresses", :force => true do |t|
     t.string   "name"
@@ -27,10 +27,10 @@ ActiveRecord::Schema.define(:version => 20130408184524) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "lock_version",                        :default => 0
-    t.point    "the_geom",             :limit => nil,                    :srid => 4326
     t.string   "phone_number"
     t.boolean  "inactive",                            :default => false
     t.string   "default_trip_purpose"
+    t.point    "the_geom",             :limit => nil,                    :srid => 4326
   end
 
   add_index "addresses", ["the_geom"], :name => "index_addresses_on_the_geom", :spatial => true
@@ -54,12 +54,17 @@ ActiveRecord::Schema.define(:version => 20130408184524) do
     t.text     "private_notes"
     t.text     "public_notes"
     t.integer  "provider_id"
-    t.boolean  "group",                   :default => false
+    t.boolean  "group",                     :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
-    t.integer  "lock_version",            :default => 0
+    t.integer  "lock_version",              :default => 0
+    t.boolean  "medicaid_eligible"
+    t.string   "prime_number"
+    t.integer  "default_funding_source_id"
+    t.boolean  "ada_eligible"
+    t.string   "default_service_level"
   end
 
   create_table "device_pool_drivers", :force => true do |t|
@@ -113,17 +118,22 @@ ActiveRecord::Schema.define(:version => 20130408184524) do
 
   create_table "monthlies", :force => true do |t|
     t.date     "start_date"
-    t.date     "end_date"
     t.integer  "volunteer_escort_hours"
     t.integer  "volunteer_admin_hours"
     t.integer  "provider_id"
-    t.integer  "complaints"
-    t.integer  "compliments"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "lock_version",           :default => 0
+    t.integer  "funding_source_id"
+  end
+
+  create_table "provider_ethnicities", :force => true do |t|
+    t.integer  "provider_id"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "providers", :force => true do |t|
@@ -134,10 +144,20 @@ ActiveRecord::Schema.define(:version => 20130408184524) do
     t.datetime "logo_updated_at"
     t.boolean  "dispatch"
     t.boolean  "scheduling"
-    t.point    "region_nw_corner",  :limit => nil
-    t.point    "region_se_corner",  :limit => nil
-    t.point    "viewport_center",   :limit => nil
     t.integer  "viewport_zoom"
+    t.boolean  "allow_trip_entry_from_runs_page"
+    t.point    "region_nw_corner",                                :limit => nil,                               :srid => 0
+    t.point    "region_se_corner",                                :limit => nil,                               :srid => 0
+    t.point    "viewport_center",                                 :limit => nil,                               :srid => 0
+    t.decimal  "oaa3b_per_ride_reimbursement_rate",                              :precision => 8, :scale => 2
+    t.decimal  "ride_connection_per_ride_reimbursement_rate",                    :precision => 8, :scale => 2
+    t.decimal  "trimet_per_ride_reimbursement_rate",                             :precision => 8, :scale => 2
+    t.decimal  "stf_van_per_ride_reimbursement_rate",                            :precision => 8, :scale => 2
+    t.decimal  "stf_taxi_per_ride_administrative_fee",                           :precision => 8, :scale => 2
+    t.decimal  "stf_taxi_per_ride_ambulatory_load_fee",                          :precision => 8, :scale => 2
+    t.decimal  "stf_taxi_per_ride_wheelchair_load_fee",                          :precision => 8, :scale => 2
+    t.decimal  "stf_taxi_per_mile_ambulatory_reimbursement_rate",                :precision => 8, :scale => 2
+    t.decimal  "stf_taxi_per_mile_wheelchair_reimbursement_rate",                :precision => 8, :scale => 2
   end
 
   create_table "regions", :force => true do |t|
@@ -241,6 +261,9 @@ ActiveRecord::Schema.define(:version => 20130408184524) do
     t.integer  "updated_by_id"
     t.integer  "lock_version",                                      :default => 0
     t.boolean  "round_trip"
+    t.boolean  "medicaid_eligible"
+    t.integer  "mileage"
+    t.string   "service_level"
   end
 
   add_index "trips", ["provider_id", "appointment_time"], :name => "index_trips_on_provider_id_and_appointment_time"

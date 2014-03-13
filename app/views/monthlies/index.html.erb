@@ -8,6 +8,7 @@
   <table>
     <tr>
       <th>Month</th>
+      <th>Funding Source</th>
       <th>Volunteer escort hours</th>
       <th>Volunteer admin hours</th>
       <% if can? :edit, Monthly %>
@@ -17,9 +18,10 @@
     
     <% for monthly in @monthlies %>
       <tr>
-        <td><%= monthly.start_date.strftime("%B %Y") %></td>
-        <td><%= monthly.volunteer_escort_hours %></td>
-        <td><%= monthly.volunteer_admin_hours %></td>
+        <td><%= monthly.start_date.try(:strftime, "%B %Y") %></td>
+        <td><%= monthly.funding_source.try(:name) %></td>
+        <td><%= monthly.volunteer_escort_hours.to_i %></td>
+        <td><%= monthly.volunteer_admin_hours.to_i %></td>
         <% if can? :edit, monthly %>
           <td><%= link_to "Edit", edit_monthly_path(monthly) %></td>
         <% end %>

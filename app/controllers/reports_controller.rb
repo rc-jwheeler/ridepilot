@@ -1,3 +1,5 @@
+require 'csv'
+
 class Query
   extend ActiveModel::Naming
   include ActiveModel::Conversion
@@ -15,7 +17,7 @@ class Query
 
   def initialize(params = {})
     now = Date.today
-    @start_date = params[:start_date] || Date.new(now.year, now.month, 1).prev_month
+    @start_date = params[:start_date].try(:to_date) || Date.new(now.year, now.month, 1).prev_month
     if params[:before_end_date]
       @before_end_date = params[:before_end_date].to_date
       @end_date = params[:before_end_date].to_date + 1
@@ -66,7 +68,7 @@ class ReportsController < ApplicationController
 
   def index
     @driver_query = Query.new :start_date => Date.today, :end_date => Date.today
-    @trips_query = Query.new 
+    @trips_query = Query.new
     cab = Driver.new(:name=>"Cab")
     cab.id = -1
     all = Driver.new(:name=>"All")
@@ -93,7 +95,7 @@ class ReportsController < ApplicationController
       month_runs = Run.for_vehicle(vehicle.id).for_date_range(@start_date, @end_date)
       month_trips = Trip.for_vehicle(vehicle.id).for_date_range(@start_date, @end_date).completed
 
-      @total_hours[vehicle] = month_runs.sum("actual_end_time - actual_start_time").to_i 
+      @total_hours[vehicle] = month_runs.sum("actual_end_time - actual_start_time").to_i
       @total_rides[vehicle] = month_trips.reduce(0){|total,trip| total + trip.trip_count}
 
       @beginning_odometer[vehicle] = month_runs.minimum(:start_odometer) || -1
@@ -117,9 +119,9 @@ class ReportsController < ApplicationController
     #computes number of trips in and out of district by purpose
     counts_by_purpose = Trip.for_provider(current_provider_id).for_date_range(@start_date, @end_date)
         .includes(:customer, :pickup_address, :dropoff_address).completed
-    
+
     by_purpose = {}
-    TRIP_PURPOSES.each do |purpose| 
+    TRIP_PURPOSES.each do |purpose|
       by_purpose[purpose] = {'purpose' => purpose, 'in_district' => 0, 'out_of_district' => 0}
     end
     @total = {'in_district' => 0, 'out_of_district' => 0}
@@ -136,12 +138,12 @@ class ReportsController < ApplicationController
         @total['out_of_district'] += row.trip_count
       end
     end
-        
+
     @trips_by_purpose = []
-    TRIP_PURPOSES.each do |purpose| 
+    TRIP_PURPOSES.each do |purpose|
       @trips_by_purpose << by_purpose[purpose]
     end
-    
+
     #compute monthly totals
     runs = Run.for_provider(current_provider_id).for_date_range(@start_date, @end_date)
 
@@ -163,10 +165,10 @@ class ReportsController < ApplicationController
     query_params = params[:query] || {}
     @query = Query.new(query_params)
     @trip_results = TRIP_RESULT_CODES.map { |k,v| [v,k] }
-    
+
     unless @trips.present?
       @trips = Trip.for_provider(current_provider_id).for_date_range(@query.start_date,@query.end_date).
-                includes(:customer,:run,:pickup_address,:dropoff_address) 
+                includes(:customer,:run,:pickup_address,:dropoff_address)
       @trips = @trips.for_cab     if @query.trip_display == "Cab Trips"
       @trips = @trips.not_for_cab if @query.trip_display == "Not Cab Trips"
     end
@@ -234,13 +236,13 @@ class ReportsController < ApplicationController
     @end_date = @query.end_date
 
     #we need new riders this month, where new means "first time this fy"
-    #so, for each trip this month, find the customer, then find out whether 
+    #so, for each trip this month, find the customer, then find out whether
     # there was a previous trip for this customer this fy
 
     trip_customers = Trip.individual.select("DISTINCT customer_id").for_provider(current_provider_id).completed
     prior_customers_in_fiscal_year = trip_customers.for_date_range(fiscal_year_start_date(@start_date), @start_date).map {|x| x.customer_id}
     customers_this_period = trip_customers.for_date_range(@start_date, @end_date).map {|x| x.customer_id}
-    
+
     new_customers = Customer.where(:id => (customers_this_period - prior_customers_in_fiscal_year))
     earlier_customers = Customer.where(:id => prior_customers_in_fiscal_year)
 
@@ -268,7 +270,7 @@ class ReportsController < ApplicationController
         @this_month_less_than_sixty += 1
         @this_year_less_than_sixty += 1
       end
-      
+
       ethnicity = customer.ethnicity || "Unspecified"
       if ! @counts_by_ethnicity.member? ethnicity
         @counts_by_ethnicity[ethnicity] = {'month' => 0, 'year' => 0}
@@ -277,7 +279,7 @@ class ReportsController < ApplicationController
       @counts_by_ethnicity[ethnicity]['year'] += 1
     end
 
-    #now the customers who appear earlier in the year 
+    #now the customers who appear earlier in the year
     for customer in earlier_customers
       age = customer.age_in_years
       if age.nil?
@@ -300,7 +302,7 @@ class ReportsController < ApplicationController
   def daily_manifest
     authorize! :read, Trip
 
-    query_params = params[:query]
+    query_params = params[:query] || {}
     @query = Query.new(query_params)
     @date = @query.start_date
 
@@ -339,11 +341,309 @@ class ReportsController < ApplicationController
   def daily_trips
     authorize! :read, Trip
 
-    query_params = params[:query]
+    query_params = params[:query] || {}
     @query = Query.new(query_params)
     @date = @query.start_date
 
     @trips = Trip.for_provider(current_provider_id).for_date(@date).includes(:pickup_address,:dropoff_address,:customer,:mobility,{:run => :driver}).order(:pickup_time)
+  end
+
+  def export_trips_in_range
+    authorize! :read, Trip
+
+    @query = Query.new(params[:query])
+    date_range = @query.start_date..@query.end_date
+    columns = Trip.column_names.map{|c| "\"#{Trip.table_name}\".\"#{c}\" as \"#{Trip.table_name}.#{c}\""} + Customer.column_names.map{|c| "\"#{Customer.table_name}\".\"#{c}\" as \"#{Customer.table_name}.#{c}\""}
+    sql = Trip.select(columns.join(',')).joins(:customer).where(:pickup_time => date_range).order(:pickup_time).to_sql
+    trips = ActiveRecord::Base.connection.select_all(sql)
+    csv_string = CSV.generate do |csv|
+      csv << columns.collect{|c| c.split(' as ').last.strip.gsub("\"", "") }
+      unless trips.empty?
+        trips.each do |t|
+          csv << t.values
+        end
+      end
+    end
+
+    attrs = {
+      filename:    "export_trips_in_range-#{@query.start_date.strftime('%b %d %Y').downcase.parameterize}-#{@query.before_end_date.strftime('%b %d %Y').downcase.parameterize}.csv",
+      type:        Mime::CSV,
+      disposition: "attachment",
+      streaming:   "true",
+      buffer_size: 4096
+    }
+    send_data(csv_string, attrs)
+  end
+
+  def customer_receiving_trips_in_range
+    authorize! :read, Trip
+
+    @query = Query.new(params[:query])
+    date_range = @query.start_date..@query.end_date
+    @customers = Customer.joins(:trips).where('trips.pickup_time' => date_range).includes(:trips).uniq()
+  end
+
+  def cctc_summary_report
+    authorize! :read, Trip
+
+    Trip.define_singleton_method(:for_customers_under_60) do |compare_date|
+      self.joins(:customer).where('"customers"."birth_date" >= ?', compare_date.to_date - 60.years)
+    end
+
+    Trip.define_singleton_method(:for_customers_over_60) do |compare_date|
+      self.joins(:customer).where('"customers"."birth_date" < ?', compare_date.to_date - 60.years)
+    end
+
+    Trip.define_singleton_method(:for_ada_eligible_customers) do
+      self.joins(:customer).where('"customers"."ada_eligible" = ?', true)
+    end
+
+    Trip.define_singleton_method(:unique_customer_count) do
+      self.count('DISTINCT "customer_id"')
+    end
+
+    Trip.define_singleton_method(:total_ride_count) do
+      # Factors in return trips
+      self.all.collect(&:trip_count).sum
+    end
+
+    Trip.define_singleton_method(:total_mileage) do
+      # Factors in return trips
+      self.sum(:mileage)
+    end
+
+    Run.define_singleton_method(:for_trips_collection) do |trips_collection|
+      self.where(id: trips_collection.collect(&:run_id).uniq.compact)
+    end
+
+    Run.define_singleton_method(:unique_driver_count) do
+      self.count('DISTINCT "driver_id"')
+    end
+
+    Run.define_singleton_method(:total_driver_hours) do
+      hours = []
+      self.all.each do |run|
+        if run.actual_start_time.present? && run.actual_end_time.present?
+          time = (run.actual_end_time.to_time - run.actual_start_time.to_time) / 60
+          time -= run.unpaid_driver_break_time if run.unpaid_driver_break_time.present?
+          hours << (time / 60).round(2)
+        end
+      end
+      hours.sum.to_f
+    end
+
+    Run.define_singleton_method(:total_mileage) do
+      # Factors in return trips
+      miles = []
+      self.all.each do |run|
+        if run.start_odometer.present? && run.end_odometer.present?
+          miles << run.end_odometer - run.start_odometer
+        end
+      end
+      miles.sum.to_i
+    end
+
+    FundingSource.define_singleton_method(:pick_id_by_name) do |name|
+      self.where(name: name).first.try(:id).to_i
+    end
+
+    @query = Query.new(params[:query] || {})
+    @start_date = @query.start_date
+    @end_date = @query.end_date
+
+    @provider = Provider.find(current_provider_id)
+    new_customer_ids = ActiveRecord::Base.connection.select_values(Customer.select('DISTINCT "customers"."id"').joins("LEFT JOIN \"trips\" \"previous_months_trips\" ON \"customers\".\"id\" = \"previous_months_trips\".\"customer_id\" AND (#{ActiveRecord::Base.send(:sanitize_sql_array, ['"previous_months_trips"."pickup_time" < ?', @start_date.to_datetime.to_time_in_current_zone.utc])})", "LEFT JOIN \"trips\" \"current_months_trips\" ON \"customers\".\"id\" = \"current_months_trips\".\"customer_id\" AND (#{ActiveRecord::Base.send(:sanitize_sql_array, ['"current_months_trips"."pickup_time" >= ? AND "current_months_trips"."pickup_time" < ?', @start_date.to_datetime.to_time_in_current_zone.utc, @end_date.to_datetime.to_time_in_current_zone.utc])})").group('"customers"."id"').having('COUNT("previous_months_trips"."id") = 0 AND COUNT("current_months_trips"."id") > 0').except(:order).to_sql)
+    new_driver_ids = ActiveRecord::Base.connection.select_values(Driver.select('DISTINCT "drivers"."id"').joins("LEFT JOIN \"runs\" \"previous_months_runs\" ON \"drivers\".\"id\" = \"previous_months_runs\".\"driver_id\" AND (#{ActiveRecord::Base.send(:sanitize_sql_array, ['"previous_months_runs"."date" < ?', @start_date.to_datetime.to_time_in_current_zone.utc])})", "LEFT JOIN \"runs\" \"current_months_runs\" ON \"drivers\".\"id\" = \"current_months_runs\".\"driver_id\" AND (#{ActiveRecord::Base.send(:sanitize_sql_array, ['"current_months_runs"."date" >= ? AND "current_months_runs"."date" < ?', @start_date.to_datetime.to_time_in_current_zone.utc, @end_date.to_datetime.to_time_in_current_zone.utc])})").group('"drivers"."id"').having('COUNT("previous_months_runs"."id") = 0 AND COUNT("current_months_runs"."id") > 0').except(:order).to_sql)
+    monthly_base_query = Monthly.where(provider_id: @provider.id, start_date: @start_date..@end_date)
+
+    trip_queries = {
+      in_range: {
+        all: Trip.for_provider(@provider.id).for_date_range(@start_date, @end_date),
+        stf: {}
+      },
+      ytd: {
+        all: Trip.for_provider(@provider.id).for_date_range(Date.new(@start_date.year, 1, 1), @end_date)
+      }
+    }
+    trip_queries[:in_range][:rc]  = trip_queries[:in_range][:all].where(funding_source_id: FundingSource.pick_id_by_name("Ride Connection"))
+    trip_queries[:in_range][:stf][:all]  = trip_queries[:in_range][:all].where(funding_source_id: FundingSource.pick_id_by_name("STF"))
+    trip_queries[:in_range][:stf][:van]  = trip_queries[:in_range][:stf][:all].not_for_cab
+    trip_queries[:in_range][:stf][:taxi] = trip_queries[:in_range][:stf][:all].for_cab
+    trip_queries[:ytd][:rc]  = trip_queries[:ytd][:all].where(funding_source_id: FundingSource.pick_id_by_name("Ride Connection"))
+    trip_queries[:ytd][:stf] = trip_queries[:ytd][:all].where(funding_source_id: FundingSource.pick_id_by_name("STF"))
+
+    @report = {
+      total_miles: {
+        stf: {
+          van_bus: Run.for_trips_collection(trip_queries[:in_range][:stf][:van]).total_mileage,
+          taxi:    trip_queries[:in_range][:stf][:taxi].total_mileage,
+        },
+        rc: Run.for_trips_collection(trip_queries[:in_range][:rc]).total_mileage,
+      },
+      rider_information: {
+        riders_new_this_month: {
+          over_60: {
+            rc:  trip_queries[:in_range][:rc].for_customers_over_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
+            stf: trip_queries[:in_range][:stf][:all].for_customers_over_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
+          },
+          under_60: {
+            rc:  trip_queries[:in_range][:rc].for_customers_under_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
+            stf: trip_queries[:in_range][:stf][:all].for_customers_under_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
+          },
+          ada_eligible: {
+            over_60:  trip_queries[:in_range][:all].where(funding_source_id: [FundingSource.pick_id_by_name("Ride Connection"), FundingSource.pick_id_by_name("STF")]).for_customers_over_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
+            under_60: trip_queries[:in_range][:all].where(funding_source_id: [FundingSource.pick_id_by_name("Ride Connection"), FundingSource.pick_id_by_name("STF")]).for_customers_under_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
+          },
+        },
+        riders_ytd: {
+          over_60: {
+            rc:  trip_queries[:ytd][:rc].for_customers_over_60(@end_date).unique_customer_count,
+            stf: trip_queries[:ytd][:stf].for_customers_over_60(@end_date).unique_customer_count,
+          },
+          under_60: {
+            rc:  trip_queries[:ytd][:rc].for_customers_under_60(@end_date).unique_customer_count,
+            stf: trip_queries[:ytd][:stf].for_customers_under_60(@end_date).unique_customer_count,
+          },
+          ada_eligible: {
+            over_60:  trip_queries[:ytd][:all].where(funding_source_id: [FundingSource.pick_id_by_name("Ride Connection"), FundingSource.pick_id_by_name("STF")]).for_customers_over_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
+            under_60: trip_queries[:ytd][:all].where(funding_source_id: [FundingSource.pick_id_by_name("Ride Connection"), FundingSource.pick_id_by_name("STF")]).for_customers_under_60(@end_date).where(customer_id: new_customer_ids).unique_customer_count,
+          },
+        },
+      },
+      driver_information: {
+        number_of_driver_hours: {
+          paid: {
+            rc:  Run.for_paid_driver.for_trips_collection(trip_queries[:in_range][:rc]).total_driver_hours,
+            stf: Run.for_paid_driver.for_trips_collection(trip_queries[:in_range][:stf][:all]).total_driver_hours,
+          },
+          volunteer: {
+            rc:  Run.for_volunteer_driver.for_trips_collection(trip_queries[:in_range][:rc]).total_driver_hours,
+            stf: Run.for_volunteer_driver.for_trips_collection(trip_queries[:in_range][:stf][:all]).total_driver_hours,
+          },
+        },
+        number_of_active_drivers: {
+          paid: {
+            rc:  Run.for_paid_driver.for_trips_collection(trip_queries[:in_range][:rc]).unique_driver_count,
+            stf: Run.for_paid_driver.for_trips_collection(trip_queries[:in_range][:stf][:all]).unique_driver_count,
+          },
+          volunteer: {
+            rc:  Run.for_volunteer_driver.for_trips_collection(trip_queries[:in_range][:rc]).unique_driver_count,
+            stf: Run.for_volunteer_driver.for_trips_collection(trip_queries[:in_range][:stf][:all]).unique_driver_count,
+          },
+        },
+        drivers_new_this_month: {
+          paid: {
+            rc:  Run.for_paid_driver.for_trips_collection(trip_queries[:in_range][:rc]).where(driver_id: new_driver_ids).unique_driver_count,
+            stf: Run.for_paid_driver.for_trips_collection(trip_queries[:in_range][:stf][:all]).where(driver_id: new_driver_ids).unique_driver_count,
+          },
+          volunteer: {
+            rc:  Run.for_volunteer_driver.for_trips_collection(trip_queries[:in_range][:rc]).where(driver_id: new_driver_ids).unique_driver_count,
+            stf: Run.for_volunteer_driver.for_trips_collection(trip_queries[:in_range][:stf][:all]).where(driver_id: new_driver_ids).unique_driver_count,
+          },
+        },
+        escort_hours: {
+          rc:  monthly_base_query.where(funding_source_id: FundingSource.pick_id_by_name("Ride Connection")).first.try(:volunteer_escort_hours),
+          stf:  monthly_base_query.where(funding_source_id: FundingSource.pick_id_by_name("STF")).first.try(:volunteer_escort_hours),
+        },
+        administrative_hours: {
+          rc:  monthly_base_query.where(funding_source_id: FundingSource.pick_id_by_name("Ride Connection")).first.try(:volunteer_admin_hours),
+          stf:  monthly_base_query.where(funding_source_id: FundingSource.pick_id_by_name("STF")).first.try(:volunteer_admin_hours),
+        },
+      },
+      rides_not_given: {
+        turndowns: {
+          rc: trip_queries[:in_range][:rc].where(trip_result: "TD").count,
+          stf: trip_queries[:in_range][:stf][:all].where(trip_result: "TD").count,
+        },
+        cancels: {
+          rc: trip_queries[:in_range][:rc].where(trip_result: "CANC").count,
+          stf: trip_queries[:in_range][:stf][:all].where(trip_result: "CANC").count,
+        },
+        no_shows: {
+          rc: trip_queries[:in_range][:rc].where(trip_result: "NS").count,
+          stf: trip_queries[:in_range][:stf][:all].where(trip_result: "NS").count,
+        },
+      },
+      rider_donations: {
+        rc: trip_queries[:in_range][:rc].sum(:donation),
+        stf: trip_queries[:in_range][:stf][:all].sum(:donation),
+      },
+      trip_purposes: {trips: [], total_rides: {}, reimbursements_due: {}}, # We will loop over and add these later
+      new_rider_ethinic_heritage: {ethnicities: []}, # We will loop over and add the rest of these later
+    }
+
+    TRIP_PURPOSES.sort.each do |tp|
+     trip = {
+        name: tp,
+        oaa3b: trip_queries[:in_range][:all].where(funding_source_id: FundingSource.pick_id_by_name("OAA")).where(trip_purpose: tp).total_ride_count,
+        rc: trip_queries[:in_range][:rc].where(trip_purpose: tp).total_ride_count,
+        trimet: trip_queries[:in_range][:all].where(funding_source_id: FundingSource.pick_id_by_name("TriMet Non-Medical")).where(trip_purpose: tp).total_ride_count,
+        stf_van: trip_queries[:in_range][:stf][:van].where(trip_purpose: tp).total_ride_count,
+        stf_taxi: {
+          all: {
+            count: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp).total_ride_count,
+            mileage: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp).total_mileage
+          },
+          wheelchair: {
+            count: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp, service_level: "Wheelchair").total_ride_count,
+            mileage: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp, service_level: "Wheelchair").total_mileage
+          },
+          ambulatory: {
+            count: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp, service_level: "Ambulatory").total_ride_count,
+            mileage: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp, service_level: "Ambulatory").total_mileage
+          },
+        },
+        unreimbursed: trip_queries[:in_range][:all].where(funding_source_id: FundingSource.pick_id_by_name("Unreimbursed")).where(trip_purpose: tp).total_ride_count,
+      }
+      trip[:total_rides] = trip[:oaa3b] +
+        trip[:rc] +
+        trip[:trimet] +
+        trip[:stf_van] +
+        trip[:stf_taxi][:all][:count] +
+        trip[:unreimbursed]
+      @report[:trip_purposes][:trips] << trip
+    end
+    @report[:trip_purposes][:total_rides] = {
+      oaa3b: @report[:trip_purposes][:trips].collect{|t| t[:oaa3b]}.sum,
+      rc: @report[:trip_purposes][:trips].collect{|t| t[:rc]}.sum,
+      trimet: @report[:trip_purposes][:trips].collect{|t| t[:trimet]}.sum,
+      stf_van: @report[:trip_purposes][:trips].collect{|t| t[:stf_van]}.sum,
+      stf_taxi: @report[:trip_purposes][:trips].collect{|t| t[:stf_taxi][:all][:count]}.sum,
+      unreimbursed: @report[:trip_purposes][:trips].collect{|t| t[:unreimbursed]}.sum,
+    }
+    @report[:trip_purposes][:reimbursements_due] = {
+      oaa3b: @report[:trip_purposes][:total_rides][:oaa3b] * @provider.oaa3b_per_ride_reimbursement_rate.to_f,
+      rc: @report[:trip_purposes][:total_rides][:rc] * @provider.ride_connection_per_ride_reimbursement_rate.to_f,
+      trimet: @report[:trip_purposes][:total_rides][:trimet] * @provider.trimet_per_ride_reimbursement_rate.to_f,
+      stf_van: @report[:trip_purposes][:total_rides][:stf_van] * @provider.stf_van_per_ride_reimbursement_rate.to_f,
+      stf_taxi: (
+        (@report[:trip_purposes][:trips].collect{|t| t[:stf_taxi][:wheelchair][:count]}.sum * @provider.stf_taxi_per_ride_wheelchair_load_fee.to_f) +
+        (@report[:trip_purposes][:trips].collect{|t| t[:stf_taxi][:wheelchair][:mileage]}.sum * @provider.stf_taxi_per_mile_wheelchair_reimbursement_rate.to_f) +
+        (@report[:trip_purposes][:trips].collect{|t| t[:stf_taxi][:ambulatory][:count]}.sum * @provider.stf_taxi_per_ride_ambulatory_load_fee.to_f) +
+        (@report[:trip_purposes][:trips].collect{|t| t[:stf_taxi][:ambulatory][:mileage]}.sum * @provider.stf_taxi_per_mile_ambulatory_reimbursement_rate.to_f) +
+        (@report[:trip_purposes][:total_rides][:stf_taxi] * @provider.stf_taxi_per_ride_administrative_fee.to_f)
+      ),
+    }
+
+    non_other_ethnicities = []
+    @provider.ethnicities.each do |e|
+      next if e.name == "Other"
+      @report[:new_rider_ethinic_heritage][:ethnicities] << {
+        name: e.name,
+        trips: {
+          rc: trip_queries[:in_range][:rc].joins(:customer).where(customers: {ethnicity: e.name}).unique_customer_count,
+          stf: trip_queries[:in_range][:stf][:all].joins(:customer).where(customers: {ethnicity: e.name}).unique_customer_count,
+        },
+      }
+      non_other_ethnicities << e.name
+    end
+    @report[:new_rider_ethinic_heritage][:ethnicities] << {
+      name: "Other",
+      trips: {
+        rc: trip_queries[:in_range][:rc].joins(:customer).where('"customers"."ethnicity" NOT IN (?)', non_other_ethnicities).unique_customer_count,
+        stf: trip_queries[:in_range][:stf][:all].joins(:customer).where('"customers"."ethnicity" NOT IN (?)', non_other_ethnicities).unique_customer_count,
+      },
+    }
   end
 
   private
@@ -351,7 +651,7 @@ class ReportsController < ApplicationController
   def prep_with_cab
     authorize! :read, Trip
 
-    query_params = params[:query]
+    query_params = params[:query] || {}
     @query = Query.new(query_params)
     @date = @query.start_date
 

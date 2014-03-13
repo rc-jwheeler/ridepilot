@@ -10,7 +10,8 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
   this._tree_elem  = $("#" + tree_id),
   this._map_elem = $("#" + map_id),
   this._timeout  = null,
-  this.search_marker = null,
+  this.last_search_marker = null,
+  this.search_markers = [],
   
   this.init = function(map_id, bounds, viewport){
     $(window).resize(self.adjustMapHeight).resize();
@@ -52,19 +53,21 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
   },
   
   this.adjustMapHeight = function() {
-    self._map_elem.css("height", function(){
-      return $(window).height() -
-      $("#header").outerHeight() -
-      $("#crossbar").outerHeight() -
-      ( $("#main").outerHeight() - $("#main").height() ) -
-      $("#page-header").outerHeight() - 21 + "px"
-    });
+    var height = $(window).height() -
+      $("#header").outerHeight(true) -
+      $("#crossbar").outerHeight(true) -
+      ( $("#main").outerHeight(true) - $("#main").height() ) -
+      $("#page-header").outerHeight(true) - 
+      $("#main > .clearfix").outerHeight(true) - 
+      $("#main > .notice").outerHeight(true) + "px";
+    self._map_elem.css("height", height);
+    $('.column_wrapper').css("height", height);
   },
   
   this.initTree = function(){
     self.tree = self._tree_elem.jstree({
       core      : { html_titles : true },
-      plugins   : [ "json_data", "themes", "checkbox"],
+      plugins   : [ "json_data", "themes", "checkbox", "contextmenu"],
       themes    : { theme : "apple", url : "../stylesheets/jstree-apple/style.css", icons : false },
       json_data : { ajax : {
         url : window.location.pathname,
@@ -90,9 +93,51 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
                 self._tree_elem.jstree("close_node", this, true);
             });
           }, 1);
-        }        
-      } }
+        }
+      } },
+      contextmenu : {
+        items : self.jsTreeContextMenu
+      }
     });
+  },
+  
+  this.jsTreeContextMenu = function(node) {
+    if ($(node).attr("rel") == "device_pool") {
+      return {
+        // Some key
+        "delete" : {
+          // The item label
+          "label" : "Delete Device Pool",
+          // The function to execute upon a click
+          "action" : self.jsTreeRemoveNode,
+          // All below are optional 
+          "_disabled" : false, // clicking the item won't do a thing
+          "_class" : "", // class is applied to the item LI node
+          "separator_before" : false, // Insert a separator before the item
+          "separator_after" : false, // Insert a separator after the item
+          "icon" : false, // false or string - if does not contain `/` - used as classname
+        }
+      };
+    } else {
+      return false;
+    }
+  },
+  
+  this.jsTreeRemoveNode = function(node) {
+    if (confirm("Are you sure you want to delete this device pool?")) {
+      $.ajax({
+          url: '/device_pools/' + $(node).data("id"),
+          type: 'DELETE',
+          dataType: 'json',
+          data: {"id": $(node).data("id")},
+          success: function(result) {
+            self._tree_elem.jstree("delete_node", node);
+          },
+          error: function(result) {
+            alert("Could not delete the selected device pool. Please try again.");
+          }
+      });
+    }
   },
   
   this.positionMarkers = function() {
@@ -153,6 +198,7 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
   },
   
   this._open_window_for_marker = function(marker) {
+    self.last_search_marker = marker;
     self._infoWindow.setContent(marker.html);
     self._infoWindow.open(self.map, marker);
   },
@@ -281,7 +327,6 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
   this.locateAddress = function(address) {
     $("#search-spinner").css("visibility", "visible");
     $("#search-message").html("");
-    self.clearSearchResult();
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode({address: address, bounds: self.bounds},
                      function(results, status) {
@@ -336,27 +381,65 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
   }
 
   this.showSearchResult = function(result) {
-    self.clearSearchResult();
+    var _search_marker;
     self.map.setCenter(result.geometry.location);
-    self.search_marker = new google.maps.Marker({
+    _search_marker = new google.maps.Marker({
       map: self.map,
-      position: result.geometry.location
+      position: result.geometry.location,
+      animation: google.maps.Animation.DROP,
+      title: result.formatted_address
     });
-    self.search_marker.html = '<div class="marker_detail">' +
+    _search_marker.html = '<div class="marker_detail">' +
                               '<h2>Search Result:</h2>' +
                               '<h3>' + result.formatted_address +
-                              '</h3></div>';
-    google.maps.event.addListener(self.search_marker, "click", function(){
-      self._open_window_for_marker(self.search_marker);
+                              '</h3><p><small><a href="javascript:d.clearSearchResult()">' +
+                              'Remove Marker</a></small></p></div>';
+    google.maps.event.addListener(_search_marker, "click", function(){
+      self._open_window_for_marker(_search_marker);
     });
-    self._open_window_for_marker(self.search_marker);
+    self.map.panTo(result.geometry.location);
+    self._open_window_for_marker(_search_marker);
+    self.search_markers.push(_search_marker);
   };
 
   this.clearSearchResult = function() {
-    if (self.search_marker) {
-      self.search_marker.setMap(null);
+    var index = self.search_markers.indexOf(self.last_search_marker);
+    if (index > -1) {
+      self.clearSearchMarkerAtIndex(index);
+    }
+    self.centerMap();
+  };
+
+  this.clearSearchMarkers = function() {
+    for (var i=self.search_markers.length - 1; i>=0; i--) {
+      self.clearSearchMarkerAtIndex(i);
+    }
+    self.search_markers = [];
+    self.centerMap();
+  };
+
+  this.clearSearchMarkerAtIndex = function(index) {
+    if (self.search_markers[index]) {
+      self.search_markers[index].setMap(null);
+      self.search_markers.splice(index, 1);
+      self.last_search_marker = null;
     }
   };
+  
+  this.centerMap = function() {
+    var p, m;
+    if (self.last_search_marker) {
+      m = self.last_search_marker;
+      p = m.getPosition();
+    } else if (self.search_markers.length) {
+      m = self.search_markers[self.search_markers.length-1];
+      p = m.getPosition();
+    } else {
+      p = self.viewport.center;
+    }
+    self.map.panTo(p);
+    if (m) self._open_window_for_marker(m);
+  },
 
   this.init(map_id, bounds, viewport);
 }

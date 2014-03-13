@@ -1,0 +1,47 @@
+<%= content_for :title, "Customers receiving trips in range:#{@query.try(:start_date).try(:strftime, ": %B %Y")}#{@query.try(:start_date).try(:strftime, " - %B %Y")}" %>
+<div id="page-header">
+<h1>Verify Runs<%= @query.try(:start_date).try(:strftime, ": %B %Y") %><%= @query.try(:start_date).try(:strftime, " - %B %Y") %></h1>
+</div>
+
+<% if @query %> 
+  <%= form_for @query, :url=>url_for(:action=>:customer_receiving_trips_in_range), :html=>{:method=>:get} do |f| %>
+    <fieldset class="select-month">
+      <p>
+        <%= f.date_select  :start_date, :order => [:month,:day,:year] %>
+        through 
+        <%= f.date_select  :before_end_date, :order => [:month,:day,:year] %>
+        <%= f.submit "Update" %>
+      </p>
+    </fieldset>
+  <% end %>
+<% end %>
+
+<table>
+  <tr>
+    <th>Customer</th>
+    <th>DOB</th>
+    <th>Trips received</th>
+    <th>Trip purposes</th>
+    <th>Trip funding sources</th>
+  </tr>
+  
+  <% @customers.each do |customer| %>
+    <tr>
+      <td>
+        <%= link_to customer.name, customer %>
+      </td>
+      <td>
+        <%= customer.birth_date.try(:strftime, '%m-%d-%Y') %>
+      </td>
+      <td>
+        <%= customer.trips.count %>
+      </td>
+      <td>
+        <%= customer.trips.collect(&:trip_purpose).compact.uniq.sort.join(', ') %>
+      </td>
+      <td>
+        <%= customer.trips.collect{|t| t.funding_source.try(:name)}.compact.uniq.sort.join(', ') %>
+      </td>
+    </tr>
+  <% end %>
+</table>

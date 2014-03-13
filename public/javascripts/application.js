@@ -93,10 +93,10 @@ $(function() {
   // hide middle/last names for group customer
   var updateGroupField = function() {
     if ( $('input#customer_group').is(':checked') ){
-      $('li.middlename, li.lastname').hide();
+      $('li.middlename, li.lastname, li.ethnicity, li.birth_date').hide();
       $('li.firstname label').html("Group Name:");
     } else {
-      $('li.middlename, li.lastname').show();
+      $('li.middlename, li.lastname, li.ethnicity, li.birth_date').show();
       $('li.firstname label').html("First Name:");
     }
   };
@@ -110,9 +110,9 @@ $(function() {
   // when trip pickup time is changed, update appointment time and displayed week
   $('#trip_pickup_time').live('change', function() {
     var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time').attr("value") );
-    var appointmentTimeDate = new Date(pickupTimeDate.getTime() + (1000 * 60 * 30));    
+    var appointmentTimeDate = new Date(pickupTimeDate.getTime() + (1000 * 60 * 30));
 
-    $('#trip_appointment_time').attr( "value", appointmentTimeDate.format("ddd yyyy-mm-dd hh:MM t") );
+    $('#trip_appointment_time').attr( "value", appointmentTimeDate.format("ddd yyyy-mm-dd hh:MM tt"));
     
     if ( week_differs(appointmentTimeDate.getTime()) ) {
       $("#calendar").weekCalendar("gotoWeek", appointmentTimeDate.getTime());
@@ -149,14 +149,19 @@ $(function() {
     }, "json");
   });
   
-  $('#new_trip #customer_name').bind('railsAutocomplete.select', function(e){ 
+  $('#new_trip #customer_name').bind('railsAutocomplete.select', function(event, data){ 
     if ($("#trip_group").val() == "true") {
       $("li.passengers").hide();
       $("li.group_size").show();
     } else {
       $("li.passengers").show();
       $("li.group_size").hide();
-    } 
+    }
+  });
+  
+  $('.new_trip #customer_name, .edit_trip #customer_name').bind('railsAutocomplete.select', function(event, data){ 
+    if (parseInt(data.address_id) > 0)
+      autocompleted(data.address_data, 'pickup');
   });
   
   $("#new_customer[data-path]").live("click", function(e) {
@@ -172,8 +177,8 @@ $(function() {
     var new_end   = new Date(parseInt(range['end']) * 1000);
      
     $.get(window.location.href, range, function(data) {
-      $("#runs tr").not(".head").remove();
-      $("#runs").append(data.rows.join(""));
+      $("#runs tr, #cab_trips tr").not(".head").remove();
+      $("#runs, #cab_trips").append(data.rows.join(""));
       $(".wc-nav").attr("data-start-time", new_start.getTime());
       $("#start_date").html((new_start.getMonth()+1) + "-" + new_start.getDate() + "-" + new_start.getFullYear());
       $("#end_date").html((new_end.getMonth()+1) + "-" + new_end.getDate() + "-" + new_end.getFullYear());  
@@ -197,7 +202,7 @@ $(function() {
     }
   };
  
-  $("body.runs .wc-nav button").click(function(e){
+  $("body.runs .wc-nav button, body.cab-trips .wc-nav button").click(function(e){
     var current_start, new_start, new_end;
     var target    = $(this);
     var week_nav  = target.parent(".wc-nav");
@@ -269,7 +274,9 @@ $(function() {
           $("select.new_device_pool_driver option[value=" + select.val() + "]").remove();
           
           link.parent("p").hide().prev("p").show();          
-        } else console.log(data);
+        } else {
+          alert("Could not add the selected driver to the device pool. Please try again.");
+        }
       }, "json"
     );
     
@@ -290,7 +297,9 @@ $(function() {
           $("select.new_device_pool_vehicle option[value=" + select.val() + "]").remove();
           
           link.parent("p").hide().prev("p").show();          
-        } else console.log(data);
+        } else {
+          alert("Could not add the selected vehicle to the device pool. Please try again.");
+        }
       }, "json"
     );
     

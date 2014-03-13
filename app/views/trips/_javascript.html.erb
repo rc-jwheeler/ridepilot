@@ -1,33 +1,67 @@
 <%= render "shared/date_picker_javascript" %>
 <script type='text/javascript'>
-
   function autocompleted(address, field) {
-    if (address.label == "New Address") {
-      $( "#" + field + "-address-form" ).dialog( "open" );
-    } else if (address.id) {
-      //found an existing address
-        id_field = '#trip_' + field + '_address_id';
-      $(id_field).val(address.id);
-      label_field = '#' + field + '_address_label';
-      $(label_field).val(address.label);
-      //close dialog
+    if (address.id) {
+      populate_address_form(field, address);
+      update_address_fields(field, address);
       $( "#" + field + "-address-form" ).dialog( "close" );
+      $("." + field + "_address_details").show();
+    } else if (address.label == "New Address") {
+      populate_address_form(field, {});
+      open_form_for_creating(field);
     } else {
       //found a geocode, fill in fields, open the dialog for saving
-      $('#' + field + '_name').val(address.name);
-      $('#' + field + '_building_name').val(address.building_name);
-      $('#' + field + '_address').val(address.address);
-      $('#' + field + '_city').val(address.city);
-      $('#' + field + '_state').val(address.state);
-      $('#' + field + '_zip').val(address.zip);
-      $('#' + field + '_lat').val(address.lat);
-      $('#' + field + '_lon').val(address.lon);
-      $('#' + field + '_in_district').val(address.in_district);
-      $( "#" + field + "-address-form" ).dialog( "open" );
+      populate_address_form(field, address);
+      open_form_for_creating(field);
     }
   }
+  
+  function populate_address_form(field, address) {
+    form = $("#" + field + "-address-form");
+    form.find('#address_id').val(address.id);
+    form.find('#' + field + '_name').val(address.name);
+    form.find('#' + field + '_building_name').val(address.building_name);
+    form.find('#' + field + '_address').val(address.address);
+    form.find('#' + field + '_city').val(address.city);
+    form.find('#' + field + '_state').val(address.state);
+    form.find('#' + field + '_zip').val(address.zip);
+    form.find('#' + field + '_lat').val(address.lat);
+    form.find('#' + field + '_lon').val(address.lon);
+    form.find('#' + field + '_in_district').val(address.in_district);
+  }
+  
+  function open_form_for_creating(field) {
+    $("." + field + "_address_details").hide();
+    form = $("#" + field + "-address-form");
+    form.parent().find('button:first span').text('Add Address');
+    form.dialog( "open" );    
+  }
+  
+  function open_form_for_editing(field) {
+    $("." + field + "_address_details").hide();
+    form = $("#" + field + "-address-form");
+    form.parent().find('button:first span').text('Save Address');
+    form.dialog( "open" );    
+  }
+  
+  function edit_pickup_address() {
+    open_form_for_editing('pickup');
+  }
 
-  $(function() {
+  function edit_dropoff_address() {
+    open_form_for_editing('dropoff');
+  }
+  
+  function update_address_fields(field, address){
+    id_field = '#trip_' + field + '_address_id';
+    $(id_field).val(address.id);
+    search_field = '#' + field + '_search_address';
+    $(search_field).val(address.label);
+    $(search_field).attr("data-original-value", address.label);
+    $(search_field).attr("data-original-id", address.id);
+  }
+
+  $(document).ready(function() {
     
     function load_index_trips(start_time) {
       $("form.edit_trip").remove();
@@ -35,7 +69,7 @@
       $("table.trips").show();
       $('a.new').show(); 
       $('a.new').prev("hr").show();
-      if (start_time) $("#calendar").weekCalendar("gotoWeek", start_time );
+      if (start_time) $("#calendar").weekCalendar("gotoWeek", start_time);
       $("#page-header h1").html("View Trips");
     }
 
@@ -52,11 +86,11 @@
     }
     
     function push_index_state() {
-       if (supports_history_api()) history.pushState({index: calendar_range}, "list trips", "<%= trips_path %>?" + $.param(calendar_range));
+      if (supports_history_api()) history.pushState({index: calendar_range, scroll_positions: scroll_positions}, "list trips", "<%= trips_path %>?" + $.param(calendar_range));
     }
     
     function replace_index_state() {
-       if (supports_history_api()) history.replaceState({index: calendar_range}, "list trips", "<%= trips_path %>?" + $.param(calendar_range));
+      if (supports_history_api()) history.replaceState({index: calendar_range, scroll_positions: scroll_positions}, "list trips", "<%= trips_path %>?" + $.param(calendar_range));
     }
     
     function push_edit_state(path) {
@@ -69,6 +103,7 @@
 
     window.onpopstate = function(event) {
       if (event.state) {
+        scroll_positions = event.state['scroll_positions'];
         if (event.state['index']) load_index_trips(event.state['index'].start * 1000);
         if (event.state.edit) $.get(event.state.edit, function(data){ load_edit_trip(data.form) }, "json");
       }
@@ -79,13 +114,16 @@
     // if no id is returned, error messages are filled in. 
     $('.address-search').live('ajax:success', function(evt, data, status, xhr){
       if (data.id) {
-        $( $(this).attr('data-id-element') ).val(data.id);
-        $( $(this).attr('data-label-element') ).val(data.label);
-        
-        if (data.phone_number) $("#dropoff_phone").val(data.phone_number);
-        if (data.trip_purpose) $("#trip_trip_purpose").val(data.trip_purpose);
+        update_address_fields(data.prefix, data);      
+
+        if (data.prefix == 'dropoff') {
+          if (data.phone_number) $("#dropoff_phone").val(data.phone_number);
+          if (data.trip_purpose) $("#trip_trip_purpose").val(data.trip_purpose);
+        }
         
         $( $(this)[0].parentNode ).dialog( "close" );
+        populate_address_form(data.prefix, data);
+        $("." + data.prefix + "_address_details").show();
       } else {
         //failed to create an address
         for (var field in data) {
@@ -102,10 +140,10 @@
       }
     })
     
-    var calendar_range;
-
+    var calendar_range, scroll_positions;
+    
     $('#calendar').weekCalendar({
-        date: <%= @start && @start > 0 ? @start * 1000 : "new Date()" %>,
+        date: new Date(<%= @start && @start > 0 ? @start * 1000 : "Date.now()" %> + (RidePilot.timezone.browser.current_offset_from_server * 1000)),
         timeslotsPerHour: 4,
         daysToShow: getDaysToShow(),
         startOnFirstDayOfWeek: true,
@@ -124,10 +162,20 @@
           $("#expand_calendar").remove().appendTo("div.wc-toolbar").show();
         },
         height: function($calendar){
-          if ( $("#calendar")[0].$expanded )
-            return ($(".wc-hour-header").eq(0).height() + 8) * 11 - 7;
-          else
-            return ($(window).height() * 0.3 + 40);
+          state = $("#calendar")[0].$state;
+          if(state == 0) {
+            $('.wc-scrollable-grid').hide();
+            $('.wc-header').hide();
+            return 0;
+          } else {
+            $('.wc-scrollable-grid').show();
+            $('.wc-header').show();
+            if(state == 2) {
+              return ($(".wc-hour-header").eq(0).height() + 8) * 11 - 7;
+            } else {
+              return ($(window).height() * 0.3 + 40);
+            }
+          }
         },
         timeFormat: "h:ia",
         textSize: 10,
@@ -147,15 +195,36 @@
         },
         data: function(start, end, callback){
           $("#vehicle_filter #vehicle_id").val("");
-          calendar_range = { start:start.getTime()/1000, end:end.getTime()/1000 };
+          /*
+          console.log("start", start);
+          console.log("end", end);
+          calendar_range = { 
+            start: (new Date(start.getTime() - (RidePilot.timezone.browser.current_offset_from_server * 1000))).getTime() / 1000,
+            end: (new Date(end.getTime()  - (RidePilot.timezone.browser.current_offset_from_server * 1000))).getTime() / 1000
+          };
+          console.log("calendar_range", calendar_range);
+          */
+          calendar_range = {start: start.getTime()/1000, end: end.getTime()/1000};
           
           $.getJSON('<%= trips_path :json %>',
             calendar_range,
             function(data, textStatus, jqXHR){  
               // we probably didn't have the right range before, so now  we should update the state
-              if ( on_trip_index() ) replace_index_state(); 
-                          
-              callback(data.events);              
+              if ( on_trip_index() ) replace_index_state();
+              
+              // massage date values to account for browser timezone differences. We should ALWAYS
+              // be showing the date as set for the server timezone, i.e. if an event comes from the
+              // server as 4pm PDT and the user is in EDT, it should still show up as 4pm.
+              for(i=0; i < data.events.length; i++) {
+                event = data.events[i];
+                event.original_start = event.start;
+                event.original_end = event.end;
+                event.start = event.start.replace(new RegExp(RidePilot.timezone.server.current_offset + "$"), RidePilot.timezone.browser.current_offset);
+                event.end = event.end.replace(new RegExp(RidePilot.timezone.server.current_offset + "$"), RidePilot.timezone.browser.current_offset);
+                data.events[i] = event;
+              }
+              
+              callback(data.events);
 
               var table = $("#calendar").next("table");
               table.find("tr.trip").remove();
@@ -164,6 +233,9 @@
                 table.append(row);
               })
               $("tr:odd").addClass("odd");
+              
+              if (scroll_positions) window.scrollTo(scroll_positions.scrollX, scroll_positions.scrollY);
+              scroll_positions = null;
             }
           );
         },
@@ -204,14 +276,16 @@
                   $(form).trigger('submit'); 
               },
               Cancel: function() {
-                var prefix = $(this).attr("id").replace(/\-address\-form/, "");
-                var field  = $( "#" + prefix + "_search_address" );
-                field.val( field.attr("data-original-value") );
-                $("#trip_" + prefix + "_address_id").val(field.attr("data-original-id"));
                 $( this ).dialog( "close" );
               }
           },
           close: function() {
+              var prefix = $(this).attr("id").replace(/\-address\-form/, "");
+              var field  = $( "#" + prefix + "_search_address" );
+              field.val( field.attr("data-original-value") );
+              $("#trip_" + prefix + "_address_id").val(field.attr("data-original-id"));
+              if (parseInt(field.attr("data-original-id")) > 0)
+                  $("." + prefix + "_address_details").show();
           }
       });
     };
@@ -219,15 +293,31 @@
     makeDialogs();
 
     $("#expand_calendar button").live("click", function(e){
-      var cal       = $("#calendar")[0];
-      cal.$expanded = !cal.$expanded; // toggle expanded state
+      var $this    = $(this);
+      var $ui_icon = $this.find(".ui-icon");
+      var $cal     = $("#calendar")[0];
+      if($ui_icon.is('.ui-icon-arrowthickstop-1-n')) {
+        // Collapsing calendar
+        $cal.$state = 0;
+        
+        // Next state is small calendar
+        $ui_icon.toggleClass("ui-icon-arrowthickstop-1-n ui-icon-triangle-1-s");
+        $(this).attr("title", "Small Calendar");
+      } else if($ui_icon.is('.ui-icon-triangle-1-s')) {
+        // Make calendar small
+        $cal.$state = 1; 
 
-      // toggle class on expander button
-      $(this).find(".ui-icon").
-        toggleClass("ui-icon-arrowthickstop-1-s").
-        toggleClass("ui-icon-arrowthickstop-1-n");
+        // Next state is large calendar
+        $ui_icon.toggleClass("ui-icon-triangle-1-s ui-icon-arrowthickstop-1-s");
+        $(this).attr("title", "Large Calendar");
+      } else if($ui_icon.is('.ui-icon-arrowthickstop-1-s')) {
+        // Make calendar large
+        $cal.$state = 2;
 
-      $(this).attr("title", cal.$expanded ? "Shrink" : "Expand" );
+        // Next state is collapsed calendar
+        $ui_icon.toggleClass("ui-icon-arrowthickstop-1-s ui-icon-arrowthickstop-1-n");
+        $(this).attr("title", "Collapse Calendar");
+      }
 
       // Trigger window resize so calendar is resized properly
       $(window).trigger("resize");
@@ -242,6 +332,8 @@
     });
     
     $('tr.trip a[data-remote]').live('ajax:success', function(e, data, status, xhr){
+      scroll_positions = {scrollX: $(window).scrollLeft(), scrollY: $(window).scrollTop()};
+      replace_index_state(); // make sure the scrollstate is recorded
       push_edit_state($(this).attr("href"));
       load_edit_trip(data.form);
     });
@@ -267,12 +359,14 @@
       var date = ISODateFormatToDateObject( $(this).val() );
       var date_formatted = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
       $.getJSON("<%= for_date_runs_path %>", { date : date_formatted }, function(data){
+        selected = $("#trip_run_id").val();
         $("#trip_run_id option").remove();
         $("#trip_run_id").append( $("<option>") );
         $.each( data, function(i, run){
           var option = $("<option>").val(run.id).text(run.label);
           $("#trip_run_id").append( option );
         })
+        $("#trip_run_id").val(selected);
       })
     });
 
@@ -328,18 +422,20 @@
       var firstDayOfWeek = -1;
       var daysToShow = 0;
       for (var i = 0; i < 7; i++) {
-        if ($(buttons.get(i)).attr('checked')) {
+        if ($(buttons.get(i)).is(':checked')) {
           if (firstDayOfWeek === -1) {
             firstDayOfWeek = i;
           }
           daysToShow = i - firstDayOfWeek + 1;
         }
       }
-      // Nothign selected, restore M-F default
+      
+      // Nothing selected, restore M-F default
       if (firstDayOfWeek == -1) {
         firstDayOfWeek = 1;
         daysToShow = 5;
       }
+      
       // Enforce consecutive selection rule
       for (var i = 0; i < 7; ++i) {
         if (i >= firstDayOfWeek && i < firstDayOfWeek + daysToShow) {
@@ -355,7 +451,5 @@
     }
 
     initWeekdaySelect();
-
   });
-
 </script>

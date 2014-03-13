@@ -28,4 +28,17 @@ class DevicePoolsController < ApplicationController
       render :action=>:edit
     end
   end
+  
+  def destroy
+    @device_pool.destroy
+    respond_to do |format|
+      format.html {
+        flash[:notice] = "Device pool deleted"
+        redirect_to provider_path(current_user.current_provider)        
+      }
+      format.js { 
+        render :json => { :device_pool => @device_pool.as_json }
+      }
+    end
+  end
 end

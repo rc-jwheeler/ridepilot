@@ -1,20 +1,19 @@
 <script type='text/javascript'>
 
 function makeDatePickers () {
-  $('#trip_pickup_time, #trip_appointment_time').datetimepicker({
-        ampm: true,
-        stepMinute: 15,
-        stepHour: 1,
-        hourMin: RidePilot.business_hours.start,
-        hourMax: RidePilot.business_hours.end,
-        hourGrid: 2,
-        minuteGrid: 15,
-        timeFormat: 'hh:mm t',
-        dateFormat: 'D yy-mm-dd',
-        showOn: "button",
+  $('input[type=text]#trip_pickup_time, input[type=text]#trip_appointment_time').datetimepicker({
         buttonImage: "<%=  image_path 'calendar-clock.png' %>",
         buttonImageOnly: true,
-        constrainInput: false
+        constrainInput: false,
+        dateFormat: 'D yy-mm-dd',
+        hourGrid: 2,
+        hourMax: RidePilot.business_hours.end,
+        hourMin: RidePilot.business_hours.start,
+        minuteGrid: 15,
+        showOn: "button",
+        stepHour: 1,
+        stepMinute: 15,
+        timeFormat: 'hh:mm tt',
   });
 }
 

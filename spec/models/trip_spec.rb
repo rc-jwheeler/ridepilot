@@ -1,6 +1,49 @@
 require 'spec_helper'
 
 describe Trip do
+  describe "mileage" do
+    it "should be an integer" do
+      t = Trip.new
+      t.should respond_to(:mileage)
+      t.mileage = "1"
+      t.mileage.should eq 1
+      t.mileage = "0"
+      t.mileage.should eq 0
+    end
+    
+    it "should only allow integers greater than 0" do
+      t = Trip.new
+      t.mileage = 0
+      t.valid?
+      t.errors.keys.include?(:mileage).should be_true
+      t.errors[:mileage].should include "must be greater than 0"
+      
+      t.mileage = 1
+      t.valid?
+      t.errors.keys.include?(:mileage).should_not be_true
+    end
+  end
+
+  describe "service_level" do
+    it "should be a string field" do
+      t = Trip.new
+      t.should respond_to(:service_level)
+      t.service_level = "abc"
+      t.service_level.should == "abc"
+    end
+  end
+
+  describe "medicaid_eligible" do
+    it "should be a boolean field" do
+      t = Trip.new
+      t.should respond_to(:medicaid_eligible)
+      t.medicaid_eligible = "1"
+      t.medicaid_eligible.should be_true
+      t.medicaid_eligible = "0"
+      t.medicaid_eligible.should be_false
+    end
+  end
+
   describe "before validation" do
     context "when there are no runs yet" do
       before do
@@ -18,6 +61,7 @@ describe Trip do
 
   describe "after validation for trips with repetition:" do
     attr_accessor :trip
+    
     before do
       @trip = new_trip(
         :repeats_mondays => true, 
@@ -34,7 +78,6 @@ describe Trip do
     end
 
     context "when creating a trip with repeating trip data" do
-
       it "should accept repeating trip values" do
         trip.repeats_mondays.should == true
         trip.repeats_tuesdays.should == false
@@ -85,7 +128,7 @@ describe Trip do
         Trip.where(:repeating_trip_id => trip.repeating_trip_id).where("id <> ?",trip.id).each do |t|
           count += 1 if t.pickup_time.strftime("%u") == "2"
         end
-        count.should == 2
+        count.should == 1
       end
 
       it "should have no child trips on the old day" do
@@ -128,7 +171,7 @@ describe Trip do
         Trip.where(:repeating_trip_id => trip.repeating_trip_id).where("id <> ?",trip.id).each do |t|
           count += 1 if t.pickup_time.strftime("%u") == "2"
         end
-        count.should == 3
+        count.should == 2
       end
 
       it "should have no child trips on the old day" do

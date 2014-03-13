@@ -103,14 +103,22 @@ class TripsController < ApplicationController
   end
 
   def new
-    if params[:customer_id]
-      @trip = Trip.new(:provider_id=>current_provider_id, :customer_id=>params[:customer_id])
-      customer = Customer.find(params[:customer_id])
+    @trip = Trip.new(:provider_id=>current_provider_id)
+
+    if params[:run_id] && run = Run.find_by_id(params[:run_id])
+      d = run.date
+      t = run.scheduled_start_time || (d.at_midnight + 12.hours)
+      @trip.run_id = run.id
+      @trip.pickup_time = Time.zone.local(d.year, d.month, d.day, t.hour, t.min, 0)
+      @trip.appointment_time = @trip.pickup_time + 30.minutes
+    end
+
+    if params[:customer_id] && customer = Customer.find_by_id(params[:customer_id])
+      @trip.customer_id = customer.id
       @trip.pickup_address_id = customer.address_id
       @trip.mobility_id = customer.mobility_id 
-    else
-      @trip = Trip.new(:provider_id=>current_provider_id)
-      @trip.customer = Customer.new
+      @trip.funding_source_id = customer.default_funding_source_id
+      @trip.service_level = customer.default_service_level
     end
 
     prep_view
@@ -119,6 +127,7 @@ class TripsController < ApplicationController
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @trip }
+      format.js   { @remote = true; render :json => {:form => render_to_string(:partial => 'form') }, :content_type => "text/json" }
     end
   end
 
@@ -128,25 +137,39 @@ class TripsController < ApplicationController
     
     respond_to do |format|
       format.html 
-      format.js  { @remote = true; render :json => {:form => render_to_string(:partial => 'form') }, :content_type => "text/json" }
+      format.js  { @remote = true; render :json => {:form => render_to_string(:partial => 'form')}, :content_type => "text/json" }
     end
   end
 
   def create
     trip_params = params[:trip]
-    @customer = Customer.find(trip_params[:customer_id])
-    authorize! :read, @customer
-    trip_params[:provider_id] = @customer.provider.id if @customer.provider.present?
-    handle_trip_params trip_params
-    authorize! :manage, Trip.new(trip_params)
-
-    @trip = Trip.new(trip_params)
-    if @trip.save
-      redirect_to(trips_path(:start => @trip.pickup_time.to_i), :notice => 'Trip was successfully created.') 
+    if trip_params[:customer_id] && customer = Customer.find_by_id(trip_params[:customer_id])
+      authorize! :read, customer
+      trip_params[:provider_id] = customer.provider.id if customer.provider.present?
     else
+      trip_params[:customer_id] = ""
+    end    
+    handle_trip_params trip_params
+    @trip = Trip.new(trip_params)
+    authorize! :manage, @trip
+    
+    respond_to do |format|
       prep_view
-      render :action => "new" 
+      if @trip.save
+        format.html {
+          if params[:run_id].present?
+            redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
+          else
+            redirect_to(trips_path(:start => @trip.pickup_time.to_i), :notice => 'Trip was successfully created.') 
+          end
+        }
+        format.js { render :json => {:status => "success", :trip => render_to_string(:partial => 'runs/trip', :locals => {:trip => @trip})}, :content_type => "text/json" }
+      else
+        format.html { render :action => "new" }
+        format.js   { @remote = true; render :json => {:status => "error", :form => render_to_string(:partial => 'form')}, :content_type => "text/json" }
+      end
     end
+
   end
 
   def update
@@ -219,13 +242,14 @@ class TripsController < ApplicationController
     authorize! :read, @trip
     @customer           = @trip.customer
     @mobilities         = Mobility.order(:name).all
-    @funding_sources    = FundingSource.all
+    @funding_sources    = FundingSource.by_provider(current_provider)
     @trip_results       = TRIP_RESULT_CODES.map { |k,v| [v,k] }
     @trip_purposes      = TRIP_PURPOSES
     @drivers            = Driver.active.for_provider @trip.provider_id
     @trips              = [] if @trips.nil?
     @vehicles           = add_cab(Vehicle.active.for_provider(@trip.provider_id))
     @repeating_vehicles = @vehicles 
+    @service_levels     = SERVICE_LEVELS
 
     @trip.run_id = -1 if @trip.cab
 

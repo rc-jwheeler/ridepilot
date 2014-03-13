@@ -93,4 +93,14 @@ class ProvidersController < ApplicationController
     redirect_to provider_path(@provider)
   end
 
+  def change_allow_trip_entry_from_runs_page
+    @provider.update_attribute :allow_trip_entry_from_runs_page, params[:allow_trip_entry_from_runs_page]
+    redirect_to provider_path(@provider)
+  end
+
+  def change_reimbursement_rates
+    reimbursement_params = params.select{|k,v| Provider::REIMBURSEMENT_ATTRIBUTES.include?(k.to_sym)}
+    @provider.update_attributes reimbursement_params
+    redirect_to provider_path(@provider)
+  end
 end

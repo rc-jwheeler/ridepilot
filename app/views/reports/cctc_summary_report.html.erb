@@ -1,0 +1,543 @@
+<%= content_for :head do %>
+<style>
+  table {
+    width: auto;
+    margin: 1.3em auto;
+  }
+  
+  table, th, td {
+    border: 0 solid #2e6399;
+    border-spacing: 0;
+    border-collapse: collapse;
+    background: #fff;
+  }
+  
+  th, td {
+    margin: 0;
+    padding: 0.3em;
+  }
+  
+  td.b_t2, th.b_t2, .b_t2 td, .b_t2 th {border-top: 2px solid}
+  td.b_l2, th.b_l2, .b_l2 td, .b_l2 th {border-left: 2px solid}
+  td.b_b2, th.b_b2, .b_b2 td, .b_b2 th {border-bottom: 2px solid}
+  td.b_r2, th.b_r2, .b_r2 td, .b_r2 th {border-right: 2px solid}
+  td.b_t, th.b_t, .b_t td, .b_t th {border-top: 1px solid}
+  td.b_l, th.b_l, .b_l td, .b_l th {border-left: 1px solid}
+  td.b_b, th.b_b, .b_b td, .b_b th {border-bottom: 1px solid}
+  td.b_r, th.b_r, .b_r td, .b_r th {border-right: 1px solid}
+  td.b_full, th.b_full, .b_full td, .b_full th {border: 1px solid}
+  td.b_full2, th.b_full2, .b_full2 td, .b_full2 th {border: 2px solid}
+  td.b_none, th.b_none, .b_none td, .b_none th {border: 0 none}
+    
+  .s_50 {background-color: rgba(0, 0, 0, 0.5)}
+  
+  .a_l {text-align: left}
+  .a_r {text-align: right}
+  .a_c {text-align: center}
+  
+  .v_t, .v_t td, .v_t th {vertical-align: top}
+  .v_b, .v_b td, .v_b th {vertical-align: bottom}
+  .v_m, .v_m td, .v_m th {vertical-align: middle}
+  
+  .b {font-weight: bold}
+  
+  @media print {
+    #session-timeout-warning, #header, #crossbar, #page-header, #new_query, p.notice {
+      display: none;
+    }
+    
+    /* Unfortunately, it is still not possible for us to reasonably support 
+     * precise printing of page-breaks across web browsers.
+     */
+    
+    #cctc-report table, #cctc-report table tr, #cctc-report table td {
+      page-break-inside: avoid;
+    }
+    
+    #cctc-report hr {
+      page-break-after: always;
+      height: 0;
+      border-width: 0;
+    }
+  }
+</style>
+<% end %>
+
+<%= content_for :title, "Clackamas County Transportation Consortium Summary Report: #{@provider.name}, #{@start_date.strftime("%B %Y")}" %>
+<div id="page-header">
+  <h1>Clackamas County Transportation Consortium Summary Report: <%= @provider.name %>, <%= @start_date.strftime("%B %Y") %></h1>
+</div>
+
+<% if @query %> 
+  <%= form_for @query, :url=>url_for(:action=>:cctc_summary_report), :html=>{:method=>:get} do |f| %>
+    <fieldset class="select-month">
+      <p>
+        <%= f.date_select :start_date, :order => [:month,:year] %>
+        <%= f.submit "Update" %>
+      </p>
+    </fieldset>
+  <% end %>
+<% end %>
+
+<div style="text-align: center" id="cctc-report">
+  <h2>Clackamas County Transportation Consortium</h2>
+  
+  <h2>Monthly Report</h2>
+  
+  <table>
+    <tbody>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td colspan="2" class="b a_c v_b">STF Ride Miles</td>
+      </tr>
+      <tr>
+        <td style="width: 100px" class="b">1. Member:</td>
+        <td style="width: 250px" class="b"><%= @provider.name %></td>
+        <td style="width: 75px" class="b b_full">Van / Bus</td>
+        <td style="width: 75px" class="b b_full">Taxi</td>
+      </tr>
+      <tr>
+        <td class="b">2. Month/Yr:</td>
+        <td class="b"><%= @start_date.strftime("%B %Y") %></td>
+        <td class="b_full"><%= @report[:total_miles][:stf][:van_bus] %></td>
+        <td class="b_full"><%= @report[:total_miles][:stf][:taxi] %></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <p>&nbsp;</p>
+  
+  <table>
+    <tbody class="b_full v_b a_c">
+      <tr class="b_none b">
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>A.</td>
+        <td>B.</td>
+        <td>C.</td>
+        <td>D.</td>
+        <td colspan="2">E.</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr class="b">
+        <td rowspan="3">&nbsp;</td>
+        <td rowspan="2" class="a_l">Funding Sources</td>
+        <td rowspan="2">OAA<br>III B</td>
+        <td rowspan="2">Ride<br>Connection</td>
+        <td>Tri-Met</td>
+        <td>SDSD</td>
+        <td colspan="2">USDOT</td>
+        <td rowspan="2">Unreimb.<br>Rides</td>
+        <td rowspan="3">Total<br>Rides</td>
+      </tr>
+      <tr class="b">
+        <td colspan="2">Non-Medical T-XXX</td>
+        <td colspan="2">STF - New Rides</td>
+      </tr>
+      <tr class="b">
+        <td class="a_l">Type of Ride</td>
+        <td>Out</td>
+        <td>Out</td>
+        <td>Out</td>
+        <td>Out</td>
+        <td>Van</td>
+        <td>Taxi</td>
+        <td>Out</td>
+      </tr>
+      <% @report[:trip_purposes][:trips].each_with_index do |trip, index| %>
+        <tr>
+          <td style="width: 15px"><%= index + 1 %></td>
+          <td style="width: 200px" class="a_l"><%= trip[:name] %></td>
+          <td style="width: 75px"><%= trip[:oaa3b] %></td>
+          <td style="width: 75px"><%= trip[:rc] %></td>
+          <td style="width: 75px"><%= trip[:trimet] %></td>
+          <td style="width: 75px" class="s_50">&nbsp;</td>
+          <td style="width: 75px"><%= trip[:stf_van] %></td>
+          <td style="width: 75px"><%= trip[:stf_taxi][:all][:count] %></td>
+          <td style="width: 75px"><%= trip[:unreimbursed] %></td>
+          <td style="width: 75px"><%= trip[:total_rides] %></td>
+        </tr>
+      <% end %>
+      <tr>
+        <td><%= @report[:trip_purposes].size + 2 %></td>
+        <td class="a_l b">Total Number of 1-way rides</td>
+        <td><%= @report[:trip_purposes][:total_rides][:oaa3b] %></td>
+        <td><%= @report[:trip_purposes][:total_rides][:rc] %></td>
+        <td><%= @report[:trip_purposes][:total_rides][:trimet] %></td>
+        <td class="s_50">&nbsp;</td>
+        <td><%= @report[:trip_purposes][:total_rides][:stf_van] %></td>
+        <td><%= @report[:trip_purposes][:total_rides][:stf_taxi] %></td>
+        <td><%= @report[:trip_purposes][:total_rides][:unreimbursed] %></td>
+        <td><%= @report[:trip_purposes][:total_rides].values.sum %></td>
+      </tr>
+      <tr>
+        <td rowspan="2">&nbsp;</td>
+        <td class="a_l">Per Ride Reimbursement Rate</td>
+        <td><%= reimbursement_rate(@provider.oaa3b_per_ride_reimbursement_rate) %></td>
+        <td><%= reimbursement_rate(@provider.ride_connection_per_ride_reimbursement_rate) %></td>
+        <td><%= reimbursement_rate(@provider.trimet_per_ride_reimbursement_rate) %></td>
+        <td class="s_50">&nbsp;</td>
+        <td><%= reimbursement_rate(@provider.stf_van_per_ride_reimbursement_rate) %></td>
+        <td class="s_50">&nbsp;</td>
+        <td class="s_50">&nbsp;</td>
+        <td class="s_50">&nbsp;</td>
+      </tr>
+        <td class="a_l b">Reimbursement Due</td>
+        <td><%= reimbursement_due(@report[:trip_purposes][:reimbursements_due][:oaa3b], @provider.oaa3b_per_ride_reimbursement_rate) %></td>
+        <td><%= reimbursement_due(@report[:trip_purposes][:reimbursements_due][:rc], @provider.ride_connection_per_ride_reimbursement_rate) %></td>
+        <td><%= reimbursement_due(@report[:trip_purposes][:reimbursements_due][:trimet], @provider.trimet_per_ride_reimbursement_rate) %></td>
+        <td class="s_50">&nbsp;</td>
+        <td><%= reimbursement_due(@report[:trip_purposes][:reimbursements_due][:stf_van], @provider.stf_van_per_ride_reimbursement_rate) %></td>
+        <td><%= reimbursement_due(@report[:trip_purposes][:reimbursements_due][:stf_taxi], [
+          @provider.stf_taxi_per_ride_administrative_fee, 
+          @provider.stf_taxi_per_ride_ambulatory_load_fee, 
+          @provider.stf_taxi_per_mile_ambulatory_reimbursement_rate, 
+          @provider.stf_taxi_per_ride_wheelchair_load_fee, 
+          @provider.stf_taxi_per_mile_wheelchair_reimbursement_rate
+        ]) %></td>
+        <td class="s_50">&nbsp;</td>
+        <td class="s_50">&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Ambulatory STF Taxi Rides Reimbursed at Admin Fee (<%= reimbursement_rate(@provider.stf_taxi_per_ride_administrative_fee) %>/ride) + Load Fee (<%= reimbursement_rate(@provider.stf_taxi_per_ride_ambulatory_load_fee) %>/ride) + Mileage (<%= reimbursement_rate(@provider.stf_taxi_per_mile_ambulatory_reimbursement_rate) %>/mile)</p>
+  <p>Wheelchair STF Taxi Rides Reimbursed at Admin Fee (<%= reimbursement_rate(@provider.stf_taxi_per_ride_administrative_fee) %>/ride) + Load Fee (<%= reimbursement_rate(@provider.stf_taxi_per_ride_wheelchair_load_fee) %>/ride) + Mileage (<%= reimbursement_rate(@provider.stf_taxi_per_mile_wheelchair_reimbursement_rate) %>/mile)</p>
+  <p><sup>*</sup> Calculations require reimbursement rates not provided in system.</p>
+  
+  <hr>
+
+  <h2>Monthly Rider and Driver Report</h2>
+  
+  <p class="b">This form has totals of information for all vehicles. All are current reporting period numbers, not YTD, unless specified.</p>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+    </tr>
+    <tr>
+      <td rowspan="2" colspan="5" class="b a_l">Total miles driven for all rides provided during month:</td>
+      <td colspan="2" class="a_l">Ride Connection:</td>
+      <td class="b_full2"><%= @report[:total_miles][:rc] %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="2" class="a_l">STF:</td>
+      <td class="b_full2"><%= @report[:total_miles][:stf][:van_bus] %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+    </tr>
+    <tr>
+      <td colspan="4">&nbsp;</td>
+      <td colspan="2" class="b">Over 60</td>
+      <td colspan="2" class="b">Under 60</td>
+      <td colspan="2" class="b">ADA Eligible</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td class="b">Rider Information</td>
+      <td class="b b_full2">RC</td>
+      <td class="b b_full2">STF</td>
+      <td class="b b_full2">RC</td>
+      <td class="b b_full2">STF</td>
+      <td class="b b_full2">RC</td>
+      <td class="b b_full2">STF</td>
+      <td class="b b_full2">Over 60</td>
+      <td class="b b_full2">Under 60</td>
+    </tr>
+    <tr>
+      <td>1.</td>
+      <td class="a_l"># Riders New This Month</td>
+      <td class="b_full"><%= @report[:rider_information][:riders_new_this_month][:over_60][:rc]  + @report[:rider_information][:riders_ytd][:under_60][:rc] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_new_this_month][:over_60][:stf] + @report[:rider_information][:riders_ytd][:under_60][:stf] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_new_this_month][:over_60][:rc] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_new_this_month][:over_60][:stf] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_new_this_month][:under_60][:rc] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_new_this_month][:under_60][:stf] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_new_this_month][:ada_eligible][:over_60] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_new_this_month][:ada_eligible][:under_60] %></td>
+    </tr>
+    <tr>
+      <td>2.</td>
+      <td class="a_l"># Riders YTD</td>
+      <td class="b_full"><%= @report[:rider_information][:riders_ytd][:over_60][:rc]  + @report[:rider_information][:riders_ytd][:under_60][:rc] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_ytd][:over_60][:stf] + @report[:rider_information][:riders_ytd][:under_60][:stf] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_ytd][:over_60][:rc] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_ytd][:over_60][:stf] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_ytd][:under_60][:rc] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_ytd][:under_60][:stf] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_ytd][:ada_eligible][:over_60] %></td>
+      <td class="b_full"><%= @report[:rider_information][:riders_ytd][:ada_eligible][:under_60] %></td>
+    </tr>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td class="b">New Rider Ethnic Heritage</td>
+      <td class="b b_full2">RC</td>
+      <td class="b b_full2">STF</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <% @report[:new_rider_ethinic_heritage][:ethnicities].each_with_index do |ethnicity, index| %>
+      <tr>
+        <td><%= index + 1 %>.</td>
+        <td class="a_l"><%= ethnicity[:name] %></td>
+        <td class="b_full"><%= ethnicity[:trips][:rc] %></td>
+        <td class="b_full"><%= ethnicity[:trips][:stf] %></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    <% end %>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td class="b">Driver Information</td>
+      <td class="b" colspan="2">Paid</td>
+      <td class="b" colspan="2">Volunteer</td>
+      <td class="b" colspan="2">Totals</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td class="b b_full2">RC</td>
+      <td class="b b_full2">STF</td>
+      <td class="b b_full2">RC</td>
+      <td class="b b_full2">STF</td>
+      <td class="b b_full2">RC</td>
+      <td class="b b_full2">STF</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>1.</td>
+      <td class="a_l">Number of Driver Hours</td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_driver_hours][:paid][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_driver_hours][:paid][:stf] %></td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_driver_hours][:volunteer][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_driver_hours][:volunteer][:stf] %></td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_driver_hours][:paid][:rc]  + @report[:driver_information][:number_of_active_drivers][:volunteer][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_driver_hours][:paid][:stf] + @report[:driver_information][:number_of_active_drivers][:volunteer][:stf] %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>2.</td>
+      <td class="a_l">Number of Active Drivers</td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_active_drivers][:paid][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_active_drivers][:paid][:stf] %></td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_active_drivers][:volunteer][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_active_drivers][:volunteer][:stf] %></td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_active_drivers][:paid][:rc]  + @report[:driver_information][:number_of_active_drivers][:volunteer][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:number_of_active_drivers][:paid][:stf] + @report[:driver_information][:number_of_active_drivers][:volunteer][:stf] %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>3.</td>
+      <td class="a_l">Drivers New this Month</td>
+      <td class="b_full"><%= @report[:driver_information][:drivers_new_this_month][:paid][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:drivers_new_this_month][:paid][:stf] %></td>
+      <td class="b_full"><%= @report[:driver_information][:drivers_new_this_month][:volunteer][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:drivers_new_this_month][:volunteer][:stf] %></td>
+      <td class="b_full"><%= @report[:driver_information][:drivers_new_this_month][:paid][:rc]  + @report[:driver_information][:drivers_new_this_month][:volunteer][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:drivers_new_this_month][:paid][:stf] + @report[:driver_information][:drivers_new_this_month][:volunteer][:stf] %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>4.</td>
+      <td class="a_l">Escort Hours</td>
+      <td class="b_full s_50">&nbsp;</td>
+      <td class="b_full s_50">&nbsp;</td>
+      <td class="b_full"><%= @report[:driver_information][:escort_hours][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:escort_hours][:stf] %></td>
+      <td class="b_full"><%= @report[:driver_information][:escort_hours][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:escort_hours][:stf] %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>5.</td>
+      <td class="a_l">Administrative Hours</td>
+      <td class="b_full s_50">&nbsp;</td>
+      <td class="b_full s_50">&nbsp;</td>
+      <td class="b_full"><%= @report[:driver_information][:administrative_hours][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:administrative_hours][:stf] %></td>
+      <td class="b_full"><%= @report[:driver_information][:administrative_hours][:rc] %></td>
+      <td class="b_full"><%= @report[:driver_information][:administrative_hours][:stf] %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td class="b">Rides Not Given</td>
+      <td class="b" colspan="2">Ride Connection</td>
+      <td>&nbsp;</td>
+      <td class="b" colspan="2">STF</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>1.</td>
+      <td class="a_l">Turndowns</td>
+      <td class="b_full" colspan="2"><%= @report[:rides_not_given][:turndowns][:rc] %></td>
+      <td>&nbsp;</td>
+      <td class="b_full" colspan="2"><%= @report[:rides_not_given][:turndowns][:stf] %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>2.</td>
+      <td class="a_l">Cancels</td>
+      <td class="b_full" colspan="2"><%= @report[:rides_not_given][:cancels][:rc] %></td>
+      <td>&nbsp;</td>
+      <td class="b_full" colspan="2"><%= @report[:rides_not_given][:cancels][:stf] %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td>3.</td>
+      <td class="a_l">No Shows</td>
+      <td class="b_full" colspan="2"><%= @report[:rides_not_given][:no_shows][:rc] %></td>
+      <td>&nbsp;</td>
+      <td class="b_full" colspan="2"><%= @report[:rides_not_given][:no_shows][:stf] %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td class="b">Rider Donations</td>
+      <td class="b_b2" colspan="2"><%= number_to_currency(@report[:rider_donations][:rc], :precesion => 2) %></td>
+      <td>&nbsp;</td>
+      <td class="b_b2" colspan="2"><%= number_to_currency(@report[:rider_donations][:stf], :precesion => 2) %></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+  
+  <table>
+    <tr class="cctc-table-head">
+      <td style="width: 15px"></td>
+      <td style="width: 200px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+      <td style="width: 75px"></td>
+    </tr>
+    <tr>
+      <td class="b_b2 v_b a_l" colspan="4"><%= current_user.email %></td>
+      <td>&nbsp;</td>
+      <td class="b_b2 v_b a_l" colspan="4"><%= Time.zone.today.to_s(:long) %></td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="b_t2 v_t a_l" colspan="4">Generated By</td>
+      <td>&nbsp;</td>
+      <td class="b_t2 v_t a_l" colspan="4">Date Generated</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+</div>

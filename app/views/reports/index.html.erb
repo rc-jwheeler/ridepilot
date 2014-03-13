@@ -13,11 +13,48 @@
 
 <hr />
 
+<h2 class="section-header">Export Trips as CSV </h2>
+
+<%= form_for @trips_query, :url=>url_for(:action=>:export_trips_in_range), :html=>{:method=>:get} do |f| %>
+  <fieldset>
+    <%= f.date_select  :start_date, :order => [:month,:day,:year] %>
+    through 
+    <%= f.date_select  :before_end_date, :order => [:month,:day,:year] %>
+    <%= f.submit "Export" %>
+  </fieldset>
+<% end %>
+
+<hr />
+
+<h2 class="section-header">Clackamas County Transportation Consortium Summary Report</h2>
+
+<%= form_for @trips_query, :url=>url_for(:action=>:cctc_summary_report), :html=>{:method=>:get} do |f| %>
+  <fieldset>
+    <%= f.date_select :start_date, :order => [:month,:year] %>
+    <%= f.submit "Show" %>
+  </fieldset>
+<% end %>
+
+<hr />
+
 <h2 class="section-header">Day's Trips Report</h2>
 
 <%= form_for @driver_query, :url=>url_for(:action=>:daily_trips), :html=>{:method=>:get} do |f| %>
   <fieldset>
     <%= f.date_select  :start_date %>
+    <%= f.submit "Show" %>
+  </fieldset>
+<% end %>
+
+<hr />
+
+<h2 class="section-header">Customer Trips In Range</h2>
+
+<%= form_for @trips_query, :url=>url_for(:action=>:customer_receiving_trips_in_range), :html=>{:method=>:get} do |f| %>
+  <fieldset>
+    <%= f.date_select  :start_date, :order => [:month,:day,:year] %>
+    through 
+    <%= f.date_select  :before_end_date, :order => [:month,:day,:year] %>
     <%= f.submit "Show" %>
   </fieldset>
 <% end %>
@@ -86,3 +123,4 @@
     <%= f.submit "Show" %>
   </fieldset>
 <% end %>
+
