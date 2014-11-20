@@ -16,7 +16,7 @@ describe CustomersController do
       put 'create', customer: @customer.attributes
       request.flash.keys.should include(:alert)
       request.flash[:alert].should include('There is already a customer with a similar name or the same email address')
-      request.should be_success
+      response.should be_success
     end
   end
 end
