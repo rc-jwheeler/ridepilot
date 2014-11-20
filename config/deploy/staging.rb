@@ -1,6 +1,6 @@
 set :deploy_to, "/home/deployer/rails/ridepilot"
 set :branch, "master"
-set :rvm_ruby_string, '1.9.3-p547@ridepilot'
+set :rvm_ruby_string, '1.9.3-p550@ridepilot'
 set :rails_env, "staging"
 
 role :web,  "184.154.158.74"
