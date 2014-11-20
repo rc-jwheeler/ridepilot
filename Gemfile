@@ -35,5 +35,5 @@ group :test, :development do
   gem 'capybara', '~> 1.0.0'
   gem 'fixjour'
   gem 'faker'
-  gem 'debugger'
+  gem 'byebug'
 end

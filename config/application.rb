@@ -47,3 +47,8 @@ module Ridepilot
 
   end
 end
+
+# TEMP fix for issue in Rails 3.0 under Ruby 2.0+
+# https://github.com/rails/rails/issues/9619
+# TODO remove after upgrade
+ActionController::Base.config.relative_url_root = ''
