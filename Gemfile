@@ -1,12 +1,13 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.20'
+gem 'rails', '~> 3.1.0'
 
 gem 'pg'
 gem 'cancan',               '~> 1.6.5'
 gem 'devise',               '~> 1.5.3'
 gem 'GeoRuby',              '~> 1.3.4'
-gem 'spatial_adapter',      '~> 1.2.0'
+gem 'activerecord-postgis-adapter', 
+                            '~> 0.6.6'
 gem 'jquery-rails',         '~> 1.0.2'
 gem 'whenever',             '0.6.8'
 gem 'ice_cube',             '0.6.8' # current recurring trip tracking relies on this version
