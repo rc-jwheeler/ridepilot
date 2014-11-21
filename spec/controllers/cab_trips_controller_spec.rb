@@ -38,6 +38,9 @@ describe CabTripsController do
       put 'update_multiple', cab_trips: cab_trip_params
     end
     
+    # TODO This test is currently failing due to timezone strangeness. Ignoring
+    # for now, and will fix if it's still an issue in Rails 3.2 or 4.0. See:
+    # http://stackoverflow.com/q/24759900/83743
     it "should be successful" do
       response.should redirect_to(cab_trips_path(start: @start_date.to_time.to_i, end: @end_date.to_time.to_i))
     end
