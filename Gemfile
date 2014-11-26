@@ -2,23 +2,23 @@ source 'http://rubygems.org'
 
 gem 'rails', '~> 3.1.0'
 
+gem 'jquery-rails'
+
 gem 'pg'
 gem 'cancan',               '~> 1.6.5'
 gem 'devise',               '~> 1.5.3'
 gem 'GeoRuby',              '~> 1.3.4'
 gem 'activerecord-postgis-adapter', 
                             '~> 0.6.6'
-gem 'jquery-rails',         '~> 1.0.2'
-gem 'whenever',             '0.6.8'
+gem 'whenever',             '~> 0.9.4'
 gem 'ice_cube',             '0.6.8' # current recurring trip tracking relies on this version
 gem 'validates_timeliness', '~> 3.0.11'
 gem 'paperclip',            '~> 2.8.0'
-gem 'will_paginate',        '3.0.pre2'
-gem 'attribute_normalizer', '~> 0.3.1'
-gem 'userstamp',            '~> 2.0.1'
-gem 'bartt-ssl_requirement','~> 1.2.7', :require => 'ssl_requirement'
-gem 'escape_utils',         '~> 0.2.4'
-gem 'rails3-jquery-autocomplete', :git => 'git://github.com/juliamae/rails3-jquery-autocomplete'
+gem 'will_paginate',        '~> 3.0.pre2'
+gem 'attribute_normalizer', '~> 1.2.0'
+gem 'userstamp',            :git => 'git@github.com:kimkong/userstamp.git'
+gem 'escape_utils',         '~> 1.0.1'
+gem 'rails3-jquery-autocomplete', '~> 1.0.14'
 gem 'schedule_atts',              :git => 'git://github.com/zpearce/Schedule-Attributes.git'
 
 # Deploy with Capistrano
