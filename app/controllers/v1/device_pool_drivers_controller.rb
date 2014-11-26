@@ -1,6 +1,5 @@
 class V1::DevicePoolDriversController < ApplicationController
-  include ::SslRequirement
-  ssl_required :update, :index
+  force_ssl :only => [:update, :index]
 
   skip_before_filter :authenticate_user!
   
