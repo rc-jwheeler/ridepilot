@@ -84,7 +84,7 @@ STATE_NAME_TO_POSTAL_ABBREVIATION = {
   "WYOMING" => "WY"
 }
 
-EMAIL_FROM = "apps@rideconnection.com"
+EMAIL_FROM = "apps@rideconnection.org"
 
 # Initialize the rails application
 Ridepilot::Application.initialize!
