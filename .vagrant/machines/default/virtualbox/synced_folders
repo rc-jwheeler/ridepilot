@@ -1,0 +1,1 @@
+{"virtualbox":{"/vagrant":{"guestpath":"/vagrant","hostpath":"/Users/chrisbloom7/Projects/Panoptic/RideConnection/ridepilot","disabled":false},"v-csc-1":{"id":"v-csc-1","guestpath":"/tmp/vagrant-chef/fa99c9ade582fb29f2163e0f19557fee/cookbooks","hostpath":"/Users/chrisbloom7/Projects/Panoptic/RideConnection/ridepilot/cookbooks","disabled":false}}}

@@ -11,3 +11,4 @@ public/system
 db/legacy
 .DS_Store
 tags
+cookbooks
