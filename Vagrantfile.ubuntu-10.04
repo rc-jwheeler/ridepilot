@@ -1,12 +1,11 @@
 Vagrant.configure(2) do |config|
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "box-cutter/ubuntu1004"
   config.vm.network "forwarded_port", guest: 3000, host: 3000
-  config.vm.post_up_message = "Check the README file for next steps"
 
   config.ssh.forward_agent = true
   
   config.vm.provider :virtualbox do |vb|
-    vb.name = "ridepilot-development-trusty"
+    vb.name = "ridepilot-development"
     vb.customize ["modifyvm", :id, "--memory", "2048"]
     vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
   end
@@ -21,7 +20,6 @@ Vagrant.configure(2) do |config|
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = "cookbooks"
 
-    chef.add_recipe "locale"
     chef.add_recipe "apt-upgrade-once"
     chef.add_recipe "apt"
     chef.add_recipe "build-essential"
@@ -33,8 +31,8 @@ Vagrant.configure(2) do |config|
     chef.add_recipe "postgresql::contrib"
     chef.add_recipe "postgresql::client"
     chef.add_recipe "postgresql::ruby"
+    chef.add_recipe "geos"
     chef.add_recipe "postgis"
-    chef.add_recipe "packages"
     chef.add_recipe "imagemagick"
     chef.add_recipe "imagemagick::rmagick"
 
@@ -49,7 +47,6 @@ Vagrant.configure(2) do |config|
           user: 'vagrant',
           upgrade: 'stable',
           default_ruby: "ruby-2.1.4",
-          rubies: ["ruby-2.1.4", "ruby-1.9.3-p550"],
           global_gems: [{name: 'bundler'}],
           rvmrc: {
             rvm_project_rvmrc: 1,
@@ -60,6 +57,19 @@ Vagrant.configure(2) do |config|
         }]
       },
       postgresql: {
+        version: '8.4',
+        initdb_locale: 'en_US.UTF-8',
+        client: {
+          packages: ["postgresql-client-8.4", "libpq-dev"]
+        },
+        server: {
+          packages: ["postgresql-8.4", "postgresql-server-dev-8.4", "libxml2-dev", "proj"],
+          service_name: "postgresql-8.4"
+        },
+        contrib: {
+          packages: ["postgresql-contrib-8.4"],
+          extensions: ["fuzzystrmatch"]
+        },
         pg_hba: [
           {
             :type => 'local', 
@@ -68,31 +78,33 @@ Vagrant.configure(2) do |config|
             :addr => '', 
             :method => 'trust'
           },
-          {
-            :type => 'host', 
-            :db => 'all', 
-            :user => 'all', 
-            :addr => '127.0.0.1/32', 
-            :method => 'md5'
-          },
-          {
-            :type => 'host', 
-            :db => 'all', 
-            :user => 'all', 
-            :addr => '::1/128', 
-            :method => 'md5'
-          }
+          # {
+          #   :type => 'host', 
+          #   :db => 'all', 
+          #   :user => 'all', 
+          #   :addr => '127.0.0.1/32', 
+          #   :method => 'md5'
+          # },
+          # {
+          #   :type => 'host', 
+          #   :db => 'all', 
+          #   :user => 'all', 
+          #   :addr => '::1/128', 
+          #   :method => 'md5'
+          # }
         ],
-        config_pgtune: { db_type: 'desktop' },
-        contrib: {
-          extensions: ["fuzzystrmatch"]
-        },
         # https://github.com/opscode-cookbooks/postgresql#chef-solo-note
         # set to md5 of empty string
         password: { postgres: "d41d8cd98f00b204e9800998ecf8427e" }
       },
-      postgis: { template_name: 'template_postgis' },
-      packages: ["ruby-dev"]
+      geos: {
+        version: "3.3.8"
+      },
+      postgis: { 
+        version: '1.5.8',
+        sql_folder: 'postgis-1.5',
+        template_name: 'template_postgis15'
+      }
     }
   end
 end

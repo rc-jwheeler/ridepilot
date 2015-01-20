@@ -21,13 +21,13 @@ ActiveRecord::Schema.define(:version => 20130627201334) do
     t.string   "state"
     t.string   "zip"
     t.boolean  "in_district"
-    t.spatial  "the_geom",             :limit => {:srid=>4326, :type=>"point"}
     t.integer  "provider_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.integer  "lock_version",                                                  :default => 0
+    t.spatial  "the_geom",             :limit => {:srid=>4326, :type=>"point"}
     t.string   "phone_number"
     t.boolean  "inactive",                                                      :default => false
     t.string   "default_trip_purpose"
@@ -144,20 +144,20 @@ ActiveRecord::Schema.define(:version => 20130627201334) do
     t.datetime "logo_updated_at"
     t.boolean  "dispatch"
     t.boolean  "scheduling"
-    t.spatial  "region_nw_corner",                                :limit => {:srid=>-1, :type=>"point"}
-    t.spatial  "region_se_corner",                                :limit => {:srid=>-1, :type=>"point"}
-    t.spatial  "viewport_center",                                 :limit => {:srid=>-1, :type=>"point"}
+    t.spatial  "region_nw_corner",                                :limit => {:srid=>0, :type=>"point"}
+    t.spatial  "region_se_corner",                                :limit => {:srid=>0, :type=>"point"}
+    t.spatial  "viewport_center",                                 :limit => {:srid=>0, :type=>"point"}
     t.integer  "viewport_zoom"
     t.boolean  "allow_trip_entry_from_runs_page"
-    t.decimal  "oaa3b_per_ride_reimbursement_rate",                                                      :precision => 8, :scale => 2
-    t.decimal  "ride_connection_per_ride_reimbursement_rate",                                            :precision => 8, :scale => 2
-    t.decimal  "trimet_per_ride_reimbursement_rate",                                                     :precision => 8, :scale => 2
-    t.decimal  "stf_van_per_ride_reimbursement_rate",                                                    :precision => 8, :scale => 2
-    t.decimal  "stf_taxi_per_ride_administrative_fee",                                                   :precision => 8, :scale => 2
-    t.decimal  "stf_taxi_per_ride_ambulatory_load_fee",                                                  :precision => 8, :scale => 2
-    t.decimal  "stf_taxi_per_ride_wheelchair_load_fee",                                                  :precision => 8, :scale => 2
-    t.decimal  "stf_taxi_per_mile_ambulatory_reimbursement_rate",                                        :precision => 8, :scale => 2
-    t.decimal  "stf_taxi_per_mile_wheelchair_reimbursement_rate",                                        :precision => 8, :scale => 2
+    t.decimal  "oaa3b_per_ride_reimbursement_rate",                                                     :precision => 8, :scale => 2
+    t.decimal  "ride_connection_per_ride_reimbursement_rate",                                           :precision => 8, :scale => 2
+    t.decimal  "trimet_per_ride_reimbursement_rate",                                                    :precision => 8, :scale => 2
+    t.decimal  "stf_van_per_ride_reimbursement_rate",                                                   :precision => 8, :scale => 2
+    t.decimal  "stf_taxi_per_ride_administrative_fee",                                                  :precision => 8, :scale => 2
+    t.decimal  "stf_taxi_per_ride_ambulatory_load_fee",                                                 :precision => 8, :scale => 2
+    t.decimal  "stf_taxi_per_ride_wheelchair_load_fee",                                                 :precision => 8, :scale => 2
+    t.decimal  "stf_taxi_per_mile_ambulatory_reimbursement_rate",                                       :precision => 8, :scale => 2
+    t.decimal  "stf_taxi_per_mile_wheelchair_reimbursement_rate",                                       :precision => 8, :scale => 2
   end
 
   create_table "regions", :force => true do |t|
@@ -272,6 +272,7 @@ ActiveRecord::Schema.define(:version => 20130627201334) do
   create_table "users", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
     t.string   "encrypted_password",   :limit => 128, :default => "", :null => false
+    t.string   "password_salt",                       :default => "", :null => false
     t.string   "reset_password_token"
     t.integer  "sign_in_count",                       :default => 0
     t.datetime "current_sign_in_at"

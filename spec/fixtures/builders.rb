@@ -42,7 +42,7 @@ Fixjour :verify => false do
   define_builder(DevicePool) do |klass, overrides|
     klass.new({
       :name     => Faker::Company.name,
-      :color    => ActiveSupport::SecureRandom.hex(3),
+      :color    => SecureRandom.hex(3),
       :provider => new_provider
     })
   end

@@ -1,21 +1,13 @@
 SITE
   remote: https://supermarket.getchef.com/api/v1
   specs:
-    7-zip (1.0.2)
-      windows (>= 1.2.2)
     apt (2.6.1)
     apt-upgrade-once (0.1.0)
-    ark (0.9.0)
-      7-zip (>= 0.0.0)
-      windows (>= 0.0.0)
     build-essential (2.1.3)
     chef-sugar (2.5.0)
     chef_gem (0.1.0)
     chef_handler (1.1.6)
     dmg (2.2.2)
-    gdal (0.1.3)
-      ark (>= 0.0.0)
-    geos (0.1.1)
     git (4.1.0)
       build-essential (>= 0.0.0)
       dmg (>= 0.0.0)
@@ -24,12 +16,18 @@ SITE
       yum (~> 3.0)
       yum-epel (>= 0.0.0)
     imagemagick (0.2.3)
-    libxml2 (0.1.1)
-      apt (>= 0.0.0)
-      yum (>= 0.0.0)
+    locale (1.0.2)
     openssl (2.0.2)
       chef-sugar (>= 0.0.0)
-    proj (0.1.0)
+    packages (0.4.0)
+    postgis (0.3.0)
+      apt (>= 0.0.0)
+      postgresql (>= 0.0.0)
+      yum (>= 0.0.0)
+    postgresql (3.4.14)
+      apt (>= 1.9.0)
+      build-essential (>= 0.0.0)
+      openssl (>= 0.0.0)
     runit (1.5.12)
       build-essential (>= 0.0.0)
       yum (~> 3.0)
@@ -43,38 +41,16 @@ SITE
     yum-epel (0.6.0)
       yum (~> 3.0)
 
-GIT
-  remote: https://github.com/chrisbloom7/chef-postgis
-  ref: master
-  sha: 042278bf18ac4fd16d9c326a440294aeef88b8ce
-  specs:
-    postgis (0.1.0)
-      gdal (>= 0.0.0)
-      geos (>= 0.0.0)
-      proj (>= 0.0.0)
-
-GIT
-  remote: https://github.com/chrisbloom7/chef-postgresql
-  ref: master
-  sha: b895217a1a6d0f7b97e0da44cf1819a83228222e
-  specs:
-    postgresql (3.4.14)
-      apt (>= 1.9.0)
-      build-essential (>= 0.0.0)
-      openssl (>= 0.0.0)
-
 DEPENDENCIES
   apt (~> 2.6.1)
   apt-upgrade-once (~> 0.1.0)
   build-essential (~> 2.1.3)
-  gdal (~> 0.1.3)
-  geos (~> 0.1.1)
   git (~> 4.1.0)
   imagemagick (~> 0.2.3)
-  libxml2 (~> 0.1.1)
-  postgis (>= 0)
-  postgresql (>= 0)
-  proj (~> 0.1.0)
+  locale (~> 1.0.2)
+  packages (~> 0.4.0)
+  postgis (~> 0.3.0)
+  postgresql (~> 3.4.14)
   rvm (~> 0.9.2)
   vim (>= 0)
 
