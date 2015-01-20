@@ -12,5 +12,11 @@ cookbook 'geos',             '~> 0.1.1'
 cookbook 'gdal',             '~> 0.1.3'
 cookbook 'proj',             '~> 0.1.0'
 cookbook 'libxml2',          '~> 0.1.1'
-cookbook 'postgresql',       '~> 3.4.14'
+
+# Switch this to use `cookbook 'postgresql', '~> 3.4.14'` once we're ready to
+# upgrade to PostgreSQL 9.1
+cookbook 'postgresql', git: 'https://github.com/chrisbloom7/chef-postgresql'
+
+# Switch this to source from `pjungwir/chef-postgis` repo once we're ready to 
+# upgrade to PostGIS 2.0
 cookbook 'postgis', git: 'https://github.com/chrisbloom7/chef-postgis'

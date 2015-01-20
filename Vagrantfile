@@ -28,12 +28,10 @@ Vagrant.configure(2) do |config|
     chef.add_recipe "rvm::vagrant"
     chef.add_recipe "rvm::user"
     chef.add_recipe "postgresql::server"
+    chef.add_recipe "postgresql::contrib"
     chef.add_recipe "postgresql::client"
     chef.add_recipe "postgresql::ruby"
     chef.add_recipe "geos"
-    chef.add_recipe "gdal"
-    chef.add_recipe "proj"
-    chef.add_recipe "libxml2"
     chef.add_recipe "postgis"
     chef.add_recipe "imagemagick"
     chef.add_recipe "imagemagick::rmagick"
@@ -65,26 +63,47 @@ Vagrant.configure(2) do |config|
           packages: ["postgresql-client-8.4", "libpq-dev"]
         },
         server: {
-          packages: ["postgresql-8.4", "postgresql-server-dev-8.4", "libxml2-dev"],
+          packages: ["postgresql-8.4", "postgresql-server-dev-8.4", "libxml2-dev", "proj"],
           service_name: "postgresql-8.4"
         },
         contrib: {
-          packages: ["postgresql-contrib-8.4"]
+          packages: ["postgresql-contrib-8.4"],
+          extensions: ["fuzzystrmatch"]
         },
-        password: { postgres: "QRcz7-HequQi" }
+        pg_hba: [
+          {
+            :type => 'local', 
+            :db => 'all', 
+            :user => 'all', 
+            :addr => '', 
+            :method => 'trust'
+          },
+          # {
+          #   :type => 'host', 
+          #   :db => 'all', 
+          #   :user => 'all', 
+          #   :addr => '127.0.0.1/32', 
+          #   :method => 'md5'
+          # },
+          # {
+          #   :type => 'host', 
+          #   :db => 'all', 
+          #   :user => 'all', 
+          #   :addr => '::1/128', 
+          #   :method => 'md5'
+          # }
+        ],
+        # https://github.com/opscode-cookbooks/postgresql#chef-solo-note
+        # set to md5 of empty string
+        password: { postgres: "d41d8cd98f00b204e9800998ecf8427e" }
       },
       geos: {
-        version: "3.3.6"
-      },
-      gdal: {
-        version: "1.9.2"
-      },
-      proj: {
-        version: "4.8.0"
+        version: "3.3.8"
       },
       postgis: { 
         version: '1.5.8',
-        sql_folder: 'postgis-1.5'
+        sql_folder: 'postgis-1.5',
+        template_name: 'template_postgis15'
       }
     }
   end

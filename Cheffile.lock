@@ -29,10 +29,6 @@ SITE
       yum (>= 0.0.0)
     openssl (2.0.2)
       chef-sugar (>= 0.0.0)
-    postgresql (3.4.14)
-      apt (>= 1.9.0)
-      build-essential (>= 0.0.0)
-      openssl (>= 0.0.0)
     proj (0.1.0)
     runit (1.5.12)
       build-essential (>= 0.0.0)
@@ -50,12 +46,22 @@ SITE
 GIT
   remote: https://github.com/chrisbloom7/chef-postgis
   ref: master
-  sha: 0053e232f4572dd072ffa05a950dc628787b2576
+  sha: 042278bf18ac4fd16d9c326a440294aeef88b8ce
   specs:
     postgis (0.1.0)
       gdal (>= 0.0.0)
       geos (>= 0.0.0)
       proj (>= 0.0.0)
+
+GIT
+  remote: https://github.com/chrisbloom7/chef-postgresql
+  ref: master
+  sha: b895217a1a6d0f7b97e0da44cf1819a83228222e
+  specs:
+    postgresql (3.4.14)
+      apt (>= 1.9.0)
+      build-essential (>= 0.0.0)
+      openssl (>= 0.0.0)
 
 DEPENDENCIES
   apt (~> 2.6.1)
@@ -67,7 +73,7 @@ DEPENDENCIES
   imagemagick (~> 0.2.3)
   libxml2 (~> 0.1.1)
   postgis (>= 0)
-  postgresql (~> 3.4.14)
+  postgresql (>= 0)
   proj (~> 0.1.0)
   rvm (~> 0.9.2)
   vim (>= 0)

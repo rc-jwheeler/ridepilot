@@ -9,7 +9,7 @@ gem 'cancan',               '~> 1.6.5'
 gem 'devise',               '~> 1.5.3'
 gem 'GeoRuby',              '~> 1.3.4'
 gem 'activerecord-postgis-adapter', 
-                            '~> 0.6.6'
+                            '~> 0.3.5' # 0.4+ require Postgresql 9.0+
 gem 'whenever',             '~> 0.9.4'
 gem 'ice_cube',             '0.6.8' # current recurring trip tracking relies on this version
 gem 'validates_timeliness', '~> 3.0.11'
