@@ -6,7 +6,7 @@ gem 'jquery-rails'
 
 gem 'pg'
 gem 'cancan',               '~> 1.6.5'
-gem 'devise',               '~> 1.5.3'
+gem 'devise',               '~> 2.2.8' # 3.0+ require Rails >= 3.2
 gem 'GeoRuby',              '~> 1.3.4'
 gem 'activerecord-postgis-adapter', 
                             '~> 0.6.0' # 0.7+ require Rails 4.0+
