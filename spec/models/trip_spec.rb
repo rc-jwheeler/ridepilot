@@ -54,7 +54,7 @@ describe Trip do
         lambda {
           trip = create_trip
           trip.run.should be_nil
-        }.should_not change(Run, :count).by(1)
+        }.should_not change(Run, :count)
       end
     end
   end

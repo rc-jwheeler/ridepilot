@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ReportsController do
-  describe :cctc_summary_report do
+  describe "cctc_summary_report" do
     before :each do
       @test_user = create_role(level: 100).user
       @test_provider = @test_user.current_provider
@@ -21,7 +21,7 @@ describe ReportsController do
 
     it "is successful" do
       get :cctc_summary_report
-      rendered.should be_success
+      response.should be_success
     end
 
     it "assigns the proper instance variables" do
@@ -31,7 +31,7 @@ describe ReportsController do
       assigns(:report).should_not be_nil
     end
 
-    describe :total_miles do
+    describe "total_miles" do
       before do
         # In report range
         create_trip(provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, cab: false)
@@ -55,7 +55,7 @@ describe ReportsController do
       # end
     end
     
-    describe :rider_information do
+    describe "rider_information" do
       before do
         # Existing customers (by virtue of having trips before current report date range)
         ec_1 = create_customer(birth_date: @test_start_date - 59.years, ada_eligible: true)  # under 60, ADA eligible
@@ -116,7 +116,7 @@ describe ReportsController do
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
       end
       
-      describe :riders_new_this_month do
+      describe "riders_new_this_month" do
         it "reports the correct number of new riders" do
           assigns(:report)[:rider_information][:riders_new_this_month][:over_60][:stf].should eq(2)
           assigns(:report)[:rider_information][:riders_new_this_month][:over_60][:rc].should eq(2)
@@ -129,7 +129,7 @@ describe ReportsController do
         end        
       end
 
-      describe :riders_ytd do
+      describe "riders_ytd" do
         it "reports the correct number of new riders ytd" do
           assigns(:report)[:rider_information][:riders_ytd][:over_60][:stf].should eq(4)
           assigns(:report)[:rider_information][:riders_ytd][:over_60][:rc].should eq(4)
@@ -143,7 +143,7 @@ describe ReportsController do
       end
     end
     
-    describe :driver_information do
+    describe "driver_information" do
       before do
         # Driver -> Run -> Trip
         
@@ -188,7 +188,7 @@ describe ReportsController do
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
       end
       
-      describe :number_of_driver_hours do
+      describe "number_of_driver_hours" do
         it "reports the correct number of new driver hours" do
           assigns(:report)[:driver_information][:number_of_driver_hours][:paid][:stf].should eq(0.84)
           assigns(:report)[:driver_information][:number_of_driver_hours][:paid][:rc].should eq(0.84)
@@ -198,7 +198,7 @@ describe ReportsController do
         end        
       end
 
-      describe :number_of_active_drivers do
+      describe "number_of_active_drivers" do
         it "reports the correct number of active drivers" do
           assigns(:report)[:driver_information][:number_of_active_drivers][:paid][:stf].should eq(2)
           assigns(:report)[:driver_information][:number_of_active_drivers][:paid][:rc].should eq(2)
@@ -208,7 +208,7 @@ describe ReportsController do
         end        
       end
 
-      describe :drivers_new_this_month do
+      describe "drivers_new_this_month" do
         it "reports the correct number of new drivers" do
           assigns(:report)[:driver_information][:drivers_new_this_month][:paid][:stf].should eq(1)
           assigns(:report)[:driver_information][:drivers_new_this_month][:paid][:rc].should eq(1)
@@ -218,16 +218,16 @@ describe ReportsController do
         end        
       end
 
-      describe :escort_hours do
+      describe "escort_hours" do
         skip "Pending completion of ticket 1501"
       end
 
-      describe :administrative_hours do
+      describe "administrative_hours" do
         skip "Pending completion of ticket 1501"
       end
     end
     
-    describe :rides_not_given do
+    describe "rides_not_given" do
       before do
         # In report range
         create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_result: "TD")
@@ -248,21 +248,21 @@ describe ReportsController do
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
       end
       
-      describe :turndowns do
+      describe "turndowns" do
         it "reports the correct number of turned-down trips" do
           assigns(:report)[:rides_not_given][:turndowns][:stf].should eq(1)
           assigns(:report)[:rides_not_given][:turndowns][:rc].should eq(1)
         end
       end
 
-      describe :cancels do
+      describe "cancels" do
         it "reports the correct number of canceled trips" do
           assigns(:report)[:rides_not_given][:cancels][:stf].should eq(1)
           assigns(:report)[:rides_not_given][:cancels][:rc].should eq(1)
         end
       end
 
-      describe :no_shows do
+      describe "no_shows" do
         it "reports the correct number of no-show trips" do
           assigns(:report)[:rides_not_given][:no_shows][:stf].should eq(1)
           assigns(:report)[:rides_not_given][:no_shows][:rc].should eq(1)
@@ -270,7 +270,7 @@ describe ReportsController do
       end
     end
     
-    describe :rider_donations do
+    describe "rider_donations" do
       before do
         # In report range
         create_trip(provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date, donation: 1.23)
@@ -289,7 +289,7 @@ describe ReportsController do
       end
     end
     
-    describe :trip_purposes do
+    describe "trip_purposes" do
       before do
         # trip_purposes: {trips: [], total_rides: {}, reimbursements_due: {}}, # We will loop over and add these later
         @test_provider.oaa3b_per_ride_reimbursement_rate = 1.23
@@ -338,7 +338,7 @@ describe ReportsController do
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
       end
       
-      describe :trips do
+      describe "trips" do
         it "reports the correct trip purpose data" do
           assigns(:report)[:trip_purposes][:trips].collect{|t| t[:name]}.should =~ TRIP_PURPOSES
           
@@ -366,7 +366,7 @@ describe ReportsController do
         end
       end
 
-      describe :total_rides do
+      describe "total_rides" do
         it "reports the correct number of total rides" do
           @test_funding_sources.keys.reject{|k| k == :stf}.each do |funding_source|
             assigns(:report)[:trip_purposes][:total_rides][funding_source].should eq(TRIP_PURPOSES.size * 3)
@@ -377,7 +377,7 @@ describe ReportsController do
         end
       end
 
-      describe :reimbursements_due do
+      describe "reimbursements_due" do
         it "reports the correct reimbursement amounts due" do
           assigns(:report)[:trip_purposes][:reimbursements_due][:oaa3b].should eq(1.23 * TRIP_PURPOSES.size * 3)
           assigns(:report)[:trip_purposes][:reimbursements_due][:rc].should eq(1.23 * TRIP_PURPOSES.size * 3)
@@ -395,7 +395,7 @@ describe ReportsController do
       end
     end
     
-    describe :new_rider_ethinic_heritage do
+    describe "new_rider_ethinic_heritage" do
       before do
         e_1 = @test_provider.ethnicities.create(:name => "Ethnicity 1")
         e_2 = @test_provider.ethnicities.create(:name => "Ethnicity 2")
@@ -429,7 +429,7 @@ describe ReportsController do
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
       end
       
-      describe :ethnicities do
+      describe "ethnicities" do
         it "reports the correct ethnicity information" do
           assigns(:report)[:new_rider_ethinic_heritage][:ethnicities].collect{|e| e[:name]}.should =~ @test_provider.ethnicities.collect(&:name)
                     
