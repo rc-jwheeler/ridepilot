@@ -33,8 +33,8 @@ end
 
 group :test, :development do
   gem 'sqlite3', :require => 'sqlite3'
-  gem 'rspec-rails', '~> 2.6.1'
-  gem 'capybara', '~> 1.0.0'
+  gem 'rspec-rails', '~> 2.99.0' # TODO Transitionary version before jumping to 3.1.0
+  gem 'capybara', '~> 2.4.4'
   gem 'fixjour'
   gem 'faker'
   gem 'byebug'
