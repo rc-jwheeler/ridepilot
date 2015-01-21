@@ -48,12 +48,12 @@ describe Monthly do
       m = Monthly.new
       m.volunteer_admin_hours = -1
       m.valid?
-      m.errors.keys.include?(:volunteer_admin_hours).should be_true
+      m.errors.keys.include?(:volunteer_admin_hours).should be_truthy
       m.errors[:volunteer_admin_hours].should include "must be greater than or equal to 0"
       
       m.volunteer_admin_hours = 0
       m.valid?
-      m.errors.keys.include?(:volunteer_admin_hours).should_not be_true
+      m.errors.keys.include?(:volunteer_admin_hours).should_not be_truthy
     end
   end
 
@@ -71,12 +71,12 @@ describe Monthly do
       m = Monthly.new
       m.volunteer_escort_hours = -1
       m.valid?
-      m.errors.keys.include?(:volunteer_escort_hours).should be_true
+      m.errors.keys.include?(:volunteer_escort_hours).should be_truthy
       m.errors[:volunteer_escort_hours].should include "must be greater than or equal to 0"
       
       m.volunteer_escort_hours = 0
       m.valid?
-      m.errors.keys.include?(:volunteer_escort_hours).should_not be_true
+      m.errors.keys.include?(:volunteer_escort_hours).should_not be_truthy
     end
   end
   
@@ -92,30 +92,30 @@ describe Monthly do
     it "should validate start_date uniqueness based on provider_id and funding_source_id" do
       start_date = Date.today
       m1 = Monthly.new(start_date: start_date, provider: @p1, funding_source: @f1, volunteer_escort_hours: 0, volunteer_admin_hours: 0)
-      m1.save.should be_true
+      m1.save.should be_truthy
       
       m2 = Monthly.new(start_date: start_date, provider: @p1, funding_source: @f1, volunteer_escort_hours: 0, volunteer_admin_hours: 0)
-      m2.valid?.should be_false
+      m2.valid?.should be_falsey
       m2.errors.keys.should include(:start_date)
       m2.errors[:start_date].should include "has already been used for the given provider and funding source"
       
       m2.provider = @p2
       m2.funding_source = @f1
-      m2.valid?.should be_true
+      m2.valid?.should be_truthy
       m2.errors.keys.should_not include(:start_date)
       
       m2.provider = @p1
       m2.funding_source = @f2
-      m2.valid?.should be_true
+      m2.valid?.should be_truthy
       m2.errors.keys.should_not include(:start_date)
       
       m2.provider = @p1
       m2.funding_source = @f1
       m2.start_date = start_date + 1.day
-      m2.valid?.should be_true
+      m2.valid?.should be_truthy
       m2.errors.keys.should_not include(:start_date)
       
-      m2.save.should be_true
+      m2.save.should be_truthy
     end
   end
 end

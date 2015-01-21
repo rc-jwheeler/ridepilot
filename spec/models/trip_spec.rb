@@ -15,12 +15,12 @@ describe Trip do
       t = Trip.new
       t.mileage = 0
       t.valid?
-      t.errors.keys.include?(:mileage).should be_true
+      t.errors.keys.include?(:mileage).should be_truthy
       t.errors[:mileage].should include "must be greater than 0"
       
       t.mileage = 1
       t.valid?
-      t.errors.keys.include?(:mileage).should_not be_true
+      t.errors.keys.include?(:mileage).should_not be_truthy
     end
   end
 
@@ -38,9 +38,9 @@ describe Trip do
       t = Trip.new
       t.should respond_to(:medicaid_eligible)
       t.medicaid_eligible = "1"
-      t.medicaid_eligible.should be_true
+      t.medicaid_eligible.should be_truthy
       t.medicaid_eligible = "0"
-      t.medicaid_eligible.should be_false
+      t.medicaid_eligible.should be_falsey
     end
   end
 

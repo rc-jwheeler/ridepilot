@@ -16,12 +16,12 @@ describe Provider do
         p = Provider.new
         p.oaa3b_per_ride_reimbursement_rate = 0
         p.valid?
-        p.errors.keys.include?(:oaa3b_per_ride_reimbursement_rate).should be_true
+        p.errors.keys.include?(:oaa3b_per_ride_reimbursement_rate).should be_truthy
         p.errors[:oaa3b_per_ride_reimbursement_rate].should include "must be greater than 0"
       
         p.oaa3b_per_ride_reimbursement_rate = 1
         p.valid?
-        p.errors.keys.include?(:oaa3b_per_ride_reimbursement_rate).should_not be_true
+        p.errors.keys.include?(:oaa3b_per_ride_reimbursement_rate).should_not be_truthy
       end
     end
 
@@ -39,12 +39,12 @@ describe Provider do
         p = Provider.new
         p.ride_connection_per_ride_reimbursement_rate = 0
         p.valid?
-        p.errors.keys.include?(:ride_connection_per_ride_reimbursement_rate).should be_true
+        p.errors.keys.include?(:ride_connection_per_ride_reimbursement_rate).should be_truthy
         p.errors[:ride_connection_per_ride_reimbursement_rate].should include "must be greater than 0"
       
         p.ride_connection_per_ride_reimbursement_rate = 1
         p.valid?
-        p.errors.keys.include?(:ride_connection_per_ride_reimbursement_rate).should_not be_true
+        p.errors.keys.include?(:ride_connection_per_ride_reimbursement_rate).should_not be_truthy
       end
     end
 
@@ -62,12 +62,12 @@ describe Provider do
         p = Provider.new
         p.trimet_per_ride_reimbursement_rate = 0
         p.valid?
-        p.errors.keys.include?(:trimet_per_ride_reimbursement_rate).should be_true
+        p.errors.keys.include?(:trimet_per_ride_reimbursement_rate).should be_truthy
         p.errors[:trimet_per_ride_reimbursement_rate].should include "must be greater than 0"
       
         p.trimet_per_ride_reimbursement_rate = 1
         p.valid?
-        p.errors.keys.include?(:trimet_per_ride_reimbursement_rate).should_not be_true
+        p.errors.keys.include?(:trimet_per_ride_reimbursement_rate).should_not be_truthy
       end
     end
 
@@ -85,12 +85,12 @@ describe Provider do
         p = Provider.new
         p.stf_van_per_ride_reimbursement_rate = 0
         p.valid?
-        p.errors.keys.include?(:stf_van_per_ride_reimbursement_rate).should be_true
+        p.errors.keys.include?(:stf_van_per_ride_reimbursement_rate).should be_truthy
         p.errors[:stf_van_per_ride_reimbursement_rate].should include "must be greater than 0"
       
         p.stf_van_per_ride_reimbursement_rate = 1
         p.valid?
-        p.errors.keys.include?(:stf_van_per_ride_reimbursement_rate).should_not be_true
+        p.errors.keys.include?(:stf_van_per_ride_reimbursement_rate).should_not be_truthy
       end
     end
 
@@ -108,12 +108,12 @@ describe Provider do
         p = Provider.new
         p.stf_taxi_per_ride_administrative_fee = 0
         p.valid?
-        p.errors.keys.include?(:stf_taxi_per_ride_administrative_fee).should be_true
+        p.errors.keys.include?(:stf_taxi_per_ride_administrative_fee).should be_truthy
         p.errors[:stf_taxi_per_ride_administrative_fee].should include "must be greater than 0"
       
         p.stf_taxi_per_ride_administrative_fee = 1
         p.valid?
-        p.errors.keys.include?(:stf_taxi_per_ride_administrative_fee).should_not be_true
+        p.errors.keys.include?(:stf_taxi_per_ride_administrative_fee).should_not be_truthy
       end
     end
 
@@ -131,12 +131,12 @@ describe Provider do
         p = Provider.new
         p.stf_taxi_per_ride_ambulatory_load_fee = 0
         p.valid?
-        p.errors.keys.include?(:stf_taxi_per_ride_ambulatory_load_fee).should be_true
+        p.errors.keys.include?(:stf_taxi_per_ride_ambulatory_load_fee).should be_truthy
         p.errors[:stf_taxi_per_ride_ambulatory_load_fee].should include "must be greater than 0"
       
         p.stf_taxi_per_ride_ambulatory_load_fee = 1
         p.valid?
-        p.errors.keys.include?(:stf_taxi_per_ride_ambulatory_load_fee).should_not be_true
+        p.errors.keys.include?(:stf_taxi_per_ride_ambulatory_load_fee).should_not be_truthy
       end
     end
 
@@ -154,12 +154,12 @@ describe Provider do
         p = Provider.new
         p.stf_taxi_per_ride_wheelchair_load_fee = 0
         p.valid?
-        p.errors.keys.include?(:stf_taxi_per_ride_wheelchair_load_fee).should be_true
+        p.errors.keys.include?(:stf_taxi_per_ride_wheelchair_load_fee).should be_truthy
         p.errors[:stf_taxi_per_ride_wheelchair_load_fee].should include "must be greater than 0"
       
         p.stf_taxi_per_ride_wheelchair_load_fee = 1
         p.valid?
-        p.errors.keys.include?(:stf_taxi_per_ride_wheelchair_load_fee).should_not be_true
+        p.errors.keys.include?(:stf_taxi_per_ride_wheelchair_load_fee).should_not be_truthy
       end
     end
 
@@ -177,12 +177,12 @@ describe Provider do
         p = Provider.new
         p.stf_taxi_per_mile_ambulatory_reimbursement_rate = 0
         p.valid?
-        p.errors.keys.include?(:stf_taxi_per_mile_ambulatory_reimbursement_rate).should be_true
+        p.errors.keys.include?(:stf_taxi_per_mile_ambulatory_reimbursement_rate).should be_truthy
         p.errors[:stf_taxi_per_mile_ambulatory_reimbursement_rate].should include "must be greater than 0"
       
         p.stf_taxi_per_mile_ambulatory_reimbursement_rate = 1
         p.valid?
-        p.errors.keys.include?(:stf_taxi_per_mile_ambulatory_reimbursement_rate).should_not be_true
+        p.errors.keys.include?(:stf_taxi_per_mile_ambulatory_reimbursement_rate).should_not be_truthy
       end
     end
 
@@ -200,12 +200,12 @@ describe Provider do
         p = Provider.new
         p.stf_taxi_per_mile_wheelchair_reimbursement_rate = 0
         p.valid?
-        p.errors.keys.include?(:stf_taxi_per_mile_wheelchair_reimbursement_rate).should be_true
+        p.errors.keys.include?(:stf_taxi_per_mile_wheelchair_reimbursement_rate).should be_truthy
         p.errors[:stf_taxi_per_mile_wheelchair_reimbursement_rate].should include "must be greater than 0"
       
         p.stf_taxi_per_mile_wheelchair_reimbursement_rate = 1
         p.valid?
-        p.errors.keys.include?(:stf_taxi_per_mile_wheelchair_reimbursement_rate).should_not be_true
+        p.errors.keys.include?(:stf_taxi_per_mile_wheelchair_reimbursement_rate).should_not be_truthy
       end
     end
   end

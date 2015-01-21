@@ -67,7 +67,7 @@ describe "Customers" do
           end
           
           it "redirects to other customer" do
-            pending "redirecting to sign in for some reason" 
+            skip "redirecting to sign in for some reason" 
             
             delete customer_path(@customer, :customer_id => other.id)
             rendered.should redirect_to(customer_path(other))
@@ -76,7 +76,7 @@ describe "Customers" do
         
         context "when customer_id is not present" do
           it "renders show with an error" do
-            pending "redirecting to sign in for some reason" 
+            skip "redirecting to sign in for some reason" 
             
             delete customer_path(@customer)
             page.has_content?("could not be deleted").should be
@@ -86,7 +86,7 @@ describe "Customers" do
       
       context "when the customer does not have trips" do
         it "redirects to customer index" do
-          pending "redirecting to sign in for some reason" 
+          skip "redirecting to sign in for some reason" 
           
           delete customer_path(@customer)
           rendered.should redirect_to(customers_path)
@@ -143,7 +143,7 @@ describe "Customers" do
       end
       
       it "redirects to customer index" do
-        pending "redirecting to sign in for some reason" 
+        skip "redirecting to sign in for some reason" 
         
         delete customer_path(@customer)
         rendered.should redirect_to(customers_path)

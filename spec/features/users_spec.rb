@@ -10,7 +10,7 @@ describe "Users" do
     end
     
     it "works" do
-      get new_user_session_path
+      visit new_user_session_path
       rendered.should be_success
     end
 

@@ -219,11 +219,11 @@ describe ReportsController do
       end
 
       describe :escort_hours do
-        pending "Pending completion of ticket 1501"
+        skip "Pending completion of ticket 1501"
       end
 
       describe :administrative_hours do
-        pending "Pending completion of ticket 1501"
+        skip "Pending completion of ticket 1501"
       end
     end
     

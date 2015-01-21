@@ -26,9 +26,9 @@ describe Customer do
       c = Customer.new
       c.should respond_to(:ada_eligible)
       c.ada_eligible = "1"
-      c.ada_eligible.should be_true
+      c.ada_eligible.should be_truthy
       c.ada_eligible = "0"
-      c.ada_eligible.should be_false
+      c.ada_eligible.should be_falsey
     end
   end
   
@@ -37,9 +37,9 @@ describe Customer do
       c = Customer.new
       c.should respond_to(:medicaid_eligible)
       c.medicaid_eligible = "1"
-      c.medicaid_eligible.should be_true
+      c.medicaid_eligible.should be_truthy
       c.medicaid_eligible = "0"
-      c.medicaid_eligible.should be_false
+      c.medicaid_eligible.should be_falsey
     end
   end
   
@@ -119,8 +119,8 @@ describe Customer do
         end
         
         it "should return false" do
-          @customer.replace_with!(@customer.id).should be_false
-          @customer.replace_with!(@other_customer.id).should_not be_false
+          @customer.replace_with!(@customer.id).should be_falsey
+          @customer.replace_with!(@other_customer.id).should_not be_falsey
         end
       end
     end
