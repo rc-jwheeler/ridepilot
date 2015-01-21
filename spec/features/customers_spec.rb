@@ -29,7 +29,7 @@ describe "Customers" do
         end
         
         it "renders the duplicate customer dialog" do
-          page.has_selector?("#confirm-destroy").should be
+          page.has_selector?("#confirm-destroy", visible: false).should be
         end
       end
       

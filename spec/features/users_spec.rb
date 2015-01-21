@@ -5,15 +5,9 @@ describe "Users" do
     attr_reader :user
     
     before do
-      @user = create_role.user
-      
+      @user = create_role.user      
     end
     
-    it "works" do
-      visit new_user_session_path
-      response.should be_success
-    end
-
     it "signs me in" do
       visit new_user_session_path
       fill_in 'user_email', :with => user.email
