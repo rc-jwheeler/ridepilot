@@ -90,8 +90,9 @@ GEM
     diff-lcs (1.1.3)
     erubis (2.7.0)
     escape_utils (1.0.1)
-    exception_notification (3.0.1)
+    exception_notification (4.0.1)
       actionmailer (>= 3.0.4)
+      activesupport (>= 3.0.4)
     faker (1.4.3)
       i18n (~> 0.5)
     ffi (1.9.6)
@@ -222,7 +223,7 @@ DEPENDENCIES
   capybara (~> 1.0.0)
   devise (~> 2.2.8)
   escape_utils (~> 1.0.1)
-  exception_notification (~> 3.0)
+  exception_notification (~> 4.0)
   faker
   fixjour
   ice_cube (= 0.6.8)
@@ -236,6 +237,6 @@ DEPENDENCIES
   schedule_atts!
   sqlite3
   userstamp!
-  validates_timeliness (~> 3.0.11)
+  validates_timeliness (~> 3.0.14)
   whenever (~> 0.9.4)
-  will_paginate (~> 3.0.pre2)
+  will_paginate (~> 3.0.7)
