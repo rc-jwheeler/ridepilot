@@ -1,7 +1,9 @@
 Ridepilot::Application.routes.draw do
   root :to => "home#index"
 
-  devise_for :users, :controllers=>{:sessions=>"users"} do
+  devise_for :users, :controllers=>{:sessions=>"users"} 
+  
+  devise_scope :user do
     get "check_session" => "users#check_session"
     get "init" => "users#show_init"
     get "new_user" => "users#new_user"
