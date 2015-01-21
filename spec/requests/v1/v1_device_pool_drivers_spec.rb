@@ -14,7 +14,7 @@ describe "V1::device_pool_drivers" do
       
       it "raises routing error" do
         lambda {
-          post v1_device_pool_drivers_path(:user => { :email => user.email, :password => "password#1" }, :secure => false, :format => "json")        
+          post v1_device_pool_drivers_url(:format => "json", :protocol => "http"), { :user => { :email => user.email, :password => "password#1" } }
         }.should raise_error(ActionController::RoutingError)        
       end
     end
@@ -27,7 +27,7 @@ describe "V1::device_pool_drivers" do
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
           
-        post v1_device_pool_drivers_path(:secure => true, :format => "json")
+        post v1_device_pool_drivers_url(:format => "json", :protocol => "https")
       end
 
       it "returns 401" do
@@ -47,7 +47,7 @@ describe "V1::device_pool_drivers" do
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
           
-        post v1_device_pool_drivers_path(:user => { :email => user.email, :password => "wrong" }, :secure => true, :format => "json")
+        post v1_device_pool_drivers_url(:format => "json", :protocol => "https"), { :user => { :email => user.email, :password => "wrong" } }
       end
 
       it "returns 401" do
@@ -70,7 +70,7 @@ describe "V1::device_pool_drivers" do
         
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
 
-        post v1_device_pool_drivers_path(:user => { :email => current_user.email, :password => "password#1" }, :secure => true, :format => "json")
+        post v1_device_pool_drivers_url(:format => "json", :protocol => "https"), { :user => { :email => current_user.email, :password => "password#1" } }
       end
 
       it "returns 401" do
@@ -91,7 +91,7 @@ describe "V1::device_pool_drivers" do
         
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
 
-        post v1_device_pool_drivers_path(:user => { :email => user.email.upcase, :password => "password#1" }, :secure => true, :format => "json")
+        post v1_device_pool_drivers_url(:format => "json", :protocol => "https"), { :user => { :email => user.email.upcase, :password => "password#1" } }
       end
 
       it "returns 200" do
@@ -108,7 +108,7 @@ describe "V1::device_pool_drivers" do
         
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
 
-        post v1_device_pool_drivers_path(:user => { :email => user.email, :password => "password#1" }, :secure => true, :format => "json")
+        post v1_device_pool_drivers_url(:format => "json", :protocol => "https"), { :user => { :email => user.email, :password => "password#1" } }
       end
 
       it "returns 200" do
@@ -116,7 +116,7 @@ describe "V1::device_pool_drivers" do
       end
 
       it "returns resource_url" do
-        response.body.should match( v1_device_pool_driver_url(:id => device_pool_driver.id, :secure => true, :format => "json") )
+        response.body.should match v1_device_pool_driver_url(:id => device_pool_driver.id, :format => "json", protocol: "https")
       end
     end
   end
@@ -133,7 +133,7 @@ describe "V1::device_pool_drivers" do
       
       it "raises routing error" do
         lambda {
-          post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "XXX" }, :secure => false, :format => "json")        
+          post v1_device_pool_driver_url(device_pool_driver.id, :format => "json", :protocol => "http"), { :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "XXX" } }
         }.should raise_error(ActionController::RoutingError)        
       end
     end
@@ -144,7 +144,7 @@ describe "V1::device_pool_drivers" do
       before do
         @device_pool_driver = create_device_pool_driver :driver => create_driver, :device_pool => create_device_pool
         
-        post v1_device_pool_driver_path(:id => device_pool_driver.id, :secure => true, :format => "json")
+        post v1_device_pool_driver_url(device_pool_driver.id, :format => "json", :protocol => "https")
       end
       
       it "returns 401" do
@@ -165,7 +165,7 @@ describe "V1::device_pool_drivers" do
         
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
                 
-        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "wrong" }, :secure => true, :format => "json")
+        post v1_device_pool_driver_url(device_pool_driver.id, :format => "json", :protocol => "https"), { :user => { :email => user.email, :password => "wrong" } }
       end
       
       it "returns 401" do
@@ -188,7 +188,7 @@ describe "V1::device_pool_drivers" do
         
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
 
-        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => current_user.email, :password => "password#1" }, :secure => true, :format => "json")
+        post v1_device_pool_driver_url(device_pool_driver.id, :format => "json", :protocol => "https"), { :user => { :email => current_user.email, :password => "password#1" } }
       end
 
       it "returns 401" do
@@ -208,7 +208,7 @@ describe "V1::device_pool_drivers" do
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
         
-        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "break", :lat => "45.5", :lng => "-122.6" }, :secure => true, :format => "json")
+        post v1_device_pool_driver_url(device_pool_driver.id, :format => "json", :protocol => "https"), { :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "break", :lat => "45.5", :lng => "-122.6" } }
       end
       
       it "returns 200" do
@@ -228,7 +228,7 @@ describe "V1::device_pool_drivers" do
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool, :lat => 45.5, :lng => -122.6
         
-        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "break", :lat => "", :lng => "" }, :secure => true, :format => "json")
+        post v1_device_pool_driver_url(device_pool_driver.id, :format => "json", :protocol => "https"), { :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "break", :lat => "", :lng => "" } }
       end
       
       it "returns 200" do
@@ -249,7 +249,7 @@ describe "V1::device_pool_drivers" do
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
                 
-        post v1_device_pool_driver_path(:id => device_pool_driver.id, :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "XXX" }, :secure => true, :format => "json")        
+        post v1_device_pool_driver_url(device_pool_driver.id, :format => "json", :protocol => "https"), { :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "XXX" } }
       end
       
       it "returns 400" do
@@ -270,7 +270,7 @@ describe "V1::device_pool_drivers" do
         create_role :level => 0, :user => user
         @device_pool_driver = create_device_pool_driver :driver => create_driver(:user => @user), :device_pool => create_device_pool
         
-        post v1_device_pool_driver_path(:id => 0, :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => DevicePoolDriver::Statuses.first }, :secure => true, :format => "json")        
+        post v1_device_pool_driver_url(0, :format => "json", :protocol => "https"), { :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => DevicePoolDriver::Statuses.first } }
       end
       
       it "returns 404" do
