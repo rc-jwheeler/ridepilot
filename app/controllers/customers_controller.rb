@@ -48,7 +48,7 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
 
     # default scope is pickup time ascending, so reverse
-    @trips    = @customer.trips.order(:pickup_time).reverse.paginate :page => params[:page], :per_page => PER_PAGE
+    @trips    = @customer.trips.reorder('pickup_time desc').paginate :page => params[:page], :per_page => PER_PAGE
 
     respond_to do |format|
       format.html # show.html.erb
