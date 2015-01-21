@@ -70,7 +70,7 @@ describe "Customers" do
             pending "redirecting to sign in for some reason" 
             
             delete customer_path(@customer, :customer_id => other.id)
-            response.should redirect_to(customer_path(other))
+            rendered.should redirect_to(customer_path(other))
           end
         end
         
@@ -89,7 +89,7 @@ describe "Customers" do
           pending "redirecting to sign in for some reason" 
           
           delete customer_path(@customer)
-          response.should redirect_to(customers_path)
+          rendered.should redirect_to(customers_path)
         end
       end
     end
@@ -146,7 +146,7 @@ describe "Customers" do
         pending "redirecting to sign in for some reason" 
         
         delete customer_path(@customer)
-        response.should redirect_to(customers_path)
+        rendered.should redirect_to(customers_path)
       end
     end
   end

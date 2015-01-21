@@ -11,7 +11,7 @@ describe "Users" do
     
     it "works" do
       get new_user_session_path
-      response.should be_success
+      rendered.should be_success
     end
 
     it "signs me in" do

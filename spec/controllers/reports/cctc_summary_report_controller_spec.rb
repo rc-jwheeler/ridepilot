@@ -21,7 +21,7 @@ describe ReportsController do
 
     it "is successful" do
       get :cctc_summary_report
-      response.should be_success
+      rendered.should be_success
     end
 
     it "assigns the proper instance variables" do
