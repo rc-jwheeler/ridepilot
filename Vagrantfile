@@ -3,12 +3,15 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 3000, host: 3000
   config.vm.post_up_message = "Check the README file for next steps"
 
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder ".", "/ridepilot"
+
   config.ssh.forward_agent = true
   
   config.vm.provider :virtualbox do |vb|
     vb.name = "ridepilot-development-trusty"
-    vb.customize ["modifyvm", :id, "--memory", "2048"]
-    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "25"]
   end
 
   config.vm.provision :shell do |shell|
