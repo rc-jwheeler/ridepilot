@@ -1,4 +1,7 @@
 Ridepilot::Application.routes.draw do
+  # The priority is based upon order of creation:
+  # first created -> highest priority.
+  
   root :to => "home#index"
 
   devise_for :users, :controllers=>{:sessions=>"users"} 
@@ -95,6 +98,4 @@ Ridepilot::Application.routes.draw do
   match "reports/:action", :controller=>:reports
   match "reports/:action/:id", :controller=>:reports
   match "test_exception_notification" => "application#test_exception_notification"
-
-  root :to => "home#index"
 end

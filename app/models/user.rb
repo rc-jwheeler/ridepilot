@@ -1,5 +1,4 @@
 class User < ActiveRecord::Base
-  
   has_many   :roles
   belongs_to :current_provider, :class_name=>"Provider", :foreign_key => :current_provider_id
   has_one    :driver
@@ -16,8 +15,8 @@ class User < ActiveRecord::Base
   
   # Include default devise modules. Others available are:
   # :rememberable, :token_authenticatable, :confirmable, :lockable
-  devise :database_authenticatable, 
-         :recoverable, :trackable, :validatable, :timeoutable
+  devise :database_authenticatable, :recoverable, :trackable, :validatable, 
+    :timeoutable
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation

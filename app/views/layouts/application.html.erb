@@ -17,7 +17,7 @@
   <%= javascript_include_tag "jquery.colorPicker.js" %>
   <%= javascript_include_tag "idletimeout.js" %>
   <%= javascript_tag do %>
-    <%= render :partial => "layouts/constants.js" %>
+    <%= render :partial => "layouts/constants", formats: :js %>
   <% end %>
   <%= csrf_meta_tag %>
   <%= yield :head %>
