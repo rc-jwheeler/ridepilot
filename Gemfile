@@ -2,12 +2,11 @@ source 'http://rubygems.org'
 
 gem 'rails', '~> 3.2.0'
 
-# TODO enable this block when we're ready to move to asset pipeline
-# group :assets do
-#   gem 'sass-rails', '~> 3.2.6'
-#   gem 'coffee-rails', '~> 3.2.2'
-#   gem 'uglifier', '>= 1.0.3'2
-# end
+group :assets do
+  gem 'sass-rails', '~> 3.2.6'
+  gem 'coffee-rails', '~> 3.2.2'
+  gem 'uglifier', '>= 1.0.3'
+end
 
 gem 'jquery-rails'
 

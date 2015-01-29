@@ -1,3 +1,15 @@
+//= require jquery
+//= require jquery_ujs
+//= require jquery-ui
+//= require autocomplete-rails
+//= require jquery.weekcalendar
+//= require jquery-ui-timepicker-addon
+//= require dateFormat
+//= require jquery.colorPicker
+//= require idletimeout
+//= require constants
+//= require_self
+
 function ISODateFormatToDateObject(str) {
   if(str === null) return null;
 
@@ -86,7 +98,7 @@ $(function() {
   });
 
   // set default driver for trip based on selected vehicle
-  $("#trip_vehicle_id").live("change", function(event){
+  $("body").on("change", "#trip_vehicle_id", function(event){
     $("#trip_driver_id").val( $(this).find("option[value=" + $(this).val() + "]").data("driver-id") );
   });
 
@@ -108,7 +120,7 @@ $(function() {
   });
   
   // when trip pickup time is changed, update appointment time and displayed week
-  $('#trip_pickup_time').live('change', function() {
+  $("body").on('change', '#trip_pickup_time', function() {
     var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time').attr("value") );
     var appointmentTimeDate = new Date(pickupTimeDate.getTime() + (1000 * 60 * 30));
 
@@ -123,16 +135,16 @@ $(function() {
   // needs to be -1 for field nulling
   $("#trip_vehicle_id option:contains(cab)").attr("value", "-1")
   
-  $("#trip_run_id").live('change', function(){
+  $("body").on('change', "#trip_run_id", function(){
     $("#trip_vehicle_id").val("");
     $("#trip_driver_id").val("");
   });
   
-  $("#trip_vehicle_id, #trip_driver_id").live("change", function(){
+  $("body").on("change", "#trip_vehicle_id, #trip_driver_id", function(){
     $("#trip_run_id").val("");
   });
   
-  $("#vehicle_filter #vehicle_id").live("change", function(){
+  $("body").on("change", "#vehicle_filter #vehicle_id", function(){
     var form = $(this).parents("form");
     $.get(form.attr("action"), form.serialize() + "&" + window.location.search.replace(/^\?/,""), function(data) {
       $("#calendar").weekCalendar("clear");
@@ -164,7 +176,7 @@ $(function() {
       autocompleted(data.address_data, 'pickup');
   });
   
-  $("#new_customer[data-path]").live("click", function(e) {
+  $("body").on("click", "#new_customer[data-path]", function(e) {
     window.location = $(this).attr("data-path") + "?customer_name=" + $("#customer_name").val();
   });
     
@@ -243,7 +255,7 @@ $(function() {
       table.append("<tr><td>There was an error searching</td></tr>");
   });
   
-  $(".delete.device_pool_driver").live('ajax:complete', function(event, data, xhr, status){
+  $("body").on('ajax:complete', ".delete.device_pool_driver", function(event, data, xhr, status){
     $(this).parents("tr").eq(0).hide("slow").remove();
         
     var json = eval('(' + data.responseText + ')');
@@ -306,14 +318,14 @@ $(function() {
     click.preventDefault();
   });
   
-  $("a.add_device_pool_driver").live("click", function(click){
+  $("body").on("click", "a.add_device_pool_driver", function(click){
     var link = $(this);
     link.parent("p").hide().next("p").show();
     
     click.preventDefault();
   });
 
-  $("a.add_device_pool_vehicle").live("click", function(click){
+  $("body").on("click", "a.add_device_pool_vehicle", function(click){
     var link = $(this);
     link.parent("p").hide().next("p").show();
     

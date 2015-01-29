@@ -1,4 +1,5 @@
-<%# Global app object: Expose any values to JavaScript through this object. %>
+<% # Global app object: Expose any values to JavaScript through this object %>
+<% environment.context_class.instance_eval { include Rails.application.routes.url_helpers } %>
 var RidePilot = {
   business_hours: {
     start: <%= BUSINESS_HOURS[:start] %>,

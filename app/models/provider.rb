@@ -41,7 +41,7 @@ class Provider < ActiveRecord::Base
     size: {:less_than => 200.kilobytes}, 
     # prevent content-type spoofing:
     content_type: {:content_type => /\Aimage/},
-    file_name: {:matches => [/png\Z/, /gif\Z/, /jpe?g\Z/]}
+    file_name: {:matches => [/png\Z/, /gif\Z/, /jpe?g\Z/], allow_blank: true}
   
   after_initialize :init
 

@@ -72,7 +72,7 @@
       get_new_trip_form();
     });
     
-    $("#new_trip").live('ajax:complete', function(e, data, status, xhr){
+    $("body").on('ajax:complete', "#new_trip", function(e, data, status, xhr){
       var json = eval('(' + data.responseText + ')');
       if (json.status == "success") {
         $('#new_trip_from_run_page').dialog("close");

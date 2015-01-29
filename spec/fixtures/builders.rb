@@ -5,7 +5,6 @@ Fixjour :verify => false do
   define_builder(Provider) do |klass, overrides|
     klass.new({
       :name           => Faker::Lorem.words(2),
-      :logo_file_name => Faker::Internet.domain_name
     })
   end
   

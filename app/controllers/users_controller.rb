@@ -110,8 +110,8 @@ class UsersController < Devise::SessionsController
 
   def check_session
     last_request_at = session['warden.user.user.session']['last_request_at']
-    timeout_time = last_request_at + Rails.configuration.devise.timeout_in
-    timeout_in = (timeout_time - Time.current).to_i
+    timeout_time = last_request_at + Rails.configuration.devise.timeout_in.to_i
+    timeout_in = timeout_time - Time.current.to_i
     render :json => {
       'last_request_at' => last_request_at,
       'timeout_in' => timeout_in,

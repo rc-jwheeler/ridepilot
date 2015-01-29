@@ -112,7 +112,7 @@
     // happens after you submit an address (not autocomplete)
     // an id should be returned, and then the form should close.
     // if no id is returned, error messages are filled in. 
-    $('.address-search').live('ajax:success', function(evt, data, status, xhr){
+    $("body").on('ajax:success', '.address-search', function(evt, data, status, xhr){
       if (data.id) {
         update_address_fields(data.prefix, data);      
 
@@ -292,7 +292,7 @@
     
     makeDialogs();
 
-    $("#expand_calendar button").live("click", function(e){
+    $("body").on("click", "#expand_calendar button", function(e){
       var $this    = $(this);
       var $ui_icon = $this.find(".ui-icon");
       var $cal     = $("#calendar")[0];
@@ -323,22 +323,22 @@
       $(window).trigger("resize");
     });
 
-    $('#pickup_search_address').live('railsAutocomplete.select', function(e, selected){
+    $("body").on('railsAutocomplete.select', '#pickup_search_address', function(e, selected){
       autocompleted(selected, 'pickup');
     });
     
-    $('#dropoff_search_address').live('railsAutocomplete.select', function(e, selected){
+    $("body").on('railsAutocomplete.select', '#dropoff_search_address', function(e, selected){
       autocompleted(selected, 'dropoff');
     });
     
-    $('tr.trip a[data-remote]').live('ajax:success', function(e, data, status, xhr){
+    $("body").on('ajax:success', 'tr.trip a[data-remote]', function(e, data, status, xhr){
       scroll_positions = {scrollX: $(window).scrollLeft(), scrollY: $(window).scrollTop()};
       replace_index_state(); // make sure the scrollstate is recorded
       push_edit_state($(this).attr("href"));
       load_edit_trip(data.form);
     });
     
-    $("form.edit_trip").live('ajax:complete', function(e, data, status, xhr){
+    $("body").on('ajax:complete', "form.edit_trip", function(e, data, status, xhr){
       var json = eval('(' + data.responseText + ')');
       if (json.form) {
         $("form.edit_trip").replaceWith(json.form);
@@ -350,12 +350,12 @@
       }
     })
     
-    $("#trip_delete").live('ajax:success', function(e, data, status, xhr){
+    $("body").on('ajax:success', "#trip_delete", function(e, data, status, xhr){
       push_index_state();
       load_index_trips(calendar_range.start * 1000);
     })
     
-    $('#trip_pickup_time').live('change', function() {
+    $("body").on('change', '#trip_pickup_time', function() {
       var date = ISODateFormatToDateObject( $(this).val() );
       var date_formatted = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
       $.getJSON("<%= for_date_runs_path %>", { date : date_formatted }, function(data){
