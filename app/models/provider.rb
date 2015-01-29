@@ -10,7 +10,10 @@ class Provider < ActiveRecord::Base
   has_many :funding_sources, :through => :funding_source_visibilities
   has_many :addresses, :dependent => :nullify
 
-  has_attached_file :logo, :styles => { :small => "150x150>" }
+  has_attached_file :logo, 
+    :styles => { :small => "150x150>" },
+    :path => ":rails_root/public/system/:attachment/:id/:style/:filename",
+    :url => "/system/:attachment/:id/:style/:filename"
   
   REIMBURSEMENT_ATTRIBUTES = [
     :oaa3b_per_ride_reimbursement_rate,
@@ -34,9 +37,11 @@ class Provider < ActiveRecord::Base
   validates_numericality_of :stf_taxi_per_ride_wheelchair_load_fee,           :greater_than => 0, :allow_blank => true
   validates_numericality_of :stf_taxi_per_mile_ambulatory_reimbursement_rate, :greater_than => 0, :allow_blank => true
   validates_numericality_of :stf_taxi_per_mile_wheelchair_reimbursement_rate, :greater_than => 0, :allow_blank => true
-
-  validates_attachment_size :logo, :less_than => 200.kilobytes
-  validates_attachment_content_type :logo, :content_type => ['image/jpeg', 'image/png', 'image/gif']
+  validates_attachment :logo, 
+    size: {:less_than => 200.kilobytes}, 
+    # prevent content-type spoofing:
+    content_type: {:content_type => /\Aimage/},
+    file_name: {:matches => [/png\Z/, /gif\Z/, /jpe?g\Z/]}
   
   after_initialize :init
 

@@ -23,7 +23,7 @@ gem 'whenever', '~> 0.9.4', :require => false
 gem 'ice_cube', '0.6.8' 
 
 gem 'validates_timeliness', '~> 3.0.14'
-gem 'paperclip', '~> 2.8.0' # TODO latest is 4.2.1
+gem 'paperclip', '~> 4.2.1'
 gem 'will_paginate', '~> 3.0.7'
 gem 'attribute_normalizer', '~> 1.2.0'
 
