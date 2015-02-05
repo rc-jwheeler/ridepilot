@@ -23,7 +23,7 @@
         <% if current_user %>
           <a href="#"><%= current_user.email %></a> 
           <span class="separator">|</span>
-          <%= link_to "Log out", destroy_user_session_path %>
+          <%= link_to "Log out", destroy_user_session_path, method: :delete %>
           <span class="separator">|</span>
           Logged in to 
           <% if @provider_map.size > 1 %>

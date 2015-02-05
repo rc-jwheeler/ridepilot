@@ -9,7 +9,7 @@ describe "Reports" do
       visit new_user_session_path
       fill_in 'user_email', :with => user.email
       fill_in 'Password', :with => 'password#1'
-      click_button 'Sign in'
+      click_button 'Log in'
     end
     
     describe "GET /customer/:id" do

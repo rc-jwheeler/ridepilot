@@ -12,7 +12,7 @@ describe "Users" do
       visit new_user_session_path
       fill_in 'user_email', :with => user.email
       fill_in 'Password', :with => 'password'
-      click_button 'Sign in'
+      click_button 'Log in'
     end
   end
 end

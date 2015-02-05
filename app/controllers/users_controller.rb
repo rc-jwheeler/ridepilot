@@ -1,12 +1,5 @@
-class UsersController < Devise::SessionsController
+class UsersController < ApplicationController
   require 'new_user_mailer'
-
-  def new
-    #hooked up to sign_in
-    if User.count == 0
-      return redirect_to :action=>:show_init
-    end
-  end
 
   def new_user
     if User.count == 0
@@ -79,15 +72,14 @@ class UsersController < Devise::SessionsController
   def show_init
     #create initial user
     if User.count > 0
-      return redirect_to :action=>:new
+      return redirect_to new_user_session_path
     end
     @user = User.new
   end
 
-
   def init
     if User.count > 0
-      return redirect_to :action=>:new
+      return redirect_to new_user_session_path
     end
     @user = User.new params[:user]
     @user.current_provider_id = 1
@@ -96,7 +88,7 @@ class UsersController < Devise::SessionsController
     @role.save
 
     flash[:notice] = "OK, now sign in"
-    redirect_to :action=>:new
+    redirect_to new_user_session_path
   end
 
   def change_provider

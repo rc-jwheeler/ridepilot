@@ -7,7 +7,7 @@ describe "CabTrips" do
       visit new_user_session_path
       fill_in 'user_email', with: @user.email
       fill_in 'Password', with: 'password#1'
-      click_button 'Sign in'
+      click_button 'Log in'
       
       @start_date = Time.now.beginning_of_week.to_date.in_time_zone.utc
       @end = @start_date + 6.days

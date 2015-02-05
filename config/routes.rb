@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   root :to => "home#index"
 
-  devise_for :users, :controllers=>{:sessions=>"users"} 
+  devise_for :users
   
   devise_scope :user do
     get "check_session" => "users#check_session"
