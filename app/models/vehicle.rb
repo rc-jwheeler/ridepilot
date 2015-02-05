@@ -19,7 +19,7 @@ class Vehicle < ActiveRecord::Base
   end
 
   validates_length_of :vin, :is=>17, :allow_nil => true, :allow_blank => true
-  validates_format_of :vin, :with => /^[^ioq]*$/i, :allow_nil => true
+  validates_format_of :vin, :with => /\A[^ioq]*\z/i, :allow_nil => true
 
   stampable :creator_attribute => :created_by_id, :updater_attribute => :updated_by_id
 end

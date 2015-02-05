@@ -1,7 +1,6 @@
-Ridepilot::Application.routes.draw do
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
-  
+Rails.application.routes.draw do
+  # The priority is based upon order of creation: first created -> highest priority.
+
   root :to => "home#index"
 
   devise_for :users, :controllers=>{:sessions=>"users"} 
@@ -12,7 +11,7 @@ Ridepilot::Application.routes.draw do
     get "new_user" => "users#new_user"
     get "show_change_password" => "users#show_change_password"
     get "touch_session" => "users#touch_session"
-    match "change_password"  => "users#change_password"
+    post "change_password"  => "users#change_password"
     post "change_provider" => "users#change_provider"
     post "create_user" => "users#create_user"
     post "init" => "users#init"
@@ -93,9 +92,9 @@ Ridepilot::Application.routes.draw do
     match "v1/device_pool_drivers/:id" => "v1/device_pool_drivers#update", :as => "v1_device_pool_driver"
   end
   
-  match "dispatch", :controller => :dispatch, :action => :index
-  match "reports", :controller=>:reports, :action=>:index
-  match "reports/:action", :controller=>:reports
-  match "reports/:action/:id", :controller=>:reports
-  match "test_exception_notification" => "application#test_exception_notification"
+  get "dispatch", :controller => :dispatch, :action => :index
+  get "reports", :controller=>:reports, :action=>:index
+  get "reports/:action", :controller=>:reports
+  get "reports/:action/:id", :controller=>:reports
+  get "test_exception_notification" => "application#test_exception_notification"
 end

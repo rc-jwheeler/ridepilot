@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   
   # Let Devise handle the length requirement.
   validates_format_of :password, :if => :password_required?,
-            :with => /^(?=.*[0-9])(?=.*[\W])(?=.*[a-zA-Z])(.*)$/,
+            :with => /\A(?=.*[0-9])(?=.*[\W])(?=.*[a-zA-Z])(.*)\z/,
             :message => "must have at least one number and at least one " +
                         "non-alphanumeric character"
   
@@ -18,8 +18,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :recoverable, :trackable, :validatable, 
     :timeoutable
 
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation
+  # TODO setup strong parameters based on the following:
+  # attr_accessible :email, :password, :password_confirmation
 
   model_stamper
   
