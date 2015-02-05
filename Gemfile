@@ -42,7 +42,9 @@ gem 'whenever', '~> 0.9.4', :require => false # TODO latest? yes
 # on 0.6.8
 gem 'ice_cube', '0.6.8' 
 
-gem 'validates_timeliness', '~> 3.0.14' # TODO latest? yes
+# Fork with Rails 4.x compatibility
+gem 'jc-validates_timeliness', '~> 3.1.1' # TODO latest? yes
+
 gem 'paperclip', '~> 4.2.1' # TODO latest? yes
 gem 'will_paginate', '~> 3.0.7' # TODO latest? yes
 gem 'attribute_normalizer', '~> 1.2.0' # TODO latest? yes
