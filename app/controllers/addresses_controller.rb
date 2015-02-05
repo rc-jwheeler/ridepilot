@@ -72,7 +72,7 @@ class AddressesController < ApplicationController
       
       #now, convert addresses to local json format
       address_json = addresses.map { |address| 
-        #todo: apt numbers
+        # TODO add apt numbers
         address = address['address']
         street_address = '%s %s' % [address['house_number'], address['road']]
         address_obj = Address.new( 
