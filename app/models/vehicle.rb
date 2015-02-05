@@ -7,8 +7,8 @@ class Vehicle < ActiveRecord::Base
   
   has_many :vehicle_maintenance_events
 
-  default_scope :order => 'active, name'
-  scope :active, :conditions => { :active => true }
+  default_scope { order('active, name') }
+  scope :active, where(:active => true)
   scope :for_provider, lambda { |provider_id| where(:provider_id => provider_id) }
   scope :reportable, where(:reportable => true)
 
