@@ -6,7 +6,7 @@ describe Address do
       attr_reader :address
       
       before do
-        @address = create_address
+        @address = create :address
       end
       
       it "is false" do
@@ -18,7 +18,7 @@ describe Address do
       attr_reader :address
       
       before do
-        @address = create_address
+        @address = create :address
       end
       
       it "is false" do
@@ -31,9 +31,9 @@ describe Address do
         attr_reader :address, :trips, :other
 
         before do
-          @address = create_address
-          @trips    = (1..5).map { create_trip :pickup_address => address }
-          @other    = create_address
+          @address = create :address
+          @trips    = (1..5).map { create :trip, :pickup_address => address }
+          @other    = create :address
           
           address.replace_with!(other.id)
         end
@@ -56,9 +56,9 @@ describe Address do
         attr_reader :address, :trips, :other
 
         before do
-          @address = create_address
-          @trips    = (1..5).map { create_trip :dropoff_address => address }
-          @other    = create_address
+          @address = create :address
+          @trips    = (1..5).map { create :trip, :dropoff_address => address }
+          @other    = create :address
           
           address.replace_with!(other.id)
         end

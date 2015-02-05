@@ -5,7 +5,7 @@ describe "Reports" do
     attr_reader :user
 
     before :each do
-      @user = create_role(:level => 100).user
+      @user = create(:role, :level => 100).user
       visit new_user_session_path
       fill_in 'user_email', :with => user.email
       fill_in 'Password', :with => 'password#1'
@@ -19,8 +19,8 @@ describe "Reports" do
         attr_reader :trips
         
         before do
-          @customer = create_customer :provider => user.current_provider
-          @trips    = (1..5).map { create_trip :customer => customer }
+          @customer = create :customer, :provider => user.current_provider
+          @trips    = (1..5).map { create :trip, :customer => customer }
           visit customer_path(@customer)
         end
         
@@ -35,7 +35,7 @@ describe "Reports" do
       
       context "when the customer has no associated trips" do
         before do
-          @customer = create_customer :provider => user.current_provider
+          @customer = create :customer, :provider => user.current_provider
         end
         
         it "shows delete link" do

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ReportsController do
   describe "cctc_summary_report" do
     before :each do
-      @test_user = create_role(level: 100).user
+      @test_user = create(:role, level: 100).user
       @test_provider = @test_user.current_provider
     
       @test_funding_sources = {}
@@ -34,14 +34,14 @@ describe ReportsController do
     describe "total_miles" do
       before do
         # In report range
-        create_trip(provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, cab: false)
-        create_trip(provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, cab: true)
-        create_trip(provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, cab: false)
+        create(:trip, provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, cab: true)
+        create(:trip, provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
         
         # Outside report range
-        create_trip(provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, cab: false)
-        create_trip(provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, cab: true)
-        create_trip(provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, cab: false)
+        create(:trip, provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, cab: true)
+        create(:trip, provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
 
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
       end
@@ -58,60 +58,60 @@ describe ReportsController do
     describe "rider_information" do
       before do
         # Existing customers (by virtue of having trips before current report date range)
-        ec_1 = create_customer(birth_date: @test_start_date - 59.years, ada_eligible: true)  # under 60, ADA eligible
-        ec_2 = create_customer(birth_date: @test_start_date - 59.years, ada_eligible: false) # under 60, ADA ineligible
-        ec_3 = create_customer(birth_date: @test_start_date - 61.years, ada_eligible: true)  # over 60, ADA eligible
-        ec_4 = create_customer(birth_date: @test_start_date - 61.years, ada_eligible: false) # over 60, ADA ineligible
+        ec_1 = create(:customer, birth_date: @test_start_date - 59.years, ada_eligible: true)  # under 60, ADA eligible
+        ec_2 = create(:customer, birth_date: @test_start_date - 59.years, ada_eligible: false) # under 60, ADA ineligible
+        ec_3 = create(:customer, birth_date: @test_start_date - 61.years, ada_eligible: true)  # over 60, ADA eligible
+        ec_4 = create(:customer, birth_date: @test_start_date - 61.years, ada_eligible: false) # over 60, ADA ineligible
         
         # New customers (by virtue of not having any trips before current report date range)
-        nc_1 = create_customer(birth_date: @test_start_date - 59.years, ada_eligible: true)  # under 60, ADA eligible
-        nc_2 = create_customer(birth_date: @test_start_date - 59.years, ada_eligible: false) # under 60, ADA ineligible
-        nc_3 = create_customer(birth_date: @test_start_date - 61.years, ada_eligible: true)  # over 60, ADA eligible
-        nc_4 = create_customer(birth_date: @test_start_date - 61.years, ada_eligible: false) # over 60, ADA ineligible
+        nc_1 = create(:customer, birth_date: @test_start_date - 59.years, ada_eligible: true)  # under 60, ADA eligible
+        nc_2 = create(:customer, birth_date: @test_start_date - 59.years, ada_eligible: false) # under 60, ADA ineligible
+        nc_3 = create(:customer, birth_date: @test_start_date - 61.years, ada_eligible: true)  # over 60, ADA eligible
+        nc_4 = create(:customer, birth_date: @test_start_date - 61.years, ada_eligible: false) # over 60, ADA ineligible
         
         # Rides for existing customers, in report range
-        create_trip(provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
 
-        create_trip(provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
 
         # Rides for existing customers, in YTD range
-        create_trip(provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
 
-        create_trip(provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.month)
 
         # Rides for existing customers, outside report range
-        create_trip(provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.year)
-        create_trip(provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.year)
-        create_trip(provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.year)
-        create_trip(provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.year)
+        create(:trip, provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.year)
+        create(:trip, provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.year)
+        create(:trip, provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.year)
+        create(:trip, provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.year)
 
-        create_trip(provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.year)
-        create_trip(provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.year)
-        create_trip(provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.year)
-        create_trip(provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.year)
+        create(:trip, provider: @test_provider, customer: ec_1, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.year)
+        create(:trip, provider: @test_provider, customer: ec_2, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.year)
+        create(:trip, provider: @test_provider, customer: ec_3, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.year)
+        create(:trip, provider: @test_provider, customer: ec_4, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date - 1.year)
 
         # Rides for new customers, in report range
-        create_trip(provider: @test_provider, customer: nc_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: nc_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: nc_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: nc_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: nc_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: nc_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: nc_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: nc_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
 
-        create_trip(provider: @test_provider, customer: nc_1, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: nc_2, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: nc_3, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: nc_4, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: nc_1, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: nc_2, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: nc_3, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: nc_4, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
         
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
       end
@@ -148,12 +148,12 @@ describe ReportsController do
         # Driver -> Run -> Trip
         
         # Existing Drivers (by virtue of having given rides before current report date range)
-        ed_1 = create_driver(provider: @test_provider, paid: true )
-        ed_2 = create_driver(provider: @test_provider, paid: false)
+        ed_1 = create(:driver, provider: @test_provider, paid: true )
+        ed_2 = create(:driver, provider: @test_provider, paid: false)
 
         # New Drivers (by virtue of not having given any rides before current report date range)
-        nd_1 = create_driver(provider: @test_provider, paid: true)
-        nd_2 = create_driver(provider: @test_provider, paid: false)
+        nd_1 = create(:driver, provider: @test_provider, paid: true)
+        nd_2 = create(:driver, provider: @test_provider, paid: false)
         
         # Runs for existing drivers, in report range
         r_1 = Run.create(provider: @test_provider, driver: ed_1, paid: true,  date: @test_start_date, actual_start_time: @test_start_date, actual_end_time: @test_start_date + 30.minutes, unpaid_driver_break_time: 5)
@@ -168,22 +168,22 @@ describe ReportsController do
         r_6 = Run.create(provider: @test_provider, driver: nd_2, paid: false, date: @test_start_date, actual_start_time: @test_start_date, actual_end_time: @test_start_date + 30.minutes, unpaid_driver_break_time: 5)
 
         # Rides for existing drivers, in report range
-        create_trip(provider: @test_provider, run: r_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, run: r_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, run: r_1, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, run: r_2, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, run: r_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, run: r_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, run: r_1, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, run: r_2, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
 
         # Rides for existing drivers, outside report range
-        create_trip(provider: @test_provider, run: r_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, run: r_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, run: r_3, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, run: r_4, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, run: r_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, run: r_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, run: r_3, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, run: r_4, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
 
         # Rides for new drivers, in report range
-        create_trip(provider: @test_provider, run: r_5, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, run: r_6, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, run: r_5, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, run: r_6, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, run: r_5, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, run: r_6, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, run: r_5, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, run: r_6, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
 
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
       end
@@ -230,20 +230,20 @@ describe ReportsController do
     describe "rides_not_given" do
       before do
         # In report range
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_result: "TD")
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date, trip_result: "TD")
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_result: "CANC")
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date, trip_result: "CANC")
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_result: "NS")
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date, trip_result: "NS")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_result: "TD")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date, trip_result: "TD")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_result: "CANC")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date, trip_result: "CANC")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_result: "NS")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date, trip_result: "NS")
 
         # Outside report range
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_result: "TD")
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month, trip_result: "TD")
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_result: "CANC")
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month, trip_result: "CANC")
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_result: "NS")
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month, trip_result: "NS")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_result: "TD")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month, trip_result: "TD")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_result: "CANC")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month, trip_result: "CANC")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_result: "NS")
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month, trip_result: "NS")
 
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
       end
@@ -273,12 +273,12 @@ describe ReportsController do
     describe "rider_donations" do
       before do
         # In report range
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date, donation: 1.23)
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, donation: 1.23)
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date, donation: 1.23)
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, donation: 1.23)
 
         # Outside report range
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, donation: 1.23)
-        create_trip(provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month, donation: 1.23)
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, donation: 1.23)
+        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month, donation: 1.23)
 
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
       end
@@ -306,33 +306,33 @@ describe ReportsController do
         TRIP_PURPOSES.each do |trip_purpose|
           @test_funding_sources.keys.reject{|k| k == :stf}.each do |funding_source|
             # In report range, 
-            create_trip(provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date, trip_purpose: trip_purpose)
-            create_trip(provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date, trip_purpose: trip_purpose, round_trip: true)
+            create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date, trip_purpose: trip_purpose)
+            create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date, trip_purpose: trip_purpose, round_trip: true)
           
             # Outside report range
-            create_trip(provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose)
-            create_trip(provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, round_trip: true)
+            create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose)
+            create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, round_trip: true)
           end
           
           # STF taxi rides, in report range
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: "Wheelchair", mileage: 1, cab: true)
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: "Wheelchair", mileage: 1, cab: true, round_trip: true)
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: "Ambulatory", mileage: 1, cab: true)
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: "Ambulatory", mileage: 1, cab: true, round_trip: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: "Wheelchair", mileage: 1, cab: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: "Wheelchair", mileage: 1, cab: true, round_trip: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: "Ambulatory", mileage: 1, cab: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: "Ambulatory", mileage: 1, cab: true, round_trip: true)
           
           # STF taxi rides, outside report range
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: "Wheelchair", mileage: 1, cab: true)
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: "Wheelchair", mileage: 1, cab: true, round_trip: true)
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: "Ambulatory", mileage: 1, cab: true)
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: "Ambulatory", mileage: 1, cab: true, round_trip: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: "Wheelchair", mileage: 1, cab: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: "Wheelchair", mileage: 1, cab: true, round_trip: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: "Ambulatory", mileage: 1, cab: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: "Ambulatory", mileage: 1, cab: true, round_trip: true)
           
           # STF non-taxi rides, in report range
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose)
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, round_trip: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, round_trip: true)
           
           # STF non-taxi rides, outside report range
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose)
-          create_trip(provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, round_trip: true)          
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, round_trip: true)          
         end
         
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
@@ -401,30 +401,30 @@ describe ReportsController do
         e_2 = @test_provider.ethnicities.create(:name => "Ethnicity 2")
         e_3 = @test_provider.ethnicities.create(:name => "Other")
         
-        c_1 = create_customer(ethnicity: e_1.name)
-        c_2 = create_customer(ethnicity: e_2.name)
-        c_3 = create_customer(ethnicity: e_3.name)
-        c_4 = create_customer(ethnicity: "Something Else")
+        c_1 = create(:customer, ethnicity: e_1.name)
+        c_2 = create(:customer, ethnicity: e_2.name)
+        c_3 = create(:customer, ethnicity: e_3.name)
+        c_4 = create(:customer, ethnicity: "Something Else")
 
         # In report range
-        create_trip(provider: @test_provider, customer: c_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: c_1, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: c_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: c_2, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: c_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: c_3, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: c_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
-        create_trip(provider: @test_provider, customer: c_4, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: c_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: c_1, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: c_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: c_2, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: c_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: c_3, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: c_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
+        create(:trip, provider: @test_provider, customer: c_4, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
         
         # Outside report range
-        create_trip(provider: @test_provider, customer: c_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: c_1, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: c_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: c_2, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: c_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: c_3, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: c_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
-        create_trip(provider: @test_provider, customer: c_4, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: c_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: c_1, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: c_2, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: c_2, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: c_3, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: c_3, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: c_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
+        create(:trip, provider: @test_provider, customer: c_4, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
 
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
       end

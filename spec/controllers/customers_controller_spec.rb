@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe CustomersController do
   before :each do
-    @user = create_role(level: 100).user
+    @user = create(:role, level: 100).user
     @request.env["devise.mapping"] = Devise.mappings[:user]
     sign_in @user
   end
 
   describe "PUT 'create'" do
     before :each do
-      @customer = create_customer(email: "abc.def.ghi", provider: @user.current_provider)
+      @customer = create(:customer, email: "abc.def.ghi", provider: @user.current_provider)
     end
     
     it "should tell me if a duplicate customer exists" do

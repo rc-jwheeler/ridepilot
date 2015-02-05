@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "CabTrips" do
   context "for admin" do
     before do
-      @user = create_role(level: 100).user
+      @user = create(:role, level: 100).user
       visit new_user_session_path
       fill_in 'user_email', with: @user.email
       fill_in 'Password', with: 'password#1'
@@ -11,11 +11,11 @@ describe "CabTrips" do
       
       @start_date = Time.now.beginning_of_week.to_date.in_time_zone.utc
       @end = @start_date + 6.days
-      @t1 = create_trip provider: @user.current_provider, cab: true, pickup_time: @start_date
-      @t2 = create_trip provider: @user.current_provider, cab: true, pickup_time: @start_date
-      create_trip provider: @user.current_provider, cab: true, pickup_time: @start_date + 1.day
-      create_trip provider: @user.current_provider, cab: true, pickup_time: @start_date + 1.day
-      create_trip provider: @user.current_provider, cab: true, pickup_time: @start_date + 3.days
+      @t1 = create :trip, provider: @user.current_provider, cab: true, pickup_time: @start_date
+      @t2 = create :trip, provider: @user.current_provider, cab: true, pickup_time: @start_date
+      create :trip, provider: @user.current_provider, cab: true, pickup_time: @start_date + 1.day
+      create :trip, provider: @user.current_provider, cab: true, pickup_time: @start_date + 1.day
+      create :trip, provider: @user.current_provider, cab: true, pickup_time: @start_date + 3.days
     end
     
     describe "GET /cab_trips" do

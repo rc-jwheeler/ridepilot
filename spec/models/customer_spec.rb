@@ -57,7 +57,7 @@ describe Customer do
       attr_reader :customer
       
       before do
-        @customer = create_customer
+        @customer = create :customer
       end
       
       it "is false" do
@@ -69,7 +69,7 @@ describe Customer do
       attr_reader :customer
       
       before do
-        @customer = create_customer
+        @customer = create :customer
       end
       
       it "is false" do
@@ -82,9 +82,9 @@ describe Customer do
         attr_reader :customer, :trips, :other
 
         before do
-          @customer = create_customer
-          @trips    = (1..5).map { create_trip :customer => customer }
-          @other    = create_customer
+          @customer = create :customer
+          @trips    = (1..5).map { create :trip, :customer => customer }
+          @other    = create :customer
           
           customer.replace_with!(other.id)
         end
@@ -104,7 +104,7 @@ describe Customer do
         attr_reader :customer
 
         before do
-          @customer = create_customer
+          @customer = create :customer
         end
         
         it "destroys self" do
@@ -114,8 +114,8 @@ describe Customer do
       
       context "when other_customer_id is the same as customer.id" do
         before do
-          @customer = create_customer
-          @other_customer = create_customer
+          @customer = create :customer
+          @other_customer = create :customer
         end
         
         it "should return false" do

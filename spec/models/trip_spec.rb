@@ -52,7 +52,7 @@ describe Trip do
       
       it "does not create an associated run" do
         lambda {
-          trip = create_trip
+          trip = create :trip
           trip.run.should be_nil
         }.should_not change(Run, :count)
       end
@@ -63,7 +63,7 @@ describe Trip do
     attr_accessor :trip
     
     before do
-      @trip = new_trip(
+      @trip = build(:trip,
         :repeats_mondays => true, 
         :repeats_tuesdays => false,
         :repeats_wednesdays => false,

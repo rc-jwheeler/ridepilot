@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CabTripsController do
   before :each do
-    @user = create_role(level: 100).user
+    @user = create(:role, level: 100).user
     @request.env["devise.mapping"] = Devise.mappings[:user]
     sign_in @user
   end
@@ -25,8 +25,8 @@ describe CabTripsController do
     before do
       @start_date = Time.now.beginning_of_week.to_date.in_time_zone.utc
       @end_date = @start_date + 6.days
-      @t1 = create_trip provider: @user.current_provider, cab: true, pickup_time: @start_date, attendant_count: 0
-      @t2 = create_trip provider: @user.current_provider, cab: true, pickup_time: @start_date, attendant_count: 0
+      @t1 = create :trip, provider: @user.current_provider, cab: true, pickup_time: @start_date, attendant_count: 0
+      @t2 = create :trip, provider: @user.current_provider, cab: true, pickup_time: @start_date, attendant_count: 0
       cab_trip_params = {
         @t1.id => {
           attendant_count: 1

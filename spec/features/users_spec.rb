@@ -5,7 +5,7 @@ describe "Users" do
     attr_reader :user
     
     before do
-      @user = create_role.user      
+      @user = create(:role).user      
     end
     
     it "signs me in" do

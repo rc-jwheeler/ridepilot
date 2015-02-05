@@ -82,8 +82,8 @@ describe Monthly do
   
   describe "uniqueness" do
     before do
-      @p1 = create_provider
-      @p2 = create_provider
+      @p1 = create :provider
+      @p2 = create :provider
       
       @f1 = FundingSource.create(name: "FS1")
       @f2 = FundingSource.create(name: "FS2")

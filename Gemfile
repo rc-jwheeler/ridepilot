@@ -86,8 +86,9 @@ group :test, :development do
   gem 'rspec-rails', '~> 3.2' # TODO latest? yes
   gem 'capybara', '~> 2.4' # TODO latest? yes
 
-  # RADAR Not updated since 2008
-  gem 'fixjour', '~> 0.5' # TODO latest? yes
+  gem 'factory_girl_rails', '~> 4.5.0' # TODO latest? yes
+  
+  gem 'database_cleaner', '~> 1.4.0' # TODO latest? yes
 
   gem 'faker', '~> 1.4' # TODO latest? yes
 end
