@@ -20,8 +20,8 @@ class Address < ActiveRecord::Base
   
   NewAddressOption = { :label => "New Address", :id => 0 }
 
-  scope :for_provider, lambda {|provider| where(:provider_id => provider.id)}
-  scope :search_for_term, lambda {|term| where("LOWER(name) LIKE '%' || :term || '%' OR LOWER(building_name) LIKE '%' || :term || '%' OR LOWER(address) LIKE '%' || :term || '%'",{:term => term})}
+  scope :for_provider,    -> (provider) { where(:provider_id => provider.id) }
+  scope :search_for_term, -> (term) { where("LOWER(name) LIKE '%' || :term || '%' OR LOWER(building_name) LIKE '%' || :term || '%' OR LOWER(address) LIKE '%' || :term || '%'",{:term => term}) }
 
   def trips
     trips_from + trips_to

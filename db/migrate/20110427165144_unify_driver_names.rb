@@ -1,7 +1,7 @@
 class UnifyDriverNames < ActiveRecord::Migration
   def self.up
     add_column :drivers, :name, :string
-    for driver in Driver.find :all
+    for driver in Driver.all
       driver.name = "%s %s" % [driver.first_name, driver.last_name]
       driver.save!
     end

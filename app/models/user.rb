@@ -60,10 +60,10 @@ class User < ActiveRecord::Base
   end
   
   def admin?
-    roles.where(:provider_id => current_provider).first.admin?
+    roles.where(:provider_id => current_provider.id).first.admin?
   end
   
   def editor?
-    roles.where(:provider_id => current_provider).first.editor?
+    roles.where(:provider_id => current_provider.id).first.editor?
   end
 end

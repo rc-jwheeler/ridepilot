@@ -33,7 +33,7 @@ class Ability
     end
 
     provider = user.current_provider
-    role = Role.find(:first, :conditions=>["provider_id=? and user_id=?", provider.id, user.id])
+    role = Role.where("provider_id = ? and user_id = ?", provider.id, user.id).first
     if not role
       return
     end

@@ -15,10 +15,10 @@ class Customer < ActiveRecord::Base
 
   default_scope { order('last_name, first_name, middle_initial') }
   
-  scope :by_letter, lambda { |letter| where("lower(last_name) LIKE ?", "#{letter.downcase}%") }
-  scope :for_provider, lambda { |provider_id| where( :provider_id => provider_id ) }
-  scope :individual, where(:group => false)
-  scope :group, where(:grop => true)
+  scope :by_letter,    -> (letter) { where("lower(last_name) LIKE ?", "#{letter.downcase}%") }
+  scope :for_provider, -> (provider_id) { where( :provider_id => provider_id ) }
+  scope :individual,   -> { where(:group => false) }
+  scope :grouped,      -> { where(:group => true) } # TODO is this scope used?
 
   has_paper_trail
 
