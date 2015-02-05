@@ -21,8 +21,6 @@ class User < ActiveRecord::Base
   # TODO setup strong parameters based on the following:
   # attr_accessible :email, :password, :password_confirmation
 
-  model_stamper
-  
   before_create do
     self.email.downcase! if self.email
   end

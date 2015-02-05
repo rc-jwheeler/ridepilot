@@ -9,11 +9,16 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended to check this file into your version control system.
+# It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150120232237) do
+ActiveRecord::Schema.define(version: 20150205164420) do
 
-  create_table "addresses", :force => true do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "postgis"
+  enable_extension "postgis_topology"
+
+  create_table "addresses", force: true do |t|
     t.string   "name"
     t.string   "building_name"
     t.string   "address"
@@ -24,18 +29,16 @@ ActiveRecord::Schema.define(:version => 20150120232237) do
     t.integer  "provider_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.integer  "lock_version",                                                  :default => 0
-    t.spatial  "the_geom",             :limit => {:srid=>4326, :type=>"point"}
+    t.integer  "lock_version",                                               default: 0
+    t.spatial  "the_geom",             limit: {:srid=>4326, :type=>"point"}
     t.string   "phone_number"
-    t.boolean  "inactive",                                                      :default => false
+    t.boolean  "inactive",                                                   default: false
     t.string   "default_trip_purpose"
   end
 
   add_index "addresses", ["the_geom"], :name => "index_addresses_on_the_geom", :spatial => true
 
-  create_table "customers", :force => true do |t|
+  create_table "customers", force: true do |t|
     t.string   "first_name"
     t.string   "middle_initial"
     t.string   "last_name"
@@ -54,12 +57,10 @@ ActiveRecord::Schema.define(:version => 20150120232237) do
     t.text     "private_notes"
     t.text     "public_notes"
     t.integer  "provider_id"
-    t.boolean  "group",                     :default => false
+    t.boolean  "group",                     default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.integer  "lock_version",              :default => 0
+    t.integer  "lock_version",              default: 0
     t.boolean  "medicaid_eligible"
     t.string   "prime_number"
     t.integer  "default_funding_source_id"
@@ -67,7 +68,7 @@ ActiveRecord::Schema.define(:version => 20150120232237) do
     t.string   "default_service_level"
   end
 
-  create_table "device_pool_drivers", :force => true do |t|
+  create_table "device_pool_drivers", force: true do |t|
     t.string   "status"
     t.float    "lat"
     t.float    "lng"
@@ -82,7 +83,7 @@ ActiveRecord::Schema.define(:version => 20150120232237) do
   add_index "device_pool_drivers", ["device_pool_id"], :name => "index_devices_on_device_pool_id"
   add_index "device_pool_drivers", ["driver_id"], :name => "index_device_pool_users_on_user_id"
 
-  create_table "device_pools", :force => true do |t|
+  create_table "device_pools", force: true do |t|
     t.integer  "provider_id"
     t.string   "name"
     t.string   "color"
@@ -90,53 +91,49 @@ ActiveRecord::Schema.define(:version => 20150120232237) do
     t.datetime "updated_at"
   end
 
-  create_table "drivers", :force => true do |t|
+  create_table "drivers", force: true do |t|
     t.boolean  "active"
     t.boolean  "paid"
     t.integer  "provider_id"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.integer  "lock_version",  :default => 0
+    t.integer  "lock_version", default: 0
     t.integer  "user_id"
   end
 
-  create_table "funding_source_visibilities", :force => true do |t|
+  create_table "funding_source_visibilities", force: true do |t|
     t.integer "funding_source_id"
     t.integer "provider_id"
   end
 
-  create_table "funding_sources", :force => true do |t|
+  create_table "funding_sources", force: true do |t|
     t.string "name"
   end
 
-  create_table "mobilities", :force => true do |t|
+  create_table "mobilities", force: true do |t|
     t.string "name"
   end
 
-  create_table "monthlies", :force => true do |t|
+  create_table "monthlies", force: true do |t|
     t.date     "start_date"
     t.integer  "volunteer_escort_hours"
     t.integer  "volunteer_admin_hours"
     t.integer  "provider_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.integer  "lock_version",           :default => 0
+    t.integer  "lock_version",           default: 0
     t.integer  "funding_source_id"
   end
 
-  create_table "provider_ethnicities", :force => true do |t|
+  create_table "provider_ethnicities", force: true do |t|
     t.integer  "provider_id"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "providers", :force => true do |t|
+  create_table "providers", force: true do |t|
     t.string   "name"
     t.string   "logo_file_name"
     t.string   "logo_content_type"
@@ -144,38 +141,38 @@ ActiveRecord::Schema.define(:version => 20150120232237) do
     t.datetime "logo_updated_at"
     t.boolean  "dispatch"
     t.boolean  "scheduling"
-    t.spatial  "region_nw_corner",                                :limit => {:srid=>0, :type=>"point"}
-    t.spatial  "region_se_corner",                                :limit => {:srid=>0, :type=>"point"}
-    t.spatial  "viewport_center",                                 :limit => {:srid=>0, :type=>"point"}
+    t.spatial  "region_nw_corner",                                limit: {:srid=>0, :type=>"point"}
+    t.spatial  "region_se_corner",                                limit: {:srid=>0, :type=>"point"}
+    t.spatial  "viewport_center",                                 limit: {:srid=>0, :type=>"point"}
     t.integer  "viewport_zoom"
     t.boolean  "allow_trip_entry_from_runs_page"
-    t.decimal  "oaa3b_per_ride_reimbursement_rate",                                                     :precision => 8, :scale => 2
-    t.decimal  "ride_connection_per_ride_reimbursement_rate",                                           :precision => 8, :scale => 2
-    t.decimal  "trimet_per_ride_reimbursement_rate",                                                    :precision => 8, :scale => 2
-    t.decimal  "stf_van_per_ride_reimbursement_rate",                                                   :precision => 8, :scale => 2
-    t.decimal  "stf_taxi_per_ride_administrative_fee",                                                  :precision => 8, :scale => 2
-    t.decimal  "stf_taxi_per_ride_ambulatory_load_fee",                                                 :precision => 8, :scale => 2
-    t.decimal  "stf_taxi_per_ride_wheelchair_load_fee",                                                 :precision => 8, :scale => 2
-    t.decimal  "stf_taxi_per_mile_ambulatory_reimbursement_rate",                                       :precision => 8, :scale => 2
-    t.decimal  "stf_taxi_per_mile_wheelchair_reimbursement_rate",                                       :precision => 8, :scale => 2
+    t.decimal  "oaa3b_per_ride_reimbursement_rate",                                                  precision: 8, scale: 2
+    t.decimal  "ride_connection_per_ride_reimbursement_rate",                                        precision: 8, scale: 2
+    t.decimal  "trimet_per_ride_reimbursement_rate",                                                 precision: 8, scale: 2
+    t.decimal  "stf_van_per_ride_reimbursement_rate",                                                precision: 8, scale: 2
+    t.decimal  "stf_taxi_per_ride_administrative_fee",                                               precision: 8, scale: 2
+    t.decimal  "stf_taxi_per_ride_ambulatory_load_fee",                                              precision: 8, scale: 2
+    t.decimal  "stf_taxi_per_ride_wheelchair_load_fee",                                              precision: 8, scale: 2
+    t.decimal  "stf_taxi_per_mile_ambulatory_reimbursement_rate",                                    precision: 8, scale: 2
+    t.decimal  "stf_taxi_per_mile_wheelchair_reimbursement_rate",                                    precision: 8, scale: 2
   end
 
-  create_table "regions", :force => true do |t|
+  create_table "regions", force: true do |t|
     t.string  "name"
-    t.spatial "the_geom", :limit => {:srid=>4326, :type=>"polygon"}
+    t.spatial "the_geom", limit: {:srid=>4326, :type=>"polygon"}
   end
 
   add_index "regions", ["the_geom"], :name => "index_regions_on_the_geom", :spatial => true
 
-  create_table "repeating_trips", :force => true do |t|
+  create_table "repeating_trips", force: true do |t|
     t.text     "schedule_yaml"
     t.integer  "provider_id"
     t.integer  "customer_id"
     t.datetime "pickup_time"
     t.datetime "appointment_time"
-    t.integer  "guest_count",        :default => 0
-    t.integer  "attendant_count",    :default => 0
-    t.integer  "group_size",         :default => 0
+    t.integer  "guest_count",        default: 0
+    t.integer  "attendant_count",    default: 0
+    t.integer  "group_size",         default: 0
     t.integer  "pickup_address_id"
     t.integer  "dropoff_address_id"
     t.integer  "mobility_id"
@@ -184,23 +181,21 @@ ActiveRecord::Schema.define(:version => 20150120232237) do
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.integer  "lock_version",       :default => 0
+    t.integer  "lock_version",       default: 0
     t.boolean  "round_trip"
     t.integer  "driver_id"
     t.integer  "vehicle_id"
-    t.boolean  "cab",                :default => false
+    t.boolean  "cab",                default: false
     t.boolean  "customer_informed"
   end
 
-  create_table "roles", :force => true do |t|
+  create_table "roles", force: true do |t|
     t.integer "user_id"
     t.integer "provider_id"
     t.integer "level"
   end
 
-  create_table "runs", :force => true do |t|
+  create_table "runs", force: true do |t|
     t.string   "name"
     t.date     "date"
     t.integer  "start_odometer"
@@ -217,49 +212,45 @@ ActiveRecord::Schema.define(:version => 20150120232237) do
     t.datetime "actual_end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.integer  "lock_version",             :default => 0
+    t.integer  "lock_version",             default: 0
   end
 
   add_index "runs", ["provider_id", "date"], :name => "index_runs_on_provider_id_and_date"
   add_index "runs", ["provider_id", "scheduled_start_time"], :name => "index_runs_on_provider_id_and_start_time"
 
-  create_table "travel_time_estimates", :id => false, :force => true do |t|
+  create_table "travel_time_estimates", id: false, force: true do |t|
     t.integer "from_address_id"
     t.integer "to_address_id"
     t.integer "seconds"
   end
 
-  create_table "trips", :force => true do |t|
+  create_table "trips", force: true do |t|
     t.integer  "run_id"
     t.integer  "customer_id"
     t.datetime "pickup_time"
     t.datetime "appointment_time"
-    t.integer  "guest_count",                                       :default => 0
-    t.integer  "attendant_count",                                   :default => 0
-    t.integer  "group_size",                                        :default => 0
+    t.integer  "guest_count",                                 default: 0
+    t.integer  "attendant_count",                             default: 0
+    t.integer  "group_size",                                  default: 0
     t.integer  "pickup_address_id"
     t.integer  "dropoff_address_id"
     t.integer  "mobility_id"
     t.integer  "funding_source_id"
     t.string   "trip_purpose"
-    t.string   "trip_result",                                       :default => ""
+    t.string   "trip_result",                                 default: ""
     t.text     "notes"
-    t.decimal  "donation",           :precision => 10, :scale => 2, :default => 0.0
+    t.decimal  "donation",           precision: 10, scale: 2, default: 0.0
     t.integer  "provider_id"
     t.datetime "called_back_at"
-    t.boolean  "customer_informed",                                 :default => false
+    t.boolean  "customer_informed",                           default: false
     t.integer  "repeating_trip_id"
-    t.boolean  "cab",                                               :default => false
-    t.boolean  "cab_notified",                                      :default => false
+    t.boolean  "cab",                                         default: false
+    t.boolean  "cab_notified",                                default: false
     t.text     "guests"
     t.integer  "called_back_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.integer  "lock_version",                                      :default => 0
+    t.integer  "lock_version",                                default: 0
     t.boolean  "round_trip"
     t.boolean  "medicaid_eligible"
     t.integer  "mileage"
@@ -269,12 +260,12 @@ ActiveRecord::Schema.define(:version => 20150120232237) do
   add_index "trips", ["provider_id", "appointment_time"], :name => "index_trips_on_provider_id_and_appointment_time"
   add_index "trips", ["provider_id", "pickup_time"], :name => "index_trips_on_provider_id_and_pickup_time"
 
-  create_table "users", :force => true do |t|
-    t.string   "email",                                 :default => "", :null => false
-    t.string   "encrypted_password",     :limit => 128, :default => "", :null => false
-    t.string   "password_salt",                         :default => "", :null => false
+  create_table "users", force: true do |t|
+    t.string   "email",                              default: "", null: false
+    t.string   "encrypted_password",     limit: 128, default: "", null: false
+    t.string   "password_salt",                      default: "", null: false
     t.string   "reset_password_token"
-    t.integer  "sign_in_count",                         :default => 0
+    t.integer  "sign_in_count",                      default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -289,25 +280,23 @@ ActiveRecord::Schema.define(:version => 20150120232237) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
-  create_table "vehicle_maintenance_events", :force => true do |t|
-    t.integer  "vehicle_id",                                                       :null => false
-    t.integer  "provider_id",                                                      :null => false
+  create_table "vehicle_maintenance_events", force: true do |t|
+    t.integer  "vehicle_id",                                              null: false
+    t.integer  "provider_id",                                             null: false
     t.boolean  "reimbursable"
     t.date     "service_date"
     t.date     "invoice_date"
     t.text     "services_performed"
-    t.decimal  "odometer",           :precision => 10, :scale => 1
+    t.decimal  "odometer",           precision: 10, scale: 1
     t.string   "vendor_name"
     t.string   "invoice_number"
-    t.decimal  "invoice_amount",     :precision => 10, :scale => 2
+    t.decimal  "invoice_amount",     precision: 10, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.integer  "lock_version",                                      :default => 0
+    t.integer  "lock_version",                                default: 0
   end
 
-  create_table "vehicles", :force => true do |t|
+  create_table "vehicles", force: true do |t|
     t.string   "name"
     t.integer  "year"
     t.string   "make"
@@ -316,14 +305,23 @@ ActiveRecord::Schema.define(:version => 20150120232237) do
     t.string   "vin"
     t.string   "garaged_location"
     t.integer  "provider_id"
-    t.boolean  "active",            :default => true
+    t.boolean  "active",            default: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.integer  "lock_version",      :default => 0
+    t.integer  "lock_version",      default: 0
     t.integer  "default_driver_id"
     t.boolean  "reportable"
   end
+
+  create_table "versions", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
 
 end

@@ -10,8 +10,6 @@ class Trip < ActiveRecord::Base
   belongs_to :dropoff_address, :class_name=>"Address"
   belongs_to :called_back_by, :class_name=>"User"
   belongs_to :repeating_trip
-  belongs_to :created_by, :foreign_key => :created_by_id, :class_name=>'User'
-  belongs_to :updated_by, :foreign_key => :updated_by_id, :class_name=>'User'
 
   before_validation :compute_run
   before_create :create_repeating_trip
@@ -35,7 +33,7 @@ class Trip < ActiveRecord::Base
   validates_numericality_of :mileage, :greater_than => 0, :allow_blank => true
   accepts_nested_attributes_for :customer
 
-  stampable :creator_attribute => :created_by_id, :updater_attribute => :updated_by_id
+  has_paper_trail
   
   scope :for_cab, where(:cab => true)
   scope :not_for_cab, where(:cab => false)

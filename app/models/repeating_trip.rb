@@ -6,15 +6,13 @@ class RepeatingTrip < ActiveRecord::Base
   belongs_to :pickup_address, :class_name=>"Address"
   belongs_to :dropoff_address, :class_name=>"Address"
   belongs_to :repeating_trip
-  belongs_to :created_by, :foreign_key => :created_by_id, :class_name=>'User'
-  belongs_to :updated_by, :foreign_key => :updated_by_id, :class_name=>'User'
 
   validates_date :pickup_time
   validates_date :appointment_time
 
-  stampable :creator_attribute => :created_by_id, :updater_attribute => :updated_by_id
+  has_paper_trail
 
-  NON_TRIP_ATTRIBUTES = %w(id recurrence schedule_yaml created_at updated_at created_by_id updated_by_id lock_version)
+  NON_TRIP_ATTRIBUTES = %w(id recurrence schedule_yaml created_at updated_at lock_version)
 
   def self.trip_attributes  
     self.new.attributes.keys - NON_TRIP_ATTRIBUTES

@@ -1,7 +1,5 @@
 class Address < ActiveRecord::Base
   belongs_to :provider
-  belongs_to :created_by, :foreign_key => :created_by_id, :class_name=>'User'
-  belongs_to :updated_by, :foreign_key => :updated_by_id, :class_name=>'User'
   
   has_many :trips_from, :class_name => "Trip", :foreign_key => :pickup_address_id
   has_many :trips_to, :class_name => "Trip", :foreign_key => :dropoff_address_id
@@ -18,7 +16,7 @@ class Address < ActiveRecord::Base
   
   before_validation :compute_in_trimet_district
 
-  stampable :creator_attribute => :created_by_id, :updater_attribute => :updated_by_id
+  has_paper_trail
   
   NewAddressOption = { :label => "New Address", :id => 0 }
 

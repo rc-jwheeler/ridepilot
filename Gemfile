@@ -47,8 +47,8 @@ gem 'paperclip', '~> 4.2.1' # TODO latest? yes
 gem 'will_paginate', '~> 3.0.7' # TODO latest? yes
 gem 'attribute_normalizer', '~> 1.2.0' # TODO latest? yes
 
-# TODO swap out for paper_trail
-gem 'userstamp', :git => 'git@github.com:kimkong/userstamp.git'
+# For change tracking and auditing
+gem 'paper_trail', '~> 3.0.6'
 
 # Support for Rails 4 since 1.0.12
 gem 'rails3-jquery-autocomplete', '~> 1.0.15' # TODO latest? yes

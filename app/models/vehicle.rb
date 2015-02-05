@@ -1,7 +1,5 @@
 class Vehicle < ActiveRecord::Base
   belongs_to :provider
-  belongs_to :created_by, :foreign_key => :created_by_id, :class_name=>'User'
-  belongs_to :updated_by, :foreign_key => :updated_by_id, :class_name=>'User'
   belongs_to :default_driver, :class_name => "Driver"
   
   has_one :device_pool_driver, :dependent => :destroy
@@ -21,5 +19,5 @@ class Vehicle < ActiveRecord::Base
   validates_length_of :vin, :is=>17, :allow_nil => true, :allow_blank => true
   validates_format_of :vin, :with => /\A[^ioq]*\z/i, :allow_nil => true
 
-  stampable :creator_attribute => :created_by_id, :updater_attribute => :updated_by_id
+  has_paper_trail
 end

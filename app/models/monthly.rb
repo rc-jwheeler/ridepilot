@@ -9,7 +9,7 @@ class Monthly < ActiveRecord::Base
   validates_numericality_of :volunteer_admin_hours, greater_than_or_equal_to: 0, allow_blank: true
   validates_uniqueness_of :start_date, scope: [:provider_id, :funding_source_id], message: "has already been used for the given provider and funding source"
 
-  stampable :creator_attribute => :created_by_id, :updater_attribute => :updated_by_id
+  has_paper_trail
   
   # Ensure that the start date represents the first of any given month
   def start_date=(start_date)
