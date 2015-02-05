@@ -29,26 +29,29 @@ gem 'turbolinks'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'pg'
-gem 'cancancan', '~> 1.10.1'
-gem 'devise', '~> 3.4.1'
-gem 'GeoRuby', '~> 1.3.4'
-gem 'activerecord-postgis-adapter', '~> 0.6.0' # TODO 0.7+ require Rails 4.0+
-gem 'whenever', '~> 0.9.4', :require => false
+gem 'cancancan', '~> 1.10.1' # TODO latest? yes
+gem 'devise', '~> 3.4.1' # TODO latest? yes
+gem 'GeoRuby', '~> 1.3.4' # TODO latest? yes
+
+# RADAR v3.x will support ActiveRecord 4.2
+gem 'activerecord-postgis-adapter', '~> 2.2.1' # TODO latest? yes
+
+gem 'whenever', '~> 0.9.4', :require => false # TODO latest? yes
 
 # RADAR current version is 0.12.1, but current recurring trip tracking relies 
 # on 0.6.8
 gem 'ice_cube', '0.6.8' 
 
-gem 'validates_timeliness', '~> 3.0.14'
-gem 'paperclip', '~> 4.2.1'
-gem 'will_paginate', '~> 3.0.7'
-gem 'attribute_normalizer', '~> 1.2.0'
+gem 'validates_timeliness', '~> 3.0.14' # TODO latest? yes
+gem 'paperclip', '~> 4.2.1' # TODO latest? yes
+gem 'will_paginate', '~> 3.0.7' # TODO latest? yes
+gem 'attribute_normalizer', '~> 1.2.0' # TODO latest? yes
 
 # TODO swap out for paper_trail
 gem 'userstamp', :git => 'git@github.com:kimkong/userstamp.git'
 
-gem 'escape_utils', '~> 1.0.1'
-gem 'rails3-jquery-autocomplete', '~> 1.0.15' # Support for Rails 4 since 1.0.12
+# Support for Rails 4 since 1.0.12
+gem 'rails3-jquery-autocomplete', '~> 1.0.15' # TODO latest? yes
 
 # RADAR Not updated since 2011
 gem 'schedule_atts', :git => 'git://github.com/zpearce/Schedule-Attributes.git'
@@ -72,13 +75,17 @@ group :development do
 end
 
 group :production do
-  gem 'exception_notification', '~> 4.0'
+  gem 'exception_notification', '~> 4.0' # TODO latest? yes
 end
 
 group :test, :development do
-  gem 'rspec-rails', '~> 3.1'
-  gem 'capybara', '~> 2.4'
-  gem 'fixjour', '~> 0.5'
-  gem 'faker', '~> 1.4'
   gem 'byebug'
+
+  gem 'rspec-rails', '~> 3.2' # TODO latest? yes
+  gem 'capybara', '~> 2.4' # TODO latest? yes
+
+  # RADAR Not updated since 2008
+  gem 'fixjour', '~> 0.5' # TODO latest? yes
+
+  gem 'faker', '~> 1.4' # TODO latest? yes
 end
