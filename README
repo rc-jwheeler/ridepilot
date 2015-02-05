@@ -8,21 +8,21 @@ RidePilot is a project of Ride Connection, a Portland-area community
 transportation provider.  It is primarily written by hackers at
 OpenPlans.
 
-## Dependencies (as of 2015-01-13)
+## Dependencies (as of 2015-02-05)
 
-* Postgresql 8.4
-* PostGIS 1.5
-* Ruby 1.9.3
-* Rails 3.0
+* Postgresql 9.3
+* PostGIS 2.1
+* Ruby 2.1.4
+* Rails 4.2
 * Imagemagick
 
 ## Setting up a development environment
 
-The cleanest way to setup a development environment is using Vagrant, Chef and VirtualBox. This gives you an isolated development environment that is easy to provision. If you don't want to go that route, you can setup all of the dependencies yourself on your local machine. YMMV with either approach.
+Because of the complexity involved with managing multiple versions of the same database, I have found the cleanest way to setup a development environment is to use Vagrant, Chef and VirtualBox for the database, and RVM for local Ruby and Gem management. This gives you an isolated environment that is easy to provision. If you don't want to go that route, you can setup all of the database dependencies yourself on your local machine. YMMV with either approach.
 
-### Provisioning a VM with Vagrant
+### Provisioning a Database VM with Vagrant
 
-Using this method, your local project folder will be mounted in the guest VM as `/vagrant`, and port 3000 will automatically be forwarded from your host machine to the guest VM. This means you can edit files in your local text editor/IDE of choice, and browse the development website from your local browser of choice as you normally would. You will run all of your rails commands (server, console, rake, etc.) from inside the VM, and do all of your development work (including any `git` commands) from your local terminal window.
+Using this method, you will set your Rails app to connect to your VM's database server. All of your development, testing, and other console commands can be run locally on the host.
 
 1. Make sure you have the most recent version of Vagrant and VirtualBox installed
 
@@ -36,9 +36,7 @@ Using this method, your local project folder will be mounted in the guest VM as 
         vagrant up # This will take a while the first time you run it as it provisions the new virtual server
         vagrant ssh # You're now connected to your new VM
     
-4. Once SSH'd in:
-
-        cd /vagrant # This is the mount point for the project directory on the host
+4. Once SSH'd in, create the database user and development and test databases per the database config
     
 5. Now skip ahead to "Common Setup Steps"
 
@@ -48,7 +46,44 @@ Provisioning a server will download copies of all of the Chef cookbooks to the `
 
 ### Provisioning Locally (without Vagrant)
 
-1. Install the required versions of Postgresql, PostGIS, Imagemagick and any other system packages required for your setup
+1. Install the required versions of Postgresql, PostGIS, and any other system packages required for your setup
+
+2. To set up PostgreSQL for use with RidePilot, you will need the
+`fuzzystrmatch` library (included in the postgresql-contrib library in Ubuntu),
+and `postgis`.  This adds support for `dmetaphone`, which is how we
+phonetically match names.  Run `psql` and then the following commands:
+
+        -- Create a new database
+        CREATE DATABASE template_postgis;
+
+        -- Make it a template database
+        UPDATE pg_database SET datistemplate = TRUE WHERE datname = 'template_postgis';
+
+        -- Connect to new database and install the pl/pgsql language
+        \c template_postgis
+
+        CREATE LANGUAGE plpgsql;
+
+        -- Install PostGIS (your file paths may vary)
+        \i /opt/local/share/postgresql93/contrib/postgis-2.1/postgis.sql 
+        \i /opt/local/share/postgresql93/contrib/postgis-2.1/spatial_ref_sys.sql
+        GRANT ALL ON geometry_columns TO PUBLIC;
+        GRANT ALL ON geography_columns TO PUBLIC;
+        GRANT ALL ON spatial_ref_sys TO PUBLIC;
+
+        -- vacuum freeze: it will guarantee that all rows in the database are
+        -- "frozen" and will not be subject to transaction ID wraparound
+        -- problems.
+        VACUUM FREEZE;
+
+        -- You'll also want to set up the fuzzy string matching functions
+        \i /opt/local/share/postgresql93/contrib/fuzzystrmatch.sql 
+
+3. Create the database user and development and test databases per the database config
+
+4. Continue to "Common Setup Steps"
+    
+### Common Setup Steps
 
 2. Install RVM
 
@@ -64,42 +99,7 @@ Provisioning a server will download copies of all of the Chef cookbooks to the `
         rvm gemset use ruby-xxx.xxx@global
         gem install bundler
     
-6. `cd` into (or out and back into) the project directory to pickup the RVM configuration files. Follow any instructions for trusting the .rvmrc file or creating the gemset.
-
-7. To set up PostgreSQL for use with RidePilot, you will need the
-`fuzzystrmatch` library (included in postgresql-contrib-8.4 in Ubuntu),
-and `postgis`.  This adds support for `dmetaphone`, which is how we
-phonetically match names.  Run `psql` and then the following commands:
-
-        -- Create a new database
-        CREATE DATABASE template_postgis15;
-
-        -- Make it a template database
-        UPDATE pg_database SET datistemplate = TRUE WHERE datname = 'template_postgis15';
-
-        -- Connect to new database and install the pl/pgsql language
-        \c template_postgis15
-
-        CREATE LANGUAGE plpgsql;
-
-        -- Install PostGIS (your file paths may vary)
-        \i /opt/local/share/postgresql84/contrib/postgis-1.5/postgis.sql 
-        \i /opt/local/share/postgresql84/contrib/postgis-1.5/spatial_ref_sys.sql
-        GRANT ALL ON geometry_columns TO PUBLIC;
-        GRANT ALL ON geography_columns TO PUBLIC;
-        GRANT ALL ON spatial_ref_sys TO PUBLIC;
-
-        -- vacuum freeze: it will guarantee that all rows in the database are
-        -- "frozen" and will not be subject to transaction ID wraparound
-        -- problems.
-        VACUUM FREEZE;
-
-        -- You'll also want to set up the fuzzy string matching functions
-        \i /opt/local/share/postgresql84/contrib/fuzzystrmatch.sql 
-
-8. Continue to "Common Setup Steps"
-    
-### Common Setup Steps
+6. `cd` into (or out and back into) the project directory to pickup the RVM configuration files. Follow any instructions for creating the gemset.
 
 1. Install the gem bundle. In the project dir, run:
 
@@ -107,22 +107,21 @@ phonetically match names.  Run `psql` and then the following commands:
 
 2. Make sure your `config/database.yml` contains the line in the section named `common: &common`:
 
-        template: template_postgis15
+        template: template_postgis
 
 3. Copy `config/app_config_template.yml` to `config/app_config.yml`. You can leave it as-is in most cases.
 
-4. Create the database user and development and test databases per the database config
-
 5. Make sure you can start the app without error
 
-        rails server
+        bin/rails server
     
    Then make sure you can browse the website at `http://localhost:3000` without error
 
 6. Make sure all of the automated tests pass
     
-        bundle exec rake db:test:prepare
-        bundle exec rake test
+        bin/rake db:test:prepare
+        bin/rake test
+        bin/rake spec
 
 ## Deployment
 
