@@ -61,6 +61,7 @@ gem 'schedule_atts', :git => 'git://github.com/zpearce/Schedule-Attributes.git'
 group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+  gem "spring-commands-rspec"
   
   # Deploy with Capistrano
   # We need it to be installed, but it's not a runtime dependency
