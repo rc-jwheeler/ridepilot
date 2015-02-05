@@ -29,11 +29,6 @@ class User < ActiveRecord::Base
     Driver.where(:provider_id => provider.id).map(&:user)
   end
   
-  def self.find_for_authentication(conditions) 
-    conditions[:email].downcase! 
-    super(conditions) 
-  end
-  
   # Generate a password that will validate properly for User
   def self.generate_password(length = 8)
     # Filter commonly confused characters
