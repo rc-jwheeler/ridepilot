@@ -26,7 +26,7 @@ class TripsController < ApplicationController
     #called.
 
     @trips = Trip.accessible_by(current_ability).for_provider(current_provider_id).where(
-      ["customer_informed = false and pickup_time >= ? ", Date.today.to_time_in_current_zone.utc]).order("called_back_at")
+      ["customer_informed = false and pickup_time >= ? ", Date.today.in_time_zone.utc]).order("called_back_at")
 
     respond_to do |format|
       format.html
@@ -275,11 +275,11 @@ class TripsController < ApplicationController
 
   def filter_trips
     if params[:end].present? && params[:start].present?
-      t_start = Time.at(params[:start].to_i).to_date.to_time_in_current_zone.utc
-      t_end   = Time.at(params[:end].to_i).to_date.to_time_in_current_zone.utc
+      t_start = Time.at(params[:start].to_i).to_date.in_time_zone.utc
+      t_end   = Time.at(params[:end].to_i).to_date.in_time_zone.utc
     else
       time    = Time.now
-      t_start = time.beginning_of_week.to_date.to_time_in_current_zone.utc
+      t_start = time.beginning_of_week.to_date.in_time_zone.utc
       t_end   = t_start + 6.days
     end
 

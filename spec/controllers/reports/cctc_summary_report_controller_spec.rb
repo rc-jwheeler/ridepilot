@@ -13,7 +13,7 @@ describe ReportsController do
       @test_funding_sources[:stf]          = @test_provider.funding_sources.create(:name => "STF")
       @test_funding_sources[:unreimbursed] = @test_provider.funding_sources.create(:name => "Unreimbursed")
     
-      @test_start_date = DateTime.new(2013, 2, 1).to_time_in_current_zone
+      @test_start_date = DateTime.new(2013, 2, 1).in_time_zone
     
       @request.env["devise.mapping"] = Devise.mappings[:user]
       sign_in @test_user
