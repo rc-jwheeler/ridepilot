@@ -1,14 +1,32 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
-gem 'rails', '~> 3.2.0'
+ruby '2.1.4'
 
-group :assets do
-  gem 'sass-rails', '~> 3.2.6'
-  gem 'coffee-rails', '~> 3.2.2'
-  gem 'uglifier', '>= 1.0.3'
-end
+gem 'rails', '~> 4.1.0'
 
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 4.0.3'
+
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier', '>= 1.3.0'
+
+# Use CoffeeScript for .js.coffee assets and views
+gem 'coffee-rails', '~> 4.0.0'
+
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+# gem 'therubyracer',  platforms: :ruby
+
+# Use jquery as the JavaScript library
 gem 'jquery-rails'
+
+# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
+gem 'turbolinks'
+
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+# gem 'jbuilder', '~> 2.0'
+
+# bundle exec rake doc:rails generates the API under doc/api.
+gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'pg'
 gem 'cancancan', '~> 1.10.1'
@@ -36,6 +54,9 @@ gem 'rails3-jquery-autocomplete', '~> 1.0.15' # Support for Rails 4 since 1.0.12
 gem 'schedule_atts', :git => 'git://github.com/zpearce/Schedule-Attributes.git'
 
 group :development do
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+  
   # Deploy with Capistrano
   # We need it to be installed, but it's not a runtime dependency
   gem "capistrano",     '~> 2.15.5', :require => false # TODO latest is 3.3.5

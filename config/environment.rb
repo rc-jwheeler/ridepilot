@@ -1,4 +1,4 @@
-# Load the rails application
+# Load the Rails application.
 require File.expand_path('../application', __FILE__)
 
 TRIP_RESULT_CODES = {
@@ -86,5 +86,5 @@ STATE_NAME_TO_POSTAL_ABBREVIATION = {
 
 EMAIL_FROM = "apps@rideconnection.org"
 
-# Initialize the rails application
-Ridepilot::Application.initialize!
+# Initialize the Rails application.
+Rails.application.initialize!

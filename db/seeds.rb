@@ -5,8 +5,8 @@ require 'geo_ruby'
 #
 # Examples:
 #
-#   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
-#   Mayor.create(:name => 'Daley', :city => cities.first)
+#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
+#   Mayor.create(name: 'Emanuel', city: cities.first)
 
 if !Provider.exists?(1)
   provider = Provider.new(:id => 1, :name => 'Ride Connection', :dispatch => true)
