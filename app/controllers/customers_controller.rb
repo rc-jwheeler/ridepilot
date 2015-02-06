@@ -74,7 +74,7 @@ class CustomersController < ApplicationController
 
   def create
 
-    @customer = Customer.new(params[:customer])
+    @customer = Customer.new customer_params
     @customer.provider = current_provider
     @customer.activated_date = Date.today
 
@@ -139,7 +139,7 @@ first_name, first_name, first_name, first_name,
     @customer = Customer.find(params[:id])
     
     respond_to do |format|
-      if @customer.update_attributes(params[:customer])
+      if @customer.update_attributes customer_params
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
       else
@@ -163,6 +163,39 @@ first_name, first_name, first_name, first_name,
   end
   
   private
+  
+  def customer_params
+    params.require(:customer).permit(
+      :ada_eligible,
+      :birth_date,
+      :default_funding_source_id,
+      :default_service_level,
+      :email,
+      :emergency_contact_notes,
+      :ethnicity,
+      :first_name,
+      :group,
+      :last_name,
+      :medicaid_eligible,
+      :middle_initial,
+      :mobility_id,
+      :mobility_notes,
+      :phone_number_1,
+      :phone_number_2,
+      :prime_number,
+      :private_notes,
+      :public_notes,
+      :address_attributes => [
+        :address,
+        :building_name,
+        :city,
+        :name,
+        :provider_id,
+        :state,
+        :zip,
+      ],
+    )
+  end
 
   def name_options
     if params[:customer_name]
