@@ -18,7 +18,6 @@ class Customer < ActiveRecord::Base
   scope :by_letter,    -> (letter) { where("lower(last_name) LIKE ?", "#{letter.downcase}%") }
   scope :for_provider, -> (provider_id) { where( :provider_id => provider_id ) }
   scope :individual,   -> { where(:group => false) }
-  scope :grouped,      -> { where(:group => true) } # TODO is this scope used?
 
   has_paper_trail
 

@@ -53,7 +53,6 @@ class Trip < ActiveRecord::Base
   scope :called_back,        -> { where('called_back_at IS NOT NULL') }
   scope :not_called_back,    -> { where('called_back_at IS NULL') }
   scope :individual,         -> { joins(:customer).where(:customers => {:group => false}) }
-  scope :grouped,            -> { joins(:customer).where(:customers => {:group => true}) } # TODO is this scope used?
 
   DAYS_OF_WEEK = %w{monday tuesday wednesday thursday friday saturday sunday}
   
