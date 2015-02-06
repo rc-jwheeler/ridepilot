@@ -1,7 +1,4 @@
 class DevicePoolDriver < ActiveRecord::Base
-  # TODO setup strong parameters based on the following:
-  # attr_accessible :lat, :lng, :status, :posted_at
-  
   belongs_to :device_pool
   belongs_to :driver
   belongs_to :vehicle
