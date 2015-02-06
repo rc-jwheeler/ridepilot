@@ -142,15 +142,15 @@ class TripsController < ApplicationController
   end
 
   def create
-    trip_params = params[:trip]
-    if trip_params[:customer_id] && customer = Customer.find_by_id(trip_params[:customer_id])
+    permitted_trip_params = trip_params
+    if permitted_trip_params[:customer_id] && customer = Customer.find_by_id(permitted_trip_params[:customer_id])
       authorize! :read, customer
-      trip_params[:provider_id] = customer.provider.id if customer.provider.present?
+      permitted_trip_params[:provider_id] = customer.provider.id if customer.provider.present?
     else
-      trip_params[:customer_id] = ""
+      permitted_trip_params[:customer_id] = ""
     end    
-    handle_trip_params trip_params
-    @trip = Trip.new(trip_params)
+    handle_trip_params permitted_trip_params
+    @trip = Trip.new(permitted_trip_params)
     authorize! :manage, @trip
     
     respond_to do |format|
@@ -173,14 +173,14 @@ class TripsController < ApplicationController
   end
 
   def update
-    trip_params = params[:trip]
-    @customer = Customer.find(trip_params[:customer_id])
-    trip_params[:provider_id] = @customer.provider.id if @customer.provider.present?
-    handle_trip_params trip_params
+    permitted_trip_params = trip_params
+    @customer = Customer.find(permitted_trip_params[:customer_id])
+    permitted_trip_params[:provider_id] = @customer.provider.id if @customer.provider.present?
+    handle_trip_params permitted_trip_params
     authorize! :manage, @trip
 
     respond_to do |format|
-      if @trip.update_attributes(trip_params)
+      if @trip.update_attributes(permitted_trip_params)
         format.html { redirect_to(trips_path, :notice => 'Trip was successfully updated.')  }
         format.js { 
           render :json => {:status => "success"}, :content_type => "text/json"
@@ -205,6 +205,44 @@ class TripsController < ApplicationController
   end
 
   private
+  
+  # This will be used automatically by CanCan for the default actions
+  def trip_params
+    params.require(:trip).permit(
+      :appointment_time,
+      :attendant_count,
+      :customer_id,
+      :customer_informed,
+      :donation,
+      :driver_id,
+      :dropoff_address_id,
+      :funding_source_id,
+      :group_size,
+      :guest_count,
+      :medicaid_eligible,
+      :mileage,
+      :mobility_id,
+      :notes,
+      :pickup_address_id,
+      :pickup_time,
+      :repeats_fridays,
+      :repeats_mondays,
+      :repeats_thursdays,
+      :repeats_tuesdays,
+      :repeats_wednesdays,
+      :repetition_customer_informed,
+      :repetition_driver_id,
+      :repetition_interval,
+      :repetition_vehicle_id,
+      :round_trip,
+      :run_id,
+      :service_level,
+      :trip_purpose,
+      :trip_result,
+      :vehicle_id,
+      customer_attributes: [:id]
+    )
+  end
   
   def set_calendar_week_start
     @week_start = if params[:start].present?

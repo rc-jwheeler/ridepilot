@@ -19,7 +19,7 @@ class TripsControllerTest < ActionController::TestCase
 
   test "should create trip" do
     assert_difference('Trip.count') do
-      post :create, :trip => @trip.attributes
+      post :create, :trip => @trip.dup.attributes.compact
     end
 
     assert_redirected_to trips_path(:start => @trip.pickup_time.to_i)
