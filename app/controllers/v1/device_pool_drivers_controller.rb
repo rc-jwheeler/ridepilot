@@ -19,7 +19,7 @@ class V1::DevicePoolDriversController < ApplicationController
       format.json do
         device_pool_driver = DevicePoolDriver.find params[:id]
         
-        if device_pool_driver.update_attributes( params[:device_pool_driver] )
+        if device_pool_driver.update_attributes device_pool_drivers_params
           render :json => { :device_pool_driver => device_pool_driver.as_mobile_json }, :status => 200
         else
           render :json => { :error => device_pool_driver.errors }, :status => 400
@@ -96,4 +96,8 @@ private
     render :json => { :error => "User does not have access to this resource."}, :status => 401
   end
   
+  # Allow updating of only our white listed parameters
+  def device_pool_drivers_params
+    params.require(:device_pool_driver).permit(:lat, :lng, :status, :posted_at)
+  end
 end
