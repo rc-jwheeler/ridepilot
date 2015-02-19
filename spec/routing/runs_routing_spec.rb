@@ -31,5 +31,13 @@ RSpec.describe RunsController, type: :routing do
       expect(:delete => "/runs/1").to route_to("runs#destroy", :id => "1")
     end
 
+    it "routes to #for_date" do
+      expect(:get => "/runs/for_date").to route_to("runs#for_date")
+    end
+
+    it "routes to #uncompleted_runs" do
+      expect(:get => "/runs/uncompleted_runs").to route_to("runs#uncompleted_runs")
+    end
+
   end
 end

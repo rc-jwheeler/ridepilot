@@ -31,5 +31,13 @@ RSpec.describe AddressesController, type: :routing do
       expect(:delete => "/addresses/1").to route_to("addresses#destroy", :id => "1")
     end
 
+    it "routes to #autocomplete" do
+      expect(:get => "/addresses/autocomplete").to route_to("addresses#autocomplete")
+    end
+
+    it "routes to #search" do
+      expect(:get => "/addresses/search").to route_to("addresses#search")
+    end
+
   end
 end

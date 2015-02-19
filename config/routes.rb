@@ -29,18 +29,19 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :trips do 
-    get :reconcile_cab, :on=>:collection
-    get :trips_requiring_callback, :on=>:collection
-    get :unscheduled, :on=>:collection
-    post :confirm, :as => :confirm
-    post :no_show, :as => :no_show
-    post :reached, :as => :reached
-    post :send_to_cab, :as => :send_to_cab
-    post :turndown, :as => :turndown
-  end
+  resources :trips do
+    post :confirm
+    post :no_show
+    post :reached
+    post :send_to_cab
+    post :turndown
 
-  resources :repeating_trips
+    collection do    
+      get :reconcile_cab
+      get :trips_requiring_callback
+      get :unscheduled
+    end
+  end
 
   resources :providers do
     post :change_role

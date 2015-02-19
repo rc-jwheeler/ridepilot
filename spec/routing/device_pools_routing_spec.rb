@@ -3,10 +3,6 @@ require "rails_helper"
 RSpec.describe DevicePoolsController, type: :routing do
   describe "routing" do
 
-    it "routes to #index" do
-      expect(:get => "/device_pools").to route_to("device_pools#index")
-    end
-
     it "routes to #new" do
       expect(:get => "/device_pools/new").to route_to("device_pools#new")
     end

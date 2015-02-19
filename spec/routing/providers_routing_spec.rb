@@ -31,5 +31,37 @@ RSpec.describe ProvidersController, type: :routing do
       expect(:delete => "/providers/1").to route_to("providers#destroy", :id => "1")
     end
 
+    it "routes to #change_dispatch" do
+      expect(:post => "/providers/1/change_dispatch").to route_to("providers#change_dispatch", :id => "1")
+    end
+
+    it "routes to #change_reimbursement_rates" do
+      expect(:post => "/providers/1/change_reimbursement_rates").to route_to("providers#change_reimbursement_rates", :id => "1")
+    end
+
+    it "routes to #change_scheduling" do
+      expect(:post => "/providers/1/change_scheduling").to route_to("providers#change_scheduling", :id => "1")
+    end
+
+    it "routes to #change_allow_trip_entry_from_runs_page" do
+      expect(:post => "/providers/1/change_allow_trip_entry_from_runs_page").to route_to("providers#change_allow_trip_entry_from_runs_page", :id => "1")
+    end
+
+    it "routes to #save_region" do
+      expect(:post => "/providers/1/save_region").to route_to("providers#save_region", :id => "1")
+    end
+
+    it "routes to #save_viewport" do
+      expect(:post => "/providers/1/save_viewport").to route_to("providers#save_viewport", :id => "1")
+    end
+
+    it "routes to #change_role" do
+      expect(:post => "/providers/1/change_role").to route_to("providers#change_role", :provider_id => "1")
+    end
+
+    it "routes to #delete_role" do
+      expect(:post => "/providers/1/delete_role").to route_to("providers#delete_role", :provider_id => "1")
+    end
+
   end
 end

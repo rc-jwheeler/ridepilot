@@ -2,33 +2,47 @@ require "rails_helper"
 
 RSpec.describe UsersController, type: :routing do
   describe "routing" do
+    
+    # NOTE we're only testing the non-Devise routes
 
-    it "routes to #index" do
-      expect(:get => "/users").to route_to("users#index")
+    it "routes to #check_session" do
+      expect(:get => "/check_session").to route_to("users#check_session")
     end
 
-    it "routes to #new" do
-      expect(:get => "/users/new").to route_to("users#new")
+    it "routes /init to #show_init" do
+      expect(:get => "/init").to route_to("users#show_init")
     end
 
-    it "routes to #show" do
-      expect(:get => "/users/1").to route_to("users#show", :id => "1")
+    it "routes to #new_user" do
+      expect(:get => "/new_user").to route_to("users#new_user")
     end
 
-    it "routes to #edit" do
-      expect(:get => "/users/1/edit").to route_to("users#edit", :id => "1")
+    it "routes to #show_change_password" do
+      expect(:get => "/show_change_password").to route_to("users#show_change_password")
     end
 
-    it "routes to #create" do
-      expect(:post => "/users").to route_to("users#create")
+    it "routes to #touch_session" do
+      expect(:get => "/touch_session").to route_to("users#touch_session")
     end
 
-    it "routes to #update" do
-      expect(:put => "/users/1").to route_to("users#update", :id => "1")
+    it "routes to #change_password" do
+      expect(:post => "/change_password").to route_to("users#change_password")
     end
 
-    it "routes to #destroy" do
-      expect(:delete => "/users/1").to route_to("users#destroy", :id => "1")
+    it "routes to #change_provider" do
+      expect(:post => "/change_provider").to route_to("users#change_provider")
+    end
+
+    it "routes to #create_user" do
+      expect(:post => "/create_user").to route_to("users#create_user")
+    end
+
+    it "routes to #init" do
+      expect(:post => "/init").to route_to("users#init")
+    end
+
+    it "routes to #create_user" do
+      expect(:put => "/create_user").to route_to("users#create_user")
     end
 
   end
