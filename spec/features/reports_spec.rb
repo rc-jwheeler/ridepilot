@@ -25,11 +25,11 @@ describe "Reports" do
         end
         
         it "shows duplicate link" do
-          page.has_link?("Duplicate").should be
+          expect(page.has_link?("Duplicate")).to be
         end
         
         it "renders the duplicate customer dialog" do
-          page.has_selector?("#confirm-destroy", visible: false).should be
+          expect(page.has_selector?("#confirm-destroy", visible: false)).to be
         end
       end
       
@@ -40,7 +40,7 @@ describe "Reports" do
         
         it "shows delete link" do
           visit customer_path(@customer)
-          page.has_link?("Delete").should be
+          expect(page.has_link?("Delete")).to be
         end
       end
     end

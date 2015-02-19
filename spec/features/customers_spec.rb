@@ -25,11 +25,11 @@ describe "Customers" do
         end
         
         it "shows duplicate link" do
-          page.has_link?("Duplicate").should be
+          expect(page.has_link?("Duplicate")).to be
         end
         
         it "renders the duplicate customer dialog" do
-          page.has_selector?("#confirm-destroy", visible: false).should be
+          expect(page.has_selector?("#confirm-destroy", visible: false)).to be
         end
       end
       
@@ -40,7 +40,7 @@ describe "Customers" do
         
         it "shows delete link" do
           visit customer_path(@customer)
-          page.has_link?("Delete").should be
+          expect(page.has_link?("Delete")).to be
         end
       end
     end
@@ -70,7 +70,7 @@ describe "Customers" do
             skip "redirecting to sign in for some reason" 
             
             delete customer_path(@customer, :customer_id => other.id)
-            rendered.should redirect_to(customer_path(other))
+            expect(rendered).to redirect_to(customer_path(other))
           end
         end
         
@@ -79,7 +79,7 @@ describe "Customers" do
             skip "redirecting to sign in for some reason" 
             
             delete customer_path(@customer)
-            page.has_content?("could not be deleted").should be
+            expect(page.has_content?("could not be deleted")).to be
           end
         end
       end
@@ -89,7 +89,7 @@ describe "Customers" do
           skip "redirecting to sign in for some reason" 
           
           delete customer_path(@customer)
-          rendered.should redirect_to(customers_path)
+          expect(rendered).to redirect_to(customers_path)
         end
       end
     end
@@ -119,7 +119,7 @@ describe "Customers" do
         
         it "does not show delete link" do
           visit customer_path(@customer)
-          page.has_link?("Delete").should_not be
+          expect(page.has_link?("Delete")).not_to be
         end
       end
       
@@ -130,7 +130,7 @@ describe "Customers" do
         
         it "shows the delete link" do
           visit customer_path(@customer)
-          page.has_link?("Delete").should be
+          expect(page.has_link?("Delete")).to be
         end
       end
     end
@@ -146,7 +146,7 @@ describe "Customers" do
         skip "redirecting to sign in for some reason" 
         
         delete customer_path(@customer)
-        rendered.should redirect_to(customers_path)
+        expect(rendered).to redirect_to(customers_path)
       end
     end
   end

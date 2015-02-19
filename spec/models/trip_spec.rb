@@ -4,57 +4,57 @@ describe Trip do
   describe "mileage" do
     it "should be an integer" do
       t = Trip.new
-      t.should respond_to(:mileage)
+      expect(t).to respond_to(:mileage)
       t.mileage = "1"
-      t.mileage.should eq 1
+      expect(t.mileage).to eq 1
       t.mileage = "0"
-      t.mileage.should eq 0
+      expect(t.mileage).to eq 0
     end
     
     it "should only allow integers greater than 0" do
       t = Trip.new
       t.mileage = 0
       t.valid?
-      t.errors.keys.include?(:mileage).should be_truthy
-      t.errors[:mileage].should include "must be greater than 0"
+      expect(t.errors.keys.include?(:mileage)).to be_truthy
+      expect(t.errors[:mileage]).to include "must be greater than 0"
       
       t.mileage = 1
       t.valid?
-      t.errors.keys.include?(:mileage).should_not be_truthy
+      expect(t.errors.keys.include?(:mileage)).not_to be_truthy
     end
   end
 
   describe "service_level" do
     it "should be a string field" do
       t = Trip.new
-      t.should respond_to(:service_level)
+      expect(t).to respond_to(:service_level)
       t.service_level = "abc"
-      t.service_level.should == "abc"
+      expect(t.service_level).to eq("abc")
     end
   end
 
   describe "medicaid_eligible" do
     it "should be a boolean field" do
       t = Trip.new
-      t.should respond_to(:medicaid_eligible)
+      expect(t).to respond_to(:medicaid_eligible)
       t.medicaid_eligible = "1"
-      t.medicaid_eligible.should be_truthy
+      expect(t.medicaid_eligible).to be_truthy
       t.medicaid_eligible = "0"
-      t.medicaid_eligible.should be_falsey
+      expect(t.medicaid_eligible).to be_falsey
     end
   end
 
   describe "before validation" do
     context "when there are no runs yet" do
       before do
-        Run.count.should == 0
+        expect(Run.count).to eq(0)
       end
       
       it "does not create an associated run" do
-        lambda {
+        expect {
           trip = create :trip
-          trip.run.should be_nil
-        }.should_not change(Run, :count)
+          expect(trip.run).to be_nil
+        }.not_to change(Run, :count)
       end
     end
   end
@@ -74,36 +74,36 @@ describe Trip do
         :repetition_vehicle_id => -1,
         :repetition_driver_id => 1,
         :repetition_interval => 1)
-      RepeatingTrip.count.should == 0
+      expect(RepeatingTrip.count).to eq(0)
     end
 
     context "when creating a trip with repeating trip data" do
       it "should accept repeating trip values" do
-        trip.repeats_mondays.should == true
-        trip.repeats_tuesdays.should == false
-        trip.repeats_wednesdays.should == false
-        trip.repeats_thursdays.should == false
-        trip.repeats_fridays.should == false
-        trip.repeats_saturdays.should == false
-        trip.repeats_sundays.should == false
-        trip.repetition_vehicle_id.should == -1
-        trip.repetition_driver_id.should == 1
-        trip.repetition_interval.should == 1
+        expect(trip.repeats_mondays).to eq(true)
+        expect(trip.repeats_tuesdays).to eq(false)
+        expect(trip.repeats_wednesdays).to eq(false)
+        expect(trip.repeats_thursdays).to eq(false)
+        expect(trip.repeats_fridays).to eq(false)
+        expect(trip.repeats_saturdays).to eq(false)
+        expect(trip.repeats_sundays).to eq(false)
+        expect(trip.repetition_vehicle_id).to eq(-1)
+        expect(trip.repetition_driver_id).to eq(1)
+        expect(trip.repetition_interval).to eq(1)
       end
 
       it "should create a repeating trip when saved" do
-        lambda {
+        expect {
           trip.save
-          trip.repeating_trip.should_not be_nil
-        }.should change(RepeatingTrip, :count).by(1)
-        trip.repeating_trip_id.should_not be_nil
+          expect(trip.repeating_trip).not_to be_nil
+        }.to change(RepeatingTrip, :count).by(1)
+        expect(trip.repeating_trip_id).not_to be_nil
       end
 
       it "should instantiate trips for three weeks out" do
         trip.save
         r_id = trip.repeating_trip_id
         # The trip we just created, which is next week, plus 2 more
-        Trip.where(:repeating_trip_id => r_id).count.should == 3
+        expect(Trip.where(:repeating_trip_id => r_id).count).to eq(3)
       end
     end
 
@@ -119,8 +119,8 @@ describe Trip do
       end
 
       it "should have the correct repeating trip attributes" do
-        trip.repeating_trip.schedule_attributes.monday.should be_nil
-        trip.repeating_trip.schedule_attributes.tuesday.should == 1
+        expect(trip.repeating_trip.schedule_attributes.monday).to be_nil
+        expect(trip.repeating_trip.schedule_attributes.tuesday).to eq(1)
       end
 
       # TODO This test is failing on master. Uncomment after upgrade. Fix if
@@ -138,15 +138,15 @@ describe Trip do
         Trip.where(:repeating_trip_id => trip.repeating_trip_id).where("id <> ?",trip.id).each do |t|
           count += 1 if t.pickup_time.strftime("%u") == "1"
         end
-        count.should == 0
+        expect(count).to eq(0)
       end
 
       it "should tell me the correct repeating trip data when reloading the trip" do
         trip.reload
-        trip.repeats_mondays.should == false
-        trip.repeats_tuesdays.should == true
-        trip.repetition_vehicle_id.should == 2
-        trip.repetition_driver_id.should == 2
+        expect(trip.repeats_mondays).to eq(false)
+        expect(trip.repeats_tuesdays).to eq(true)
+        expect(trip.repetition_vehicle_id).to eq(2)
+        expect(trip.repetition_driver_id).to eq(2)
       end
     end
    
@@ -164,8 +164,8 @@ describe Trip do
       end
 
       it "should have the correct repeating trip attributes" do
-        trip.repeating_trip.schedule_attributes.monday.should be_nil
-        trip.repeating_trip.schedule_attributes.tuesday.should == 1
+        expect(trip.repeating_trip.schedule_attributes.monday).to be_nil
+        expect(trip.repeating_trip.schedule_attributes.tuesday).to eq(1)
       end
 
       # TODO This test is failing on master. Uncomment after upgrade. Fix if
@@ -183,15 +183,15 @@ describe Trip do
         Trip.where(:repeating_trip_id => trip.repeating_trip_id).where("id <> ?",trip.id).each do |t|
           count += 1 if t.pickup_time.strftime("%u") == "1"
         end
-        count.should == 0
+        expect(count).to eq(0)
       end
 
       it "should tell me the correct repeating trip data when reloading the trip" do
         trip.reload
-        trip.repeats_mondays.should == false
-        trip.repeats_tuesdays.should == true
-        trip.repetition_vehicle_id.should == 2
-        trip.repetition_driver_id.should == 2
+        expect(trip.repeats_mondays).to eq(false)
+        expect(trip.repeats_tuesdays).to eq(true)
+        expect(trip.repetition_vehicle_id).to eq(2)
+        expect(trip.repetition_driver_id).to eq(2)
       end
     end
 
@@ -204,8 +204,8 @@ describe Trip do
       end
 
       it "should remove all future trips after the trip and delete the repeating trip record" do 
-        Trip.where(:repeating_trip_id => @repeating_trip_id).count.should == 0
-        RepeatingTrip.find_by_id(@repeating_trip_id).should be_nil
+        expect(Trip.where(:repeating_trip_id => @repeating_trip_id).count).to eq(0)
+        expect(RepeatingTrip.find_by_id(@repeating_trip_id)).to be_nil
       end
     end
   end

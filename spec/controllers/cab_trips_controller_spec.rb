@@ -10,14 +10,14 @@ describe CabTripsController do
   describe "GET 'index'" do
     it "should be successful" do
       get 'index'
-      response.should be_success
+      expect(response).to be_success
     end
   end
 
   describe "GET 'edit_multiple'" do
     it "should be successful" do
       get 'edit_multiple'
-      response.should be_success
+      expect(response).to be_success
     end
   end
   
@@ -42,12 +42,12 @@ describe CabTripsController do
     # for now, and will fix if it's still an issue in Rails 3.2 or 4.0. See:
     # http://stackoverflow.com/q/24759900/83743
     it "should be successful" do
-      response.should redirect_to(cab_trips_path(start: @start_date.to_time.to_i, end: @end_date.to_time.to_i))
+      expect(response).to redirect_to(cab_trips_path(start: @start_date.to_time.to_i, end: @end_date.to_time.to_i))
     end
     
     it "should update the submitted trips" do
-      Trip.find(@t1.id).attendant_count.should == 1
-      Trip.find(@t2.id).attendant_count.should == 2
+      expect(Trip.find(@t1.id).attendant_count).to eq(1)
+      expect(Trip.find(@t2.id).attendant_count).to eq(2)
     end
   end
 end

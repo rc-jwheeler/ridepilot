@@ -4,51 +4,51 @@ describe Customer do
   describe "default_service_level" do
     it "should be a string field" do
       c = Customer.new
-      c.should respond_to(:default_service_level)
+      expect(c).to respond_to(:default_service_level)
       c.default_service_level = "abc"
-      c.default_service_level.should == "abc"
+      expect(c.default_service_level).to eq("abc")
     end
   end
   
   describe "default_funding_source_id" do
     it "should be an integer field" do
       c = Customer.new
-      c.should respond_to(:default_funding_source_id)
+      expect(c).to respond_to(:default_funding_source_id)
       c.default_funding_source_id = "1"
-      c.default_funding_source_id.should eq 1
+      expect(c.default_funding_source_id).to eq 1
       c.default_funding_source_id = "0"
-      c.default_funding_source_id.should eq 0
+      expect(c.default_funding_source_id).to eq 0
     end
   end
   
   describe "ada_eligible" do
     it "should be a boolean field" do
       c = Customer.new
-      c.should respond_to(:ada_eligible)
+      expect(c).to respond_to(:ada_eligible)
       c.ada_eligible = "1"
-      c.ada_eligible.should be_truthy
+      expect(c.ada_eligible).to be_truthy
       c.ada_eligible = "0"
-      c.ada_eligible.should be_falsey
+      expect(c.ada_eligible).to be_falsey
     end
   end
   
   describe "medicaid_eligible" do
     it "should be a boolean field" do
       c = Customer.new
-      c.should respond_to(:medicaid_eligible)
+      expect(c).to respond_to(:medicaid_eligible)
       c.medicaid_eligible = "1"
-      c.medicaid_eligible.should be_truthy
+      expect(c.medicaid_eligible).to be_truthy
       c.medicaid_eligible = "0"
-      c.medicaid_eligible.should be_falsey
+      expect(c.medicaid_eligible).to be_falsey
     end
   end
   
   describe "prime_number" do
     it "should be a string field" do
       c = Customer.new
-      c.should respond_to(:prime_number)
+      expect(c).to respond_to(:prime_number)
       c.prime_number = "abc"
-      c.prime_number.should == "abc"
+      expect(c.prime_number).to eq("abc")
     end
   end
   
@@ -61,7 +61,7 @@ describe Customer do
       end
       
       it "is false" do
-        @customer.replace_with!("").should_not be
+        expect(@customer.replace_with!("")).not_to be
       end
     end
     
@@ -73,7 +73,7 @@ describe Customer do
       end
       
       it "is false" do
-        @customer.replace_with!(-1).should_not be
+        expect(@customer.replace_with!(-1)).not_to be
       end
     end
     
@@ -90,12 +90,12 @@ describe Customer do
         end
         
         it "destroys self" do
-          Customer.exists?(customer.id).should_not be
+          expect(Customer.exists?(customer.id)).not_to be
         end
 
         it "moves self's trips to other customer" do
           for trip in trips
-            trip.reload.customer.should == other
+            expect(trip.reload.customer).to eq(other)
           end
         end
       end
@@ -119,8 +119,8 @@ describe Customer do
         end
         
         it "should return false" do
-          @customer.replace_with!(@customer.id).should be_falsey
-          @customer.replace_with!(@other_customer.id).should_not be_falsey
+          expect(@customer.replace_with!(@customer.id)).to be_falsey
+          expect(@customer.replace_with!(@other_customer.id)).not_to be_falsey
         end
       end
     end

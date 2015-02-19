@@ -24,9 +24,9 @@ describe "CabTrips" do
       end
       
       it "has a link to edit the trips occuring on the 1st, 2nd and 4th day of the week" do
-        page.should have_link("Edit 2 cab trips", href: edit_multiple_cab_trips_path(start: @start_date.to_i))
-        page.should have_link("Edit 2 cab trips", href: edit_multiple_cab_trips_path(start: (@start_date + 1.day).to_i))
-        page.should have_link("Edit 1 cab trip", href: edit_multiple_cab_trips_path(start: (@start_date + 3.day).to_i))
+        expect(page).to have_link("Edit 2 cab trips", href: edit_multiple_cab_trips_path(start: @start_date.to_i))
+        expect(page).to have_link("Edit 2 cab trips", href: edit_multiple_cab_trips_path(start: (@start_date + 1.day).to_i))
+        expect(page).to have_link("Edit 1 cab trip", href: edit_multiple_cab_trips_path(start: (@start_date + 3.day).to_i))
       end
       
       # TODO This test is failing on master. Uncomment after upgrade. Fix if
@@ -45,15 +45,15 @@ describe "CabTrips" do
       end
     
       it "displays the trips occuring on the specified date" do
-        page.should have_selector("#cab_trips_#{@t1.id}_attendant_count")
-        page.should have_selector("#cab_trips_#{@t2.id}_attendant_count")
+        expect(page).to have_selector("#cab_trips_#{@t1.id}_attendant_count")
+        expect(page).to have_selector("#cab_trips_#{@t2.id}_attendant_count")
       end
     
       it "should update the specified trips" do
         fill_in("cab_trips_#{@t1.id}_attendant_count", with: 1)
         fill_in("cab_trips_#{@t2.id}_attendant_count", with: 2)
         click_button "Update cab trips"
-        page.should have_content("2 cab trips updated successfully")
+        expect(page).to have_content("2 cab trips updated successfully")
       end
     end
   end

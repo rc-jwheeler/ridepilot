@@ -13,9 +13,9 @@ describe "V1::device_pool_drivers" do
       end
       
       it "raises routing error" do
-        lambda {
+        expect {
           post v1_device_pool_drivers_url(:format => "json", :protocol => "http"), { :user => { :email => user.email, :password => "password#1" } }
-        }.should raise_error(ActionController::RoutingError)        
+        }.to raise_error(ActionController::RoutingError)        
       end
     end
     
@@ -31,11 +31,11 @@ describe "V1::device_pool_drivers" do
       end
 
       it "returns 401" do
-        response.status.should be(401)
+        expect(response.status).to be(401)
       end
 
       it "returns error" do
-        response.body.should match("No user found")
+        expect(response.body).to match("No user found")
       end
     end
     
@@ -51,11 +51,11 @@ describe "V1::device_pool_drivers" do
       end
 
       it "returns 401" do
-        response.status.should be(401)
+        expect(response.status).to be(401)
       end
 
       it "returns error" do
-        response.body.should match("No user found")
+        expect(response.body).to match("No user found")
       end
     end
     
@@ -74,11 +74,11 @@ describe "V1::device_pool_drivers" do
       end
 
       it "returns 401" do
-        response.status.should be(401)
+        expect(response.status).to be(401)
       end
 
       it "returns error" do
-        response.body.should match("User does not have access to this resource")
+        expect(response.body).to match("User does not have access to this resource")
       end
     end
     
@@ -95,7 +95,7 @@ describe "V1::device_pool_drivers" do
       end
 
       it "returns 200" do
-        response.status.should be(200)
+        expect(response.status).to be(200)
       end
     end
     
@@ -112,11 +112,11 @@ describe "V1::device_pool_drivers" do
       end
 
       it "returns 200" do
-        response.status.should be(200)
+        expect(response.status).to be(200)
       end
 
       it "returns resource_url" do
-        response.body.should match v1_device_pool_driver_url(:id => device_pool_driver.id, :format => "json", protocol: "https")
+        expect(response.body).to match v1_device_pool_driver_url(:id => device_pool_driver.id, :format => "json", protocol: "https")
       end
     end
   end
@@ -132,9 +132,9 @@ describe "V1::device_pool_drivers" do
       end
       
       it "raises routing error" do
-        lambda {
+        expect {
           post v1_device_pool_driver_url(device_pool_driver.id, :format => "json", :protocol => "http"), { :user => { :email => user.email, :password => "password#1" }, :device_pool_driver => { :status => "XXX" } }
-        }.should raise_error(ActionController::RoutingError)        
+        }.to raise_error(ActionController::RoutingError)        
       end
     end
     
@@ -148,11 +148,11 @@ describe "V1::device_pool_drivers" do
       end
       
       it "returns 401" do
-        response.status.should be(401)
+        expect(response.status).to be(401)
       end
       
       it "returns error" do
-        response.body.should match("No user found")
+        expect(response.body).to match("No user found")
       end
     end
     
@@ -169,11 +169,11 @@ describe "V1::device_pool_drivers" do
       end
       
       it "returns 401" do
-        response.status.should be(401)
+        expect(response.status).to be(401)
       end
       
       it "returns error" do
-        response.body.should match("No user found")
+        expect(response.body).to match("No user found")
       end
     end
     
@@ -192,11 +192,11 @@ describe "V1::device_pool_drivers" do
       end
 
       it "returns 401" do
-        response.status.should be(401)
+        expect(response.status).to be(401)
       end
 
       it "returns error" do
-        response.body.should match("User does not have access to this resource")
+        expect(response.body).to match("User does not have access to this resource")
       end
     end
     
@@ -212,11 +212,11 @@ describe "V1::device_pool_drivers" do
       end
       
       it "returns 200" do
-        response.status.should be(200)
+        expect(response.status).to be(200)
       end
       
       it "returns device as json" do
-        response.body.should == {:device_pool_driver => device_pool_driver.reload.as_mobile_json }.to_json
+        expect(response.body).to eq({:device_pool_driver => device_pool_driver.reload.as_mobile_json }.to_json)
       end
     end
     
@@ -232,12 +232,12 @@ describe "V1::device_pool_drivers" do
       end
       
       it "returns 200" do
-        response.status.should be(200)
+        expect(response.status).to be(200)
       end
       
       it "does not update the coordinates" do
         device_pool_driver.reload
-        [device_pool_driver.lat, device_pool_driver.lng].should == [45.5, -122.6]
+        expect([device_pool_driver.lat, device_pool_driver.lng]).to eq([45.5, -122.6])
       end
     end
     
@@ -253,12 +253,12 @@ describe "V1::device_pool_drivers" do
       end
       
       it "returns 400" do
-        response.status.should be(400)
+        expect(response.status).to be(400)
       end
       
       it "returns error as json" do
         json = JSON.parse(response.body)
-        json.should include("error")
+        expect(json).to include("error")
       end
     end
     
@@ -274,12 +274,12 @@ describe "V1::device_pool_drivers" do
       end
       
       it "returns 404" do
-        response.status.should be(404)
+        expect(response.status).to be(404)
       end
       
       it "returns error as json" do
         json = JSON.parse(response.body)
-        json.should include("error")
+        expect(json).to include("error")
       end
     end
   end

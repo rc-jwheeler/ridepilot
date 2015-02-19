@@ -21,14 +21,14 @@ describe ReportsController do
 
     it "is successful" do
       get :cctc_summary_report
-      response.should be_success
+      expect(response).to be_success
     end
 
     it "assigns the proper instance variables" do
       get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
-      assigns(:provider).should eq(@test_provider)
-      assigns(:start_date).should eq(@test_start_date.to_date)
-      assigns(:report).should_not be_nil
+      expect(assigns(:provider)).to eq(@test_provider)
+      expect(assigns(:start_date)).to eq(@test_start_date.to_date)
+      expect(assigns(:report)).not_to be_nil
     end
 
     describe "total_miles" do
@@ -118,27 +118,27 @@ describe ReportsController do
       
       describe "riders_new_this_month" do
         it "reports the correct number of new riders" do
-          assigns(:report)[:rider_information][:riders_new_this_month][:over_60][:stf].should eq(2)
-          assigns(:report)[:rider_information][:riders_new_this_month][:over_60][:rc].should eq(2)
+          expect(assigns(:report)[:rider_information][:riders_new_this_month][:over_60][:stf]).to eq(2)
+          expect(assigns(:report)[:rider_information][:riders_new_this_month][:over_60][:rc]).to eq(2)
 
-          assigns(:report)[:rider_information][:riders_new_this_month][:under_60][:stf].should eq(2)
-          assigns(:report)[:rider_information][:riders_new_this_month][:under_60][:rc].should eq(2)
+          expect(assigns(:report)[:rider_information][:riders_new_this_month][:under_60][:stf]).to eq(2)
+          expect(assigns(:report)[:rider_information][:riders_new_this_month][:under_60][:rc]).to eq(2)
 
-          assigns(:report)[:rider_information][:riders_new_this_month][:ada_eligible][:over_60].should eq(2)
-          assigns(:report)[:rider_information][:riders_new_this_month][:ada_eligible][:under_60].should eq(2)
+          expect(assigns(:report)[:rider_information][:riders_new_this_month][:ada_eligible][:over_60]).to eq(2)
+          expect(assigns(:report)[:rider_information][:riders_new_this_month][:ada_eligible][:under_60]).to eq(2)
         end        
       end
 
       describe "riders_ytd" do
         it "reports the correct number of new riders ytd" do
-          assigns(:report)[:rider_information][:riders_ytd][:over_60][:stf].should eq(4)
-          assigns(:report)[:rider_information][:riders_ytd][:over_60][:rc].should eq(4)
+          expect(assigns(:report)[:rider_information][:riders_ytd][:over_60][:stf]).to eq(4)
+          expect(assigns(:report)[:rider_information][:riders_ytd][:over_60][:rc]).to eq(4)
 
-          assigns(:report)[:rider_information][:riders_ytd][:under_60][:stf].should eq(4)
-          assigns(:report)[:rider_information][:riders_ytd][:under_60][:rc].should eq(4)
+          expect(assigns(:report)[:rider_information][:riders_ytd][:under_60][:stf]).to eq(4)
+          expect(assigns(:report)[:rider_information][:riders_ytd][:under_60][:rc]).to eq(4)
 
-          assigns(:report)[:rider_information][:riders_ytd][:ada_eligible][:over_60].should eq(2)
-          assigns(:report)[:rider_information][:riders_ytd][:ada_eligible][:under_60].should eq(2)
+          expect(assigns(:report)[:rider_information][:riders_ytd][:ada_eligible][:over_60]).to eq(2)
+          expect(assigns(:report)[:rider_information][:riders_ytd][:ada_eligible][:under_60]).to eq(2)
         end        
       end
     end
@@ -190,31 +190,31 @@ describe ReportsController do
       
       describe "number_of_driver_hours" do
         it "reports the correct number of new driver hours" do
-          assigns(:report)[:driver_information][:number_of_driver_hours][:paid][:stf].should eq(0.84)
-          assigns(:report)[:driver_information][:number_of_driver_hours][:paid][:rc].should eq(0.84)
+          expect(assigns(:report)[:driver_information][:number_of_driver_hours][:paid][:stf]).to eq(0.84)
+          expect(assigns(:report)[:driver_information][:number_of_driver_hours][:paid][:rc]).to eq(0.84)
 
-          assigns(:report)[:driver_information][:number_of_driver_hours][:volunteer][:stf].should eq(0.84)
-          assigns(:report)[:driver_information][:number_of_driver_hours][:volunteer][:rc].should eq(0.84)
+          expect(assigns(:report)[:driver_information][:number_of_driver_hours][:volunteer][:stf]).to eq(0.84)
+          expect(assigns(:report)[:driver_information][:number_of_driver_hours][:volunteer][:rc]).to eq(0.84)
         end        
       end
 
       describe "number_of_active_drivers" do
         it "reports the correct number of active drivers" do
-          assigns(:report)[:driver_information][:number_of_active_drivers][:paid][:stf].should eq(2)
-          assigns(:report)[:driver_information][:number_of_active_drivers][:paid][:rc].should eq(2)
+          expect(assigns(:report)[:driver_information][:number_of_active_drivers][:paid][:stf]).to eq(2)
+          expect(assigns(:report)[:driver_information][:number_of_active_drivers][:paid][:rc]).to eq(2)
 
-          assigns(:report)[:driver_information][:number_of_active_drivers][:volunteer][:stf].should eq(2)
-          assigns(:report)[:driver_information][:number_of_active_drivers][:volunteer][:rc].should eq(2)
+          expect(assigns(:report)[:driver_information][:number_of_active_drivers][:volunteer][:stf]).to eq(2)
+          expect(assigns(:report)[:driver_information][:number_of_active_drivers][:volunteer][:rc]).to eq(2)
         end        
       end
 
       describe "drivers_new_this_month" do
         it "reports the correct number of new drivers" do
-          assigns(:report)[:driver_information][:drivers_new_this_month][:paid][:stf].should eq(1)
-          assigns(:report)[:driver_information][:drivers_new_this_month][:paid][:rc].should eq(1)
+          expect(assigns(:report)[:driver_information][:drivers_new_this_month][:paid][:stf]).to eq(1)
+          expect(assigns(:report)[:driver_information][:drivers_new_this_month][:paid][:rc]).to eq(1)
 
-          assigns(:report)[:driver_information][:drivers_new_this_month][:volunteer][:stf].should eq(1)
-          assigns(:report)[:driver_information][:drivers_new_this_month][:volunteer][:rc].should eq(1)
+          expect(assigns(:report)[:driver_information][:drivers_new_this_month][:volunteer][:stf]).to eq(1)
+          expect(assigns(:report)[:driver_information][:drivers_new_this_month][:volunteer][:rc]).to eq(1)
         end        
       end
 
@@ -250,22 +250,22 @@ describe ReportsController do
       
       describe "turndowns" do
         it "reports the correct number of turned-down trips" do
-          assigns(:report)[:rides_not_given][:turndowns][:stf].should eq(1)
-          assigns(:report)[:rides_not_given][:turndowns][:rc].should eq(1)
+          expect(assigns(:report)[:rides_not_given][:turndowns][:stf]).to eq(1)
+          expect(assigns(:report)[:rides_not_given][:turndowns][:rc]).to eq(1)
         end
       end
 
       describe "cancels" do
         it "reports the correct number of canceled trips" do
-          assigns(:report)[:rides_not_given][:cancels][:stf].should eq(1)
-          assigns(:report)[:rides_not_given][:cancels][:rc].should eq(1)
+          expect(assigns(:report)[:rides_not_given][:cancels][:stf]).to eq(1)
+          expect(assigns(:report)[:rides_not_given][:cancels][:rc]).to eq(1)
         end
       end
 
       describe "no_shows" do
         it "reports the correct number of no-show trips" do
-          assigns(:report)[:rides_not_given][:no_shows][:stf].should eq(1)
-          assigns(:report)[:rides_not_given][:no_shows][:rc].should eq(1)
+          expect(assigns(:report)[:rides_not_given][:no_shows][:stf]).to eq(1)
+          expect(assigns(:report)[:rides_not_given][:no_shows][:rc]).to eq(1)
         end
       end
     end
@@ -284,8 +284,8 @@ describe ReportsController do
       end
       
       it "reports the correct amount of donations" do
-        assigns(:report)[:rider_donations][:stf].should eq(1.23)
-        assigns(:report)[:rider_donations][:rc].should eq(1.23)
+        expect(assigns(:report)[:rider_donations][:stf]).to eq(1.23)
+        expect(assigns(:report)[:rider_donations][:rc]).to eq(1.23)
       end
     end
     
@@ -340,28 +340,28 @@ describe ReportsController do
       
       describe "trips" do
         it "reports the correct trip purpose data" do
-          assigns(:report)[:trip_purposes][:trips].collect{|t| t[:name]}.should =~ TRIP_PURPOSES
+          expect(assigns(:report)[:trip_purposes][:trips].collect{|t| t[:name]}).to match(TRIP_PURPOSES)
           
           assigns(:report)[:trip_purposes][:trips].each do |trip|
             @test_funding_sources.keys.reject{|k| k == :stf}.each do |funding_source|
-              trip[funding_source].should eq(3)
+              expect(trip[funding_source]).to eq(3)
             end
 
             # STF taxi rides
-            trip[:stf_taxi][:all][:count].should eq(6)
-            trip[:stf_taxi][:all][:mileage].should eq(4)
+            expect(trip[:stf_taxi][:all][:count]).to eq(6)
+            expect(trip[:stf_taxi][:all][:mileage]).to eq(4)
             
-            trip[:stf_taxi][:wheelchair][:count].should eq(3)
-            trip[:stf_taxi][:wheelchair][:mileage].should eq(2)
+            expect(trip[:stf_taxi][:wheelchair][:count]).to eq(3)
+            expect(trip[:stf_taxi][:wheelchair][:mileage]).to eq(2)
             
-            trip[:stf_taxi][:ambulatory][:count].should eq(3)
-            trip[:stf_taxi][:ambulatory][:mileage].should eq(2)
+            expect(trip[:stf_taxi][:ambulatory][:count]).to eq(3)
+            expect(trip[:stf_taxi][:ambulatory][:mileage]).to eq(2)
             
             # STF non-taxi rides
-            trip[:stf_van].should eq(3)
+            expect(trip[:stf_van]).to eq(3)
             
             # Total rides
-            trip[:total_rides].should eq(21)
+            expect(trip[:total_rides]).to eq(21)
           end
         end
       end
@@ -369,22 +369,22 @@ describe ReportsController do
       describe "total_rides" do
         it "reports the correct number of total rides" do
           @test_funding_sources.keys.reject{|k| k == :stf}.each do |funding_source|
-            assigns(:report)[:trip_purposes][:total_rides][funding_source].should eq(TRIP_PURPOSES.size * 3)
+            expect(assigns(:report)[:trip_purposes][:total_rides][funding_source]).to eq(TRIP_PURPOSES.size * 3)
           end
           
-          assigns(:report)[:trip_purposes][:total_rides][:stf_taxi].should eq(TRIP_PURPOSES.size * 6)
-          assigns(:report)[:trip_purposes][:total_rides][:stf_van].should eq(TRIP_PURPOSES.size * 3)
+          expect(assigns(:report)[:trip_purposes][:total_rides][:stf_taxi]).to eq(TRIP_PURPOSES.size * 6)
+          expect(assigns(:report)[:trip_purposes][:total_rides][:stf_van]).to eq(TRIP_PURPOSES.size * 3)
         end
       end
 
       describe "reimbursements_due" do
         it "reports the correct reimbursement amounts due" do
-          assigns(:report)[:trip_purposes][:reimbursements_due][:oaa3b].should eq(1.23 * TRIP_PURPOSES.size * 3)
-          assigns(:report)[:trip_purposes][:reimbursements_due][:rc].should eq(1.23 * TRIP_PURPOSES.size * 3)
-          assigns(:report)[:trip_purposes][:reimbursements_due][:trimet].should eq(1.23 * TRIP_PURPOSES.size * 3)
-          assigns(:report)[:trip_purposes][:reimbursements_due][:stf_van].should eq(1.23 * TRIP_PURPOSES.size * 3)
+          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:oaa3b]).to eq(1.23 * TRIP_PURPOSES.size * 3)
+          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:rc]).to eq(1.23 * TRIP_PURPOSES.size * 3)
+          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:trimet]).to eq(1.23 * TRIP_PURPOSES.size * 3)
+          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:stf_van]).to eq(1.23 * TRIP_PURPOSES.size * 3)
 
-          assigns(:report)[:trip_purposes][:reimbursements_due][:stf_taxi].should eq(
+          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:stf_taxi]).to eq(
             (TRIP_PURPOSES.size * 3 * 1.23) +
             (TRIP_PURPOSES.size * 2 * 1.23) +
             (TRIP_PURPOSES.size * 3 * 1.23) +
@@ -431,19 +431,19 @@ describe ReportsController do
       
       describe "ethnicities" do
         it "reports the correct ethnicity information" do
-          assigns(:report)[:new_rider_ethinic_heritage][:ethnicities].collect{|e| e[:name]}.should =~ @test_provider.ethnicities.collect(&:name)
+          expect(assigns(:report)[:new_rider_ethinic_heritage][:ethnicities].collect{|e| e[:name]}).to match(@test_provider.ethnicities.collect(&:name))
                     
           @test_provider.ethnicities.reject{|e| e.name == "Other"}.each do |ethnicity|
             e = assigns(:report)[:new_rider_ethinic_heritage][:ethnicities].find{|e| e[:name] == ethnicity.name}
-            e.should_not be_nil
-            e[:trips][:rc].should eq(1)
-            e[:trips][:stf].should eq(1)
+            expect(e).not_to be_nil
+            expect(e[:trips][:rc]).to eq(1)
+            expect(e[:trips][:stf]).to eq(1)
           end
           
           e = assigns(:report)[:new_rider_ethinic_heritage][:ethnicities].find{|e| e[:name] == "Other"}
-          e.should_not be_nil
-          e[:trips][:rc].should eq(2)
-          e[:trips][:stf].should eq(2)
+          expect(e).not_to be_nil
+          expect(e[:trips][:rc]).to eq(2)
+          expect(e[:trips][:stf]).to eq(2)
         end
       end
     end

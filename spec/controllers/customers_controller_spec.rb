@@ -14,9 +14,9 @@ describe CustomersController do
     
     it "should tell me if a duplicate customer exists" do
       put 'create', customer: @customer.attributes
-      request.flash.keys.should include("alert")
-      request.flash[:alert].should include('There is already a customer with a similar name or the same email address')
-      response.should be_success
+      expect(request.flash.keys).to include("alert")
+      expect(request.flash[:alert]).to include('There is already a customer with a similar name or the same email address')
+      expect(response).to be_success
     end
   end
 end
