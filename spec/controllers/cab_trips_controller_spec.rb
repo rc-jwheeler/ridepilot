@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe CabTripsController do
+RSpec.describe CabTripsController do
   before :each do
     @user = create(:role, level: 100).user
     @request.env["devise.mapping"] = Devise.mappings[:user]

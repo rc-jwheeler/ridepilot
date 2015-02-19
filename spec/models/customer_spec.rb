@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Customer do
+RSpec.describe Customer do
   describe "default_service_level" do
     it "should be a string field" do
       c = Customer.new

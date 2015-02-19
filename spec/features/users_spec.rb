@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe "Users" do
+RSpec.describe "Users" do
   describe "GET /users/sign_in" do
     attr_reader :user
     

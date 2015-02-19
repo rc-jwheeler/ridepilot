@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe ProviderEthnicity do
+RSpec.describe ProviderEthnicity do
   describe "provider_id" do
     it "should be an integer field" do
       c = ProviderEthnicity.new

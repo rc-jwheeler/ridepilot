@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe ReportsController do
+RSpec.describe ReportsController do
   describe "cctc_summary_report" do
     before :each do
       @test_user = create(:role, level: 100).user

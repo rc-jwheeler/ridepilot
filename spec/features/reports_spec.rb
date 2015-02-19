@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe "Reports" do
+RSpec.describe "Reports" do
   context "for admin" do
     attr_reader :user
 

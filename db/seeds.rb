@@ -9,7 +9,7 @@ require 'geo_ruby'
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 if !Provider.exists?(1)
-  provider = Provider.new(:id => 1, :name => 'Ride Connection', :dispatch => true)
+  provider = Provider.new(:name => 'Ride Connection', :dispatch => true)
   provider.logo = File.open(Rails.root.join("public", "ride_connection_logo.png"))
   provider.save!
 end

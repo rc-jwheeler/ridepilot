@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Monthly do
+RSpec.describe Monthly do
   describe "provider_id" do
     it "should be an integer field" do
       m = Monthly.new

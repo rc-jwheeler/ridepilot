@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe "CabTrips" do
+RSpec.describe "CabTrips" do
   context "for admin" do
     before do
       @user = create(:role, level: 100).user

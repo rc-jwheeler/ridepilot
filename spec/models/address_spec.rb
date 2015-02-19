@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Address do
+RSpec.describe Address do
   describe "replace_with!" do
     context "when no address id" do
       attr_reader :address

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Trip do
+RSpec.describe Trip do
   describe "mileage" do
     it "should be an integer" do
       t = Trip.new

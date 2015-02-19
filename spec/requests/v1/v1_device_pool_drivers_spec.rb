@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe "V1::device_pool_drivers" do
+RSpec.describe "V1::device_pool_drivers" do
   
   describe "POST /device_pool_drivers.json" do
     context "when not using https" do

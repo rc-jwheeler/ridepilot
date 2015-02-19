@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe "Customers" do
+RSpec.describe "Customers" do
   context "for admin" do
     attr_reader :user
 

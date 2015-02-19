@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Provider do
+RSpec.describe Provider do
   describe "reimbursement rates" do
     describe "oaa3b_per_ride_reimbursement_rate" do
       it "should be an integer field" do

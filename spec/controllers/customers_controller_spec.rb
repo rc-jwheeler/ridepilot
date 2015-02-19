@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe CustomersController do
+RSpec.describe CustomersController do
   before :each do
     @user = create(:role, level: 100).user
     @request.env["devise.mapping"] = Devise.mappings[:user]
