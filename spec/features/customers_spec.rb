@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "rails_helper"
 
 describe "Customers" do
   context "for admin" do

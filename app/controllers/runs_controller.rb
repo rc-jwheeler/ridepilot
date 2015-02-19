@@ -16,9 +16,13 @@ class RunsController < ApplicationController
       format.html # index.html.erb
       format.xml  { render :xml => @trips }
       format.js {
-        rows = @runs.present? ? @runs.map do |r|
-          render_to_string :partial => "row.html", :locals => { :run => r }
-        end : [render_to_string( :partial => "no_runs.html" )]
+        rows = if @runs.present?
+          @runs.map do |r|
+            render_to_string :partial => "row.html", :locals => { :run => r }
+          end 
+        else 
+          [render_to_string( :partial => "no_runs.html" )]
+        end
 
         render :json => { :rows => rows }
       }

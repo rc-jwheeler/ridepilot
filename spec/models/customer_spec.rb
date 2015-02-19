@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "rails_helper"
 
 describe Customer do
   describe "default_service_level" do

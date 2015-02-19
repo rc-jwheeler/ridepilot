@@ -85,6 +85,7 @@ group :test, :development do
   gem 'byebug'
 
   gem 'rspec-rails', '~> 3.2' # TODO latest? yes
+  
   gem 'capybara', '~> 2.4' # TODO latest? yes
 
   gem 'factory_girl_rails', '~> 4.5.0' # TODO latest? yes

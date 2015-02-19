@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "rails_helper"
 
 describe "V1::device_pool_drivers" do
   

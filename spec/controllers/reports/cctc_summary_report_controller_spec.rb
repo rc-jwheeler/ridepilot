@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "rails_helper"
 
 describe ReportsController do
   describe "cctc_summary_report" do

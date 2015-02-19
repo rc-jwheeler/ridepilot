@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "rails_helper"
 
 describe ProviderEthnicity do
   describe "provider_id" do
