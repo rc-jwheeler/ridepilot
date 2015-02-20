@@ -1,29 +1,22 @@
 class VehiclesController < ApplicationController
   load_and_authorize_resource
 
-  def new
-
-  end
-
-  def show
-
-  end
-
   def index
     redirect_to provider_path(current_provider)
   end
 
-  def edit
-  
-  end
+  def show; end
+
+  def new; end
+
+  def edit; end
 
   def update
-    @vehicle.provider = current_provider
-    if @vehicle.update_attributes(params[:vehicle])
+    if @vehicle.update_attributes(vehicle_params)
       flash[:notice] = "Vehicle updated"
       redirect_to provider_path(current_provider)
     else
-      render :action=>:edit
+      render :action => :edit
     end 
   end
 
@@ -33,7 +26,7 @@ class VehiclesController < ApplicationController
       flash[:notice] = "Vehicle created"
       redirect_to provider_path(current_provider)
     else
-      render :action=>:new
+      render :action => :new
     end
   end
 
@@ -42,4 +35,10 @@ class VehiclesController < ApplicationController
     redirect_to provider_path(current_provider)
   end
 
+  private
+  
+  def vehicle_params
+    params.require(:vehicle).permit(:name, :year, :make, :model, :license_plate, :vin, :garaged_location, :active, :default_driver_id, :reportable)
+  end
+  
 end
