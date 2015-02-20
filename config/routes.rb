@@ -72,7 +72,7 @@ Rails.application.routes.draw do
   resources :monthlies
   resources :provider_ethnicities
   resources :vehicles
-  resources :vehicle_maintenance_events
+  resources :vehicle_maintenance_events, :except => [:show, :destroy]
 
   resources :runs do
     collection do

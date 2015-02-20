@@ -1,24 +1,22 @@
 class VehicleMaintenanceEventsController < ApplicationController
   load_and_authorize_resource
 
-  def new
-    @vehicle_maintenance_event.vehicle_id=params[:vehicle_id]
-  end
-
   def index
     redirect_to provider_path(current_user.current_provider)
   end
 
-  def edit
+  def new
+    @vehicle_maintenance_event.vehicle_id = params[:vehicle_id]
   end
 
+  def edit; end
+
   def update
-    params[:vehicle_maintenance_event][:provider_id] = nil
-    if @vehicle_maintenance_event.update_attributes(params[:vehicle_maintenance_event])
+    if @vehicle_maintenance_event.update_attributes(vehicle_maintenance_event_params)
       flash[:notice] = "Vehicle maintenance event updated"
       redirect_to vehicle_path(@vehicle_maintenance_event.vehicle)
     else
-      render :action=>:edit
+      render :action => :edit
     end 
   end
 
@@ -28,8 +26,14 @@ class VehicleMaintenanceEventsController < ApplicationController
       flash[:notice] = "Vehicle maintenance event created"
       redirect_to vehicle_path(@vehicle_maintenance_event.vehicle)
     else
-      render :action=>:new
+      render :action => :new
     end
   end
 
+  private
+  
+  def vehicle_maintenance_event_params
+    params.require(:vehicle_maintenance_event).permit(:vehicle_id, :reimbursable, :service_date, :invoice_date, :services_performed, :odometer, :vendor_name, :invoice_number, :invoice_amount)
+  end
+  
 end

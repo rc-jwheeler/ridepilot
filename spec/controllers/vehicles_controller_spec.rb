@@ -24,9 +24,15 @@ RSpec.describe VehiclesController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Vehicle. As you add validations to Vehicle, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) { attributes_for(:vehicle) }
+  let(:valid_attributes) { 
+    # Nothing is required, but add a name to avoid a ParameterMissing error
+    attributes_for(:vehicle, :name => "Vehicle 1")
+  }
 
-  let(:invalid_attributes) { attributes_for(:vehicle, :vin => "123456789012345678") }
+  let(:invalid_attributes) { 
+    # Nothing is required, but VIN length must be <= 17
+    attributes_for(:vehicle, :vin => "123456789012345678") 
+  }
 
   describe "GET #index" do
     it "redirects to the current user's provider" do
@@ -95,24 +101,24 @@ RSpec.describe VehiclesController, type: :controller do
     context "with valid params" do
       let(:new_attributes) {
         {
-          "name" =>              "Name",
-          "default_driver_id" => 1,
-          "year" =>              2000,
-          "make" =>              "Make",
-          "model" =>             "Model",
-          "license_plate" =>     "License Plate",
-          "vin" =>               "12345678901234567",
-          "garaged_location" =>  "Garaged Location",
-          "active" =>            false,
-          "reportable" =>        false
+          :name => "Name",
+          :default_driver_id => 1,
+          :year => 2000,
+          :make => "Make",
+          :model => "Model",
+          :license_plate => "License Plate",
+          :vin => "12345678901234567",
+          :garaged_location => "Garaged Location",
+          :active => false,
+          :reportable => false
         }
       }
 
       it "updates the requested vehicle" do
         vehicle = create(:vehicle, :provider => @current_user.current_provider)
-        put :update, {:id => vehicle.to_param, :vehicle => new_attributes}
-        vehicle.reload
-        expect(vehicle.attributes.slice(*new_attributes.keys)).to eq(new_attributes)
+        expect {
+          put :update, {:id => vehicle.to_param, :vehicle => new_attributes}
+        }.to change { vehicle.reload.garaged_location }.from(nil).to("Garaged Location")
       end
 
       it "assigns the requested vehicle as @vehicle" do
