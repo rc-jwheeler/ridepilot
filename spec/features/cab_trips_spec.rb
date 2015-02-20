@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "CabTrips" do
   context "for admin" do
     before do
-      @user = create(:role, level: 100).user
+      @user = create(:admin)
       visit new_user_session_path
       fill_in 'user_email', with: @user.email
       fill_in 'Password', with: 'password#1'

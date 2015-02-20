@@ -5,7 +5,7 @@ RSpec.describe "Customers" do
     attr_reader :user
 
     before :each do
-      @user = create(:role, :level => 100).user
+      @user = create(:admin)
       visit new_user_session_path
       fill_in 'user_email', :with => user.email
       fill_in 'Password', :with => 'password#1'

@@ -5,7 +5,7 @@ RSpec.describe "Users" do
     attr_reader :user
     
     before do
-      @user = create(:role).user      
+      @user = create(:admin)
     end
     
     it "signs me in" do
