@@ -4,7 +4,6 @@
   <% if show_scheduling? %><li><%= link_to "Funding Sources", funding_sources_path %></li><% end %>
   <% if show_scheduling? %><li><%= link_to "Trips", trips_path %></li><% end %>
   <% if show_scheduling? %><li><%= link_to "Runs", runs_path %></li><% end %>
-  <% if show_scheduling? %><li><%= link_to "Repeating trips", repeating_trips_path %></li><% end %>
   <% if show_scheduling? %><li><%= link_to "Reports", reports_path %></li><% end %>
   <% if show_scheduling? %><li><%= link_to "Vehicles, drivers and users", provider_path(current_user.current_provider) %></li><% end %>
   <% if show_dispatch? %><li><%= link_to "Dispatch", dispatch_path %></li><% end %>
