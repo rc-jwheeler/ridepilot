@@ -54,11 +54,15 @@ class User < ActiveRecord::Base
     end
   end
   
+  def super_admin?
+    return admin? && current_provider == Provider.ride_connection
+  end
+
   def admin?
-    roles.where(:provider_id => current_provider.id).first.admin?
+    roles.where(:provider_id => current_provider.id).first.try(:admin?)
   end
   
   def editor?
-    roles.where(:provider_id => current_provider.id).first.editor?
+    roles.where(:provider_id => current_provider.id).first.try(:editor?)
   end
 end
