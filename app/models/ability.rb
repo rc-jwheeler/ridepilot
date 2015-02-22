@@ -2,7 +2,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    ride_connection = Provider.find_by_name("Ride Connection")
+    ride_connection = Provider.ride_connection
     can_manage_all = false
 
     can :read, Mobility

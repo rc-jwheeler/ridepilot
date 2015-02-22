@@ -82,7 +82,7 @@ class UsersController < ApplicationController
       return redirect_to new_user_session_path
     end
     @user = User.new params[:user]
-    @user.current_provider_id = 1
+    @user.current_provider = Provider.ride_connection
     @user.save!
     @role = Role.new ({:user_id=>@user.id, :provider_id=>1, :level=>100})
     @role.save

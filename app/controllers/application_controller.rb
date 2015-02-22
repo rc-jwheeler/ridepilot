@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
       return
     end
 
-    ride_connection = Provider.find_by_name("Ride Connection")
+    ride_connection = Provider.ride_connection
     @provider_map = []
     for role in current_user.roles
       if role.provider == ride_connection 
