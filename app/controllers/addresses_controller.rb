@@ -1,9 +1,10 @@
 require 'open-uri'
 
 class AddressesController < ApplicationController
-  load_and_authorize_resource
-    
-  def autocomplete    
+  load_resource :only => [:edit, :update, :destroy]
+  authorize_resource
+
+  def autocomplete
     term = params['term'].downcase.strip
 
     #clean up address
@@ -26,10 +27,10 @@ class AddressesController < ApplicationController
     term.gsub!(' blvd,', 'boulevard,')
     term.gsub!(' pkwy,', 'parkway,')
 
-    #three ways to match: 
+    #three ways to match:
     #- name
     #- building name
-    #- substring of textified address (split at comma into address, 
+    #- substring of textified address (split at comma into address,
     #  city/state/zip)
 
     address, city_state_zip = term.split(",")
@@ -45,9 +46,9 @@ class AddressesController < ApplicationController
     if addresses.size > 0
       #there are some existing addresses
       address_json = addresses.map { |address| address.json }
-      
-      address_json << Address::NewAddressOption unless request.env["HTTP_REFERER"].match(/addresses\/[0-9]+\/edit/)
-            
+
+      address_json << Address::NewAddressOption unless request.env["HTTP_REFERER"].try(:match, /addresses\/[0-9]+\/edit/)
+
       render :json => address_json
     else
       #no existing addresses, try geocoding
@@ -56,26 +57,26 @@ class AddressesController < ApplicationController
 
       if term.size < 5 or ! term.match /[a-z]{2}/
         #do not geocode too-short terms
-        return render :json => [Address::NewAddressOption] 
+        return render :json => [Address::NewAddressOption]
       end
       url = "http://open.mapquestapi.com/nominatim/v1/search?format=json&addressdetails=1&countrycodes=us&q=" + CGI.escape(term)
-    
-      result = OpenURI.open_uri(url)
+
+      result = OpenURI.open_uri(url).read
 
       addresses = ActiveSupport::JSON.decode(result)
 
       #only addresses within one decimal degree of the trimet district
       addresses = addresses.find_all { |address|
         point = Point.from_x_y(address['lon'].to_f, address['lat'].to_f, 4326)
-        Region.count(:conditions => ["name='TriMet' and st_distance(the_geom, ?) <= 1", point]) > 0 
+        Region.count(:conditions => ["name='TriMet' and st_distance(the_geom, ?) <= 1", point]) > 0
       }
-      
+
       #now, convert addresses to local json format
-      address_json = addresses.map { |address| 
+      address_json = addresses.map { |address|
         # TODO add apt numbers
         address = address['address']
         street_address = '%s %s' % [address['house_number'], address['road']]
-        address_obj = Address.new( 
+        address_obj = Address.new(
                     :name => '',
                     :building_name => '',
                     :address => street_address,
@@ -87,25 +88,28 @@ class AddressesController < ApplicationController
         address_obj.json
 
       }
-      
-      address_json << Address::NewAddressOption unless request.env["HTTP_REFERER"].match(/addresses\/[0-9]+\/edit/)
-            
+
+      address_json << Address::NewAddressOption unless request.env["HTTP_REFERER"].try(:match, /addresses\/[0-9]+\/edit/)
+
       render :json => address_json
     end
   end
 
+  def edit; end
+  
   def create
     the_geom       = params[:lat].to_s.size > 0 ? Point.from_x_y(params[:lon].to_f, params[:lat].to_f, 4326) : nil
-    prefix         = params['prefix']
+    prefix         = params['prefix'] || ""
     address_params = {}
-  
+
+    # Some kind of faux strong parameters...
     for param in ['name', 'building_name', 'address', 'city', 'state', 'zip', 'phone_number', 'in_district', 'default_trip_purpose']
       address_params[param] = params[prefix + "_" + param]
     end
-  
+
     address_params[:provider_id] = current_provider_id
     address_params[:the_geom]    = the_geom
-  
+
     if params[:address_id].present?
       address = Address.find(params[:address_id])
       authorize! :edit, address
@@ -114,7 +118,7 @@ class AddressesController < ApplicationController
       authorize! :new, Address
       address = Address.new(address_params)
     end
-    
+
     if address.save
       attrs = address.attributes
       attrs[:label] = address.text.gsub(/\s+/, ' ')
@@ -122,31 +126,31 @@ class AddressesController < ApplicationController
       attrs.merge!('phone_number' => address.phone_number, 'trip_purpose' => address.default_trip_purpose ) if prefix == "dropoff"
       render :json => attrs.to_json
     else
-      errors = address.errors.clone
+      errors = address.errors.messages
       errors['prefix'] = prefix
       render :json => errors
     end
   end
-  
+
   def search
     @term      = params[:name].downcase
     @provider  = Provider.find params[:provider_id]
     @addresses = Address.accessible_by(current_ability).for_provider(@provider).order(:address, :name).search_for_term(@term)
-    
+
     respond_to do |format|
       format.json { render :text => render_to_string(:partial => "results.html") }
     end
   end
-  
+
   def update
-    if @address.update_attributes params[:address]
+    if @address.update_attributes address_params
       flash[:notice] = "Address '#{@address.name}' was successfully updated"
       redirect_to provider_path(@address.provider)
     else
       render :action => :edit
     end
   end
-  
+
   def destroy
     if @address.trips.present?
       if new_address = @address.replace_with!(params[:address_id])
@@ -160,4 +164,9 @@ class AddressesController < ApplicationController
     end
   end
 
+  private
+  
+  def address_params
+    params.require(:address).permit(:name, :building_name, :address, :city, :state, :zip, :in_district, :provider_id, :phone_number, :inactive, :default_trip_purpose)
+  end
 end
