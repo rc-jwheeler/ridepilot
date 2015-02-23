@@ -41,9 +41,5 @@ RSpec.describe UsersController, type: :routing do
       expect(:post => "/init").to route_to("users#init")
     end
 
-    it "routes to #create_user" do
-      expect(:put => "/create_user").to route_to("users#create_user")
-    end
-
   end
 end

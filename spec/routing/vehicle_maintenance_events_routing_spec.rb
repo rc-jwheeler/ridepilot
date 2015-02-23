@@ -7,6 +7,10 @@ RSpec.describe VehicleMaintenanceEventsController, type: :routing do
       expect(:get => "/vehicle_maintenance_events").to route_to("vehicle_maintenance_events#index")
     end
 
+    it "does not route to #show" do
+      expect(:get => "/vehicle_maintenance_events/1").to_not route_to("vehicle_maintenance_events#show", :id => "1")
+    end
+
     it "routes to #new" do
       expect(:get => "/vehicle_maintenance_events/new").to route_to("vehicle_maintenance_events#new")
     end
@@ -21,6 +25,10 @@ RSpec.describe VehicleMaintenanceEventsController, type: :routing do
 
     it "routes to #update" do
       expect(:put => "/vehicle_maintenance_events/1").to route_to("vehicle_maintenance_events#update", :id => "1")
+    end
+
+    it "does not route to #destroy" do
+      expect(:delete => "/vehicle_maintenance_events/1").to_not route_to("vehicle_maintenance_events#destroy", :id => "1")
     end
 
   end

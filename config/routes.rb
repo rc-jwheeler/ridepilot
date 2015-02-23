@@ -55,7 +55,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :addresses do
+  resources :addresses, :only => [:create, :update, :destroy] do
     collection do
       get :autocomplete
       get :search
