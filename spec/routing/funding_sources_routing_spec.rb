@@ -27,8 +27,8 @@ RSpec.describe FundingSourcesController, type: :routing do
       expect(:put => "/funding_sources/1").to route_to("funding_sources#update", :id => "1")
     end
 
-    it "routes to #destroy" do
-      expect(:delete => "/funding_sources/1").to route_to("funding_sources#destroy", :id => "1")
+    it "does not route to #destroy" do
+      expect(:delete => "/funding_sources/1").to_not route_to("funding_sources#destroy", :id => "1")
     end
 
   end

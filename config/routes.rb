@@ -67,7 +67,7 @@ Rails.application.routes.draw do
   end
   
   resources :drivers, :except => [:show]
-  resources :funding_sources
+  resources :funding_sources, :except => [:destroy]
   resources :monthlies
   resources :provider_ethnicities
   resources :vehicles

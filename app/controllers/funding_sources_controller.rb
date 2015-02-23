@@ -1,7 +1,10 @@
 class FundingSourcesController < ApplicationController
   load_and_authorize_resource
 
-  def index
+  def index; end
+
+  def show
+    redirect_to :action=>:edit
   end
 
   def new
@@ -10,14 +13,7 @@ class FundingSourcesController < ApplicationController
     @checked_providers = []
   end
 
-  def show
-    redirect_to :action=>:edit
-  end
-
   def create
-    funding_source_params = params[:funding_source]
-    @funding_source = FundingSource.new(funding_source_params)
-
     if not params["provider"]
       flash[:alert] = "New funding sources must be associated with at least one provider"
       @providers = Provider.all
@@ -44,23 +40,17 @@ class FundingSourcesController < ApplicationController
   end
 
   def update
-    funding_source_params = params[:funding_source]
     if @funding_source.update_attributes(funding_source_params)
-
       #now, handle changes to the provider list
-      new_provider_ids = params["provider"] or []
+      new_visibilities        = Provider.where(id: Array(params["provider"])).pluck(:id)
+      current_visibilities    = @funding_source.funding_source_visibilities.pluck(:provider_id).uniq
+      visibilities_to_create  = new_visibilities - current_visibilities
+      visibilities_to_destroy = current_visibilities - (new_visibilities & current_visibilities)      
 
-      current_visibilities = @funding_source.funding_source_visibilities
-      for visibility in current_visibilities
-        if ! new_provider_ids.member? visibility.provider_id
-          visibility.destroy
-        end
-      end
-      current_provider_ids = current_visibilities.map {|x| x.provider_id}
-      for id in new_provider_ids
-        if ! current_provider_ids.member? id
-          FundingSourceVisibility.create(:provider_id=>id, :funding_source_id=>@funding_source.id)
-        end
+      @funding_source.funding_source_visibilities.destroy(@funding_source.funding_source_visibilities.where(:provider_id => visibilities_to_destroy))
+
+      visibilities_to_create.each do |provider_id|
+        @funding_source.funding_source_visibilities.create(:provider_id => provider_id)
       end
 
       redirect_to(@funding_source, :notice => 'Funding source was successfully created.')
@@ -69,6 +59,12 @@ class FundingSourcesController < ApplicationController
       @checked_providers = @funding_source.providers
       render :action=>:edit
     end
+  end
+  
+  private
+  
+  def funding_source_params
+    params.require(:funding_source).permit(:name)
   end
 
 end
