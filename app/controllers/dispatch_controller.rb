@@ -6,7 +6,7 @@ class DispatchController < ApplicationController
     respond_to do |format|
       format.html
       format.js { 
-        render :json => DevicePool::Tree.new( DevicePool.accessible_by(current_ability) ).as_json
+        render :json => DevicePool::Tree.new( DevicePool.accessible_by(current_ability).to_a ).as_json
       }
     end
   end
