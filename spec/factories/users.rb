@@ -32,7 +32,8 @@ FactoryGirl.define do
       association :current_provider, factory: :provider, strategy: :build
 
       after(:build) do |super_admin|
-        super_admin.current_provider = Provider.find_by_name!("Ride Connection")
+        raise ActiveRecord::RecordNotFound.new("Couldn't find a Ride Connection provider!") unless ride_connection = Provider.ride_connection
+        super_admin.current_provider = ride_connection
       end
       
       after(:create) do |super_admin|

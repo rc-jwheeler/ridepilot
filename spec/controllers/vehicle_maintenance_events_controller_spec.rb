@@ -19,7 +19,7 @@ require "rails_helper"
 # that an instance is receiving a specific message.
 
 RSpec.describe VehicleMaintenanceEventsController, type: :controller do
-  login_current_user
+  login_admin_as_current_user
   
   before(:each) do
     @vehicle = create(:vehicle)

@@ -4,6 +4,11 @@ class User < ActiveRecord::Base
   has_one    :driver
   has_one    :device_pool_driver, :through => :driver
   
+  # Include default devise modules. Others available are:
+  # :rememberable, :token_authenticatable, :confirmable, :lockable
+  devise :database_authenticatable, :recoverable, :trackable, :validatable, 
+    :timeoutable
+
   validates :password, :confirmation => true
   validates :email, :uniqueness => true
   
@@ -13,14 +18,6 @@ class User < ActiveRecord::Base
             :message => "must have at least one number and at least one " +
                         "non-alphanumeric character"
   
-  # Include default devise modules. Others available are:
-  # :rememberable, :token_authenticatable, :confirmable, :lockable
-  devise :database_authenticatable, :recoverable, :trackable, :validatable, 
-    :timeoutable
-
-  # TODO setup strong parameters based on the following:
-  # attr_accessible :email, :password, :password_confirmation
-
   before_create do
     self.email.downcase! if self.email
   end

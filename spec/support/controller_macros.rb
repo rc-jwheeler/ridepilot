@@ -1,5 +1,5 @@
 module ControllerMacros
-  def login_current_user
+  def login_admin_as_current_user
     before(:each) do
       @request.env["devise.mapping"] = Devise.mappings[:user]
       @current_user = create(:admin)

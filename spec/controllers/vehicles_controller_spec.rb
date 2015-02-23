@@ -19,7 +19,7 @@ require "rails_helper"
 # that an instance is receiving a specific message.
 
 RSpec.describe VehiclesController, type: :controller do
-  login_current_user
+  login_admin_as_current_user
 
   # This should return the minimal set of attributes required to create a valid
   # Vehicle. As you add validations to Vehicle, be sure to
