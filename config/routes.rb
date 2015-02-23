@@ -15,7 +15,6 @@ Rails.application.routes.draw do
     post "change_provider" => "users#change_provider"
     post "create_user" => "users#create_user"
     post "init" => "users#init"
-    put "create_user" => "users#create_user"
   end
 
   resources :customers do

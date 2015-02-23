@@ -19,141 +19,322 @@ require "rails_helper"
 # that an instance is receiving a specific message.
 
 RSpec.describe UsersController, type: :controller do
+  # NOTE note all requests require a user to be logged in
 
   # This should return the minimal set of attributes required to create a valid
   # User. As you add validations to User, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    attributes_for(:user)
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    attributes_for(:user, :password => '')
   }
 
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # UsersController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  describe "anonymous or sometimes-authenticated actions" do
+    before(:each) do
+      # Many of these work only with a fresh database
+      # DatabaseCleaner.clean # necessary?
+    end
 
-  describe "GET #index" do
-    it "assigns all users as @users" do
-      user = User.create! valid_attributes
-      get :index, {}, valid_session
-      expect(assigns(:users)).to eq([user])
+    describe "GET #init" do
+      context "with 0 users" do
+        before(:each) do
+          User.destroy_all
+        end
+
+        it "assigns a new user as @user" do
+          skip "Skip pending resolution of UsersController issues noted in email to Kevin sent 25 Feb 2015"
+          get :init, {}
+          expect(assigns(:user)).to be_a_new(User)
+        end
+
+        it "renders the 'show_init' template" do
+          skip "Skip pending resolution of UsersController issues noted in email to Kevin sent 25 Feb 2015"
+          post :init, {}
+          expect(response).to render_template("show_init")
+        end
+      end
+
+      context "with > 0 users" do
+        login_admin_as_current_user
+
+        it "redirects to the sign-in page" do
+          skip "Skip pending resolution of UsersController issues noted in email to Kevin sent 25 Feb 2015"
+          get :init, {}
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+    end
+
+    describe "POST #init" do
+      context "with 0 users" do
+        before(:each) do
+          User.destroy_all
+        end
+
+        context "with valid params" do
+          it "creates a new User" do
+            skip "Skip pending resolution of UsersController issues noted in email to Kevin sent 25 Feb 2015"
+            expect {
+              post :init, {:user => valid_attributes}
+            }.to change(User, :count).by(1)
+          end
+
+          it "assigns a newly created user as @user" do
+            skip "Skip pending resolution of UsersController issues noted in email to Kevin sent 25 Feb 2015"
+            post :init, {:user => valid_attributes}
+            expect(assigns(:user)).to be_a(User)
+            expect(assigns(:user)).to be_persisted
+          end
+
+          it "assigns the user to the first provider" do
+            skip "Skip pending resolution of UsersController issues noted in email to Kevin sent 25 Feb 2015"
+            post :init, {:user => valid_attributes}
+            expect(assigns(:user).current_provider).to eq(Provider.ride_connection)
+          end
+
+          it "sets the user to be a super admin" do
+            skip "Skip pending resolution of UsersController issues noted in email to Kevin sent 25 Feb 2015"
+            post :init, {:user => valid_attributes}
+            expect(assigns(:user).super_admin?).to be_truthy
+          end
+
+          it "redirects to the sign-in page" do
+            skip "Skip pending resolution of UsersController issues noted in email to Kevin sent 25 Feb 2015"
+            post :init, {:user => valid_attributes}
+            expect(response).to redirect_to(new_user_session_path)
+          end
+        end
+
+        context "with invalid params" do
+          it "borks" do
+            skip "Skip pending resolution of UsersController issues noted in email to Kevin sent 25 Feb 2015"
+            post :init, {:user => invalid_attributes}
+            expect(response.status).to eq(422)
+          end
+        end
+      end
+
+      context "with > 0 users" do
+        login_admin_as_current_user
+
+        it "redirects to the sign-in page" do
+          skip "Skip pending resolution of UsersController issues noted in email to Kevin sent 25 Feb 2015"
+          post :init, {:user => valid_attributes}
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+    end
+
+    describe "GET #new_user" do
+      context "with 0 users" do
+        before(:each) do
+          User.destroy_all
+        end
+
+        it "redirects to the init page" do
+          skip "Skip pending resolution of UsersController issues noted in email to Kevin sent 25 Feb 2015"
+          get :new_user, {}
+          expect(response).to redirect_to(init_path)
+        end
+      end
+
+      context "with > 0 users" do
+        login_admin_as_current_user
+
+        it "assigns a new user as @user" do
+          get :new_user, {}
+          expect(assigns(:user)).to be_a_new(User)
+        end
+      end
     end
   end
 
-  describe "GET #show" do
-    it "assigns the requested user as @user" do
-      user = User.create! valid_attributes
-      get :show, {:id => user.to_param}, valid_session
-      expect(assigns(:user)).to eq(user)
+  describe "authenticated methods" do
+    login_admin_as_current_user
+
+    describe "GET #check_session" do
+      it "responds with JSON" do
+        get :check_session, {}
+        expect(response.content_type).to eq("application/json")
+      end
+
+      it "include an integer named last_request_at" do
+        get :check_session, {}
+        json = JSON.parse(response.body)
+        expect(json["last_request_at"]).to be_a(Integer)
+      end
+
+      it "include an integer named timeout_in" do
+        get :check_session, {}
+        json = JSON.parse(response.body)
+        expect(json["timeout_in"]).to be_a(Integer)
+      end
+    end
+
+    describe "GET #touch_session" do
+      it "responds with the string 'OK'" do
+        get :touch_session, {}
+        expect(response.body).to eq('OK')
+      end
+    end
+
+    describe "POST #create_user" do
+      context "with valid params" do
+        context "creating a new user" do        
+          # NOTE passwords are generated automatically, any set will be ignored
+        
+          it "creates a new User" do
+            expect {
+              post :create_user, {:user => valid_attributes, :role => {:level => 50}}
+            }.to change(User, :count).by(1)
+          end
+
+          it "assigns a newly created user as @user" do
+            $ASDF = true
+            post :create_user, {:user => valid_attributes, :role => {:level => 50}}
+            expect(assigns(:user)).to be_a(User)
+            expect(assigns(:user)).to be_persisted
+          end
+
+          it "assigns the user to a new role for the current provider" do
+            post :create_user, {:user => valid_attributes, :role => {:level => 50}}
+            expect(assigns(:role)).to be_a(Role)
+            expect(assigns(:role)).to be_persisted
+            expect(assigns(:role).user).to eq(assigns(:user))
+            expect(assigns(:role).provider).to eq(@current_user.current_provider)
+            expect(assigns(:role).level).to eq(50)
+          end
+
+          it "redirects to the current provider" do
+            post :create_user, {:user => valid_attributes, :role => {:level => 50}}
+            expect(response).to redirect_to(@current_user.current_provider)
+          end
+        end
+        
+        context "updating an existing user" do
+          before(:each) do
+            @new_user = create(:user)
+          end
+          
+          it "does not create a new User" do
+            expect {
+              post :create_user, {:user => {:email => @new_user.email}, :role => {:level => 50}}
+            }.to_not change(User, :count)
+          end
+
+          it "assigns the user to a new role for the current provider" do
+            post :create_user, {:user => {:email => @new_user.email}, :role => {:level => 50}}
+            expect(assigns(:role)).to be_a(Role)
+            expect(assigns(:role)).to be_persisted
+            expect(assigns(:role).user).to eq(@new_user)
+            expect(assigns(:role).provider).to eq(@current_user.current_provider)
+            expect(assigns(:role).level).to eq(50)
+          end
+
+          it "redirects to the current provider" do
+            post :create_user, {:user => {:email => @new_user.email}, :role => {:level => 50}}
+            expect(response).to redirect_to(@current_user.current_provider)
+          end
+        end
+      end
+
+      context "with invalid params" do
+        it "assigns a newly created but unsaved user as @user" do
+          post :create_user, {:user => invalid_attributes}
+          expect(assigns(:user)).to be_a_new(User)
+        end
+
+        it "re-renders the 'new_user' template" do
+          post :create_user, {:user => invalid_attributes}
+          expect(response).to render_template("new_user")
+        end
+      end
+    end
+
+    describe "GET #show_change_password" do
+      it "assigns the current user as @user" do
+        get :show_change_password, {}
+        expect(assigns(:user)).to eq(@current_user)
+      end
+    end
+
+    describe "PUT #change_password" do
+      context "with valid params" do
+        let(:new_attributes) {{
+          :current_password => attributes_for(:user)[:password],
+          :password => "new password 12345",
+          :password_confirmation => "new password 12345"
+        }}
+
+        it "updates the requested user's password" do
+          expect {
+            put :change_password, {:user => new_attributes}
+          }.to change { @current_user.reload.encrypted_password }
+        end
+
+        it "signs the user in again" do
+          skip "Unable to test here as nothing in the user's record or session that changes that we can check"
+          expect {
+            put :change_password, {:user => new_attributes}
+          }.to change { @current_user.reload.last_sign_in_at }
+        end
+
+        it "redirects to the home page" do
+          put :change_password, {:user => new_attributes}
+          expect(response).to redirect_to(root_path)
+        end
+      end
+
+      context "with invalid params" do
+        it "re-renders the 'show_change_password' template" do
+          put :change_password, {:user => invalid_attributes}
+          expect(response).to render_template("show_change_password")
+        end
+      end
+    end
+
+    describe "POST #change_provider" do
+      context "while logged in as a super admin" do
+        before(:each) do
+          sign_out @current_user
+          @request.env["devise.mapping"] = Devise.mappings[:user]
+          @current_user = create(:super_admin)
+          sign_in @current_user
+          @old_provider = @current_user.current_provider
+          @new_provider = create(:provider)
+        end
+
+        it "updates the current user's current provider" do
+          expect {
+            post :change_provider, {:provider_id => @new_provider.id, :come_from => "/"}
+          }.to change { @current_user.reload.current_provider_id }.from(@old_provider.id).to(@new_provider.id)
+        end
+
+        it "redirects to the come_from param" do
+          post :change_provider, {:provider_id => @new_provider.id, :come_from => "/providers"}
+          expect(response).to redirect_to("/providers")
+        end
+      end
+
+      context "while logged in, but not as a super admin" do
+        before(:each) do
+          @new_provider = create(:provider)
+        end
+
+        it "does not update the current user's current provider" do
+          expect {
+            post :change_provider, {:provider_id => @new_provider.id, :come_from => "/"}
+          }.not_to change { @current_user.reload.current_provider_id }
+        end
+
+        it "redirects to the come_from param" do
+          post :change_provider, {:provider_id => @new_provider.id, :come_from => "/providers"}
+          expect(response).to redirect_to("/providers")
+        end
+      end
     end
   end
-
-  describe "GET #new" do
-    it "assigns a new user as @user" do
-      get :new, {}, valid_session
-      expect(assigns(:user)).to be_a_new(User)
-    end
-  end
-
-  describe "GET #edit" do
-    it "assigns the requested user as @user" do
-      user = User.create! valid_attributes
-      get :edit, {:id => user.to_param}, valid_session
-      expect(assigns(:user)).to eq(user)
-    end
-  end
-
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new User" do
-        expect {
-          post :create, {:user => valid_attributes}, valid_session
-        }.to change(User, :count).by(1)
-      end
-
-      it "assigns a newly created user as @user" do
-        post :create, {:user => valid_attributes}, valid_session
-        expect(assigns(:user)).to be_a(User)
-        expect(assigns(:user)).to be_persisted
-      end
-
-      it "redirects to the created user" do
-        post :create, {:user => valid_attributes}, valid_session
-        expect(response).to redirect_to(User.last)
-      end
-    end
-
-    context "with invalid params" do
-      it "assigns a newly created but unsaved user as @user" do
-        post :create, {:user => invalid_attributes}, valid_session
-        expect(assigns(:user)).to be_a_new(User)
-      end
-
-      it "re-renders the 'new' template" do
-        post :create, {:user => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
-      end
-    end
-  end
-
-  describe "PUT #update" do
-    context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
-
-      it "updates the requested user" do
-        user = User.create! valid_attributes
-        put :update, {:id => user.to_param, :user => new_attributes}, valid_session
-        user.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "assigns the requested user as @user" do
-        user = User.create! valid_attributes
-        put :update, {:id => user.to_param, :user => valid_attributes}, valid_session
-        expect(assigns(:user)).to eq(user)
-      end
-
-      it "redirects to the user" do
-        user = User.create! valid_attributes
-        put :update, {:id => user.to_param, :user => valid_attributes}, valid_session
-        expect(response).to redirect_to(user)
-      end
-    end
-
-    context "with invalid params" do
-      it "assigns the user as @user" do
-        user = User.create! valid_attributes
-        put :update, {:id => user.to_param, :user => invalid_attributes}, valid_session
-        expect(assigns(:user)).to eq(user)
-      end
-
-      it "re-renders the 'edit' template" do
-        user = User.create! valid_attributes
-        put :update, {:id => user.to_param, :user => invalid_attributes}, valid_session
-        expect(response).to render_template("edit")
-      end
-    end
-  end
-
-  describe "DELETE #destroy" do
-    it "destroys the requested user" do
-      user = User.create! valid_attributes
-      expect {
-        delete :destroy, {:id => user.to_param}, valid_session
-      }.to change(User, :count).by(-1)
-    end
-
-    it "redirects to the users list" do
-      user = User.create! valid_attributes
-      delete :destroy, {:id => user.to_param}, valid_session
-      expect(response).to redirect_to(users_url)
-    end
-  end
-
 end

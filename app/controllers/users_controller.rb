@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   def new_user
     if User.count == 0
-      return redirect_to :init
+      return redirect_to :show_init
     end
     authorize! :edit, current_user.current_provider
     @user = User.new
@@ -23,10 +23,11 @@ class UsersController < ApplicationController
     User.transaction do
       begin
         if not @user
-          @user = User.new(params[:user])
-          new_password = User.generate_password
-          @user.password = new_password
-          @user.reset_password_token = User.reset_password_token
+          @user = User.new(create_user_params)
+          @user.password = User.generate_password
+          raw, enc = Devise.token_generator.generate(User, :reset_password_token)
+          @user.reset_password_token = enc
+          @user.reset_password_sent_at = Time.now.utc
           @user.current_provider_id = current_provider_id
           @user.save!
           new_user = true
@@ -49,8 +50,10 @@ class UsersController < ApplicationController
       flash[:notice] = "%s has been added and a password has been emailed" % @user.email
       redirect_to provider_path(current_provider)
     else
-      @errors = @role.valid? ? [] : {'email' => 'A user with this email address already exists'}
-      render :action=>:new_user
+      user_errors = @user.valid? ? {} : @user.errors.messages
+      role_errors = @role.valid? ? {} : @role.errors.messages
+      @errors = user_errors.merge(role_errors)
+      render :action => :new_user
     end
   end
   
@@ -59,7 +62,7 @@ class UsersController < ApplicationController
   end
 
   def change_password
-    if current_user.update_password(params[:user])
+    if current_user.update_password(change_password_params)
       sign_in(current_user, :bypass => true)
       flash[:notice] = "Password changed"
       redirect_to '/'
@@ -81,7 +84,7 @@ class UsersController < ApplicationController
     if User.count > 0
       return redirect_to new_user_session_path
     end
-    @user = User.new params[:user]
+    @user = User.new(init_user_params)
     @user.current_provider = Provider.ride_connection
     @user.save!
     @role = Role.new ({:user_id=>@user.id, :provider_id=>1, :level=>100})
@@ -114,4 +117,17 @@ class UsersController < ApplicationController
     render :text => 'OK'
   end
 
+  private
+  
+  def init_user_params
+    params.require(:user).permit(:email, :password, :password_confirmation)
+  end
+  
+  def create_user_params
+    params.require(:user).permit(:email)
+  end
+  
+  def change_password_params
+    params.require(:user).permit(:current_password, :password, :password_confirmation)
+  end
 end

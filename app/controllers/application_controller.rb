@@ -33,17 +33,19 @@ class ApplicationController < ActionController::Base
   end
 
   private
-  def current_provider_id
-    return current_user.current_provider_id
-  end
-
+  
   def current_provider
     return current_user.current_provider
+  end
+
+  def current_provider_id
+    return current_provider.try(:id)
   end
 
   def do_not_track
     # Devise is supposed to recognize this header, I thought. Unfortunately,
     # I'm having to check it manually.
+    # TODO is this still true?
     if request.headers['devise.skip_trackable']
       request.env['devise.skip_trackable'] = true
     end
