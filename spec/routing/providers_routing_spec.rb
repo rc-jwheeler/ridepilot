@@ -15,20 +15,20 @@ RSpec.describe ProvidersController, type: :routing do
       expect(:get => "/providers/1").to route_to("providers#show", :id => "1")
     end
 
-    it "routes to #edit" do
-      expect(:get => "/providers/1/edit").to route_to("providers#edit", :id => "1")
+    it "does not route to #edit" do
+      expect(:get => "/providers/1/edit").to_not route_to("providers#edit", :id => "1")
     end
 
     it "routes to #create" do
       expect(:post => "/providers").to route_to("providers#create")
     end
 
-    it "routes to #update" do
-      expect(:put => "/providers/1").to route_to("providers#update", :id => "1")
+    it "does not route to #update" do
+      expect(:put => "/providers/1").to_not route_to("providers#update", :id => "1")
     end
 
-    it "routes to #destroy" do
-      expect(:delete => "/providers/1").to route_to("providers#destroy", :id => "1")
+    it "does not route to #destroy" do
+      expect(:delete => "/providers/1").to_not route_to("providers#destroy", :id => "1")
     end
 
     it "routes to #change_dispatch" do

@@ -98,8 +98,17 @@ class ProvidersController < ApplicationController
   end
 
   def change_reimbursement_rates
-    reimbursement_params = params.select{|k,v| Provider::REIMBURSEMENT_ATTRIBUTES.include?(k.to_sym)}
     @provider.update_attributes reimbursement_params
     redirect_to provider_path(@provider)
+  end
+  
+  private
+  
+  def provider_params
+    params.require(:provider).permit(:name, :logo, :dispatch, :scheduling, :region_nw_corner, :region_se_corner, :viewport_center, :viewport_zoom, :allow_trip_entry_from_runs_page, :oaa3b_per_ride_reimbursement_rate, :ride_connection_per_ride_reimbursement_rate, :trimet_per_ride_reimbursement_rate, :stf_van_per_ride_reimbursement_rate, :stf_taxi_per_ride_administrative_fee, :stf_taxi_per_ride_ambulatory_load_fee, :stf_taxi_per_ride_wheelchair_load_fee, :stf_taxi_per_mile_ambulatory_reimbursement_rate, :stf_taxi_per_mile_wheelchair_reimbursement_rate)
+  end
+
+  def reimbursement_params
+    params.permit(*Provider::REIMBURSEMENT_ATTRIBUTES)
   end
 end

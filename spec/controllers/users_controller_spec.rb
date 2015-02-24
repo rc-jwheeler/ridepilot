@@ -15,11 +15,6 @@ RSpec.describe UsersController, type: :controller do
   }
 
   describe "anonymous or sometimes-authenticated actions" do
-    before(:each) do
-      # Many of these work only with a fresh database
-      # DatabaseCleaner.clean # necessary?
-    end
-
     describe "GET #init" do
       context "with 0 users" do
         before(:each) do
