@@ -31,7 +31,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'pg'
 gem 'cancancan', '~> 1.10.1' # TODO latest? yes
 gem 'devise', '~> 3.4.1' # TODO latest? yes
-gem 'GeoRuby', '~> 1.3.4' # TODO latest? yes
 
 # RADAR v3.x will support ActiveRecord 4.2
 gem 'activerecord-postgis-adapter', '~> 2.2.1' # TODO latest? yes

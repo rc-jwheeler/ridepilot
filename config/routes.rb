@@ -42,7 +42,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :providers do
+  resources :providers, :except => [:edit, :update, :destroy] do
     post :change_role
     post :delete_role
     member do

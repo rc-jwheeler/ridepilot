@@ -67,7 +67,7 @@ class AddressesController < ApplicationController
 
       #only addresses within one decimal degree of the trimet district
       addresses = addresses.find_all { |address|
-        point = Point.from_x_y(address['lon'].to_f, address['lat'].to_f, 4326)
+        point = RGeo::Geos.factory(srid: 4326).point(address['lon'].to_f, address['lat'].to_f, 4326)
         Region.count(:conditions => ["name='TriMet' and st_distance(the_geom, ?) <= 1", point]) > 0
       }
 
@@ -83,7 +83,7 @@ class AddressesController < ApplicationController
                     :city => address['city'],
                     :state => STATE_NAME_TO_POSTAL_ABBREVIATION[address['state'].upcase],
                     :zip => address['postcode'],
-                    :the_geom => Point.from_x_y(address['lon'].to_f, address['lat'].to_f, 4326)
+                    :the_geom => RGeo::Geos.factory(srid: 4326).point(address['lon'].to_f, address['lat'].to_f, 4326)
                     )
         address_obj.json
 
@@ -98,7 +98,7 @@ class AddressesController < ApplicationController
   def edit; end
   
   def create
-    the_geom       = params[:lat].to_s.size > 0 ? Point.from_x_y(params[:lon].to_f, params[:lat].to_f, 4326) : nil
+    the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geos.factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f, 4326) : nil
     prefix         = params['prefix'] || ""
     address_params = {}
 

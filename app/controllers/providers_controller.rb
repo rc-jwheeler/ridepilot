@@ -31,12 +31,12 @@ class ProvidersController < ApplicationController
     if north == 0.0 and west == 0.0
       @provider.region_nw_corner = nil
     else
-      @provider.region_nw_corner = Point.from_x_y(west, north)
+      @provider.region_nw_corner = RGeo::Geos.factory(srid: 4326).point(west, north)
     end
     if south == 0.0 and east == 0.0
       @provider.region_se_corner = nil
     else
-      @provider.region_se_corner = Point.from_x_y(east, south)
+      @provider.region_se_corner = RGeo::Geos.factory(srid: 4326).point(east, south)
     end
     @provider.save!
     redirect_to provider_path(@provider)
@@ -56,7 +56,7 @@ class ProvidersController < ApplicationController
       @provider.viewport_center = nil
       @provider.viewport_zoom = nil
     else
-      @provider.viewport_center = Point.from_x_y(lng, lat)
+      @provider.viewport_center = RGeo::Geos.factory(srid: 4326).point(lng, lat)
     end
     @provider.save!
     redirect_to provider_path(@provider)
@@ -73,7 +73,6 @@ class ProvidersController < ApplicationController
     redirect_to provider_path(params[:provider_id])
   end
 
-
   def change_role
     role = Role.find(params[:role][:id])
     authorize! :edit, role
@@ -82,7 +81,7 @@ class ProvidersController < ApplicationController
     redirect_to provider_path(params[:provider_id])
   end
   
-  def change_dispatch    
+  def change_dispatch
     @provider.update_attribute :dispatch, params[:dispatch]
     
     redirect_to provider_path(@provider)

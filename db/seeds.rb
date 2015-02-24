@@ -1,5 +1,3 @@
-require 'geo_ruby'
-
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
@@ -17,8 +15,7 @@ end
 f = File.new(Rails.root.join('db', 'trimet.wkt'))
 wkt = f.read
 f.close
-poly = GeoRuby::SimpleFeatures::Polygon.from_ewkt(wkt)
-poly.srid = 4326
+poly = RGeo::Geos.factory(srid: 4326).polygon(wkt)
 region = Region.create(:name => "TriMet", :the_geom => poly)
 
 for name in ["Scooter", "Wheelchair", "Wheelchair - Oversized", "Wheelchair - Can Transfer", "Unknown", "Ambulatory"]
