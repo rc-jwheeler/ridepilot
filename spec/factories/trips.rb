@@ -6,5 +6,9 @@ FactoryGirl.define do
     appointment_time { pickup_time + 30.minutes }
     trip_purpose "Medical"
     customer
+    
+    factory :cab_trip do
+      cab true
+    end
   end
 end
