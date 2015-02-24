@@ -47,7 +47,6 @@ class Ability
     can action, Address, :provider_id => provider.id
     can action, Customer, :provider_id => provider.id
     can action, DevicePool, :provider_id => provider.id if provider.dispatch?
-    can action, DevicePool, :provider_id => provider.id if provider.dispatch?
     can action, Driver, :provider_id => provider.id
     can action, Monthly, :provider_id => provider.id
     can action, ProviderEthnicity, :provider_id => provider.id

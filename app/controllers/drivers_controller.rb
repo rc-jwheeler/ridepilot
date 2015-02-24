@@ -6,6 +6,7 @@ class DriversController < ApplicationController
   end
 
   def new
+    @driver.provider = current_provider
     prep_edit
   end
 
