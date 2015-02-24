@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150205164420) do
+ActiveRecord::Schema.define(version: 20150224063651) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,11 +29,11 @@ ActiveRecord::Schema.define(version: 20150205164420) do
     t.integer  "provider_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",                                               default: 0
-    t.spatial  "the_geom",             limit: {:srid=>4326, :type=>"point"}
+    t.integer  "lock_version",                                                                  default: 0
     t.string   "phone_number"
-    t.boolean  "inactive",                                                   default: false
+    t.boolean  "inactive",                                                                      default: false
     t.string   "default_trip_purpose"
+    t.spatial  "the_geom",             limit: {:srid=>4326, :type=>"point", :geographic=>true}
   end
 
   add_index "addresses", ["the_geom"], :name => "index_addresses_on_the_geom", :spatial => true
@@ -141,25 +141,25 @@ ActiveRecord::Schema.define(version: 20150205164420) do
     t.datetime "logo_updated_at"
     t.boolean  "dispatch"
     t.boolean  "scheduling"
-    t.spatial  "region_nw_corner",                                limit: {:srid=>0, :type=>"point"}
-    t.spatial  "region_se_corner",                                limit: {:srid=>0, :type=>"point"}
-    t.spatial  "viewport_center",                                 limit: {:srid=>0, :type=>"point"}
     t.integer  "viewport_zoom"
     t.boolean  "allow_trip_entry_from_runs_page"
-    t.decimal  "oaa3b_per_ride_reimbursement_rate",                                                  precision: 8, scale: 2
-    t.decimal  "ride_connection_per_ride_reimbursement_rate",                                        precision: 8, scale: 2
-    t.decimal  "trimet_per_ride_reimbursement_rate",                                                 precision: 8, scale: 2
-    t.decimal  "stf_van_per_ride_reimbursement_rate",                                                precision: 8, scale: 2
-    t.decimal  "stf_taxi_per_ride_administrative_fee",                                               precision: 8, scale: 2
-    t.decimal  "stf_taxi_per_ride_ambulatory_load_fee",                                              precision: 8, scale: 2
-    t.decimal  "stf_taxi_per_ride_wheelchair_load_fee",                                              precision: 8, scale: 2
-    t.decimal  "stf_taxi_per_mile_ambulatory_reimbursement_rate",                                    precision: 8, scale: 2
-    t.decimal  "stf_taxi_per_mile_wheelchair_reimbursement_rate",                                    precision: 8, scale: 2
+    t.decimal  "oaa3b_per_ride_reimbursement_rate",                                                                        precision: 8, scale: 2
+    t.decimal  "ride_connection_per_ride_reimbursement_rate",                                                              precision: 8, scale: 2
+    t.decimal  "trimet_per_ride_reimbursement_rate",                                                                       precision: 8, scale: 2
+    t.decimal  "stf_van_per_ride_reimbursement_rate",                                                                      precision: 8, scale: 2
+    t.decimal  "stf_taxi_per_ride_administrative_fee",                                                                     precision: 8, scale: 2
+    t.decimal  "stf_taxi_per_ride_ambulatory_load_fee",                                                                    precision: 8, scale: 2
+    t.decimal  "stf_taxi_per_ride_wheelchair_load_fee",                                                                    precision: 8, scale: 2
+    t.decimal  "stf_taxi_per_mile_ambulatory_reimbursement_rate",                                                          precision: 8, scale: 2
+    t.decimal  "stf_taxi_per_mile_wheelchair_reimbursement_rate",                                                          precision: 8, scale: 2
+    t.spatial  "region_nw_corner",                                limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.spatial  "region_se_corner",                                limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.spatial  "viewport_center",                                 limit: {:srid=>4326, :type=>"point", :geographic=>true}
   end
 
   create_table "regions", force: true do |t|
     t.string  "name"
-    t.spatial "the_geom", limit: {:srid=>4326, :type=>"polygon"}
+    t.spatial "the_geom", limit: {:srid=>4326, :type=>"polygon", :geographic=>true}
   end
 
   add_index "regions", ["the_geom"], :name => "index_regions_on_the_geom", :spatial => true
