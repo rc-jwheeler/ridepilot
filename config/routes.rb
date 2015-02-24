@@ -7,14 +7,12 @@ Rails.application.routes.draw do
   
   devise_scope :user do
     get "check_session" => "users#check_session"
-    get "init" => "users#show_init"
     get "new_user" => "users#new_user"
     get "show_change_password" => "users#show_change_password"
     get "touch_session" => "users#touch_session"
     post "change_password"  => "users#change_password"
     post "change_provider" => "users#change_provider"
     post "create_user" => "users#create_user"
-    post "init" => "users#init"
   end
 
   resources :customers do

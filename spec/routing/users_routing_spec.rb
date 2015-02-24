@@ -9,10 +9,6 @@ RSpec.describe UsersController, type: :routing do
       expect(:get => "/check_session").to route_to("users#check_session")
     end
 
-    it "routes /init to #show_init" do
-      expect(:get => "/init").to route_to("users#show_init")
-    end
-
     it "routes to #new_user" do
       expect(:get => "/new_user").to route_to("users#new_user")
     end
@@ -35,10 +31,6 @@ RSpec.describe UsersController, type: :routing do
 
     it "routes to #create_user" do
       expect(:post => "/create_user").to route_to("users#create_user")
-    end
-
-    it "routes to #init" do
-      expect(:post => "/init").to route_to("users#init")
     end
 
   end

@@ -1,10 +1,7 @@
-class UsersController < ApplicationController
-  require 'new_user_mailer'
+require 'new_user_mailer'
 
+class UsersController < ApplicationController
   def new_user
-    if User.count == 0
-      return redirect_to :show_init
-    end
     authorize! :edit, current_user.current_provider
     @user = User.new
     @errors = []
@@ -72,28 +69,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def show_init
-    #create initial user
-    if User.count > 0
-      return redirect_to new_user_session_path
-    end
-    @user = User.new
-  end
-
-  def init
-    if User.count > 0
-      return redirect_to new_user_session_path
-    end
-    @user = User.new(init_user_params)
-    @user.current_provider = Provider.ride_connection
-    @user.save!
-    @role = Role.new ({:user_id=>@user.id, :provider_id=>1, :level=>100})
-    @role.save
-
-    flash[:notice] = "OK, now sign in"
-    redirect_to new_user_session_path
-  end
-
   def change_provider
     provider = Provider.find(params[:provider_id])
     if can? :read, provider
@@ -118,10 +93,6 @@ class UsersController < ApplicationController
   end
 
   private
-  
-  def init_user_params
-    params.require(:user).permit(:email, :password, :password_confirmation)
-  end
   
   def create_user_params
     params.require(:user).permit(:email)
