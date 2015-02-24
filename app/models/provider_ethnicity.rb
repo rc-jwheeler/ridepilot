@@ -1,7 +1,7 @@
 class ProviderEthnicity < ActiveRecord::Base
   belongs_to :provider
 
-  validate :name, :length => { :minimum => 2 }
+  validates :name, :length => { :minimum => 2 }
 
   default_scope { order('name') }
 

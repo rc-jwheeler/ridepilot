@@ -1,21 +1,15 @@
 class ProviderEthnicitiesController < ApplicationController
-  load_and_authorize_resource :provider_ethnicity
+  load_and_authorize_resource
 
   def index
     redirect_to provider_path(current_provider)
   end
 
-  def show
+  def show; end
 
-  end
+  def new; end
 
-  def new
-
-  end
-
-  def edit
-
-  end
+  def edit; end
 
   def create
     @provider_ethnicity.provider = current_provider
@@ -23,22 +17,28 @@ class ProviderEthnicitiesController < ApplicationController
       flash[:notice] = "Ethnicity created"
       redirect_to provider_path(current_provider)
     else
-      render :action=>:new
+      render :action => :new
     end
   end
 
   def update
     @provider_ethnicity.provider = current_provider
-    if @provider_ethnicity.update_attributes(params[:provider_ethnicity])
+    if @provider_ethnicity.update_attributes(provider_ethnicity_params)
       flash[:notice] = "Ethnicity updated"
       redirect_to provider_path(current_provider)
     else
-      render :action=>:edit
+      render :action => :edit
     end 
   end
 
   def destroy
     @provider_ethnicity.destroy
     redirect_to provider_path(current_provider)
+  end
+  
+  private
+  
+  def provider_ethnicity_params
+    params.require(:provider_ethnicity).permit(:name)
   end
 end

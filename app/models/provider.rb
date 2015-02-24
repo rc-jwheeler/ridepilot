@@ -27,7 +27,7 @@ class Provider < ActiveRecord::Base
     :stf_taxi_per_mile_wheelchair_reimbursement_rate
   ]
   
-  validate :name, :length => { :minimum => 2 }
+  validates :name, :length => { :minimum => 2 }
   validates_numericality_of :oaa3b_per_ride_reimbursement_rate,               :greater_than => 0, :allow_blank => true
   validates_numericality_of :ride_connection_per_ride_reimbursement_rate,     :greater_than => 0, :allow_blank => true
   validates_numericality_of :trimet_per_ride_reimbursement_rate,              :greater_than => 0, :allow_blank => true
