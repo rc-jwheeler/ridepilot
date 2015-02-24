@@ -11,8 +11,8 @@ RSpec.describe DevicePoolsController, type: :routing do
       expect(:get => "/device_pools/new").to route_to("device_pools#new")
     end
 
-    it "routes to #show" do
-      expect(:get => "/device_pools/1").to route_to("device_pools#show", :id => "1")
+    it "does not route to #show" do
+      expect(:get => "/device_pools/1").to_not route_to("device_pools#show", :id => "1")
     end
 
     it "routes to #edit" do

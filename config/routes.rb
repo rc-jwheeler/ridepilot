@@ -62,7 +62,7 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :device_pools, :except => [:index] do
+  resources :device_pools, :except => [:index, :show] do
     resources :device_pool_drivers, :only => [:create, :destroy]
   end
   

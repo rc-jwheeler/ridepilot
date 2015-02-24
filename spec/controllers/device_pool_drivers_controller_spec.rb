@@ -87,7 +87,6 @@ RSpec.describe DevicePoolDriversController, type: :controller do
     it "include the deleted device_pool_driver in the json response" do
       device_pool_driver = create(:device_pool_driver, :device_pool => @device_pool)
       delete :destroy, {:device_pool_id => @device_pool.id, :id => device_pool_driver.to_param}
-      expect(response.content_type).to eq("application/json")
       json = JSON.parse(response.body)
       expect(json["device_pool_driver"]).to be_a(Hash)
       expect(json["device_pool_driver"]["id"]).to be_a(Integer)

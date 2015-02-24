@@ -20,10 +20,9 @@ class DevicePoolsController < ApplicationController
   def update
     params[:device_pool][:color] = params[:device_pool][:color].gsub(/#/, "")
     
-    @device_pool.update_attributes(params[:device_pool])
-    if @device_pool.save
+    if @device_pool.update_attributes(device_pool_params)
       flash[:notice] = "Device pool updated"
-      redirect_to provider_path(current_user.current_provider)
+      redirect_to provider_path(current_provider)
     else
       render :action=>:edit
     end
@@ -34,11 +33,17 @@ class DevicePoolsController < ApplicationController
     respond_to do |format|
       format.html {
         flash[:notice] = "Device pool deleted"
-        redirect_to provider_path(current_user.current_provider)        
+        redirect_to provider_path(current_provider)        
       }
       format.js { 
         render :json => { :device_pool => @device_pool.as_json }
       }
     end
+  end
+  
+  private
+  
+  def device_pool_params
+    params.require(:device_pool).permit(:name, :color)
   end
 end
