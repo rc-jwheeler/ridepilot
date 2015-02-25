@@ -25,6 +25,12 @@ module Ridepilot
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
       g.view_specs false
       g.helper_specs false
+      
+      # It is suggested to leave these all enabled
+      # g.request_specs false
+      # g.routing_specs false
+      # g.controller_specs false
+      # g.model_specs false
     end
   end
 end
