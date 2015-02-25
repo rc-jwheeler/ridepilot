@@ -4,7 +4,7 @@ class TripsController < ApplicationController
   before_filter :set_calendar_week_start, :only => [:index, :new, :edit]
 
   def index
-    @trips = @trips.for_provider(current_provider_id).includes(:customer,{:run => [:driver,:vehicle]}).order(:pickup_time)
+    @trips = @trips.for_provider(current_provider_id).includes(:customer, {:run => [:driver, :vehicle]}).order(:pickup_time)
     
     respond_to do |format|
       format.html do
@@ -26,7 +26,7 @@ class TripsController < ApplicationController
     #called.
 
     @trips = Trip.accessible_by(current_ability).for_provider(current_provider_id).where(
-      ["customer_informed = false and pickup_time >= ? ", Date.today.in_time_zone.utc]).order("called_back_at")
+      "customer_informed = false AND pickup_time >= ?", Date.today.in_time_zone.utc).order("called_back_at")
 
     respond_to do |format|
       format.html
@@ -64,7 +64,7 @@ class TripsController < ApplicationController
     @trip = Trip.find(params[:trip_id])
     if can? :edit, @trip
       @trip.cab = true
-      @trip.cab_informed = false
+      @trip.cab_notified = false
       @trip.trip_result = 'COMP'
       @trip.save
     end
@@ -103,7 +103,7 @@ class TripsController < ApplicationController
   end
 
   def new
-    @trip = Trip.new(:provider_id=>current_provider_id)
+    @trip = Trip.new(:provider_id => current_provider_id)
 
     if params[:run_id] && run = Run.find_by_id(params[:run_id])
       d = run.date
@@ -142,15 +142,14 @@ class TripsController < ApplicationController
   end
 
   def create
-    permitted_trip_params = trip_params
-    if permitted_trip_params[:customer_id] && customer = Customer.find_by_id(permitted_trip_params[:customer_id])
+    if params[:trip][:customer_id] && customer = Customer.find_by_id(params[:trip][:customer_id])
       authorize! :read, customer
-      permitted_trip_params[:provider_id] = customer.provider.id if customer.provider.present?
+      params[:trip][:provider_id] = customer.provider.id if customer.provider.present?
     else
-      permitted_trip_params[:customer_id] = ""
+      params[:trip][:customer_id] = ""
     end    
-    handle_trip_params permitted_trip_params
-    @trip = Trip.new(permitted_trip_params)
+    handle_trip_params params[:trip]
+    @trip = Trip.new(trip_params)
     authorize! :manage, @trip
     
     respond_to do |format|
@@ -173,14 +172,17 @@ class TripsController < ApplicationController
   end
 
   def update
-    permitted_trip_params = trip_params
-    @customer = Customer.find(permitted_trip_params[:customer_id])
-    permitted_trip_params[:provider_id] = @customer.provider.id if @customer.provider.present?
-    handle_trip_params permitted_trip_params
+    if params[:trip][:customer_id] && customer = Customer.find_by_id(params[:trip][:customer_id])
+      authorize! :read, customer
+      params[:trip][:provider_id] = customer.provider.id if customer.provider.present?
+    else
+      params[:trip][:customer_id] = @trip.customer_id
+    end    
+    handle_trip_params params[:trip]
     authorize! :manage, @trip
 
     respond_to do |format|
-      if @trip.update_attributes(permitted_trip_params)
+      if @trip.update_attributes(trip_params)
         format.html { redirect_to(trips_path, :notice => 'Trip was successfully updated.')  }
         format.js { 
           render :json => {:status => "success"}, :content_type => "text/json"
@@ -188,7 +190,7 @@ class TripsController < ApplicationController
       else
         prep_view
         format.html { render :action => "edit"  }
-        format.js   { @remote = true; render :json => {:form => render_to_string(:partial => 'form') }, :content_type => "text/json" }
+        format.js   { @remote = true; render :json => {:status => "error", :form => render_to_string(:partial => 'form') }, :content_type => "text/json" }
       end
     end
   end
@@ -206,7 +208,6 @@ class TripsController < ApplicationController
 
   private
   
-  # This will be used automatically by CanCan for the default actions
   def trip_params
     params.require(:trip).permit(
       :appointment_time,
@@ -225,6 +226,7 @@ class TripsController < ApplicationController
       :notes,
       :pickup_address_id,
       :pickup_time,
+      :provider_id, # We normally wouldn't accept this and would set it manually on the instance, but in this controller we're setting it in the params dynamically
       :repeats_fridays,
       :repeats_mondays,
       :repeats_thursdays,
