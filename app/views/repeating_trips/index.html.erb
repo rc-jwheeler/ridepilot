@@ -1,0 +1,61 @@
+<h1>Listing repeating_trips</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Schedule yaml</th>
+      <th>Provider</th>
+      <th>Customer</th>
+      <th>Pickup time</th>
+      <th>Appointment time</th>
+      <th>Guest count</th>
+      <th>Attendant count</th>
+      <th>Group size</th>
+      <th>Pickup address</th>
+      <th>Dropoff address</th>
+      <th>Mobility</th>
+      <th>Funding source</th>
+      <th>Trip purpose</th>
+      <th>Notes</th>
+      <th>Round trip</th>
+      <th>Driver</th>
+      <th>Vehicle</th>
+      <th>Cab</th>
+      <th>Customer informed</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @repeating_trips.each do |repeating_trip| %>
+      <tr>
+        <td><%= repeating_trip.schedule_yaml %></td>
+        <td><%= repeating_trip.provider %></td>
+        <td><%= repeating_trip.customer %></td>
+        <td><%= repeating_trip.pickup_time %></td>
+        <td><%= repeating_trip.appointment_time %></td>
+        <td><%= repeating_trip.guest_count %></td>
+        <td><%= repeating_trip.attendant_count %></td>
+        <td><%= repeating_trip.group_size %></td>
+        <td><%= repeating_trip.pickup_address %></td>
+        <td><%= repeating_trip.dropoff_address %></td>
+        <td><%= repeating_trip.mobility %></td>
+        <td><%= repeating_trip.funding_source %></td>
+        <td><%= repeating_trip.trip_purpose %></td>
+        <td><%= repeating_trip.notes %></td>
+        <td><%= repeating_trip.round_trip %></td>
+        <td><%= repeating_trip.driver %></td>
+        <td><%= repeating_trip.vehicle %></td>
+        <td><%= repeating_trip.cab %></td>
+        <td><%= repeating_trip.customer_informed %></td>
+        <td><%= link_to 'Show', repeating_trip %></td>
+        <td><%= link_to 'Edit', edit_repeating_trip_path(repeating_trip) %></td>
+        <td><%= link_to 'Destroy', repeating_trip, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Repeating trip', new_repeating_trip_path %>
