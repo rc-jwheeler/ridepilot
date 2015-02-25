@@ -133,7 +133,7 @@ RSpec.describe DevicePoolsController, type: :controller do
         expect(response.content_type).to eq("text/javascript")
       end
 
-      it "include the deleted device_pool in the JS response" do
+      it "includes the deleted device_pool in the JS response" do
         device_pool = create(:device_pool, :provider => @current_user.current_provider)
         delete :destroy, {:id => device_pool.to_param, :format => "js"}
         json = JSON.parse(response.body)

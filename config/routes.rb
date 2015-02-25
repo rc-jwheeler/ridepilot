@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     post :send_to_cab
     post :turndown
 
-    collection do    
+    collection do
       get :reconcile_cab
       get :trips_requiring_callback
       get :unscheduled
@@ -71,7 +71,7 @@ Rails.application.routes.draw do
   resources :vehicles
   resources :vehicle_maintenance_events, :except => [:show, :destroy]
 
-  resources :runs do
+  resources :runs, :except => [:show] do
     collection do
       get :for_date
       get :uncompleted_runs
