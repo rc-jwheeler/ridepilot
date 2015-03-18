@@ -1,3 +1,6 @@
+# TODO this test is now duplicated as a controller spec. OK to remove
+# TODO once removed, rest of /test folder can be removed as well
+
 require 'test_helper'
 
 class TripsControllerTest < ActionController::TestCase

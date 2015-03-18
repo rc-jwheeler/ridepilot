@@ -1,3 +1,5 @@
+# TODO Obsolete, remove /test suite in favor of /specs
+
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
