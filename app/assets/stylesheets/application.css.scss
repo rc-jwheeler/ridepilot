@@ -774,10 +774,10 @@ span.individual {
   text-indent: -9999px;
 }
 span.group {
-  background: url(images/users.png) left center no-repeat scroll;
+  background: image-path("users.png") left center no-repeat scroll;
 }
 span.individual {
-  background: url(images/user.png) left center no-repeat scroll;
+  background: image-path("user.png") left center no-repeat scroll;
 }
 a.edit,
 a.new-trip,
@@ -801,35 +801,35 @@ a.trip {
 }
 
 a.edit {
-  background: url(images/card--pencil.png) left center no-repeat scroll;
+  background: image-path("card--pencil.png") left center no-repeat scroll;
 }
 a.new-trip {
-  background: url(images/plus-button.png) left center no-repeat scroll;
+  background: image-path("plus-button.png") left center no-repeat scroll;
 }
 a.trip {
-  background: url(images/car--arrow.png) left center no-repeat scroll;
+  background: image-path("car--arrow.png") left center no-repeat scroll;
 }
 a.delete {
-  background: url(images/cross-button.png) left center no-repeat scroll;
+  background: image-path("cross-button.png") left center no-repeat scroll;
   color: #e5004d;
 }
 a.new-maintenance {
-  background: url(images/wrench--plus.png) left center no-repeat scroll;
+  background: image-path("wrench--plus.png") left center no-repeat scroll;
 }
 a.edit-maintenance {
-  background: url(images/wrench--pencil.png) left center no-repeat scroll;
+  background: image-path("wrench--pencil.png") left center no-repeat scroll;
 }
 a.edit-driver {
-  background: url(images/pencil.png) left center no-repeat scroll;
+  background: image-path("pencil.png") left center no-repeat scroll;
 }
 a.edit-vehicle {
-  background: url(images/car--pencil.png) left center no-repeat scroll;
+  background: image-path("car--pencil.png") left center no-repeat scroll;
 }
 a.view-customer {
-  background: url(images/user-business-gray-boss.png) left center no-repeat scroll;
+  background: image-path("user-business-gray-boss.png") left center no-repeat scroll;
 }
 a.details {
-  background: url(images/magnifier-zoom.png) left center no-repeat scroll;
+  background: image-path("magnifier-zoom.png") left center no-repeat scroll;
 }
 a.delete:hover,
 a.delete:active {
@@ -849,12 +849,12 @@ a.cancel {
   text-decoration: none;
   font-size: 11px;
   line-height: 16px;
-  background: url(images/cross-button.png) left center no-repeat scroll;
+  background: image-path("cross-button.png") left center no-repeat scroll;
   color: #e5004d;
   float: right;
 }
 input.delete {
-  background: url(images/cross-button.png) left center no-repeat scroll;
+  background: image-path("cross-button.png") left center no-repeat scroll;
   color: #e5004d;
   padding: 5px 0 5px 17px;
   text-decoration: none;
@@ -999,7 +999,7 @@ ul.reports li {
 ul.reports li a {
   padding: 5px 0 5px 20px;
   text-decoration: none;
-  background: url(images/reports-stack.png) left center no-repeat scroll;
+  background: image-path("reports-stack.png") left center no-repeat scroll;
 }
 
 body.daily-manifest-by-half-hour ul.schedule,
@@ -1128,7 +1128,7 @@ ul.funding-sources li {
 ul.funding-sources li a {
   padding: 5px 0 5px 20px;
   text-decoration: none;
-  background: url(images/credit-card.png) left center no-repeat scroll;
+  background: image-path("credit-card.png") left center no-repeat scroll;
 }
 
 /*
@@ -1146,28 +1146,28 @@ tr.inactive td.name {
   padding-left: 36px;
 }
 td.admin {
-  background: url(images/user-worker-boss.png) 10px 0.75em no-repeat scroll;
+  background: image-path("user-worker-boss.png") 10px 0.75em no-repeat scroll;
 }
 td.editor {
-  background: url(images/user-worker.png) 10px 0.75em no-repeat scroll;
+  background: image-path("user-worker.png") 10px 0.75em no-repeat scroll;
 }
 td.user {
-  background: url(images/user.png) 10px 0.75em no-repeat scroll;
+  background: image-path("user.png") 10px 0.75em no-repeat scroll;
 }
 td.active {
-  background: url(images/dashboard--plus.png) 10px 0.75em no-repeat scroll;
+  background: image-path("dashboard--plus.png") 10px 0.75em no-repeat scroll;
 }
 td.inactive {
-  background: url(images/dashboard--inactive.png) 10px 0.75em no-repeat scroll;
+  background: image-path("dashboard--inactive.png") 10px 0.75em no-repeat scroll;
 }
 td.inactive {
-  background: url(images/dashboard--inactive.png) 10px 0.75em no-repeat scroll;
+  background: image-path("dashboard--inactive.png") 10px 0.75em no-repeat scroll;
 }
 tr.active td.name {
-  background: url(images/car.png) 10px 0.75em no-repeat scroll;
+  background: image-path("car.png") 10px 0.75em no-repeat scroll;
 }
 tr.inactive td.name {
-  background: url(images/car--inactive.png) 10px 0.75em no-repeat scroll;
+  background: image-path("car--inactive.png") 10px 0.75em no-repeat scroll;
 }
 
 /*
@@ -1178,7 +1178,7 @@ tr.inactive td.name {
 a.action-bttn:link,
 a.action-bttn:visited {
   padding: 0.5em 0.8em 0.5em 2.25em;
-  background: #eee url(images/arrow-180.png) 0.8em center no-repeat scroll;
+  background: #eee image-path("arrow-180.png") 0.8em center no-repeat scroll;
   color: #0081CC;
   font-size: 15px;
   text-decoration: none;
@@ -1196,28 +1196,28 @@ body.cab-trips.index a.action-bttn.new,
 body.runs.index a.action-bttn.new,
 body.runs.edit a.action-bttn.new,
 body.providers.show a.action-bttn.new {
-  background: #eee url(images/plus.png) 0.8em center no-repeat scroll;
+  background: #eee image-path("plus.png") 0.8em center no-repeat scroll;
 }
 /* funding sources */
 body.funding-sources.index a.action-bttn {
-  background: #eee url(images/credit-card--plus.png) 0.8em center no-repeat scroll;
+  background: #eee image-path("credit-card--plus.png") 0.8em center no-repeat scroll;
 }
 /* customers */
 body.customers.index a.action-bttn {
-  background: #eee url(images/user--plus.png) 0.8em center no-repeat scroll;
+  background: #eee image-path("user--plus.png") 0.8em center no-repeat scroll;
 }
 /* providers */
 body.providers a.new-user {
-  background: #eee url(images/user--plus.png) 0.8em center no-repeat scroll;
+  background: #eee image-path("user--plus.png") 0.8em center no-repeat scroll;
 }
 body.providers a.new-driver {
-  background: #eee url(images/dashboard--plus.png) 0.8em center no-repeat scroll;
+  background: #eee image-path("dashboard--plus.png") 0.8em center no-repeat scroll;
 }
 body.providers a.new-vehicle {
-  background: #eee url(images/car--plus.png) 0.8em center no-repeat scroll;
+  background: #eee image-path("car--plus.png") 0.8em center no-repeat scroll;
 }
 body.providers a.new-provider {
-  background: #eee url(images/plus.png) 0.8em center no-repeat scroll;
+  background: #eee image-path("plus.png") 0.8em center no-repeat scroll;
 }
 body.providers span.device-pool-color {
   display: block;
@@ -1226,7 +1226,7 @@ body.providers span.device-pool-color {
   border: 1px solid #CCC;
 }
 body.monthlies a.new-report {
-  background: #eee url(images/report--plus.png) 0.8em center no-repeat scroll;
+  background: #eee image-path("report--plus.png") 0.8em center no-repeat scroll;
 }
 body.providers #region-form {
   float: left;
@@ -1429,7 +1429,7 @@ body.trips div.repeats>li {
 }
 
 .dispatch #search-spinner, .edit_run #search-spinner {
-  background-image: url(images/spinner.gif);
+  background-image: image-path("spinner.gif");
   display: inline-block;
   height: 25px;
   line-height: 25px;

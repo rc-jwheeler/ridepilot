@@ -6,9 +6,9 @@ var RidePilot = {
     end:   <%= BUSINESS_HOURS[:end] %>
   },
   urls: {
-    check_session: "<%= check_session_path %>",
-    touch_session: "<%= touch_session_path %>",
-    sign_out:      "<%= destroy_user_session_path %>"
+    check_session: "<%= check_session_path(:script_name => Rails.application.config.relative_url_root) %>",
+    touch_session: "<%= touch_session_path(:script_name => Rails.application.config.relative_url_root) %>",
+    sign_out:      "<%= destroy_user_session_path(:script_name => Rails.application.config.relative_url_root) %>"
   },
   timezone: {
     server: {
