@@ -9,7 +9,7 @@
   <%= csrf_meta_tags %>
   <%= yield :head %>
 </head>
-<body class="<%= bodytag_class %>">
+<body class="<%= bodytag_class %>" <%= bodytag_turbolinks %>>
 
   <div id="session-timeout-warning" style="display: none;">
     You will be logged off in <span><!-- countdown place holder
