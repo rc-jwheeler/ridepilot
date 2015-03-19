@@ -80,7 +80,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { :host => 'apps2.rideconnection.org/ridepilot' }
   
   # Set the subdirectory as the relative root
-  config.action_controller.relative_url_root = '/ridepilot'  
+  config.relative_url_root = '/ridepilot'  
 end
 
 # Turn off auto TLS for e-mail
