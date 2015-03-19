@@ -77,10 +77,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Needed for sending new users' confirmation email
-  config.action_mailer.default_url_options = { :host => 'apps2.rideconnection.org/ridepilot' }
-  
-  # Set the subdirectory as the relative root
-  config.action_controller.relative_url_root = '/ridepilot'  
+  config.action_mailer.default_url_options = { :host => 'ridestage.panopticdev.com/ridepilot' }
 end
 
 # Turn off auto TLS for e-mail
