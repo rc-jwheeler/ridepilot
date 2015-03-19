@@ -11,8 +11,8 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
-//= require turbolinks
 //= require jquery-ui
 //= require autocomplete-rails
 //= require jquery.weekcalendar
@@ -22,6 +22,7 @@
 //= require idletimeout
 //= require constants
 //= require_self
+//= require turbolinks
 
 function ISODateFormatToDateObject(str) {
   if(str === null) return null;
