@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_filter :do_not_track
   before_filter :authenticate_user!
   before_filter :get_providers
+  before_filter :set_cache_buster_for_xhr
   
   rescue_from CanCan::AccessDenied do |exception|
     render :file => "#{Rails.root}/public/403.html", :status => 403
@@ -48,6 +49,15 @@ class ApplicationController < ActionController::Base
     # TODO is this still true?
     if request.headers['devise.skip_trackable']
       request.env['devise.skip_trackable'] = true
+    end
+  end
+
+  # Prevent AJAX requests/redirects from being cached
+  def set_cache_buster_for_xhr
+    if request.xhr?
+      response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+      response.headers["Pragma"] = "no-cache"
+      response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
     end
   end
 end
