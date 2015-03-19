@@ -68,7 +68,7 @@ function Dispatcher (tree_id, map_id, bounds, viewport) {
     self.tree = self._tree_elem.jstree({
       core      : { html_titles : true },
       plugins   : [ "json_data", "themes", "checkbox", "contextmenu"],
-      themes    : { theme : "apple", url : "/assets/jstree-apple/style.css", icons : false },
+      themes    : { theme : "apple", url : "<%= asset_path("jstree-apple/style.css") %>", icons : false },
       json_data : { ajax : {
         url : window.location.pathname,
         dataType : "json", 
