@@ -49,7 +49,7 @@ module ApplicationHelper
   end
 
   def bodytag_turbolinks
-    "data-no-turbolink=\"true\"" if controller.controller_name == "dispatch"
+    "data-no-turbolink" if controller.controller_name == "dispatch"
   end
 
   def collect_weekdays(schedule)
