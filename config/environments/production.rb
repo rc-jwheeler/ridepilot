@@ -78,6 +78,9 @@ Rails.application.configure do
 
   # Needed for sending new users' confirmation email
   config.action_mailer.default_url_options = { :host => 'apps.rideconnection.org/ridepilot' }
+  
+  # Set the subdirectory as the relative root
+  config.action_controller.relative_url_root = '/ridepilot'  
 end
 
 # Turn off auto TLS for e-mail
