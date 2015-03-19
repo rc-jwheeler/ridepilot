@@ -48,10 +48,6 @@ module ApplicationHelper
     "#{a} #{b}".gsub(/_/, '-')
   end
 
-  def bodytag_turbolinks
-    "data-no-turbolink" if controller.controller_name == "dispatch"
-  end
-
   def collect_weekdays(schedule)
     weekdays = []
     if schedule.monday
