@@ -148,8 +148,8 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.1.10)
       sprockets-rails (~> 2.0)
-    rails3-jquery-autocomplete (1.0.15)
-      rails (>= 3.2)
+    rails-jquery-autocomplete (1.0.0)
+      rails (>= 4.0)
     railties (4.1.10)
       actionpack (= 4.1.10)
       activesupport (= 4.1.10)
@@ -253,7 +253,7 @@ DEPENDENCIES
   paperclip (~> 4.2.1)
   pg
   rails (~> 4.1.0)
-  rails3-jquery-autocomplete (~> 1.0.15)
+  rails-jquery-autocomplete (~> 1.0.0)
   rspec-rails (~> 3.2)
   sass-rails (~> 4.0.3)
   schedule_atts!

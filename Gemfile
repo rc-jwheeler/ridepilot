@@ -51,8 +51,7 @@ gem 'attribute_normalizer', '~> 1.2.0'
 # For change tracking and auditing
 gem 'paper_trail', '~> 3.0.6'
 
-# Support for Rails 4 since 1.0.12
-gem 'rails3-jquery-autocomplete', '~> 1.0.15'
+gem 'rails-jquery-autocomplete', '~> 1.0.0'
 
 # RADAR Not updated since 2011
 gem 'schedule_atts', :git => 'git://github.com/zpearce/Schedule-Attributes.git'

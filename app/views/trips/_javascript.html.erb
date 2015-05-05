@@ -324,11 +324,11 @@
     });
 
     $("body").on('railsAutocomplete.select', '#pickup_search_address', function(e, selected){
-      autocompleted(selected, 'pickup');
+      autocompleted(selected.item, 'pickup');
     });
     
     $("body").on('railsAutocomplete.select', '#dropoff_search_address', function(e, selected){
-      autocompleted(selected, 'dropoff');
+      autocompleted(selected.item, 'dropoff');
     });
     
     $("body").on('ajax:success', 'tr.trip a[data-remote]', function(e, data, status, xhr){
