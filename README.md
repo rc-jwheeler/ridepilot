@@ -53,8 +53,7 @@ Set up development environment
 
 4. Testing
     - `rake db:test:prepare`
-    - `rake test`
-    - `rake spec`
+    - `rspec`
 
 5. Start application
     - Copy `config/app_config_template.yml` to `config/app_config.yml`.
