@@ -16,7 +16,6 @@ ActiveRecord::Schema.define(version: 20150224063651) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
-  enable_extension "postgis_topology"
 
   create_table "addresses", force: true do |t|
     t.string   "name"
@@ -80,8 +79,8 @@ ActiveRecord::Schema.define(version: 20150224063651) do
     t.integer  "vehicle_id"
   end
 
-  add_index "device_pool_drivers", ["device_pool_id"], :name => "index_devices_on_device_pool_id"
-  add_index "device_pool_drivers", ["driver_id"], :name => "index_device_pool_users_on_user_id"
+  add_index "device_pool_drivers", ["device_pool_id"], :name => "index_device_pool_drivers_on_device_pool_id"
+  add_index "device_pool_drivers", ["driver_id"], :name => "index_device_pool_drivers_on_driver_id"
 
   create_table "device_pools", force: true do |t|
     t.integer  "provider_id"
@@ -216,7 +215,7 @@ ActiveRecord::Schema.define(version: 20150224063651) do
   end
 
   add_index "runs", ["provider_id", "date"], :name => "index_runs_on_provider_id_and_date"
-  add_index "runs", ["provider_id", "scheduled_start_time"], :name => "index_runs_on_provider_id_and_start_time"
+  add_index "runs", ["provider_id", "scheduled_start_time"], :name => "index_runs_on_provider_id_and_scheduled_start_time"
 
   create_table "travel_time_estimates", id: false, force: true do |t|
     t.integer "from_address_id"
@@ -261,15 +260,15 @@ ActiveRecord::Schema.define(version: 20150224063651) do
   add_index "trips", ["provider_id", "pickup_time"], :name => "index_trips_on_provider_id_and_pickup_time"
 
   create_table "users", force: true do |t|
-    t.string   "email",                              default: "", null: false
-    t.string   "encrypted_password",     limit: 128, default: "", null: false
-    t.string   "password_salt",                      default: "", null: false
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
-    t.integer  "sign_in_count",                      default: 0
+    t.integer  "sign_in_count",          default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "password_salt"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "current_provider_id"
