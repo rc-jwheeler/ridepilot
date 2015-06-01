@@ -40,7 +40,7 @@ Set up development environment
 
     - `rake db:create`
 
-    - To enable PostGIS, connect to each database with psql or pgAdmin, run:
+    - To enable PostGIS, connect to your database with psql or pgAdmin, run:
   ```sql
   -- Enable PostGIS (includes raster)
   CREATE EXTENSION postgis;
