@@ -49,11 +49,11 @@ Set up development environment
   -- fuzzy matching needed for Tiger
   CREATE EXTENSION fuzzystrmatch;
   ```
-   - 'rake db:migrate db:seed'
+   - `rake db:migrate db:seed`
 
 4. Testing
     - `rake db:test:prepare`
-    - 'rake test'
+    - `rake test`
     - `rspec`
 
 5. Start application
