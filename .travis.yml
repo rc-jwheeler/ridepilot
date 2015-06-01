@@ -1,0 +1,24 @@
+language: ruby
+cache: bundler
+bundler_args: "--without development"
+rvm:
+- 2.2.1
+before_script:
+- cp config/database.yml.travis config/database.yml
+script:
+- bundle exec /usr/bin/env RAILS_ENV=test rake db:drop db:create db:schema:load
+- bundle exec /usr/bin/env RAILS_ENV=test rspec
+branches:
+  only:
+  - develop
+  - master
+deploy:
+  provider: heroku
+  api_key:
+    secure: h2X56lVdkyPaUO9hF6COPPrgC1MSL7Ps9C2xOJkAcjCKaPr3yti8OcoVOrRKhWPpAwLInFQTIsXVlc081ML5RFTZY2Y3U+kgGoro8IlWZdE8BiNr/oKgqIcqeWG4k5h/SU9RN7HMfDumBBPcTqiT7noADR+sMUxOX+KavQhhF8XPm9y8chBxchSy9qo3N44J72lD77TQ3/QxhK9KP5Dm16CqpCzAMWXjH+Ew5NHga1TfstJBz5cqIXIv4Sss2V1ZFf2bj1uPmmocxBgFdOuoLoAnCwHDr/Wd4gnIQUvF3VluEyg5J28febBOi/C3xAp/LRnurs4T1DMV5QyG7ZV+bCjY6TA+ei1ZF5/EkGfbqjLCehI4UPMtp4qOoqRtXJdUmvrUYTxP3MSe6mBXq8OAafxLkJiChXuzc+bSKTeU5G/EgQ4UqXam8xPh86WLYR3a3GQ/hmDmp28OiIHwn0dRAqQ9qo54dIkp6DSr9Lm2cV8QKqOJXcFBSSUxOVDQ2uTYLGntmoXzVUb7MhGN4EA4oOQUBXLvNMamL9d/Sgd/8Vek8S8aTuPuWg3gvp/ZGfSgZvibwMZf2Lfrx9IDiHsaso23PWDpb41jSjy5tbubOQJK5d20nqltdFEBSNsTPW/IJVeH5CGe7TIf66nX1Mb2XS423upbAheaMzBRWav3Ngs=
+  run: rake db:migrate
+  app: ridepilot-int
+  strategy: api
+  on:
+    repo: camsys/ridepilot
+    branch: develop
