@@ -16,6 +16,8 @@ ActiveRecord::Schema.define(version: 20150224063651) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
+  enable_extension "postgis_topology"
+  enable_extension "fuzzystrmatch"
 
   create_table "addresses", force: true do |t|
     t.string   "name"
