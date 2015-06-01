@@ -61,11 +61,6 @@ group :development do
   gem 'spring'
   gem "spring-commands-rspec"
   
-  # Use Capistrano for deployment
-  gem 'capistrano', '~> 3.4'
-  gem 'capistrano-rvm', '~> 0.1', require: false
-  gem 'capistrano-rails', '~> 1.1', require: false
-  gem 'capistrano-secrets-yml', '~> 1.0', require: false
 end
 
 group :production do
