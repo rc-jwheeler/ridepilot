@@ -53,6 +53,7 @@ Set up development environment
 
 4. Testing
     - `rake db:test:prepare`
+    - 'rake test'
     - `rspec`
 
 5. Start application
