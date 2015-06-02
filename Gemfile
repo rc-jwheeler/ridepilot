@@ -56,6 +56,8 @@ gem 'rails-jquery-autocomplete', '~> 1.0.0'
 # RADAR Not updated since 2011
 gem 'schedule_atts', :git => 'git://github.com/zpearce/Schedule-Attributes.git'
 
+gem 'rails_12factor', group: [:integration, :production, :qa]
+
 group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
