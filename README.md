@@ -7,6 +7,8 @@ RidePilot is originally a project of Ride Connection, a Portland-area community
 transportation provider.  It is primarily written by hackers at
 OpenPlans.
 
+#More to add
+
 Status
 -------------
 work in progress
