@@ -100,7 +100,6 @@ RSpec.describe Trip do
       end
 
       it "should instantiate trips for three weeks out" do
-        pending("Need to figure out trip.save callback vs repeating_trip")
         trip.save
         r_id = trip.repeating_trip_id
         # The trip we just created, which is next week, plus 2 more
