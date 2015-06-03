@@ -43,8 +43,13 @@ class UsersController < ApplicationController
     end
 
     if record_valid
-      NewUserMailer.new_user_email(@user, new_password).deliver if new_user
-      flash[:notice] = "%s has been added and a password has been emailed" % @user.email
+      # NewUserMailer doesn't server the purpose by design
+      #NewUserMailer.new_user_email(@user, new_password).deliver if new_user
+
+      # send password reset instructions instead
+      @user.send_reset_password_instructions  if new_user
+
+      flash[:notice] = "%s has been added and the instructions has been emailed" % @user.email
       redirect_to provider_path(current_provider)
     else
       user_errors = @user.valid? ? {} : @user.errors.messages
