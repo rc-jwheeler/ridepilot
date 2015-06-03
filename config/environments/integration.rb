@@ -77,6 +77,8 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # Needed for sending new users' confirmation email
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.default_url_options = { :host => Rails.application.secrets.ridepilot_host }
   config.after_initialize do
     config.devise.mailer_sender = Rails.application.secrets.smtp_mail_from_address ||= "1-click@camsys.com"
