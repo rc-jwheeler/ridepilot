@@ -1,5 +1,6 @@
 class NewUserMailer < ActionMailer::Base
-
+  default :from => Rails.application.secrets.smtp_mail_from_address
+  
   def new_user_email(user, password)
     @user     = user
     @password = password

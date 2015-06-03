@@ -81,7 +81,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.default_url_options = { :host => Rails.application.secrets.ridepilot_host }
   config.after_initialize do
-    config.devise.mailer_sender = Rails.application.secrets.smtp_mail_from_address ||= "1-click@camsys.com"
+    config.devise.mailer_sender = Rails.application.secrets.smtp_mail_from_address
   end
 end
 
