@@ -1,6 +1,4 @@
 class NewUserMailer < ActionMailer::Base
-  default :from => EMAIL_FROM
-
 
   def new_user_email(user, password)
     @user     = user
