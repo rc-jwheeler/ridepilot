@@ -2,13 +2,14 @@ language: ruby
 cache: bundler
 bundler_args: "--without development"
 rvm:
-- 2.2.1
+  - 2.2.1
 before_script:
-- cp config/database.yml.travis config/database.yml
+  - cp config/database.yml.travis config/database.yml
+  - psql -U postgres -c "create extension postgis"
 script:
-- bundle exec /usr/bin/env RAILS_ENV=test rake db:test:prepare
-- bundle exec /usr/bin/env RAILS_ENV=test rake test
-- bundle exec /usr/bin/env RAILS_ENV=test rake spec
+  - bundle exec /usr/bin/env RAILS_ENV=test rake db:test:prepare
+  - bundle exec /usr/bin/env RAILS_ENV=test rake test
+  - bundle exec /usr/bin/env RAILS_ENV=test rake spec
 branches:
   only:
   - develop

@@ -247,6 +247,7 @@ DEPENDENCIES
   rails (~> 4.1.0)
   rails-jquery-autocomplete (~> 1.0.0)
   rails_12factor
+  rgeo
   rspec-rails (~> 3.2)
   sass-rails (~> 4.0.3)
   schedule_atts!

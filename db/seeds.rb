@@ -37,7 +37,7 @@ ActiveRecord::Base.transaction do
     f = File.new(Rails.root.join('db', 'trimet.wkt'))
     wkt = f.read
     f.close
-    region.the_geom = RGeo::Geos.factory(srid: 4326).parse_wkt(wkt)
+    region.the_geom = RGeo::Geographic.spherical_factory(srid: 4326).parse_wkt(wkt)
   end
 
   puts "Creating initial mobilities..."

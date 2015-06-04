@@ -33,6 +33,7 @@ gem 'cancancan', '~> 1.10.1'
 gem 'devise', '~> 3.4.1'
 
 # RADAR v3.x will support ActiveRecord 4.2
+gem 'rgeo'
 gem 'activerecord-postgis-adapter', '~> 2.2.1'
 
 gem 'whenever', '~> 0.9.4', :require => false
