@@ -3,6 +3,9 @@ cache: bundler
 bundler_args: "--without development"
 rvm:
 - 2.2.1
+before_install:
+ - sudo apt-get update
+ - sudo apt-get install libgeos-dev libproj-dev
 before_script:
 - cp config/database.yml.travis config/database.yml
 - psql -U postgres -c "create extension postgis"
