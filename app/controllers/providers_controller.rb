@@ -56,7 +56,7 @@ class ProvidersController < ApplicationController
       @provider.viewport_center = nil
       @provider.viewport_zoom = nil
     else
-      @provider.viewport_center = RGeo::Geos.factory(srid: 4326).point(lng, lat)
+      @provider.viewport_center = RGeo::Geographic.spherical_factory(srid: 4326).point(lng, lat)
     end
     @provider.save!
     redirect_to provider_path(@provider)
