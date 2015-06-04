@@ -6,7 +6,7 @@ rvm:
 addons:
   postgresql: "9.3"
 before_script:
-  - psql -U postgres -c "create database ridepilot_test"
+  - cp config/database.travis.yml config/database.yml
   - psql -U postgres -d ridepilot_test -c "create extension postgis"
 script:
   - bundle exec /usr/bin/env RAILS_ENV=test rake db:test:prepare
