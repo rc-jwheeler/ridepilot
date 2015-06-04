@@ -3,11 +3,8 @@ cache: bundler
 bundler_args: "--without development"
 rvm:
   - 2.2.1
-addons:
-  postgresql: "9.3"
 before_script:
   - cp config/database.yml.travis config/database.yml
-  - psql -U postgres -c "create extension postgis"
 script:
   - bundle exec /usr/bin/env RAILS_ENV=test rake db:test:prepare
   - bundle exec /usr/bin/env RAILS_ENV=test rake test
