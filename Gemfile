@@ -57,6 +57,8 @@ gem 'rails-jquery-autocomplete', '~> 1.0.0'
 # RADAR Not updated since 2011
 gem 'schedule_atts', :git => 'git://github.com/zpearce/Schedule-Attributes.git'
 
+gem 'haml'
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'

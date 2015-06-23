@@ -93,6 +93,8 @@ GEM
       railties (>= 3.0.0)
     faker (1.4.3)
       i18n (~> 0.5)
+    haml (4.0.6)
+      tilt
     hike (1.2.3)
     i18n (0.7.0)
     ice_cube (0.6.8)
@@ -237,6 +239,7 @@ DEPENDENCIES
   exception_notification (~> 4.0)
   factory_girl_rails (~> 4.5)
   faker (~> 1.4)
+  haml
   ice_cube (= 0.6.8)
   jc-validates_timeliness (~> 3.1.1)
   jquery-rails
