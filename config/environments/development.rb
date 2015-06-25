@@ -14,11 +14,8 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
 
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.default_url_options = { :host => Rails.application.secrets.ridepilot_host }
-  config.after_initialize do
-    config.devise.mailer_sender = Rails.application.secrets.smtp_mail_from_address
-  end
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
