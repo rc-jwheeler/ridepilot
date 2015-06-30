@@ -25,13 +25,13 @@ class UsersController < ApplicationController
           raw, enc = Devise.token_generator.generate(User, :reset_password_token)
           @user.reset_password_token = enc
           @user.reset_password_sent_at = Time.now.utc
-          @user.current_provider_id = current_provider_id
+          @user.current_provider = current_provider
           @user.save!
           new_user = true
         end
 
         @role.user = @user
-        @role.provider_id = current_provider_id
+        @role.provider = current_provider
         @role.level = params[:role][:level]
         @role.save!
 
@@ -77,7 +77,7 @@ class UsersController < ApplicationController
   def change_provider
     provider = Provider.find(params[:provider_id])
     if can? :read, provider
-      current_user.current_provider_id = provider.id
+      current_user.current_provider = provider
       current_user.save!
     end
     redirect_to params[:come_from]
