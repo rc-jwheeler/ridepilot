@@ -10,6 +10,7 @@ TRIP_RESULT_CODES = {
 }
 
 TRIP_PURPOSES = ["Life-Sustaining Medical", "Medical", "Nutrition", "Personal/Support Services", "Recreation", "School/Work", "Shopping", "Volunteer Work", "Center"]
+TRIP_PURPOSES_KEYS = ["Life-Sustaining Medical", "Medical", "Nutrition", "Personal/Support Services", "Recreation", "School/Work", "Shopping", "Volunteer Work", "Center"]
 
 SERVICE_LEVELS = ["Wheelchair", "Ambulatory"]
 
