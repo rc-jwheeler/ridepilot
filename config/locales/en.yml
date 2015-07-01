@@ -20,6 +20,18 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  address_name: "Address Name:"
+  building_name: "Building Name:"
+  address: "Address:"
+  city: "City:"
+  state: "State:"
+  zip: "Zip Code:"
+  phone_number: "Phone Number:"
+  in_district: "In TriMet District:"
+  unspecified: "Unspecified"
+  yes: "Yes"
+  no: "No"
+  default_trip_purpose: "Default Trip Purpose:"
   activerecord:
     errors:
       models:
