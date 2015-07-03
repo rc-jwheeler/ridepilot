@@ -50,7 +50,7 @@ gem 'will_paginate', '~> 3.0.7'
 gem 'attribute_normalizer', '~> 1.2.0'
 
 # For change tracking and auditing
-gem 'paper_trail', '~> 3.0.6'
+gem 'paper_trail', '~> 4.0.0.rc'
 
 gem 'rails-jquery-autocomplete', '~> 1.0.0'
 
