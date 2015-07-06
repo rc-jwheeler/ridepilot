@@ -11,6 +11,9 @@ class Trip < ActiveRecord::Base
   belongs_to :called_back_by, :class_name=>"User"
   belongs_to :repeating_trip
 
+  belongs_to :trip_purpose
+  delegate :name, to: :trip_purpose, prefix: :trip_purpose, allow_nil: true
+
   before_validation :compute_run
   before_create :create_repeating_trip
   before_update :update_repeating_trip
@@ -23,7 +26,7 @@ class Trip < ActiveRecord::Base
   validates_presence_of :dropoff_address,  :unless => :allow_addressless_trip?
   validates_presence_of :pickup_time,      :unless => :allow_addressless_trip?
   validates_presence_of :appointment_time, :unless => :allow_addressless_trip?
-  validates_presence_of :trip_purpose
+  validates_presence_of :trip_purpose_id
   validate :driver_is_valid_for_vehicle
   validates_associated :customer
   validates_associated :pickup_address

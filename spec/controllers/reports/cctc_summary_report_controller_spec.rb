@@ -304,10 +304,11 @@ RSpec.describe ReportsController do
         @test_provider.stf_taxi_per_ride_administrative_fee = 1.23
         @test_provider.save!
         
-        TRIP_PURPOSES.each do |trip_purpose|
+        TRIP_PURPOSES.each do |trip_purpose_name|
+          trip_purpose = create(:trip_purpose, name: trip_purpose_name)
           @test_funding_sources.keys.reject{|k| k == :stf}.each do |funding_source|
             # In report range, 
-            create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date, trip_purpose: trip_purpose)
+            create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date, trip_purpose: trip_purpose )
             create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date, trip_purpose: trip_purpose, round_trip: true)
           
             # Outside report range
@@ -341,7 +342,7 @@ RSpec.describe ReportsController do
       
       describe "trips" do
         it "reports the correct trip purpose data" do
-          expect(assigns(:report)[:trip_purposes][:trips].collect{|t| t[:name]}.sort).to match(TRIP_PURPOSES.sort)
+          expect(assigns(:report)[:trip_purposes][:trips].collect{|t| t[:name]}.sort).to match(TripPurpose.pluck(:name).sort)
           
           assigns(:report)[:trip_purposes][:trips].each do |trip|
             @test_funding_sources.keys.reject{|k| k == :stf}.each do |funding_source|

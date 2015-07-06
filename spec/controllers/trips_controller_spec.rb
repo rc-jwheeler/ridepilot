@@ -11,13 +11,14 @@ RSpec.describe TripsController, type: :controller do
       :customer_id => create(:customer, :provider => @current_user.current_provider).id,
       :pickup_address_id => create(:address, :provider => @current_user.current_provider).id,
       :dropoff_address_id => create(:address, :provider => @current_user.current_provider).id,
+      :trip_purpose_id => create(:trip_purpose).id
     )
   }
 
   let(:invalid_attributes) {
     attributes_for(:trip, 
       :customer_id => create(:customer, :provider => @current_user.current_provider).id,
-      :trip_purpose => ""
+      :trip_purpose_id => nil
     )
   }
 
@@ -261,7 +262,7 @@ RSpec.describe TripsController, type: :controller do
           :dropoff_address_id => create(:address, :provider => @current_user.current_provider).id,
           :mobility_id => create(:mobility),
           :funding_source_id => create(:funding_source, :provider => @current_user.current_provider).id,
-          :trip_purpose => "MyString",
+          :trip_purpose_id => create(:trip_purpose, name: 'New purpose').id,
           :trip_result => "MyString",
           :notes => "MyText",
           :donation => "9.99",
@@ -277,10 +278,10 @@ RSpec.describe TripsController, type: :controller do
       }
 
       it "updates the requested trip" do
-        trip = create(:trip, :provider => @current_user.current_provider, :trip_purpose => "Something")
+        trip = create(:trip, :provider => @current_user.current_provider, :trip_purpose => create(:trip_purpose, name: 'Something'))
         expect {
           put :update, {:id => trip.to_param, :trip => new_attributes}
-        }.to change{ trip.reload.trip_purpose }.from("Something").to("MyString")
+        }.to change{ trip.reload.trip_purpose.name }.from("Something").to("New purpose")
       end
 
       it "assigns the requested trip as @trip" do

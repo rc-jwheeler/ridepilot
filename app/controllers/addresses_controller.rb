@@ -103,7 +103,7 @@ class AddressesController < ApplicationController
     address_params = {}
 
     # Some kind of faux strong parameters...
-    for param in ['name', 'building_name', 'address', 'city', 'state', 'zip', 'phone_number', 'in_district', 'default_trip_purpose']
+    for param in ['name', 'building_name', 'address', 'city', 'state', 'zip', 'phone_number', 'in_district', 'trip_purpose_id']
       address_params[param] = params[prefix + "_" + param]
     end
 
@@ -123,7 +123,7 @@ class AddressesController < ApplicationController
       attrs = address.attributes
       attrs[:label] = address.text.gsub(/\s+/, ' ')
       attrs[:prefix] = prefix
-      attrs.merge!('phone_number' => address.phone_number, 'trip_purpose' => address.default_trip_purpose ) if prefix == "dropoff"
+      attrs.merge!('phone_number' => address.phone_number, 'trip_purpose' => address.trip_purpose ) if prefix == "dropoff"
       render :json => attrs.to_json
     else
       errors = address.errors.messages
@@ -167,6 +167,6 @@ class AddressesController < ApplicationController
   private
   
   def address_params
-    params.require(:address).permit(:name, :building_name, :address, :city, :state, :zip, :in_district, :provider_id, :phone_number, :inactive, :default_trip_purpose)
+    params.require(:address).permit(:name, :building_name, :address, :city, :state, :zip, :in_district, :provider_id, :phone_number, :inactive, :trip_purpose_id)
   end
 end

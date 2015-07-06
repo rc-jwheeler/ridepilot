@@ -174,7 +174,7 @@ class RunsController < ApplicationController
       :round_trip,
       :run_id,
       :service_level,
-      :trip_purpose,
+      :trip_purpose_id,
       :trip_result,
       :vehicle_id,
       customer_attributes: [:id]

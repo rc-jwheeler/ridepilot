@@ -44,7 +44,7 @@
       
       <li class="selfclear">
         <%= form.label :default_trip_purpose, translate_helper("default_trip_purpose") %>
-        <%= form.select :default_trip_purpose, translate_array_helper(TRIP_PURPOSES_KEYS), :include_blank => true %>
+        <%= form.select :trip_purpose_id, TripPurpose.all.map { |tp| [tp.name, tp.id] }, :include_blank => true %>
       </li>
       
       <li class="selfclear">

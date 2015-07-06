@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150703195053) do
+ActiveRecord::Schema.define(version: 20150706203217) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
-  enable_extension "fuzzystrmatch"
   enable_extension "postgis_topology"
+  enable_extension "fuzzystrmatch"
 
   create_table "addresses", force: true do |t|
     t.string   "name"
@@ -35,10 +35,12 @@ ActiveRecord::Schema.define(version: 20150703195053) do
     t.boolean  "inactive",                                                                      default: false
     t.string   "default_trip_purpose"
     t.spatial  "the_geom",             limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.integer  "trip_purpose_id"
   end
 
   add_index "addresses", ["provider_id"], :name => "index_addresses_on_provider_id"
   add_index "addresses", ["the_geom"], :name => "index_addresses_on_the_geom", :spatial => true
+  add_index "addresses", ["trip_purpose_id"], :name => "index_addresses_on_trip_purpose_id"
 
   create_table "customers", force: true do |t|
     t.string   "first_name"
@@ -127,12 +129,6 @@ ActiveRecord::Schema.define(version: 20150703195053) do
     t.string "name"
   end
 
-  create_table "locales", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "mobilities", force: true do |t|
     t.string "name"
   end
@@ -214,6 +210,7 @@ ActiveRecord::Schema.define(version: 20150703195053) do
     t.integer  "vehicle_id"
     t.boolean  "cab",                default: false
     t.boolean  "customer_informed"
+    t.integer  "trip_purpose_id"
   end
 
   add_index "repeating_trips", ["customer_id"], :name => "index_repeating_trips_on_customer_id"
@@ -223,6 +220,7 @@ ActiveRecord::Schema.define(version: 20150703195053) do
   add_index "repeating_trips", ["mobility_id"], :name => "index_repeating_trips_on_mobility_id"
   add_index "repeating_trips", ["pickup_address_id"], :name => "index_repeating_trips_on_pickup_address_id"
   add_index "repeating_trips", ["provider_id"], :name => "index_repeating_trips_on_provider_id"
+  add_index "repeating_trips", ["trip_purpose_id"], :name => "index_repeating_trips_on_trip_purpose_id"
   add_index "repeating_trips", ["vehicle_id"], :name => "index_repeating_trips_on_vehicle_id"
 
   create_table "roles", force: true do |t|
@@ -259,24 +257,16 @@ ActiveRecord::Schema.define(version: 20150703195053) do
   add_index "runs", ["provider_id", "scheduled_start_time"], :name => "index_runs_on_provider_id_and_scheduled_start_time"
   add_index "runs", ["vehicle_id"], :name => "index_runs_on_vehicle_id"
 
-  create_table "translation_keys", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "translations", force: true do |t|
-    t.integer  "locale_id"
-    t.integer  "translation_key_id"
-    t.string   "value"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "travel_time_estimates", id: false, force: true do |t|
     t.integer "from_address_id"
     t.integer "to_address_id"
     t.integer "seconds"
+  end
+
+  create_table "trip_purposes", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "trips", force: true do |t|
@@ -310,6 +300,7 @@ ActiveRecord::Schema.define(version: 20150703195053) do
     t.boolean  "medicaid_eligible"
     t.integer  "mileage"
     t.string   "service_level"
+    t.integer  "trip_purpose_id"
   end
 
   add_index "trips", ["called_back_by_id"], :name => "index_trips_on_called_back_by_id"
@@ -322,6 +313,7 @@ ActiveRecord::Schema.define(version: 20150703195053) do
   add_index "trips", ["provider_id", "pickup_time"], :name => "index_trips_on_provider_id_and_pickup_time"
   add_index "trips", ["repeating_trip_id"], :name => "index_trips_on_repeating_trip_id"
   add_index "trips", ["run_id"], :name => "index_trips_on_run_id"
+  add_index "trips", ["trip_purpose_id"], :name => "index_trips_on_trip_purpose_id"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
