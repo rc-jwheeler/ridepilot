@@ -62,6 +62,9 @@ gem 'schedule_atts', :git => 'git://github.com/zpearce/Schedule-Attributes.git'
 
 gem 'haml'
 
+# ENV var management
+gem 'figaro'
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'
