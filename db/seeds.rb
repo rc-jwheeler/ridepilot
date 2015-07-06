@@ -16,9 +16,9 @@ ActiveRecord::Base.transaction do
     provider.save!
   
     puts "Creating first User..."
-    password = ENV['RIDE_CONNECTION_ADMIN_PASSWORD']
+    password = Rails.application.secrets.ride_connection_admin_password
     user = User.create!(
-      :email => ENV['RIDE_CONNECTION_ADMIN_EMAIL'],
+      :email => Rails.application.secrets.ride_connection_admin_email,
       :password => password,
       :password_confirmation => password,
       :current_provider => provider
