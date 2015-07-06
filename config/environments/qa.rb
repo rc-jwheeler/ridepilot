@@ -79,7 +79,7 @@ Rails.application.configure do
   # Needed for sending new users' confirmation email
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.default_url_options = { :host => Rails.application.secrets.ridepilot_host }
+  config.action_mailer.default_url_options = { :host => ENV['RIDEPILOT_HOST'] }
 end
 
 # Turn off auto TLS for e-mail
