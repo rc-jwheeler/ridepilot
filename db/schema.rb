@@ -17,7 +17,6 @@ ActiveRecord::Schema.define(version: 20150703195053) do
   enable_extension "plpgsql"
   enable_extension "postgis"
   enable_extension "fuzzystrmatch"
-  enable_extension "postgis_tiger_geocoder"
   enable_extension "postgis_topology"
 
   create_table "addresses", force: true do |t|
