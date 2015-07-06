@@ -45,5 +45,10 @@ ActiveRecord::Base.transaction do
     Mobility.find_or_create_by!(:name => name)
   end
 
+  puts "Seeding translations"
+
+  Rake::Task["ridepilot:load_locales"].invoke
+
   puts "Done seeding"
+
 end

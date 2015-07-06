@@ -1,4 +1,15 @@
 GIT
+  remote: git://github.com/camsys/translation_engine.git
+  revision: ee47e29dcaef3d691720c9a362bc44f5cef497db
+  specs:
+    translation_engine (3.1.0)
+      honeybadger
+      i18n-active_record
+      pg
+      rails (~> 4.1.0)
+      sass-rails
+
+GIT
   remote: git://github.com/zpearce/Schedule-Attributes.git
   revision: babf55d9b5cd8f56456e1e2a33916e809f7c4e28
   specs:
@@ -96,7 +107,10 @@ GEM
     haml (4.0.6)
       tilt
     hike (1.2.3)
+    honeybadger (2.1.0)
     i18n (0.7.0)
+    i18n-active_record (0.0.2)
+      i18n (>= 0.5.0)
     ice_cube (0.6.8)
     jc-validates_timeliness (3.1.1)
       timeliness (~> 0.3.7)
@@ -260,6 +274,7 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   therubyracer
+  translation_engine!
   uglifier (>= 1.3.0)
   unicorn
   whenever (~> 0.9.4)
