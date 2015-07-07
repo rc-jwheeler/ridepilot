@@ -14,6 +14,9 @@ class Trip < ActiveRecord::Base
   belongs_to :trip_purpose
   delegate :name, to: :trip_purpose, prefix: :trip_purpose, allow_nil: true
 
+  belongs_to :trip_result
+  delegate :code, :name, to: :trip_result, prefix: :trip_result, allow_nil: true
+
   before_validation :compute_run
   before_create :create_repeating_trip
   before_update :update_repeating_trip
@@ -45,9 +48,10 @@ class Trip < ActiveRecord::Base
   scope :for_date_range,     -> (start_date, end_date) { where('trips.pickup_time >= ? AND trips.pickup_time < ?', start_date.to_datetime.in_time_zone.utc, end_date.to_datetime.in_time_zone.utc) }
   scope :for_driver,         -> (driver_id) { not_for_cab.where(:runs => {:driver_id => driver_id}).joins(:run) }
   scope :for_vehicle,        -> (vehicle_id) { not_for_cab.where(:runs => {:vehicle_id => vehicle_id}).joins(:run) }
-  scope :scheduled,          -> { where("trips.trip_result = '' OR trips.trip_result = 'COMP'") }
-  scope :completed,          -> { where(:trip_result => 'COMP') }
-  scope :turned_down,        -> { where(:trip_result => 'TD') }
+  scope :by_result,          -> (code) { includes(:trip_result).references(:trip_result).where("trip_results.code = ?", code) }
+  scope :scheduled,          -> { includes(:trip_result).references(:trip_result).where("trips.trip_result_id is NULL or trip_results.code = 'COMP'") }
+  scope :completed,          -> { Trip.by_result('COMP') }
+  scope :turned_down,        -> { Trip.by_result('TD') }
   scope :today_and_prior,    -> { where('CAST(trips.pickup_time AS date) <= ?', Date.today.in_time_zone.utc) }
   scope :after_today,        -> { where('CAST(trips.pickup_time AS date) > ?', Date.today.in_time_zone.utc) }
   scope :prior_to,           -> (pickup_time) { where('trips.pickup_time < ?', pickup_time.to_datetime.in_time_zone.utc) }
@@ -82,7 +86,7 @@ class Trip < ActiveRecord::Base
   end
 
   def complete
-    trip_result == 'COMP'
+    trip_result.try(:code) == 'COMP'
   end
 
   def pending

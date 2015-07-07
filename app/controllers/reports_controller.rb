@@ -164,7 +164,7 @@ class ReportsController < ApplicationController
   def show_trips_for_verification
     query_params = params[:query] || {}
     @query = Query.new(query_params)
-    @trip_results = TRIP_RESULT_CODES.map { |k,v| [v,k] }
+    @trip_results = TripResult.pluck(:name, :code)
 
     unless @trips.present?
       @trips = Trip.for_provider(current_provider_id).for_date_range(@query.start_date,@query.end_date).
@@ -179,7 +179,7 @@ class ReportsController < ApplicationController
     if @trips.empty?
       redirect_to({:action => :show_trips_for_verification}, :notice => "Trips updated successfully" )
     else
-      @trip_results = TRIP_RESULT_CODES.map { |k,v| [v,k] }
+      @trip_results = TripResult.pluck(:name, :code)
       render :action => :show_trips_for_verification
     end
   end
@@ -552,16 +552,16 @@ class ReportsController < ApplicationController
       },
       rides_not_given: {
         turndowns: {
-          rc: trip_queries[:in_range][:rc].where(trip_result: "TD").count,
-          stf: trip_queries[:in_range][:stf][:all].where(trip_result: "TD").count,
+          rc: trip_queries[:in_range][:rc].by_result('TD').count,
+          stf: trip_queries[:in_range][:stf][:all].by_result('TD').count,
         },
         cancels: {
-          rc: trip_queries[:in_range][:rc].where(trip_result: "CANC").count,
-          stf: trip_queries[:in_range][:stf][:all].where(trip_result: "CANC").count,
+          rc: trip_queries[:in_range][:rc].by_result('CANC').count,
+          stf: trip_queries[:in_range][:stf][:all].by_result('CANC').count,
         },
         no_shows: {
-          rc: trip_queries[:in_range][:rc].where(trip_result: "NS").count,
-          stf: trip_queries[:in_range][:stf][:all].where(trip_result: "NS").count,
+          rc: trip_queries[:in_range][:rc].by_result('NS').count,
+          stf: trip_queries[:in_range][:stf][:all].by_result('NS').count,
         },
       },
       rider_donations: {
