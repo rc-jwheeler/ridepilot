@@ -53,7 +53,7 @@ RSpec.describe "CabTrips" do
       it "should update the specified trips" do
         fill_in("cab_trips_#{@t1.id}_attendant_count", with: 1)
         fill_in("cab_trips_#{@t2.id}_attendant_count", with: 2)
-        click_button "Update cab trips"
+        click_button "Update"
         expect(page).to have_content("2 cab trips updated successfully")
       end
     end
