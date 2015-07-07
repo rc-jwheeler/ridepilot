@@ -13,7 +13,7 @@ module ApplicationHelper
   end
   
   def display_trip_result(trip_result)
-    TRIP_RESULT_CODES[trip_result] || "Pending"
+    trip_result.try(:name) || "Pending"
   end
   
   def format_time_for_listing(time)

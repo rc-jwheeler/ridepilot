@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150706203217) do
+ActiveRecord::Schema.define(version: 20150707162440) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,11 +30,11 @@ ActiveRecord::Schema.define(version: 20150706203217) do
     t.integer  "provider_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",                                                                  default: 0
+    t.integer  "lock_version",                                                              default: 0
     t.string   "phone_number"
-    t.boolean  "inactive",                                                                      default: false
-    t.string   "default_trip_purpose"
-    t.spatial  "the_geom",             limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.boolean  "inactive",                                                                  default: false
+    t.string   "trip_purpose_old"
+    t.spatial  "the_geom",         limit: {:srid=>4326, :type=>"point", :geographic=>true}
     t.integer  "trip_purpose_id"
   end
 
@@ -206,7 +206,7 @@ ActiveRecord::Schema.define(version: 20150706203217) do
     t.integer  "dropoff_address_id"
     t.integer  "mobility_id"
     t.integer  "funding_source_id"
-    t.string   "trip_purpose"
+    t.string   "trip_purpose_old"
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -289,6 +289,13 @@ ActiveRecord::Schema.define(version: 20150706203217) do
     t.datetime "updated_at"
   end
 
+  create_table "trip_results", force: true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "trips", force: true do |t|
     t.integer  "run_id"
     t.integer  "customer_id"
@@ -301,8 +308,8 @@ ActiveRecord::Schema.define(version: 20150706203217) do
     t.integer  "dropoff_address_id"
     t.integer  "mobility_id"
     t.integer  "funding_source_id"
-    t.string   "trip_purpose"
-    t.string   "trip_result",                                 default: ""
+    t.string   "trip_purpose_old"
+    t.string   "trip_result_old",                             default: ""
     t.text     "notes"
     t.decimal  "donation",           precision: 10, scale: 2, default: 0.0
     t.integer  "provider_id"
@@ -321,6 +328,7 @@ ActiveRecord::Schema.define(version: 20150706203217) do
     t.integer  "mileage"
     t.string   "service_level"
     t.integer  "trip_purpose_id"
+    t.integer  "trip_result_id"
   end
 
   add_index "trips", ["called_back_by_id"], :name => "index_trips_on_called_back_by_id"
@@ -334,6 +342,7 @@ ActiveRecord::Schema.define(version: 20150706203217) do
   add_index "trips", ["repeating_trip_id"], :name => "index_trips_on_repeating_trip_id"
   add_index "trips", ["run_id"], :name => "index_trips_on_run_id"
   add_index "trips", ["trip_purpose_id"], :name => "index_trips_on_trip_purpose_id"
+  add_index "trips", ["trip_result_id"], :name => "index_trips_on_trip_result_id"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

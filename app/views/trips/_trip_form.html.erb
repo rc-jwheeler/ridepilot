@@ -40,7 +40,7 @@
     </td>
   <% end %>
   <td>
-    <%= trip_fields.select :trip_result, @trip_results, :include_blank => true %>
+    <%= trip_fields.select :trip_result_id, @trip_results, :include_blank => true %>
   </td>
   <td class="nowrap">
     <%= link_to "Edit Trip", [:edit,trip], :class => "edit" %>

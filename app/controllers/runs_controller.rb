@@ -46,7 +46,7 @@ class RunsController < ApplicationController
 
   def edit
     setup_run
-    @trip_results = TRIP_RESULT_CODES.map { |k,v| [v,k] }
+    @trip_results = TripResult.pluck(:name, :code)
   end
 
   def create
@@ -88,7 +88,7 @@ class RunsController < ApplicationController
         format.xml  { head :ok }
       else
         setup_run
-        @trip_results = TRIP_RESULT_CODES.map { |k,v| [v,k] }
+        @trip_results = TripResult.pluck(:name, :code)
         
         format.html { render :action => "edit" }
         format.xml  { render :xml => @run.errors, :status => :unprocessable_entity }
@@ -175,7 +175,7 @@ class RunsController < ApplicationController
       :run_id,
       :service_level,
       :trip_purpose_id,
-      :trip_result,
+      :trip_result_id,
       :vehicle_id,
       customer_attributes: [:id]
     ])

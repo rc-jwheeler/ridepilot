@@ -127,7 +127,7 @@
     <% for trip in @trips %>
     <tr>
       <td><%= link_to trip.pickup_time.strftime('%m-%d-%Y %I:%M%P'), edit_trip_path(trip) %></td>
-      <td><%= TRIP_RESULT_CODES[trip.trip_result] %></td>
+      <td><%= trip.trip_result_name %></td>
     </tr>
     <% end %>
   <% else %>
