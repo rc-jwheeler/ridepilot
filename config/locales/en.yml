@@ -108,7 +108,7 @@ en:
   this_week: "This Week"
   update: "Update"
   search: "Search"
-  date_order_parameter: "year, month, day"
+  date_order_parameter: "year,month,day"
   #Activerecord
   activerecord:
     errors:

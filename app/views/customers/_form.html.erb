@@ -56,7 +56,7 @@
       <li class="selfclear birth_date">
         <%= f.label :birth_date, translate_helper("date_of_birth") %>
         <%- date_order_parameters = translate_helper("date_order_parameter").split(",").collect do |param| param.to_sym end %>
-        <%= f.date_select :birth_date, :start_year => 1896, :include_blank => true, order: date_order_parameters  %>
+        <%= f.date_select :birth_date, :start_year => 1896, :use_short_month => true, :include_blank => true, order: date_order_parameters  %>
       </li>
 
       <li class="selfclear ethnicity">
