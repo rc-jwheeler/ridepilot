@@ -7,6 +7,6 @@ one:
   pickup_address_id: 1
   dropoff_address_id: 2
   mobility_id: 1
-  trip_purpose: Shopping
+  trip_purpose_id: 1
   trip_result: COMP
   provider_id: 1

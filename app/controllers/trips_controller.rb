@@ -239,7 +239,7 @@ class TripsController < ApplicationController
       :round_trip,
       :run_id,
       :service_level,
-      :trip_purpose,
+      :trip_purpose_id,
       :trip_result,
       :vehicle_id,
       customer_attributes: [:id]
@@ -284,7 +284,7 @@ class TripsController < ApplicationController
     @mobilities         = Mobility.order(:name).all
     @funding_sources    = FundingSource.by_provider(current_provider)
     @trip_results       = TRIP_RESULT_CODES.map { |k,v| [v,k] }
-    @trip_purposes      = TRIP_PURPOSES
+    @trip_purposes      = TripPurpose.all
     @drivers            = Driver.active.for_provider @trip.provider_id
     @trips              = [] if @trips.nil?
     @vehicles           = add_cab(Vehicle.active.for_provider(@trip.provider_id))

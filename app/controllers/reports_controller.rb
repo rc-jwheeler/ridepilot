@@ -121,8 +121,8 @@ class ReportsController < ApplicationController
         .includes(:customer, :pickup_address, :dropoff_address).completed
 
     by_purpose = {}
-    TRIP_PURPOSES.each do |purpose|
-      by_purpose[purpose] = {'purpose' => purpose, 'in_district' => 0, 'out_of_district' => 0}
+    TripPurpose.all.each do |purpose|
+      by_purpose[purpose.name] = {'purpose' => purpose.name, 'in_district' => 0, 'out_of_district' => 0}
     end
     @total = {'in_district' => 0, 'out_of_district' => 0}
 
@@ -140,8 +140,8 @@ class ReportsController < ApplicationController
     end
 
     @trips_by_purpose = []
-    TRIP_PURPOSES.each do |purpose|
-      @trips_by_purpose << by_purpose[purpose]
+    TripPurpose.all.each do |purpose|
+      @trips_by_purpose << by_purpose[purpose.name]
     end
 
     #compute monthly totals
@@ -572,9 +572,9 @@ class ReportsController < ApplicationController
       new_rider_ethinic_heritage: {ethnicities: []}, # We will loop over and add the rest of these later
     }
 
-    TRIP_PURPOSES.sort.each do |tp|
-     trip = {
-        name: tp,
+    TripPurpose.order(:name).each do |tp|
+      trip = {
+        name: tp.name,
         oaa3b: trip_queries[:in_range][:all].where(funding_source_id: FundingSource.pick_id_by_name("OAA")).where(trip_purpose: tp).total_ride_count,
         rc: trip_queries[:in_range][:rc].where(trip_purpose: tp).total_ride_count,
         trimet: trip_queries[:in_range][:all].where(funding_source_id: FundingSource.pick_id_by_name("TriMet Non-Medical")).where(trip_purpose: tp).total_ride_count,
@@ -670,9 +670,8 @@ class ReportsController < ApplicationController
   def hms_to_hours(hms)
     #argument is a string of the form hours:minutes:seconds.  We would like
     #a float of hours
-    if !hms or hms.empty?
-      return 0
-    end
+    return 0 if hms == 0 || hms.blank?
+
     hours, minutes, seconds = hms.split(":").map &:to_i
     hours ||= 0
     minutes ||= 0
