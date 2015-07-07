@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150707162440) do
+ActiveRecord::Schema.define(version: 20150707185003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,13 +69,15 @@ ActiveRecord::Schema.define(version: 20150707162440) do
     t.string   "prime_number"
     t.integer  "default_funding_source_id"
     t.boolean  "ada_eligible"
-    t.string   "default_service_level"
+    t.string   "service_level_old"
+    t.integer  "service_level_id"
   end
 
   add_index "customers", ["address_id"], :name => "index_customers_on_address_id"
   add_index "customers", ["default_funding_source_id"], :name => "index_customers_on_default_funding_source_id"
   add_index "customers", ["mobility_id"], :name => "index_customers_on_mobility_id"
   add_index "customers", ["provider_id"], :name => "index_customers_on_provider_id"
+  add_index "customers", ["service_level_id"], :name => "index_customers_on_service_level_id"
 
   create_table "device_pool_drivers", force: true do |t|
     t.string   "status"
@@ -263,6 +265,12 @@ ActiveRecord::Schema.define(version: 20150707162440) do
   add_index "runs", ["provider_id", "scheduled_start_time"], :name => "index_runs_on_provider_id_and_scheduled_start_time"
   add_index "runs", ["vehicle_id"], :name => "index_runs_on_vehicle_id"
 
+  create_table "service_levels", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "translation_keys", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -326,9 +334,10 @@ ActiveRecord::Schema.define(version: 20150707162440) do
     t.boolean  "round_trip"
     t.boolean  "medicaid_eligible"
     t.integer  "mileage"
-    t.string   "service_level"
+    t.string   "service_level_old"
     t.integer  "trip_purpose_id"
     t.integer  "trip_result_id"
+    t.integer  "service_level_id"
   end
 
   add_index "trips", ["called_back_by_id"], :name => "index_trips_on_called_back_by_id"
@@ -341,6 +350,7 @@ ActiveRecord::Schema.define(version: 20150707162440) do
   add_index "trips", ["provider_id", "pickup_time"], :name => "index_trips_on_provider_id_and_pickup_time"
   add_index "trips", ["repeating_trip_id"], :name => "index_trips_on_repeating_trip_id"
   add_index "trips", ["run_id"], :name => "index_trips_on_run_id"
+  add_index "trips", ["service_level_id"], :name => "index_trips_on_service_level_id"
   add_index "trips", ["trip_purpose_id"], :name => "index_trips_on_trip_purpose_id"
   add_index "trips", ["trip_result_id"], :name => "index_trips_on_trip_result_id"
 

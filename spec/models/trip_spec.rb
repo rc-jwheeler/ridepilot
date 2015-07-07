@@ -25,11 +25,13 @@ RSpec.describe Trip do
   end
 
   describe "service_level" do
-    it "should be a string field" do
+    it "should be an integer field" do
       t = Trip.new
-      expect(t).to respond_to(:service_level)
-      t.service_level = "abc"
-      expect(t.service_level).to eq("abc")
+      expect(t).to respond_to(:service_level_id)
+      t.service_level_id = "1"
+      expect(t.service_level_id).to eq(1)
+      t.service_level_id = "0"
+      expect(t.service_level_id).to eq(0)
     end
   end
 

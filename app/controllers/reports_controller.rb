@@ -585,12 +585,12 @@ class ReportsController < ApplicationController
             mileage: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp).total_mileage
           },
           wheelchair: {
-            count: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp, service_level: "Wheelchair").total_ride_count,
-            mileage: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp, service_level: "Wheelchair").total_mileage
+            count: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp).by_service_level("Wheelchair").total_ride_count,
+            mileage: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp).by_service_level("Wheelchair").total_mileage
           },
           ambulatory: {
-            count: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp, service_level: "Ambulatory").total_ride_count,
-            mileage: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp, service_level: "Ambulatory").total_mileage
+            count: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp).by_service_level("Ambulatory").total_ride_count,
+            mileage: trip_queries[:in_range][:stf][:taxi].where(trip_purpose: tp).by_service_level("Ambulatory").total_mileage
           },
         },
         unreimbursed: trip_queries[:in_range][:all].where(funding_source_id: FundingSource.pick_id_by_name("Unreimbursed")).where(trip_purpose: tp).total_ride_count,

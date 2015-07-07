@@ -273,7 +273,7 @@ RSpec.describe TripsController, type: :controller do
           :round_trip => false,
           :medicaid_eligible => false,
           :mileage => 1,
-          :service_level => "MyString",
+          :service_level_id => create(:service_level),
         }
       }
 
