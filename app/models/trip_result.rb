@@ -1,4 +1,4 @@
 class TripResult < ActiveRecord::Base
-  validates_presence_of :name
-  validates_presence_of :code
+  validates_presence_of :name, :code
+  validates_uniqueness_of :name, :code
 end

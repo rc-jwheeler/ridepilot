@@ -1,0 +1,2 @@
+module LookupTablesHelper
+end

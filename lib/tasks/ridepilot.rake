@@ -25,5 +25,13 @@ namespace :ridepilot do
     puts 'Finished seeding service levels'
   end
 
+  desc 'Seed lookup table configurations'
+  task :seed_lookup_table_configurations => :environment do
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_lookup_table_configurations.rb')
+    load(seed_file) if File.exist?(seed_file)
+
+    puts 'Finished seeding lookup table configurations'
+  end
+
   #------------- End of Incremental Seeding --------------
 end
