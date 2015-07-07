@@ -51,7 +51,9 @@ Set up development environment
   -- fuzzy matching needed for Tiger
   CREATE EXTENSION fuzzystrmatch;
   ```
-   - `rake db:migrate db:seed`
+   - `rake db:migrate`
+   - `rake translation_engine:install`
+   - `rake db:seed`
 
 4. Testing
     - `rake db:test:prepare`
