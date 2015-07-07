@@ -87,7 +87,7 @@ class TripsController < ApplicationController
   def confirm
     @trip = Trip.find(params[:trip_id])
     if can? :edit, @trip
-      @trip.TripResult.find_by(code: 'COMP')
+      @trip.trip_result = TripResult.find_by(code: 'COMP')
       @trip.save
     end
     redirect_to :action=>:unscheduled
@@ -96,7 +96,7 @@ class TripsController < ApplicationController
   def turndown
     @trip = Trip.find(params[:trip_id])
     if can? :edit, @trip
-      @trip.TripResult.find_by(code: 'TD')
+      @trip.trip_result = TripResult.find_by(code: 'TD')
       @trip.save
     end
     redirect_to :action=>:unscheduled
@@ -283,7 +283,7 @@ class TripsController < ApplicationController
     @customer           = @trip.customer
     @mobilities         = Mobility.order(:name).all
     @funding_sources    = FundingSource.by_provider(current_provider)
-    @trip_results       = TripResult.pluck(:name, :code)
+    @trip_results       = TripResult.pluck(:name, :id)
     @trip_purposes      = TripPurpose.all
     @drivers            = Driver.active.for_provider @trip.provider_id
     @trips              = [] if @trips.nil?

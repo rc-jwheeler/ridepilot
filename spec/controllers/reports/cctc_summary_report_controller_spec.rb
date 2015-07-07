@@ -232,8 +232,8 @@ RSpec.describe ReportsController do
       before do
         # In report range
         td_result = create(:trip_result, code:"TD", name: "Turned down ")
-        canc_result = create(:trip_result, code:"Cancelled")
-        ns_result = create(:trip_result, code:"No-show")
+        canc_result = create(:trip_result, code:"CANC", name: 'Cancelled')
+        ns_result = create(:trip_result, code:'NS', name:"No-show")
 
         create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_result: td_result)
         create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date, trip_result: td_result)

@@ -401,6 +401,7 @@ RSpec.describe TripsController, type: :controller do
     end
     
     it "updates the trip_result of the requested trip to \"COMP\"" do
+      create(:trip_result, code:"COMP", name: 'Complete')
       trip = create(:trip, :provider => @current_user.current_provider)
       expect {
         post :confirm, {:trip_id => trip.to_param}
@@ -422,6 +423,7 @@ RSpec.describe TripsController, type: :controller do
     end
     
     it "updates the trip_result of the requested trip to \"NS\"" do
+      comp_result = create(:trip_result, code:"NS", name: 'No-show')
       trip = create(:trip, :provider => @current_user.current_provider)
       expect {
         post :no_show, {:trip_id => trip.to_param}
@@ -468,6 +470,7 @@ RSpec.describe TripsController, type: :controller do
     end
     
     it "marks the trip as a cab trip and sets the trip_result \"COMP\"" do
+      comp_result = create(:trip_result, code:"COMP", name: 'Complete')
       trip = create(:trip, :provider => @current_user.current_provider)
       expect {
         post :send_to_cab, {:trip_id => trip.to_param}
@@ -497,6 +500,7 @@ RSpec.describe TripsController, type: :controller do
     end
     
     it "updates the trip_result of the requested trip to \"TD\"" do
+      comp_result = create(:trip_result, code:"TD", name: 'Turned down')
       trip = create(:trip, :provider => @current_user.current_provider)
       expect {
         post :turndown, {:trip_id => trip.to_param}
@@ -517,8 +521,8 @@ RSpec.describe TripsController, type: :controller do
     
     it "assigns complete and no-show cab trips to @trips" do
       td_result = create(:trip_result, code:"TD", name: "Turned down ")
-      comp_result = create(:trip_result, code:"Complete")
-      ns_result = create(:trip_result, code:"No-show")
+      comp_result = create(:trip_result, code:"COMP", name: 'Complete')
+      ns_result = create(:trip_result, code: 'NS', name:"No-show")
 
       trip_1 = create(:cab_trip, :provider => @current_user.current_provider, :trip_result => ns_result)
       trip_2 = create(:cab_trip, :provider => @current_user.current_provider, :trip_result => comp_result)
@@ -556,6 +560,7 @@ RSpec.describe TripsController, type: :controller do
     #on yet.
 
     it "assigns future trips without a trip result to @trips" do
+      ns_result = create(:trip_result, code:"NS", name: 'No-show')
       trip_1 = create(:trip, :provider => @current_user.current_provider, :trip_result => nil,   :pickup_time => Date.tomorrow.in_time_zone)
       trip_2 = create(:trip, :provider => @current_user.current_provider, :trip_result => ns_result, :pickup_time => Date.tomorrow.in_time_zone)
       trip_3 = create(:trip, :provider => @current_user.current_provider, :trip_result => nil,   :pickup_time => Date.yesterday.in_time_zone)
