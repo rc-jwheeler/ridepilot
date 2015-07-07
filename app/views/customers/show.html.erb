@@ -92,7 +92,7 @@
   <dd><%= @customer.default_funding_source.try(:name) %></dd>
   
   <dt><%= translate_helper("default_service_level")%></td>
-  <dd><%= @customer.default_service_level %></dd>
+  <dd><%= @customer.service_level_name %></dd>
   
   <% unless @customer.group %>
     <dt><%= translate_helper("ethnicity")%></td>

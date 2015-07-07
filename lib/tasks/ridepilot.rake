@@ -17,5 +17,13 @@ namespace :ridepilot do
     puts 'Finished seeding trip results'
   end
 
+  desc 'Seed default service levels'
+  task :seed_service_levels => :environment do
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_service_levels.rb')
+    load(seed_file) if File.exist?(seed_file)
+
+    puts 'Finished seeding service levels'
+  end
+
   #------------- End of Incremental Seeding --------------
 end

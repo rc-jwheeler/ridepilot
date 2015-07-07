@@ -173,7 +173,7 @@ class RunsController < ApplicationController
       :repetition_vehicle_id,
       :round_trip,
       :run_id,
-      :service_level,
+      :service_level_id,
       :trip_purpose_id,
       :trip_result_id,
       :vehicle_id,
