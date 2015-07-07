@@ -129,6 +129,12 @@ ActiveRecord::Schema.define(version: 20150706203217) do
     t.string "name"
   end
 
+  create_table "locales", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "mobilities", force: true do |t|
     t.string "name"
   end
@@ -256,6 +262,20 @@ ActiveRecord::Schema.define(version: 20150706203217) do
   add_index "runs", ["provider_id", "date"], :name => "index_runs_on_provider_id_and_date"
   add_index "runs", ["provider_id", "scheduled_start_time"], :name => "index_runs_on_provider_id_and_scheduled_start_time"
   add_index "runs", ["vehicle_id"], :name => "index_runs_on_vehicle_id"
+
+  create_table "translation_keys", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "translations", force: true do |t|
+    t.integer  "locale_id"
+    t.integer  "translation_key_id"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "travel_time_estimates", id: false, force: true do |t|
     t.integer "from_address_id"
