@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :trip_purpose do
-    name "Medical"
+    name {|n| "sample_purpose_#{n}" }
   end
 
 end
