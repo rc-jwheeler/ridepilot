@@ -93,12 +93,22 @@ en:
   reassociate_customer_trips: "Associate this customer's trips with another customer."
   group_name: "Group Name"
   no_trips_yet: "No trips yet."
+
+  # Lookup tables
+  add_value: "Add Value"
+  delete_value: "Delete Value"
+  lookup_table: "Lookup Table"
+  edit_value: "Edit Value"
+
   #Shared
+  site_title: "Ridepilot"
   new_trip: "New Trip"
   date: "Date"
+  add: "Add"
   edit: "Edit"
   delete: "Delete"
   confirm: "Are you sure?"
+  ok: "OK"
   cancel: "Cancel"
   back: "Back"
   inactivate: "Inactivate"
@@ -109,6 +119,9 @@ en:
   update: "Update"
   search: "Search"
   date_order_parameter: "year,month,day"
+  operation_failed: "The operation has failed, please try again"
+  confirm_delete_message: "Are you sure you want to delete %{value}?"
+
   #Activerecord
   activerecord:
     errors:
