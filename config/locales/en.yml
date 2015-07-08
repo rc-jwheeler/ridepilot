@@ -167,3 +167,18 @@ en:
   resend_unlock_header: "Resend unlock instructions"
   submit_new_unlock: "Resend unlock instructions"
   password: "Password"
+  operation_failed: "The operation has failed, please try again"
+  confirm_delete_message: "Are you sure you want to delete %{value}?"
+
+  #Activerecord
+  activerecord:
+    errors:
+      models:
+        run:
+          attributes:
+            scheduled_end_time:
+              after: "must be after the scheduled start time"
+            actual_end_time:
+              after: "must be after the actual start time"
+            date:
+              invalid_date: "must be a valid date"
