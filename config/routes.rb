@@ -96,5 +96,12 @@ Rails.application.routes.draw do
   get "reports/:action/:id", :controller=>:reports
   get "test_exception_notification" => "application#test_exception_notification"
 
-  resources :lookup_tables, :only => [:index, :show]
+  resources :lookup_tables, :only => [:index, :show] do 
+    member do
+      post :add_value
+      put :update_value
+      put :destroy_value
+    end
+
+  end
 end

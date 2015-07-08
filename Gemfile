@@ -65,6 +65,15 @@ gem 'haml'
 # ENV var management
 gem 'figaro'
 
+# datatables
+gem 'jquery-datatables-rails', '~> 3.3.0'
+
+# bootstrap
+gem 'bootstrap-sass', '~> 3.3.5'
+
+# soft-delete
+gem "paranoia", "~> 2.0"
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'
