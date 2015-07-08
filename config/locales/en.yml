@@ -141,3 +141,15 @@ en:
   resend_unlock_header: "Resend unlock instructions"
   submit_new_unlock: "Resend unlock instructions"
   password: "Password"
+  #dispatch
+  dispatch_submit: "Refresh"
+  dispatcher_heading: "Dispatcher"
+  locate_address: "Locate Address"
+  clear_all_markers: "Clear All Markers"
+  loading: "Loading..."
+
+
+
+
+
+
