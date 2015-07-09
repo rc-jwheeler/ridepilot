@@ -29,7 +29,7 @@
       <% if show_inactivated_date %>
       <td><%= customer.inactivated_date %></td>
       <% end %>
-      <td><%= link_to translate_helper("new_trip"), new_trip_path(:customer_id=>customer.id), :class=>'new-trip' %></td>
+      <td><%= link_to translate_helper("new_trip_link_text"), new_trip_path(:customer_id=>customer.id), :class=>'new-trip' %></td>
       <td><%= link_to translate_helper("edit"), edit_customer_path(customer), :class=>'edit' %></td>
       <td><% if can_delete? customer %><%= link_to translate_helper("delete"), customer, :confirm => translate_helper("confirm"), :method => :delete, :class=>'delete' %><% end %></td>
     </tr>

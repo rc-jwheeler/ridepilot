@@ -1,2 +1,2 @@
 <%- link = link_to 'Unlock my account', unlock_url(@resource, unlock_token: @token) %>
-<%= translate_helper("reset_password_email", email: @resource.email, link: link %>
+<%= translate_helper("unlock_instructions_email", email: @resource.email, link: link %>
