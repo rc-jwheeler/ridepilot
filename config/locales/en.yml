@@ -93,11 +93,23 @@ en:
   reassociate_customer_trips: "Associate this customer's trips with another customer."
   group_name: "Group Name"
   no_trips_yet: "No trips yet."
+
+  # Lookup tables
+  add_value: "Add Value"
+  delete_value: "Delete Value"
+  lookup_table: "Lookup Table"
+  edit_value: "Edit Value"
+  value: "Value"
+
   #Shared
+  site_title: "Ridepilot"
+  new_trip: "New Trip"
   date: "Date"
+  add: "Add"
   edit: "Edit"
   delete: "Delete"
   confirm: "Are you sure?"
+  ok: "OK"
   cancel: "Cancel"
   back: "Back"
   inactivate: "Inactivate"
@@ -112,6 +124,8 @@ en:
   month: "Month"
   active: "Active"
   inactive: "Inactive"
+  operation_failed: "The operation has failed, please try again"
+  confirm_delete_message: "Are you sure you want to delete %{value}?"
   #device pool
   remove_device_pool_driver: "Remove"
   device_pool_form_error_message: 
@@ -178,6 +192,7 @@ en:
   reports_link_text: "Reports"
   current_provider_link_text: "Vehicles, drivers and users"
   dispatch_link_text: "Dispatch"
+  lookup_tables_link_text: "Lookup Tables"
   #footer
   footer_content: "Footer content here."
   #application layout
@@ -311,10 +326,3 @@ en:
   zoom_level: "Zoom Level"
   zoom: "Zoom:"
   save_viewport_submit: "Save Viewport"
-
-
-
-
-
-
-
