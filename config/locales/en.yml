@@ -214,3 +214,15 @@ en:
   no_monthly_reports_available: "No monthly reports yet."
   new_monthly_link_text:  "Add New Monthly Data"
   new_monthly_heading: "Create Monthly Report"
+  #provider_ethnicities
+  provider_ethnicity_form_error_message:
+    one: "%{count} error prohibited this provider ethnicity from being saved:"
+    other: "%{count} errors sprohibited this provider ethnicity from being saved:"
+  provider_ethnicity_form_name: "Name"
+  provider_ethnicity_form_submit: "Submit"
+  edit_ethnicity_heading: "Edit Ethnicity"
+  new_ethnicity_heading: "New Ethnicity"
+  show_ethnicity_heading: "Ethnicity Details"
+  edit_ethnicity_link_text: "Edit Ethnicity"
+  edit_ethnicity_provider_label: "Provider"
+  edit_ethnicity_name_label: "Name"
