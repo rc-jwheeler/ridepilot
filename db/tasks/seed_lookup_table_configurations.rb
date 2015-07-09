@@ -7,7 +7,9 @@
   {
     name: 'TripResult',
     caption: 'Trip Result',
-    value_column_name: 'name'
+    value_column_name: 'name',
+    add_value_allowed: false,
+    delete_value_allowed: false
   },
   {
     name: 'ServiceLevel',
