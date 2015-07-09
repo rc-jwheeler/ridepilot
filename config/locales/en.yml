@@ -176,6 +176,19 @@ en:
   dispatch_link_text: "Dispatch"
   #footer
   footer_content: "Footer content here."
+  #application layout
+  application_header: "RidePilot"
+  session_timeout_message: "You will be logged off shortly due to inactivity.  <a id='session-resume' href='#'>Click here to stay logged in.</a>"
+  logo_text: "RidePilot"
+  log_out_link_text: "Log out"
+  application_trips_link_text: "Trips"
+  application_runs_link_text: "Runs"
+  application_cabs_link_text: "Cab trips"
+  application_customer_link_text: "Customers"
+  application_reports_link_text: "Reports"
+  application_dispatch_link_text: "Dispatch"
+  application_admin_link_text: "Admin"
+  application_settings_link_text: "Settings"
 
 
 
