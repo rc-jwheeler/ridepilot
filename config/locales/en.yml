@@ -174,7 +174,8 @@ en:
   reports_link_text: "Reports"
   current_provider_link_text: "Vehicles, drivers and users"
   dispatch_link_text: "Dispatch"
-
+  #footer
+  footer_content: "Footer content here."
 
 
 
