@@ -148,6 +148,7 @@ en:
   change_my_password: "Change My Password"
   new_password_heading: "Forgot your password?"
   submit_new_password_form: "Send me reset password instructions"
+  submit_new_confirmation_form: "Send new confirmation instructions"
   new_session_heading: "New Session"
   new_session_submit: "Log In"
   sign_in_link: "Sign in"
@@ -159,6 +160,7 @@ en:
   resend_unlock_header: "Resend unlock instructions"
   submit_new_unlock: "Resend unlock instructions"
   password: "Password"
+  session_timeout_warning: "Session timeout"
   #dispatch
   dispatch_submit: "Refresh"
   dispatcher_heading: "Dispatcher"
@@ -183,6 +185,8 @@ en:
   funding_sources_link_back: "Back to List of Funding Sources"
   funding_source_index_heading: "Funding Sources"
   new_funding_source_link:  "New Funding Source"
+  funding_source_column_heading: "Funding Source"
+
   #home
   providers_link_text: "Providers"
   customers_link_text: "Customers"
