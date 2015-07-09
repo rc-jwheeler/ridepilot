@@ -109,6 +109,7 @@ en:
   search: "Search"
   date_order_parameter: "year,month,day"
   new_trip_link_text: "New Trip"
+  month: "Month"
   #device pool
   remove_device_pool_driver: "Remove"
   device_pool_form_error_message: 
@@ -202,6 +203,13 @@ en:
   unscheduled_trips_link_text: "Unscheduled Trips"
   reconcile_cab_log_link_text: "Reconcile Cab Log"
   trips_requiring_callback_link_text: "Trips Requiring Callback"
-
-
-
+  #monthlies
+  monthlies_start_date: "Month"
+  funding_source: "Funding Source"
+  volunteer_escort_hours: "Volunteer Escort Hours"
+  volunteer_admin_hours: "Volunteer Admin Hours"
+  monthlies_form_submit: "Submit"
+  monthlies_index_heading: "Reports: Monthly Miscellaneous Data"
+  no_monthly_reports_available: "No monthly reports yet."
+  new_monthly_link_text:  "Add New Monthly Data"
+  new_monthly_heading: "Create Monthly Report"
