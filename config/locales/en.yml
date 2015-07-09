@@ -147,6 +147,17 @@ en:
   locate_address: "Locate Address"
   clear_all_markers: "Clear All Markers"
   loading: "Loading..."
+  #drivers
+  driver_form_error:
+    one: "1 error prohibited this driver from being saved"
+    other: "%{count} errors prohibited this driver from being saved"
+  driver_form_name: "Name"
+  driver_form_active: "Active"
+  driver_form_paid: "Paid"
+  driver_form_associated_user: "Associated User"
+  driver_form_submit: "Submit"
+  edit_driver_heading: "Edit Driver"
+  new_driver_heading: "New Driver"
 
 
 
