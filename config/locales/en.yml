@@ -158,6 +158,13 @@ en:
   driver_form_submit: "Submit"
   edit_driver_heading: "Edit Driver"
   new_driver_heading: "New Driver"
+  #funding_source
+  funding_source_form_name: "Name"
+  funding_source_label: "Available to:"
+  funding_source_form_submit: "Submit"
+  funding_sources_link_back: "Back to List of Funding Sources"
+  funding_source_index_heading: "Funding Sources"
+  new_funding_source_link:  "New Funding Source"
 
 
 
