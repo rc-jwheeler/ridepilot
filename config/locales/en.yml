@@ -93,12 +93,23 @@ en:
   reassociate_customer_trips: "Associate this customer's trips with another customer."
   group_name: "Group Name"
   no_trips_yet: "No trips yet."
+
+  # Lookup tables
+  add_value: "Add Value"
+  delete_value: "Delete Value"
+  lookup_table: "Lookup Table"
+  edit_value: "Edit Value"
+  value: "Value"
+
   #Shared
+  site_title: "Ridepilot"
   new_trip: "New Trip"
   date: "Date"
+  add: "Add"
   edit: "Edit"
   delete: "Delete"
   confirm: "Are you sure?"
+  ok: "OK"
   cancel: "Cancel"
   back: "Back"
   inactivate: "Inactivate"
@@ -109,6 +120,8 @@ en:
   update: "Update"
   search: "Search"
   date_order_parameter: "year,month,day"
+  operation_failed: "The operation has failed, please try again"
+  confirm_delete_message: "Are you sure you want to delete %{value}?"
   #device pool
   remove_device_pool_driver: "Remove"
   device_pool_form_error_message: 
@@ -141,3 +154,15 @@ en:
   resend_unlock_header: "Resend unlock instructions"
   submit_new_unlock: "Resend unlock instructions"
   password: "Password"
+  #Activerecord
+  activerecord:
+    errors:
+      models:
+        run:
+          attributes:
+            scheduled_end_time:
+              after: "must be after the scheduled start time"
+            actual_end_time:
+              after: "must be after the actual start time"
+            date:
+              invalid_date: "must be a valid date"

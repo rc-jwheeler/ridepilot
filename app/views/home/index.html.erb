@@ -7,4 +7,5 @@
   <% if show_scheduling? %><li><%= link_to "Reports", reports_path %></li><% end %>
   <% if show_scheduling? %><li><%= link_to "Vehicles, drivers and users", provider_path(current_user.current_provider) %></li><% end %>
   <% if show_dispatch? %><li><%= link_to "Dispatch", dispatch_path %></li><% end %>
+  <% if can? :manage, LookupTable %><li><%= link_to "Lookup Tables", lookup_tables_path %></li><% end %>
 </ul>

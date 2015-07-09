@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150707185003) do
+ActiveRecord::Schema.define(version: 20150708153506) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,9 +137,20 @@ ActiveRecord::Schema.define(version: 20150707185003) do
     t.datetime "updated_at"
   end
 
-  create_table "mobilities", force: true do |t|
-    t.string "name"
+  create_table "lookup_tables", force: true do |t|
+    t.string   "caption"
+    t.string   "name"
+    t.string   "value_column_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
+
+  create_table "mobilities", force: true do |t|
+    t.string   "name"
+    t.datetime "deleted_at"
+  end
+
+  add_index "mobilities", ["deleted_at"], :name => "index_mobilities_on_deleted_at"
 
   create_table "monthlies", force: true do |t|
     t.date     "start_date"
@@ -269,7 +280,10 @@ ActiveRecord::Schema.define(version: 20150707185003) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "service_levels", ["deleted_at"], :name => "index_service_levels_on_deleted_at"
 
   create_table "translation_keys", force: true do |t|
     t.string   "name"
@@ -295,14 +309,20 @@ ActiveRecord::Schema.define(version: 20150707185003) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "trip_purposes", ["deleted_at"], :name => "index_trip_purposes_on_deleted_at"
 
   create_table "trip_results", force: true do |t|
     t.string   "code"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "trip_results", ["deleted_at"], :name => "index_trip_results_on_deleted_at"
 
   create_table "trips", force: true do |t|
     t.integer  "run_id"

@@ -80,6 +80,9 @@
       $(document).ready(function(){
         idleTimer = new IdleTimer();
         idleTimer.start();
+
+        // this is to fix modal dialog under the fade mask
+        $('.modal').appendTo("body") 
       });
     <% end %>
   <% end %>
