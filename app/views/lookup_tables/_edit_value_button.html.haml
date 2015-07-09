@@ -12,7 +12,7 @@
             %strong
               = translate_helper(:site_title)
         .modal-body{:style => "text-align:left;"}
-          = f.label :value, translate_helper("value")
+          = f.label :value, translate_helper(:value)
           = text_field_tag :value, nil, class: 'form-control'
 
 :javascript

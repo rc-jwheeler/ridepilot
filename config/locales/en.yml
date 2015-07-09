@@ -99,6 +99,7 @@ en:
   delete_value: "Delete Value"
   lookup_table: "Lookup Table"
   edit_value: "Edit Value"
+  value: "Value"
 
   #Shared
   site_title: "Ridepilot"
