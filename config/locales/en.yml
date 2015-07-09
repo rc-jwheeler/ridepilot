@@ -165,7 +165,15 @@ en:
   funding_sources_link_back: "Back to List of Funding Sources"
   funding_source_index_heading: "Funding Sources"
   new_funding_source_link:  "New Funding Source"
-
+  #home
+  providers_link_text: "Providers"
+  customers_link_text: "Customers"
+  funding_sources_link_text: "Funding Sources"
+  trips_link_text: "Trips"
+  runs_link_text: "Runs"
+  reports_link_text: "Reports"
+  current_provider_link_text: "Vehicles, drivers and users"
+  dispatch_link_text: "Dispatch"
 
 
 
