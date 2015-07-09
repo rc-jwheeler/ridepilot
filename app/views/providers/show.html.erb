@@ -253,13 +253,13 @@
 <h2 class="section-header">Drivers</h2>
 
 <% if @provider.drivers.size == 0 %>
-  <p>No drivers yet.</p>
+  <p><%= translate_helper("no_drivers") %></p>
 <% else %>
   <table>
     <tr>
-      <th>Name</th>
-      <th>Active</th>
-      <th>Paid</th>
+      <th><%= translate_helper("name") %></th>
+      <th><%= translate_helper("active") %></th>
+      <th><%= translate_helper("driver_paid") %></th>
       <% if can? :edit, Driver %>
       <th></th>
       <th></th>
@@ -268,11 +268,11 @@
     <% for driver in @provider.drivers %>
     <tr>
       <td class="<%= driver.active ? 'active' : 'inactive' %>"><%= driver.name %></td>
-      <td><%= driver.active ? "Active" : "Inactive" %></td>
-      <td><%= driver.paid ? "Paid" : "Volunteer" %></td>
+      <td><%= driver.active ? translate_helper("active") : translate_helper("inactive") %></td>
+      <td><%= driver.paid ? translate_helper("driver_paid") : translate_helper("volunteer") %></td>
       <% if can? :edit, Driver %>
-      <td><%= link_to "Edit", edit_driver_path(driver), :class=>'edit edit-driver' %></td>
-      <td><%= link_to "Delete", driver, :confirm => 'Are you sure?', :method => :delete, :class=>'delete' %></td>
+      <td><%= link_to translate_helper("edit"), edit_driver_path(driver), :class=>'edit edit-driver' %></td>
+      <td><%= link_to translate_helper("delete"), driver, :confirm => translate_helper("delete_driver_confirm"), :method => :delete, :class=>'delete' %></td>
       <% end %>
     </tr>
     <% end %>
@@ -280,12 +280,9 @@
 <% end %>
 
 <% if @provider == current_user.current_provider %>
-  <p><%= link_to "Create Driver", new_driver_path, :class=>'new-driver action-bttn' %>
+  <p><%= link_to translate_helper("new_driver_link_text"), new_driver_path, :class=>'new-driver action-bttn' %>
 <% else %>
-  <p>You are currently logged in to
-  <%= current_user.current_provider.name %>.  To create a driver for
-  <%= @provider.name %>, please switch providers by using the dropdown
-  menu at the top of this page.</p>
+  <%= translate_helper("switch_providers_to_create_driver", current_provider: current_user.current_provider.name, provider: @provider.name) %>
 <% end %>
 
 <hr />
@@ -293,18 +290,18 @@
 <h2 class="section-header">Vehicles</h2>
 
 <% if @provider.vehicles.size == 0 %>
-  <p>No vehicles yet.</p>
+  <p><%= translate_helper("no_vehicles") %></p>
 <% else %>
   <table>
     <tr>
-      <th>Name</th>
-      <th>Year</th>
-      <th>Make</th>
-      <th>Model</th>
-      <th>License Plate</th>
-      <th>VIN</th>
-      <th>Location</th>
-      <th>Default Driver</th>
+      <th><%= translate_helper("name") %></th>
+      <th><%= translate_helper("vehicle_year") %></th>
+      <th><%= translate_helper("vehicle_make") %></th>
+      <th><%= translate_helper("vehicle_model") %></th>
+      <th><%= translate_helper("license_plate") %></th>
+      <th><%= translate_helper("vin") %></th>
+      <th><%= translate_helper("vehicle_location") %></th>
+      <th><%= translate_helper("default_driver") %></th>
       <th></th>
       <% if can? :edit, Vehicle %>
       <th></th>
@@ -327,10 +324,10 @@
       <td><%= vehicle.vin %></td>
       <td><%= vehicle.garaged_location %></td>
       <td><%= vehicle.default_driver.try :name %></td>
-      <td><%= vehicle.active ? "Active" : "Inactive" %></td>
+      <td><%= vehicle.active ? translate_helper("active") : translate_helper("inactive") %></td>
       <% if can? :edit, Vehicle %>
-      <td><%= link_to "Edit", edit_vehicle_path(vehicle), :class=>'edit edit-vehicle' %></td>
-      <td><%= link_to "Delete", vehicle, :confirm => 'Are you sure?', :method => :delete, :class=>'delete' %></td>
+      <td><%= link_to translate_helper("edit"), edit_vehicle_path(vehicle), :class=>'edit edit-vehicle' %></td>
+      <td><%= link_to translate_helper("delete"), vehicle, :confirm => translate_helper("delete_vehicle_confirmation"), :method => :delete, :class=>'delete' %></td>
       <% end %>
     </tr>
     <% end %>
@@ -338,23 +335,20 @@
 <% end %>
 
 <% if @provider == current_user.current_provider %>
-  <p><%= link_to "Create Vehicle", new_vehicle_path, :class=>'new-vehicle action-bttn' %></p>
+  <p><%= link_to translate_helper("new_vehicle_link_text"), new_vehicle_path, :class=>'new-vehicle action-bttn' %></p>
 <% else %>
-  <p>You are currently logged in to
-  <%= current_user.current_provider.name %>.  To create a vehicle for
-  <%= @provider.name %>, please switch providers by using the dropdown
-  menu at the top of this page.</p>
+  <%= translate_helper("switch_providers_to_create_vehicle", current_provider: current_user.current_provider.name, provider: @provider.name) %>
 <% end %>
 <hr />
 
 <h2 class="section-header">Ethnicities</h2>
 
 <% if @provider.ethnicities.size == 0 %>
-  <p>No ethnicities yet.</p>
+  <p><%= translate_helper("no_ethnicities") %></p>
 <% else %>
   <table>
     <tr>
-      <th>Name</th>
+      <th><%= translate_helper("name") %></th>
       <% if can? :edit, ProviderEthnicity %>
         <th></th>
         <th></th>
@@ -370,8 +364,8 @@
           <% end %>
         </td>
         <% if can? :edit, ProviderEthnicity %>
-          <td><%= link_to "Edit", edit_provider_ethnicity_path(ethnicity), :class=>'edit edit-ethnicity' %></td>
-          <td><%= link_to "Delete", ethnicity, :confirm => 'Are you sure?', :method => :delete, :class=>'delete' %></td>
+          <td><%= link_to translate_helper("edit"), edit_provider_ethnicity_path(ethnicity), :class=>'edit edit-ethnicity' %></td>
+          <td><%= link_to translate_helper("delete"), ethnicity, :confirm => translate_helper("delete_provider_ethnicity_confirm"), :method => :delete, :class=>'delete' %></td>
         <% end %>
       </tr>
     <% end %>
@@ -379,16 +373,13 @@
 <% end %>
 
 <% if @provider == current_user.current_provider %>
-  <p><%= link_to "Create Ethnicity", new_provider_ethnicity_path, :class=>'new action-bttn' %></p>
+  <p><%= link_to translate_helper("new_ethnicity_link_text"), new_provider_ethnicity_path, :class=>'new action-bttn' %></p>
 <% else %>
-  <p>You are currently logged in to
-  <%= current_user.current_provider.name %>.  To create an ethnicity for
-  <%= @provider.name %>, please switch providers by using the dropdown
-  menu at the top of this page.</p>
+  <%= translate_helper("switch_providers_to_create_ethnicity", current_provider: current_user.current_provider.name, provider: @provider.name) %>
 <% end %>
 <hr />
 
-<h2 class="section-header">Region Boundaries</h2>
+<h2 class="section-header"><%= translate_helper("region_heading") %></h2>
 
 <div id="region">
   <div id="region-form">
@@ -409,30 +400,30 @@
     %>
     <% form_tag save_region_provider_path do %>
       <table>
-      <tr><th colspan="2"><h3>Northwest Corner</h4></th></tr>
+      <tr><th colspan="2"><h3><%= translate_helper("northwest_corner") %></h3></th></tr>
       <tr>
-        <td><%= label_tag "Latitude:" %></td>
+        <td><%= label_tag translate_helper("latitude") %></td>
         <td>
           <%= text_field_tag :region_north, nw_y %>
           <span class="hint">(e.g. 45.971)</span>
         </td>
       <tr>
-        <td><%= label_tag "Longitude:" %></td>
+        <td><%= label_tag translate_helper("longitude") %></td>
         <td>
           <%= text_field_tag :region_west, nw_x %>
           <span class="hint">(e.g. -123.358)</span>
         </td>
       </tr>
-      <tr><th colspan="2"><h3>Southeast Corner</h4></th></tr>
+      <tr><th colspan="2"><h3><%= translate_helper("southeast_corner") %></h3></th></tr>
       <tr>
-        <td><%= label_tag "Latitude:" %></td>
+        <td><%= label_tag translate_helper("latitude") %></td>
         <td>
           <%= text_field_tag :region_south, se_y %>
           <span class="hint">(e.g. 45.342)</span>
         </td>
       </tr>
       <tr>
-        <td><%= label_tag "Longitude:" %></td>
+        <td><%= label_tag translate_helper("longitude") %></td>
         <td>
           <%= text_field_tag :region_east, se_x %>
           <span class="hint">(e.g. -121.922)</span>
@@ -440,7 +431,7 @@
       </tr>
       <tr>
         <td></td>
-        <td><%= submit_tag "Save Region" %></td>
+        <td><%= submit_tag translate_helper("save_region_submit") %></td>
       </tr>
       </table>
     <% end %>
@@ -453,7 +444,7 @@
 
 <hr />
 
-<h2 class="section-header">Dispatch View</h2>
+<h2 class="section-header"><%= translate_helper("dispatch_view_heading") %></h2>
 
 <div id="viewport">
   <div id="viewport-form">
@@ -467,25 +458,25 @@
     %>
     <% form_tag save_viewport_provider_path do %>
       <table>
-      <tr><th colspan="2"><h3>Map Center</h4></th></tr>
+      <tr><th colspan="2"><h3><%= translate_helper("map_center") %></h3></th></tr>
       <tr>
-        <td><%= label_tag "Latitude:" %></td>
+        <td><%= label_tag translate_helper("latitude") %></td>
         <td>
           <%= text_field_tag :viewport_lat, center_lat %>
           <span class="hint">(e.g. 45.523)</span>
         </td>
       <tr>
-        <td><%= label_tag "Longitude:" %></td>
+        <td><%= label_tag translate_helper("longitude") %></td>
         <td>
           <%= text_field_tag :viewport_lng, center_lng %>
           <span class="hint">(e.g. -122.676)</span>
         </td>
       </tr>
       <tr>
-        <th colspan="2">Zoom Level</th>
+        <th colspan="2"><%= translate_helper("zoom_level") %></th>
       </tr>
       <tr>
-        <td><%= label_tag "Zoom:" %></td>
+        <td><%= label_tag translate_helper("zoom") %></td>
         <td>
           <%= select_tag :viewport_zoom, options_for_select(@zoom_choices,
                 [@provider.viewport_zoom.to_s, @provider.viewport_zoom.to_s]) %>
@@ -494,7 +485,7 @@
       </tr>
       <tr>
         <td></td>
-        <td><%= submit_tag "Save Viewport" %></td>
+        <td><%= submit_tag translate_helper("save_viewport_submit") %></td>
       </tr>
       </table>
     <% end %>
