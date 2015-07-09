@@ -42,11 +42,11 @@
     <div class="wrap selfclear">
       <ul id="primary-nav" class="selfclear">
         <% if show_scheduling? %><li class="trips"><%= link_to translate_helper("application_trips_link_text"), trips_path %></li><% end %>
-        <% if show_scheduling? %><li class="runs"><%= link_to link_to translate_helper("application_runs_link_text"), runs_path %></li><% end %>
-        <% if show_scheduling? %><li class="cab_trips"><%= link_to link_to translate_helper("application_cabs_link_text"), cab_trips_path %></li><% end %>
-        <% if show_scheduling? %><li class="customers"><%= link_to link_to translate_helper("application_customers_link_text"), customers_path %></li><% end %>
-        <% if show_scheduling? %><li class="reports"><%= link_to link_to translate_helper("application_reports_link_text"), reports_path %></li><% end %>
-        <% if show_dispatch?   %><li class="dispatch"><%= link_to link_to translate_helper("application_dispatch_link_text"), dispatch_path %></li><% end %>
+        <% if show_scheduling? %><li class="runs"><%= link_to translate_helper("application_runs_link_text"), runs_path %></li><% end %>
+        <% if show_scheduling? %><li class="cab_trips"><%= link_to translate_helper("application_cabs_link_text"), cab_trips_path %></li><% end %>
+        <% if show_scheduling? %><li class="customers"><%= link_to translate_helper("application_customers_link_text"), customers_path %></li><% end %>
+        <% if show_scheduling? %><li class="reports"><%= link_to translate_helper("application_reports_link_text"), reports_path %></li><% end %>
+        <% if show_dispatch?   %><li class="dispatch"><%= link_to translate_helper("application_dispatch_link_text"), dispatch_path %></li><% end %>
       </ul>
       <ul id="secondary-nav" class="selfclear">
         <% if current_user && can?(:read, current_user) %>

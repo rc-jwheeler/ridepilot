@@ -94,7 +94,6 @@ en:
   group_name: "Group Name"
   no_trips_yet: "No trips yet."
   #Shared
-  new_trip: "New Trip"
   date: "Date"
   edit: "Edit"
   delete: "Delete"
@@ -109,6 +108,7 @@ en:
   update: "Update"
   search: "Search"
   date_order_parameter: "year,month,day"
+  new_trip_link_text: "New Trip"
   #device pool
   remove_device_pool_driver: "Remove"
   device_pool_form_error_message: 
@@ -177,19 +177,31 @@ en:
   #footer
   footer_content: "Footer content here."
   #application layout
-  application_header: "RidePilot"
+  application_title: "RidePilot"
   session_timeout_message: "You will be logged off shortly due to inactivity.  <a id='session-resume' href='#'>Click here to stay logged in.</a>"
   logo_text: "RidePilot"
   log_out_link_text: "Log out"
   application_trips_link_text: "Trips"
   application_runs_link_text: "Runs"
   application_cabs_link_text: "Cab trips"
-  application_customer_link_text: "Customers"
+  application_customers_link_text: "Customers"
   application_reports_link_text: "Reports"
   application_dispatch_link_text: "Dispatch"
   application_admin_link_text: "Admin"
   application_settings_link_text: "Settings"
-
+  #customer layout
+  active_customers_link_text: "Active Customers"
+  all_customers_link_text: "All Customers"
+  new_customer_link_text: "New Customer"
+  #repeating trips layout
+  view_repeating_trips_link_text: "View Repeating Trips"
+  #runs layout
+  view_runs_link_text: "View Runs"
+  #trips layout
+  view_trips_link_text: "View Trips"
+  unscheduled_trips_link_text: "Unscheduled Trips"
+  reconcile_cab_log_link_text: "Reconcile Cab Log"
+  trips_requiring_callback_link_text: "Trips Requiring Callback"
 
 
 
