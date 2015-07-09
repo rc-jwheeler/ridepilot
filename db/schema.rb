@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150708153506) do
+ActiveRecord::Schema.define(version: 20150709200502) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +143,9 @@ ActiveRecord::Schema.define(version: 20150708153506) do
     t.string   "value_column_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "add_value_allowed",    default: true
+    t.boolean  "edit_value_allowed",   default: true
+    t.boolean  "delete_value_allowed", default: true
   end
 
   create_table "mobilities", force: true do |t|
