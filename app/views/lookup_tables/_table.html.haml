@@ -1,7 +1,10 @@
 .col-sm-12{style: 'padding: 10px 0px;'}
-  = render partial: 'add_value_button', locals: {table: table}
-  = render partial: 'edit_value_button', locals: {table: table}
-  = render partial: 'delete_value_button', locals: {table: table}
+  - if table.add_value_allowed
+    = render partial: 'add_value_button', locals: {table: table}
+  - if table.edit_value_allowed
+    = render partial: 'edit_value_button', locals: {table: table}
+  - if table.delete_value_allowed
+    = render partial: 'delete_value_button', locals: {table: table}
 %table.table.table-condensed.table-striped.table-bordered.table-hover#lookup_table
   %thead
     %th
