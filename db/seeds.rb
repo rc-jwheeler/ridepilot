@@ -45,9 +45,6 @@ ActiveRecord::Base.transaction do
     Mobility.find_or_create_by!(:name => name)
   end
 
-  puts "Seeding lookup tables"
-  Rake::Task["ridepilot:seed_lookup_tables"].invoke
-
   puts "Seeding translations"
 
   Rake::Task["ridepilot:load_locales"].invoke
