@@ -1,3 +1,4 @@
+<%= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'dispatch' %>
 <form id="refresh" class="">
   <div class="actions" style="border:0; z-index: 1000">
     <%= submit_tag translate_helper("dispatch_submit"), :onclick => "d.refresh(); return false;" -%>
