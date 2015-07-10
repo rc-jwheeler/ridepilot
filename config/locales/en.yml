@@ -489,10 +489,18 @@ en:
   volunteer_hours_administrative: "Volunteer Hours: Administrative"
   ride_information: "Ride Information"
   unduplicated_riders: "Unduplicated riders (First ride this fiscal year)"
-
-
-
-
+  #show runs report
+  show_runs_report_title: "Verify Runs"
+  show_runs_report_heading: "Verify Runs"
+  vehicle: "Vehicle"
+  driver: "Driver"
+  actual_start_time: "Actual Start Time"
+  actual_end_time: "Actual End Time"
+  odometer_start: "Odometer Start"
+  odometer_end: "Odometer End"
+  unpaid_break_time: "Unpaid Break Time"
+  week_of: "Week Of"
+  show_runs_submit: "Update Runs"
 
 
 
