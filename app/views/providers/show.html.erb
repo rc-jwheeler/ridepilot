@@ -186,6 +186,7 @@
   <% end %>
 <% end %>
 
+<h2 class="section-header"><%= translate_helper("device_pools") %></h2>
 <% if @provider.dispatch? && can?(:edit, DevicePool) %>
   <% if @provider.device_pools.size == 0 %>
     <p><%= translate_helper("no_device_pool") %></p>
