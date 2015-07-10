@@ -469,9 +469,26 @@ en:
   daily_manifest_by_half_hour_label: "Daily Manifest By Half Hour"
   daily_manifest_by_half_hour_with_cab_summary_label: "Daily Manifest By Half Hour with Cab Summary"
   verify_runs: "Verify Runs"
-
-
-
+  #service summary
+  service_summary_title: "Service Summary: %{provider}, %{start_date}"
+  service_summary_heading: "Reports: Service Summary"
+  service_summary_report_submit: "Report"
+  service_summary_section_one_heading: "Service Summary Section 1 - Trip Data"
+  stf_service_label: "STF Service"
+  line_number_label: "Line #"
+  out_of_district: "Out of District"
+  trips: "Trips"
+  total_trips: "Total Trips"
+  total_miles_driven: "Total Miles Driven"
+  turndowns: "Turndowns"
+  driver_hours_volunteer: "Driver Hours: Volunteer"
+  driver_hours_paid: "Driver hours: Paid"
+  total_driver_hours: "Total Driver Hours"
+  volunteer_hours: "Volunteer Hours"
+  volunteer_hours_escort: "Volunteer Hours: Escort"
+  volunteer_hours_administrative: "Volunteer Hours: Administrative"
+  ride_information: "Ride Information"
+  unduplicated_riders: "Unduplicated riders (First ride this fiscal year)"
 
 
 
