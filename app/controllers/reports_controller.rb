@@ -380,7 +380,7 @@ class ReportsController < ApplicationController
 
     @query = Query.new(params[:query])
     date_range = @query.start_date..@query.end_date
-    @customers = Customer.joins(:trips).where('trips.pickup_time' => date_range).includes(:trips).uniq()
+    @customers = Customer.unscoped.joins(:trips).where('trips.pickup_time' => date_range).includes(:trips).uniq()
   end
 
   def cctc_summary_report
