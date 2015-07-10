@@ -501,6 +501,16 @@ en:
   unpaid_break_time: "Unpaid Break Time"
   week_of: "Week Of"
   show_runs_submit: "Update Runs"
+  #show trips
+  show_trips_title: "Verify Trips"
+  show_trips_report_heading: "Verify Trips"
+  show_trips_submit: "Verify Trips"
+  show_trips_submit_update: "Update Trips"
+
+
+
+
+
 
 
 
