@@ -330,3 +330,30 @@ en:
   zoom_level: "Zoom Level"
   zoom: "Zoom:"
   save_viewport_submit: "Save Viewport"
+  #reports
+  service_date: "Service Date"
+  service_performed: "Service Performed"
+  odometer_reading: "Odometer Reading"
+  vendor: "Vendor"
+  invoice_date: "Invoice Date"
+  invoice_number: "Invoice Number"
+  invoice_amount: "Invoice Amount"
+  report_footer_heading: "Provider/Agency:"
+  report_month_heading: "Report month:"
+  person_preparing_report_label: "Person preparing report (please print):"
+  signature_of_person_preparing_report_label: "Signature of person preparing report:"
+  report_footer_title: "Title"
+  back_to_reports_link: "Back to Reports"
+  report_header: "<div id='address'>Ride Connection, Inc. 847 NE 19th Ave #200 <br /> Portland, OR 97232<br />503.528.1720</div>"
+  report_header_instructions: "<div id='instructions'><strong>Please submit report by the 5th of each month to:</strong><br />Kirsten Huckfeldt, Fiscal Specialist<br />Phone: 503.528.1742<br />Fax: 503.528.1755<br />Email: Khuckfeldt@rideconnection.org</div>"
+  pickup_unspecified: "(Pickup Unspecified)"
+  dropoff_unspecified: "(Dropoff Unspecified)"
+  trip_notes_label: "Trip notes:"
+  trip_run_label: "Run: "
+  trip_result_label: "Result: "
+  pending: "Pending"
+  manifest_trip_link_text: "manifest_trip"
+
+
+
+
