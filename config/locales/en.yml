@@ -354,6 +354,25 @@ en:
   pending: "Pending"
   manifest_trip_link_text: "manifest_trip"
 
+  age_and_ethnicity_report_heading: "Reports: Unduplicated Age &amp; Ethnicity"
+  age_and_ethnicity_page_title: "Age and Ethnicity: %{provider}, %{start_date}"
 
+  report: "Report"
+  age_and_ethnicity_table_heading: "Unduplicated Age & Ethnicity Report"
 
-
+  age: "Age"
+  current_month: "Current Month"
+  fiscal_ytd: "Fiscal YTD"
+  unduplicated_60_and_older: "Unduplicated Persons 60 and Older"
+  unduplicated_59_and_younger: "Unduplicated number of persons 59 years and younger"
+  unduplicated_unknown_age: "Unduplicated number of persons age unknown"
+  total_unduplicated_individuals: "Total Unduplicated Individuals"
+  ethnic_heritage: "Ethnic Heritage"
+  cab_log_heading: "Reports: Cab Log"
+  cab_report_submit: "Report"
+  date_and_time: "Date & Time"
+  return: "Return"
+  pick_up_point: "Pick-Up Point"
+  destination: "Destination"
+  cctc_summary_report_page_title: "Clackamas County Transportation Consortium Summary Report: %{provider}, %{start_date}"
+  cctc_summary_report_heading: "Clackamas County Transportation Consortium Summary Report: %{provider}, %{start_date}"

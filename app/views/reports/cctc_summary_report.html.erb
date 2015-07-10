@@ -63,9 +63,9 @@
 </style>
 <% end %>
 
-<%= content_for :title, "Clackamas County Transportation Consortium Summary Report: #{@provider.name}, #{@start_date.strftime("%B %Y")}" %>
+<%= content_for :title, translate_helper("cctc_summary_report_page_title",provider:@provider.name,start_date:start_date.strftime("%B %Y")) %>
 <div id="page-header">
-  <h1>Clackamas County Transportation Consortium Summary Report: <%= @provider.name %>, <%= @start_date.strftime("%B %Y") %></h1>
+  <h1><%= translate_helper("cctc_summary_report_heading",provider:@provider.name,start_date:start_date.strftime("%B %Y")) %></h1>
 </div>
 
 <% if @query %> 
@@ -73,7 +73,7 @@
     <fieldset class="select-month">
       <p>
         <%= f.date_select :start_date, :order => [:month,:year] %>
-        <%= f.submit "Update" %>
+        <%= f.submit translate_helper("update") %>
       </p>
     </fieldset>
   <% end %>
