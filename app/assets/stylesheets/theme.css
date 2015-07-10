@@ -272,8 +272,16 @@ button {width: auto; overflow: visible;}
 #primary-nav a:hover, #primary-nav a:active,
 #secondary-nav a:hover, #secondary-nav a:active {
   background: #fff;
-  color: #009FFB;
+  color: #000;
 }
+
+#primary-nav a.active,
+#secondary-nav a.active {
+  background: #fff;
+  color: #000;
+  font-weight: bold;
+}
+
 body.cab-trips #primary-nav li.cab_trips a:link, 
 body.cab-trips #primary-nav li.cab_trips a:visited,
 body.trips #primary-nav li.trips a:link, 
