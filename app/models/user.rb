@@ -51,6 +51,7 @@ class User < ActiveRecord::Base
     end
   end
   
+  # super admin (aka system admin) is regardless of providers
   def super_admin?
     !roles.system_admins.empty?
   end
