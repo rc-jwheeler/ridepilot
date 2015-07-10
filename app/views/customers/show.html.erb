@@ -1,5 +1,5 @@
 <div id="page-header">
-  <h1>translate_helper("customer") <%= @customer.name %></h1>
+  <h1><%= translate_helper("customer") + " " + @customer.name %></h1>
 </div>
 
 <div class="profile-actions selfclear">
@@ -132,7 +132,7 @@
     <% end %>
   <% else %>
     <tr>
-      <td>translate_helper("no_trips_yet")</td>
+      <td><%= translate_helper("no_trips_yet") %></td>
     </tr>
   <% end %>
 </table>
