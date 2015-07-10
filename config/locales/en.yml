@@ -506,13 +506,17 @@ en:
   show_trips_report_heading: "Verify Trips"
   show_trips_submit: "Verify Trips"
   show_trips_submit_update: "Update Trips"
-
-
-
-
-
-
-
-
+  #vehicles monthly
+  vehicle_operations_title: "Vehicle Operations: %{provider}, %{start_date}"
+  vehicle_operations_heading: "Vehicle Operations Report"
+  vehicle_operations_submit: "Report"
+  vehicle_operations_ymm_label: "Vehicle Year/Make/Model (Internal Name)"
+  hours_in_operation: "Hours in Operation"
+  average_rides_per_hour: "Avg Rides per Hour"
+  start_odometer: "Start Odometer"
+  end_odometer: "End Odometer"
+  mileage: "Mileage"
+  license_plate: "License Plate"
+  garaged_location: "Garaged Location"
 
 

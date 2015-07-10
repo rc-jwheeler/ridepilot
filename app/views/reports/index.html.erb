@@ -84,7 +84,7 @@
 
 <%= form_for @driver_query, :url=>url_for(:action=>:daily_manifest_by_half_hour), :html=>{:method=>:get} do |f| %>
   <fieldset>
-    <h3><%= translate_helper("daily_manifest_by_half_hour") %></h3>
+    <h3><%= translate_helper("daily_manifest_by_half_hour_label") %></h3>
     <%= f.date_select  :start_date %>
     <%= f.collection_select :driver_id, @drivers_with_cab, :id, :name %>
     <%= f.submit translate_helper("show") %>
