@@ -89,7 +89,7 @@ en:
   new_customer: "New Customer"
   new_trip_for_customer: "New Trip for This Customer"
   duplicate: "Duplicate"
-  customer: "Customer:"
+  customer: "Customer"
   reassociate_customer_trips: "Associate this customer's trips with another customer."
   group_name: "Group Name"
   no_trips_yet: "No trips yet."
@@ -441,5 +441,43 @@ en:
   trips_received: "Trips Received"
   trip_purposes: "Trip Purposes"
   trip_funding_sources: "Trip Funding Sources"
+  daily_manifest_title: "Manifest"
+  daily_manifest_heading: "Transportation Manifest"
+  unspecified_driver: "Unspecified driver"
+  cab_trips: "Cab Trips"
+  daily_trips_title: "Daily Trips"
+  daily_trips_heading: "Day's Trips"
+  donation_report_heading: "Reports: Donations"
+  donation_report_submit: "Report"
+  total_donations: "Total Donations"
+  total: "Total"
+  reports_heading: "Reports"
+  service_summary_link_text: "Service Summary"
+  age_and_ethnicity_link_text: "Age & Ethnicity"
+  vehicles_link_text: "Vehicles"
+  donations_link_text: "Donations"
+  cab_log_link_text: "Cab Log"
+  monthly_misc_link_text: "Monthly Miscellaneous Data"
+  export_trips_as_csv: "Export Trips as CSV"
+  through: "through"
+  export: "Export"
+  cctc_summary_label: "Clackamas County Transportation Consortium Summary Report"
+  show: "Show"
+  verify_trips: "Verify Trips"
+  daily_manifest_label: "Daily Manifest"
+  daily_manifest_with_cab_summary_label: "Daily Manifest with Cab Summary"
+  daily_manifest_by_half_hour_label: "Daily Manifest By Half Hour"
+  daily_manifest_by_half_hour_with_cab_summary_label: "Daily Manifest By Half Hour with Cab Summary"
+  verify_runs: "Verify Runs"
+
+
+
+
+
+
+
+
+
+
 
 
