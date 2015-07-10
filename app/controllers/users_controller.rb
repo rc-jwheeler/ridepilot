@@ -80,7 +80,7 @@ class UsersController < ApplicationController
       current_user.current_provider = provider
       current_user.save!
     end
-    redirect_to params[:come_from]
+    redirect_to provider_path(provider)
   end
 
   def check_session

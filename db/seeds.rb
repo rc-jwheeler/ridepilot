@@ -28,7 +28,7 @@ ActiveRecord::Base.transaction do
     Role.create!(
       :user => user,
       :provider => provider, 
-      :level => 100
+      :level => 200
     )
   end
 
