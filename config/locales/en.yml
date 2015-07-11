@@ -543,3 +543,75 @@ en:
   generic_error_message:
       one: "%{count} error prohibited this record from being saved:"
       other: "%{count} errors prohibited this record from being saved:"
+  #trips
+  change_customer: "Change Customer"
+  trips_form_error_message: 
+    one: "%{count} error prohibited this trip from being saved:"
+    other: "%{count} errors sprohibited this trip from being saved:"
+  appointment_time: "Appointment Time"
+  pickup_address: "Pickup Address"
+  customer_phone: "Customer Phone"
+  dropoff_address: "Dropoff Address"
+  dropoff_phone: "Dropoff Phone"
+  repetition: "Repetitions"
+  repetition_vehicle: "Vehicle"
+  repetition_driver: "Driver"
+  mark_as_called_back: "Mark as Called Back:"
+  group_size: "Group Size"
+  passengers: "Passengers"
+  guests: "Guests"
+  attendants: "Attendants"
+  run: "Run"
+  cab_mileage: "Cab Mileage"
+  medicaid_eligible: "Medicaid Eligible"
+  customer_private_notes: "Customer Private Notes"
+  trip_donation: "Donation"
+  trip_service_level: "Service Level"
+  trip_mobility_requirements: "Mobility Req."
+  trip_mobility_notes: "Mobility notes"
+  trip_notes: "Trip Notes"
+  trip_called_back: "Called Back?"
+  delete_trip: "Delete"
+  delete_trip_confirm: "Are you sure?"
+  back_to_view_trips: "Back to View Trips"
+  edit_trip_link_text: "Edit Trip"
+  edit_run_link_text: "Edit Run"
+  cab_trip: "Cab Trip"
+  view_customer_record_link_text: "Click to view customer record"
+  select_days_of_week: "Select Days of Week..."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
