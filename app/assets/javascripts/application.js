@@ -135,7 +135,7 @@ $(function() {
   
   // when trip pickup time is changed, update appointment time and displayed week
   $("body").on('change', '#trip_pickup_time', function() {
-    var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time').attr("value") );
+    var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time')[0].value );
     var appointmentTimeDate = new Date(pickupTimeDate.getTime() + (1000 * 60 * 30));
 
     $('#trip_appointment_time').attr( "value", appointmentTimeDate.format("ddd yyyy-mm-dd hh:MM tt"));
