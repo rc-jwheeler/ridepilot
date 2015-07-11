@@ -12,7 +12,6 @@
   <% if @address.errors.any? %>
     <div id="error_explanation">
       <h2>translate_helper("address_form_error_message", count: @address.errors.count)</h2>
-      <h2><%= pluralize(@address.errors.count, "error") %> </h2>
       <ul>
       <% @address.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>

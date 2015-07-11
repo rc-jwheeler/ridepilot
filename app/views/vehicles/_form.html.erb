@@ -1,7 +1,7 @@
 <%= form_for @vehicle do |f| %>
   <% if @vehicle.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@vehicle.errors.count, "error") %> prohibited this vehicle from being saved:</h2>
+      <h2>translate_helper("vehicle_form_error_message", count: @vehicle.errors.count)</h2>
 
       <ul>
       <% @vehicle.errors.full_messages.each do |msg| %>
@@ -15,62 +15,62 @@
 
     <ol class="section first">
       <li>
-        <%= f.label :name %>
+        <%= f.label :name, translate_helper("vehicle_form_name_label") %>
         <%= f.text_field :name %>
       </li>
 
       <li>
-        <%= f.label :year %>
+        <%= f.label :year, translate_helper("vehicle_form_year_label") %>
         <%= f.text_field :year %>
       </li>
 
       <li>
-        <%= f.label :make %>
+        <%= f.label :make, translate_helper("vehicle_form_make_label") %>
         <%= f.text_field :make %>
       </li>
 
       <li>
-        <%= f.label :model %>
+        <%= f.label :model, translate_helper("vehicle_form_model_label") %>
         <%= f.text_field :model %>
       </li>
     </ol>
 
     <ol class="section second">
       <li>
-        <%= f.label :license_plate %>
+        <%= f.label :license_plate, translate_helper("vehicle_form_license_plate_label") %>
         <%= f.text_field :license_plate %>
       </li>
 
       <li>
-        <%= f.label :vin %>
+        <%= f.label :vin, translate_helper("vehicle_form_vin_label") %>
         <%= f.text_field :vin %>
       </li>
 
       <li>
-        <%= f.label :garaged_location %>
+        <%= f.label :garaged_location, translate_helper("vehicle_form_location_label") %>
         <%= f.text_field :garaged_location %>
       </li>
 
       <li>
-        <%= f.label :active %>
+        <%= f.label :active, translate_helper("vehicle_form_active_label") %>
         <%= f.select :active, [["Yes", "true"], ["No", "false"]], {:selected => @vehicle.active.to_s } %>
       </li>
     </ol>
     
     <ol class="section third">
       <li>
-        <%= f.label :default_driver_id %>
+        <%= f.label :default_driver_id, translate_helper("vehicle_form_driver_label") %>
         <%= f.collection_select :default_driver_id, Driver.active.for_provider(current_user.current_provider_id), :id, :name, :include_blank => true %>
       </li>
 
       <li>
-        <%= f.label :reportable, "Vehicle should appear on vehicle report" %>
+        <%= f.label :reportable, translate_helper("vehicle_form_reportable_label") %>
         <%= f.select :reportable, [["Yes", "true"], ["No", "false"]], {:selected => @vehicle.reportable.to_s } %>
       </li>
     </ol>
 
     <div class="actions">
-      <%= f.submit %>
+      <%= f.submit, translate_helper("vehicle_form_submit") %>
     </div>
 
   </fieldset>

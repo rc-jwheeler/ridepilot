@@ -334,7 +334,6 @@ en:
   zoom: "Zoom:"
   save_viewport_submit: "Save Viewport"
   #reports
-  service_date: "Service Date"
   service_performed: "Service Performed"
   odometer_reading: "Odometer Reading"
   vendor: "Vendor"
@@ -591,24 +590,51 @@ en:
   trip_to: "To"
   trip_confirm: "Confirm"
   trip_turn_down: "Turn Down"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  #users
+  new_user_heading: "Create New User"
+  user_form_error_message: 
+    one: "%{count} error prohibited this user from being saved:"
+    other: "%{count} errors sprohibited this user from being saved:"
+  permissions: "Permissions"
+  new_user_submit: "Create User"
+  change_password_heading: "Change Password"
+  current_password: "Current Password"
+  password: "Password"
+  password_confirmation: "Password Confirmation"
+  change_password_submit: "Update"
+  #vehicle maintenance
+  service_date: "Service Date"
+  invoice_date: "Invoice Date"
+  odometer: "Odometer"
+  vendor_name: "Vendor Name"
+  invoice_number: "Invoice Number"
+  invoice_amount: "Invoice Amount"
+  reimbursable: "Reimbursable"
+  services_performed: "Services Performed"
+  maintenance_form_submit: "Submit"
+  edit_maintenance_heading: "Edit Maintenance Event"
+  new_maintenance_heading: "Add Maintenance Event"
+  back_to_provider: "Back"
+  #vehicles
+  vehicle_form_error_message: 
+    one: "%{count} error prohibited this vehicle from being saved:"
+    other: "%{count} errors sprohibited this vehicle from being saved:"
+  vehicle_form_name_label: "Name"
+  vehicle_form_year_label: "Year"
+  vehicle_form_make_label: "Make"
+  vehicle_form_model_label: "Model"
+  vehicle_form_license_plate_label: "License Plate"
+  vehicle_form_vin_label: "VIN"
+  vehicle_form_location_label: "Garaged Location"
+  vehicle_form_active_label: "Active"
+  vehicle_form_driver_label: "Driver"
+  vehicle_form_reportable_label: "Vehicle should appear on vehicle report"
+  vehicle_form_submit: "Submit"
+  edit_vehicle_heading: "Edit Vehicle"
+  new_vehicle_heading: "New Vehicle"
+  vehicle_show_heading: "Vehicle Details"
+  add_maintenance_link_text: "Add Maintenance Event"
+  edit_vehicle_link_text: "Edit Vehicle"
 
 
 
