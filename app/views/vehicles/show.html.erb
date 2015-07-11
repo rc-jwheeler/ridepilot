@@ -1,41 +1,41 @@
 <div id="page-header">
-  <h1>Vehicle Details</h1>
+  <h1><%= translate_helper("vehicle_show_heading") %></h1>
 </div>
 
 <p class="profile-actions selfclear">
   <% if can? :edit, @vehicle %>
-  <%= link_to "Add maintenance event", new_vehicle_maintenance_event_path(:vehicle_id=>@vehicle), :class=>'new-maintenance' %>
+  <%= link_to translate_helper("add_maintenance_link_text"), new_vehicle_maintenance_event_path(:vehicle_id=>@vehicle), :class=>'new-maintenance' %>
   <% end %>
   <span class="separator">|</span>
   <% if can? :edit, @vehicle %>
-  <%= link_to "Edit Vehicle", edit_vehicle_path(@vehicle), :class=>'edit edit-vehicle' %>
+  <%= link_to translate_helper("edit_vehicle_link_text"), edit_vehicle_path(@vehicle), :class=>'edit edit-vehicle' %>
   <% end %>
 </p>
 
 <div class="vehicle-profile selfclear">
 
 <dl>
-  <dt>Name:</dt>
+  <dt><%= translate_helper("vehicle_form_name_label") %></dt>
   <dd><%= @vehicle.name %></dd>
 
-  <dt>Make:</dt>
+  <dt><%= translate_helper("vehicle_form_make_label") %></dt>
   <dd><%= @vehicle.make %></dd>
 
-  <dt>Model:</dt>
+  <dt><%= translate_helper("vehicle_form_model_label") %></dt>
   <dd><%= @vehicle.model %></dd>
 </dl>
 
 <dl>
-  <dt>License plate:</dt>
+  <dt><%= translate_helper("vehicle_form_license_plate_label") %></dt>
   <dd><%= @vehicle.license_plate %></dd>
 
-  <dt>Vin:</dt>
+  <dt><%= translate_helper("vehicle_form_vin_label") %></dt>
   <dd><%= @vehicle.vin %></dd>
 
-  <dt>Garaged:</dt>
+  <dt><%= translate_helper("vehicle_form_location_label") %></dt>
   <dd><%= @vehicle.garaged_location %></dd>
 
-  <dt>Show vehicle on vehicle report:</dt>
+  <dt><%= translate_helper("vehicle_form_reportable_label") %></dt>
   <dd><%= @vehicle.reportable ? 'Yes' : 'No' %></dd>
 </dl>
 
@@ -45,14 +45,14 @@
 <table>
 
   <tr>
-    <th>Service date</th>
-    <th>Invoice date</th>
-    <th>Odometer</th>
-    <th>Vendor name</th>
-    <th>Invoice number</th>
-    <th>Invoice Amount</th>
-    <th>Reimbursable</th>
-    <th>Services Performed</th>
+    <th><%= translate_helper("service_date") %></th>
+    <th><%= translate_helper("invoice_date") %></th>
+    <th><%= translate_helper("odometer") %></th>
+    <th><%= translate_helper("vendor_name") %></th>
+    <th><%= translate_helper("invoice_number") %></th>
+    <th><%= translate_helper("invoice_amount") %></th>
+    <th><%= translate_helper("reimbursable") %></th>
+    <th><%= translate_helper("services_performed") %></th>
     <% if can? :edit, @vehicle %>
     <th></th>
     <% end %>
@@ -69,7 +69,7 @@
     <td><%= event.reimbursable %></td>
     <td><%= event.services_performed %></td>
     <% if can? :edit, @vehicle %>
-    <td><%= link_to "Edit", edit_vehicle_maintenance_event_path(event), :class=>'edit-maintenance' %></td>
+    <td><%= link_to translate_helper("edit"), edit_vehicle_maintenance_event_path(event), :class=>'edit-maintenance' %></td>
     <% end %>
   </tr>
   <% end %>
@@ -81,5 +81,5 @@
 
 <% if current_user && can?(:edit, Provider) %>
 <hr />
-<%= link_to 'Back', provider_path(current_user.current_provider), :class=>'action-bttn' %>
+<%= link_to translate_helper("back_to_provider"), provider_path(current_user.current_provider), :class=>'action-bttn' %>
 <% end %>

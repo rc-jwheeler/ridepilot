@@ -5,50 +5,50 @@
 
     <ol class="section first">
       <li>
-        <%= f.label :service_date, "Service Date:" %>
+        <%= f.label :service_date, translate_helper("service_date") %>
         <%= f.text_field :service_date %>
       </li>
 
       <li>
-        <%= f.label :invoice_date %>
+        <%= f.label :invoice_date, translate_helper("invoice_date") %>
         <%= f.text_field :invoice_date %>
       </li>
 
       <li>
-        <%= f.label :odometer %>
+        <%= f.label :odometer, translate_helper("odometer") %>
         <%= f.text_field :odometer %>
       </li>
 
       <li>
-        <%= f.label :vendor_name %>
+        <%= f.label :vendor_name, translate_helper("vendor_name") %>
         <%= f.text_field :vendor_name %>
       </li>
     </ol>
 
     <ol class="section second">
       <li>
-        <%= f.label :invoice_number %>
+        <%= f.label :invoice_number, translate_helper("invoice_number") %>
         <%= f.text_field :invoice_number %>
       </li>
 
       <li>
-        <%= f.label :invoice_amount %>
+        <%= f.label :invoice_amount, translate_helper("invoice_amount") %>
         <%= f.text_field :invoice_amount %>
       </li>
 
       <li>
-        <%= f.label :reimbursable %>
+        <%= f.label :reimbursable, translate_helper("reimbursable") %>
         <%= f.select :reimbursable, [["Yes", "true"], ["No", "false"]], {:selected => @vehicle_maintenance_event.reimbursable.to_s } %>
       </li>
 
       <li>
-        <%= f.label :services_performed %>
+        <%= f.label :services_performed, translate_helper("service_date") %>
         <%= f.text_area :services_performed %>
       </li>
     </ol>
 
     <div class="actions">
-      <%= f.submit %>
+      <%= f.submit translate_helper("maintenance_form_submit") %>
     </div>
 
   </fieldset>
