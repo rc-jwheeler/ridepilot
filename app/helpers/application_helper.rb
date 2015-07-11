@@ -87,4 +87,8 @@ module ApplicationHelper
 
     return weekday_abbrevs[weekday]
   end
+
+  def is_add_user_allowed?(user)
+    user.present? && ( user.admin? || user.super_admin?)
+  end
 end

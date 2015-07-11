@@ -132,7 +132,8 @@ en:
   remove_device_pool_driver: "Remove"
   device_pool_form_error_message: 
     one: "%{count} error prohibited this device pool from being saved:"
-    other: "%{count} errors prohibited this device pool from being saved:"
+    other: "%{count} errors sprohibited this device pool from being saved:"
+  device_pools: 'Device Pools'
   device_pool_name: "Name"
   device_pool_color: "Color"
   edit_device_pool: "Edit Device Pool"
