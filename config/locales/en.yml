@@ -579,14 +579,17 @@ en:
   cab_trip: "Cab Trip"
   view_customer_record_link_text: "Click to view customer record"
   select_days_of_week: "Select Days of Week..."
-
-
-
-
-
-
-
-
+  editing_trip: "Editing Trip"
+  view_trips: "View Trips"
+  reconcile_cab_log: "Reconcile Cab Log"
+  mark_as_no_show: "Mark as no-show"
+  last_called_back: "Last Called Back"
+  not_yet_called: "not yet called"
+  mark_as_reached: "Mark as reached"
+  trip_from: "From"
+  trip_to: "To"
+  trip_confirm: "Confirm"
+  trip_turn_down: "Turn Down"
 
 
 
