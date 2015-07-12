@@ -3,7 +3,7 @@ class LookupTable < ActiveRecord::Base
   validates_uniqueness_of :name
 
   def values
-    model.all.order(value_column_name).select(:id, "#{value_column_name} as value")
+    model.all.order(value_column_name)
   end
 
   def model
@@ -15,18 +15,18 @@ class LookupTable < ActiveRecord::Base
   end
 
   def add_value(value)
-    model.create("#{value_column_name}": value)
+    model.create("#{value_column_name}": value) if add_value_allowed
   end
 
   def update_value(old_value, new_value)
     item = find(old_value)
-    item.update("#{value_column_name}": new_value) if item
+    item.update("#{value_column_name}": new_value) if item && edit_value_allowed
     item
   end
 
   def destroy_value(value)
     item = find(value)
-    item.destroy if item
+    item.destroy if item && delete_value_allowed
 
     item
   end

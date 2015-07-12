@@ -2,14 +2,16 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    ride_connection = Provider.ride_connection
     can_manage_all = false
 
     can :read, Mobility
+    can :read, TripPurpose
+    can :read, TripResult
+    can :read, ServiceLevel
     can :read, Region
 
     for role in user.roles
-      if role.provider == ride_connection && role.admin?
+      if role.system_admin?
         can_manage_all = true
         can :manage, :all 
         break
@@ -18,17 +20,13 @@ class Ability
     
     unless can_manage_all
       for role in user.roles
-        if role.provider == ride_connection 
-          can :read, :all 
+        if role.editor?
+          action = :manage
         else
-          if role.editor?
-            action = :manage
-          else
-            action = :read
-          end
-          can action, Provider, :id => role.provider.id
-          cannot :create, Provider
+          action = :read
         end
+        can action, Provider, :id => role.provider.id
+        cannot :create, Provider
       end
     end
 
@@ -55,6 +53,7 @@ class Ability
     can action, Trip, :provider_id => provider.id if provider.scheduling?
     can action, Vehicle, :provider_id => provider.id
     can action, VehicleMaintenanceEvent, :provider_id => provider.id
+    can :manage, LookupTable if role.admin?
         
     can action, DevicePoolDriver do |device_pool_driver|
       device_pool_driver.provider_id == provider.id

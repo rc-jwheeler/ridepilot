@@ -107,3 +107,8 @@ group :test, :development do
 
   gem 'faker', '~> 1.4'
 end
+
+group :test do 
+  gem 'launchy'
+  gem 'selenium-webdriver'
+end

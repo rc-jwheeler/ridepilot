@@ -5,7 +5,7 @@
     = render partial: 'edit_value_button', locals: {table: table}
   - if table.delete_value_allowed
     = render partial: 'delete_value_button', locals: {table: table}
-%table.table.table-condensed.table-striped.table-bordered.table-hover#lookup_table
+%table.table.table-condensed.table-striped.table-bordered.table-hover#lookupTable
   %thead
     %th
       = table.value_column_name.titleize
@@ -13,7 +13,7 @@
     - table.values.each do |item|
       %tr
         %td
-          = item.value
+          = item[table.value_column_name]
 
 :javascript
   $(document).ready(function(){
@@ -27,10 +27,10 @@
       $('#deleteLookupTableValue').prop('disabled', 'disabled');
     };
 
-    var table = $('#lookup_table').dataTable();
+    var table = $('#lookupTable').dataTable();
 
     // select & deselect table row
-    $('#lookup_table tbody').on( 'click', 'tr', function () {
+    $('#lookupTable tbody').on( 'click', 'tr', function () {
       if ( $(this).hasClass('selected') ) {
         $(this).removeClass('selected');
         disableEditingButtons();
