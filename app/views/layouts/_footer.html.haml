@@ -9,6 +9,8 @@
       - else
         %span#versionInfo= "Version #{Rails.application.config.version}"
     .pull-right
-      - if can? :manage, Translation
-        <a href="/tags">Tags mode</a>
+      - if current_user.present?
+        - if can? :manage, Translation
+          = link_to "En", request.env['PATH_INFO'] + "?tags=false"
+          = link_to "Tags", request.env['PATH_INFO'] + "?tags=true"
 / end of footer
