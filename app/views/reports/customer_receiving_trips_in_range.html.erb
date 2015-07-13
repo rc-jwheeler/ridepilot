@@ -1,5 +1,5 @@
 <%= content_for :title, (translate_helper("crtr_report_title") + "#{@query.try(:start_date).try(:strftime, ": %B %Y")}#{@query.try(:start_date).try(:strftime, " - %B %Y")}") %>
-<div id="page-header">
+<div id="page-header" class="clearfix">
 <h1><%= translate_helper("crtr_verify_runs")%><%= @query.try(:start_date).try(:strftime, ": %B %Y") %><%= @query.try(:start_date).try(:strftime, " - %B %Y") %></h1>
 </div>
 

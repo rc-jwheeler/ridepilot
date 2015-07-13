@@ -64,7 +64,7 @@
 <% end %>
 
 <%= content_for :title, translate_helper("cctc_summary_report_page_title",provider:@provider.name,start_date: @start_date.strftime("%B %Y")) %>
-<div id="page-header">
+<div id="page-header" class="clearfix">
   <h1><%= translate_helper("cctc_summary_provider_heading",provider:@provider.name,start_date: @start_date.strftime("%B %Y")) %></h1>
 </div>
 
