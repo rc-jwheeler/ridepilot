@@ -1,6 +1,5 @@
 RIDE_CONNECTION_ADMIN_EMAIL:
 RIDE_CONNECTION_ADMIN_PASSWORD:
-RIDEPILOT_HOST:
 SYSTEM_SEND_FROM_ADDRESS:
 SMTP_MAIL_ADDR:
 SMTP_MAIL_PORT:
@@ -8,5 +7,17 @@ SMTP_MAIL_DOMAIN:
 SMTP_MAIL_USER_NAME:
 SMTP_MAIL_PASSWORD:
 
+development:
+  RIDEPILOT_HOST:                
+
+test:
+  RIDEPILOT_HOST:                 
+
+integration:
+  RIDEPILOT_HOST:                 
+
+qa:
+  RIDEPILOT_HOST:                 
+
 production:
-  APP_VERSION:
+  RIDEPILOT_HOST:                 
