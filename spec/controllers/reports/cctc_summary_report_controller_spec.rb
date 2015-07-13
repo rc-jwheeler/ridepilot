@@ -310,8 +310,20 @@ RSpec.describe ReportsController do
 
         wheelchair_service_level = create(:service_level, name: 'Wheelchair')
         ambulatory_service_level = create(:service_level, name: 'Ambulatory')
-        
-        TRIP_PURPOSES.each do |trip_purpose_name|
+          
+        @trip_purpose_names = [
+          "Life-Sustaining Medical", 
+          "Medical", 
+          "Nutrition", 
+          "Personal/Support Services", 
+          "Recreation", 
+          "School/Work", 
+          "Shopping", 
+          "Volunteer Work", 
+          "Center"]
+        @trip_purpose_count = @trip_purpose_names.size
+
+        @trip_purpose_names.each do |trip_purpose_name|
           trip_purpose = create(:trip_purpose, name: trip_purpose_name)
           @test_funding_sources.keys.reject{|k| k == :stf}.each do |funding_source|
             # In report range, 
@@ -349,7 +361,7 @@ RSpec.describe ReportsController do
       
       describe "trips" do
         it "reports the correct trip purpose data" do
-          expect(assigns(:report)[:trip_purposes][:trips].collect{|t| t[:name]}.sort).to match(TripPurpose.pluck(:name).sort)
+          expect(assigns(:report)[:trip_purposes][:trips].collect{|t| t[:name]}.sort).to match(@trip_purpose_names.sort)
           
           assigns(:report)[:trip_purposes][:trips].each do |trip|
             @test_funding_sources.keys.reject{|k| k == :stf}.each do |funding_source|
@@ -378,27 +390,27 @@ RSpec.describe ReportsController do
       describe "total_rides" do
         it "reports the correct number of total rides" do
           @test_funding_sources.keys.reject{|k| k == :stf}.each do |funding_source|
-            expect(assigns(:report)[:trip_purposes][:total_rides][funding_source]).to eq(TRIP_PURPOSES.size * 3)
+            expect(assigns(:report)[:trip_purposes][:total_rides][funding_source]).to eq(@trip_purpose_count * 3)
           end
           
-          expect(assigns(:report)[:trip_purposes][:total_rides][:stf_taxi]).to eq(TRIP_PURPOSES.size * 6)
-          expect(assigns(:report)[:trip_purposes][:total_rides][:stf_van]).to eq(TRIP_PURPOSES.size * 3)
+          expect(assigns(:report)[:trip_purposes][:total_rides][:stf_taxi]).to eq(@trip_purpose_count * 6)
+          expect(assigns(:report)[:trip_purposes][:total_rides][:stf_van]).to eq(@trip_purpose_count * 3)
         end
       end
 
       describe "reimbursements_due" do
         it "reports the correct reimbursement amounts due" do
-          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:oaa3b]).to eq(1.23 * TRIP_PURPOSES.size * 3)
-          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:rc]).to eq(1.23 * TRIP_PURPOSES.size * 3)
-          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:trimet]).to eq(1.23 * TRIP_PURPOSES.size * 3)
-          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:stf_van]).to eq(1.23 * TRIP_PURPOSES.size * 3)
+          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:oaa3b]).to eq(1.23 * @trip_purpose_count * 3)
+          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:rc]).to eq(1.23 * @trip_purpose_count * 3)
+          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:trimet]).to eq(1.23 * @trip_purpose_count * 3)
+          expect(assigns(:report)[:trip_purposes][:reimbursements_due][:stf_van]).to eq(1.23 * @trip_purpose_count * 3)
 
           expect(assigns(:report)[:trip_purposes][:reimbursements_due][:stf_taxi]).to eq(
-            (TRIP_PURPOSES.size * 3 * 1.23) +
-            (TRIP_PURPOSES.size * 2 * 1.23) +
-            (TRIP_PURPOSES.size * 3 * 1.23) +
-            (TRIP_PURPOSES.size * 2 * 1.23) +
-            (TRIP_PURPOSES.size * 6 * 1.23)
+            (@trip_purpose_count * 3 * 1.23) +
+            (@trip_purpose_count * 2 * 1.23) +
+            (@trip_purpose_count * 3 * 1.23) +
+            (@trip_purpose_count * 2 * 1.23) +
+            (@trip_purpose_count * 6 * 1.23)
           )
         end
       end

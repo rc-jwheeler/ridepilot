@@ -86,7 +86,7 @@ class Address < ActiveRecord::Base
       first_line = ''
     end
 
-    return ("%s%s\n%s, %s  %s" % [first_line, address, city, state, zip]).strip
+    return ("%s %s \n%s, %s %s" % [first_line, address, city, state, zip]).strip
 
   end
 
