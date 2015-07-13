@@ -19,7 +19,7 @@
       :default_funding_source_id => "#trip_funding_source_id",
       :default_service_level     => "#trip_service_level"
     },
-    :style => @customer.try(:id).present? ? 'display: none' : ''
+    :style => @customer.try(:id).present? ? 'display: none' : '', :autocomplete => "off"
 %>
 <%- if @customer.try(:id).blank? -%>
   <input type="button" name="new_customer" value="<%= translate_helper("new_customer") %>" id="new_customer" data-path="<%= new_customer_path %>">
