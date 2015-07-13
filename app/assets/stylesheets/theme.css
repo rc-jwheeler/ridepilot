@@ -46,7 +46,7 @@ html { overflow-y: scroll; }
 a:hover, a:active { outline: none; }
 a, a:active, a:visited { color: #0081cc; }
 a:hover { color: #009ffb; }
-ul, ol { margin-left: 1.8em; }
+ul, ol { margin-left: 1.8em; padding-left: 0;}
 ol { list-style-type: decimal; }
 /* Remove margins for navigation lists */
 nav ul, nav li { margin: 0; } 
@@ -201,6 +201,7 @@ button {width: auto; overflow: visible;}
   -moz-box-shadow: 0 0 10px #062340;
   -webkit-box-shadow: 0 0 10px #062340;
   box-shadow: 0 0 10px #062340;
+  padding: 0;
 }
 #primary-nav {
   font-size: 15px;
@@ -610,6 +611,7 @@ table {
   border-bottom: 10px solid #f7f7f7;
   border-collapse: separate;
   background: #f7f7f7;
+  border-spacing: 0;
 
   -webkit-border-top-right-radius: 5px;
   -moz-border-radius-topright: 5px;
