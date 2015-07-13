@@ -38,7 +38,7 @@ Set up development environment
 
 3. Database setup
 
-    - Copy `config/database.yml.example.pg` to `config/database.yml` and update the values.
+    - Copy `config/database.yml.example.pg` to `config/database.yml` and update the values for specific environment.
 
     - `rake db:create`
 
@@ -61,7 +61,8 @@ Set up development environment
     - `rspec`
 
 5. Start application
-    - Copy `config/app_config_template.yml` to `config/app_config.yml`.
+    - Copy `config/application.example.yml` to `config/application.yml` and update the values.
+    - Copy `config/app_config_template.yml` to `config/app_config.yml`. # might be deprecated
     - `rails s`
 
 License
