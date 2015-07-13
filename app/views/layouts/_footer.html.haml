@@ -2,10 +2,13 @@
   #footer_text
     = translate_helper("footer_content")
   #versionLang.col-xs-12
-    .pull-right
+    .pull-left
       - unless Rails.env.production?
         %span#versionInfo
           = "Version #{ENV['APP_VERSION'] || Rails.application.config.version}"
       - else
         %span#versionInfo= "Version #{Rails.application.config.version}"
+    .pull-right
+      - if can? :manage, Translation
+        <a href="/tags">Tags mode</a>
 / end of footer
