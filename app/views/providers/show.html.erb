@@ -66,15 +66,15 @@
       </td>
       <td><%= role.name %></td>
       <td><%= role.user.last_sign_in_at %></td>
-      <% if can? :edit, role %>
-      <td>
-        <%= form_for(role, :url=>provider_change_role_path(@provider.id), :html => { :method => :post }) do |f| %>
-          <%= f.hidden_field :id %>
-          <%= f.select :level, Role.editable_role_array_by_user(current_user) %>
-          <%= f.submit translate_helper("change_role") %>
-        <% end %>
-      </td>
-      <td><%= button_to translate_helper("delete"), provider_delete_role_path(@provider.id, :role_id=>role.id), :confirm => translate_helper("delete_role_confirm"), :class=>'delete' %></td>
+      <% if can_edit_role?(role) %>
+        <td>
+          <%= form_for(role, :url=>provider_change_role_path(@provider.id), :html => { :method => :post }) do |f| %>
+            <%= f.hidden_field :id %>
+            <%= f.select :level, Role.editable_role_array_by_user(current_user) %>
+            <%= f.submit translate_helper("change_role") %>
+          <% end %>
+        </td>
+        <td><%= button_to translate_helper("delete"), provider_delete_role_path(@provider.id, :role_id=>role.id), :confirm => translate_helper("delete_role_confirm"), :class=>'delete' %></td>
       <% end %>
     </tr>
     <% end %>
