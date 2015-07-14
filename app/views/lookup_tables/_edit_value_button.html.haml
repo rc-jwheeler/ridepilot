@@ -20,7 +20,7 @@
     $('#editLookupTableValueDialog').on('show.bs.modal', function (e) {
       var form = $(this).find('form');
       var baseUrl = "#{update_value_lookup_table_path(table)}";
-      var currentValue = $('#lookup_table').DataTable().row($('#lookup_table .selected')).data();
+      var currentValue = $('#lookupTable').DataTable().row($('#lookupTable .selected')).data();
       var newUrl = baseUrl + "?old_value=" + currentValue;
       form.prop('action', newUrl);
       form.find('input[name=value]').val(currentValue);

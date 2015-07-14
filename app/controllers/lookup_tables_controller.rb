@@ -4,7 +4,8 @@ class LookupTablesController < ApplicationController
   before_action :set_lookup_table, except: [:index]
 
   def index
-    redirect_to lookup_table_path(@lookup_tables.first) if @lookup_tables.first.present?
+    @first_lookup_table = @lookup_tables.first
+    redirect_to lookup_table_path(@first_lookup_table) if @first_lookup_table.present?
   end
 
   def show
