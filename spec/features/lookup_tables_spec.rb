@@ -29,7 +29,7 @@ RSpec.describe "Lookup Tables" do
           sample_purpose_1 = create(:trip_purpose, name: 'Sample Purpose 1')
           sample_purpose_2 = create(:trip_purpose, name: 'Sample Purpose 2')
           @table = create(:lookup_table) 
-          visit lookup_table_path(@table)
+          visit lookup_table_path(:id => @table.id)
         end
         it "can see #lookupTable table" do 
           expect(page).to have_table('lookupTable')
@@ -44,7 +44,7 @@ RSpec.describe "Lookup Tables" do
         before do
           sample_purpose_1 = create(:trip_purpose, name: 'Sample Purpose')
           @table = create(:lookup_table) 
-          visit lookup_table_path(@table)
+          visit lookup_table_path(:id => @table.id)
         end
 
         it "can see Add Value button" do 
@@ -119,7 +119,7 @@ RSpec.describe "Lookup Tables" do
           sample_purpose_1 = create(:trip_purpose, name: 'Sample Purpose 1')
           sample_purpose_2 = create(:trip_purpose, name: 'Sample Purpose 2')
           @table = create(:lookup_table, add_value_allowed: false, edit_value_allowed: false, delete_value_allowed: false) 
-          visit lookup_table_path(@table)
+          visit lookup_table_path(:id => @table.id)
         end
 
         it "cannot see Add Value button" do 
