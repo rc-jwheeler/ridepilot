@@ -65,6 +65,7 @@ class Ability
 
     if role.admin?
       can :manage, User, {:roles => {:provider_id => provider.id}}
+      can :manage, Translation
     else
       can :read, User, {:roles => {:provider_id => provider.id}}
     end

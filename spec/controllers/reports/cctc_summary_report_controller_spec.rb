@@ -361,6 +361,7 @@ RSpec.describe ReportsController do
       
       describe "trips" do
         it "reports the correct trip purpose data" do
+
           expect(assigns(:report)[:trip_purposes][:trips].collect{|t| t[:name]}.sort).to match(@trip_purpose_names.sort)
           
           assigns(:report)[:trip_purposes][:trips].each do |trip|

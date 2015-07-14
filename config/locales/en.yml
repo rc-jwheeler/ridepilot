@@ -636,9 +636,10 @@ en:
   add_maintenance_link_text: "Add Maintenance Event"
   edit_vehicle_link_text: "Edit Vehicle"
 
-
-
-
+  locales:
+    en: "English"
+    sp: "Spanish"
+    tags: "Tags"
 
 
 

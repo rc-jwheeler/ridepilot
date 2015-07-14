@@ -18,7 +18,7 @@ RSpec.describe LookupTablesController, type: :controller do
     it "redirects to the first lookup table with non-empty lookup tables" do 
       table = create(:lookup_table)
       get :index
-      expect(response).to redirect_to(lookup_table_path(table))
+      expect(response).to redirect_to(lookup_table_path(:id => table.id))
     end
   end
 

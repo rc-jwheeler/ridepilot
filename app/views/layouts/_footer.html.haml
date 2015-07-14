@@ -2,10 +2,15 @@
   #footer_text
     = translate_helper("footer_content")
   #versionLang.col-xs-12
-    .pull-right
+    .pull-left
       - unless Rails.env.production?
         %span#versionInfo
           = "Version #{ENV['APP_VERSION'] || Rails.application.config.version}"
       - else
         %span#versionInfo= "Version #{Rails.application.config.version}"
+    .pull-right
+      - if current_user.present?
+        = links_to_each_locale(can? :manage, Translation)
+      -else
+        = links_to_each_locale(false)
 / end of footer
