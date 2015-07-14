@@ -67,7 +67,7 @@ class UsersController < ApplicationController
     if current_user.update_password(change_password_params)
       sign_in(current_user, :bypass => true)
       flash[:notice] = "Password changed"
-      redirect_to '/'
+      redirect_to root_path
     else
       flash.now[:alert] = "Error updating password"
       render :action=>:show_change_password

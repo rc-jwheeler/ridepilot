@@ -180,7 +180,7 @@ RSpec.describe UsersController, type: :controller do
 
       it "redirects to the new provider page" do
         post :change_provider, {:provider_id => @new_provider.id}
-        expect(response).to redirect_to("/providers/#{@new_provider.id}")
+        expect(response).to redirect_to("/en/providers/#{@new_provider.id}")
       end
     end
 
@@ -197,7 +197,7 @@ RSpec.describe UsersController, type: :controller do
 
       it "redirects to the new provider page" do
         post :change_provider, {:provider_id => @new_provider.id}
-        expect(response).to redirect_to("/providers/#{@new_provider.id}")
+        expect(response).to redirect_to("/en/providers/#{@new_provider.id}")
       end
     end
   end
