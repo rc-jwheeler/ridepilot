@@ -20,8 +20,10 @@ class ApplicationController < ActionController::Base
     @provider_map = []
     if current_user.super_admin?
       @provider_map = Provider.all.collect {|provider| [ provider.name, provider.id ] }
-    elsif current_user.current_provider
-      @provider_map << [current_user.current_provider.name, current_user.current_provider.id]
+    else
+      for role in current_user.roles
+        @provider_map << [role.provider.name, role.provider_id]
+      end
     end
     @provider_map.sort!{|a, b| a[0] <=> b[0] }
   end
