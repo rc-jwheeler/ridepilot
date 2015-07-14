@@ -44,12 +44,6 @@ class Provider < ActiveRecord::Base
     file_name: {:matches => [/png\Z/, /gif\Z/, /jpe?g\Z/], allow_blank: true}
   
   after_initialize :init
-  
-  # Expects Ride Connection to be the first provider
-  # RADAR this should be changed to rely on an attribute other than the ID
-  def self.ride_connection
-    Provider.unscoped.order(:id).first
-  end
 
   def init
     self.scheduling = true if new_record?

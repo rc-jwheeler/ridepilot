@@ -1,16 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Provider do
-  describe "Provider.ride_connection" do
-    it "should report the first provider as Ride Connection" do
-      Provider.destroy_all
-      provider_1 = create(:provider)
-      provider_2 = create(:provider)
-      expect(Provider.ride_connection).to eq(provider_1)
-      provider_1.destroy
-      expect(Provider.ride_connection).to eq(provider_2)
-    end
-  end
   
   describe "reimbursement rates" do
     describe "oaa3b_per_ride_reimbursement_rate" do

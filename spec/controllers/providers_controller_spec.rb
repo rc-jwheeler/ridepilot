@@ -133,9 +133,10 @@ RSpec.describe ProvidersController, type: :controller do
 
   describe "POST #change_dispatch" do
     it "updates the dispatch flag on the requested provider" do
+      initial_dispatch_value = @current_user.current_provider.dispatch
       expect {
         post :change_dispatch, {:id => @current_user.current_provider.id, :dispatch => false}
-      }.to change{ @current_user.current_provider.reload.dispatch }.from(true).to(false)
+      }.to change{ @current_user.current_provider.reload.dispatch }.from(initial_dispatch_value).to(false)
     end
 
     it "redirects to the provider" do
