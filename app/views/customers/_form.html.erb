@@ -102,10 +102,12 @@
         <%= f.collection_select :default_funding_source_id, @funding_sources, :id, :name, :include_blank => true %>
       </li>
 
-      <li class="selfclear">
-        <%= f.label :prime_number, translate_helper("prime_number") %>
-        <%= f.text_field :prime_number %>
-      </li>
+      <% if is_admin_or_system_admin? %>
+        <li class="selfclear">
+          <%= f.label :prime_number, translate_helper("prime_number") %>
+          <%= f.text_field :prime_number %>
+        </li>
+      <% end %>
 
       <li class="selfclear">
         <%= f.label :emergency_contact_notes, translate_helper("emergency_contact_notes") %>

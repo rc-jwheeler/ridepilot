@@ -99,9 +99,11 @@
     <dd><%= @customer.ethnicity %></dd>
   <% end %>
   
-  <dt><%= translate_helper("prime_number")%></td>
-  <dd><%= @customer.prime_number %></dd>
-  
+  <% if is_admin_or_system_admin? %>
+    <dt><%= translate_helper("prime_number")%></td>
+    <dd><%= @customer.prime_number %></dd>
+  <% end  %>  
+
   <dt><%= translate_helper("emergency_contact_notes")%></td>
   <dd><%= @customer.emergency_contact_notes %></dd>
 

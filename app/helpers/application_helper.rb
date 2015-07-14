@@ -16,6 +16,10 @@ module ApplicationHelper
 
     is_allowed
   end
+
+  def is_admin_or_system_admin?
+    current_user.present? && (current_user.admin? || current_user.super_admin?)
+  end
   
   def new_device_pool_members_options(members)
     options_for_select [["",""]] + members.map { |d| [d.name, d.id] }
