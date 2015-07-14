@@ -21,7 +21,7 @@ RSpec.describe "Reports" do
         before do
           @customer = create :customer, :provider => user.current_provider
           @trips    = (1..5).map { create :trip, :customer => customer }
-          visit customer_path(@customer)
+          visit customer_path(:id => @customer.id)
         end
         
         it "shows duplicate link" do
@@ -39,7 +39,7 @@ RSpec.describe "Reports" do
         end
         
         it "shows delete link" do
-          visit customer_path(@customer)
+          visit customer_path(:id => @customer.id)
           expect(page.has_link?("Delete")).to be
         end
       end
