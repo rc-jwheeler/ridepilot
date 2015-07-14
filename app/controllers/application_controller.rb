@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_filter :do_not_track
   before_filter :authenticate_user!
   before_filter :get_providers
+  before_filter :set_locale
   before_filter :set_cache_buster_for_xhr
   
   rescue_from CanCan::AccessDenied do |exception|
@@ -36,6 +37,14 @@ class ApplicationController < ActionController::Base
   
   def current_provider
     return current_user.current_provider
+  end
+
+  def default_url_options(options={}) # This overrides/extends
+    { locale: I18n.locale }
+  end
+
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
   end
 
   def current_provider_id

@@ -10,7 +10,7 @@
         %span#versionInfo= "Version #{Rails.application.config.version}"
     .pull-right
       - if current_user.present?
-        - if can? :manage, Translation
-          = link_to "En", request.env['PATH_INFO'] + "?tags=false"
-          = link_to "Tags", request.env['PATH_INFO'] + "?tags=true"
+        = links_to_each_locale(can? :manage, Translation)
+      -else
+        = links_to_each_locale(false)
 / end of footer
