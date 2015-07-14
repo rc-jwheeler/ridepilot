@@ -17,14 +17,13 @@ class ApplicationController < ActionController::Base
       return
     end
 
-    ride_connection = Provider.ride_connection
     @provider_map = []
-    for role in current_user.roles
-      if role.provider == ride_connection 
-        @provider_map = Provider.all.collect {|provider| [ provider.name, provider.id ] }
-        break
+    if current_user.super_admin?
+      @provider_map = Provider.all.collect {|provider| [ provider.name, provider.id ] }
+    else
+      for role in current_user.roles
+        @provider_map << [role.provider.name, role.provider_id]
       end
-      @provider_map << [role.provider.name, role.provider_id]
     end
     @provider_map.sort!{|a, b| a[0] <=> b[0] }
   end

@@ -7,6 +7,15 @@ module ApplicationHelper
   def show_scheduling?
     current_user && current_user.current_provider.scheduling?
   end
+
+  def can_edit_role?(role)
+    false if !current_user.present?
+
+    is_allowed = can? :edit, role
+    is_allowed = current_user.super_admin? if is_allowed && role.system_admin?
+
+    is_allowed
+  end
   
   def new_device_pool_members_options(members)
     options_for_select [["",""]] + members.map { |d| [d.name, d.id] }
