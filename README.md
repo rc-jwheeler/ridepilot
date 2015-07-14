@@ -38,7 +38,7 @@ Set up development environment
 
 3. Database setup
 
-    - Copy `config/database.yml.example.pg` to `config/database.yml` and update the values for specific environment.
+    - Copy `config/database.yml.example.pg` to `config/database.yml` and update the values for specific environment (at least __development__ and __test__).
 
     - `rake db:create`
 
@@ -56,8 +56,11 @@ Set up development environment
    - `rake db:seed`
 
 4. Testing
-    - `rake db:test:prepare`
-    - `rake test`
+    - set up test database if not yet
+      - make sure `config/database.yml` has the configurations for __test__ environment
+      - `RAILS_ENV=test rake db:create db:schema:load`
+    - update locales
+      - `rake ridepilot:load_locales`
     - `rspec`
 
 5. Start application
