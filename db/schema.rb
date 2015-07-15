@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150713143556) do
+ActiveRecord::Schema.define(version: 20150715133816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,10 +146,7 @@ ActiveRecord::Schema.define(version: 20150713143556) do
     t.boolean  "add_value_allowed",    default: true
     t.boolean  "edit_value_allowed",   default: true
     t.boolean  "delete_value_allowed", default: true
-    t.datetime "deleted_at"
   end
-
-  add_index "lookup_tables", ["deleted_at"], :name => "index_lookup_tables_on_deleted_at"
 
   create_table "mobilities", force: true do |t|
     t.string   "name"
