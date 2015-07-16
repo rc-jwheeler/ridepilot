@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   scope "(:locale)", locale: TranslationEngine.available_locales do
 
+    mount TranslationEngine::Engine => "/translation_engine"
+
     root :to => "home#index"
 
     devise_for :users
