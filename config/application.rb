@@ -38,9 +38,8 @@ module Ridepilot
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'Pacific Time (US & Canada)'
 
-    # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    # config.i18n.default_locale = :de
+    config.i18n.enforce_available_locales = false
+    config.i18n.default_locale = :en
 
     config.generators do |g|
       g.test_framework :rspec, fixture: false

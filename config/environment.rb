@@ -3,7 +3,7 @@ require File.expand_path('../application', __FILE__)
 
 Rails.application.routes.default_url_options[:host] = ENV['RIDEPILOT_HOST']
 
-I18n.available_locales = ["en", "tags"]
+I18n.available_locales = ["en"]
 
 #Deprecated; Values have been moved to trip_results table
 TRIP_RESULT_CODES = {
