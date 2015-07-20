@@ -81,6 +81,9 @@ gem "paranoia", "~> 2.0"
 # Manage application-level settings
 gem 'rails-settings-cached', '~> 0.4.1'
 
+# Use redis as the cache_store for Rails
+gem 'redis-rails', '~> 4.0.0'
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'

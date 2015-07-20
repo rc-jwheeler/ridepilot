@@ -1,4 +1,4 @@
-# all configurable environments: 
+# all configurable environments:
 #   development
 #   test
 #   integration
@@ -15,6 +15,7 @@ development:
   SMTP_MAIL_DOMAIN:
   SMTP_MAIL_USER_NAME:
   SMTP_MAIL_PASSWORD:
+  REDISCLOUD_URL:
 
 test:
   SYSTEM_ADMIN_EMAIL:
@@ -25,4 +26,5 @@ test:
   SMTP_MAIL_PORT:
   SMTP_MAIL_DOMAIN:
   SMTP_MAIL_USER_NAME:
-  SMTP_MAIL_PASSWORD:               
+  SMTP_MAIL_PASSWORD:
+  REDISCLOUD_URL:

@@ -53,5 +53,10 @@ module Ridepilot
       # g.controller_specs false
       # g.model_specs false
     end
+    
+    # Use Redis as the cache_store if it's available
+    if ENV["REDISCLOUD_URL"]
+      config.cache_store = :redis_store, ENV["REDISCLOUD_URL"], { expires_in: 90.minutes }
+    end
   end
 end
