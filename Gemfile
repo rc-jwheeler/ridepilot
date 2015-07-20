@@ -74,6 +74,9 @@ gem 'bootstrap-sass', '~> 3.3.5'
 # soft-delete
 gem "paranoia", "~> 2.0"
 
+# font-awesome icons
+gem "font-awesome-rails"
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'
