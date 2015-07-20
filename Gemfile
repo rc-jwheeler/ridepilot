@@ -84,6 +84,9 @@ gem 'rails-settings-cached', '~> 0.4.1'
 # Use redis as the cache_store for Rails
 gem 'redis-rails', '~> 4.0.0'
 
+# font-awesome icons
+gem "font-awesome-rails"
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'

@@ -104,4 +104,15 @@ module ApplicationHelper
   def is_add_user_allowed?(user)
     user.present? && ( user.admin? || user.super_admin?)
   end
+
+  def add_tooltip(key)
+    if TranslationEngine.translation_exists?(key)
+      html = '<i class="fa fa-question-circle fa-2x pull-right label-help" style="margin-top:-4px;" title data-content="'
+      html << TranslationEngine.translate_text(key.to_sym)
+      html << '" aria-label="'
+      html << TranslationEngine.translate_text(key.to_sym)
+      html << '" tabindex="0"></i>'
+      return html.html_safe
+    end
+  end
 end
