@@ -54,6 +54,7 @@ class Ability
     can action, Vehicle, :provider_id => provider.id
     can action, VehicleMaintenanceEvent, :provider_id => provider.id
     can :manage, LookupTable if role.admin?
+    can :manage, ApplicationSetting if role.admin?
         
     can action, DevicePoolDriver do |device_pool_driver|
       device_pool_driver.provider_id == provider.id

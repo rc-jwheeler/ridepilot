@@ -11,6 +11,15 @@ GIT
       simple_form
 
 GIT
+  remote: git://github.com/phatworx/devise_security_extension.git
+  revision: 2132a72dad0cfec5956ba64463c7a1a70ffe8e61
+  ref: 2132a72d
+  specs:
+    devise_security_extension (0.10.0)
+      devise (>= 3.0.0, < 4.0)
+      rails (>= 3.2.6, < 5.0)
+
+GIT
   remote: git://github.com/zpearce/Schedule-Attributes.git
   revision: babf55d9b5cd8f56456e1e2a33916e809f7c4e28
   specs:
@@ -181,6 +190,8 @@ GEM
       sprockets-rails (~> 2.0)
     rails-jquery-autocomplete (1.0.0)
       rails (>= 4.0)
+    rails-settings-cached (0.4.1)
+      rails (>= 4.0.0)
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
@@ -194,6 +205,23 @@ GEM
     raindrops (0.13.0)
     rake (10.4.2)
     rdoc (4.2.0)
+    redis (3.2.1)
+    redis-actionpack (4.0.0)
+      actionpack (~> 4)
+      redis-rack (~> 1.5.0)
+      redis-store (~> 1.1.0)
+    redis-activesupport (4.1.0)
+      activesupport (~> 4)
+      redis-store (~> 1.1.0)
+    redis-rack (1.5.0)
+      rack (~> 1.5)
+      redis-store (~> 1.1.0)
+    redis-rails (4.0.0)
+      redis-actionpack (~> 4)
+      redis-activesupport (~> 4)
+      redis-store (~> 1.1.0)
+    redis-store (1.1.6)
+      redis (>= 2.2)
     ref (1.0.5)
     request_store (1.1.0)
     responders (1.1.2)
@@ -289,6 +317,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   database_cleaner (~> 1.4)
   devise (~> 3.4.1)
+  devise_security_extension!
   exception_notification (~> 4.0)
   factory_girl_rails (~> 4.5)
   faker (~> 1.4)
@@ -308,7 +337,9 @@ DEPENDENCIES
   rack-timeout
   rails (~> 4.1.0)
   rails-jquery-autocomplete (~> 1.0.0)
+  rails-settings-cached (~> 0.4.1)
   rails_12factor
+  redis-rails (~> 4.0.0)
   rgeo
   rspec-rails (~> 3.2)
   sass-rails (~> 4.0.3)
@@ -323,6 +354,3 @@ DEPENDENCIES
   unicorn
   whenever (~> 0.9.4)
   will_paginate (~> 3.0.7)
-
-BUNDLED WITH
-   1.10.2

@@ -19,6 +19,12 @@ Rails.application.routes.draw do
       post "create_user" => "users#create_user"
     end
 
+    resource :application_settings, only: [:edit, :update] do
+      collection do
+        get :index
+      end
+    end
+
     resources :customers do
       post :inactivate, :as => :inactivate
       

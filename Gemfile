@@ -35,6 +35,10 @@ gem 'pg'
 gem 'cancancan', '~> 1.10.1'
 gem 'devise', '~> 3.4.1'
 
+# gem 'devise_security_extension', '~> 0.9.2'
+# Use specific commit to fix password_salt error, until new version released
+gem 'devise_security_extension', :git => 'git://github.com/phatworx/devise_security_extension.git', :ref => '2132a72d'
+
 # RADAR v3.x will support ActiveRecord 4.2
 gem 'rgeo'
 gem 'activerecord-postgis-adapter', '~> 2.2.1'
@@ -73,6 +77,12 @@ gem 'bootstrap-sass', '~> 3.3.5'
 
 # soft-delete
 gem "paranoia", "~> 2.0"
+
+# Manage application-level settings
+gem 'rails-settings-cached', '~> 0.4.1'
+
+# Use redis as the cache_store for Rails
+gem 'redis-rails', '~> 4.0.0'
 
 # font-awesome icons
 gem "font-awesome-rails"
