@@ -78,6 +78,9 @@ gem 'bootstrap-sass', '~> 3.3.5'
 # soft-delete
 gem "paranoia", "~> 2.0"
 
+# Manage application-level settings
+gem 'rails-settings-cached', '~> 0.4.1'
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'

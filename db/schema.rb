@@ -297,6 +297,17 @@ ActiveRecord::Schema.define(version: 20150720181030) do
 
   add_index "service_levels", ["deleted_at"], :name => "index_service_levels_on_deleted_at"
 
+  create_table "settings", force: true do |t|
+    t.string   "var",                   null: false
+    t.text     "value"
+    t.integer  "thing_id"
+    t.string   "thing_type", limit: 30
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
+
   create_table "translation_keys", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
