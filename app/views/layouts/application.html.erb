@@ -15,7 +15,7 @@
   </div>
   <div id="header">
     <div class="wrap selfclear">
-      <%= link_to translate_helper("logo_text"), root_path, :id => "logo" %>
+      <%= translate_helper("header_content") %>
       <div id="login-area">
         <% if current_user %>
           <a href="#"><%= current_user.email %></a> 

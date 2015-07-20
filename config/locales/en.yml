@@ -20,6 +20,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  header_content: "<a href='/en' id='logo'>RidePilot</a>"
   #addresses
   address_name: "Address Name"
   building_name: "Building Name"
