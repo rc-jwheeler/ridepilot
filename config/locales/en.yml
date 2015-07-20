@@ -103,7 +103,7 @@ en:
   lookup_table: "Lookup Table"
   edit_value: "Edit Value"
   value: "Value"
-
+  key: "Key"
   #Shared
   site_title: "Ridepilot"
   new_trip: "New Trip"

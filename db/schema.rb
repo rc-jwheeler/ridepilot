@@ -297,7 +297,7 @@ ActiveRecord::Schema.define(version: 20150715133816) do
   create_table "translations", force: true do |t|
     t.integer  "locale_id"
     t.integer  "translation_key_id"
-    t.string   "value"
+    t.text   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
