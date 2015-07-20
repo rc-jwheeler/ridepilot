@@ -376,6 +376,7 @@ en:
   trip_notes_label: "Trip notes:"
   trip_run_label: "Run: "
   trip_result_label: "Result: "
+  trip_result: 'Trip Result'
   pending: "Pending"
   manifest_trip_link_text: "manifest_trip"
 
@@ -678,6 +679,9 @@ en:
   translation_engine_link_text: "Translations"
   save: "Save"
   confirm_message: "Are you sure you want to delete this record?"
+  #filters
+  filter: 'Filter'
+  reset: 'Reset'
 
   locales:
     en: "English"

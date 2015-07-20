@@ -1,0 +1,19 @@
+= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips'
+.clearfix#page-header
+  %h1= translate_helper("view_trips")
+  = render :partial => 'weekday_select'
+  .clearfix
+
+.col-md-3
+  = render :partial => 'filters'
+.col-md-9
+  %div#calendar { data-start-time: @week_start.to_i * 1000}
+
+  = render :partial => 'list'
+
+  %hr
+
+  = link_to translate_helper("new_trip_link_text"), new_trip_path, :class=>'action-bttn new'
+
+= render 'javascript'
+

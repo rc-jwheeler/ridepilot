@@ -206,7 +206,7 @@
           */
           calendar_range = {start: start.getTime()/1000, end: end.getTime()/1000};
           
-          $.getJSON('<%= trips_path :json %>',
+          $.getJSON('<%= trips_path I18n.locale, :json %>',
             calendar_range,
             function(data, textStatus, jqXHR){  
               // we probably didn't have the right range before, so now  we should update the state
