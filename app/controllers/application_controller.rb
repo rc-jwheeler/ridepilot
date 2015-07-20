@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  before_filter :apply_application_settings
   before_filter :do_not_track
   before_filter :authenticate_user!
   before_filter :get_providers
@@ -34,6 +35,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+  
+  def apply_application_settings
+    ApplicationSetting.apply!
+  end
   
   def current_provider
     return current_user.current_provider
