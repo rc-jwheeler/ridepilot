@@ -256,16 +256,20 @@ Devise.setup do |config|
   # Configure security extension for devise
 
   # Should the password expire (e.g 3.months)
-  # config.expire_password_after = 3.months
+  config.expire_password_after = ApplicationSetting.defaults['devise.expire_password_after']
 
   # Need 1 char of A-Z, a-z and 0-9
   # config.password_regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/
 
   # How many passwords to keep in archive
-  # config.password_archiving_count = 5
+  # Note: Changing the password 4 times results in the old_passwords table
+  # containing passwords 1, 2, 3, and 4. With a password_archiving_count of 4,
+  # changing it a 5th time results in password 5 being added and password 1
+  # being dropped, and thus able to be used again after 5 changes.
+  config.password_archiving_count = ApplicationSetting.defaults['devise.password_archiving_count']
 
   # Deny old password (true, false, count)
-  # config.deny_old_passwords = true
+  config.deny_old_passwords = true
 
   # enable email validation for :secure_validatable. (true, false, validation_options)
   # dependency: need an email validator like rails_email_validator
@@ -288,5 +292,4 @@ Devise.setup do |config|
 
   # Time period for account expiry from last_activity_at
   # config.expire_after = 90.days
-
 end
