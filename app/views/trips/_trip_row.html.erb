@@ -1,7 +1,7 @@
 <tr class="trip">
   <td>
     <% if can? :edit, trip %>
-      <%= link_to(format_time_for_listing(trip.pickup_time), edit_trip_path(trip), "data-remote"=>true, :title=>translate_helper("edit_trip_link_text")) %>
+      <%= link_to(format_time_for_listing(trip.pickup_time), edit_trip_path(trip), :title=>translate_helper("edit_trip_link_text")) %>
     <% else %>
       <%= format_time_for_listing trip.pickup_time %>
     <% end %>
