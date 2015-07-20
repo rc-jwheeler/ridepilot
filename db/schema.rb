@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150715133816) do
+ActiveRecord::Schema.define(version: 20150720181030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -168,6 +168,15 @@ ActiveRecord::Schema.define(version: 20150715133816) do
 
   add_index "monthlies", ["funding_source_id"], :name => "index_monthlies_on_funding_source_id"
   add_index "monthlies", ["provider_id"], :name => "index_monthlies_on_provider_id"
+
+  create_table "old_passwords", force: true do |t|
+    t.string   "encrypted_password",       null: false
+    t.string   "password_archivable_type", null: false
+    t.integer  "password_archivable_id",   null: false
+    t.datetime "created_at"
+  end
+
+  add_index "old_passwords", ["password_archivable_type", "password_archivable_id"], :name => "index_password_archivable"
 
   create_table "provider_ethnicities", force: true do |t|
     t.integer  "provider_id"
@@ -392,10 +401,12 @@ ActiveRecord::Schema.define(version: 20150715133816) do
     t.integer  "current_provider_id"
     t.string   "unconfirmed_email"
     t.datetime "reset_password_sent_at"
+    t.datetime "password_changed_at"
   end
 
   add_index "users", ["current_provider_id"], :name => "index_users_on_current_provider_id"
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["password_changed_at"], :name => "index_users_on_password_changed_at"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
   create_table "vehicle_maintenance_events", force: true do |t|

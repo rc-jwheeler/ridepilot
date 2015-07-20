@@ -11,6 +11,15 @@ GIT
       simple_form
 
 GIT
+  remote: git://github.com/phatworx/devise_security_extension.git
+  revision: 2132a72dad0cfec5956ba64463c7a1a70ffe8e61
+  ref: 2132a72d
+  specs:
+    devise_security_extension (0.10.0)
+      devise (>= 3.0.0, < 4.0)
+      rails (>= 3.2.6, < 5.0)
+
+GIT
   remote: git://github.com/zpearce/Schedule-Attributes.git
   revision: babf55d9b5cd8f56456e1e2a33916e809f7c4e28
   specs:
@@ -287,6 +296,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   database_cleaner (~> 1.4)
   devise (~> 3.4.1)
+  devise_security_extension!
   exception_notification (~> 4.0)
   factory_girl_rails (~> 4.5)
   faker (~> 1.4)
@@ -320,6 +330,3 @@ DEPENDENCIES
   unicorn
   whenever (~> 0.9.4)
   will_paginate (~> 3.0.7)
-
-BUNDLED WITH
-   1.10.2
