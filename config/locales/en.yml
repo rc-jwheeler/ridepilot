@@ -201,6 +201,7 @@ en:
   current_provider_link_text: "Vehicles, drivers and users"
   dispatch_link_text: "Dispatch"
   lookup_tables_link_text: "Lookup Tables"
+  application_settings_link_text: "Application Settings"
   #footer
   footer_content: "Footer content here."
   #application layout
@@ -215,7 +216,7 @@ en:
   application_reports_link_text: "Reports"
   application_dispatch_link_text: "Dispatch"
   application_admin_link_text: "Admin"
-  application_settings_link_text: "Settings"
+  current_provider_settings_link_text: "Settings"
   #customer layout
   active_customers_link_text: "Active Customers"
   all_customers_link_text: "All Customers"
@@ -636,6 +637,19 @@ en:
   vehicle_show_heading: "Vehicle Details"
   add_maintenance_link_text: "Add Maintenance Event"
   edit_vehicle_link_text: "Edit Vehicle"
+  
+  # Application Settings
+  application_settings_heading: "Application Settings"
+  edit_application_settings_heading: "Editing Application Settings"
+  application_settings_password_archiving_count: "Password archive count"
+  application_settings_expire_password_after: "Expire password after"
+  application_settings_setting: "Setting"
+  application_settings_configured_value: "Configured Value"
+  application_settings_applied_value: "Applied Value"
+  application_settings_default_value: "Default Value"
+  application_settings_edit_link_text: "Edit Application Settings"
+  
+  # General
   translation_engine_link_text: "Translations"
   save: "Save"
   confirm_message: "Are you sure you want to delete this record?"

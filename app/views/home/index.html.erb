@@ -1,5 +1,6 @@
 <%= render 'shared/highlight_active_tab_js', is_primary_nav: false, tab_class: 'admin' %>
 <ul>
+  <% if can? :manage, ApplicationSetting %><li><%= link_to translate_helper("application_settings_link_text"), application_settings_path %></li><% end %>
   <% if can? :edit, "Providers" %><li><%= link_to translate_helper("providers_link_text"), providers_path %></li><% end %>
   <% if show_scheduling? %><li><%= link_to translate_helper("customers_link_text"), customers_path %></li><% end %>
   <% if show_scheduling? %><li><%= link_to translate_helper("funding_sources_link_text"), funding_sources_path %></li><% end %>
