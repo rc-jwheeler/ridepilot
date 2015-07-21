@@ -216,7 +216,7 @@
           <td>
             <table>
             <% if device_pool.device_pool_drivers.length == 0 %>
-              <tr class="empty"><td><%= translate_helper("no_drivers") %></td><td></td></tr>
+              <tr class="empty"><td><%= translate_helper("no_drivers") %></td></tr>
             <% else %>
               <% for device_pool_driver in device_pool.device_pool_drivers.sort {|a,b| a.name <=> b.name} %>
                 <%= render "device_pool_drivers/device_pool_driver_row", :device_pool_driver => device_pool_driver %>
@@ -258,6 +258,7 @@
   <table>
     <tr>
       <th><%= translate_helper("name") %></th>
+      <th><%= translate_helper("email") %></th>
       <th><%= translate_helper("active") %></th>
       <th><%= translate_helper("driver_paid") %></th>
       <% if can? :edit, Driver %>
@@ -268,6 +269,7 @@
     <% for driver in @provider.drivers %>
     <tr>
       <td class="<%= driver.active ? 'active' : 'inactive' %>"><%= driver.name %></td>
+      <td><%= mail_to(driver.email) if driver.email.present? %></td>
       <td><%= driver.active ? translate_helper("active") : translate_helper("inactive") %></td>
       <td><%= driver.paid ? translate_helper("driver_paid") : translate_helper("volunteer") %></td>
       <% if can? :edit, Driver %>
