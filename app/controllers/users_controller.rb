@@ -74,6 +74,24 @@ class UsersController < ApplicationController
     end
   end
 
+  def show_change_expiration
+    @user = User.find(params[:id])
+    authorize! :manage, @user
+  end
+
+  def change_expiration
+    @user = User.find(params[:id])
+    authorize! :manage, @user
+    
+    if @user.update_attributes(change_expiration_params)
+      flash.now[:alert] = "Expiration set"
+      redirect_to @user.current_provider
+    else
+      flash.now[:alert] = "Error setting expiration"
+      render action: :show_change_expiration
+    end
+  end
+
   def change_provider
     provider = Provider.find(params[:provider_id])
     if can? :read, provider
@@ -101,6 +119,10 @@ class UsersController < ApplicationController
   
   def create_user_params
     params.require(:user).permit(:email)
+  end
+  
+  def change_expiration_params
+    params.require(:user).permit(:expires_at, :inactivation_reason)
   end
   
   def change_password_params

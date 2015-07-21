@@ -10,13 +10,15 @@ Rails.application.routes.draw do
     devise_for :users
     
     devise_scope :user do
-      get "check_session" => "users#check_session"
       get "new_user" => "users#new_user"
-      get "show_change_password" => "users#show_change_password"
-      get "touch_session" => "users#touch_session"
-      patch "change_password"  => "users#change_password"
-      post "change_provider" => "users#change_provider"
       post "create_user" => "users#create_user"
+      get "show_change_password" => "users#show_change_password"
+      patch "change_password"  => "users#change_password"
+      get "show_change_expiration" => "users#show_change_expiration"
+      patch "change_expiration"  => "users#change_expiration"
+      post "change_provider" => "users#change_provider"
+      get "check_session" => "users#check_session"
+      get "touch_session" => "users#touch_session"
     end
 
     resource :application_settings, only: [:edit, :update] do

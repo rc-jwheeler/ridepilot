@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
+  include ActiveSupport::Testing::TimeHelpers
+  
   describe "role checks" do
     before(:each) do
       @user = create(:user)
@@ -189,6 +191,19 @@ RSpec.describe User, type: :model do
       
       # Can now reuse first password
       expect(user.update_password({current_password: passwords[2], password: passwords[0], password_confirmation: passwords[0]})).to be_truthy
+    end
+  end
+  
+  describe "account_expireable" do
+    it "locks the user when an expiration date is present" do
+      user = create :user
+      expect(user.active_for_authentication?).to be_truthy
+
+      user.update_attribute :expires_at, 1.hour.from_now
+      expect(user.active_for_authentication?).to be_truthy
+
+      user.update_attribute :expires_at, 1.hour.ago
+      expect(user.active_for_authentication?).to be_falsey
     end
   end
 end

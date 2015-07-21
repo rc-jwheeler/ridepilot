@@ -34,10 +34,12 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'pg'
 gem 'cancancan', '~> 1.10.1'
 gem 'devise', '~> 3.4.1'
+gem 'devise_account_expireable', '~> 0.0.2'
 
 # gem 'devise_security_extension', '~> 0.9.2'
 # Use specific commit to fix password_salt error, until new version released
 gem 'devise_security_extension', :git => 'git://github.com/phatworx/devise_security_extension.git', :ref => '2132a72d'
+
 
 # RADAR v3.x will support ActiveRecord 4.2
 gem 'rgeo'

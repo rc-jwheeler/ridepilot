@@ -15,6 +15,18 @@ function makeDatePickers () {
         stepMinute: 15,
         timeFormat: 'hh:mm tt',
   });
+  $('input[type=text]#user_expires_at').datetimepicker({
+        buttonImage: "<%=  image_path 'calendar-clock.png' %>",
+        buttonImageOnly: true,
+        constrainInput: false,
+        dateFormat: 'D yy-mm-dd',
+        hourGrid: 2,
+        minuteGrid: 15,
+        showOn: "button",
+        stepHour: 1,
+        stepMinute: 15,
+        timeFormat: 'hh:mm tt',
+  });
 }
 
 $(function(){

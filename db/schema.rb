@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150721160719) do
+ActiveRecord::Schema.define(version: 20150721190126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -414,6 +414,8 @@ ActiveRecord::Schema.define(version: 20150721160719) do
     t.string   "unconfirmed_email"
     t.datetime "reset_password_sent_at"
     t.datetime "password_changed_at"
+    t.datetime "expires_at"
+    t.string   "inactivation_reason"
   end
 
   add_index "users", ["current_provider_id"], :name => "index_users_on_current_provider_id"
