@@ -30,6 +30,15 @@ RSpec.describe Driver, type: :model do
     expect(driver.valid?).to be_truthy
   end
   
+  it "must have a valid email when specified" do
+    driver = build :driver, email: "m@m"
+    expect(driver.valid?).to be_falsey
+    expect(driver.errors.keys).to include :email
+    
+    driver.email = "m@m.m"
+    expect(driver.valid?).to be_truthy
+  end
+  
   it "can find drivers for a given provider" do
     driver_1 = create :driver
     driver_2 = create :driver
