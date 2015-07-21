@@ -1,7 +1,7 @@
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips'
-.clearfix#page-header
-  %h1= translate_helper("view_trips")
-  = render :partial => 'weekday_select'
+.clearfix.row#page-header
+  %h1= translate_helper("trips")
+  = link_to translate_helper("new_trip_link_text"), new_trip_path, :class=>'btn btn-default pull-right'
   .clearfix
 
 .col-md-3
@@ -12,8 +12,6 @@
   = render :partial => 'list'
 
   %hr
-
-  = link_to translate_helper("new_trip_link_text"), new_trip_path, :class=>'action-bttn new'
 
 = render 'javascript'
 

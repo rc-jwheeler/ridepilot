@@ -7,12 +7,14 @@ class TripsController < ApplicationController
   def index
     @trips = @trips.for_provider(current_provider_id).includes(:customer, {:run => [:driver, :vehicle]}).order(:pickup_time)
     
+    @vehicles        = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
+    @drivers         = Driver.active.for_provider current_provider_id
+
     respond_to do |format|
       format.html do
         @start = params[:start].to_i
         # let js handle grabbing the trips
         @trips = [] 
-        @vehicles = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
       end
       format.xml  { render :xml => @trips }
       format.json { render :json => trips_json }
