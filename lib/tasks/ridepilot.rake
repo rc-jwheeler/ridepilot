@@ -29,5 +29,17 @@ namespace :ridepilot do
     puts 'Finished seeding lookup table configurations'
   end
 
+  desc 'Seed some fake customers for testing'
+  task :seed_fake_customers => :environment do
+    for index in 1..5
+      debugger
+      customer = Customer.new
+      customer.first_name = "Customer_first_name_#{index}"
+      customer.last_name = "Customer_last_name_#{index}"
+      customer.address = Address.first
+      customer.provider = Provider.first
+      puts customer.save!
+    end
+  end
   #------------- End of Incremental Seeding --------------
 end
