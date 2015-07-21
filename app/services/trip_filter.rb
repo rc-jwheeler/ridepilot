@@ -51,9 +51,9 @@ class TripFilter
   def filter_by_status!
     if @filters[:status_id].present?  
       if @filters[:status_id].to_i == 1
-        @trips = @trips.where.not(run_id: nil)
+        @trips = @trips.where("run_id is NOT NULL or cab = true")
       else
-        @trips = @trips.where(run_id: nil)
+        @trips = @trips.where("run_id is NULL and cab = false")
       end
     end
   end
