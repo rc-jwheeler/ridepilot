@@ -110,6 +110,9 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
+    devise_account_expireable (0.0.2)
+      devise (>= 2.0.4)
+      rails (>= 3.2)
     diff-lcs (1.2.5)
     erubis (2.7.0)
     exception_notification (4.1.0)
@@ -317,6 +320,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   database_cleaner (~> 1.4)
   devise (~> 3.4.1)
+  devise_account_expireable (~> 0.0.2)
   devise_security_extension!
   exception_notification (~> 4.0)
   factory_girl_rails (~> 4.5)
@@ -354,3 +358,6 @@ DEPENDENCIES
   unicorn
   whenever (~> 0.9.4)
   will_paginate (~> 3.0.7)
+
+BUNDLED WITH
+   1.10.5

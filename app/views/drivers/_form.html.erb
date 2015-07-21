@@ -19,6 +19,11 @@
       </li>
 
       <li>
+        <%= f.label :email, translate_helper("driver_form_email") %>
+        <%= f.text_field :email %>
+      </li>
+
+      <li>
         <%= f.label :active, translate_helper("driver_form_active") %>
         <%= f.select :active, [["Active", "true"], ["Inactive", "false"]], {:selected => @driver.active.to_s} %>
       </li>

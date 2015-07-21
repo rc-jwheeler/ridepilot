@@ -50,6 +50,7 @@
       <th><%= translate_helper("email") %></th>
       <th><%= translate_helper("role") %></th>
       <th><%= translate_helper("last_login") %></th>
+      <th><%= translate_helper("expires_at") %></th>
       <% if can? :edit, Role %>
       <th></th>
       <th></th>
@@ -61,11 +62,12 @@
       <td class="<%= role.name.downcase %>">
         <%= role.user.email %>
         <% if role.user == current_user %>
-        <span class="separator">|</span> <%= link_to translate_helper("change_password"), show_change_password_path, :class=>'change-password' %>
+          <span class="separator">|</span> <%= link_to translate_helper("change_password"), show_change_password_path, :class=>'change-password' %>
         <% end %>
       </td>
       <td><%= role.name %></td>
       <td><%= role.user.last_sign_in_at %></td>
+      <td><%= link_to_if role.user != current_user, role.user.expires_at.present? ? role.user.expires_at : "N/A", show_change_expiration_path(id: role.user.id), :class=>'change-expiration' %></td>
       <% if can_edit_role?(role) %>
         <td>
           <%= form_for(role, :url=>provider_change_role_path(@provider.id), :html => { :method => :post }) do |f| %>
@@ -216,7 +218,7 @@
           <td>
             <table>
             <% if device_pool.device_pool_drivers.length == 0 %>
-              <tr class="empty"><td><%= translate_helper("no_drivers") %></td><td></td></tr>
+              <tr class="empty"><td><%= translate_helper("no_drivers") %></td></tr>
             <% else %>
               <% for device_pool_driver in device_pool.device_pool_drivers.sort {|a,b| a.name <=> b.name} %>
                 <%= render "device_pool_drivers/device_pool_driver_row", :device_pool_driver => device_pool_driver %>
@@ -258,6 +260,7 @@
   <table>
     <tr>
       <th><%= translate_helper("name") %></th>
+      <th><%= translate_helper("email") %></th>
       <th><%= translate_helper("active") %></th>
       <th><%= translate_helper("driver_paid") %></th>
       <% if can? :edit, Driver %>
@@ -268,6 +271,7 @@
     <% for driver in @provider.drivers %>
     <tr>
       <td class="<%= driver.active ? 'active' : 'inactive' %>"><%= driver.name %></td>
+      <td><%= mail_to(driver.email) if driver.email.present? %></td>
       <td><%= driver.active ? translate_helper("active") : translate_helper("inactive") %></td>
       <td><%= driver.paid ? translate_helper("driver_paid") : translate_helper("volunteer") %></td>
       <% if can? :edit, Driver %>

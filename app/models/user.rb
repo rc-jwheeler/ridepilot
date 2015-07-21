@@ -1,25 +1,26 @@
 class User < ActiveRecord::Base
   has_many   :roles, dependent: :destroy
-  belongs_to :current_provider, :class_name=>"Provider", :foreign_key => :current_provider_id
+  belongs_to :current_provider, class_name: "Provider", foreign_key: :current_provider_id
   has_one    :driver
-  has_one    :device_pool_driver, :through => :driver
+  has_one    :device_pool_driver, through: :driver
   
   # Include default devise modules. Others available are:
   # :rememberable, :token_authenticatable, :confirmable, :lockable
   devise :database_authenticatable, :recoverable, :trackable, :validatable, 
-    :timeoutable, :password_expirable, :password_archivable
+    :timeoutable, :password_expirable, :password_archivable, :account_expireable
 
-  validates :password, :confirmation => true
-  validates :email, :uniqueness => true
+  # Let Devise handle the email format requirement
+  validates :email, uniqueness: true
   
-  # Let Devise handle the length requirement.
-  validates_format_of :password, :if => :password_required?,
-            :with => /\A(?=.*[0-9])(?=.*[\W])(?=.*[a-zA-Z])(.*)\z/,
-            :message => "must have at least one number and at least one " +
-                        "non-alphanumeric character"
+  # Let Devise handle the password length requirement
+  validates :password, confirmation: true, format: {
+    if: :password_required?,
+    with: /\A(?=.*[0-9])(?=.*[\W])(?=.*[a-zA-Z])(.*)\z/,
+    message: "must have at least one number and at least one non-alphanumeric character"
+  }
   
-  before_create do
-    self.email.downcase! if self.email
+  before_validation do
+    self.email = self.email.downcase if self.email.present?
   end
   
   def self.drivers(provider)
