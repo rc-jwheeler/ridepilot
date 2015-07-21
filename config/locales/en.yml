@@ -602,7 +602,7 @@ en:
   edit_run_link_text: "Edit Run"
   cab_trip: "Cab Trip"
   view_customer_record_link_text: "Click to view customer record"
-  select_days_of_week: "Select Days of Week..."
+  days_of_week: "Days of Week"
   editing_trip: "Editing Trip"
   view_trips: "View Trips"
   reconcile_cab_log: "Reconcile Cab Log"
@@ -682,6 +682,7 @@ en:
   #filters
   filter: 'Filter'
   reset: 'Reset'
+  all: 'All'
 
   locales:
     en: "English"

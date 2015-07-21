@@ -1,7 +1,7 @@
-#footer{:role => "contentinfo", :aria => {:label => 'Footer'}}
-  #footer_text
+.col-sm-12#footer{:role => "contentinfo", :aria => {:label => 'Footer'}}
+  .col-sm-12#footer_text
     = translate_helper("footer_content")
-  #versionLang.col-xs-12
+  #versionLang.col-sm-12
     .pull-left
       - unless Rails.env.production?
         %span#versionInfo
