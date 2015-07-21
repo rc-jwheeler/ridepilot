@@ -683,6 +683,9 @@ en:
   filter: 'Filter'
   reset: 'Reset'
   all: 'All'
+  status: 'Status'
+  scheduled: 'Scheduled'
+  unscheduled: 'Unscheduled'
 
   locales:
     en: "English"

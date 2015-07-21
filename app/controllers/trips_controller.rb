@@ -6,10 +6,10 @@ class TripsController < ApplicationController
 
   def index
     @trips = @trips.for_provider(current_provider_id).includes(:customer, {:run => [:driver, :vehicle]}).order(:pickup_time)
+    @trips = filter_trips
     
     @vehicles        = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
     @drivers         = Driver.active.for_provider current_provider_id
-
     respond_to do |format|
       format.html do
         @start = params[:start].to_i
@@ -265,7 +265,6 @@ class TripsController < ApplicationController
   end
   
   def trips_json
-    filter_trips
     trips = @trips.map { |trip| 
       { :id    => trip.id,
         :start => trip.pickup_time.to_s(:js),
@@ -322,26 +321,30 @@ class TripsController < ApplicationController
   end
 
   def filter_trips
-    if params[:end].present? && params[:start].present?
-      t_start = Time.at(params[:start].to_i).to_date.in_time_zone.utc
-      t_end   = Time.at(params[:end].to_i).to_date.in_time_zone.utc
-    else
-      time    = Time.now
-      t_start = time.beginning_of_week.to_date.in_time_zone.utc
-      t_end   = t_start + 6.days
-    end
+    filters_hash = {
+      start: params[:start], 
+      end: params[:end]
+      }.merge params[:trip_filters] || {}
+    update_sessions(filters_hash)
+    
+    TripFilter.new(@trips, trip_sessions).filter!
+  end
 
-    @trips = @trips.
-      where("pickup_time >= '#{t_start.strftime "%Y-%m-%d %H:%M:%S"}'").
-      where("pickup_time <= '#{t_end.strftime "%Y-%m-%d %H:%M:%S"}'").order(:pickup_time)
-      
-    if params[:vehicle_id].present?  
-      if params[:vehicle_id].to_i == -1
-        @trips = @trips.select {|t| t.cab } 
-      else
-        @trips = @trips.select {|t| t.vehicle_id == params[:vehicle_id].to_i } 
-      end
+  def update_sessions(params = {})
+    params.each do |key, val|
+      session[key] = val if !val.nil?
     end
+  end
+
+  def trip_sessions
+    {
+      start: session[:start],
+      end: session[:end], 
+      driver_id: session[:driver_id], 
+      vehicle_id: session[:vehicle_id],
+      trip_result_id: session[:trip_result_id], 
+      status_id: session[:status_id]
+    }
   end
 
   def add_cab(vehicles)
