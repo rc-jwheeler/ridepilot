@@ -20,5 +20,4 @@ class Driver < ActiveRecord::Base
   def self.unassigned(provider)
     users.for_provider(provider).reject { |driver| driver.device_pool.present? }
   end
-  
 end
