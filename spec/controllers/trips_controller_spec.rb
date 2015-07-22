@@ -66,7 +66,7 @@ RSpec.describe TripsController, type: :controller do
           expect(json["rows"].first).to include("<tr class=\"day\">")
           expect(json["rows"].first).to include(pickup_time.strftime('%A, %e-%b-%4Y'))
           expect(json["rows"].second).to include("<tr class=\"trip\">")
-          expect(json["rows"].second).to include(edit_trip_path(trip))
+          expect(json["rows"].second).to include(trip_path(trip))
         end
       end
       
