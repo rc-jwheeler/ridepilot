@@ -57,11 +57,11 @@ RSpec.describe Driver, type: :model do
     expect(unassigned).to include driver_2
   end
   
-  # it "can generate a hash of the driver's operating hours" do
-  #   driver = create :driver
-  #   hours = create :operating_hours, driver: driver, day_of_week: 0, start_time: "01:00", end_time: "02:00"
-  #   expect(driver.hours_hash[0]).to eql hours
-  # end
+  it "can generate a hash of the driver's operating hours" do
+    driver = create :driver
+    hours = create :operating_hours, driver: driver, day_of_week: 0, start_time: "01:00", end_time: "02:00"
+    expect(driver.hours_hash[0]).to eql hours
+  end
   
   describe "available?" do
     before do

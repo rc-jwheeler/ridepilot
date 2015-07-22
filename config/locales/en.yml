@@ -183,6 +183,10 @@ en:
   driver_form_submit: "Submit"
   edit_driver_heading: "Edit Driver"
   new_driver_heading: "New Driver"
+  operating_hours_heading: "Available Hours"
+  operating_hours_closed: "Closed"
+  operating_hours_24_hours: "24 Hours"
+  operating_hours_open: "Open ..."
   #funding_source
   funding_source_form_name: "Name"
   funding_source_label: "Available to:"
@@ -306,6 +310,7 @@ en:
   add_vehicle_to_device_pool: "Add Vehicle"
   new_device_pool_link_text: "Create Device Pool"
   switch_providers_to_add_device_pool: "<p>You are currently logged in to %{current_provider}.  To create a device pool for %{provider}, please switch providers by using the dropdown menu at the top of this page.</p>"
+  currently_available: "Currently Available?"
   driver_paid: "Paid"
   volunteer: "Volunteer"
   delete_driver_confirm: "Are you sure?"

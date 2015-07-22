@@ -39,4 +39,18 @@ RSpec.describe OperatingHours, type: :model do
     expect(hours.valid?).to be_truthy
     expect(hours.is_24_hours?).to be_truthy
   end
+  
+  it "can make itself closed" do
+    hours = build :operating_hours
+    expect(hours.is_closed?).to be_falsey
+    hours.make_closed
+    expect(hours.is_closed?).to be_truthy
+  end
+  
+  it "can make itself available 24 hours" do
+    hours = build :operating_hours
+    expect(hours.is_24_hours?).to be_falsey
+    hours.make_24_hours
+    expect(hours.is_24_hours?).to be_truthy
+  end
 end

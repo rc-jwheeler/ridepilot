@@ -14,19 +14,19 @@ class OperatingHours < ActiveRecord::Base
   # - start_time == 0:00 and end_time == 0:00 represents 24-hours
   # - If closed, then hours should be null.
 
-  # def make_closed!
-  #   self.start_time = nil
-  #   self.end_time = nil
-  # end
+  def make_closed
+    self.start_time = nil
+    self.end_time = nil
+  end
   
   def is_closed?
     self.start_time.nil? and self.end_time.nil?
   end
   
-  # def make_24_hours!
-  #   self.start_time = '00:00'
-  #   self.end_time = '00:00'
-  # end
+  def make_24_hours
+    self.start_time = '00:00'
+    self.end_time = '00:00'
+  end
   
   def is_24_hours?
     start_time.try(:to_s,:time_utc) == '00:00:00' and end_time.try(:to_s, :time_utc) == '00:00:00'

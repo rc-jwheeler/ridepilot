@@ -512,6 +512,12 @@ fieldset ol.section li label, .ui-widget fieldset ol.section li label {
   width: 35%;
   margin-right: 2%;
 }
+fieldset ol.section li label.inline, .ui-widget fieldset ol.section li label.inline {
+  float: none;
+  width: auto;
+  margin-right: 0;
+  font-weight: normal;
+}
 fieldset ol.section li input, .ui-widget fieldset ol.section li input {
   max-width: 60%;
 }

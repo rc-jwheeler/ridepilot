@@ -37,10 +37,71 @@
         <%= f.label :user_id, translate_helper("driver_form_associated_user") %>
         <%= f.collection_select :user_id, @available_users, :id, :email, :include_blank => true %>
       </li>
+      <li>
+        <br>
+        <%= label_tag translate_helper("operating_hours_heading") %>
+        <table>
+          <% Date::DAYNAMES.each_with_index do |day_name, day_value| %>
+            <% hours = @hours[day_value] %>
+            <tr <%= (!hours.nil? and hours.errors.any?) ? 'class=row_with_errors' : '' %>>
+              <td nowrap><%= day_name %></td>
+              <td nowrap>
+                <%= radio_button_tag "hours[#{day_value}]", 'closed', (hours.nil? or hours.is_closed?), :id => "hours-#{day_value}-closed", :class => "hours-#{day_value}" %> <%= label_tag "hours-#{day_value}-closed", translate_helper("operating_hours_closed"), class: :inline %>
+              </td>
+              <td nowrap>
+                <%= radio_button_tag "hours[#{day_value}]", 'open24', (!hours.nil? and hours.is_24_hours?), :id => "hours-#{day_value}-open-24", :class => "hours-#{day_value}" %> <%= label_tag "hours-#{day_value}-open-24", translate_helper("operating_hours_24_hours"), class: :inline %>
+              </td>
+              <td nowrap>
+                <%= radio_button_tag "hours[#{day_value}]", 'open', (!hours.nil? and hours.is_regular_hours?), :id => "hours-#{day_value}-open", :class => "hours-#{day_value}" %> <%= label_tag "hours-#{day_value}-open", translate_helper("operating_hours_open"), class: :inline %>
+                <select id="start-hour-<%= day_value %>" name="start_hour[<%= day_value %>]">
+                  <% @start_hours.each do |hour| %>
+                    <option value="<%= hour %>" <%= !hours.nil? and hour.to_s(:time_utc) == hours.start_time.try(:to_s, :time_utc) ? "selected" : "" %>>
+                      <%= hour.strftime("%l:%M%P") %>
+                    </option>
+                  <% end %>
+                </select> to
+                <select id="end-hour-<%= day_value %>" name="end_hour[<%= day_value %>]">
+                  <% @end_hours.each do |hour| %>
+                    <option value="<%= hour %>" <%= !hours.nil? and hour.to_s(:time_utc) == hours.end_time.try(:to_s, :time_utc) ? "selected" : "" %>>
+                      <%= hour.strftime("%l:%M%P") %>
+                    </option>
+                  <% end %>
+                </select>
+              </td>
+              <td>
+                <% if !hours.nil? and hours.errors.any? %>
+                  <% hours.errors.full_messages.each do |msg| %>
+                    <span class="error"><%= msg %></span><br/>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </li>
     </ol>
 
     <div class="actions">
       <%= f.submit translate_helper("driver_form_submit") %>
     </div>
-
+  
+  </fieldset>
 <% end %> 
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    function update_hours_enabled(i) {
+      var enabled = $("input#hours-" + i + "-open").is(":checked");
+      $("select#start-hour-" + i).prop('disabled', !enabled);
+      $("select#end-hour-" + i).prop('disabled', !enabled);
+    };
+
+    // Enable/disable behavior for operating hours on form
+    for (var i = 0; i < 7; ++i) (function(i) {
+      update_hours_enabled(i);
+      $("input.hours-" + i).click(function(e) {
+        update_hours_enabled(i);
+      });
+    })(i);
+  });
+<% end %>

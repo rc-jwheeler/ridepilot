@@ -263,6 +263,7 @@
       <th><%= translate_helper("email") %></th>
       <th><%= translate_helper("active") %></th>
       <th><%= translate_helper("driver_paid") %></th>
+      <th><%= translate_helper("currently_available") %></th>
       <% if can? :edit, Driver %>
       <th></th>
       <th></th>
@@ -274,6 +275,7 @@
       <td><%= mail_to(driver.email) if driver.email.present? %></td>
       <td><%= driver.active ? translate_helper("active") : translate_helper("inactive") %></td>
       <td><%= driver.paid ? translate_helper("driver_paid") : translate_helper("volunteer") %></td>
+      <td><%= driver.available? ? translate_helper("true") : translate_helper("false") %></td>
       <% if can? :edit, Driver %>
       <td><%= link_to translate_helper("edit"), edit_driver_path(driver), :class=>'edit edit-driver' %></td>
       <td><%= link_to translate_helper("delete"), driver, :confirm => translate_helper("delete_driver_confirm"), :method => :delete, :class=>'delete' %></td>

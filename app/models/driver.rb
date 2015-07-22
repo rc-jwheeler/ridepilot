@@ -22,13 +22,13 @@ class Driver < ActiveRecord::Base
     users.for_provider(provider).reject { |driver| driver.device_pool.present? }
   end
 
-  # def hours_hash
-  #   result = {}
-  #   self.operating_hours.each do |h|
-  #     result[h.day_of_week] = h
-  #   end
-  #   result
-  # end
+  def hours_hash
+    result = {}
+    self.operating_hours.each do |h|
+      result[h.day_of_week] = h
+    end
+    result
+  end
   
   def available?(day_of_week: Time.current.wday, time_of_day: Time.current.strftime('%H:%M'))
     # If no operating hours are defined, assume available
