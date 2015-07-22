@@ -568,6 +568,7 @@ en:
       one: "%{count} error prohibited this record from being saved:"
       other: "%{count} errors prohibited this record from being saved:"
   #trips
+  trip: 'Trip'
   change_customer: "Change Customer"
   trips_form_error_message: 
     one: "%{count} error prohibited this trip from being saved:"
@@ -614,6 +615,14 @@ en:
   trip_to: "To"
   trip_confirm: "Confirm"
   trip_turn_down: "Turn Down"
+  weeks: 'Weeks'
+  repeat_every: 'Repeat every'
+  other: 'Other'
+  trip_parameters: 'Trip Parameters'
+  new: 'New'
+  update: 'Update'
+  assignment: 'Assignment'
+  n_a: 'N/A'
   #users
   new_user_heading: "Create New User"
   user_form_error_message: 

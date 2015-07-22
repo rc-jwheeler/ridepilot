@@ -143,6 +143,16 @@ class TripsController < ApplicationController
     end
   end
 
+  def show
+    prep_view
+    @trips = []
+    
+    respond_to do |format|
+      format.html 
+      format.js  { @remote = true; render :json => {:form => render_to_string(:partial => 'form')}, :content_type => "text/json" }
+    end
+  end
+
   def create
     if params[:trip][:customer_id] && customer = Customer.find_by_id(params[:trip][:customer_id])
       authorize! :read, customer
