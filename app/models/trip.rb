@@ -3,6 +3,7 @@ class Trip < ActiveRecord::Base
 
   belongs_to :provider
   belongs_to :run
+  delegate :name, to: :run, prefix: :run, allow_nil: true
   belongs_to :customer
   belongs_to :funding_source
   belongs_to :mobility
