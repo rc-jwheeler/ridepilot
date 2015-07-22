@@ -114,6 +114,14 @@ first_name, first_name, first_name, first_name,
 
     respond_to do |format|
       if @customer.save
+
+        providers = []
+        params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
+          providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
+        end
+
+        @customer.save!
+
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
@@ -139,6 +147,15 @@ first_name, first_name, first_name, first_name,
     
     respond_to do |format|
       if @customer.update_attributes customer_params
+
+        providers = []
+        params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
+          providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
+        end
+
+        @customer.authorized_providers = providers
+        @customer.save!
+
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
       else
@@ -184,6 +201,7 @@ first_name, first_name, first_name, first_name,
       :prime_number,
       :private_notes,
       :public_notes,
+      :authorized_provider_ids,
       :address_attributes => [
         :address,
         :building_name,

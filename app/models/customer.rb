@@ -1,8 +1,8 @@
 class Customer < ActiveRecord::Base
 
-  has_and_belongs_to_many :authorized_providers, :class_name => 'Provider', :through => 'providers_customers'  
+  has_and_belongs_to_many :authorized_providers, :class_name => 'Provider', :through => 'customers_providers'
 
-  #belongs_to :provider
+  belongs_to :provider
   belongs_to :address
   belongs_to :mobility
   belongs_to :default_funding_source, :class_name=>'FundingSource'
