@@ -64,6 +64,10 @@ class Ability
       device_pool_driver.driver_id == user.driver.id if user.driver
     end
 
+    can :manage, DriverHistory do |driver_history|
+      role.admin? and driver_history.driver.provider_id == provider.id
+    end
+    
     if role.admin?
       can :manage, User, {:roles => {:provider_id => provider.id}}
       can :manage, Translation
