@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  load_and_authorize_resource :except=>[:autocomplete, :found, :edit]
+  load_and_authorize_resource :except=>[:autocomplete, :found, :edit, :show, :update]
 
   def autocomplete
     customers = Customer.for_provider(current_provider_id).by_term( params['term'].downcase, 10 ).accessible_by(current_ability)
@@ -48,6 +48,8 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
 
     # default scope is pickup time ascending, so reverse
+    authorize! :show, @customer if Customer.where("id = ? AND (provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?))", @customer.id, current_provider.id, current_provider.id).count == 0
+
     @trips    = @customer.trips.reorder('pickup_time desc').paginate :page => params[:page], :per_page => PER_PAGE
 
     respond_to do |format|
@@ -69,7 +71,7 @@ class CustomersController < ApplicationController
 
   def edit
     @customer = Customer.find(params[:id])
-    #authorize! :edit, @customer if Customer.where("id = ? AND provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?)", @customer.id, current_provider.id, current_provider.id).count == 0
+    authorize! :edit, @customer if Customer.where("id = ? AND provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?)", @customer.id, current_provider.id, current_provider.id).count == 0
     prep_edit
   end
 
@@ -144,6 +146,8 @@ first_name, first_name, first_name, first_name,
 
   def update
     @customer = Customer.find(params[:id])
+
+    authorize! :update, @customer if Customer.where("id = ? AND provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?)", @customer.id, current_provider.id, current_provider.id).count == 0
 
     @customer.assign_attributes customer_params
 

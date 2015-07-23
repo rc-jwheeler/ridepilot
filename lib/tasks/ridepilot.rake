@@ -49,9 +49,8 @@
       offset = rand(Provider.count)
       random_provider = Provider.offset(offset).first
       provider_id = 
-      user = User.find_or_create_by(:email => "abromley#{index}@camsys.com") do |userr|
-        userr.password = "welcome1!"  
-      end
+      user = User.find_or_create_by(:email => "abromley#{index}@camsys.com")
+      user.password = "welcome1!"
       user.current_provider_id = random_provider.id
       user.save!
       role = Role.new
