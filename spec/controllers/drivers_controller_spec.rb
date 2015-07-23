@@ -54,6 +54,29 @@ RSpec.describe DriversController, type: :controller do
         post :create, {:driver => valid_attributes}
         expect(response).to redirect_to(@current_user.current_provider)
       end
+      
+      context "with nested driver history attributes" do
+        it "creates new driver histories" do
+          expect {
+            post :create, {:driver => valid_attributes.merge({
+              driver_histories_attributes: [
+                attributes_for(:driver_history)
+              ]
+            })}
+          }.to change(DriverHistory, :count).by(1)
+        end
+
+        it "rejects driver histories with blank events" do
+          expect {
+            post :create, {:driver => valid_attributes.merge({
+              driver_histories_attributes: [
+                attributes_for(:driver_history),
+                attributes_for(:driver_history, event: nil)
+              ]
+            })}
+          }.to change(DriverHistory, :count).by(1)
+        end
+      end
     end
 
     context "with invalid params" do
@@ -98,6 +121,43 @@ RSpec.describe DriversController, type: :controller do
         put :update, {:id => driver.to_param, :driver => valid_attributes}
         expect(response).to redirect_to(@current_user.current_provider)
       end
+      
+      context "with nested driver history attributes" do
+        before do
+          @driver = create :driver, :provider => @current_user.current_provider
+          @driver_history = create :driver_history, driver: @driver, event: "Crash"
+        end
+        
+        it "updates driver histories" do
+          expect {
+            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
+              driver_histories_attributes: [
+                @driver_history.attributes.merge({event: "Accident"})
+              ]
+            })}
+          }.to change{ @driver_history.reload.event }.from("Crash").to("Accident")
+        end
+
+        it "allows new driver histories to be added" do
+          expect {
+            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
+              driver_histories_attributes: [
+                attributes_for(:driver_history),
+              ]
+            })}
+          }.to change(DriverHistory, :count).by(1)
+        end
+
+        it "allows driver histories to be destroyed" do
+          expect {
+            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
+              driver_histories_attributes: [
+                @driver_history.attributes.merge({:_destroy => "1"})
+              ]
+            })}
+          }.to change(DriverHistory, :count).by(-1)
+        end
+      end
     end
 
     context "with invalid params" do
@@ -129,5 +189,4 @@ RSpec.describe DriversController, type: :controller do
       expect(response).to redirect_to(@current_user.current_provider)
     end
   end
-
 end

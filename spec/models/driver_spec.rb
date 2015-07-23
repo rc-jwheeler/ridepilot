@@ -134,5 +134,12 @@ RSpec.describe Driver, type: :model do
         @driver.save
       }.not_to change(DriverHistory, :count)
     end
+    
+    it "destroys driver histories when the driver is destroyed" do
+      3.times { create :driver_history, driver: @driver }
+      expect {
+        @driver.destroy
+      }.to change(DriverHistory, :count).by(-3)
+    end
   end
 end
