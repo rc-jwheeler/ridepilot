@@ -5,6 +5,14 @@
   .panel-body{style: 'padding: 5px;'}
     .form-group.col-sm-12
       .col-sm-3
+        = f.label :customer_informed, translate_helper("trip_called_back")
+      .col-sm-9
+        = f.check_box :customer_informed
+        - if @trip.customer_informed
+          = "on #{@trip.called_back_at}" if @trip.called_back_at.present?
+          = "by #{@trip.called_back_by.email}" if @trip.called_back_by.present?
+    .form-group.col-sm-12
+      .col-sm-3
         = f.label :trip_result, translate_helper("trip_result")
       .col-sm-9
         = f.select :trip_result_id, @trip_results,  { :include_blank => true }, {class: 'form-control'} 

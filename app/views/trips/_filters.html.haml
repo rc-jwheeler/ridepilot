@@ -5,7 +5,14 @@
   .panel-body{style: 'padding: 5px;'}
     = form_for :trip_filters, url: trips_path, html: { :id => "trip_filter_form" }, :method => :get do |f|
       .btns.pull-right
+        = f.submit  translate_helper(:ok), id: 'runTripFilters', class: 'btn action-button', role: 'button'
         = button_tag  translate_helper(:reset), id: 'resetTripFilters', class: 'btn action-button', role: 'button'
+      .col-sm-12.datepicker{style: 'padding: 5px;'}
+        = f.label :start, translate_helper("from_date")
+        = f.text_field :start, :value => format_time_for_listing_day(@start_pickup_date), name: 'start', class: 'form-control', disabled: 'disabled'
+      .col-sm-12.datepicker{style: 'padding: 5px;'}
+        = f.label :end, translate_helper("to_date")
+        = f.text_field :end, :value => format_time_for_listing_day(@end_pickup_date), name: 'end', class: 'form-control', disabled: 'disabled'
       .col-sm-12{style: 'padding: 5px;'}
         = render partial: 'weekday_select'
       .col-sm-12{style: 'padding: 5px;'}
@@ -22,15 +29,26 @@
         = f.select :trip_result_id, options_from_collection_for_select( TripResult.all, :id, :name, session[:trip_result_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }
 
 :javascript
+
   $(document).ready(function(){
-    $('#trip_filter_form select').on('change', function() {
-      $('#trip_filter_form').submit();
-    });
+    function makeDatePickers () {
+      $('.datepicker input[type=text]').datepicker({
+          showOn: 'both',
+          buttonImage: "#{image_path 'calendar-clock.png'}",
+          buttonImageOnly: true,
+          constrainInput: false,
+          dateFormat: 'dd-M-yy D'
+      });
+    }
+    makeDatePickers();
+
     $('#resetTripFilters').on('click', function() {
+      $('#trip_filter_form input').val('');
       $('#trip_filter_form select').val('');
 
       $('#trip_filter_form select').submit();
     });
+
   });
       
     
