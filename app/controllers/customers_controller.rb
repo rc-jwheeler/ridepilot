@@ -48,7 +48,7 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
 
     # default scope is pickup time ascending, so reverse
-    authorize! :show, @customer if Customer.where("id = ? AND (provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?))", @customer.id, current_provider.id, current_provider.id).count == 0
+    authorize! :show, @customer if !@customer.authorized_for_provider(current_provider.id)
 
     @trips    = @customer.trips.reorder('pickup_time desc').paginate :page => params[:page], :per_page => PER_PAGE
 
@@ -71,7 +71,7 @@ class CustomersController < ApplicationController
 
   def edit
     @customer = Customer.find(params[:id])
-    authorize! :edit, @customer if Customer.where("id = ? AND provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?)", @customer.id, current_provider.id, current_provider.id).count == 0
+    authorize! :edit, @customer if !@customer.authorized_for_provider(current_provider.id)
     prep_edit
   end
 
@@ -147,7 +147,7 @@ first_name, first_name, first_name, first_name,
   def update
     @customer = Customer.find(params[:id])
 
-    authorize! :update, @customer if Customer.where("id = ? AND provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?)", @customer.id, current_provider.id, current_provider.id).count == 0
+    authorize! :update, @customer if !@customer.authorized_for_provider(current_provider.id)
 
     @customer.assign_attributes customer_params
 
@@ -240,4 +240,5 @@ first_name, first_name, first_name, first_name,
     @funding_sources = FundingSource.by_provider(current_provider)
     @service_levels = ServiceLevel.pluck(:name, :id)
   end
+
 end

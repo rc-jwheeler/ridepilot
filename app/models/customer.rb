@@ -87,6 +87,10 @@ class Customer < ActiveRecord::Base
       false
     end
   end
+
+  def authorized_for_provider provider_id
+    Customer.for_provider(provider_id).where("id = ?", self.id).count > 0
+  end
   
   def self.by_term( term, limit = nil )
     if term[0].match /\d/ #by phone number
