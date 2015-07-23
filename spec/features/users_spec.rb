@@ -13,6 +13,8 @@ RSpec.describe "Users" do
       fill_in 'user_email', :with => user.email
       fill_in 'Password', :with => 'password'
       click_button 'Log In'
+      
+      # TODO add sme actual assertions
     end
   end
 end

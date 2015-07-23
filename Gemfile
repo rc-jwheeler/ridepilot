@@ -89,6 +89,9 @@ gem 'redis-rails', '~> 4.0.0'
 # font-awesome icons
 gem "font-awesome-rails"
 
+# Nested form helper
+gem 'nested_form', '~> 0.3.2'
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'

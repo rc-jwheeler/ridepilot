@@ -54,6 +54,8 @@ class DriversController < ApplicationController
   private
   
   def prep_edit
+    @driver.driver_histories.build
+    
     @available_users = @driver.provider.users - User.drivers(@driver.provider)
     @available_users << @driver.user if @driver.user
     
