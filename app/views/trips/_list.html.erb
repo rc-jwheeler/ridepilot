@@ -7,13 +7,16 @@
 
 <table class="trips" <% if display %>style="display:<%= display %>;" <% end %>>
   <tr>
-    <th><%= translate_helper("pickup_time") %></th>
+    <th></th>
+    <th><%= translate_helper("pickup_date") %></th>
     <th><%= translate_helper("customer") %></th>
     <th><%= translate_helper("pickup_address") %></th>
+    <th><%= translate_helper("pickup_time") %></th>
     <th><%= translate_helper("dropoff_address") %></th>
-    <th><%= translate_helper("run") %></th>
+    <th><%= translate_helper("appointment_time") %></th>
+    <th><%= translate_helper("status") %></th>
     <th><%= translate_helper("trip_called_back") %></th>
-    <th>Result</th>
+    <th><%= translate_helper("result") %></th>
   </tr>
 
   <% @trips.each do |trip| %>

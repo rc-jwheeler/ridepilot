@@ -4,14 +4,17 @@ class TripsController < ApplicationController
   before_filter :set_calendar_week_start, :only => [:index, :new, :edit]
 
   def index
-    @trips = @trips.for_provider(current_provider_id).includes(:customer, {:run => [:driver, :vehicle]}).order(:pickup_time)
-    @trips = filter_trips
+    @trips = @trips.for_provider(current_provider_id).includes(:customer, {:run => [:driver, :vehicle]}).references(:customer, {:run => [:driver, :vehicle]}).order(:pickup_time)
+    filter_trips
     
     @vehicles        = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
     @drivers         = Driver.active.for_provider current_provider_id
+    @start_pickup_date = Time.at(session[:start].to_i) if session[:start]
+    @end_pickup_date = Time.at(session[:end].to_i) if session[:end]
+
     respond_to do |format|
       format.html do
-        @start = params[:start].to_i
+        @start = session[:start].to_i
         # let js handle grabbing the trips
         @trips = [] 
       end
@@ -260,6 +263,8 @@ class TripsController < ApplicationController
   end
   
   def set_calendar_week_start
+    Date.beginning_of_week= :sunday
+
     @week_start = if params[:start].present?
       Time.at params[:start].to_i/1000
     elsif @trip.try :pickup_time
@@ -278,13 +283,9 @@ class TripsController < ApplicationController
       }
     }
 
-    days = @trips.group_by(&:date)
     rows = []
-    days.each do |day, trips|
-      rows << render_to_string(:partial => "day_row.html", :locals => { :day => day })
-      trips.each do |trip|
-        rows << render_to_string(:partial => "trip_row.html", :locals => { :trip => trip })
-      end
+    @trips.each do |trip|
+      rows << render_to_string(:partial => "trip_row.html", :locals => { :trip => trip })
     end
 
     {:events => trips, :rows => rows }    
@@ -330,9 +331,17 @@ class TripsController < ApplicationController
       start: params[:start], 
       end: params[:end]
       }.merge params[:trip_filters] || {}
-    update_sessions(filters_hash)
     
-    TripFilter.new(@trips, trip_sessions).filter!
+    update_sessions(filters_hash)
+
+    trip_filter = TripFilter.new(@trips, trip_sessions)
+    @trips = trip_filter.filter!
+    # need to re-update start&end pickup filters
+    # as default values are used if they were not presented initially
+    update_sessions({
+      start: trip_filter.filters[:start],
+      end: trip_filter.filters[:end]
+      })
   end
 
   def update_sessions(params = {})
