@@ -1,4 +1,4 @@
-<%= form_for @driver do |f| %>
+<%= nested_form_for @driver do |f| %>
   <% if @driver.errors.any? %>
     <div id="error_explanation">
       <h2><%= translate_helper("driver_form_error", count: @driver.errors.count) %></h2>
@@ -79,6 +79,12 @@
           <% end %>
         </table>
       </li>
+      <li>
+        <br>
+        <strong><%= translate_helper("driver_histories_heading") %></strong><br>
+        <%= f.fields_for :driver_histories, :wrapper => false %>
+        <%= f.link_to_add translate_helper("driver_histories_add_link_title"), :driver_histories %>
+      </li>
     </ol>
 
     <div class="actions">
@@ -95,6 +101,15 @@
       $("select#start-hour-" + i).prop('disabled', !enabled);
       $("select#end-hour-" + i).prop('disabled', !enabled);
     };
+    
+    function make_datepicker(o) {
+      o.datepicker({
+        showOn: "button",
+        buttonImage: "<%= image_path "calendar-clock.png" %>",
+        buttonImageOnly: true,
+        dateFormat: "yy-mm-dd"
+      });
+    }
 
     // Enable/disable behavior for operating hours on form
     for (var i = 0; i < 7; ++i) (function(i) {
@@ -103,5 +118,12 @@
         update_hours_enabled(i);
       });
     })(i);
+    
+    make_datepicker($('[data-behavior=date-picker]'));
+
+    $(document).on('nested:fieldAdded', function(event){
+      var field = event.field; 
+      make_datepicker(field.find('[data-behavior=date-picker]'));
+    })
   });
 <% end %>

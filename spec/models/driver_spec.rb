@@ -105,4 +105,41 @@ RSpec.describe Driver, type: :model do
       expect(@driver.available?(day_of_week: @day_of_week, time_of_day: @time_of_day)).to be_falsey
     end
   end
+  
+  describe "driver_histories" do
+    before do
+      @driver = create :driver
+    end
+    
+    it "accepts nested driver histories" do
+      @driver.driver_histories_attributes = 3.times.collect { attributes_for :driver_history, driver: @driver }
+      expect {
+        @driver.save
+      }.to change(DriverHistory, :count).by(3)
+    end
+
+    it "allows destroy attribute" do
+      3.times { create :driver_history, driver: @driver }
+      expect(@driver.driver_histories.count).to eql 3
+      
+      @driver.driver_histories_attributes = @driver.driver_histories.collect { |history| history.attributes.merge({:_destroy => "1"}) }
+      expect {
+        @driver.save
+      }.to change(DriverHistory, :count).by(-3)
+    end
+    
+    it "rejects a history with a blank event" do
+      @driver.driver_histories_attributes = [ attributes_for(:driver_history, driver: @driver, event: nil) ]
+      expect {
+        @driver.save
+      }.not_to change(DriverHistory, :count)
+    end
+    
+    it "destroys driver histories when the driver is destroyed" do
+      3.times { create :driver_history, driver: @driver }
+      expect {
+        @driver.destroy
+      }.to change(DriverHistory, :count).by(-3)
+    end
+  end
 end

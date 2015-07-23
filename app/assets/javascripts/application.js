@@ -15,6 +15,7 @@
 //= require jquery_ujs
 //= require dataTables/jquery.dataTables
 //= require jquery-ui
+//= require jquery_nested_form
 //= require autocomplete-rails
 //= require jquery.weekcalendar
 //= require jquery-ui-timepicker-addon
