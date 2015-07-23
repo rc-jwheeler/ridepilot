@@ -9,6 +9,8 @@ class Driver < ActiveRecord::Base
 
   has_many :operating_hours, class_name: :OperatingHours, dependent: :destroy
   has_many :driver_histories, dependent: :destroy, inverse_of: :driver
+
+  accepts_nested_attributes_for :driver_histories, allow_destroy: true, reject_if: proc { |attributes| attributes['event'].blank? }
   
   validates :user_id, uniqueness: {allow_nil: true}
   validates :name, uniqueness: {scope: :provider_id}, length: {minimum: 2}
