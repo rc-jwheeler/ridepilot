@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150723140425) do
+ActiveRecord::Schema.define(version: 20150723203943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
-  enable_extension "fuzzystrmatch"
   enable_extension "postgis_topology"
+  enable_extension "fuzzystrmatch"
 
   create_table "addresses", force: true do |t|
     t.string   "name"
@@ -113,6 +113,18 @@ ActiveRecord::Schema.define(version: 20150723140425) do
   end
 
   add_index "device_pools", ["provider_id"], :name => "index_device_pools_on_provider_id"
+
+  create_table "driver_compliances", force: true do |t|
+    t.integer  "driver_id"
+    t.string   "event"
+    t.text     "notes"
+    t.date     "due_date"
+    t.date     "compliance_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "driver_compliances", ["driver_id"], :name => "index_driver_compliances_on_driver_id"
 
   create_table "driver_histories", force: true do |t|
     t.integer  "driver_id"
@@ -349,7 +361,7 @@ ActiveRecord::Schema.define(version: 20150723140425) do
   create_table "translations", force: true do |t|
     t.integer  "locale_id"
     t.integer  "translation_key_id"
-    t.text     "value"
+    t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
