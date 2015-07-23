@@ -10,10 +10,11 @@ class TripFilter
   def filter!
     filter_by_pickup_time!
     filter_by_vehicle!
+    filter_by_driver!
     filter_by_status!
 
     @filters.each do |k, v|
-      next if [:start, :end, :vehicle_id, :status_id].index(k) # has been processed above
+      next if [:start, :end, :vehicle_id, :driver_id, :status_id].index(k) # has been processed above
 
       @trips = @trips.where("#{k}": v) if !v.blank?
     end
@@ -23,19 +24,42 @@ class TripFilter
 
   private 
 
-  def filter_by_pickup_time!
-    if @filters[:end].present? && @filters[:start].present?
-      t_start = Time.at(@filters[:start].to_i).to_date.in_time_zone.utc
-      t_end   = Time.at(@filters[:end].to_i).to_date.in_time_zone.utc
+  def parse_datetime(time_param)
+    return if !time_param.present? 
+
+    # this is to parse calendar params
+    # will be deprecated after new calendar gets in
+    if time_param.to_i.to_s == time_param
+      time = Time.at(time_param.to_i)
     else
+      time = Date.strptime(time_param, '%d-%b-%Y %a') rescue nil
+    end
+
+    time.to_date.in_time_zone.utc if time
+  end
+
+  def filter_by_pickup_time!
+    t_start = parse_datetime(@filters[:start]) 
+    t_end = parse_datetime(@filters[:end]) 
+
+    unless t_start && t_end
       time    = Time.now
       t_start = time.beginning_of_week.to_date.in_time_zone.utc
       t_end   = t_start + 6.days
+    else 
+      if t_start
+        t_end   = t_start + 6.days
+      else
+        t_start   = t_end - 6.days
+      end
     end
 
     @trips = @trips.
       where("pickup_time >= '#{t_start.strftime "%Y-%m-%d %H:%M:%S"}'").
       where("pickup_time <= '#{t_end.strftime "%Y-%m-%d %H:%M:%S"}'").order(:pickup_time)
+
+    @filters[:start] = t_start.to_i
+    @filters[:end] = t_end.to_i
   end
 
   def filter_by_vehicle!
@@ -43,8 +67,14 @@ class TripFilter
       if @filters[:vehicle_id].to_i == -1
         @trips = @trips.where(cab: true)
       else
-        @trips = @trips.where(vehicle_id: @filters[:vehicle_id]) 
+        @trips = @trips.where("runs.vehicle_id": @filters[:vehicle_id]) 
       end
+    end
+  end
+
+  def filter_by_driver!
+    if @filters[:driver_id].present?  
+      @trips = @trips.where("runs.driver_id": @filters[:driver_id]) 
     end
   end
 
