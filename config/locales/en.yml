@@ -41,6 +41,7 @@ en:
   reassociate_trips: "Associate this addresses's trips with another address."
   address_search: "Address Search"
   #cab trips
+  pickup_date: "Pickup Date"
   pickup_time: "Pickup Time"
   customer_name: "Customer Name"
   trip_purpose: "Trip Purpose"
@@ -623,6 +624,7 @@ en:
   update: 'Update'
   assignment: 'Assignment'
   n_a: 'N/A'
+  view: 'View'
   #users
   new_user_heading: "Create New User"
   user_form_error_message: 
@@ -695,6 +697,8 @@ en:
   status: 'Status'
   scheduled: 'Scheduled'
   unscheduled: 'Unscheduled'
+  from_date: 'From Date'
+  to_date: 'To Date'
 
   locales:
     en: "English"
