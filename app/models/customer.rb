@@ -1,4 +1,7 @@
 class Customer < ActiveRecord::Base
+
+  has_and_belongs_to_many :authorized_providers, :class_name => 'Provider', :through => 'customers_providers'
+
   belongs_to :provider
   belongs_to :address
   belongs_to :mobility
@@ -19,7 +22,7 @@ class Customer < ActiveRecord::Base
   default_scope { order('last_name, first_name, middle_initial') }
   
   scope :by_letter,    -> (letter) { where("lower(last_name) LIKE ?", "#{letter.downcase}%") }
-  scope :for_provider, -> (provider_id) { where( :provider_id => provider_id ) }
+  scope :for_provider, -> (provider_id) { where("provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?)", provider_id, provider_id) }
   scope :individual,   -> { where(:group => false) }
 
   has_paper_trail
@@ -83,6 +86,10 @@ class Customer < ActiveRecord::Base
     else
       false
     end
+  end
+
+  def authorized_for_provider provider_id
+    Customer.for_provider(provider_id).where("id = ?", self.id).count > 0
   end
   
   def self.by_term( term, limit = nil )

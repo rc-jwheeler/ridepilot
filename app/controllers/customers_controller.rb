@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  load_and_authorize_resource :except=>[:autocomplete, :found]
+  load_and_authorize_resource :except=>[:autocomplete, :found, :edit, :show, :update]
 
   def autocomplete
     customers = Customer.for_provider(current_provider_id).by_term( params['term'].downcase, 10 ).accessible_by(current_ability)
@@ -20,7 +20,7 @@ class CustomersController < ApplicationController
   def index
     # only active customers
     @show_inactivated_date = false
-    @customers = @customers.for_provider(current_provider_id).where(:inactivated_date => nil)
+    @customers = Customer.for_provider(current_provider_id).where(:inactivated_date => nil)
     @customers = @customers.by_letter(params[:letter]) if params[:letter].present?
     
     respond_to do |format|
@@ -48,6 +48,8 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
 
     # default scope is pickup time ascending, so reverse
+    authorize! :show, @customer if !@customer.authorized_for_provider(current_provider.id)
+
     @trips    = @customer.trips.reorder('pickup_time desc').paginate :page => params[:page], :per_page => PER_PAGE
 
     respond_to do |format|
@@ -69,6 +71,7 @@ class CustomersController < ApplicationController
 
   def edit
     @customer = Customer.find(params[:id])
+    authorize! :edit, @customer if !@customer.authorized_for_provider(current_provider.id)
     prep_edit
   end
 
@@ -112,6 +115,13 @@ first_name, first_name, first_name, first_name,
       end
     end
 
+    providers = []
+    params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
+      providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
+    end
+
+    @customer.authorized_providers = providers
+
     respond_to do |format|
       if @customer.save
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
@@ -136,9 +146,19 @@ first_name, first_name, first_name, first_name,
 
   def update
     @customer = Customer.find(params[:id])
+
+    authorize! :update, @customer if !@customer.authorized_for_provider(current_provider.id)
+
+    @customer.assign_attributes customer_params
+
+    providers = []
+    params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
+      providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
+    end
+    @customer.authorized_providers = providers
     
     respond_to do |format|
-      if @customer.update_attributes customer_params
+      if @customer.save
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
       else
@@ -184,6 +204,7 @@ first_name, first_name, first_name, first_name,
       :prime_number,
       :private_notes,
       :public_notes,
+      :authorized_provider_ids,
       :address_attributes => [
         :address,
         :building_name,
@@ -219,4 +240,5 @@ first_name, first_name, first_name, first_name,
     @funding_sources = FundingSource.by_provider(current_provider)
     @service_levels = ServiceLevel.pluck(:name, :id)
   end
+
 end

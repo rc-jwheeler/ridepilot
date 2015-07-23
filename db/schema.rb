@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(version: 20150723140425) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
-  enable_extension "postgis_topology"
   enable_extension "fuzzystrmatch"
+  enable_extension "postgis_topology"
 
   create_table "addresses", force: true do |t|
     t.string   "name"
@@ -78,6 +78,15 @@ ActiveRecord::Schema.define(version: 20150723140425) do
   add_index "customers", ["mobility_id"], :name => "index_customers_on_mobility_id"
   add_index "customers", ["provider_id"], :name => "index_customers_on_provider_id"
   add_index "customers", ["service_level_id"], :name => "index_customers_on_service_level_id"
+
+  create_table "customers_providers", id: false, force: true do |t|
+    t.integer "provider_id"
+    t.integer "customer_id"
+  end
+
+  add_index "customers_providers", ["customer_id", "provider_id"], :name => "index_customers_providers_on_customer_id_and_provider_id"
+  add_index "customers_providers", ["customer_id"], :name => "index_customers_providers_on_customer_id"
+  add_index "customers_providers", ["provider_id"], :name => "index_customers_providers_on_provider_id"
 
   create_table "device_pool_drivers", force: true do |t|
     t.string   "status"
@@ -340,7 +349,7 @@ ActiveRecord::Schema.define(version: 20150723140425) do
   create_table "translations", force: true do |t|
     t.integer  "locale_id"
     t.integer  "translation_key_id"
-    t.string   "value"
+    t.text     "value"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
