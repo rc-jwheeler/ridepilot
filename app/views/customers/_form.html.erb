@@ -132,8 +132,9 @@
       <% end %>
     </ol>
 
-    <div class="customer_providers">
-      <%= f.association :authorized_providers, as: :check_boxes %>
+    <div id="customer_providers" class="col-md-12">
+      <div class="col-md-3"><bold><%= translate_helper("customer_authorized_providers") %></bold></div>
+      <div class="col-md-9"><%= f.association :authorized_providers, as: :check_boxes, label: false, :item_wrapper_class => 'col-md-4', :label_html => { :class => 'col-md-12', :wrapper => false } %></div>
     </div>
 
     <div class="actions">
