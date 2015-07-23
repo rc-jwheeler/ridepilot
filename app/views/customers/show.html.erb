@@ -116,7 +116,18 @@
 
 </div>
 
-<hr />
+<div id="customer_providers" class="col-md-12">
+  <div class="col-md-4">
+    <strong><%= translate_helper("customer_authorized_providers") %></strong>
+  </div>
+  <div class="col-md-8">
+  <% @customer.authorized_providers.each do |provider|  %>
+    <div class="container-fluid "><%= provider.name %></div>
+  <% end %>
+  </div>
+</div>
+
+<hr class="container-fluid" />
 
 <h2 class="section-header">Trips</h2>
 
