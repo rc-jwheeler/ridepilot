@@ -86,8 +86,12 @@ class Address < ActiveRecord::Base
       first_line = ''
     end
 
-    return ("%s %s \n%s, %s %s" % [first_line, address, city, state, zip]).strip
+    ("%s %s \n%s, %s %s" % [first_line, address, city, state, zip]).strip
 
+  end
+
+  def address_text
+    ("%s, %s, %s %s" % [address, city, state, zip]).strip
   end
 
   def json
