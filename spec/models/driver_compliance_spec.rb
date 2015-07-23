@@ -36,4 +36,11 @@ RSpec.describe DriverCompliance, type: :model do
     compliance.compliance_date = Date.current
     expect(compliance.valid?).to be_truthy
   end
+  
+  it "can mark itself as complete" do
+    compliance = create :driver_compliance
+    expect(compliance.compliance_date).to be_nil
+    compliance.complete!
+    expect(compliance.reload.compliance_date).to eql Date.current
+  end
 end
