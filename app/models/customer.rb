@@ -22,7 +22,7 @@ class Customer < ActiveRecord::Base
   default_scope { order('last_name, first_name, middle_initial') }
   
   scope :by_letter,    -> (letter) { where("lower(last_name) LIKE ?", "#{letter.downcase}%") }
-  scope :for_provider, -> (provider_id) { where( :provider_id => provider_id ) }
+  scope :for_provider, -> (provider_id) { where("provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?)", provider_id, provider_id) }
   scope :individual,   -> { where(:group => false) }
 
   has_paper_trail

@@ -20,7 +20,7 @@ class CustomersController < ApplicationController
   def index
     # only active customers
     @show_inactivated_date = false
-    @customers = @customers.for_provider(current_provider_id).where(:inactivated_date => nil)
+    @customers = Customer.for_provider(current_provider_id).where(:inactivated_date => nil)
     @customers = @customers.by_letter(params[:letter]) if params[:letter].present?
     
     respond_to do |format|
@@ -69,6 +69,7 @@ class CustomersController < ApplicationController
 
   def edit
     @customer = Customer.find(params[:id])
+    #authorize! :edit, @customer if Customer.where("id = ? AND provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?)", @customer.id, current_provider.id, current_provider.id).count == 0
     prep_edit
   end
 
@@ -112,16 +113,15 @@ first_name, first_name, first_name, first_name,
       end
     end
 
+    providers = []
+    params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
+      providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
+    end
+
+    @customer.authorized_providers = providers
+
     respond_to do |format|
       if @customer.save
-
-        providers = []
-        params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
-          providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
-        end
-
-        @customer.save!
-
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
@@ -144,18 +144,17 @@ first_name, first_name, first_name, first_name,
 
   def update
     @customer = Customer.find(params[:id])
+
+    @customer.assign_attributes customer_params
+
+    providers = []
+    params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
+      providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
+    end
+    @customer.authorized_providers = providers
     
     respond_to do |format|
-      if @customer.update_attributes customer_params
-
-        providers = []
-        params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
-          providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
-        end
-
-        @customer.authorized_providers = providers
-        @customer.save!
-
+      if @customer.save
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
       else
