@@ -3,7 +3,7 @@
 </div>
 
 <div class="profile-actions selfclear">
-  <%= link_to translate_helper("new_trip_link_text"), new_trip_path(:customer_id=>@customer.id), :class=>'new-trip'  %>
+  <%= link_to translate_helper("new_trip_link_text"), new_trip_path(:customer_id=>@customer.id), :class=>'new-trip' if !@read_only_customer  %>
   <span class="separator">|</span>
   <div class="manage">
     <%= link_to translate_helper("edit"), edit_customer_path(@customer), :class=>'edit' %>

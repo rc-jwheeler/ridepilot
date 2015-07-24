@@ -48,7 +48,12 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
 
     # default scope is pickup time ascending, so reverse
-    authorize! :show, @customer if !@customer.authorized_for_provider(current_provider.id)
+    if !@customer.authorized_for_provider(current_provider.id)
+      authorize! :show, @customer 
+    else
+      @read_only_customer = false
+      @read_only_customer = true if @customer.provider_id != current_provider.id
+    end
 
     @trips    = @customer.trips.reorder('pickup_time desc').paginate :page => params[:page], :per_page => PER_PAGE
 
