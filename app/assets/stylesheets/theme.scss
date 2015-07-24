@@ -1518,3 +1518,11 @@ body.trips div.repeats>li {
   float: right;
   margin-top: -0.6em;
 }
+
+th.fc-resourceName {
+  width: 1px; // set a small width so let it grow to max text length
+}
+
+.fc-event {
+  cursor: pointer;
+}

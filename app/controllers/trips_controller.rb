@@ -9,17 +9,27 @@ class TripsController < ApplicationController
     
     @vehicles        = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
     @drivers         = Driver.active.for_provider current_provider_id
-    @start_pickup_date = Time.at(session[:start].to_i) if session[:start]
-    @end_pickup_date = Time.at(session[:end].to_i) if session[:end]
+    @start_pickup_date = Time.at(session[:start].to_i).to_date
+    @end_pickup_date = Time.at(session[:end].to_i).to_date
+
+    @trip_jsons = @trips.map(&:as_calendar_json).to_json
+    @day_resources = []
+
+    if @start_pickup_date > @end_pickup_date
+      flash[:alert] = TranslationEngine.translate_text(:from_date_cannot_later_than_to_date)
+    else
+      flash[:alert] = nil
+      @day_resources = (@start_pickup_date..@end_pickup_date).map{|d| {
+        id:   d.to_s(:js), 
+        name: d.strftime("%a, %b %d,%Y"),
+        isDate: true
+        }}.to_json
+    end
 
     respond_to do |format|
-      format.html do
-        @start = session[:start].to_i
-        # let js handle grabbing the trips
-        @trips = [] 
-      end
+      format.html 
       format.xml  { render :xml => @trips }
-      format.json { render :json => trips_json }
+      format.json { render :json => @trips }
     end
   end
 
@@ -272,23 +282,6 @@ class TripsController < ApplicationController
     else
       Time.now.beginning_of_week
     end
-  end
-  
-  def trips_json
-    trips = @trips.map { |trip| 
-      { :id    => trip.id,
-        :start => trip.pickup_time.to_s(:js),
-        :end   => trip.appointment_time.to_s(:js),
-        :title => trip.customer.name
-      }
-    }
-
-    rows = []
-    @trips.each do |trip|
-      rows << render_to_string(:partial => "trip_row.html", :locals => { :trip => trip })
-    end
-
-    {:events => trips, :rows => rows }    
   end
 
   def prep_view
