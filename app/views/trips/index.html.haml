@@ -7,7 +7,7 @@
 .col-md-3
   = render :partial => 'filters'
 .col-md-9
-  %div#calendar { data-start-time: @week_start.to_i * 1000}
+  = render 'calendar'
 
   = render :partial => 'list'
 

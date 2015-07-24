@@ -23,6 +23,7 @@
 //= require jquery.colorPicker
 //= require idletimeout
 //= require constants
+//= require fullcalendar
 //= require_self
 
 function ISODateFormatToDateObject(str) {

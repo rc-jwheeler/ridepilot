@@ -42,16 +42,14 @@ class TripFilter
     t_start = parse_datetime(@filters[:start]) 
     t_end = parse_datetime(@filters[:end]) 
 
-    unless t_start && t_end
+    if !t_start && !t_end
       time    = Time.now
       t_start = time.beginning_of_week.to_date.in_time_zone.utc
       t_end   = t_start + 6.days
-    else 
-      if t_start
-        t_end   = t_start + 6.days
-      else
-        t_start   = t_end - 6.days
-      end
+    elsif !t_end
+      t_end   = t_start + 6.days
+    elsif !t_start
+      t_start   = t_end - 6.days
     end
 
     @trips = @trips.
