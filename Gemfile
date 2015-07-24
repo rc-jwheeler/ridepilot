@@ -54,7 +54,7 @@ gem 'ice_cube', '0.6.8'
 # Fork with Rails 4.x compatibility
 gem 'jc-validates_timeliness', '~> 3.1.1'
 
-gem 'paperclip', '~> 4.2.1'
+gem 'paperclip', '~> 4.3.0'
 gem 'will_paginate', '~> 3.0.7'
 gem 'attribute_normalizer', '~> 1.2.0'
 
