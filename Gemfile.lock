@@ -21,9 +21,9 @@ GIT
 
 GIT
   remote: git://github.com/xudongcamsys/rails-fullcalendar-resourceviews.git
-  revision: 9470592fa6f970e53f441a4e203399a670780168
+  revision: f614277d77b69ca0be3d5881b63d149bd5ab64cf
   specs:
-    rails-fullcalendar-resourceviews (1.6.4.8)
+    rails-fullcalendar-resourceviews (1.6.5.2)
       jquery-rails
 
 GIT
@@ -349,7 +349,7 @@ DEPENDENCIES
   pg
   rack-timeout
   rails (~> 4.1.0)
-  rails-fullcalendar-resourceviews (~> 1.6.4.8)!
+  rails-fullcalendar-resourceviews (~> 1.6.5.2)!
   rails-jquery-autocomplete (~> 1.0.0)
   rails-settings-cached (~> 0.4.1)
   rails_12factor
