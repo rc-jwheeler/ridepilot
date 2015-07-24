@@ -79,11 +79,21 @@
           <% end %>
         </table>
       </li>
+    </ol>
+
+    <ol class="section second">
       <li>
-        <br>
         <strong><%= translate_helper("driver_histories_heading") %></strong><br>
         <%= f.fields_for :driver_histories, :wrapper => false %>
         <%= f.link_to_add translate_helper("driver_histories_add_link_title"), :driver_histories %>
+      </li>
+    </ol>
+
+    <ol class="section third">
+      <li>
+        <strong><%= translate_helper("driver_compliances_heading") %></strong><br>
+        <%= f.fields_for :driver_compliances, :wrapper => false %>
+        <%= f.link_to_add translate_helper("driver_compliances_add_link_title"), :driver_compliances %>
       </li>
     </ol>
 
