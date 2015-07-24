@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Document, type: :model do
   it "requires an associated documentable object" do
-    document = build :document, :on_driver, documentable: nil
+    document = build :document, documentable: nil
     expect(document.valid?).to be_falsey
     expect(document.errors.keys).to include :documentable
     
@@ -11,7 +11,7 @@ RSpec.describe Document, type: :model do
   end
   
   it "requires a document to be attached" do
-    document = build :document, :on_driver, document_file_name: nil, document_content_type: nil, document_file_size: nil
+    document = build :document, document_file_name: nil, document_content_type: nil, document_file_size: nil
     expect(document.valid?).to be_falsey
     expect(document.errors.keys).to include :document
 
@@ -23,7 +23,7 @@ RSpec.describe Document, type: :model do
   
   describe "attached documents" do
     it "allows image files (.png, .gif, .jpg)" do
-      document = build :document, :on_driver, document_content_type: 'image/bmp'
+      document = build :document, document_content_type: 'image/bmp'
       expect(document.valid?).to be_falsey
       expect(document.errors.keys).to include :document
 
@@ -34,7 +34,7 @@ RSpec.describe Document, type: :model do
     end
     
     it "allows plain text files (.txt)" do
-      document = build :document, :on_driver, document_content_type: 'text/html'
+      document = build :document, document_content_type: 'text/html'
       expect(document.valid?).to be_falsey
       expect(document.errors.keys).to include :document
 
@@ -43,7 +43,7 @@ RSpec.describe Document, type: :model do
     end
     
     it "allows PDF files (.pdf)" do
-      document = build :document, :on_driver, document_content_type: 'application/javascript'
+      document = build :document, document_content_type: 'application/javascript'
       expect(document.valid?).to be_falsey
       expect(document.errors.keys).to include :document
 
@@ -52,7 +52,7 @@ RSpec.describe Document, type: :model do
     end
     
     it "allows MS Excel files (.xls, .xlsx)" do
-      document = build :document, :on_driver, document_content_type: 'image/bmp'
+      document = build :document, document_content_type: 'image/bmp'
       expect(document.valid?).to be_falsey
       expect(document.errors.keys).to include :document
 
@@ -63,7 +63,7 @@ RSpec.describe Document, type: :model do
     end
     
     it "allows MS Word files (.doc, .docx)" do
-      document = build :document, :on_driver, document_content_type: 'image/bmp'
+      document = build :document, document_content_type: 'image/bmp'
       expect(document.valid?).to be_falsey
       expect(document.errors.keys).to include :document
 
@@ -74,7 +74,7 @@ RSpec.describe Document, type: :model do
     end
     
     it "allows file sizes of 2 gigabytes or smaller" do
-      document = build :document, :on_driver, document_file_size: 2.1.gigabytes
+      document = build :document, document_file_size: 2.1.gigabytes
       expect(document.valid?).to be_falsey
       expect(document.errors.keys).to include :document
 

@@ -112,7 +112,7 @@ RSpec.describe Driver, type: :model do
     end
     
     it "accepts nested driver histories" do
-      @driver.driver_histories_attributes = 3.times.collect { attributes_for :driver_history, driver: @driver }
+      @driver.driver_histories_attributes = 3.times.collect { attributes_for :driver_history, driver: nil }
       expect {
         @driver.save
       }.to change(DriverHistory, :count).by(3)
@@ -129,7 +129,7 @@ RSpec.describe Driver, type: :model do
     end
     
     it "rejects a history with a blank event" do
-      @driver.driver_histories_attributes = [ attributes_for(:driver_history, driver: @driver, event: nil) ]
+      @driver.driver_histories_attributes = [ attributes_for(:driver_history, driver: nil, event: nil) ]
       expect {
         @driver.save
       }.not_to change(DriverHistory, :count)
@@ -149,7 +149,7 @@ RSpec.describe Driver, type: :model do
     end
     
     it "accepts nested driver compliances" do
-      @driver.driver_compliances_attributes = 3.times.collect { attributes_for :driver_compliance, driver: @driver }
+      @driver.driver_compliances_attributes = 3.times.collect { attributes_for :driver_compliance, driver: nil }
       expect {
         @driver.save
       }.to change(DriverCompliance, :count).by(3)
@@ -166,7 +166,7 @@ RSpec.describe Driver, type: :model do
     end
     
     it "rejects a compliance with a blank event" do
-      @driver.driver_compliances_attributes = [ attributes_for(:driver_compliance, driver: @driver, event: nil) ]
+      @driver.driver_compliances_attributes = [ attributes_for(:driver_compliance, driver: nil, event: nil) ]
       expect {
         @driver.save
       }.not_to change(DriverCompliance, :count)
@@ -207,6 +207,43 @@ RSpec.describe Driver, type: :model do
     it "only checks against its own compliance entries" do
       create :driver_compliance, due_date: Date.current.yesterday
       expect(@driver.compliant?).to be_truthy
+    end
+  end
+  
+  describe "documents" do
+    before do
+      @driver = create :driver
+    end
+    
+    it "accepts nested documents" do
+      @driver.documents_attributes = 3.times.collect { attributes_for :document, documentable: nil }
+      expect {
+        @driver.save
+      }.to change(Document, :count).by(3)
+    end
+
+    it "allows destroy attribute" do
+      3.times { create :document, documentable: @driver }
+      expect(@driver.documents.count).to eql 3
+      
+      @driver.documents_attributes = @driver.documents.collect { |document| document.attributes.merge({:_destroy => "1"}) }
+      expect {
+        @driver.save
+      }.to change(Document, :count).by(-3)
+    end
+    
+    it "rejects a document with a blank document" do
+      @driver.documents_attributes = [ attributes_for(:document, :no_attachment, documentable: @driver) ]
+      expect {
+        @driver.save
+      }.not_to change(Document, :count)
+    end
+    
+    it "destroys driver compliances when the driver is destroyed" do
+      3.times { create :document, documentable: @driver }
+      expect {
+        @driver.destroy
+      }.to change(Document, :count).by(-3)
     end
   end
 end

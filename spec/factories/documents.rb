@@ -8,8 +8,12 @@ FactoryGirl.define do
     document_content_type { 'application/pdf' }
     document_file_size { 1024 }
 
-    trait :on_driver do
-      association :documentable, factory: :driver
+    association :documentable, :factory => :driver
+    
+    trait :no_attachment do
+      document_file_name nil
+      document_content_type nil
+      document_file_size nil
     end
   end
 end

@@ -10,9 +10,11 @@ class Driver < ActiveRecord::Base
   has_many :operating_hours, class_name: :OperatingHours, dependent: :destroy
   has_many :driver_histories, dependent: :destroy, inverse_of: :driver
   has_many :driver_compliances, dependent: :destroy, inverse_of: :driver
+  has_many :documents, as: :documentable, dependent: :destroy
 
   accepts_nested_attributes_for :driver_histories, allow_destroy: true, reject_if: proc { |attributes| attributes['event'].blank? }
   accepts_nested_attributes_for :driver_compliances, allow_destroy: true, reject_if: proc { |attributes| attributes['event'].blank? }
+  accepts_nested_attributes_for :documents, allow_destroy: true, reject_if: :blank_document?
   
   validates :user_id, uniqueness: {allow_nil: true}
   validates :name, uniqueness: {scope: :provider_id}, length: {minimum: 2}
@@ -60,5 +62,13 @@ class Driver < ActiveRecord::Base
   
   def compliant?(as_of: Date.current)
     driver_compliances.for(id).overdue(as_of: as_of).empty?
+  end
+  
+  private
+  
+  def blank_document?(attributes)
+    attributes['document_file_name'].blank? ||
+      attributes['document_content_type'].blank? ||
+      attributes['document_file_size'].blank?
   end
 end
