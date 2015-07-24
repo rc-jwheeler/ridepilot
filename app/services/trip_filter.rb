@@ -29,7 +29,7 @@ class TripFilter
 
     # this is to parse calendar params
     # will be deprecated after new calendar gets in
-    if time_param.to_i.to_s == time_param
+    if time_param.to_i.to_s == time_param.to_s
       time = Time.at(time_param.to_i)
     else
       time = Date.strptime(time_param, '%d-%b-%Y %a') rescue nil
@@ -51,7 +51,7 @@ class TripFilter
     elsif !t_start
       t_start   = t_end - 6.days
     end
-
+    
     @trips = @trips.
       where("pickup_time >= '#{t_start.strftime "%Y-%m-%d %H:%M:%S"}'").
       where("pickup_time <= '#{t_end.strftime "%Y-%m-%d %H:%M:%S"}'").order(:pickup_time)
