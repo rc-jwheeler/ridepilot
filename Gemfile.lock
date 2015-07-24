@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/camsys/translation_engine.git
-  revision: 0e170cd0553dc0278725f5671193997be44d45e7
+  revision: 72414d6b0991c4ebe19e22f956dee35b62309f5e
   specs:
-    translation_engine (3.4.1)
+    translation_engine (3.5.1)
       honeybadger
       i18n-active_record
       pg
@@ -134,7 +134,7 @@ GEM
     haml (4.0.6)
       tilt
     hike (1.2.3)
-    honeybadger (2.1.1)
+    honeybadger (2.1.3)
     i18n (0.7.0)
     i18n-active_record (0.0.2)
       i18n (>= 0.5.0)
@@ -362,4 +362,4 @@ DEPENDENCIES
   will_paginate (~> 3.0.7)
 
 BUNDLED WITH
-   1.10.5
+   1.10.6
