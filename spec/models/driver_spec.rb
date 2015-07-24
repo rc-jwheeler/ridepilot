@@ -142,4 +142,71 @@ RSpec.describe Driver, type: :model do
       }.to change(DriverHistory, :count).by(-3)
     end
   end
+  
+  describe "driver_compliances" do
+    before do
+      @driver = create :driver
+    end
+    
+    it "accepts nested driver compliances" do
+      @driver.driver_compliances_attributes = 3.times.collect { attributes_for :driver_compliance, driver: @driver }
+      expect {
+        @driver.save
+      }.to change(DriverCompliance, :count).by(3)
+    end
+
+    it "allows destroy attribute" do
+      3.times { create :driver_compliance, driver: @driver }
+      expect(@driver.driver_compliances.count).to eql 3
+      
+      @driver.driver_compliances_attributes = @driver.driver_compliances.collect { |compliance| compliance.attributes.merge({:_destroy => "1"}) }
+      expect {
+        @driver.save
+      }.to change(DriverCompliance, :count).by(-3)
+    end
+    
+    it "rejects a compliance with a blank event" do
+      @driver.driver_compliances_attributes = [ attributes_for(:driver_compliance, driver: @driver, event: nil) ]
+      expect {
+        @driver.save
+      }.not_to change(DriverCompliance, :count)
+    end
+    
+    it "destroys driver compliances when the driver is destroyed" do
+      3.times { create :driver_compliance, driver: @driver }
+      expect {
+        @driver.destroy
+      }.to change(DriverCompliance, :count).by(-3)
+    end
+  end
+  
+  describe "compliant?" do
+    before do
+      @driver = create :driver
+    end
+
+    it "returns true when a driver has no compliance entries" do
+      expect(@driver.compliant?).to be_truthy
+    end
+
+    it "returns true when a driver's compliance entries are all complete" do
+      create :driver_compliance, driver: @driver, due_date: Date.current.yesterday, compliance_date: Date.current
+      expect(@driver.compliant?).to be_truthy
+    end
+
+    it "returns true when a driver's incomplete compliance entries are all due in the future" do
+      create :driver_compliance, driver: @driver, due_date: Date.current.tomorrow
+      expect(@driver.compliant?).to be_truthy
+    end
+    
+    it "returns false when a driver has over due compliance entries" do
+      create :driver_compliance, driver: @driver, due_date: Date.current.yesterday
+      expect(@driver.compliant?).to be_falsey
+    end
+    
+    it "only checks against its own compliance entries" do
+      create :driver_compliance, due_date: Date.current.yesterday
+      expect(@driver.compliant?).to be_truthy
+    end
+  end
 end

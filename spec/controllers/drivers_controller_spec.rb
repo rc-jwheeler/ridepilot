@@ -77,6 +77,29 @@ RSpec.describe DriversController, type: :controller do
           }.to change(DriverHistory, :count).by(1)
         end
       end
+      
+      context "with nested driver compliance attributes" do
+        it "creates new driver compliances" do
+          expect {
+            post :create, {:driver => valid_attributes.merge({
+              driver_compliances_attributes: [
+                attributes_for(:driver_compliance)
+              ]
+            })}
+          }.to change(DriverCompliance, :count).by(1)
+        end
+
+        it "rejects driver compliances with blank events" do
+          expect {
+            post :create, {:driver => valid_attributes.merge({
+              driver_compliances_attributes: [
+                attributes_for(:driver_compliance),
+                attributes_for(:driver_compliance, event: nil)
+              ]
+            })}
+          }.to change(DriverCompliance, :count).by(1)
+        end
+      end
     end
 
     context "with invalid params" do
@@ -156,6 +179,43 @@ RSpec.describe DriversController, type: :controller do
               ]
             })}
           }.to change(DriverHistory, :count).by(-1)
+        end
+      end
+      
+      context "with nested driver compliance attributes" do
+        before do
+          @driver = create :driver, :provider => @current_user.current_provider
+          @driver_compliance = create :driver_compliance, driver: @driver, event: "Crash Test"
+        end
+        
+        it "updates driver compliances" do
+          expect {
+            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
+              driver_compliances_attributes: [
+                @driver_compliance.attributes.merge({event: "Accidents Anonymous"})
+              ]
+            })}
+          }.to change{ @driver_compliance.reload.event }.from("Crash Test").to("Accidents Anonymous")
+        end
+
+        it "allows new driver compliances to be added" do
+          expect {
+            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
+              driver_compliances_attributes: [
+                attributes_for(:driver_compliance),
+              ]
+            })}
+          }.to change(DriverCompliance, :count).by(1)
+        end
+
+        it "allows driver compliances to be destroyed" do
+          expect {
+            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
+              driver_compliances_attributes: [
+                @driver_compliance.attributes.merge({:_destroy => "1"})
+              ]
+            })}
+          }.to change(DriverCompliance, :count).by(-1)
         end
       end
     end
