@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150723203943) do
+ActiveRecord::Schema.define(version: 20150724133111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,6 +113,20 @@ ActiveRecord::Schema.define(version: 20150723203943) do
   end
 
   add_index "device_pools", ["provider_id"], :name => "index_device_pools_on_provider_id"
+
+  create_table "documents", force: true do |t|
+    t.integer  "documentable_id"
+    t.string   "documentable_type"
+    t.string   "description"
+    t.string   "document_file_name"
+    t.string   "document_content_type"
+    t.integer  "document_file_size"
+    t.datetime "document_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "documents", ["documentable_id", "documentable_type"], :name => "index_documents_on_documentable_id_and_documentable_type"
 
   create_table "driver_compliances", force: true do |t|
     t.integer  "driver_id"
