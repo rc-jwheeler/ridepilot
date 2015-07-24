@@ -19,28 +19,28 @@
 
     <ol class="section first">
       <li class="selfclear">
-        <label for="customer"><%= translate_helper("customer") %></label>
+        <label for="customer"><%= translate_helper_with_tooltip("customer") %></label>
         <%= render "customer", :f => f, :trip => @trip %>
       </li> 
       
       <li class="selfclear timepicker">
-        <%= f.label :pickup_time, translate_helper("pickup_time") %>
+        <%= f.label :pickup_time, translate_helper_with_tooltip("pickup_time") %>
         <%= f.text_field :pickup_time, :value => @trip.pickup_time.try(:to_s, :form) %>
       </li>
 
       <li class="selfclear timepicker">
-        <%= f.label :appointment_time, translate_helper("appointment_time") %>
+        <%= f.label :appointment_time, translate_helper_with_tooltip("appointment_time") %>
         <%= f.text_field :appointment_time, :value => @trip.appointment_time.try(:to_s, :form) %>
       </li>
 
       <% unless add_new_trip_via_run_page? %>
         <li class="selfclear">
-          <%= f.label :round_trip, translate_helper("round_trip") %>
+          <%= f.label :round_trip, translate_helper_with_tooltip("round_trip") %>
           <%= f.check_box :round_trip %>
         </li>
 
         <li class="selfclear">
-          <%= f.label :pickup_address_label, translate_helper("pickup_address") %>
+          <%= f.label :pickup_address_label, translate_helper_with_tooltip("pickup_address") %>
           <%= autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:text), autocomplete_addresses_path, 
             :size => 30, 
             :id_element => "#trip_pickup_address_id", 
