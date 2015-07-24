@@ -1,0 +1,132 @@
+
+    <ol class="section first">
+      <li class="selfclear">
+        <label for="customer"><%= translate_helper("customer") %></label>
+        <%= render "customer", :trip => @trip %>
+      </li> 
+      
+      <li class="selfclear timepicker">
+        <%= translate_helper("pickup_time") %>
+        <%= @trip.pickup_time.try(:to_s, :form) %>
+      </li>
+
+      <li class="selfclear timepicker">
+        <%= translate_helper("appointment_time") %>
+        <%= @trip.appointment_time.try(:to_s, :form) %>
+      </li>
+
+      <li class="selfclear">
+        <%= translate_helper("round_trip") %>
+        <%= @trip.round_trip %>
+      </li>
+
+        <li class="selfclear">
+          <%= translate_helper("pickup_address") %>
+          <%= @trip.pickup_address.try(:text) %>
+        </li>
+
+        <li class="selfclear">
+        <%= translate_helper("customer") %>
+          <%= translate_helper("customer_phone") %>
+          <%= @trip.customer.phone_number_1 %>
+        </li>
+
+        <li class="selfclear">
+          <%= translate_helper("dropoff_address") %>
+          <%= @trip.dropoff_address.try(:text) %>
+        </li>
+
+        <li class="selfclear">
+          <label for="dropoff_phone"><%= translate_helper("dropoff_phone") %></label>
+          @trip.dropoff_address.try(:phone_number)
+        </li>
+      
+    </ol>
+
+    ====
+
+    <ol class="section second">
+      <li class="selfclear">
+        <%= translate_helper("trip_purpose") %>
+        <%= @trip.trip_purpose %>
+      </li>
+
+      <li class="selfclear passengers group_size">
+          <%= translate_helper("passengers") %>
+          <ul>
+            <li>
+              <span class="nobreak"><%=translate_helper("guests") %></span>
+              <span class="nobreak"><%= translate_helper("attendants") %></span>
+            </li>
+          </ul>
+      </li>
+      
+      <li class="selfclear">
+        <%= translate_helper("run") %>
+        <%= @trip.run %>
+      </li>
+
+      <li class="selfclear">
+        <%= translate_helper("cab_mileage") %>
+        <%= @trip.mileage %>
+      </li>
+
+      <li class="selfclear">
+        <%= translate_helper("medicaid_eligible")  %>
+        <%= @trip.medicaid_eligible %>
+      </li>
+
+      <li class="selfclear">
+        <label for="customer_private_notes"><%= translate_helper("customer_private_notes") %></label>
+        <textarea rows="20" name="customer_private_notes" id="customer_private_notes" cols="40" readonly="readonly"><%= @customer.try :private_notes %></textarea>
+      </li>
+
+    </ol>
+
+    ====
+
+    <ol class="section third">
+      <li class="selfclear">
+        <%= translate_helper("trip_result") %>
+        <%= @trip_results %>
+      </li>
+
+      <li class="selfclear donation">
+        <%= translate_helper("trip_donation") %>
+        <%= @trip.donation %>
+      </li>
+
+      <li class="selfclear">
+        <%= translate_helper("funding_source") %>
+        <%= @funding_sources.to_yaml %>
+      </li>
+
+      <li class="selfclear">
+        <%= translate_helper("trip_service_level") %>
+        <%= @service_levels %>
+      </li>
+
+      <li class="selfclear">
+        <%= translate_helper("trip_mobility_requirements") %>
+        <%= @mobilities %>
+      </li>
+
+      <li class="selfclear">
+        <label for="mobility_notes"><%= translate_helper("trip_mobility_notes") %></label>
+        <%= @trip.customer.try :mobility_notes %>
+      </li>
+    </ol>
+
+    <ol class="section fourth double">
+      <li class="selfclear">
+        <%= translate_helper("trip_notes") %>
+        <%= @trip.notes %>
+      </li>
+      <li class="selfclear">
+        <%= translate_helper("trip_called_back") %>
+        <% if @trip.customer_informed %>
+          <%= "on #{@trip.called_back_at}" if @trip.called_back_at.present? %>
+          <%= "by #{@trip.called_back_by.email}" if @trip.called_back_by.present? %>
+        <% end %>
+      </li>
+    </ol>

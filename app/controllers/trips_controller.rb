@@ -1,5 +1,6 @@
 class TripsController < ApplicationController
-  load_and_authorize_resource
+
+  load_and_authorize_resource :except=>[:show]
   
   before_filter :set_calendar_week_start, :only => [:index, :new, :edit]
 
@@ -16,6 +17,10 @@ class TripsController < ApplicationController
       format.xml  { render :xml => @trips }
       format.json { render :json => trips_json }
     end
+  end
+
+  def show
+    @trip = Trip.find(params[:id])
   end
 
   def trips_requiring_callback
