@@ -45,31 +45,6 @@ RSpec.describe TripsController, type: :controller do
         expect(assigns(:trips)).to_not include(trip_2)
       end
       
-      it "renders matching trips in the events attribute of the json response" do
-        trip = create(:trip, :provider => @current_user.current_provider, :pickup_time => Time.now.in_time_zone)
-        get :index, {:format => "json"}
-        json = JSON.parse(response.body)
-        expect(json["events"]).to be_a(Array)
-        expect(json["events"].first["id"]).to be_a(Integer)
-        expect(json["events"].first["id"]).to eq(trip.id)
-      end
-      
-      context "with rendered views" do
-        render_views
-      
-        it "renders rows of HTML for matching trips in the row attribute of the json response" do
-          pickup_time = Time.now.in_time_zone
-          trip = create(:trip, :provider => @current_user.current_provider, :pickup_time => pickup_time)
-          get :index, {:format => "json"}
-          json = JSON.parse(response.body)
-          expect(json["rows"]).to be_a(Array)
-          expect(json["rows"].first).to include("<tr class=\"day\">")
-          expect(json["rows"].first).to include(pickup_time.strftime('%A, %e-%b-%4Y'))
-          expect(json["rows"].second).to include("<tr class=\"trip\">")
-          expect(json["rows"].second).to include(trip_path(trip))
-        end
-      end
-      
       context "when specifying a start param" do
         it "assigns trips for the requested week as @trips" do
           trip_1 = create(:trip, :provider => @current_user.current_provider, :pickup_time => Time.now.in_time_zone)
