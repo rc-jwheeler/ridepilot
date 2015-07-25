@@ -9,12 +9,13 @@ class TripFilter
 
   def filter!
     filter_by_pickup_time!
+    filter_by_days_of_week!
     filter_by_vehicle!
     filter_by_driver!
     filter_by_status!
 
     @filters.each do |k, v|
-      next if [:start, :end, :vehicle_id, :driver_id, :status_id].index(k) # has been processed above
+      next if [:start, :end, :days_of_week, :vehicle_id, :driver_id, :status_id].index(k) # has been processed above
 
       @trips = @trips.where("#{k}": v) if !v.blank?
     end
@@ -58,6 +59,12 @@ class TripFilter
 
     @filters[:start] = t_start.to_i
     @filters[:end] = t_end.to_i
+  end
+
+  def filter_by_days_of_week!
+    days_of_week = @filters[:days_of_week].blank? ? "0,1,2,3,4,5,6" : @filters[:days_of_week]
+    @trips = @trips.where('extract(dow from pickup_time) in (?)', days_of_week.split(','))
+    @filters[:days_of_week] = days_of_week
   end
 
   def filter_by_vehicle!

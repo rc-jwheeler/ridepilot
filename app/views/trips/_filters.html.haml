@@ -4,15 +4,16 @@
       = translate_helper(:filter)
   .panel-body{style: 'padding: 5px;'}
     = form_for :trip_filters, url: trips_path, html: { :id => "trip_filter_form" }, :method => :get do |f|
+      =f.hidden_field :days_of_week
       .btns.pull-right
         = f.submit  translate_helper(:ok), id: 'runTripFilters', class: 'btn action-button', role: 'button'
         = button_tag  translate_helper(:reset), id: 'resetTripFilters', class: 'btn action-button', role: 'button'
       .col-sm-12.datepicker{style: 'padding: 5px;'}
         = f.label :start, translate_helper("from_date")
-        = f.text_field :start, :value => format_time_for_listing_day(@start_pickup_date), name: 'start', class: 'form-control'
+        = f.text_field :start, :value => format_time_for_listing_day(@start_pickup_date), class: 'form-control'
       .col-sm-12.datepicker{style: 'padding: 5px;'}
         = f.label :end, translate_helper("to_date")
-        = f.text_field :end, :value => format_time_for_listing_day(@end_pickup_date), name: 'end', class: 'form-control'
+        = f.text_field :end, :value => format_time_for_listing_day(@end_pickup_date), class: 'form-control'
       .col-sm-12{style: 'padding: 5px;'}
         = render partial: 'weekday_select'
       .col-sm-12{style: 'padding: 5px;'}
