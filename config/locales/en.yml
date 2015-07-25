@@ -699,6 +699,7 @@ en:
   unscheduled: 'Unscheduled'
   from_date: 'From Date'
   to_date: 'To Date'
+  from_date_cannot_later_than_to_date: "From Date can not be later than To Date"
 
   locales:
     en: "English"

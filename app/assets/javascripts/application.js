@@ -11,11 +11,11 @@
 // about supported directives.
 //
 //= require jquery
-//= require bootstrap-sprockets
 //= require jquery_ujs
 //= require dataTables/jquery.dataTables
 //= require jquery-ui
 //= require jquery_nested_form
+//= require bootstrap-sprockets
 //= require autocomplete-rails
 //= require jquery.weekcalendar
 //= require jquery-ui-timepicker-addon

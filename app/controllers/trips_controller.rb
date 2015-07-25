@@ -11,6 +11,7 @@ class TripsController < ApplicationController
     @drivers         = Driver.active.for_provider current_provider_id
     @start_pickup_date = Time.at(session[:start].to_i).to_date
     @end_pickup_date = Time.at(session[:end].to_i).to_date
+    @days_of_week = trip_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : trip_sessions[:days_of_week].split(',').map(&:to_i)
 
     @trip_jsons = @trips.map(&:as_calendar_json).to_json
     @day_resources = []
@@ -19,11 +20,11 @@ class TripsController < ApplicationController
       flash[:alert] = TranslationEngine.translate_text(:from_date_cannot_later_than_to_date)
     else
       flash[:alert] = nil
-      @day_resources = (@start_pickup_date..@end_pickup_date).map{|d| {
+      @day_resources = (@start_pickup_date..@end_pickup_date).select{|d| @days_of_week.index(d.wday)}.map{|d| {
         id:   d.to_s(:js), 
         name: d.strftime("%a, %b %d,%Y"),
         isDate: true
-        }}.to_json
+        } }.to_json
     end
 
     respond_to do |format|
@@ -274,14 +275,6 @@ class TripsController < ApplicationController
   
   def set_calendar_week_start
     Date.beginning_of_week= :sunday
-
-    @week_start = if params[:start].present?
-      Time.at params[:start].to_i/1000
-    elsif @trip.try :pickup_time
-      @trip.pickup_time.beginning_of_week
-    else
-      Time.now.beginning_of_week
-    end
   end
 
   def prep_view
@@ -320,10 +313,7 @@ class TripsController < ApplicationController
   end
 
   def filter_trips
-    filters_hash = {
-      start: params[:start], 
-      end: params[:end]
-      }.merge params[:trip_filters] || {}
+    filters_hash = params[:trip_filters] || {}
     
     update_sessions(filters_hash)
 
@@ -333,7 +323,8 @@ class TripsController < ApplicationController
     # as default values are used if they were not presented initially
     update_sessions({
       start: trip_filter.filters[:start],
-      end: trip_filter.filters[:end]
+      end: trip_filter.filters[:end],
+      days_of_week: trip_filter.filters[:days_of_week]
       })
   end
 
@@ -350,7 +341,8 @@ class TripsController < ApplicationController
       driver_id: session[:driver_id], 
       vehicle_id: session[:vehicle_id],
       trip_result_id: session[:trip_result_id], 
-      status_id: session[:status_id]
+      status_id: session[:status_id],
+      days_of_week: session[:days_of_week]
     }
   end
 
