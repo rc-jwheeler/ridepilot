@@ -93,7 +93,7 @@ gem "font-awesome-rails"
 gem 'nested_form', '~> 0.3.2'
 
 # jQuery full calendar plugin with resource views
-gem 'rails-fullcalendar-resourceviews', '~> 1.6.5.2', github: 'xudongcamsys/rails-fullcalendar-resourceviews'
+gem 'rails-fullcalendar-resourceviews', '~> 1.6.5.6', github: 'xudongcamsys/rails-fullcalendar-resourceviews'
 
 group :integration, :qa, :production do 
   gem 'rails_12factor'
