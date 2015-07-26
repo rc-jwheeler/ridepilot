@@ -23,13 +23,6 @@ RSpec.describe TripsController, type: :controller do
   }
 
   describe "GET #index" do
-    context "when responding to :html request" do
-      it "assigns an empty array to @trips even if valid trips are found" do
-        trip = create(:trip, :provider => @current_user.current_provider, :pickup_time => Time.now.in_time_zone)
-        get :index, {}
-        expect(assigns(:trips)).to eq([])
-      end
-    end
     
     context "when responding to a :json request" do
       it "responds with JSON" do
@@ -49,7 +42,11 @@ RSpec.describe TripsController, type: :controller do
         it "assigns trips for the requested week as @trips" do
           trip_1 = create(:trip, :provider => @current_user.current_provider, :pickup_time => Time.now.in_time_zone)
           trip_2 = create(:trip, :provider => @current_user.current_provider, :pickup_time => 1.week.from_now.in_time_zone)
-          get :index, {:start => 1.week.from_now.in_time_zone.at_beginning_of_week.to_i, :end => 1.week.from_now.in_time_zone.at_end_of_week.to_i, :format => "json"}
+          get :index, {
+            trip_filters: {
+            :start => 1.week.from_now.in_time_zone.at_beginning_of_week.to_i, 
+            :end => 1.week.from_now.in_time_zone.at_end_of_week.to_i
+            }, format: :json}
           expect(assigns(:trips)).to_not include(trip_1)
           expect(assigns(:trips)).to include(trip_2)
         end
