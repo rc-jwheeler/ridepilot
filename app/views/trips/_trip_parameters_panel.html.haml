@@ -35,7 +35,7 @@
     .form-group.col-sm-12
       = f.fields_for :customer do |c|
         .col-sm-3
-          = c.label :phone_number_1, translate_helper("customer_phone")
+          = c.label :phone_number_1, translate_helper_with_tooltip("customer_phone")
         .col-sm-9  
           = c.text_field :phone_number_1, :class => :full, class: 'form-control'
 
