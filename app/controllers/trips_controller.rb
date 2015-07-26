@@ -190,7 +190,7 @@ class TripsController < ApplicationController
           if params[:run_id].present?
             redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
           else
-            redirect_to(trips_path(:start => @trip.pickup_time.to_i), :notice => 'Trip was successfully created.') 
+            redirect_to(trips_path, :notice => 'Trip was successfully created.') 
           end
         }
         format.js { render :json => {:status => "success", :trip => render_to_string(:partial => 'runs/trip', :locals => {:trip => @trip})}, :content_type => "text/json" }
