@@ -5,26 +5,26 @@
   .panel-body{style: 'padding: 5px;'}
     .form-group.col-sm-12.timepicker
       .col-sm-3
-        = f.label :pickup_time, translate_helper("pickup_time")
+        = f.label :pickup_time, translate_helper_with_tooltip("pickup_time")
       .col-sm-9
         = f.text_field :pickup_time, :value => @trip.pickup_time.try(:to_s, :form), class: 'form-control'
 
     .form-group.col-sm-12.timepicker
       .col-sm-3
-        = f.label :appointment_time, translate_helper("appointment_time") 
+        = f.label :appointment_time, translate_helper_with_tooltip("appointment_time") 
       .col-sm-9
         = f.text_field :appointment_time, :value => @trip.appointment_time.try(:to_s, :form), class: 'form-control'
 
     - unless add_new_trip_via_run_page?
       .form-group.col-sm-12
         .col-sm-3
-          = f.label :round_trip, translate_helper("round_trip")
+          = f.label :round_trip, translate_helper_with_tooltip("round_trip")
         .col-sm-9
           = f.check_box :round_trip
 
       .form-group.col-sm-12
         .col-sm-3
-          = f.label :pickup_address_label, translate_helper("pickup_address")
+          = f.label :pickup_address_label, translate_helper_with_tooltip("pickup_address")
         .col-sm-9
           = autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:address_text), autocomplete_addresses_path, :size => 30, :id_element => "#trip_pickup_address_id", :class => "nearly-full form-control", "data-original-value" => @trip.pickup_address.try(:text), "data-original-id" => @trip.pickup_address.try(:id)  
           - if edit_mode != :show
