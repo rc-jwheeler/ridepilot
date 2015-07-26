@@ -20,6 +20,13 @@ GIT
       rails (>= 3.2.6, < 5.0)
 
 GIT
+  remote: git://github.com/xudongcamsys/rails-fullcalendar-resourceviews.git
+  revision: 528d8a1f0746792af25612adc9c74faead66b09f
+  specs:
+    rails-fullcalendar-resourceviews (1.6.5.6)
+      jquery-rails
+
+GIT
   remote: git://github.com/zpearce/Schedule-Attributes.git
   revision: babf55d9b5cd8f56456e1e2a33916e809f7c4e28
   specs:
@@ -342,6 +349,7 @@ DEPENDENCIES
   pg
   rack-timeout
   rails (~> 4.1.0)
+  rails-fullcalendar-resourceviews (~> 1.6.5.6)!
   rails-jquery-autocomplete (~> 1.0.0)
   rails-settings-cached (~> 0.4.1)
   rails_12factor

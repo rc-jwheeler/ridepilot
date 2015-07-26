@@ -28,13 +28,17 @@ module ApplicationHelper
   def display_trip_result(trip_result)
     trip_result.try(:name) || "Pending"
   end
+
+  def format_full_datetime(time)
+    time.strftime "%l:%M%P %a %d-%b-%Y" if time
+  end
   
   def format_time_for_listing(time)
     time.strftime('%l:%M%P')
   end
 
   def format_time_for_listing_day(time)
-    time.strftime('%A, %v') 
+    time.strftime('%d-%b-%Y %a') 
   end
   
   def format_date_for_daily_manifest(date)

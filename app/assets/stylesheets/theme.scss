@@ -736,7 +736,7 @@ table td.nowrap {
 .ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
 .ui-timepicker-div dl{ text-align: left; }
 .ui-timepicker-div dl dt{ height: 25px; }
-.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+//.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
 .ui-timepicker-div td {  }
 .ui_tpicker_hour,
 .ui_tpicker_minute { font-size: 9px; }
@@ -1346,17 +1346,15 @@ body.trips #page-header h1 {
 body.trips #weekday_select {
   float: left;
   white-space: nowrap;
-  width: 500px; /* Wide enough for all 7 buttons without wrapping. */
-}
+  //width: 500px; /* Wide enough for all 7 buttons without wrapping. */
 
-body.trips #weekday_select p {
-  margin: 0.6em 0 0.1em 1em;
-  color: #0081cc;
-  cursor: pointer;
+  .ui-button-text {
+    padding: 0.2em 0.5em;
+  }
 }
 
 body.trips #weekday_select_buttons {
-  margin: 1em;
+  //margin: 1em;
   width: 100%;
 }
 
@@ -1519,4 +1517,12 @@ body.trips div.repeats>li {
 .dispatch #refresh {
   float: right;
   margin-top: -0.6em;
+}
+
+th.fc-resourceName {
+  width: 1px; // set a small width so let it grow to max text length
+}
+
+.fc-event {
+  cursor: pointer;
 }

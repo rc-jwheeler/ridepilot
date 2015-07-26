@@ -23,13 +23,6 @@ RSpec.describe TripsController, type: :controller do
   }
 
   describe "GET #index" do
-    context "when responding to :html request" do
-      it "assigns an empty array to @trips even if valid trips are found" do
-        trip = create(:trip, :provider => @current_user.current_provider, :pickup_time => Time.now.in_time_zone)
-        get :index, {}
-        expect(assigns(:trips)).to eq([])
-      end
-    end
     
     context "when responding to a :json request" do
       it "responds with JSON" do
@@ -45,36 +38,15 @@ RSpec.describe TripsController, type: :controller do
         expect(assigns(:trips)).to_not include(trip_2)
       end
       
-      it "renders matching trips in the events attribute of the json response" do
-        trip = create(:trip, :provider => @current_user.current_provider, :pickup_time => Time.now.in_time_zone)
-        get :index, {:format => "json"}
-        json = JSON.parse(response.body)
-        expect(json["events"]).to be_a(Array)
-        expect(json["events"].first["id"]).to be_a(Integer)
-        expect(json["events"].first["id"]).to eq(trip.id)
-      end
-      
-      context "with rendered views" do
-        render_views
-      
-        it "renders rows of HTML for matching trips in the row attribute of the json response" do
-          pickup_time = Time.now.in_time_zone
-          trip = create(:trip, :provider => @current_user.current_provider, :pickup_time => pickup_time)
-          get :index, {:format => "json"}
-          json = JSON.parse(response.body)
-          expect(json["rows"]).to be_a(Array)
-          expect(json["rows"].first).to include("<tr class=\"day\">")
-          expect(json["rows"].first).to include(pickup_time.strftime('%A, %e-%b-%4Y'))
-          expect(json["rows"].second).to include("<tr class=\"trip\">")
-          expect(json["rows"].second).to include(edit_trip_path(trip))
-        end
-      end
-      
       context "when specifying a start param" do
         it "assigns trips for the requested week as @trips" do
           trip_1 = create(:trip, :provider => @current_user.current_provider, :pickup_time => Time.now.in_time_zone)
           trip_2 = create(:trip, :provider => @current_user.current_provider, :pickup_time => 1.week.from_now.in_time_zone)
-          get :index, {:start => 1.week.from_now.in_time_zone.at_beginning_of_week.to_i, :end => 1.week.from_now.in_time_zone.at_end_of_week.to_i, :format => "json"}
+          get :index, {
+            trip_filters: {
+            :start => 1.week.from_now.in_time_zone.at_beginning_of_week.to_i, 
+            :end => 1.week.from_now.in_time_zone.at_end_of_week.to_i
+            }, format: :json}
           expect(assigns(:trips)).to_not include(trip_1)
           expect(assigns(:trips)).to include(trip_2)
         end
@@ -176,7 +148,7 @@ RSpec.describe TripsController, type: :controller do
         context "when run_id param is not present" do
           it "redirects to the trips list" do
             post :create, {:trip => valid_attributes}
-            expect(response).to redirect_to(trips_url(:start => Trip.last.pickup_time.to_i))
+            expect(response).to redirect_to(trips_url)
           end
         end
       end

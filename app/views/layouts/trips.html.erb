@@ -1,11 +1,1 @@
-<% content_for :menu_bar do %>
-        <ul id="subnav" class="selfclear">
-          <li><%= link_to translate_helper("new_trip_link_text"), new_trip_path %></li>
-          <li><%= link_to translate_helper("view_trips_link_text"), :action=>:index %></li>
-          <li><%= link_to translate_helper("unscheduled_trips_link_text"), :action=>:unscheduled %></li>
-          <li><%= link_to translate_helper("trips_requiring_callback_link_text"), :action=>:trips_requiring_callback %></li>
-          <li><%= link_to translate_helper("reconcile_cab_log_link_text"), :action=>:reconcile_cab %></li>
-        </ul>
-<% end %>
-
 <%= render :file => 'layouts/application' %>
