@@ -72,14 +72,14 @@ class TripFilter
       if @filters[:vehicle_id].to_i == -1
         @trips = @trips.where(cab: true)
       else
-        @trips = @trips.where("runs.vehicle_id": @filters[:vehicle_id]) 
+        @trips = @trips.includes(run: :vehicle).references(run: :vehicle).where("runs.vehicle_id": @filters[:vehicle_id]) 
       end
     end
   end
 
   def filter_by_driver!
     if @filters[:driver_id].present?  
-      @trips = @trips.where("runs.driver_id": @filters[:driver_id]) 
+      @trips = @trips.includes(run: :driver).references(run: :driver).where("runs.driver_id": @filters[:driver_id]) 
     end
   end
 

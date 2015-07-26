@@ -4,7 +4,8 @@ class TripsController < ApplicationController
   before_filter :set_calendar_week_start, :only => [:index, :new, :edit]
 
   def index
-    @trips = @trips.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]}).references(:customer, {:run => [:driver, :vehicle]}).order(:pickup_time)
+    @trips = @trips.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]})
+    .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
     filter_trips
     
     @vehicles        = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
