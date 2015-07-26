@@ -212,8 +212,8 @@ class Trip < ActiveRecord::Base
   def as_calendar_json
     {
       id: id,
-      start: pickup_time.to_i,
-      end: appointment_time.to_i,
+      start: pickup_time.iso8601,
+      end: appointment_time.iso8601,
       title: customer_name + "\n" + pickup_address.address_text,
       resource: pickup_time.to_date.to_s(:js)
     }

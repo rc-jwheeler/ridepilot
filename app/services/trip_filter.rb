@@ -36,7 +36,7 @@ class TripFilter
       time = Date.strptime(time_param, '%d-%b-%Y %a') rescue nil
     end
 
-    time.to_date.in_time_zone.utc if time
+    time.to_date.in_time_zone if time
   end
 
   def filter_by_pickup_time!
@@ -45,18 +45,18 @@ class TripFilter
 
     if !t_start && !t_end
       time    = Time.now
-      t_start = time.beginning_of_week.to_date.in_time_zone.utc
+      t_start = time.beginning_of_week.to_date.in_time_zone
       t_end   = t_start + 6.days
     elsif !t_end
       t_end   = t_start + 6.days
     elsif !t_start
       t_start   = t_end - 6.days
     end
-    
-    @trips = @trips.
-      where("pickup_time >= '#{t_start.strftime "%Y-%m-%d %H:%M:%S"}'").
-      where("pickup_time <= '#{t_end.strftime "%Y-%m-%d %H:%M:%S"}'").order(:pickup_time)
 
+    @trips = @trips.
+      where("pickup_time >= '#{t_start.beginning_of_day.strftime "%Y-%m-%d %H:%M:%S"}'").
+      where("pickup_time <= '#{t_end.end_of_day.strftime "%Y-%m-%d %H:%M:%S"}'").order(:pickup_time)
+    
     @filters[:start] = t_start.to_i
     @filters[:end] = t_end.to_i
   end

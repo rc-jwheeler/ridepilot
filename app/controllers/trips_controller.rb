@@ -5,7 +5,7 @@ class TripsController < ApplicationController
   before_filter :set_calendar_week_start, :only => [:index, :new, :edit]
 
   def index
-    @trips = @trips.for_provider(current_provider_id).includes(:customer, {:run => [:driver, :vehicle]}).references(:customer, {:run => [:driver, :vehicle]}).order(:pickup_time)
+    @trips = @trips.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]}).references(:customer, {:run => [:driver, :vehicle]}).order(:pickup_time)
     filter_trips
     
     @vehicles        = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
@@ -14,7 +14,7 @@ class TripsController < ApplicationController
     @end_pickup_date = Time.at(session[:end].to_i).to_date
     @days_of_week = trip_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : trip_sessions[:days_of_week].split(',').map(&:to_i)
 
-    @trip_jsons = @trips.map(&:as_calendar_json).to_json
+    @trip_jsons = @trips.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
     @day_resources = []
 
     if @start_pickup_date > @end_pickup_date
