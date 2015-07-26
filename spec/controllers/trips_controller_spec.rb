@@ -148,7 +148,7 @@ RSpec.describe TripsController, type: :controller do
         context "when run_id param is not present" do
           it "redirects to the trips list" do
             post :create, {:trip => valid_attributes}
-            expect(response).to redirect_to(trips_url(:start => Trip.last.pickup_time.to_i))
+            expect(response).to redirect_to(trips_url)
           end
         end
       end
