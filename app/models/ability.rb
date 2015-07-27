@@ -72,6 +72,10 @@ class Ability
       role.admin? and driver_compliance.driver.provider_id == provider.id
     end
     
+    can action, Document do |document|
+      document.documentable.provider_id == provider.id
+    end
+    
     if role.admin?
       can :manage, User, {:roles => {:provider_id => provider.id}}
       can :manage, Translation
