@@ -28,6 +28,11 @@
         <%= form.label :zip, translate_helper("zip") %>
         <%= form.text_field :zip %>
       </li>
+
+      <li class="selfclear">
+        <%= form.label :notes, translate_helper("address_notes") %>
+        <%= form.text_field :notes %>
+      </li>
       
       <%= form.hidden_field :provider_id %>
 
