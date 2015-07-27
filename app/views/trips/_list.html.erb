@@ -8,15 +8,15 @@
 <table class="trips" <% if display %>style="display:<%= display %>;" <% end %>>
   <tr>
     <th></th>
-    <th><%= translate_helper("pickup_date") %></th>
-    <th><%= translate_helper("customer") %></th>
-    <th><%= translate_helper("pickup_address") %></th>
-    <th><%= translate_helper("pickup_time") %></th>
-    <th><%= translate_helper("dropoff_address") %></th>
-    <th><%= translate_helper("appointment_time") %></th>
-    <th><%= translate_helper("status") %></th>
-    <th><%= translate_helper("trip_called_back") %></th>
-    <th><%= translate_helper("result") %></th>
+    <th><%= translate_helper("pickup_date_column") %></th>
+    <th><%= translate_helper("customer_column") %></th>
+    <th><%= translate_helper("pickup_address_column") %></th>
+    <th><%= translate_helper("pickup_time_column") %></th>
+    <th><%= translate_helper("dropoff_address_column") %></th>
+    <th><%= translate_helper("appointment_time_column") %></th>
+    <th><%= translate_helper("trip_status_column") %></th>
+    <th><%= translate_helper("trip_called_back_column") %></th>
+    <th><%= translate_helper("trip_result_column") %></th>
   </tr>
 
   <% @trips.each do |trip| %>
