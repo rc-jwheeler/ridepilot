@@ -1,7 +1,7 @@
 <div id="weekday_select">
   <label style="width: 100%;"><%= translate_helper("days_of_week") %></label>
   <% days_abbr = translate_helper("date.day_name_initials").split(",") %>
-  <div id="weekday_select_buttons" class="btn-group col-sm-12" data-toggle="buttons">
+  <div id="weekday_select_buttons" class="btn-group col-sm-12" data-toggle="buttons" style="padding:0px;">
     <label for="weekday_sun" class="btn btn-default">
       <%= days_abbr[0] %>
       <input type="checkbox" autocomplete="off" id="weekday_sun"/>

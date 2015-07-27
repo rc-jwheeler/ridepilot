@@ -4,9 +4,9 @@
   = link_to translate_helper("new_trip_link_text"), new_trip_path, :class=>'btn action-button pull-right'
   .clearfix
 
-.col-md-3
+.col-md-3{style: 'padding: 0px 15px 0px 0px;'}
   = render :partial => 'filters'
-.col-md-9
+.col-md-9{style: 'padding: 0px;'}
   = render 'calendar'
 
   = render :partial => 'list'
