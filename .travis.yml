@@ -12,7 +12,6 @@ script:
 branches:
   only:
   - develop
-  - master
 deploy:
   provider: heroku
   api_key:
