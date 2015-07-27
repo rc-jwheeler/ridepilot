@@ -625,6 +625,16 @@ en:
   assignment: 'Assignment'
   n_a: 'N/A'
   view: 'View'
+  #trips table
+  pickup_date_column: 'Pickup Date'
+  customer_column: 'Customer'
+  pickup_address_column: 'Pickup Address'
+  pickup_time_column: 'Pickup Time'
+  dropoff_address_column: 'Dropoff Address'
+  appointment_time_column: 'Appointment Time'
+  trip_status_column: 'Status'
+  trip_called_back_column: 'Called back?'
+  trip_result_column: 'Result'
   #users
   new_user_heading: "Create New User"
   user_form_error_message: 
@@ -674,7 +684,6 @@ en:
   vehicle_show_heading: "Vehicle Details"
   add_maintenance_link_text: "Add Maintenance Event"
   edit_vehicle_link_text: "Edit Vehicle"
-  
   # Application Settings
   application_settings_heading: "Application Settings"
   edit_application_settings_heading: "Editing Application Settings"
@@ -685,7 +694,6 @@ en:
   application_settings_applied_value: "Applied Value"
   application_settings_default_value: "Default Value"
   application_settings_edit_link_text: "Edit Application Settings"
-  
   # General
   translation_engine_link_text: "Translations"
   save: "Save"
