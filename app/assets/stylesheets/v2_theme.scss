@@ -35,6 +35,15 @@
   margin: 0px;
 }
 
+// calendar
+.fc-view {
+  overflow: scroll;
+
+  table {
+    min-width: 1000px !important;
+  }
+}
+
 th.fc-resourceName {
   width: 1px; // set a small width so let it grow to max text length
 }
