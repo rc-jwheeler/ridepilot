@@ -34,3 +34,11 @@
 {
   margin: 0px;
 }
+
+th.fc-resourceName {
+  width: 1px; // set a small width so let it grow to max text length
+}
+
+.fc-event {
+  cursor: pointer;
+}

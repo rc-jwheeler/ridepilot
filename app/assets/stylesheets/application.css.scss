@@ -11,6 +11,7 @@
  * file per style scope.
  */
 
+@import "base_lib";
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "font-awesome";
@@ -19,5 +20,5 @@
 @import "jquery.weekcalendar";
 @import "jquery-ui-timepicker-addon";
 @import "fullcalendar";
-@import "theme";
-@import "bootstrap_override";
+@import "v1_theme";
+@import "v2_theme";
