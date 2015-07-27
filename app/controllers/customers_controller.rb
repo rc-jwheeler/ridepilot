@@ -156,12 +156,10 @@ first_name, first_name, first_name, first_name,
 
     @customer.assign_attributes customer_params
 
-    debugger
-
     #save address changes
     address = Address.find(params[:customer][:address_attributes][:id]) if params[:customer][:address_attributes][:id].present?
-    
-    address.assign_attributes(params[:customer][:address_attributes])
+
+    address.assign_attributes(address_params)
     # Rails.logger.info(address.save)
     #   address.save!
     # rescue Exception => e Rails.logger.errors("ERROR saving address: #{e}")
@@ -231,6 +229,10 @@ first_name, first_name, first_name, first_name,
         :notes
       ],
     )
+  end
+
+  def address_params
+    params["customer"].require(:address_attributes).permit(:name, :building_name, :address, :city, :state, :zip, :in_district, :provider_id, :phone_number, :inactive, :trip_purpose_id, :notes)
   end
 
   def name_options
