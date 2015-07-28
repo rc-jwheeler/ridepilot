@@ -39,6 +39,11 @@
     <%= label_tag "#{prefix}_phone_number", translate_helper("phone_number") %>
     <%= text_field_tag "#{prefix}_phone_number", address.phone_number %>
   </li>
+
+  <li class="selfclear">
+    <%= label_tag "#{prefix}_notes", translate_helper("address_notes") %>
+    <%= text_area_tag "#{prefix}_notes", address.phone_number %>
+  </li>
   
   <li class="selfclear">
     <%= label_tag "#{prefix}_trip_purpose", translate_helper("trip_purpose") %>
@@ -49,6 +54,7 @@
     <%= label_tag "#{prefix}_in_district", translate_helper("in_district") %>
     <%= select_tag "#{prefix}_in_district", options_for_select([["Yes", "true"], ["No", "false"]], address.in_district ? "true" : "false") %>
   </li>
+
   </ol>
   </fieldset>
 <% end %>

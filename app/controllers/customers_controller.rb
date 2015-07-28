@@ -156,6 +156,12 @@ first_name, first_name, first_name, first_name,
 
     @customer.assign_attributes customer_params
 
+    #save address changes
+    if params[:customer][:address_attributes][:id].present?
+      address = Address.find(params[:customer][:address_attributes][:id])
+      address.assign_attributes(address_params)
+    end
+
     providers = []
     params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
       providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
@@ -218,8 +224,13 @@ first_name, first_name, first_name, first_name,
         :provider_id,
         :state,
         :zip,
+        :notes
       ],
     )
+  end
+
+  def address_params
+    params["customer"].require(:address_attributes).permit(:name, :building_name, :address, :city, :state, :zip, :in_district, :provider_id, :phone_number, :inactive, :trip_purpose_id, :notes)
   end
 
   def name_options

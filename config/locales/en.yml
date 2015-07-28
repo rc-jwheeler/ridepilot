@@ -40,6 +40,7 @@ en:
   editing_address: "Editing Address"
   reassociate_trips: "Associate this addresses's trips with another address."
   address_search: "Address Search"
+  address_notes: "Notes"
   #cab trips
   pickup_date: "Pickup Date"
   pickup_time: "Pickup Time"
@@ -708,6 +709,7 @@ en:
   from_date: 'From Date'
   to_date: 'To Date'
   from_date_cannot_later_than_to_date: "From Date can not be later than To Date"
+
 
   locales:
     en: "English"

@@ -55,6 +55,9 @@
   <dt><%= translate_helper("address")%></td>
   <dd><%= @customer.address ? raw(format_newlines @customer.address.text) : '' %></dd>
 
+  <dt><%= translate_helper("address_notes")%></td>
+  <dd><%= @customer.address.notes if @customer.address.present?  %></dd>
+
   <dt><%= translate_helper("email")%></td>
   <dd><%= @customer.email %></dd>
 </dl>
