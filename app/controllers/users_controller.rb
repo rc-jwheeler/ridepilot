@@ -49,7 +49,7 @@ class UsersController < ApplicationController
       # send password reset instructions instead
       @user.send_reset_password_instructions  if new_user
 
-      flash[:notice] = "%s has been added and the instructions has been emailed" % @user.email
+      flash.now[:notice] = "%s has been added and the instructions has been emailed" % @user.email
       redirect_to provider_path(current_provider)
     else
       user_errors = @user.valid? ? {} : @user.errors.messages
@@ -66,7 +66,7 @@ class UsersController < ApplicationController
   def change_password
     if current_user.update_password(change_password_params)
       sign_in(current_user, :bypass => true)
-      flash[:notice] = "Password changed"
+      flash.now[:notice] = "Password changed"
       redirect_to root_path
     else
       flash.now[:alert] = "Error updating password"

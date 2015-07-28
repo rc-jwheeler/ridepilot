@@ -18,9 +18,9 @@ class TripsController < ApplicationController
     @day_resources = []
 
     if @start_pickup_date > @end_pickup_date
-      flash[:alert] = TranslationEngine.translate_text(:from_date_cannot_later_than_to_date)
+      flash.now[:alert] = TranslationEngine.translate_text(:from_date_cannot_later_than_to_date)
     else
-      flash[:alert] = nil
+      flash.now[:alert] = nil
       @day_resources = (@start_pickup_date..@end_pickup_date).select{|d| @days_of_week.index(d.wday)}.map{|d| {
         id:   d.to_s(:js), 
         name: d.strftime("%a, %b %d,%Y"),

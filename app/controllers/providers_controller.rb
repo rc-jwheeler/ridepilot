@@ -48,7 +48,7 @@ class ProvidersController < ApplicationController
     lng = params[:viewport_lng].to_f
     zoom = params[:viewport_zoom].to_i
     if zoom < 0 or zoom >= 20
-      flash[:alert] = 'Zoom must be between 0 and 19.'
+      flash.now[:alert] = 'Zoom must be between 0 and 19.'
       redirect_to provider_path(@provider)
     end
     @provider.viewport_zoom = zoom
