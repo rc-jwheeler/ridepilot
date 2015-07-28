@@ -157,12 +157,10 @@ first_name, first_name, first_name, first_name,
     @customer.assign_attributes customer_params
 
     #save address changes
-    address = Address.find(params[:customer][:address_attributes][:id]) if params[:customer][:address_attributes][:id].present?
-
-    address.assign_attributes(address_params)
-    # Rails.logger.info(address.save)
-    #   address.save!
-    # rescue Exception => e Rails.logger.errors("ERROR saving address: #{e}")
+    if params[:customer][:address_attributes][:id].present?
+      address = Address.find(params[:customer][:address_attributes][:id])
+      address.assign_attributes(address_params)
+    end
 
     providers = []
     params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
