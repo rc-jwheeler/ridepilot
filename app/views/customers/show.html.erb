@@ -3,7 +3,7 @@
 </div>
 
 <div class="profile-actions selfclear">
-  <%= link_to translate_helper("new_trip_link_text"), new_trip_path(:customer_id=>@customer.id), :class=>'new-trip'  %>
+  <%= link_to translate_helper("new_trip_link_text"), new_trip_path(:customer_id=>@customer.id), :class=>'new-trip' if !@read_only_customer  %>
   <span class="separator">|</span>
   <div class="manage">
     <%= link_to translate_helper("edit"), edit_customer_path(@customer), :class=>'edit' %>
@@ -139,7 +139,11 @@
   <% if @trips.present? %>
     <% for trip in @trips %>
     <tr>
-      <td><%= link_to trip.pickup_time.strftime('%m-%d-%Y %I:%M%P'), edit_trip_path(trip) %></td>
+      <%- if @read_only_customer %>
+        <td><%= link_to trip.pickup_time.strftime('%m-%d-%Y %I:%M%P'), trip_path(trip) %></td>
+      <%- else %>
+        <td><%= link_to trip.pickup_time.strftime('%m-%d-%Y %I:%M%P'), edit_trip_path(trip) %></td>
+      <% end %>
       <td><%= trip.trip_result_name %></td>
     </tr>
     <% end %>

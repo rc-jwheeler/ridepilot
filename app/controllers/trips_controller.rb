@@ -1,9 +1,11 @@
 class TripsController < ApplicationController
-  load_and_authorize_resource
+
+  load_and_authorize_resource :except=>[:show]
   
   before_filter :set_calendar_week_start, :only => [:index, :new, :edit]
 
   def index
+    @trips = Trip.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]}) if @trips.blank?
     @trips = @trips.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]})
     .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
     filter_trips
@@ -159,8 +161,12 @@ class TripsController < ApplicationController
   end
 
   def show
+
+    @trip = Trip.find(params[:id])
     prep_view
     @trips = []
+
+    authorize! :show, @trip if !@trip.customer.authorized_for_provider(current_provider.id)
     
     respond_to do |format|
       format.html 
@@ -170,7 +176,7 @@ class TripsController < ApplicationController
 
   def create
     if params[:trip][:customer_id] && customer = Customer.find_by_id(params[:trip][:customer_id])
-      authorize! :read, customer
+      #authorize! :read, customer
       params[:trip][:provider_id] = customer.provider.id if customer.provider.present?
     else
       params[:trip][:customer_id] = ""
@@ -279,7 +285,6 @@ class TripsController < ApplicationController
   end
 
   def prep_view
-    authorize! :read, @trip
     @customer           = @trip.customer
     @mobilities         = Mobility.order(:name).all
     @funding_sources    = FundingSource.by_provider(current_provider)
