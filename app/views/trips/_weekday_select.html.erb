@@ -39,7 +39,7 @@
     function initWeekdaySelect() {
       var buttons = $('#weekday_select input');
       var daysToShow = <%= @days_of_week %>;
-      $('#trip_filters_days_of_week').val(daysToShow);
+      $('.days_of_week_hidden_field').val(daysToShow);
 
       daysToShow.forEach(function(i) {
         $('#weekday_select_buttons .btn').eq(i).button('toggle');
@@ -58,7 +58,7 @@
         } 
       }
 
-      $('#trip_filters_days_of_week').val(daysToShow);
+      $('.days_of_week_hidden_field').val(daysToShow);
     }
 
     initWeekdaySelect();

@@ -8,24 +8,37 @@
 
 class RunsController < ApplicationController
   load_and_authorize_resource
-  before_filter :filter_runs, :only => :index
 
   def index
-    @runs = @runs.for_provider(current_provider_id)
+    setup_run
+    Date.beginning_of_week= :sunday
+
+    @runs = Run.for_provider(current_provider_id).includes(:driver, :vehicle).order(:scheduled_start_time)
+    filter_runs
+    
+    @start_pickup_date = Time.at(session[:start].to_i).to_date
+    @end_pickup_date = Time.at(session[:end].to_i).to_date
+    @days_of_week = run_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : run_sessions[:days_of_week].split(',').map(&:to_i)
+
+    @runs_json = @runs.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
+    @day_resources = []
+
+    if @start_pickup_date > @end_pickup_date
+      flash[:alert] = TranslationEngine.translate_text(:from_date_cannot_later_than_to_date)
+    else
+      flash[:alert] = nil
+      @day_resources = (@start_pickup_date..@end_pickup_date).select{|d| @days_of_week.index(d.wday)}.map{|d| {
+        id:   d.to_s(:js), 
+        name: d.strftime("%a, %b %d,%Y"),
+        isDate: true
+        } }.to_json
+    end
+
+
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @trips }
-      format.js {
-        rows = if @runs.present?
-          @runs.map do |r|
-            render_to_string :partial => "row.html", :locals => { :run => r }
-          end 
-        else 
-          [render_to_string( :partial => "no_runs.html" )]
-        end
-
-        render :json => { :rows => rows }
-      }
+      format.xml  { render :xml => @runs }
+      format.json { render :json => @runs }
     end
   end
 
@@ -179,5 +192,37 @@ class RunsController < ApplicationController
       :vehicle_id,
       customer_attributes: [:id]
     ])
+  end
+
+  def filter_runs
+    filters_hash = params[:run_filters] || {}
+    
+    update_sessions(filters_hash)
+
+    run_filter = RunFilter.new(@runs, run_sessions)
+    @runs = run_filter.filter!
+
+    update_sessions({
+      start: run_filter.filters[:start],
+      end: run_filter.filters[:end],
+      days_of_week: run_filter.filters[:days_of_week]
+      })
+  end
+
+  def update_sessions(params = {})
+    params.each do |key, val|
+      session[key] = val if !val.nil?
+    end
+  end
+
+  def run_sessions
+    {
+      start: session[:start],
+      end: session[:end], 
+      driver_id: session[:driver_id], 
+      vehicle_id: session[:vehicle_id],
+      run_result_id: session[:run_result_id], 
+      days_of_week: session[:days_of_week]
+    }
   end
 end

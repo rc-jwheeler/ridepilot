@@ -1,50 +1,20 @@
-.col-sm-12#tripCalendar{style: 'padding: 0px;'}
+.col-sm-12#calendar{style: 'padding: 0px;'}
+- resources = [] if !defined? resources
+- events = [] if !defined? events
 
 :javascript
-  $(document).ready(function() {
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
-    
-    var calendar = $('#tripCalendar').fullCalendar({
+  $(document).ready(function() {    
+    var calendar = $('#calendar').fullCalendar({
       header: false,
       defaultView: 'resourceDay',
       minTime: RidePilot.business_hours.start,
       slotMinutes: 60,
       maxTime:RidePilot.business_hours.end,
       columnFormat: 'h(:mm)tt',
-      resources: #{@day_resources},
-      events: #{@trip_jsons},
-
-      select: function(start, end, allDay, jsEvent, view, resource) {
-        var title = prompt('event title:');
-
-        if (title) {
-          calendar.fullCalendar('renderEvent',
-            {
-              title: title,
-              start: start,
-              end: end,
-              allDay: allDay,
-              resource: resource.id
-            },
-            true // make the event "stick"
-          );
-        }
-        calendar.fullCalendar('unselect');
-      },
-      resourceRender: function(resource, element, view) {
-        // this is triggered when the resource is rendered, just like eventRender
-      },
-      eventDrop: function( event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view ) { 
-        //
-      },
-      eventResize: function( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ) { 
-        //
-      },
+      resources: #{resources},
+      events: #{events},
       eventClick: function ( event, jsEvent, view )  {
-        window.location.href = "#{trips_path}/" + event.id;
+        window.location.href = "#{base_path}/" + event.id;
       }
     });
   });

@@ -52,6 +52,16 @@ class Run < ActiveRecord::Base
     { :id => id, :label => label }
   end
 
+  def as_calendar_json
+    {
+      id: id,
+      start: scheduled_start_time.iso8601,
+      end: scheduled_end_time.iso8601,
+      title: label,
+      resource: scheduled_start_time.to_date.to_s(:js)
+    }
+  end
+
   private
 
   def set_complete
