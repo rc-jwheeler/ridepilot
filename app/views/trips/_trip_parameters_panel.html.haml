@@ -120,10 +120,3 @@
           = f.label :notes, translate_helper("trip_notes")
         .col-sm-9
           = f.text_area :notes, class: 'form-control'
-
-- if edit_mode != :show
-  - unless add_new_trip_via_run_page?
-    .address-form#pickup-address-form
-      = render :partial=>'find_or_create_address', :locals=>{:prefix=>'pickup', :address => @trip.pickup_address || @trip.build_pickup_address } 
-    .address-form#dropoff-address-form
-      = render :partial=>'find_or_create_address', :locals=>{:prefix=>'dropoff', :address => @trip.dropoff_address || @trip.build_dropoff_address }

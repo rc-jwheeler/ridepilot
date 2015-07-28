@@ -31,3 +31,14 @@
   </div>
   
 <% end %>
+
+<% if edit_mode != :show %>
+  <% unless add_new_trip_via_run_page? %>
+    <div class="address-form" id="pickup-address-form">
+      <%= render :partial=>'find_or_create_address', :locals=>{:prefix=>'pickup', :address => @trip.pickup_address || @trip.build_pickup_address } %>
+    </div>
+    <div class="address-form" id="dropoff-address-form">
+      <%= render :partial=>'find_or_create_address', :locals=>{:prefix=>'dropoff', :address => @trip.dropoff_address || @trip.build_dropoff_address } %>
+    </div>
+  <% end %>
+<% end %>
