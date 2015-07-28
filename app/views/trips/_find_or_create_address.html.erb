@@ -1,7 +1,3 @@
-  <li class="selfclear">
-    <%= label_tag "#{prefix}_notes", translate_helper("address_notes") %>
-    <%= text_area_tag "#{prefix}_notes", address.notes %>
-  </li>
 <%= form_tag addresses_path, :class=>'address-search', :method=>:post, :remote=>true, 'data-id-element' => "#trip_#{prefix}_address_id", 'data-label-element' => "##{prefix}_search_address" do %> 
   <%= hidden_field_tag 'address_id', address.id %>
   <%= hidden_field_tag 'prefix', prefix %>
@@ -42,6 +38,11 @@
   <li class="selfclear">
     <%= label_tag "#{prefix}_phone_number", translate_helper("phone_number") %>
     <%= text_field_tag "#{prefix}_phone_number", address.phone_number %>
+  </li>
+
+  <li class="selfclear">
+    <%= label_tag "#{prefix}_notes", translate_helper("address_notes") %>
+    <%= text_area_tag "#{prefix}_notes", address.phone_number %>
   </li>
   
   <li class="selfclear">

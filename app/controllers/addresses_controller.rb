@@ -98,7 +98,7 @@ class AddressesController < ApplicationController
   def edit; end
   
   def create
-    debugger
+    
     the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f, 4326) : nil
     prefix         = params['prefix'] || ""
     address_params = {}
