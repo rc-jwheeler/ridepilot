@@ -10,12 +10,13 @@ class RunsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    setup_run
     Date.beginning_of_week= :sunday
 
     @runs = Run.for_provider(current_provider_id).includes(:driver, :vehicle).order(:scheduled_start_time)
     filter_runs
     
+    @drivers = Driver.where(:provider_id=>current_provider_id)
+    @vehicles = Vehicle.active.where(:provider_id=>current_provider_id)
     @start_pickup_date = Time.at(session[:start].to_i).to_date
     @end_pickup_date = Time.at(session[:end].to_i).to_date
     @days_of_week = run_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : run_sessions[:days_of_week].split(',').map(&:to_i)
@@ -55,6 +56,11 @@ class RunsController < ApplicationController
   def uncompleted_runs
     @runs = Run.for_provider(current_provider_id).where("complete = false").order("date desc")
     render "index"
+  end
+
+  def show
+    setup_run
+    @trip_results = TripResult.pluck(:name, :code)
   end
 
   def edit

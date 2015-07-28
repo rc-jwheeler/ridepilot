@@ -33,4 +33,22 @@
   </div>
 </fieldset>
 <% end %>
-<%= render "shared/date_picker_javascript" %>
+
+<script type='text/javascript'>
+
+  $(function(){
+    $('input[type=text]#user_expires_at').datetimepicker({
+          buttonImage: "<%=  image_path 'calendar-clock.png' %>",
+          buttonImageOnly: true,
+          constrainInput: false,
+          dateFormat: 'D yy-mm-dd',
+          hourGrid: 2,
+          minuteGrid: 15,
+          showOn: "both",
+          stepHour: 1,
+          stepMinute: 15,
+          timeFormat: 'hh:mm tt',
+    });
+  });
+
+</script>

@@ -1,4 +1,4 @@
-<%= render "shared/date_picker_javascript" %>
+<%= render "shared/date_time_picker_javascript" %>
 <script type='text/javascript'>
   function autocompleted(address, field) {
     if (address.id) {
@@ -62,9 +62,11 @@
   }
 
   $(document).ready(function() {
+    makeDatetimePickers();
+
     function load_edit_trip(form) {
       makeDialogs();
-      makeDatePickers();
+      makeDatetimePickers();
     }
     
     // happens after you submit an address (not autocomplete)
