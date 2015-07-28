@@ -55,10 +55,10 @@ class Run < ActiveRecord::Base
   def as_calendar_json
     {
       id: id,
-      start: scheduled_start_time.iso8601,
-      end: scheduled_end_time.iso8601,
+      start: scheduled_start_time ? scheduled_start_time.iso8601 : nil,
+      end: scheduled_end_time ? scheduled_end_time.iso8601 : nil,
       title: label,
-      resource: scheduled_start_time.to_date.to_s(:js)
+      resource: date.to_date.to_s(:js)
     }
   end
 

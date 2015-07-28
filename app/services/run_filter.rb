@@ -48,8 +48,8 @@ class RunFilter
     end
 
     @runs = @runs.
-      where("scheduled_start_time >= '#{t_start.beginning_of_day.strftime "%Y-%m-%d %H:%M:%S"}'").
-      where("scheduled_start_time <= '#{t_end.end_of_day.strftime "%Y-%m-%d %H:%M:%S"}'").order(:scheduled_start_time)
+      where("date >= '#{t_start.beginning_of_day.strftime "%Y-%m-%d %H:%M:%S"}'").
+      where("date <= '#{t_end.end_of_day.strftime "%Y-%m-%d %H:%M:%S"}'").order(:date)
     
     @filters[:start] = t_start.to_i
     @filters[:end] = t_end.to_i
@@ -57,7 +57,7 @@ class RunFilter
 
   def filter_by_days_of_week!
     days_of_week = @filters[:days_of_week].blank? ? "0,1,2,3,4,5,6" : @filters[:days_of_week]
-    @runs = @runs.where('extract(dow from scheduled_start_time) in (?)', days_of_week.split(','))
+    @runs = @runs.where('extract(dow from date) in (?)', days_of_week.split(','))
     @filters[:days_of_week] = days_of_week
   end
 
