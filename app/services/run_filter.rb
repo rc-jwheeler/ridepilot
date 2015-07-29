@@ -75,11 +75,10 @@ class RunFilter
 
   def filter_by_result!
     if @filters[:run_result_id].present?  
-      base = @runs.includes(:trips).references(:trips)
       if @filters[:run_result_id].to_i == 1 # Completed
-        # TODO
+        @runs = @runs.where(complete: true)
       else
-        # TODO
+        @runs = @runs.where(complete: false)
       end
     end
   end
