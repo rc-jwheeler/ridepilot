@@ -160,12 +160,8 @@ class TripsController < ApplicationController
 
     @trip = Trip.find(params[:id])
     prep_view
-<<<<<<< HEAD
-    @trips = []
 
     authorize! :show, @trip if !@trip.customer.authorized_for_provider(current_provider.id)
-=======
->>>>>>> added new run views
     
     respond_to do |format|
       format.html 
