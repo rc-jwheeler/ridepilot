@@ -93,6 +93,8 @@ Rails.application.routes.draw do
         get :uncompleted_runs
       end
     end
+
+    resources :trips_runs, only: [:index]
     
     resources :cab_trips, :only => [:index] do
       collection do

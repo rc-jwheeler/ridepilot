@@ -13,12 +13,7 @@ class TripFilter
     filter_by_vehicle!
     filter_by_driver!
     filter_by_status!
-
-    @filters.each do |k, v|
-      next if [:start, :end, :days_of_week, :vehicle_id, :driver_id, :status_id].index(k) # has been processed above
-
-      @trips = @trips.where("#{k}": v) if !v.blank?
-    end
+    filter_by_result!
 
     @trips
   end
@@ -90,6 +85,12 @@ class TripFilter
       else
         @trips = @trips.where("run_id is NULL and cab = false")
       end
+    end
+  end
+
+  def filter_by_result!
+    if @filters[:trip_result_id].present?  
+      @trips = @trips.where(trip_result_id: @filters[:trip_result_id]) 
     end
   end
 

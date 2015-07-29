@@ -44,6 +44,7 @@
       <ul id="primary-nav" class="selfclear">
         <% if show_scheduling? %><li class="trips"><%= link_to translate_helper("application_trips_link_text"), trips_path %></li><% end %>
         <% if show_scheduling? %><li class="runs"><%= link_to translate_helper("application_runs_link_text"), runs_path %></li><% end %>
+        <% if show_scheduling? %><li class="trips_runs"><%= link_to translate_helper("application_trips_runs_link_text"), trips_runs_path %></li><% end %>
         <% if show_scheduling? %><li class="cab_trips"><%= link_to translate_helper("application_cabs_link_text"), cab_trips_path %></li><% end %>
         <% if show_scheduling? %><li class="customers"><%= link_to translate_helper("application_customers_link_text"), customers_path %></li><% end %>
         <% if show_scheduling? %><li class="drivers"><%= link_to translate_helper("application_drivers_link_text"), drivers_path %></li><% end %>

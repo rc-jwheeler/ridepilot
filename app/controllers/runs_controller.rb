@@ -136,21 +136,6 @@ class RunsController < ApplicationController
     @drivers = Driver.where(:provider_id=>@run.provider_id)
     @vehicles = Vehicle.active.where(:provider_id=>@run.provider_id)
   end
-  
-  def filter_runs
-    if params[:end].present? && params[:start].present?
-      @week_start = Time.at params[:start].to_i
-      @week_end   = Time.at params[:end].to_i
-    else
-      time     = Time.now
-      @week_start = time.beginning_of_week
-      @week_end   = @week_start + 6.days
-    end
-    
-    @runs = @runs.
-      where("date >= '#{@week_start.to_s(:db)}'").
-      where("date < '#{@week_end.to_s(:db)}'")
-  end
 
   def date_range(run)
     if run.date

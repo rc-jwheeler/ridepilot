@@ -31,8 +31,8 @@ en:
   phone_number: "Phone Number"
   in_district: "In TriMet District"
   unspecified: "Unspecified"
-  yes: "Yes"
-  no: "No"
+  "yes": "Yes" # yes, no: needs to put as string, otherwise won't be loaded as will be parsed as {false=>"No"}
+  "no": "No"
   default_trip_purpose: "Default Trip Purpose:"
   address_form_error_message:
     one: "%{count} error prohibited this address from being saved:"
@@ -770,6 +770,12 @@ en:
   trip_round_trip_column: 'Round Trip?'
   guest_count_column: 'Guest Count'
   attendant_count_column: 'Attendant Count'
+  # trips runs tab
+  application_trips_runs_link_text: 'Trips Runs'
+  trips_runs: 'Trips Runs'
+  trips_runs_filter: 'Filter'
+  run_result: 'Result'
+  run_trip_day: 'Date'
 
 
   locales:

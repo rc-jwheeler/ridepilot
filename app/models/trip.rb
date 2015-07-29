@@ -218,6 +218,15 @@ class Trip < ActiveRecord::Base
       resource: pickup_time.to_date.to_s(:js)
     }
   end
+  def as_run_event_json
+    {
+      id: id,
+      start: pickup_time.iso8601,
+      end: appointment_time.iso8601,
+      title: customer_name + "\n" + pickup_address.address_text,
+      resource: run.try(:id)
+    }
+  end
     
 private
   

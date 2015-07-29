@@ -1,0 +1,12 @@
+= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips_runs'
+.clearfix.row#page-header{style: 'padding: 0px;'}
+  = link_to translate_helper("new_run_link_text"), new_run_path, :class=>'btn action-button pull-right'
+  %h1= translate_helper("trips_runs")
+  .clearfix
+
+.col-md-3{style: 'padding: 0px 15px 0px 0px;'}
+  = render :partial => 'filters'
+.col-md-9{style: 'padding: 0px;'}
+  = render 'trips/calendar', base_path: trips_runs_path, resources: @runs_json, events: @trips_json
+  = render :partial => 'trip_list'
+
