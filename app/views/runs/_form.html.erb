@@ -23,7 +23,7 @@
   </div>
   <div class="col-sm-12">
     <% if edit_mode != :new %>
-      <%= render 'trip_list', f: f %>
+      <%= render 'trip_list', f: f, edit_mode: edit_mode %>
     <% end %>
   </div>
   

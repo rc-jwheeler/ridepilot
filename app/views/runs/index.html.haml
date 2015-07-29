@@ -1,5 +1,5 @@
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'runs'
-.clearfix.row#page-header
+.clearfix.row#page-header{style: 'padding: 0px;'}
   = link_to translate_helper("new_run_link_text"), new_run_path, :class=>'btn action-button pull-right'
   %h1= translate_helper("runs")
   .clearfix

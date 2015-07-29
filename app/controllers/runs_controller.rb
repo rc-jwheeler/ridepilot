@@ -60,12 +60,10 @@ class RunsController < ApplicationController
 
   def show
     setup_run
-    @trip_results = TripResult.pluck(:name, :code)
   end
 
   def edit
     setup_run
-    @trip_results = TripResult.pluck(:name, :code)
   end
 
   def create
@@ -107,7 +105,6 @@ class RunsController < ApplicationController
         format.xml  { head :ok }
       else
         setup_run
-        @trip_results = TripResult.pluck(:name, :code)
         
         format.html { render :action => "edit" }
         format.xml  { render :xml => @run.errors, :status => :unprocessable_entity }
