@@ -60,14 +60,16 @@
   </div><!-- /#crossbar -->
 
   <div id="main">
-    <% if notice %>
-      <p class="notice"><%= notice %></p>
-    <% end %>
-    <% if alert %>
-      <p class="alert"><%= alert %></p>
-    <% end %>
-    <%= content_for?(:menu_bar) ? yield(:menu_bar) : '' %>
-    <%= yield %>
+    <div class="wrap selfclear">
+      <% if notice %>
+        <p class="notice"><%= notice %></p>
+      <% end %>
+      <% if alert %>
+        <p class="alert"><%= alert %></p>
+      <% end %>
+      <%= content_for?(:menu_bar) ? yield(:menu_bar) : '' %>
+      <%= yield %>
+    </div>
   </div>
 
   <%= render partial: 'layouts/footer' %>

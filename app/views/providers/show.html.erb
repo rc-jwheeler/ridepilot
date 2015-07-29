@@ -5,7 +5,7 @@
 
 <h2 class="section-header"><%= translate_helper("show_provider_address_heading") %></h2>
 
-<% form_tag search_addresses_path, :method => :get, :remote => true, :id => "search_addresses" do %>
+<%= form_tag search_addresses_path, :method => :get, :remote => true, :id => "search_addresses" do %>
   <%= hidden_field_tag :provider_id, @provider.id %>
   <fieldset>
     <ol class="section fourth">
@@ -404,7 +404,7 @@
          se_x = ''
        end
     %>
-    <% form_tag save_region_provider_path do %>
+    <%= form_tag save_region_provider_path do %>
       <table>
       <tr><th colspan="2"><h3><%= translate_helper("northwest_corner") %></h3></th></tr>
       <tr>
@@ -462,7 +462,7 @@
          center_lng = ''
        end
     %>
-    <% form_tag save_viewport_provider_path do %>
+    <%= form_tag save_viewport_provider_path do %>
       <table>
       <tr><th colspan="2"><h3><%= translate_helper("map_center") %></h3></th></tr>
       <tr>
