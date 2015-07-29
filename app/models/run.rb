@@ -44,7 +44,7 @@ class Run < ActiveRecord::Base
     if @cab
       "Cab"
     else
-      "#{vehicle_name}: #{driver.try :name} #{scheduled_start_time.try :strftime, "%I:%M%P"}".gsub( /m$/, "" )
+      !name.blank? ? name: "#{vehicle_name}: #{driver.try :name} #{scheduled_start_time.try :strftime, "%I:%M%P"}".gsub( /m$/, "" )
     end
   end
   
