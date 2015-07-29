@@ -1,20 +1,22 @@
-<fieldset class="driver-history-fields fields">
-  <%= f.hidden_field :id %>
-  
-  <p>
-    <%= f.label :event, translate_helper("driver_history_form_event") %>
-    <%= f.text_field :event %>
-  </p>
-
-  <p>
-    <%= f.label :notes, translate_helper("driver_history_form_notes") %>
-    <%= f.text_area :notes %>
-  </p>
-
-  <p>
-    <%= f.label :event_date, translate_helper("driver_history_form_event_date") %>
-    <%= f.text_field :event_date, data: {behavior: 'date-picker'} %>
-  </p>
-  
-  <p><%= f.link_to_remove translate_helper("driver_histories_remove_link_title") %></p>
-</fieldset>
+<tr class="fields driver-history-fields">
+  <td>
+    <%= f.hidden_field :id %>
+    <%= f.text_field :event, class: "form-control" %>
+  </td>
+  <td>
+    <%= f.text_field :notes, class: "form-control" %>
+  </td>
+  <td>
+    <div class="input-group datepicker-icon">
+      <%= f.text_field :event_date, class: "form-control datepicker" %>
+      <div class="input-group-btn">
+        <button class="btn btn-default" type="button">
+          <%= image_tag "calendar-clock.png" %>
+        </button>
+      </div>
+    </div>
+  </td>
+  <td>
+    <%= f.link_to_remove "X", class: "btn btn-danger btn-sm" %>
+  </td>
+</tr>

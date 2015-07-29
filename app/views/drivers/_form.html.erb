@@ -1,108 +1,236 @@
 <%= nested_form_for @driver do |f| %>
   <% if @driver.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= translate_helper("driver_form_error", count: @driver.errors.count) %></h2>
-
-      <ul>
-      <% @driver.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+    <div class="panel panel-danger">
+      <div class="panel-heading"><%= translate_helper("driver_form_error", count: @driver.errors.count) %></div>
+      <div class="panel-body">
+        <ul>
+          <% @driver.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
     </div>
   <% end %>
 
-  <fieldset class="new-driver">
-    <ol class="section first">
-      <li>
-        <%= f.label :name, translate_helper("driver_form_name") %>
-        <%= f.text_field :name %>
-      </li>
-
-      <li>
-        <%= f.label :email, translate_helper("driver_form_email") %>
-        <%= f.text_field :email %>
-      </li>
-
-      <li>
-        <%= f.label :active, translate_helper("driver_form_active") %>
-        <%= f.select :active, [["Active", "true"], ["Inactive", "false"]], {:selected => @driver.active.to_s} %>
-      </li>
-
-      <li>
-        <%= f.label :paid, translate_helper("paid") %>
-        <%= f.select :paid, [["Paid", "true"], ["Volunteer", "false"]], {:selected => @driver.paid.to_s} %>
-      </li>
+  <div class="row">
+    <div class="col-sm-12 col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Details</div>
+        <div class="panel-body form-horizontal">
+          <div class="form-group">
+            <%= f.label :name, translate_helper("driver_form_name"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.text_field :name, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>  
+          <div class="form-group">
+            <%= f.label :email, translate_helper("driver_form_email"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.text_field :email, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>  
+          <div class="form-group">
+            <%= f.label :active, translate_helper("driver_form_active"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.select :active, [["Active", "true"], ["Inactive", "false"]], { selected: @driver.active.to_s }, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>  
+          <div class="form-group">
+            <%= f.label :paid, translate_helper("paid"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.select :paid, [["Paid", "true"], ["Volunteer", "false"]], { selected: @driver.paid.to_s }, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>  
+          <div class="form-group">
+            <%= f.label :user_id, translate_helper("driver_form_associated_user"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.collection_select :user_id, @available_users, :id, :email, { include_blank: true }, { class: "form-control", disabled: @readonly } %>
+            </div>
+          </div>  
+        </div><!-- END .panel-body -->
+      </div><!-- END .panel -->
       
-      <li>
-        <%= f.label :user_id, translate_helper("driver_form_associated_user") %>
-        <%= f.collection_select :user_id, @available_users, :id, :email, :include_blank => true %>
-      </li>
-      <li>
-        <br>
-        <%= label_tag translate_helper("operating_hours_heading") %>
-        <table>
-          <% Date::DAYNAMES.each_with_index do |day_name, day_value| %>
-            <% hours = @hours[day_value] %>
-            <tr <%= (!hours.nil? and hours.errors.any?) ? 'class=row_with_errors' : '' %>>
-              <td nowrap><%= day_name %></td>
-              <td nowrap>
-                <%= radio_button_tag "hours[#{day_value}]", 'closed', (hours.nil? or hours.is_closed?), :id => "hours-#{day_value}-closed", :class => "hours-#{day_value}" %> <%= label_tag "hours-#{day_value}-closed", translate_helper("operating_hours_closed"), class: :inline %>
-              </td>
-              <td nowrap>
-                <%= radio_button_tag "hours[#{day_value}]", 'open24', (!hours.nil? and hours.is_24_hours?), :id => "hours-#{day_value}-open-24", :class => "hours-#{day_value}" %> <%= label_tag "hours-#{day_value}-open-24", translate_helper("operating_hours_24_hours"), class: :inline %>
-              </td>
-              <td nowrap>
-                <%= radio_button_tag "hours[#{day_value}]", 'open', (!hours.nil? and hours.is_regular_hours?), :id => "hours-#{day_value}-open", :class => "hours-#{day_value}" %> <%= label_tag "hours-#{day_value}-open", translate_helper("operating_hours_open"), class: :inline %>
-                <select id="start-hour-<%= day_value %>" name="start_hour[<%= day_value %>]">
-                  <% @start_hours.each do |hour| %>
-                    <option value="<%= hour %>" <%= !hours.nil? and hour.to_s(:time_utc) == hours.start_time.try(:to_s, :time_utc) ? "selected" : "" %>>
-                      <%= hour.strftime("%l:%M%P") %>
-                    </option>
+      <div class="panel panel-default">
+        <div class="panel-heading"><%= label_tag translate_helper("operating_hours_heading") %></div>
+        <div class="panel-body form-inline">
+          <table class="table table-condensed">
+            <tbody>
+              <% Date::DAYNAMES.each_with_index do |day_name, day_value| %>
+                <% hours = @hours[day_value] %>
+                <tr class="<%= (!hours.nil? and hours.errors.any?) ? "row_with_errors" : "" %>">
+                  <td class="col-md-2">
+                    <p class="form-control-static"><strong><%= day_name %></strong></p>
+                    <% if hours.try(:errors).try(:any?) %>
+                      <p class="text-danger"><%= msg %></p>
+                    <% end %>
+                  </td>
+                  <% if @readonly %>
+                    <td class="col-md-10">
+                      <p class="form-control-static">
+                        <% if hours.nil? or hours.is_closed? %>
+                          Closed
+                        <% elsif hours.is_24_hours? %>
+                          Open 24 hours
+                        <% else %>
+                          Open <%= hours.start_time.to_formatted_s(:time) %>
+                          - <%= hours.end_time.to_formatted_s(:time) %>
+                        <% end %>
+                      </p>
+                    </td>
+                  <% else %>
+                    <td class="col-md-5">
+                      <div class="col-sm-4">
+                        <%= label_tag "hours-#{day_value}-closed", class: "radio-inline" do %>
+                          <%= radio_button_tag "hours[#{day_value}]", 'closed', (hours.nil? or hours.is_closed?), id: "hours-#{day_value}-closed", class: "hours-#{day_value}", disabled: @readonly %>
+                          <%= translate_helper("operating_hours_closed") %>
+                        <% end %>
+                      </div>
+                      <div class="col-sm-4">
+                        <%= label_tag "hours-#{day_value}-open-24", class: "radio-inline" do %>
+                          <%= radio_button_tag "hours[#{day_value}]", 'open24', (hours.present? and hours.is_24_hours?), id: "hours-#{day_value}-open-24", class: "hours-#{day_value}", disabled: @readonly %>
+                          <%= translate_helper("operating_hours_24_hours") %>
+                        <% end %>
+                      </div>
+                      <div class="col-sm-4">
+                        <%= label_tag "hours-#{day_value}-open", class: "radio-inline" do %>
+                          <%= radio_button_tag "hours[#{day_value}]", 'open', (hours.present? and hours.is_regular_hours?), id: "hours-#{day_value}-open", class: "hours-#{day_value}", disabled: @readonly %>
+                          <%= translate_helper("operating_hours_open") %>
+                        <% end %>
+                      </div>
+                    </td>
+                    <td class="col-md-5">
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <%= label_tag "start-hour-#{day_value}", "From", style: "font-weight: normal" %>
+                          <select id="start-hour-<%= day_value %>" name="start_hour[<%= day_value %>]" class="form-control" <%= @readonly ? "readonly" : "" %>>
+                            <% @start_hours.each do |hour| %>
+                              <option value="<%= hour %>" <%= !hours.nil? and hour.to_s(:time_utc) == hours.start_time.try(:to_s, :time_utc) ? "selected" : "" %>>
+                                <%= hour.strftime("%l:%M%P") %>
+                              </option>
+                            <% end %>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <%= label_tag "end-hour-#{day_value}", "To", style: "font-weight: normal" %>
+                          <select id="end-hour-<%= day_value %>" name="end_hour[<%= day_value %>]" class="form-control" <%= @readonly ? "readonly" : "" %>>
+                            <% @end_hours.each do |hour| %>
+                              <option value="<%= hour %>" <%= !hours.nil? and hour.to_s(:time_utc) == hours.end_time.try(:to_s, :time_utc) ? "selected" : "" %>>
+                                <%= hour.strftime("%l:%M%P") %>
+                              </option>
+                            <% end %>
+                          </select>
+                        </div>
+                      </div>
+                    </td>
                   <% end %>
-                </select> to
-                <select id="end-hour-<%= day_value %>" name="end_hour[<%= day_value %>]">
-                  <% @end_hours.each do |hour| %>
-                    <option value="<%= hour %>" <%= !hours.nil? and hour.to_s(:time_utc) == hours.end_time.try(:to_s, :time_utc) ? "selected" : "" %>>
-                      <%= hour.strftime("%l:%M%P") %>
-                    </option>
-                  <% end %>
-                </select>
-              </td>
-              <td>
-                <% if !hours.nil? and hours.errors.any? %>
-                  <% hours.errors.full_messages.each do |msg| %>
-                    <span class="error"><%= msg %></span><br/>
-                  <% end %>
-                <% end %>
-              </td>
-            </tr>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div><!-- END .panel-body -->
+      </div><!-- END .panel -->
+    </div><!-- END .col-md-6 -->
+
+    <div class="col-sm-12 col-md-6">
+      <% if @driver.persisted? %>
+        <div class="panel panel-default">
+          <div class="panel-heading"><%= label_tag translate_helper("driver_documents_heading") %></div>
+          <table class="table table-striped" id="documents-table">
+            <thead>
+              <tr>
+                <th class="col-md-3"><%= translate_helper("document_form_upload_date") %></th>
+                <th><%= translate_helper("document_form_description") %></th>
+                <% unless @readonly %><th class="col-md-1"></th><% end %>
+              </tr>
+            </thead>
+            <tbody>
+              <% if @readonly and @driver.documents.empty? %>
+                <tr>
+                  <td colspan="3"><%= translate_helper("driver_documents_empty") %></td>
+                </tr>
+              <% end %>
+              <%= render partial: 'documents/document', collection: @driver.documents %>
+            </tbody>
+          </table>
+          <% unless @readonly %>
+            <div class="panel-footer">
+              <div class="clearfix">
+                <%= link_to translate_helper("driver_documents_add_link_title"), new_driver_document_path(@driver), class: "btn btn-default pull-right", remote: true %>
+              </div>
+            </div>
           <% end %>
-        </table>
-      </li>
-    </ol>
+        </div><!-- END .panel -->
 
-    <ol class="section second">
-      <li>
-        <strong><%= translate_helper("driver_histories_heading") %></strong><br>
-        <%= f.fields_for :driver_histories, :wrapper => false %>
-        <%= f.link_to_add translate_helper("driver_histories_add_link_title"), :driver_histories %>
-      </li>
-    </ol>
+        <div class="panel panel-default">
+          <div class="panel-heading"><%= label_tag translate_helper("driver_histories_heading") %></div>
+          <table class="table table-striped" id="driver-histories">
+            <thead>
+              <tr>
+                <th width="32%"><%= translate_helper("driver_history_form_event") %></th>
+                <th width="32%"><%= translate_helper("driver_history_form_notes") %></th>
+                <th width="32%"><%= translate_helper("driver_history_form_event_date") %></th>
+                <th width="4%"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= f.fields_for :driver_histories, :wrapper => false %>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5">
+                  <%= f.link_to_add translate_helper("driver_histories_add_link_title"), :driver_histories, data: { target: "#driver-histories" }, class: "btn btn-default" %>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div><!-- END .panel -->      
 
-    <ol class="section third">
-      <li>
-        <strong><%= translate_helper("driver_compliances_heading") %></strong><br>
-        <%= f.fields_for :driver_compliances, :wrapper => false %>
-        <%= f.link_to_add translate_helper("driver_compliances_add_link_title"), :driver_compliances %>
-      </li>
-    </ol>
+        <div class="panel panel-default">
+          <div class="panel-heading"><%= label_tag translate_helper("driver_compliances_heading") %></div>
+          <table class="table table-striped" id="driver-compliances">
+            <thead>
+              <tr>
+                <th width="24%"><%= translate_helper("driver_compliance_form_event") %></th>
+                <th width="24%"><%= translate_helper("driver_compliance_form_notes") %></th>
+                <th width="24%"><%= translate_helper("driver_compliance_form_due_date") %></th>
+                <th width="24%"><%= translate_helper("driver_compliance_form_compliance_date") %></th>
+                <th width="4%"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= f.fields_for :driver_compliances, :wrapper => false %>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5">
+                  <%= f.link_to_add translate_helper("driver_compliances_add_link_title"), :driver_compliances, data: { target: "#driver-compliances" }, class: "btn btn-default" %>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div><!-- END .panel -->      
+      </div><!-- END .col-md-6 -->
+    <% end %>
+  </div><!-- END .row -->
 
-    <div class="actions">
-      <%= f.submit translate_helper("driver_form_submit") %>
-    </div>
-  
-  </fieldset>
+  <% unless @readonly %>
+    <div class="row form-actions"><%= f.submit translate_helper("driver_form_submit"), class: "btn action-button" %></div>
+  <% end %>
 <% end %> 
+
+<div id="modal-dialog" class="modal fade col-sm-12" role="dialog" aria-hidden="true" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <div class="modal-title"><strong></strong></div>
+      </div>
+      <div class="modal-body"></div><!-- END .modal-body -->
+    </div><!-- END .modal-content -->
+  </div><!-- END .modal-dialog -->
+</div><!-- END .modal -->
 
 <%= javascript_tag do %>
   $(document).ready(function(){
@@ -114,11 +242,8 @@
     
     function make_datepicker(o) {
       o.datepicker({
-        showOn: "button",
-        buttonImage: "<%= image_path "calendar-clock.png" %>",
-        buttonImageOnly: true,
         dateFormat: "yy-mm-dd"
-      });
+      }).css('z-index', 999);
     }
 
     // Enable/disable behavior for operating hours on form
@@ -129,11 +254,15 @@
       });
     })(i);
     
-    make_datepicker($('[data-behavior=date-picker]'));
+    make_datepicker($('.datepicker'));
+
+    $('.datepicker-icon').on('click', '.btn', function(e) {
+      $(e.delegateTarget).find('.datepicker').datepicker('show');
+    });
 
     $(document).on('nested:fieldAdded', function(event){
       var field = event.field; 
-      make_datepicker(field.find('[data-behavior=date-picker]'));
+      make_datepicker(field.find('.datepicker'));
     })
   });
 <% end %>

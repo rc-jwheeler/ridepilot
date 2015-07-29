@@ -21,6 +21,14 @@ RSpec.describe DriversController, type: :controller do
     end
   end
 
+  describe "GET #show" do
+    it "assigns the requested driver as @driver" do
+      driver = create(:driver, :provider => @current_user.current_provider)
+      get :show, {:id => driver.to_param}
+      expect(assigns(:driver)).to eq(driver)
+    end
+  end
+
   describe "GET #new" do
     it "assigns a new driver as @driver" do
       get :new, {}

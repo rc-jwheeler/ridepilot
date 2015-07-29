@@ -76,7 +76,7 @@ Rails.application.routes.draw do
       resources :device_pool_drivers, :only => [:create, :destroy]
     end
     
-    resources :drivers, except: [:show] do
+    resources :drivers do
       resources :documents, except: [:index, :show]
     end
     resources :funding_sources, :except => [:destroy]

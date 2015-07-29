@@ -14,7 +14,6 @@ class Driver < ActiveRecord::Base
 
   accepts_nested_attributes_for :driver_histories, allow_destroy: true, reject_if: proc { |attributes| attributes['event'].blank? }
   accepts_nested_attributes_for :driver_compliances, allow_destroy: true, reject_if: proc { |attributes| attributes['event'].blank? }
-  accepts_nested_attributes_for :documents, allow_destroy: true, reject_if: :blank_document?
   
   validates :user_id, uniqueness: {allow_nil: true}
   validates :name, uniqueness: {scope: :provider_id}, length: {minimum: 2}

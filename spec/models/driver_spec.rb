@@ -214,31 +214,7 @@ RSpec.describe Driver, type: :model do
     before do
       @driver = create :driver
     end
-    
-    it "accepts nested documents" do
-      @driver.documents_attributes = 3.times.collect { attributes_for :document, documentable: nil }
-      expect {
-        @driver.save
-      }.to change(Document, :count).by(3)
-    end
 
-    it "allows destroy attribute" do
-      3.times { create :document, documentable: @driver }
-      expect(@driver.documents.count).to eql 3
-      
-      @driver.documents_attributes = @driver.documents.collect { |document| document.attributes.merge({:_destroy => "1"}) }
-      expect {
-        @driver.save
-      }.to change(Document, :count).by(-3)
-    end
-    
-    it "rejects a document with a blank document" do
-      @driver.documents_attributes = [ attributes_for(:document, :no_attachment, documentable: @driver) ]
-      expect {
-        @driver.save
-      }.not_to change(Document, :count)
-    end
-    
     it "destroys driver compliances when the driver is destroyed" do
       3.times { create :document, documentable: @driver }
       expect {

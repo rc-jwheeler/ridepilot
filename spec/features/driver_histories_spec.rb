@@ -19,19 +19,19 @@ RSpec.describe "DriverHistories" do
       end
       
       it "shows the existing history event and a new history event" do
-        expect(page).to have_selector "fieldset.driver-history-fields", count: 2
+        expect(page).to have_selector ".driver-history-fields", count: 2
       end
       
       # TODO Pending acceptance and merge of capybara_js branch into develop
       skip "has a link to add new history events", js: true do
         click_link "Add event"
-        expect(page).to have_selector "fieldset.driver-history-fields", count: 3
+        expect(page).to have_selector ".driver-history-fields", count: 3
       end
       
       # TODO Pending acceptance and merge of capybara_js branch into develop
       skip "has a link to remove existing history events", js: true do
         all(:link, "Remove this event").first.click
-        expect(page).to have_selector "fieldset.driver-history-fields", count: 2
+        expect(page).to have_selector ".driver-history-fields", count: 2
         expect(find("#driver_driver_histories_attributes_0__destroy", visible: false).val()).to eql "1"
       end
     end

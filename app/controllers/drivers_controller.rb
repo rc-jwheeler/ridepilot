@@ -5,6 +5,10 @@ class DriversController < ApplicationController
     redirect_to provider_path(current_provider)
   end
 
+  def show
+    prep_edit(readonly: true)
+  end
+
   def new
     @driver.provider = current_provider
     prep_edit
@@ -53,9 +57,13 @@ class DriversController < ApplicationController
 
   private
   
-  def prep_edit
-    @driver.driver_histories.build
-    @driver.driver_compliances.build
+  def prep_edit(readonly: false)
+    @readonly = readonly
+    
+    unless readonly
+      @driver.driver_histories.build
+      @driver.driver_compliances.build
+    end
     
     @available_users = @driver.provider.users - User.drivers(@driver.provider)
     @available_users << @driver.user if @driver.user

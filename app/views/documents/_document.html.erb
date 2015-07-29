@@ -1,0 +1,17 @@
+<tr class="document-<%= document.id %>">
+  <td>
+    <p class="form-control-static">
+      <%= document.document_updated_at.to_s(:form) %>
+    </p>
+  </td>
+  <td>
+    <p class="form-control-static">
+      <%= link_to document.description, @readonly ? document.document.url : polymorphic_path([document.documentable, document], action: :edit), remote: true %>
+    </p>
+  </td>
+  <% unless @readonly %>
+    <td>
+      <%= link_to "X", polymorphic_path([document.documentable, document]), remote: true, method: :delete, data: { confirm: 'Are you sure you want to delete this document?' }, class: "btn btn-danger btn-sm pull-right" %>
+    </td>
+  <% end %>
+</tr>
