@@ -22,12 +22,10 @@ namespace :ridepilot do
 
 	      y = YAML.load_file(locales_directory + filename)
 
-	      p y if filename == 'test.yml'
-
 	      failed = success = skipped = 0
 	      
 	      y.each_with_parents do |parents, v|
-	    
+
 	        locale = parents.shift
 	        locale = Locale.find_or_create_by(name: locale)
 
