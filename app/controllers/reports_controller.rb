@@ -164,7 +164,7 @@ class ReportsController < ApplicationController
   def show_trips_for_verification
     query_params = params[:query] || {}
     @query = Query.new(query_params)
-    @trip_results = TripResult.pluck(:name, :code)
+    @trip_results = TripResult.pluck(:name, :id)
 
     unless @trips.present?
       @trips = Trip.for_provider(current_provider_id).for_date_range(@query.start_date,@query.end_date).
@@ -179,7 +179,7 @@ class ReportsController < ApplicationController
     if @trips.empty?
       redirect_to({:action => :show_trips_for_verification}, :notice => "Trips updated successfully" )
     else
-      @trip_results = TripResult.pluck(:name, :code)
+      @trip_results = TripResult.pluck(:name, :id)
       render :action => :show_trips_for_verification
     end
   end

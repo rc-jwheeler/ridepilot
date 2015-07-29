@@ -565,6 +565,8 @@ en:
   new_run_link_text: "New Run"
   new_run_heading: "New Run"
   new_run_submit: "Submit"
+  runs: 'Runs'
+  new_run: 'New Run'
   #shared
   generic_error_message:
       one: "%{count} error prohibited this record from being saved:"
@@ -700,7 +702,8 @@ en:
   save: "Save"
   confirm_message: "Are you sure you want to delete this record?"
   #filters
-  filter: 'Filter'
+  trip_filter: 'Filter'
+  run_filter: 'Filter'
   reset: 'Reset'
   all: 'All'
   status: 'Status'
@@ -709,6 +712,18 @@ en:
   from_date: 'From Date'
   to_date: 'To Date'
   from_date_cannot_later_than_to_date: "From Date can not be later than To Date"
+  # runs table
+  run_date_column: 'Date'
+  run_start_time_column: 'Start Time'
+  run_end_time_column: 'End Time'
+  run_vehicle_column: 'Vehicle'
+  run_driver_column: 'Driver'
+  run_result_column: 'Result'
+  # ride_trips table
+  trip_purpose_column: 'Purpose'
+  trip_round_trip_column: 'Round Trip?'
+  guest_count_column: 'Guest Count'
+  attendant_count_column: 'Attendant Count'
 
 
   locales:

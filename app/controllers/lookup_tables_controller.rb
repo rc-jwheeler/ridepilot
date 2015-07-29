@@ -38,8 +38,8 @@ class LookupTablesController < ApplicationController
 
   def redirect_to_show_page
     if !@item.errors.empty?
-      flash[:alert] = TranslationEngine.translate_text(:operation_failed) + ": "
-      flash[:alert] += @item.errors.full_messages.join(';')
+      flash.now[:alert] = TranslationEngine.translate_text(:operation_failed) + ": "
+      flash.now[:alert] += @item.errors.full_messages.join(';')
     end
     redirect_to lookup_table_path(@lookup_table)
   end

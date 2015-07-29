@@ -13,7 +13,7 @@ class VehicleMaintenanceEventsController < ApplicationController
 
   def update
     if @vehicle_maintenance_event.update_attributes(vehicle_maintenance_event_params)
-      flash[:notice] = "Vehicle maintenance event updated"
+      flash.now[:notice] = "Vehicle maintenance event updated"
       redirect_to vehicle_path(@vehicle_maintenance_event.vehicle)
     else
       render :action => :edit
@@ -23,7 +23,7 @@ class VehicleMaintenanceEventsController < ApplicationController
   def create
     @vehicle_maintenance_event.provider = current_user.current_provider
     if @vehicle_maintenance_event.save
-      flash[:notice] = "Vehicle maintenance event created"
+      flash.now[:notice] = "Vehicle maintenance event created"
       redirect_to vehicle_path(@vehicle_maintenance_event.vehicle)
     else
       render :action => :new

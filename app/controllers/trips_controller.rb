@@ -1,12 +1,10 @@
 class TripsController < ApplicationController
-
   load_and_authorize_resource :except=>[:show]
-  
-  before_filter :set_calendar_week_start, :only => [:index, :new, :edit]
 
   def index
-    @trips = Trip.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]}) if @trips.blank?
-    @trips = @trips.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]})
+    Date.beginning_of_week= :sunday
+
+    @trips = Trip.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]})
     .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
     filter_trips
     
@@ -16,13 +14,13 @@ class TripsController < ApplicationController
     @end_pickup_date = Time.at(session[:end].to_i).to_date
     @days_of_week = trip_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : trip_sessions[:days_of_week].split(',').map(&:to_i)
 
-    @trip_jsons = @trips.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
+    @trips_json = @trips.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
     @day_resources = []
 
     if @start_pickup_date > @end_pickup_date
-      flash[:alert] = TranslationEngine.translate_text(:from_date_cannot_later_than_to_date)
+      flash.now[:alert] = TranslationEngine.translate_text(:from_date_cannot_later_than_to_date)
     else
-      flash[:alert] = nil
+      flash.now[:alert] = nil
       @day_resources = (@start_pickup_date..@end_pickup_date).select{|d| @days_of_week.index(d.wday)}.map{|d| {
         id:   d.to_s(:js), 
         name: d.strftime("%a, %b %d,%Y"),
@@ -141,7 +139,6 @@ class TripsController < ApplicationController
     end
 
     prep_view
-    @trips = []
     
     respond_to do |format|
       format.html # new.html.erb
@@ -152,7 +149,6 @@ class TripsController < ApplicationController
 
   def edit
     prep_view
-    @trips = []
     
     respond_to do |format|
       format.html 
@@ -161,10 +157,8 @@ class TripsController < ApplicationController
   end
 
   def show
-
     @trip = Trip.find(params[:id])
     prep_view
-    @trips = []
 
     authorize! :show, @trip if !@trip.customer.authorized_for_provider(current_provider.id)
     
@@ -278,10 +272,6 @@ class TripsController < ApplicationController
       :vehicle_id,
       customer_attributes: [:id]
     )
-  end
-  
-  def set_calendar_week_start
-    Date.beginning_of_week= :sunday
   end
 
   def prep_view

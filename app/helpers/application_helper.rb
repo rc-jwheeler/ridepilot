@@ -34,15 +34,15 @@ module ApplicationHelper
   end
   
   def format_time_for_listing(time)
-    time.strftime('%l:%M%P')
+    time.strftime('%l:%M%P') if time
   end
 
   def format_time_for_listing_day(time)
-    time.strftime('%d-%b-%Y %a') 
+    time.strftime('%d-%b-%Y %a') if time
   end
   
   def format_date_for_daily_manifest(date)
-    date.strftime('%A, %v')
+    date.strftime('%A, %v') if date
   end
   
   def delete_trippable_link(trippable)
