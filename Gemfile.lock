@@ -65,6 +65,12 @@ GEM
     autoprefixer-rails (5.2.1)
       execjs
       json
+    aws-sdk (2.1.8)
+      aws-sdk-resources (= 2.1.8)
+    aws-sdk-core (2.1.8)
+      jmespath (~> 1.0)
+    aws-sdk-resources (2.1.8)
+      aws-sdk-core (= 2.1.8)
     bcrypt (3.1.10)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
@@ -141,6 +147,8 @@ GEM
     ice_cube (0.6.8)
     jc-validates_timeliness (3.1.1)
       timeliness (~> 0.3.7)
+    jmespath (1.0.2)
+      multi_json (~> 1.0)
     jquery-datatables-rails (3.3.0)
       actionpack (>= 3.1)
       jquery-rails
@@ -229,6 +237,7 @@ GEM
     redis-store (1.1.6)
       redis (>= 2.2)
     ref (1.0.5)
+    remotipart (1.2.1)
     request_store (1.1.0)
     responders (1.1.2)
       railties (>= 3.2, < 4.2)
@@ -314,6 +323,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-postgis-adapter (~> 2.2.1)
   attribute_normalizer (~> 1.2.0)
+  aws-sdk (~> 2.1.8)
   better_errors
   binding_of_caller
   bootstrap-sass (~> 3.3.5)
@@ -348,6 +358,7 @@ DEPENDENCIES
   rails-settings-cached (~> 0.4.1)
   rails_12factor
   redis-rails (~> 4.0.0)
+  remotipart (~> 1.2)
   rgeo
   rspec-rails (~> 3.2)
   sass-rails (~> 4.0.3)

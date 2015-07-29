@@ -18,6 +18,7 @@ gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+gem 'remotipart', '~> 1.2'
 
 gem 'translation_engine', github: 'camsys/translation_engine'
 #gem 'translation_engine', path: '~/code/translation_engine'
@@ -40,7 +41,6 @@ gem 'devise_account_expireable', '~> 0.0.2'
 # Use specific commit to fix password_salt error, until new version released
 gem 'devise_security_extension', :git => 'git://github.com/phatworx/devise_security_extension.git', :ref => '2132a72d'
 
-
 # RADAR v3.x will support ActiveRecord 4.2
 gem 'rgeo'
 gem 'activerecord-postgis-adapter', '~> 2.2.1'
@@ -55,6 +55,7 @@ gem 'ice_cube', '0.6.8'
 gem 'jc-validates_timeliness', '~> 3.1.1'
 
 gem 'paperclip', '~> 4.3.0'
+gem 'aws-sdk', '~> 2.1.8'
 gem 'will_paginate', '~> 3.0.7'
 gem 'attribute_normalizer', '~> 1.2.0'
 

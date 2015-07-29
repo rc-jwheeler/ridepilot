@@ -1,15 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe Document, type: :model do
+  it "requires a description" do
+    document = build :document, description: nil
+    expect(document.valid?).to be_falsey
+    expect(document.errors.keys).to include :description
+
+    document.description = "Test"
+    expect(document.valid?).to be_truthy
+  end
+
   it "requires an associated documentable object" do
     document = build :document, documentable: nil
     expect(document.valid?).to be_falsey
     expect(document.errors.keys).to include :documentable
-    
+
     document.documentable = create :driver
     expect(document.valid?).to be_truthy
   end
-  
+
   it "requires a document to be attached" do
     document = build :document, document_file_name: nil, document_content_type: nil, document_file_size: nil
     expect(document.valid?).to be_falsey

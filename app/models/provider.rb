@@ -10,10 +10,7 @@ class Provider < ActiveRecord::Base
   has_many :funding_sources, :through => :funding_source_visibilities
   has_many :addresses, :dependent => :nullify
 
-  has_attached_file :logo, 
-    :styles => { :small => "150x150>" },
-    :path => ":rails_root/public/system/:attachment/:id/:style/:filename",
-    :url => "/system/:attachment/:id/:style/:filename"
+  has_attached_file :logo, :styles => { :small => "150x150>" }
   
   REIMBURSEMENT_ATTRIBUTES = [
     :oaa3b_per_ride_reimbursement_rate,

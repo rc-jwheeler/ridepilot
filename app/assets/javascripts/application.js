@@ -13,6 +13,7 @@
 //= require jquery
 //= require bootstrap-sprockets
 //= require jquery_ujs
+//= require jquery.remotipart
 //= require dataTables/jquery.dataTables
 //= require jquery-ui
 //= require jquery_nested_form

@@ -1,10 +1,10 @@
 class Document < ActiveRecord::Base
   belongs_to :documentable, polymorphic: true
   
-  has_attached_file :document, :default_url => "/images/:style/missing.png"
-  
-  validates :documentable, presence: true, associated: true
-  
+  has_attached_file :document
+          
+  validates :description, presence: true
+  validates :documentable, presence: true, associated: true  
   validates_attachment :document, presence: true,
     content_type: { :content_type => [
       "image/jpeg", "image/gif", "image/png", # image files (.png, .gif, .jpg)
