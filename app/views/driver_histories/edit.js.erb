@@ -1,0 +1,5 @@
+$('#modal-dialog .modal-body').html("<%= j (render partial: 'form', locals: {remote: true}) %>");
+var $new_form = $("<%= j translate_helper('driver_history_form_edit_heading') %>");
+$new_form.find('input.datepicker').datepicker({dateFormat: 'yy-mm-dd', showButtonPanel: true}).css('z-index', 9999);
+$('#modal-dialog .modal-title strong').html($new_form);
+$('#modal-dialog').modal('show');

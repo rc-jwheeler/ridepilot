@@ -115,6 +115,20 @@ ActiveRecord::Schema.define(version: 20150727030205) do
 
   add_index "device_pools", ["provider_id"], :name => "index_device_pools_on_provider_id"
 
+  create_table "documents", force: true do |t|
+    t.integer  "documentable_id"
+    t.string   "documentable_type"
+    t.string   "description"
+    t.string   "document_file_name"
+    t.string   "document_content_type"
+    t.integer  "document_file_size"
+    t.datetime "document_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "documents", ["documentable_id", "documentable_type"], :name => "index_documents_on_documentable_id_and_documentable_type"
+
   create_table "driver_compliances", force: true do |t|
     t.integer  "driver_id"
     t.string   "event"

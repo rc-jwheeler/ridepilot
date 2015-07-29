@@ -126,7 +126,7 @@ RSpec.describe TripFilter do
       base_pickup_time = Time.now.in_time_zone.beginning_of_week
       @cancel_trip_result = create(:trip_result, code: 'CANC')
       @cancelled_trip = create(:trip, pickup_time: base_pickup_time, trip_result: @cancel_trip_result)
-      @non_scheduled_trip = create(:trip, pickup_time: base_pickup_time)
+      @non_scheduled_trip = create(:trip, pickup_time: base_pickup_time + 1.day)
     end
 
     it "should return cancelled trips when trip result filter is Cancelled" do 

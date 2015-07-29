@@ -11,6 +11,11 @@
   font-weight: bold;
 }
 
+a.btn-default
+{
+  color: #000;
+}
+
 #customer_providers
 {
   /*border: solid 1px black;
@@ -33,6 +38,21 @@
 .checkbox + .checkbox 
 {
   margin: 0px;
+}
+
+.field_with_errors {
+  @extend .has-error;
+}
+
+/* Get rid of the top blue border applied to all tables in Ridepilot, when using
+   bootstrap table styling
+*/
+table.table 
+{
+  border-top: 0 none;
+  border-bottom: 0 none;
+  border-collapse: collapse;
+  background: transparent;
 }
 
 // calendar

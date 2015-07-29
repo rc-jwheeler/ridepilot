@@ -10,29 +10,38 @@ RSpec.describe "DriverHistories" do
       click_button 'Log In'
       
       @driver = create :driver, :provider => @admin.current_provider
-      create :driver_history, driver: @driver
+      @driver_history = create :driver_history, driver: @driver
     end
     
+    describe "GET /drivers/:id" do
+      before do
+        visit driver_path(id: @driver.to_param)
+      end
+      
+      it "shows the name of the history event" do
+        expect(page).to have_text @driver_history.event
+      end
+      
+      it "shows the date of the history event" do
+        expect(page).to have_text @driver_history.event_date.to_s(:form)
+      end
+    end
+
     describe "GET /drivers/:id/edit" do
       before do
         visit edit_driver_path(id: @driver.to_param)
       end
       
-      it "shows the existing history event and a new history event" do
-        expect(page).to have_selector "fieldset.driver-history-fields", count: 2
+      # TODO Pending acceptance and merge of capybara_js branch into develop
+      skip "shows a link to delete the history event", js: true do
       end
       
       # TODO Pending acceptance and merge of capybara_js branch into develop
-      skip "has a link to add new history events", js: true do
-        click_link "Add event"
-        expect(page).to have_selector "fieldset.driver-history-fields", count: 3
+      skip "shows a link to edit the history event", js: true do
       end
       
       # TODO Pending acceptance and merge of capybara_js branch into develop
-      skip "has a link to remove existing history events", js: true do
-        all(:link, "Remove this event").first.click
-        expect(page).to have_selector "fieldset.driver-history-fields", count: 2
-        expect(find("#driver_driver_histories_attributes_0__destroy", visible: false).val()).to eql "1"
+      skip "shows a link to add a new history event", js: true do
       end
     end
   end

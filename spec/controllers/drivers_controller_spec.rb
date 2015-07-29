@@ -21,6 +21,14 @@ RSpec.describe DriversController, type: :controller do
     end
   end
 
+  describe "GET #show" do
+    it "assigns the requested driver as @driver" do
+      driver = create(:driver, :provider => @current_user.current_provider)
+      get :show, {:id => driver.to_param}
+      expect(assigns(:driver)).to eq(driver)
+    end
+  end
+
   describe "GET #new" do
     it "assigns a new driver as @driver" do
       get :new, {}
@@ -53,52 +61,6 @@ RSpec.describe DriversController, type: :controller do
       it "redirects to the current provider" do
         post :create, {:driver => valid_attributes}
         expect(response).to redirect_to(@current_user.current_provider)
-      end
-      
-      context "with nested driver history attributes" do
-        it "creates new driver histories" do
-          expect {
-            post :create, {:driver => valid_attributes.merge({
-              driver_histories_attributes: [
-                attributes_for(:driver_history)
-              ]
-            })}
-          }.to change(DriverHistory, :count).by(1)
-        end
-
-        it "rejects driver histories with blank events" do
-          expect {
-            post :create, {:driver => valid_attributes.merge({
-              driver_histories_attributes: [
-                attributes_for(:driver_history),
-                attributes_for(:driver_history, event: nil)
-              ]
-            })}
-          }.to change(DriverHistory, :count).by(1)
-        end
-      end
-      
-      context "with nested driver compliance attributes" do
-        it "creates new driver compliances" do
-          expect {
-            post :create, {:driver => valid_attributes.merge({
-              driver_compliances_attributes: [
-                attributes_for(:driver_compliance)
-              ]
-            })}
-          }.to change(DriverCompliance, :count).by(1)
-        end
-
-        it "rejects driver compliances with blank events" do
-          expect {
-            post :create, {:driver => valid_attributes.merge({
-              driver_compliances_attributes: [
-                attributes_for(:driver_compliance),
-                attributes_for(:driver_compliance, event: nil)
-              ]
-            })}
-          }.to change(DriverCompliance, :count).by(1)
-        end
       end
     end
 
@@ -143,80 +105,6 @@ RSpec.describe DriversController, type: :controller do
         driver = create(:driver, :provider => @current_user.current_provider)
         put :update, {:id => driver.to_param, :driver => valid_attributes}
         expect(response).to redirect_to(@current_user.current_provider)
-      end
-      
-      context "with nested driver history attributes" do
-        before do
-          @driver = create :driver, :provider => @current_user.current_provider
-          @driver_history = create :driver_history, driver: @driver, event: "Crash"
-        end
-        
-        it "updates driver histories" do
-          expect {
-            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
-              driver_histories_attributes: [
-                @driver_history.attributes.merge({event: "Accident"})
-              ]
-            })}
-          }.to change{ @driver_history.reload.event }.from("Crash").to("Accident")
-        end
-
-        it "allows new driver histories to be added" do
-          expect {
-            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
-              driver_histories_attributes: [
-                attributes_for(:driver_history),
-              ]
-            })}
-          }.to change(DriverHistory, :count).by(1)
-        end
-
-        it "allows driver histories to be destroyed" do
-          expect {
-            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
-              driver_histories_attributes: [
-                @driver_history.attributes.merge({:_destroy => "1"})
-              ]
-            })}
-          }.to change(DriverHistory, :count).by(-1)
-        end
-      end
-      
-      context "with nested driver compliance attributes" do
-        before do
-          @driver = create :driver, :provider => @current_user.current_provider
-          @driver_compliance = create :driver_compliance, driver: @driver, event: "Crash Test"
-        end
-        
-        it "updates driver compliances" do
-          expect {
-            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
-              driver_compliances_attributes: [
-                @driver_compliance.attributes.merge({event: "Accidents Anonymous"})
-              ]
-            })}
-          }.to change{ @driver_compliance.reload.event }.from("Crash Test").to("Accidents Anonymous")
-        end
-
-        it "allows new driver compliances to be added" do
-          expect {
-            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
-              driver_compliances_attributes: [
-                attributes_for(:driver_compliance),
-              ]
-            })}
-          }.to change(DriverCompliance, :count).by(1)
-        end
-
-        it "allows driver compliances to be destroyed" do
-          expect {
-            put :update, {:id => @driver.to_param, :driver => valid_attributes.merge({
-              driver_compliances_attributes: [
-                @driver_compliance.attributes.merge({:_destroy => "1"})
-              ]
-            })}
-          }.to change(DriverCompliance, :count).by(-1)
-        end
       end
     end
 

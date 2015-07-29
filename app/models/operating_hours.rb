@@ -12,14 +12,14 @@ class OperatingHours < ActiveRecord::Base
   # Notes:
   # - start_time and end_time should be saved as strings, and w/o TZ info
   # - start_time == 0:00 and end_time == 0:00 represents 24-hours
-  # - If closed, then hours should be null.
+  # - If unavailable, then hours should be null.
 
-  def make_closed
+  def make_unavailable
     self.start_time = nil
     self.end_time = nil
   end
   
-  def is_closed?
+  def is_unavailable?
     self.start_time.nil? and self.end_time.nil?
   end
   
@@ -33,7 +33,7 @@ class OperatingHours < ActiveRecord::Base
   end
   
   def is_regular_hours?
-    !is_closed? and !is_24_hours?
+    !is_unavailable? and !is_24_hours?
   end
   
   private

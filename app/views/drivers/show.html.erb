@@ -1,0 +1,15 @@
+<div id="page-header" class="row">
+  <div class="col-sm-12 col-md-6">
+    <h1><%= translate_helper("show_driver_heading") %></h1>
+  </div>
+  <div class="col-sm-12 col-md-6">
+    <% if can? :manage, @driver %>
+      <div class="pull-right">
+        <%= link_to translate_helper("delete_driver_button"), @driver, method: :delete, data: { confirm: translate_helper("delete_driver_confirm") }, class: "btn btn-default btn-sm" %>
+        <%= link_to translate_helper("edit_driver_button"), edit_driver_path(@driver), class: "btn btn-default btn-sm" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%= render partial: "form" %>

@@ -10,29 +10,42 @@ RSpec.describe "DriverCompliances" do
       click_button 'Log In'
       
       @driver = create :driver, :provider => @admin.current_provider
-      create :driver_compliance, driver: @driver
+      @driver_compliance = create :driver_compliance, driver: @driver, compliance_date: Date.current
     end
     
+    describe "GET /drivers/:id" do
+      before do
+        visit driver_path(id: @driver.to_param)
+      end
+      
+      it "shows the name of the compliance event" do
+        expect(page).to have_text @driver_compliance.event
+      end
+      
+      it "shows the due date of the compliance event" do
+        expect(page).to have_text @driver_compliance.due_date.to_s(:form)
+      end
+      
+      it "shows the compliance date of the compliance event" do
+        expect(page).to have_text @driver_compliance.compliance_date.to_s(:form)
+      end
+    end
+
     describe "GET /drivers/:id/edit" do
       before do
         visit edit_driver_path(id: @driver.to_param)
       end
       
-      it "shows the existing compliance event and a new compliance event" do
-        expect(page).to have_selector "fieldset.driver-compliance-fields", count: 2
+      # TODO Pending acceptance and merge of capybara_js branch into develop
+      skip "shows a link to delete the compliance event", js: true do
       end
       
       # TODO Pending acceptance and merge of capybara_js branch into develop
-      skip "has a link to add new compliance events", js: true do
-        click_link "Add event"
-        expect(page).to have_selector "fieldset.driver-compliance-fields", count: 3
+      skip "shows a link to edit the compliance event", js: true do
       end
       
       # TODO Pending acceptance and merge of capybara_js branch into develop
-      skip "has a link to remove existing compliance events", js: true do
-        all(:link, "Remove this event").first.click
-        expect(page).to have_selector "fieldset.driver-compliance-fields", count: 2
-        expect(find("#driver_driver_compliance_attributes_0__destroy", visible: false).val()).to eql "1"
+      skip "shows a link to add a new compliance event", js: true do
       end
     end
   end

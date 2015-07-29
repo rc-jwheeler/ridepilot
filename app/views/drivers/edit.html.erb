@@ -1,5 +1,27 @@
-<div id="page-header" class="clearfix">
-  <h1><%= translate_helper("edit_driver_heading") %></h1>
+<div id="page-header" class="row">
+  <div class="col-sm-12 col-md-6">
+    <h1><%= translate_helper("edit_driver_heading") %></h1>
+  </div>
+  <div class="col-sm-12 col-md-6">
+    <% if can? :manage, @driver %>
+      <div class="pull-right">
+        <%= link_to translate_helper("cancel"), @driver, class: "btn btn-default btn-sm" %>
+        <button class="btn btn-default btn-sm" id="driver_form_submit">
+          <%= translate_helper("update") %>
+        </button>
+      </div>
+    <% end %>
+  </div>
 </div>
 
-<%= render :partial=>"form" %>
+<%= render partial: "form" %>
+
+<%= javascript_tag do %>
+  $(document).ready(function(){
+    $("form.edit_driver .form-actions").hide();
+    
+    $("#driver_form_submit").on("click", function(){
+      $("form.edit_driver").submit();
+    });
+  });
+<% end %>

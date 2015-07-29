@@ -28,10 +28,10 @@ RSpec.describe OperatingHours, type: :model do
     expect(hours.is_regular_hours?).to be_truthy
   end
   
-  it "can be closed" do
+  it "can be unavailable" do
     hours = build :operating_hours, start_time: nil, end_time: nil
     expect(hours.valid?).to be_truthy
-    expect(hours.is_closed?).to be_truthy
+    expect(hours.is_unavailable?).to be_truthy
   end
   
   it "can be available 24 hours" do
@@ -40,11 +40,11 @@ RSpec.describe OperatingHours, type: :model do
     expect(hours.is_24_hours?).to be_truthy
   end
   
-  it "can make itself closed" do
+  it "can make itself unavailable" do
     hours = build :operating_hours
-    expect(hours.is_closed?).to be_falsey
-    hours.make_closed
-    expect(hours.is_closed?).to be_truthy
+    expect(hours.is_unavailable?).to be_falsey
+    hours.make_unavailable
+    expect(hours.is_unavailable?).to be_truthy
   end
   
   it "can make itself available 24 hours" do

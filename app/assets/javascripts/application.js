@@ -12,9 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.remotipart
 //= require dataTables/jquery.dataTables
 //= require jquery-ui
-//= require jquery_nested_form
 //= require bootstrap-sprockets
 //= require autocomplete-rails
 //= require jquery.weekcalendar
@@ -165,8 +165,15 @@ $(function() {
   updateGroupField();
   $('input#customer_group').click(updateGroupField);
 
+  // Setting z-index to 999 ensures the calendar appears over bootstrap input group components
   $('#new_monthly #monthly_start_date, #new_monthly #monthly_end_date, input.datepicker').datepicker({
-		dateFormat: 'yy-mm-dd'    		
+		dateFormat: 'yy-mm-dd',
+    showButtonPanel: true
+  }).css('z-index', 999);
+  
+  // Support for bootstrap style input groups for datepickers
+  $('body').on('click', '.datepicker-icon .btn', function(e) {
+    $(e.currentTarget).closest('.datepicker-icon').find('.datepicker').datepicker('show');
   });
   
   // when trip pickup time is changed, update appointment time and displayed week
