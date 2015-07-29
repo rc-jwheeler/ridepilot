@@ -145,7 +145,7 @@ class AddressesController < ApplicationController
 
   def update
     if @address.update_attributes address_params
-      flash[:notice] = "Address '#{@address.name}' was successfully updated"
+      flash.now[:notice] = "Address '#{@address.name}' was successfully updated"
       redirect_to provider_path(@address.provider)
     else
       render :action => :edit

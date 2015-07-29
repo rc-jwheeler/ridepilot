@@ -113,7 +113,7 @@ first_name, first_name, first_name, first_name,
 
       if dup_customers.size > 0
         dup = dup_customers[0]
-        flash[:alert] = "There is already a customer with a similar name or the same email address: <a href=\"#{url_for :action=>:show, :id=>dup.id}\">#{dup.name}</a> (dob #{dup.birth_date}).  If this is truly a different customer, check the 'ignore duplicates' box to continue creating this customer.".html_safe
+        flash.now[:alert] = "There is already a customer with a similar name or the same email address: <a href=\"#{url_for :action=>:show, :id=>dup.id}\">#{dup.name}</a> (dob #{dup.birth_date}).  If this is truly a different customer, check the 'ignore duplicates' box to continue creating this customer.".html_safe
         @dup = true
         prep_edit
         return render :action=>"new"
@@ -157,8 +157,8 @@ first_name, first_name, first_name, first_name,
     @customer.assign_attributes customer_params
 
     #save address changes
-    if params[:customer][:address_attributes][:id].present?
-      address = Address.find(params[:customer][:address_attributes][:id])
+    if address_attributes_param && address_attributes_param[:id].present?
+      address = Address.find(address_attributes_param[:id])
       address.assign_attributes(address_params)
     end
 
@@ -229,8 +229,16 @@ first_name, first_name, first_name, first_name,
     )
   end
 
+  def address_attributes_param
+    params[:customer][:address_attributes]
+  end
+
   def address_params
-    params["customer"].require(:address_attributes).permit(:name, :building_name, :address, :city, :state, :zip, :in_district, :provider_id, :phone_number, :inactive, :trip_purpose_id, :notes)
+    address_attributes_param.permit(
+      :name, :building_name, :address, 
+      :city, :state, :zip, :in_district, 
+      :provider_id, :phone_number, :inactive, 
+      :trip_purpose_id, :notes) if address_attributes_param
   end
 
   def name_options

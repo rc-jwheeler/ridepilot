@@ -24,7 +24,7 @@ class DriversController < ApplicationController
         @driver.update_attributes!(driver_params)
         create_or_update_hours!
       end
-      flash[:notice] = "Driver updated"
+      flash.now[:notice] = "Driver updated"
       redirect_to provider_path(current_provider)
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.debug e.message
@@ -41,7 +41,7 @@ class DriversController < ApplicationController
         @driver.save!
         create_or_update_hours!
       end
-      flash[:notice] = "Driver created"
+      flash.now[:notice] = "Driver created"
       redirect_to provider_path(current_provider)
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.debug e.message

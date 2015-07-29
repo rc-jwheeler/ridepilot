@@ -44,12 +44,22 @@ class Run < ActiveRecord::Base
     if @cab
       "Cab"
     else
-      "#{vehicle_name}: #{driver.try :name} #{scheduled_start_time.try :strftime, "%I:%M%P"}".gsub( /m$/, "" )
+      !name.blank? ? name: "#{vehicle_name}: #{driver.try :name} #{scheduled_start_time.try :strftime, "%I:%M%P"}".gsub( /m$/, "" )
     end
   end
   
   def as_json(options)
     { :id => id, :label => label }
+  end
+
+  def as_calendar_json
+    {
+      id: id,
+      start: scheduled_start_time ? scheduled_start_time.iso8601 : nil,
+      end: scheduled_end_time ? scheduled_end_time.iso8601 : nil,
+      title: label,
+      resource: date.to_date.to_s(:js)
+    }
   end
 
   private

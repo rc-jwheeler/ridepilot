@@ -87,7 +87,7 @@ Rails.application.routes.draw do
     resources :vehicles
     resources :vehicle_maintenance_events, :except => [:show, :destroy]
 
-    resources :runs, :except => [:show] do
+    resources :runs do
       collection do
         get :for_date
         get :uncompleted_runs

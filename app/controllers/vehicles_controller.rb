@@ -13,7 +13,7 @@ class VehiclesController < ApplicationController
 
   def update
     if @vehicle.update_attributes(vehicle_params)
-      flash[:notice] = "Vehicle updated"
+      flash.now[:notice] = "Vehicle updated"
       redirect_to provider_path(current_provider)
     else
       render :action => :edit
@@ -23,7 +23,7 @@ class VehiclesController < ApplicationController
   def create
     @vehicle.provider = current_provider
     if @vehicle.save
-      flash[:notice] = "Vehicle created"
+      flash.now[:notice] = "Vehicle created"
       redirect_to provider_path(current_provider)
     else
       render :action => :new
