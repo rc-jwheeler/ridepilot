@@ -2,7 +2,7 @@ class DriversController < ApplicationController
   load_and_authorize_resource
 
   def index
-    redirect_to provider_path(current_provider)
+    @drivers = @drivers.for_provider(current_provider.id)
   end
 
   def show
@@ -24,8 +24,7 @@ class DriversController < ApplicationController
         @driver.update_attributes!(driver_params)
         create_or_update_hours!
       end
-      flash.now[:notice] = "Driver updated"
-      redirect_to provider_path(current_provider)
+      redirect_to @driver, notice: 'Driver was successfully updated.'
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.debug e.message
       prep_edit
@@ -42,7 +41,7 @@ class DriversController < ApplicationController
         create_or_update_hours!
       end
       flash.now[:notice] = "Driver created"
-      redirect_to provider_path(current_provider)
+      redirect_to @driver, notice: 'Driver was successfully created.'
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.debug e.message
       prep_edit
@@ -52,7 +51,7 @@ class DriversController < ApplicationController
 
   def destroy
     @driver.destroy
-    redirect_to provider_path(current_provider)
+    redirect_to drivers_path, notice: 'Driver was successfully deleted.'
   end
 
   private

@@ -15,9 +15,11 @@ RSpec.describe DriversController, type: :controller do
   }
 
   describe "GET #index" do
-    it "redirects to the current provider" do
+    it "assigns all drivers for the current provider as @drivers" do
+      driver_1 = create(:driver, :provider => @current_user.current_provider)
+      driver_2 = create(:driver)
       get :index, {}
-      expect(response).to redirect_to(@current_user.current_provider)
+      expect(assigns(:drivers)).to eq([driver_1])
     end
   end
 
@@ -26,6 +28,12 @@ RSpec.describe DriversController, type: :controller do
       driver = create(:driver, :provider => @current_user.current_provider)
       get :show, {:id => driver.to_param}
       expect(assigns(:driver)).to eq(driver)
+    end
+
+    it "sets @readonly to true" do
+      driver = create(:driver, :provider => @current_user.current_provider)
+      get :show, {:id => driver.to_param}
+      expect(assigns(:readonly)).to be_truthy
     end
   end
 
@@ -58,9 +66,9 @@ RSpec.describe DriversController, type: :controller do
         expect(assigns(:driver)).to be_persisted
       end
 
-      it "redirects to the current provider" do
+      it "redirects to the new driver" do
         post :create, {:driver => valid_attributes}
-        expect(response).to redirect_to(@current_user.current_provider)
+        expect(response).to redirect_to(Driver.last)
       end
     end
 
@@ -101,10 +109,10 @@ RSpec.describe DriversController, type: :controller do
         expect(assigns(:driver)).to eq(driver)
       end
 
-      it "redirects to the current provider" do
+      it "redirects to the driver" do
         driver = create(:driver, :provider => @current_user.current_provider)
         put :update, {:id => driver.to_param, :driver => valid_attributes}
-        expect(response).to redirect_to(@current_user.current_provider)
+        expect(response).to redirect_to(driver)
       end
     end
 
@@ -131,10 +139,10 @@ RSpec.describe DriversController, type: :controller do
       }.to change(Driver, :count).by(-1)
     end
 
-    it "redirects to the current provider" do
+    it "redirects to the drivers list" do
       driver = create(:driver, :provider => @current_user.current_provider)
       delete :destroy, {:id => driver.to_param}
-      expect(response).to redirect_to(@current_user.current_provider)
+      expect(response).to redirect_to(drivers_url)
     end
   end
 end
