@@ -157,8 +157,8 @@ first_name, first_name, first_name, first_name,
     @customer.assign_attributes customer_params
 
     #save address changes
-    if params[:customer][:address_attributes][:id].present?
-      address = Address.find(params[:customer][:address_attributes][:id])
+    if address_attributes_param && address_attributes_param[:id].present?
+      address = Address.find(address_attributes_param[:id])
       address.assign_attributes(address_params)
     end
 
@@ -229,8 +229,16 @@ first_name, first_name, first_name, first_name,
     )
   end
 
+  def address_attributes_param
+    params[:customer][:address_attributes]
+  end
+
   def address_params
-    params["customer"].require(:address_attributes).permit(:name, :building_name, :address, :city, :state, :zip, :in_district, :provider_id, :phone_number, :inactive, :trip_purpose_id, :notes)
+    address_attributes_param.permit(
+      :name, :building_name, :address, 
+      :city, :state, :zip, :in_district, 
+      :provider_id, :phone_number, :inactive, 
+      :trip_purpose_id, :notes) if address_attributes_param
   end
 
   def name_options
