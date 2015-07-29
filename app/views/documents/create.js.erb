@@ -1,5 +1,3 @@
 $('#modal-dialog').modal('hide');
-var $new_row = $("<%= j (render @document) %>").hide();
-$('#documents-table tbody').append($new_row)
-$new_row.slideDown('slow');
+$("<%= j (render @document) %>").hide().appendTo('#documents-table tbody').slideDown('slow');
 

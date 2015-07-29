@@ -1,4 +1,4 @@
-<%= nested_form_for @driver do |f| %>
+<%= form_for @driver do |f| %>
   <% if @driver.errors.any? %>
     <div class="panel panel-danger">
       <div class="panel-heading"><%= translate_helper("driver_form_error", count: @driver.errors.count) %></div>
@@ -67,12 +67,13 @@
                   <% if @readonly %>
                     <td class="col-md-10">
                       <p class="form-control-static">
-                        <% if hours.nil? or hours.is_closed? %>
-                          Closed
+                        <% if hours.nil? or hours.is_unavailable? %>
+                          <%= translate_helper("operating_hours_unavailable") %>
                         <% elsif hours.is_24_hours? %>
-                          Open 24 hours
+                          <%= translate_helper("operating_hours_24_hours") %>
                         <% else %>
-                          Open <%= hours.start_time.to_formatted_s(:time) %>
+                          <%= translate_helper("operating_hours_open") %>
+                          <%= hours.start_time.to_formatted_s(:time) %>
                           - <%= hours.end_time.to_formatted_s(:time) %>
                         <% end %>
                       </p>
@@ -80,9 +81,9 @@
                   <% else %>
                     <td class="col-md-5">
                       <div class="col-sm-4">
-                        <%= label_tag "hours-#{day_value}-closed", class: "radio-inline" do %>
-                          <%= radio_button_tag "hours[#{day_value}]", 'closed', (hours.nil? or hours.is_closed?), id: "hours-#{day_value}-closed", class: "hours-#{day_value}", disabled: @readonly %>
-                          <%= translate_helper("operating_hours_closed") %>
+                        <%= label_tag "hours-#{day_value}-unavailable", class: "radio-inline" do %>
+                          <%= radio_button_tag "hours[#{day_value}]", 'unavailable', (hours.nil? or hours.is_unavailable?), id: "hours-#{day_value}-unavailable", class: "hours-#{day_value}", disabled: @readonly %>
+                          <%= translate_helper("operating_hours_unavailable") %>
                         <% end %>
                       </div>
                       <div class="col-sm-4">
@@ -94,7 +95,7 @@
                       <div class="col-sm-4">
                         <%= label_tag "hours-#{day_value}-open", class: "radio-inline" do %>
                           <%= radio_button_tag "hours[#{day_value}]", 'open', (hours.present? and hours.is_regular_hours?), id: "hours-#{day_value}-open", class: "hours-#{day_value}", disabled: @readonly %>
-                          <%= translate_helper("operating_hours_open") %>
+                          <%= translate_helper("operating_hours_open") %>&hellip;
                         <% end %>
                       </div>
                     </td>
@@ -148,7 +149,7 @@
             <tbody>
               <% if @readonly and @driver.documents.empty? %>
                 <tr>
-                  <td colspan="3"><%= translate_helper("driver_documents_empty") %></td>
+                  <td colspan="2"><%= translate_helper("driver_documents_empty") %></td>
                 </tr>
               <% end %>
               <%= render partial: 'documents/document', collection: @driver.documents %>
@@ -165,51 +166,60 @@
 
         <div class="panel panel-default">
           <div class="panel-heading"><%= label_tag translate_helper("driver_histories_heading") %></div>
-          <table class="table table-striped" id="driver-histories">
+          <table class="table table-striped" id="driver_histories-table">
             <thead>
               <tr>
-                <th width="32%"><%= translate_helper("driver_history_form_event") %></th>
-                <th width="32%"><%= translate_helper("driver_history_form_notes") %></th>
-                <th width="32%"><%= translate_helper("driver_history_form_event_date") %></th>
-                <th width="4%"></th>
+                <th class="col-md-3"><%= translate_helper("driver_history_form_event_date") %></th>
+                <th><%= translate_helper("driver_history_form_event") %></th>
+                <% unless @readonly %><th class="col-md-1"></th><% end %>
               </tr>
             </thead>
             <tbody>
-              <%= f.fields_for :driver_histories, :wrapper => false %>
+              <% if @readonly and @driver.driver_histories.empty? %>
+                <tr>
+                  <td colspan="2"><%= translate_helper("driver_histories_empty") %></td>
+                </tr>
+              <% end %>
+              <%= render partial: 'driver_histories/driver_history', collection: @driver.driver_histories %>
             </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="5">
-                  <%= f.link_to_add translate_helper("driver_histories_add_link_title"), :driver_histories, data: { target: "#driver-histories" }, class: "btn btn-default" %>
-                </td>
-              </tr>
-            </tfoot>
           </table>
+          <% unless @readonly %>
+            <div class="panel-footer">
+              <div class="clearfix">
+                <%= link_to translate_helper("driver_histories_add_link_title"), new_driver_driver_history_path(@driver), class: "btn btn-default pull-right", remote: true %>
+              </div>
+            </div>
+          <% end %>
         </div><!-- END .panel -->      
 
         <div class="panel panel-default">
           <div class="panel-heading"><%= label_tag translate_helper("driver_compliances_heading") %></div>
-          <table class="table table-striped" id="driver-compliances">
+          <table class="table table-striped" id="driver_compliances-table">
+
             <thead>
               <tr>
-                <th width="24%"><%= translate_helper("driver_compliance_form_event") %></th>
-                <th width="24%"><%= translate_helper("driver_compliance_form_notes") %></th>
-                <th width="24%"><%= translate_helper("driver_compliance_form_due_date") %></th>
-                <th width="24%"><%= translate_helper("driver_compliance_form_compliance_date") %></th>
-                <th width="4%"></th>
+                <th class="col-md-3"><%= translate_helper("driver_compliance_form_due_date") %></th>
+                <th class="col-md-3"><%= translate_helper("driver_compliance_form_compliance_date") %></th>
+                <th><%= translate_helper("driver_compliance_form_event") %></th>
+                <% unless @readonly %><th class="col-md-1"></th><% end %>
               </tr>
             </thead>
             <tbody>
-              <%= f.fields_for :driver_compliances, :wrapper => false %>
+              <% if @readonly and @driver.driver_compliances.empty? %>
+                <tr>
+                  <td colspan="3"><%= translate_helper("driver_compliances_empty") %></td>
+                </tr>
+              <% end %>
+              <%= render partial: 'driver_compliances/driver_compliance', collection: @driver.driver_compliances %>
             </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="5">
-                  <%= f.link_to_add translate_helper("driver_compliances_add_link_title"), :driver_compliances, data: { target: "#driver-compliances" }, class: "btn btn-default" %>
-                </td>
-              </tr>
-            </tfoot>
           </table>
+          <% unless @readonly %>
+            <div class="panel-footer">
+              <div class="clearfix">
+                <%= link_to translate_helper("driver_compliances_add_link_title"), new_driver_driver_compliance_path(@driver), class: "btn btn-default pull-right", remote: true %>
+              </div>
+            </div>
+          <% end %>
         </div><!-- END .panel -->      
       </div><!-- END .col-md-6 -->
     <% end %>
@@ -240,12 +250,6 @@
       $("select#end-hour-" + i).prop('disabled', !enabled);
     };
     
-    function make_datepicker(o) {
-      o.datepicker({
-        dateFormat: "yy-mm-dd"
-      }).css('z-index', 999);
-    }
-
     // Enable/disable behavior for operating hours on form
     for (var i = 0; i < 7; ++i) (function(i) {
       update_hours_enabled(i);
@@ -253,16 +257,5 @@
         update_hours_enabled(i);
       });
     })(i);
-    
-    make_datepicker($('.datepicker'));
-
-    $('.datepicker-icon').on('click', '.btn', function(e) {
-      $(e.delegateTarget).find('.datepicker').datepicker('show');
-    });
-
-    $(document).on('nested:fieldAdded', function(event){
-      var field = event.field; 
-      make_datepicker(field.find('.datepicker'));
-    })
   });
 <% end %>

@@ -60,11 +60,6 @@ class DriversController < ApplicationController
   def prep_edit(readonly: false)
     @readonly = readonly
     
-    unless readonly
-      @driver.driver_histories.build
-      @driver.driver_compliances.build
-    end
-    
     @available_users = @driver.provider.users - User.drivers(@driver.provider)
     @available_users << @driver.user if @driver.user
     
@@ -94,11 +89,7 @@ class DriversController < ApplicationController
   end
   
   def driver_params
-    params.require(:driver).permit(
-      :active, :paid, :name, :user_id,
-      driver_histories_attributes: [:id, :event, :event_date, :notes, :_destroy],
-      driver_compliances_attributes: [:id, :event, :due_date, :compliance_date, :notes, :_destroy]
-    )
+    params.require(:driver).permit(:active, :paid, :name, :user_id)
   end
   
   def create_or_update_hours!
@@ -122,15 +113,15 @@ class DriversController < ApplicationController
           day_hours = OperatingHours.new day_of_week: day, driver: @driver
         end
         case value
-        when 'closed'
-          day_hours.make_closed
+        when 'unavailable'
+          day_hours.make_unavailable
         when 'open24'
           day_hours.make_24_hours
         when 'open'
           day_hours.start_time = params[:start_hour][day.to_s]
           day_hours.end_time = params[:end_hour][day.to_s]
         else
-          @driver.errors.add :operating_hours, 'must be "closed", "open24", or "open".'
+          @driver.errors.add :operating_hours, 'must be "unavailable", "open24", or "open".'
           raise ActiveRecord::RecordInvalid.new(@driver)
         end
         day_hours.save!

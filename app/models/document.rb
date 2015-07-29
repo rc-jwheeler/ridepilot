@@ -2,7 +2,7 @@ class Document < ActiveRecord::Base
   belongs_to :documentable, polymorphic: true
   
   has_attached_file :document
-          
+
   validates :description, presence: true
   validates :documentable, presence: true, associated: true  
   validates_attachment :document, presence: true,
@@ -18,4 +18,6 @@ class Document < ActiveRecord::Base
       "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ]},
     :size => { :in => 0..2.gigabytes }
+          
+  scope :default_order, -> { order("document_uploaded_at DESC") }
 end

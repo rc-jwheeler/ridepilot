@@ -54,7 +54,6 @@ class DocumentsController < ApplicationController
 
   private
   
-  # Only allow a trusted parameter "white list" through.
   def document_params
     params.require(:document).permit(:description, :document)
   end

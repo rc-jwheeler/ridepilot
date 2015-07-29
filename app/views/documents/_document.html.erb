@@ -11,7 +11,7 @@
   </td>
   <% unless @readonly %>
     <td>
-      <%= link_to "X", polymorphic_path([document.documentable, document]), remote: true, method: :delete, data: { confirm: 'Are you sure you want to delete this document?' }, class: "btn btn-danger btn-sm pull-right" %>
+      <%= link_to "X", polymorphic_path([document.documentable, document]), remote: true, method: :delete, data: { confirm: translate_helper("document_delete_confirm") }, class: "btn btn-danger btn-sm pull-right" %>
     </td>
   <% end %>
 </tr>

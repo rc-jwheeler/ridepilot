@@ -173,7 +173,8 @@ en:
   locate_address: "Locate Address"
   clear_all_markers: "Clear All Markers"
   loading: "Loading..."
-  #drivers
+
+  # Drivers
   driver_form_error:
     one: "1 error prohibited this driver from being saved"
     other: "%{count} errors prohibited this driver from being saved"
@@ -189,25 +190,49 @@ en:
   edit_driver_button: "Edit"
   delete_driver_button: "Delete"
   operating_hours_heading: "Available Hours"
-  operating_hours_closed: "Closed"
+  operating_hours_unavailable: "Unavailable"
   operating_hours_24_hours: "24 Hours"
-  operating_hours_open: "Open ..."
+  operating_hours_open: "Open"
+  
+  # Driver histories
   driver_histories_heading: "History Events"
   driver_histories_add_link_title: "Add history event"
-  driver_histories_remove_link_title: "Remove this event"
+  driver_histories_empty: "No history events exist for this driver"
+  driver_history_delete_confirm: "Are you sure you want to delete this history event?"
+  driver_history_form_error:
+    one: "1 error prohibited this driver history from being saved"
+    other: "%{count} errors prohibited this driver history from being saved"
+  driver_history_form_new_heading: "New compliance event"
+  driver_history_form_edit_heading: "Edit compliance event"
   driver_history_form_event: "Name"
   driver_history_form_notes: "Notes"
   driver_history_form_event_date: "Event Date"
+  driver_history_form_submit: "Save"
+  
+  # Driver compliances
   driver_compliances_heading: "Compliance Events"
   driver_compliances_add_link_title: "Add compliance event"
-  driver_compliances_remove_link_title: "Remove this event"
+  driver_compliances_empty: "No compliance events exist for this driver"
+  driver_compliance_delete_confirm: "Are you sure you want to delete this compliance event?"
+  driver_compliance_form_error:
+    one: "1 error prohibited this driver compliance from being saved"
+    other: "%{count} errors prohibited this driver compliance from being saved"
+  driver_compliance_form_new_heading: "New compliance event"
+  driver_compliance_form_edit_heading: "Edit compliance event"
   driver_compliance_form_event: "Name"
   driver_compliance_form_notes: "Notes"
   driver_compliance_form_due_date: "Due Date"
   driver_compliance_form_compliance_date: "Compliance Date"
+  driver_compliance_form_submit: "Save"
+  
+  # Documents
   driver_documents_heading: "Driver Documentation"
-  driver_documents_add_link_title: "Add"
-  #documents
+  driver_documents_add_link_title: "Add document"
+  driver_documents_empty: "No documents exist for this driver"
+  document_delete_confirm: "Are you sure you want to delete this document?"
+  document_form_error:
+    one: "1 error prohibited this document from being saved"
+    other: "%{count} errors prohibited this document from being saved"
   document_form_new_heading: "Upload new document"
   document_form_edit_heading: "Edit document"
   document_form_description: "Description"
@@ -216,7 +241,8 @@ en:
   document_form_upload_date: "Uploaded At"
   document_form_file_name_currently: "Current file:"
   document_form_submit: "Save"
-  #funding_source
+
+  # Funding sources
   funding_source_form_name: "Name"
   funding_source_label: "Available to:"
   funding_source_form_submit: "Submit"
@@ -225,7 +251,7 @@ en:
   new_funding_source_link:  "New Funding Source"
   funding_source_column_heading: "Funding Source"
 
-  #home
+  # Home
   providers_link_text: "Providers"
   customers_link_text: "Customers"
   funding_sources_link_text: "Funding Sources"
