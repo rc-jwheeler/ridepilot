@@ -48,7 +48,12 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
 
     # default scope is pickup time ascending, so reverse
-    authorize! :show, @customer if !@customer.authorized_for_provider(current_provider.id)
+    if !@customer.authorized_for_provider(current_provider.id)
+      authorize! :show, @customer 
+    else
+      @read_only_customer = false
+      @read_only_customer = true if @customer.provider_id != current_provider.id
+    end
 
     @trips    = @customer.trips.reorder('pickup_time desc').paginate :page => params[:page], :per_page => PER_PAGE
 
@@ -151,6 +156,12 @@ first_name, first_name, first_name, first_name,
 
     @customer.assign_attributes customer_params
 
+    #save address changes
+    if params[:customer][:address_attributes][:id].present?
+      address = Address.find(params[:customer][:address_attributes][:id])
+      address.assign_attributes(address_params)
+    end
+
     providers = []
     params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
       providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
@@ -213,8 +224,13 @@ first_name, first_name, first_name, first_name,
         :provider_id,
         :state,
         :zip,
+        :notes
       ],
     )
+  end
+
+  def address_params
+    params["customer"].require(:address_attributes).permit(:name, :building_name, :address, :city, :state, :zip, :in_district, :provider_id, :phone_number, :inactive, :trip_purpose_id, :notes)
   end
 
   def name_options

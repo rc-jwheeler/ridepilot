@@ -40,7 +40,9 @@ en:
   editing_address: "Editing Address"
   reassociate_trips: "Associate this addresses's trips with another address."
   address_search: "Address Search"
+  address_notes: "Notes"
   #cab trips
+  pickup_date: "Pickup Date"
   pickup_time: "Pickup Time"
   customer_name: "Customer Name"
   trip_purpose: "Trip Purpose"
@@ -390,6 +392,7 @@ en:
   trip_notes_label: "Trip notes:"
   trip_run_label: "Run: "
   trip_result_label: "Result: "
+  trip_result: 'Trip Result'
   pending: "Pending"
   manifest_trip_link_text: "manifest_trip"
 
@@ -581,6 +584,7 @@ en:
       one: "%{count} error prohibited this record from being saved:"
       other: "%{count} errors prohibited this record from being saved:"
   #trips
+  trip: 'Trip'
   change_customer: "Change Customer"
   trips_form_error_message: 
     one: "%{count} error prohibited this trip from being saved:"
@@ -615,7 +619,7 @@ en:
   edit_run_link_text: "Edit Run"
   cab_trip: "Cab Trip"
   view_customer_record_link_text: "Click to view customer record"
-  select_days_of_week: "Select Days of Week..."
+  days_of_week: "Days of Week"
   editing_trip: "Editing Trip"
   view_trips: "View Trips"
   reconcile_cab_log: "Reconcile Cab Log"
@@ -627,6 +631,25 @@ en:
   trip_to: "To"
   trip_confirm: "Confirm"
   trip_turn_down: "Turn Down"
+  weeks: 'Weeks'
+  repeat_every: 'Repeat every'
+  other: 'Other'
+  trip_parameters: 'Trip Parameters'
+  new: 'New'
+  update: 'Update'
+  assignment: 'Assignment'
+  n_a: 'N/A'
+  view: 'View'
+  #trips table
+  pickup_date_column: 'Pickup Date'
+  customer_column: 'Customer'
+  pickup_address_column: 'Pickup Address'
+  pickup_time_column: 'Pickup Time'
+  dropoff_address_column: 'Dropoff Address'
+  appointment_time_column: 'Appointment Time'
+  trip_status_column: 'Status'
+  trip_called_back_column: 'Called back?'
+  trip_result_column: 'Result'
   #users
   new_user_heading: "Create New User"
   user_form_error_message: 
@@ -676,7 +699,6 @@ en:
   vehicle_show_heading: "Vehicle Details"
   add_maintenance_link_text: "Add Maintenance Event"
   edit_vehicle_link_text: "Edit Vehicle"
-  
   # Application Settings
   application_settings_heading: "Application Settings"
   edit_application_settings_heading: "Editing Application Settings"
@@ -687,11 +709,21 @@ en:
   application_settings_applied_value: "Applied Value"
   application_settings_default_value: "Default Value"
   application_settings_edit_link_text: "Edit Application Settings"
-  
   # General
   translation_engine_link_text: "Translations"
   save: "Save"
   confirm_message: "Are you sure you want to delete this record?"
+  #filters
+  filter: 'Filter'
+  reset: 'Reset'
+  all: 'All'
+  status: 'Status'
+  scheduled: 'Scheduled'
+  unscheduled: 'Unscheduled'
+  from_date: 'From Date'
+  to_date: 'To Date'
+  from_date_cannot_later_than_to_date: "From Date can not be later than To Date"
+
 
   locales:
     en: "English"

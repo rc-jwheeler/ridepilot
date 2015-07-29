@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150724133111) do
+ActiveRecord::Schema.define(version: 20150727030205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
-  enable_extension "postgis_topology"
   enable_extension "fuzzystrmatch"
+  enable_extension "postgis_topology"
 
   create_table "addresses", force: true do |t|
     t.string   "name"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20150724133111) do
     t.string   "trip_purpose_old"
     t.spatial  "the_geom",         limit: {:srid=>4326, :type=>"point", :geographic=>true}
     t.integer  "trip_purpose_id"
+    t.text     "notes"
   end
 
   add_index "addresses", ["provider_id"], :name => "index_addresses_on_provider_id"
@@ -375,7 +376,7 @@ ActiveRecord::Schema.define(version: 20150724133111) do
   create_table "translations", force: true do |t|
     t.integer  "locale_id"
     t.integer  "translation_key_id"
-    t.string   "value"
+    t.text     "value"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

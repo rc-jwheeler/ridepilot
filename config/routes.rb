@@ -38,7 +38,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :trips, :except => [:show] do
+    resources :trips do
       post :confirm
       post :no_show
       post :reached

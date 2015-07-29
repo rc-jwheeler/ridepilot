@@ -7,11 +7,11 @@ RSpec.describe CustomersController, type: :controller do
   # Customer. As you add validations to Customer, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    attributes_for(:customer, :authorized_provider_ids => [])
+    attributes_for(:customer, :authorized_provider_ids => [], :address_attributes => {})
   }
 
   let(:invalid_attributes) {
-    attributes_for(:customer, :first_name => "", :authorized_provider_ids => [])
+    attributes_for(:customer, :first_name => "", :authorized_provider_ids => [], :address_attributes => {})
   }
 
   describe "GET #index" do

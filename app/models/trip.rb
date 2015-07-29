@@ -3,7 +3,9 @@ class Trip < ActiveRecord::Base
 
   belongs_to :provider
   belongs_to :run
+  delegate :name, to: :run, prefix: :run, allow_nil: true
   belongs_to :customer
+  delegate :name, to: :customer, prefix: :customer, allow_nil: true
   belongs_to :funding_source
   belongs_to :mobility
   belongs_to :pickup_address, :class_name=>"Address"
@@ -205,6 +207,16 @@ class Trip < ActiveRecord::Base
     # then the whole trip is invalid. So in that case, ignore the address errors
     # until there is a customer.
     (customer.blank? || customer.id.blank? || (provider.present? && provider.allow_trip_entry_from_runs_page)) && run.present?
+  end
+
+  def as_calendar_json
+    {
+      id: id,
+      start: pickup_time.iso8601,
+      end: appointment_time.iso8601,
+      title: customer_name + "\n" + pickup_address.address_text,
+      resource: pickup_time.to_date.to_s(:js)
+    }
   end
     
 private

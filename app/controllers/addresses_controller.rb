@@ -98,6 +98,7 @@ class AddressesController < ApplicationController
   def edit; end
   
   def create
+    
     the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f, 4326) : nil
     prefix         = params['prefix'] || ""
     address_params = {}
@@ -167,6 +168,6 @@ class AddressesController < ApplicationController
   private
   
   def address_params
-    params.require(:address).permit(:name, :building_name, :address, :city, :state, :zip, :in_district, :provider_id, :phone_number, :inactive, :trip_purpose_id)
+    params.require(:address).permit(:name, :building_name, :address, :city, :state, :zip, :in_district, :provider_id, :phone_number, :inactive, :trip_purpose_id, :notes)
   end
 end

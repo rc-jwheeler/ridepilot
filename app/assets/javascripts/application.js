@@ -11,12 +11,12 @@
 // about supported directives.
 //
 //= require jquery
-//= require bootstrap-sprockets
 //= require jquery_ujs
 //= require jquery.remotipart
 //= require dataTables/jquery.dataTables
 //= require jquery-ui
 //= require jquery_nested_form
+//= require bootstrap-sprockets
 //= require autocomplete-rails
 //= require jquery.weekcalendar
 //= require jquery-ui-timepicker-addon
@@ -24,6 +24,7 @@
 //= require jquery.colorPicker
 //= require idletimeout
 //= require constants
+//= require fullcalendar
 //= require_self
 
 function ISODateFormatToDateObject(str) {

@@ -1,5 +1,6 @@
 .action-button {
   @extend .btn-primary;
+  color: white !important;
   text-shadow: none;
   margin-right: 5px;
   padding: 3px 6px;
@@ -52,4 +53,21 @@ table.table
   border-bottom: 0 none;
   border-collapse: collapse;
   background: transparent;
+}
+
+// calendar
+.fc-view {
+  overflow: scroll;
+
+  table {
+    min-width: 1000px !important;
+  }
+}
+
+th.fc-resourceName {
+  width: 1px; // set a small width so let it grow to max text length
+}
+
+.fc-event {
+  cursor: pointer;
 }

@@ -1,20 +1,39 @@
 class TripsController < ApplicationController
-  load_and_authorize_resource
+
+  load_and_authorize_resource :except=>[:show]
   
   before_filter :set_calendar_week_start, :only => [:index, :new, :edit]
 
   def index
-    @trips = @trips.for_provider(current_provider_id).includes(:customer, {:run => [:driver, :vehicle]}).order(:pickup_time)
+    @trips = Trip.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]}) if @trips.blank?
+    @trips = @trips.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]})
+    .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
+    filter_trips
     
+    @vehicles        = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
+    @drivers         = Driver.active.for_provider current_provider_id
+    @start_pickup_date = Time.at(session[:start].to_i).to_date
+    @end_pickup_date = Time.at(session[:end].to_i).to_date
+    @days_of_week = trip_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : trip_sessions[:days_of_week].split(',').map(&:to_i)
+
+    @trip_jsons = @trips.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
+    @day_resources = []
+
+    if @start_pickup_date > @end_pickup_date
+      flash[:alert] = TranslationEngine.translate_text(:from_date_cannot_later_than_to_date)
+    else
+      flash[:alert] = nil
+      @day_resources = (@start_pickup_date..@end_pickup_date).select{|d| @days_of_week.index(d.wday)}.map{|d| {
+        id:   d.to_s(:js), 
+        name: d.strftime("%a, %b %d,%Y"),
+        isDate: true
+        } }.to_json
+    end
+
     respond_to do |format|
-      format.html do
-        @start = params[:start].to_i
-        # let js handle grabbing the trips
-        @trips = [] 
-        @vehicles = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
-      end
+      format.html 
       format.xml  { render :xml => @trips }
-      format.json { render :json => trips_json }
+      format.json { render :json => @trips }
     end
   end
 
@@ -141,9 +160,23 @@ class TripsController < ApplicationController
     end
   end
 
+  def show
+
+    @trip = Trip.find(params[:id])
+    prep_view
+    @trips = []
+
+    authorize! :show, @trip if !@trip.customer.authorized_for_provider(current_provider.id)
+    
+    respond_to do |format|
+      format.html 
+      format.js  { @remote = true; render :json => {:form => render_to_string(:partial => 'form')}, :content_type => "text/json" }
+    end
+  end
+
   def create
     if params[:trip][:customer_id] && customer = Customer.find_by_id(params[:trip][:customer_id])
-      authorize! :read, customer
+      #authorize! :read, customer
       params[:trip][:provider_id] = customer.provider.id if customer.provider.present?
     else
       params[:trip][:customer_id] = ""
@@ -159,7 +192,7 @@ class TripsController < ApplicationController
           if params[:run_id].present?
             redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
           else
-            redirect_to(trips_path(:start => @trip.pickup_time.to_i), :notice => 'Trip was successfully created.') 
+            redirect_to(trips_path, :notice => 'Trip was successfully created.') 
           end
         }
         format.js { render :json => {:status => "success", :trip => render_to_string(:partial => 'runs/trip', :locals => {:trip => @trip})}, :content_type => "text/json" }
@@ -248,39 +281,10 @@ class TripsController < ApplicationController
   end
   
   def set_calendar_week_start
-    @week_start = if params[:start].present?
-      Time.at params[:start].to_i/1000
-    elsif @trip.try :pickup_time
-      @trip.pickup_time.beginning_of_week
-    else
-      Time.now.beginning_of_week
-    end
-  end
-  
-  def trips_json
-    filter_trips
-    trips = @trips.map { |trip| 
-      { :id    => trip.id,
-        :start => trip.pickup_time.to_s(:js),
-        :end   => trip.appointment_time.to_s(:js),
-        :title => trip.customer.name
-      }
-    }
-
-    days = @trips.group_by(&:date)
-    rows = []
-    days.each do |day, trips|
-      rows << render_to_string(:partial => "day_row.html", :locals => { :day => day })
-      trips.each do |trip|
-        rows << render_to_string(:partial => "trip_row.html", :locals => { :trip => trip })
-      end
-    end
-
-    {:events => trips, :rows => rows }    
+    Date.beginning_of_week= :sunday
   end
 
   def prep_view
-    authorize! :read, @trip
     @customer           = @trip.customer
     @mobilities         = Mobility.order(:name).all
     @funding_sources    = FundingSource.by_provider(current_provider)
@@ -315,26 +319,37 @@ class TripsController < ApplicationController
   end
 
   def filter_trips
-    if params[:end].present? && params[:start].present?
-      t_start = Time.at(params[:start].to_i).to_date.in_time_zone.utc
-      t_end   = Time.at(params[:end].to_i).to_date.in_time_zone.utc
-    else
-      time    = Time.now
-      t_start = time.beginning_of_week.to_date.in_time_zone.utc
-      t_end   = t_start + 6.days
-    end
+    filters_hash = params[:trip_filters] || {}
+    
+    update_sessions(filters_hash)
 
-    @trips = @trips.
-      where("pickup_time >= '#{t_start.strftime "%Y-%m-%d %H:%M:%S"}'").
-      where("pickup_time <= '#{t_end.strftime "%Y-%m-%d %H:%M:%S"}'").order(:pickup_time)
-      
-    if params[:vehicle_id].present?  
-      if params[:vehicle_id].to_i == -1
-        @trips = @trips.select {|t| t.cab } 
-      else
-        @trips = @trips.select {|t| t.vehicle_id == params[:vehicle_id].to_i } 
-      end
+    trip_filter = TripFilter.new(@trips, trip_sessions)
+    @trips = trip_filter.filter!
+    # need to re-update start&end pickup filters
+    # as default values are used if they were not presented initially
+    update_sessions({
+      start: trip_filter.filters[:start],
+      end: trip_filter.filters[:end],
+      days_of_week: trip_filter.filters[:days_of_week]
+      })
+  end
+
+  def update_sessions(params = {})
+    params.each do |key, val|
+      session[key] = val if !val.nil?
     end
+  end
+
+  def trip_sessions
+    {
+      start: session[:start],
+      end: session[:end], 
+      driver_id: session[:driver_id], 
+      vehicle_id: session[:vehicle_id],
+      trip_result_id: session[:trip_result_id], 
+      status_id: session[:status_id],
+      days_of_week: session[:days_of_week]
+    }
   end
 
   def add_cab(vehicles)
