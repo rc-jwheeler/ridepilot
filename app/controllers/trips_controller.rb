@@ -1,5 +1,5 @@
 class TripsController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource :except=>[:show]
 
   def index
     Date.beginning_of_week= :sunday
@@ -157,7 +157,6 @@ class TripsController < ApplicationController
   end
 
   def show
-
     @trip = Trip.find(params[:id])
     prep_view
 
