@@ -1,0 +1,14 @@
+<tr>
+  <td>
+    <%= link_to_if can?(:manage, driver), driver.name, driver %>
+  </td>
+  <td>
+    <%= driver.active? ? translate_helper("active") : translate_helper("inactive") %>
+  </td>
+  <td>
+    <%= driver.paid? ? translate_helper("driver_paid") : translate_helper("volunteer") %>
+  </td>
+  <td>
+    <%= driver.available? ? translate_helper("driver_available") : translate_helper("driver_unavailable") %>
+  </td>
+</tr>
