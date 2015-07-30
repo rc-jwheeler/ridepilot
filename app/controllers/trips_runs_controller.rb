@@ -97,7 +97,7 @@ class TripsRunsController < ApplicationController
   def as_resource_json(run)
     {
       id:   run.id, 
-      name: "<a href='#{runs_path}/#{run.id}'>#{run.label}</a>",
+      name: "<input type='radio' name='run_records' value=#{run.id}></input>&nbsp;<a href='#{runs_path}/#{run.id}'>#{run.label}</a>",
       isDate: false
     }
   end
