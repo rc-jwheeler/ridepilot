@@ -209,6 +209,10 @@ class Trip < ActiveRecord::Base
     (customer.blank? || customer.id.blank? || (provider.present? && provider.allow_trip_entry_from_runs_page)) && run.present?
   end
 
+  def adjusted_run_id
+    cab ? Run::CAB_RUN_ID : (run_id ? run_id : Run::UNSCHEDULED_RUN_ID)
+  end
+
   def as_calendar_json
     {
       id: id,
@@ -224,7 +228,7 @@ class Trip < ActiveRecord::Base
       start: pickup_time.iso8601,
       end: appointment_time.iso8601,
       title: customer_name + "\n" + pickup_address.address_text,
-      resource: run.try(:id)
+      resource: adjusted_run_id
     }
   end
     

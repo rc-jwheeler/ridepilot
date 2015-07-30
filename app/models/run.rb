@@ -32,6 +32,9 @@ class Run < ActiveRecord::Base
   scope :for_date_range,         -> (start_date, end_date) { where("runs.date >= ? and runs.date < ?", start_date, end_date) }
   scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
 
+  CAB_RUN_ID = -1 # id for cab runs 
+  UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)
+
   def cab=(value)
     @cab = value
   end

@@ -8,5 +8,81 @@
   = render :partial => 'filters'
 .col-md-9{style: 'padding: 0px;'}
   = render 'trips/calendar', base_path: trips_runs_path, resources: @runs_json, events: @trips_json
+  .col-sm-12{style: 'padding: 0px 0px 10px 0px;'}
+    .pull-left
+      %button.btn.action-button#scheduleButton{style: 'display: none;'}
+        = translate_helper(:schedule)
+    .pull-right
+      %button.btn.action-button#unscheduleButton{style: 'display: none;'}
+        = translate_helper(:unschedule)
   = render :partial => 'trip_list'
+
+:javascript
+  $(document).ready(function() {
+    var unscheduledRunId = #{Run::UNSCHEDULED_RUN_ID}
+
+    function assignTripToRun(tripId, runId) {
+      //TODO
+      console.log(arguments);
+    }
+
+    function getSelectedRunId() {
+      return parseInt($('#calendar input[name=run_records]:checked').val());
+    }
+
+    function getSelectedTripId() {
+      return parseInt($('#tripsTable input[name=trip_records]:checked').val());
+    }
+
+    function getSelectedTripRunId() {
+      return $('#tripsTable input[name=trip_records]:checked').data('run-id');
+    }
+
+    $('#scheduleButton').click(function() {
+      assignTripToRun(getSelectedTripId(), getSelectedRunId());
+    });
+
+    $('#unscheduleButton').click(function() {
+      assignTripToRun(getSelectedTripId(), unscheduledRunId);
+    });
+
+    $('#tripsTable').on('change', '.trip-run-options', function() {
+      assignTripToRun($(this).data('trip-id'), parseInt($(this).val()) );
+    });
+
+    function manageSchedulingButtons() {
+      var selectedRunId = getSelectedRunId();
+      var selectedTripRunId = getSelectedTripRunId();
+
+      if(
+        $.isNumeric(selectedRunId) && $.isNumeric(selectedTripRunId) &&
+        selectedRunId != unscheduledRunId && selectedTripRunId != selectedRunId) {
+        $('#scheduleButton').show();
+      } else {
+        $('#scheduleButton').hide();
+      }
+
+      if(
+        typeof(selectedTripRunId) == 'number' && selectedTripRunId != unscheduledRunId) {
+        $('#unscheduleButton').show();
+      } else {
+        $('#unscheduleButton').hide();
+      }
+    }
+
+    $('#calendar').on('change', 'input[name=run_records]', function() {
+      $('#calendar tr.row-highlight').removeClass('row-highlight');
+      $('#calendar input[name=run_records]:checked').parents('tr').addClass('row-highlight');
+
+      manageSchedulingButtons();
+    });
+
+    $('#tripsTable').on('change', 'input[name=trip_records]', function() {
+      $('#tripsTable tr.row-highlight').removeClass('row-highlight');
+      $('#tripsTable input[name=trip_records]:checked').parents('tr').addClass('row-highlight');
+
+      manageSchedulingButtons();
+    });
+
+  });
 

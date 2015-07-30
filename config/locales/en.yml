@@ -42,6 +42,7 @@ en:
   address_search: "Address Search"
   address_notes: "Notes"
   #cab trips
+  cab: 'Cab'
   pickup_date: "Pickup Date"
   pickup_time: "Pickup Time"
   customer_name: "Customer Name"
@@ -755,6 +756,8 @@ en:
   status: 'Status'
   scheduled: 'Scheduled'
   unscheduled: 'Unscheduled'
+  schedule: 'Schedule'
+  unschedule: 'Unschedule'
   from_date: 'From Date'
   to_date: 'To Date'
   from_date_cannot_later_than_to_date: "From Date can not be later than To Date"
