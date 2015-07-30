@@ -3,8 +3,10 @@
 - events = [] if !defined? events
 
 :javascript
-  $(document).ready(function() {    
+  $(document).ready(function() { 
+
     var calendar = $('#calendar').fullCalendar({
+      currentDate: new Date(#{currentDate}),
       header: false,
       defaultView: 'resourceDay',
       minTime: RidePilot.business_hours.start,
