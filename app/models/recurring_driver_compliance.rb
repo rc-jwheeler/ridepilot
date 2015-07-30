@@ -5,7 +5,7 @@ class RecurringDriverCompliance < ActiveRecord::Base
   belongs_to :provider
   
   has_many :drivers, through: :provider
-  has_many :driver_compliances # No :dependent option. See around_destroy
+  has_many :driver_compliances, :dependent => :nullify
   
   scope :default_order, -> { order("start_date DESC") }
   
