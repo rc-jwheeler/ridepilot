@@ -48,9 +48,8 @@ gem 'activerecord-postgis-adapter', '~> 2.2.1'
 # Manage app-specific cron tasks using a Ruby DSL, see config/schedule.rb
 gem 'whenever', '~> 0.9.4', :require => false
 
-# RADAR current version is 0.12.1, but current recurring trip tracking relies 
-# on 0.6.8
-gem 'ice_cube', '0.6.8' 
+# RADAR current version is 0.13.0, but schedule_atts requires > 0.7.0 
+gem 'ice_cube', '~> 0.6.8'
 
 # Fork with Rails 4.x compatibility
 gem 'jc-validates_timeliness', '~> 3.1.1'
@@ -65,7 +64,8 @@ gem 'paper_trail', '~> 4.0.0.rc'
 
 gem 'rails-jquery-autocomplete', '~> 1.0.0'
 
-# RADAR Not updated since 2011, could recurring_select gem replace this?
+# RADAR Not updated since 2011, used by RecurringTrip model
+# TODO could recurring_select gem replace this?
 gem 'schedule_atts', :git => 'git://github.com/zpearce/Schedule-Attributes.git'
 
 gem 'haml'
