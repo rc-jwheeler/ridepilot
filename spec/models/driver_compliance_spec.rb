@@ -29,14 +29,13 @@ RSpec.describe DriverCompliance, type: :model do
   end
   
   describe "recurring events" do
-    it "does not allow modifying anything other than compliance date and notes" do
-      compliance = create :driver_compliance, :recurring, event: "My Event", notes: nil, compliance_date: nil
+    it "does not allow modifying anything other than compliance date" do
+      compliance = create :driver_compliance, :recurring, event: "My Event", compliance_date: nil
       compliance.event = "My New Event"
       expect(compliance.valid?).to be_falsey
       expect(compliance.errors.keys).to include :event
 
       compliance.reload
-      compliance.notes = "My Notes"
       compliance.compliance_date = Date.current
       expect(compliance.valid?).to be_truthy
     end
