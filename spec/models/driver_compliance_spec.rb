@@ -7,7 +7,7 @@ RSpec.describe DriverCompliance, type: :model do
     expect(compliance.errors.keys).to include :driver
   end
 
-  it "requires an event" do
+  it "requires an event name" do
     compliance = build :driver_compliance, event: nil
     expect(compliance.valid?).to be_falsey
     expect(compliance.errors.keys).to include :event

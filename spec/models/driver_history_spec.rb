@@ -7,7 +7,7 @@ RSpec.describe DriverHistory, type: :model do
     expect(history.errors.keys).to include :driver
   end
 
-  it "requires an event" do
+  it "requires an event name" do
     history = build :driver_history, event: nil
     expect(history.valid?).to be_falsey
     expect(history.errors.keys).to include :event
