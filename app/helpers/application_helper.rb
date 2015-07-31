@@ -40,6 +40,10 @@ module ApplicationHelper
   def format_time_for_listing_day(time)
     time.strftime('%d-%b-%Y %a') if time
   end
+
+  def format_time_as_title_for_listing_day(time)
+    time.strftime('%b %d, %Y') if time
+  end
   
   def format_date_for_daily_manifest(date)
     date.strftime('%A, %v') if date

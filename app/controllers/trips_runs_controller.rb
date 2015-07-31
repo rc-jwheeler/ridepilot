@@ -6,7 +6,7 @@ class TripsRunsController < ApplicationController
 
     filters_hash = runs_trips_params || {}
     update_sessions(filters_hash.except(:start, :end))
-
+    
     @runs = Run.for_provider(current_provider_id).includes(:driver, :vehicle)
     filter_runs
 
@@ -57,7 +57,7 @@ class TripsRunsController < ApplicationController
   end
 
   def runs_trips_params
-    raw_params = params[:run_trip_filters]
+    raw_params = params[:run_trip_filters] || {}
     if raw_params
       raw_params[:run_trip_day] = Date.today.in_time_zone.to_i if raw_params[:run_trip_day].blank?
       raw_params[:start] = raw_params[:run_trip_day]
