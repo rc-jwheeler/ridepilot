@@ -1,8 +1,7 @@
 class TripsRunsController < ApplicationController
-  def index
-    authorize! :read, Run, :provider_id => current_provider_id
-    authorize! :read, Trip, :provider_id => current_provider_id
+  before_action :authorization
 
+  def index
     Date.beginning_of_week= :sunday
 
     filters_hash = runs_trips_params || {}
@@ -11,7 +10,7 @@ class TripsRunsController < ApplicationController
     @runs = Run.for_provider(current_provider_id).includes(:driver, :vehicle)
     filter_runs
 
-    @trips = Trip.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]})
+    @trips = Trip.has_scheduled_time.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]})
     .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
     filter_trips
     
@@ -32,8 +31,19 @@ class TripsRunsController < ApplicationController
       format.html
     end
   end
+
+  def schedule
+    respond_to do |format|
+      format.js { render json: TripScheduler.new(params[:trip_id], params[:run_id]).execute }
+    end
+  end
   
   private
+
+  def authorization
+    authorize! :read, Run, :provider_id => current_provider_id
+    authorize! :read, Trip, :provider_id => current_provider_id
+  end
 
   def filter_trips
     trip_filter = TripFilter.new(@trips, trip_sessions)
@@ -91,15 +101,11 @@ class TripsRunsController < ApplicationController
   end
 
   def add_cab_run(runs)
-    cab_run = Run.new :name => TranslationEngine.translate_text(:cab)
-    cab_run.id = Run::CAB_RUN_ID
-    [cab_run] + runs 
+    [Run.fake_cab_run] + runs 
   end
 
   def add_unscheduled_run(runs)
-    unscheduled_run = Run.new :name => TranslationEngine.translate_text(:unscheduled)
-    unscheduled_run.id = Run::UNSCHEDULED_RUN_ID
-    [unscheduled_run] + runs 
+    [Run.fake_unscheduled_run] + runs 
   end
 
   def as_resource_json(run)

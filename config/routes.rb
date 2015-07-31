@@ -94,7 +94,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :trips_runs, only: [:index]
+    resources :trips_runs, only: [:index] do 
+      collection do 
+        post :schedule
+      end
+    end
     
     resources :cab_trips, :only => [:index] do
       collection do

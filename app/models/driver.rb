@@ -33,10 +33,10 @@ class Driver < ActiveRecord::Base
     result
   end
   
-  def available?(day_of_week: Time.current.wday, time_of_day: Time.current.strftime('%H:%M'))
+  def available?(day_of_week = Time.current.wday, time_of_day = Time.current.strftime('%H:%M'))
     # If no operating hours are defined, assume available
     return true unless operating_hours.any?
-
+    
     if hours = operating_hours.where(day_of_week: day_of_week).first
       if hours.is_unavailable?
         return false

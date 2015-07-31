@@ -592,9 +592,10 @@ en:
   license_plate: "License Plate"
   garaged_location: "Garaged Location"
   #runs
-  runs_form_error_message: 
+  run_form_error_message: 
     one: "%{count} error prohibited this run from being saved:"
-    other: "%{count} errors sprohibited this run from being saved:"
+    other: "%{count} errors sprohibited this run from being saved:"  
+  unavailable_at_run_time: 'is not available at run schedule time'
   scheduled_start_time: "Scheduled Start Time"
   scheduled_end_time: "Scheduled End Time"
   delete_run_link_text: "Delete Run (does not delete trips)"
@@ -779,6 +780,9 @@ en:
   trips_runs_filter: 'Filter'
   run_result: 'Result'
   run_trip_day: 'Date'
+  not_fit_in_run_schedule: 'Trip schedule does not fit in run schedule'
+  vehicle_unavailable: 'Vehicle is not available'
+  driver_unavailable: 'Driver is not available'
 
 
   locales:

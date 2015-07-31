@@ -66,6 +66,7 @@ class Trip < ActiveRecord::Base
   scope :called_back,        -> { where('called_back_at IS NOT NULL') }
   scope :not_called_back,    -> { where('called_back_at IS NULL') }
   scope :individual,         -> { joins(:customer).where(:customers => {:group => false}) }
+  scope :has_scheduled_time, -> { where.not(pickup_time: nil).where.not(appointment_time: nil) }
 
   DAYS_OF_WEEK = %w{monday tuesday wednesday thursday friday saturday sunday}
   

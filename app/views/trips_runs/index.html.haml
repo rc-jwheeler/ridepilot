@@ -22,8 +22,14 @@
     var unscheduledRunId = #{Run::UNSCHEDULED_RUN_ID}
 
     function assignTripToRun(tripId, runId) {
-      //TODO
-      console.log(arguments);
+      $.ajax({
+        type: "POST",
+        url: "#{schedule_trips_runs_path}",
+        data: {
+          trip_id: tripId,
+          run_id: runId
+        }
+      });
     }
 
     function getSelectedRunId() {

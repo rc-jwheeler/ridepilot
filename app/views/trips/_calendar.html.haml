@@ -1,11 +1,13 @@
 .col-sm-12#calendar{style: 'padding: 0px;'}
 - resources = [] if !defined? resources
 - events = [] if !defined? events
+- currentDate = nil if !defined? currentDate
 
 :javascript
+  var calendar;
   $(document).ready(function() { 
 
-    var calendar = $('#calendar').fullCalendar({
+    calendar = $('#calendar').fullCalendar({
       currentDate: new Date(#{currentDate}),
       header: false,
       defaultView: 'resourceDay',

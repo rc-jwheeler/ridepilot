@@ -23,6 +23,7 @@ class Run < ActiveRecord::Base
     :less_than => Proc.new {|run| run.start_odometer + 500 }, 
     :if => Proc.new {|run| run.start_odometer.present? }  
   validates_numericality_of :unpaid_driver_break_time, :allow_nil => true
+  #validate :driver_availability #TODO: needs to discuss when to enable this
   
   scope :for_provider,           -> (provider_id) { where( :provider_id => provider_id ) }
   scope :for_vehicle,            -> (vehicle_id) { where(:vehicle_id => vehicle_id )}
@@ -31,6 +32,8 @@ class Run < ActiveRecord::Base
   scope :incomplete_on,          -> (date) { where(:complete => false, :date => date) }
   scope :for_date_range,         -> (start_date, end_date) { where("runs.date >= ? and runs.date < ?", start_date, end_date) }
   scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
+  scope :has_scheduled_time,     -> { where.not(scheduled_start_time: nil).where.not(scheduled_end_time: nil) }
+
 
   CAB_RUN_ID = -1 # id for cab runs 
   UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)
@@ -65,6 +68,14 @@ class Run < ActiveRecord::Base
     }
   end
 
+  def self.fake_cab_run
+    Run.new name: TranslationEngine.translate_text(:cab), id: Run::CAB_RUN_ID
+  end
+
+  def self.fake_unscheduled_run
+    Run.new name: TranslationEngine.translate_text(:unscheduled), id: Run::UNSCHEDULED_RUN_ID
+  end
+
   private
 
   def set_complete
@@ -97,5 +108,11 @@ class Run < ActiveRecord::Base
       end
     end
     true
+  end
+
+  def driver_availability
+    if date && scheduled_start_time && driver && !driver.available?(date.wday, scheduled_start_time.strftime('%H:%M'))
+      errors.add(:driver_id, TranslationEngine.translate_text(:unavailable_at_run_time))
+    end
   end
 end
