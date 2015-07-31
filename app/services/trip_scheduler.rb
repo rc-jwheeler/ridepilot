@@ -7,15 +7,16 @@ class TripScheduler
   end
 
   def execute
-    return false if !@trip || !@run 
+    return response_as_json(false) if !@trip || !@run 
+    return response_as_json(true) if @trip.adjusted_run_id == @run.id
 
     case @run.id
-    when Run::CAB_RUN_ID 
-      schedule_to_cab
     when Run::UNSCHEDULED_RUN_ID
       unschedule
+    when Run::CAB_RUN_ID 
+      schedule_to_cab
     else
-      schedule
+      schedule_to_run
     end
   end
 
@@ -32,19 +33,19 @@ class TripScheduler
     end
   end
 
-  def schedule_to_cab
-    @trip.cab = true
-    @trip.run = nil
-    response_as_json @trip.save, @trip.errors.full_messages.join(';')
-  end
-
   def unschedule
     @trip.cab = false
     @trip.run = nil
     response_as_json @trip.save, @trip.errors.full_messages.join(';')
   end
 
-  def schedule
+  def schedule_to_cab
+    @trip.cab = true
+    @trip.run = nil
+    response_as_json @trip.save, @trip.errors.full_messages.join(';')
+  end
+
+  def schedule_to_run
     if !validate_time_availability
       response_as_json false, TranslationEngine.translate_text(:not_fit_in_run_schedule)
     elsif !validate_vehicle_availability 
@@ -82,7 +83,7 @@ class TripScheduler
     @run.driver.active && @run.driver.available?(trip_pickup_time.wday, trip_pickup_time.strftime('%H:%M'))
   end
 
-  def response_as_json(is_success, error_text)
+  def response_as_json(is_success, error_text = '')
     {
       success: is_success,
       message: error_text || ''

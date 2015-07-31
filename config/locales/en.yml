@@ -783,7 +783,7 @@ en:
   not_fit_in_run_schedule: 'Trip schedule does not fit in run schedule'
   vehicle_unavailable: 'Vehicle is not available'
   driver_unavailable: 'Driver is not available'
-
+  unknown_error: 'There was something wrong with the request, please try again.'
 
   locales:
     en: "English"

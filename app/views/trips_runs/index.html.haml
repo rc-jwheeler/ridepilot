@@ -21,15 +21,36 @@
   $(document).ready(function() {
     var unscheduledRunId = #{Run::UNSCHEDULED_RUN_ID}
 
-    function assignTripToRun(tripId, runId) {
+    function assignTripToRun(tripId, runId, prevRunId) {
       $.ajax({
         type: "POST",
         url: "#{schedule_trips_runs_path}",
+        dataType: 'json',
         data: {
           trip_id: tripId,
           run_id: runId
+        },
+        success: function(resp) {
+          if(!resp.success) {
+            show_alert(resp.message);
+            resetSchedule(tripId, prevRunId);
+          } else {
+            hide_alert();
+            // update data-run-id for run dropdown in trips table
+            $('.trip-run-options[data-run-id=' + prevRunId+ ']').attr('data-run-id',runId); 
+
+            location.reload(); //TODO: dynamically move events
+          }
+        },
+        failure: function() {
+          show_alert("#{translate_helper(:unknown_error)}");
+          resetSchedule(tripId, prevRunId);
         }
       });
+    }
+
+    function resetTripSchedule(tripId, prevRunId) {
+      $('.trip-run-options[data-run-id=' + prevRunId+ ']').val(prevRunId);
     }
 
     function getSelectedRunId() {
@@ -41,19 +62,23 @@
     }
 
     function getSelectedTripRunId() {
-      return $('#tripsTable input[name=trip_records]:checked').data('run-id');
+      return parseInt($('#tripsTable input[name=trip_records]:checked').parents('tr').find('.trip-run-options').val());
+    }
+
+    function getSelectedTripPrevRunId() {
+      return parseInt($('#tripsTable input[name=trip_records]:checked').parents('tr').find('.trip-run-options').data('run-id') );
     }
 
     $('#scheduleButton').click(function() {
-      assignTripToRun(getSelectedTripId(), getSelectedRunId());
+      assignTripToRun(getSelectedTripId(), getSelectedRunId(), getSelectedTripPrevRunId());
     });
 
     $('#unscheduleButton').click(function() {
-      assignTripToRun(getSelectedTripId(), unscheduledRunId);
+      assignTripToRun(getSelectedTripId(), unscheduledRunId, getSelectedTripPrevRunId());
     });
 
     $('#tripsTable').on('change', '.trip-run-options', function() {
-      assignTripToRun($(this).data('trip-id'), parseInt($(this).val()) );
+      assignTripToRun($(this).data('trip-id'), parseInt($(this).val()), getSelectedTripPrevRunId() );
     });
 
     function manageSchedulingButtons() {
