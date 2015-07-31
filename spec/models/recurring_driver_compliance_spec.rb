@@ -166,22 +166,85 @@ RSpec.describe RecurringDriverCompliance, type: :model do
       expect(DriverCompliance.all).to include driver_compliance_3
     end
   end
+  
+  describe "calculating occurrence dates" do
+    before do
+      # This doesn't require a full model, so a double can stand in
+      @dbl = instance_double "RecurringDriverCompliance", start_date: Date.current, recurrence_frequency: 1, recurrence_schedule: "months"
+    end
+    
+    it "requires an RecurringDriverCompliance occurrence" do
+      expect {
+        RecurringDriverCompliance.calculate_occurrence_dates
+      }.to raise_error(ArgumentError, /missing keyword/)
+
+      expect {
+        RecurringDriverCompliance.calculate_occurrence_dates recurrence: @dbl
+      }.not_to raise_error
+    end
+
+    it "uses the occurrence start_date as the first_date by default" do
+      expect(RecurringDriverCompliance.calculate_occurrence_dates(recurrence: @dbl).first).to eq Date.current
+    end
+
+    it "can accept an option first_date" do
+      expect(RecurringDriverCompliance.calculate_occurrence_dates(recurrence: @dbl, first_date: Date.current.tomorrow).first).to eq Date.current.tomorrow
+    end
+
+    it "calculates 6 months worth of events by default" do
+      expect(RecurringDriverCompliance.calculate_occurrence_dates(recurrence: @dbl).last).to eq Date.current + 6.months
+    end
+    
+    it "can accept an optional end_date" do
+      expect(RecurringDriverCompliance.calculate_occurrence_dates(recurrence: @dbl, end_date: Date.current + 2.months).last).to eq Date.current + 2.months
+    end
+    
+    describe "irregular traversals" do
+      it "handles monthly recurrences when the first_date is on the 31st" do
+        Timecop.freeze(Date.parse("2015-01-31")) do
+          # Jan 31 + 1 month is Feb 28, and Feb 28 + 1 month = Mar 28
+          # But Jan 31 + 2 month = Mar 31
+          dbl = instance_double "RecurringDriverCompliance", start_date: Date.current, recurrence_frequency: 1, recurrence_schedule: "months"
+          expect(RecurringDriverCompliance.calculate_occurrence_dates recurrence: dbl, end_date: Date.parse("2015-12-31")).to eq [
+            Date.parse("2015-01-31"),
+            Date.parse("2015-02-28"),
+            Date.parse("2015-03-31"),
+            Date.parse("2015-04-30"),
+            Date.parse("2015-05-31"),
+            Date.parse("2015-06-30"),
+            Date.parse("2015-07-31"),
+            Date.parse("2015-08-31"),
+            Date.parse("2015-09-30"),
+            Date.parse("2015-10-31"),
+            Date.parse("2015-11-30"),
+            Date.parse("2015-12-31"),
+          ]
+        end
+      end
+      
+      # Add other examples as edge-cases are discovered
+    end
+  end
 
   describe "event generation" do
     before do
-      # Freeze the date at Monday, June 1, 2015 at 12:00 PM
+      # Time.now is now frozen at Monday, June 1, 2015 at 12:00 PM
       Timecop.freeze(Chronic.parse("June 1, 2015"))
-
-      # Start date is June 2, 2015
+      
+      # Start date is Tuesday, June 2, 2015
       @recurrence = create :recurring_driver_compliance,
-        event_name: "Submit expenses",
+        event_name: "Submit timesheet",
         event_notes: "Don't forget!",
-        recurrence_frequency: 3,
-        recurrence_schedule: "months",
-        start_date: Date.current.tomorrow,
+        recurrence_frequency: 2,
+        recurrence_schedule: "weeks",
+        start_date: Date.parse("2015-06-02"),
         future_start_rule: "immediately",
         compliance_date_based_scheduling: false
       @provider = @recurrence.provider
+    end
+    
+    after do
+      Timecop.return
     end
 
     describe "for drivers that already exist when the recurrence is created" do
@@ -204,11 +267,11 @@ RSpec.describe RecurringDriverCompliance, type: :model do
 
       it "sets the name and notes of generated children to the recurrence's event name and event notes fields, respectively" do
         RecurringDriverCompliance.generate!
-        expect(@driver.driver_compliances.first.event).to eq "Submit expenses"
+        expect(@driver.driver_compliances.first.event).to eq "Submit timesheet"
         expect(@driver.driver_compliances.first.notes).to eq "Don't forget!"
       end
 
-      pending "is idempotent" do
+      it "is idempotent" do
         RecurringDriverCompliance.generate!
         
         expect {
@@ -218,18 +281,60 @@ RSpec.describe RecurringDriverCompliance, type: :model do
 
       describe "without prior event occurrences" do
         describe "when due date scheduling is preferred" do
-          it "schedules the first event on the start date" do
-            RecurringDriverCompliance.generate!
-            expect(@driver.driver_compliances.first.due_date).to eq Date.current.tomorrow
+          it "schedules new events on a schedule based on the start date, up to 6 months out" do
+            # Time is still frozen at Monday, June 1, 2015 at 12:00 PM
+            # Starting from Tue, Jun 2, 2015, bi-weekly occurrences over 
+            # the next 6 months should include:
+            expected_dates = [
+              "2015-06-02",
+              "2015-06-16",
+              "2015-06-30",
+              "2015-07-14",
+              "2015-07-28",
+              "2015-08-11",
+              "2015-08-25",
+              "2015-09-08",
+              "2015-09-22",
+              "2015-10-06",
+              "2015-10-20",
+              "2015-11-03",
+              "2015-11-17",
+              "2015-12-01"
+            ]
+            
+            expect {
+              RecurringDriverCompliance.generate!
+            }.to change(DriverCompliance, :count).by(expected_dates.size)
+            
+            expected_dates.each do |expected_date|
+              expect(@recurrence.driver_compliances.for(@driver).where(due_date: expected_date)).to exist
+            end
           end
 
-          it "schedules more events on a schedule based on the start date, up to 6 months out"
+          it "won't schedule anything when the start_date is more than 6 months away" do
+            @recurrence.update_attributes start_date: 7.months.from_now
+            expect {
+              RecurringDriverCompliance.generate!
+            }.not_to change(DriverCompliance, :count)
+          end
 
-          it "schedules only 1 event at a time when the recurrence schedule is more than 6 months"
+          it "will only schedule one event when the recurrence frequency is is greater than 6 months" do
+            @recurrence.update_attributes recurrence_frequency: 7, recurrence_schedule: "months"
+            expect {
+              RecurringDriverCompliance.generate!
+            }.to change(DriverCompliance, :count).by(1)
+          end
+
+          it "will only schedule one event when the start_date means the second occurrence will fall outside of 6 months" do
+            @recurrence.update_attributes start_date: 3.months.from_now, recurrence_frequency: 4, recurrence_schedule: "months"
+            expect {
+              RecurringDriverCompliance.generate!
+            }.to change(DriverCompliance, :count).by(1)
+          end
         end
 
         describe "when compliance date scheduling is preferred" do
-          it "schedules new events on a schedule based on the due date (because no previously occurrence exists to have been completed)"
+          it "schedules only the first event (because no previous occurrences exists that could be completed)"
         end
       end
 

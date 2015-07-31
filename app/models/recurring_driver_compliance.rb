@@ -1,3 +1,5 @@
+require 'chronic'
+
 class RecurringDriverCompliance < ActiveRecord::Base
   RECURRENCE_SCHEDULES = [:days, :weeks, :months, :years].freeze
   FUTURE_START_RULES = [:immediately, :on_schedule, :time_span].freeze
@@ -30,17 +32,35 @@ class RecurringDriverCompliance < ActiveRecord::Base
     end
   end
   
-  def self.generate!
-    transaction do
-      find_each do |reccurrence|
-        reccurrence.drivers.find_each do |driver|
-          driver.driver_compliances.create! event: reccurrence.event_name,
-            notes: reccurrence.event_notes,
-            due_date: reccurrence.start_date
+  class << self
+    def generate!
+      transaction do
+        find_each do |recurrence|
+          recurrence.drivers.find_each do |driver|
+            missing_occurrences = calculate_occurrence_dates(recurrence: recurrence) - recurrence.driver_compliances.for(driver).pluck(:due_date)
+            missing_occurrences.each do |occurrence_date|
+              driver.driver_compliances.create! event: recurrence.event_name,
+                notes: recurrence.event_notes,
+                due_date: occurrence_date,
+                recurring_driver_compliance: recurrence
+            end
+          end
         end
       end
     end
-  end
+  
+    def calculate_occurrence_dates(recurrence:, first_date: nil, end_date: nil)
+      next_date = (first_date ||= recurrence.start_date)
+      end_date ||= (Date.current + 6.months)
+      occurrences = []
+      loop do
+        break if next_date > end_date
+        occurrences << next_date
+        next_date = first_date + (recurrence.recurrence_frequency * occurrences.size).send(recurrence.recurrence_schedule)
+      end
+      occurrences
+    end
+  end  
   
   private
   
