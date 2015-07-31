@@ -8,13 +8,13 @@ class TripsController < ApplicationController
     .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
     filter_trips
     
-    @vehicles        = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
-    @drivers         = Driver.active.for_provider current_provider_id
+    @vehicles        = add_cab(Vehicle.where(:provider_id => current_provider_id))
+    @drivers         = Driver.for_provider current_provider_id
     @start_pickup_date = Time.at(session[:start].to_i).to_date
     @end_pickup_date = Time.at(session[:end].to_i).to_date
     @days_of_week = trip_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : trip_sessions[:days_of_week].split(',').map(&:to_i)
 
-    @trips_json = @trips.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
+    @trips_json = @trips.has_scheduled_time.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
     @day_resources = []
 
     if @start_pickup_date > @end_pickup_date
