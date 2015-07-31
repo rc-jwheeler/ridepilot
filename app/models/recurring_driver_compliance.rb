@@ -30,6 +30,18 @@ class RecurringDriverCompliance < ActiveRecord::Base
     end
   end
   
+  def self.generate!
+    transaction do
+      find_each do |reccurrence|
+        reccurrence.drivers.find_each do |driver|
+          driver.driver_compliances.create! event: reccurrence.event_name,
+            notes: reccurrence.event_notes,
+            due_date: reccurrence.start_date
+        end
+      end
+    end
+  end
+  
   private
   
   def future_start_rule_is_time_span?
