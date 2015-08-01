@@ -86,7 +86,8 @@ class TripScheduler
   def response_as_json(is_success, error_text = '')
     {
       success: is_success,
-      message: error_text || ''
+      message: error_text || '',
+      trip_event_json: is_success ? @trip.as_run_event_json : nil
     }
   end
 

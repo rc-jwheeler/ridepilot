@@ -4,10 +4,9 @@
 - currentDate = nil if !defined? currentDate
 
 :javascript
-  var calendar;
   $(document).ready(function() { 
 
-    calendar = $('#calendar').fullCalendar({
+    $('#calendar').fullCalendar({
       currentDate: new Date(#{currentDate}),
       header: false,
       defaultView: 'resourceDay',

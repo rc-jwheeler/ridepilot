@@ -39,7 +39,9 @@
             // update data-run-id for run dropdown in trips table
             $('.trip-run-options[data-run-id=' + prevRunId+ ']').attr('data-run-id',runId); 
 
-            location.reload(); //TODO: dynamically move events
+            var calendar = $('#calendar').data('fullCalendar');
+            calendar.removeEvents(resp.trip_event_json.id);
+            calendar.renderEvent(resp.trip_event_json);
           }
         },
         failure: function() {
