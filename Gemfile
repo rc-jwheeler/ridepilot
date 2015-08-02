@@ -48,9 +48,6 @@ gem 'activerecord-postgis-adapter', '~> 2.2.1'
 # Manage app-specific cron tasks using a Ruby DSL, see config/schedule.rb
 gem 'whenever', '~> 0.9.4', :require => false
 
-# Dependency of whenever, but also used by DriverRequirement model
-gem 'chronic', '~> 0.10.2'
-
 # RADAR current version is 0.13.0, but schedule_atts requires > 0.7.0 
 gem 'ice_cube', '~> 0.6.8'
 

@@ -28,6 +28,24 @@ RSpec.describe DriverCompliance, type: :model do
     expect(compliance.valid?).to be_truthy
   end
   
+  describe "#complete!" do
+    it "instantly sets the compliance date to the current date" do
+      compliance = create :driver_compliance
+      expect(compliance.compliance_date).to be_nil
+      compliance.complete!
+      expect(compliance.reload.compliance_date).to eql Date.current
+    end
+  end
+
+  describe "#complete?" do
+    it "knows if the record is considered complete" do
+      compliance = create :driver_compliance
+      expect(compliance.complete?).to be_falsey
+      compliance.complete!
+      expect(compliance.reload.complete?).to be_truthy
+    end
+  end
+
   describe "recurring events" do
     it "does not allow modifying anything other than compliance date" do
       compliance = create :driver_compliance, :recurring, event: "My Event", compliance_date: nil
@@ -52,6 +70,17 @@ RSpec.describe DriverCompliance, type: :model do
       expect {
         compliance.destroy
       }.to change(DriverCompliance, :count).by(-1)
+    end
+  end
+  
+  describe ".complete" do
+    it "finds compliance events that have a compliance date" do
+      compliance_1 = create :driver_compliance, compliance_date: nil
+      compliance_2 = create :driver_compliance, compliance_date: ""
+      compliance_3 = create :driver_compliance, compliance_date: Date.current
+      expect(DriverCompliance.complete).not_to include compliance_1
+      expect(DriverCompliance.complete).not_to include compliance_2
+      expect(DriverCompliance.complete).to include compliance_3
     end
   end
   
