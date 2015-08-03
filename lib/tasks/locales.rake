@@ -10,6 +10,15 @@ namespace :ridepilot do
 	  end
   end
 
+  desc "Clear up existing database translations"
+  task clear_locales: :environment do
+    TranslationKey.delete_all
+    Locale.delete_all
+    Translation.delete_all
+
+    puts "Translations have been all cleared."
+  end
+
   desc "Load database translations from config/locales/*.yml files"
   task load_locales: :environment do
   	locales_directory = Rails.root.to_s + "/config/locales/"
