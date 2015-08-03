@@ -64,6 +64,15 @@ Rails.application.routes.draw do
         post :save_viewport
       end
     end
+    
+    resources :recurring_driver_compliances do
+      collection do
+        get :preview_schedule
+      end
+      member do
+        get :delete
+      end
+    end
 
     resources :addresses, :only => [:create, :edit, :update, :destroy] do
       collection do

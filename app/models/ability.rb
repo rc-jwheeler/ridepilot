@@ -13,7 +13,7 @@ class Ability
     for role in user.roles
       if role.system_admin?
         can_manage_all = true
-        can :manage, :all 
+        can :manage, :all
         break
       end
     end
@@ -41,47 +41,32 @@ class Ability
       action = [:read, :search]
     end
 
-    can :read, FundingSource, {:providers => {:id => provider.id}}      
-    can action, Address, :provider_id => provider.id
-    can action, Customer, :provider_id => provider.id
-    can action, DevicePool, :provider_id => provider.id if provider.dispatch?
-    can action, Driver, :provider_id => provider.id
-    can action, Monthly, :provider_id => provider.id
-    can action, ProviderEthnicity, :provider_id => provider.id
-    can action, RepeatingTrip, :provider_id => provider.id
-    can action, Run, :provider_id => provider.id if provider.scheduling?
-    can action, Trip, :provider_id => provider.id if provider.scheduling?
-    can action, Vehicle, :provider_id => provider.id
-    can action, VehicleMaintenanceEvent, :provider_id => provider.id
-    can :manage, LookupTable if role.admin?
-    can :manage, ApplicationSetting if role.admin?
-        
-    can action, DevicePoolDriver do |device_pool_driver|
-      device_pool_driver.provider_id == provider.id
-    end
-    
-    can :manage, DevicePoolDriver do |device_pool_driver|
-      device_pool_driver.driver_id == user.driver.id if user.driver
-    end
-
-    can :manage, DriverHistory do |driver_history|
-      role.admin? and driver_history.driver.provider_id == provider.id
-    end
-    
-    can :manage, DriverCompliance do |driver_compliance|
-      role.admin? and driver_compliance.driver.provider_id == provider.id
-    end
-    
-    can action, Document do |document|
-      document.documentable.provider_id == provider.id
-    end
+    can :read,   FundingSource, :providers => {:id => provider.id}
+    can action,  Address, :provider_id => provider.id
+    can action,  Customer, :provider_id => provider.id
+    can action,  DevicePool, :provider_id => provider.id if provider.dispatch?
+    can action,  DevicePoolDriver, :provider_id => provider.id
+    can :manage, DevicePoolDriver, :driver_id => user.driver.id if user.driver.present?
+    can action,  Document, :documentable => {:provider_id => provider.id}
+    can action,  Driver, :provider_id => provider.id
+    can action,  Monthly, :provider_id => provider.id
+    can action,  ProviderEthnicity, :provider_id => provider.id
+    can action,  RepeatingTrip, :provider_id => provider.id
+    can action,  Run, :provider_id => provider.id if provider.scheduling?
+    can action,  Trip, :provider_id => provider.id if provider.scheduling?
+    can action,  Vehicle, :provider_id => provider.id
+    can action,  VehicleMaintenanceEvent, :provider_id => provider.id
     
     if role.admin?
-      can :manage, User, {:roles => {:provider_id => provider.id}}
+      can :manage, DriverHistory, :driver => {:provider_id => provider.id}
+      can :manage, DriverCompliance, :driver => {:provider_id => provider.id}
+      can :manage, RecurringDriverCompliance, :provider_id => provider.id
+      can :manage, User, :roles => {:provider_id => provider.id}
+      can :manage, LookupTable
+      can :manage, ApplicationSetting
       can :manage, Translation
     else
-      can :read, User, {:roles => {:provider_id => provider.id}}
+      can :read, User, :roles => {:provider_id => provider.id}
     end
-
   end
 end

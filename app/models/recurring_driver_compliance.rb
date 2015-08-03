@@ -143,12 +143,12 @@ class RecurringDriverCompliance < ActiveRecord::Base
     end
   end  
   
-  private
-  
   def future_start_rule_is_time_span?
     future_start_rule.present? && future_start_rule.to_sym == :time_span
   end
 
+  private
+  
   # Only allow updating the event_name and event_notes fields if the record is
   # associated with any DriverCompliance records
   def limit_updates_on_recurrences_with_children
