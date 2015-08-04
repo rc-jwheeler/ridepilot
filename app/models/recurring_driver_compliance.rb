@@ -31,7 +31,10 @@ class RecurringDriverCompliance < ActiveRecord::Base
   end
   
   class << self
-    def generate!
+    def generate!(range_length: nil)
+      # Defaults to 6 months, but can be set longer
+      @default_range_length = range_length
+      
       transaction do
         find_each do |recurrence|
           # Ensures that the next steps all work off the same collection
@@ -46,11 +49,10 @@ class RecurringDriverCompliance < ActiveRecord::Base
       end
     end
   
-    # Public for testability purposes
     def occurrence_dates_on_schedule_in_range(recurrence, first_date: nil, range_start_date: nil, range_end_date: nil)
       first_date ||= recurrence.start_date
       range_start_date ||= Date.current
-      range_end_date ||= (range_start_date + 6.months - 1.day)
+      range_end_date ||= (range_start_date + default_range_length - 1.day)
       next_date = first_date
       
       occurrences = []
@@ -65,7 +67,7 @@ class RecurringDriverCompliance < ActiveRecord::Base
     
     # Public for testability purposes
     def next_occurrence_date_from_previous_date_in_range(recurrence, previous_date, range_end_date: nil)
-      range_end_date ||= (Date.current + 6.months - 1.day)
+      range_end_date ||= (Date.current + default_range_length - 1.day)
       next_date = previous_date + recurrence.recurrence_frequency.send(recurrence.recurrence_schedule)
       
       if next_date > range_end_date
@@ -141,19 +143,23 @@ class RecurringDriverCompliance < ActiveRecord::Base
         due_date: occurrence_date,
         recurring_driver_compliance: recurrence
     end
+    
+    def default_range_length
+      @default_range_length || 6.months
+    end
   end  
+  
+  private
   
   def future_start_rule_is_time_span?
     future_start_rule.present? && future_start_rule.to_sym == :time_span
   end
 
-  private
-  
   # Only allow updating the event_name and event_notes fields if the record is
   # associated with any DriverCompliance records
   def limit_updates_on_recurrences_with_children
     if driver_compliances.any?
-      changed_attributes.except(:event_name, :event_notes).keys.each do |key|
+      changed_attributes.except(:recurrence_notes, :event_name, :event_notes).keys.each do |key|
         errors.add(key, "cannot be modified once events have been generated")
       end
     end

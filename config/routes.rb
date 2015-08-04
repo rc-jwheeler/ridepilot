@@ -68,6 +68,9 @@ Rails.application.routes.draw do
     resources :recurring_driver_compliances do
       collection do
         get :preview_schedule
+        get :preview_future_schedule
+        get :preview_compliance_date_based_schedule
+        put :generate, action: "generate!"
       end
       member do
         get :delete

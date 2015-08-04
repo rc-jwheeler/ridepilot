@@ -19,7 +19,7 @@ RSpec.describe "DriverDocuments" do
       end
       
       it "shows the description of the document" do
-        expect(page).to have_text @document.document_updated_at.to_s(:form)
+        expect(page).to have_text @document.document_updated_at.to_s(:long)
       end
       
       it "shows a direct link to the uploaded file" do

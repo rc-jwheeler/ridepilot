@@ -138,12 +138,12 @@
       <% if @driver.persisted? %>
         <div class="panel panel-default">
           <div class="panel-heading"><%= label_tag translate_helper("driver_documents_heading") %></div>
-          <table class="table table-striped" id="documents-table">
+          <table class="table table-striped table-condensed" id="documents-table">
             <thead>
               <tr>
-                <th class="col-md-3"><%= translate_helper("document_form_upload_date") %></th>
+                <th class="col-sm-3"><%= translate_helper("document_form_upload_date") %></th>
                 <th><%= translate_helper("document_form_description") %></th>
-                <% unless @readonly %><th class="col-md-1"></th><% end %>
+                <% unless @readonly %><th class="col-sm-1"></th><% end %>
               </tr>
             </thead>
             <tbody>
@@ -166,12 +166,12 @@
 
         <div class="panel panel-default">
           <div class="panel-heading"><%= label_tag translate_helper("driver_histories_heading") %></div>
-          <table class="table table-striped" id="driver_histories-table">
+          <table class="table table-striped table-condensed" id="driver_histories-table">
             <thead>
               <tr>
-                <th class="col-md-3"><%= translate_helper("driver_history_form_event_date") %></th>
+                <th class="col-sm-3"><%= translate_helper("driver_history_form_event_date") %></th>
                 <th><%= translate_helper("driver_history_form_event") %></th>
-                <% unless @readonly %><th class="col-md-1"></th><% end %>
+                <% unless @readonly %><th class="col-sm-1"></th><% end %>
               </tr>
             </thead>
             <tbody>
@@ -194,14 +194,14 @@
 
         <div class="panel panel-default">
           <div class="panel-heading"><%= label_tag translate_helper("driver_compliances_heading") %></div>
-          <table class="table table-striped" id="driver_compliances-table">
+          <table class="table table-striped table-condensed" id="driver_compliances-table">
 
             <thead>
               <tr>
-                <th class="col-md-3"><%= translate_helper("driver_compliance_form_due_date") %></th>
-                <th class="col-md-3"><%= translate_helper("driver_compliance_form_compliance_date") %></th>
+                <th class="col-sm-3"><%= translate_helper("driver_compliance_form_due_date") %></th>
                 <th><%= translate_helper("driver_compliance_form_event") %></th>
-                <% unless @readonly %><th class="col-md-1"></th><% end %>
+                <th class="col-sm-3"><%= translate_helper("driver_compliance_form_compliance_date") %></th>
+                <% unless @readonly %><th class="col-sm-1"></th><% end %>
               </tr>
             </thead>
             <tbody>

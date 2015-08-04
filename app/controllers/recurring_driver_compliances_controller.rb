@@ -1,7 +1,9 @@
 class RecurringDriverCompliancesController < ApplicationController
-  load_and_authorize_resource skip: :preview_schedule
+  load_and_authorize_resource skip: [:preview_schedule, :preview_future_schedule, :preview_compliance_date_based_schedule]
   
-  before_filter :prep_form, except: [:index, :show, :destroy, :preview_schedule]
+  before_filter :prep_form, only: [:new, :edit, :create, :update]  
+  before_filter :prep_preview, only: [:preview_schedule, :preview_future_schedule, :preview_compliance_date_based_schedule]
+  before_filter :generate_schedule_previews, only: [:show, :edit, :create, :update]
   
   # GET /recurring_driver_compliances
   def index
@@ -11,6 +13,7 @@ class RecurringDriverCompliancesController < ApplicationController
 
   # GET /recurring_driver_compliances/1
   def show
+    @all_readonly = @readonly = true
   end
 
   # GET /recurring_driver_compliances/new
@@ -40,23 +43,43 @@ class RecurringDriverCompliancesController < ApplicationController
     end
   end
 
+  # GET /recurring_driver_compliances/1/delete
+  def delete
+  end
+  
   # DELETE /recurring_driver_compliances/1
   def destroy
-    @recurring_driver_compliance.destroy
+    if params[:destroy_with_incomplete_children] == "1"
+      @recurring_driver_compliance.destroy_with_incomplete_children!
+    else
+      @recurring_driver_compliance.destroy
+    end
     redirect_to recurring_driver_compliances_url, notice: 'Recurring driver compliance was successfully destroyed.'
   end
   
   # GET /recurring_driver_compliances/preview_schedule
   def preview_schedule
-    @recurring_driver_compliance = RecurringDriverCompliance.new recurring_driver_compliance_params
-    if @recurring_driver_compliance.compliance_date_based_scheduling?
-      @occurrence_dates = [@recurring_driver_compliance.start_date]
-    else
-      @occurrence_dates = RecurringDriverCompliance.occurrence_dates_on_schedule_in_range @recurring_driver_compliance, range_start_date: Date.current, range_end_date: (@recurring_driver_compliance.start_date + (@recurring_driver_compliance.recurrence_frequency * 6).send(@recurring_driver_compliance.recurrence_schedule))
-    end
-    
-    render :json => @occurrence_dates.collect{ |date| date.strftime("%A, %b %d, %Y") }
+    render partial: "schedule_preview", locals: {dates: generate_schedule_preview}
   end
+
+  # GET /recurring_driver_compliances/preview_future_schedule
+  def preview_future_schedule
+    render partial: "schedule_preview", locals: {dates: generate_future_schedule_preview}
+  end
+
+  # GET /recurring_driver_compliances/preview_compliance_date_based_schedule
+  def preview_compliance_date_based_schedule
+    render partial: "schedule_preview", locals: {dates: generate_compliance_date_based_schedule_preview}
+  end
+  
+  # PUT /recurring_driver_compliances/generate
+  def generate!
+    # This is in place only for testing. In production we would rely on a cron 
+    # task to generate these regularly
+    raise ActionController::RoutingError if Rails.env.production? or Rails.env.staging?
+    RecurringDriverCompliance.generate! range_length: 5.years
+    redirect_to recurring_driver_compliances_url, notice: 'All recurring driver compliance events have been generated.'
+  end  
 
   private
 
@@ -76,7 +99,46 @@ class RecurringDriverCompliancesController < ApplicationController
     )
   end
   
+  def generate_schedule_preview
+    if @recurring_driver_compliance.compliance_date_based_scheduling?
+      # Return the first start date
+      @occurrence_dates = [@recurring_driver_compliance.start_date]
+    else
+      # Return the first 6 occurrences, beginning with the start date
+      @occurrence_dates = RecurringDriverCompliance.occurrence_dates_on_schedule_in_range @recurring_driver_compliance, range_start_date: Date.current, range_end_date: (@recurring_driver_compliance.start_date + (@recurring_driver_compliance.recurrence_frequency * 5).send(@recurring_driver_compliance.recurrence_schedule))
+    end.collect{ |date| date.to_s(:long) }
+  end
+  
+  def generate_future_schedule_preview
+    if @recurring_driver_compliance.compliance_date_based_scheduling?
+      # Return the adjusted start date, as of the day after the start date
+      [RecurringDriverCompliance.adjusted_start_date(@recurring_driver_compliance, as_of: @recurring_driver_compliance.start_date.tomorrow)]
+    else
+      # Return the first 6 occurrences, as of the day after the start date
+      adjusted_start_date = RecurringDriverCompliance.adjusted_start_date(@recurring_driver_compliance, as_of: @recurring_driver_compliance.start_date.tomorrow)
+      RecurringDriverCompliance.occurrence_dates_on_schedule_in_range @recurring_driver_compliance, first_date: adjusted_start_date, range_end_date: (adjusted_start_date + (@recurring_driver_compliance.recurrence_frequency * 5).send(@recurring_driver_compliance.recurrence_schedule))
+    end.collect{ |date| date.to_s(:long) }
+  end
+  
+  def generate_compliance_date_based_schedule_preview
+    # Return the next occurance date, as of the day after the start date
+    assumed_completion_date = @recurring_driver_compliance.start_date + 1.day
+    [RecurringDriverCompliance.next_occurrence_date_from_previous_date_in_range(@recurring_driver_compliance, assumed_completion_date, range_end_date: (assumed_completion_date + @recurring_driver_compliance.recurrence_frequency.send(@recurring_driver_compliance.recurrence_schedule)))].collect{ |date| date.to_s(:long) }
+  end
+  
   def prep_form
     @readonly = @recurring_driver_compliance.driver_compliances.any?
+  end
+  
+  def prep_preview
+    @recurring_driver_compliance = RecurringDriverCompliance.new recurring_driver_compliance_params
+  end
+  
+  def generate_schedule_previews
+    if @recurring_driver_compliance.persisted? or @recurring_driver_compliance.valid?
+      @schedule_preview = generate_schedule_preview
+      @future_schedule_preview = generate_future_schedule_preview
+      @compliance_date_based_schedule_preview = generate_compliance_date_based_schedule_preview if @recurring_driver_compliance.compliance_date_based_scheduling?
+    end
   end
 end

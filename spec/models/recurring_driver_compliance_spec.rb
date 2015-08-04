@@ -114,10 +114,10 @@ RSpec.describe RecurringDriverCompliance, type: :model do
       create :recurring_driver_compliance
     }.not_to change(DriverCompliance, :count)
   end
-
+  
   describe "updates" do
-    it "only allows the event_name and event_notes fields to be modified once it has spawned children" do
-      recurrence = create :recurring_driver_compliance, event_name: "My Event", event_notes: nil
+    it "only allows the recurrence_notes, event_name, and event_notes fields to be modified once it has spawned children" do
+      recurrence = create :recurring_driver_compliance, event_name: "My Event", event_notes: nil, recurrence_notes: nil
       create :driver_compliance, recurring_driver_compliance: recurrence
 
       recurrence.start_date = Date.tomorrow
@@ -126,7 +126,8 @@ RSpec.describe RecurringDriverCompliance, type: :model do
 
       recurrence.reload
       recurrence.event_name = "My New Event"
-      recurrence.event_notes = "My Notes"
+      recurrence.event_notes = "My Event Notes"
+      recurrence.recurrence_notes = "My Recurrence Notes"
       expect(recurrence.valid?).to be_truthy
     end
 

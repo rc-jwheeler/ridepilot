@@ -42,7 +42,7 @@
             <div class="form-group">
               <%= label_tag "", translate_helper("document_form_upload_date"), class: "col-md-3 control-label" %>
               <div class="col-md-9">
-                <p class="form-control-static"><%= @document.document_updated_at.to_s(:form) %></p>
+                <p class="form-control-static"><%= @document.document_updated_at.to_s(:long) %></p>
               </div>
             </div>
           <% end %>

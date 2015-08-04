@@ -1,7 +1,7 @@
 <tr class="driver_compliance-<%= driver_compliance.id %>">
   <td>
     <p class="form-control-static">
-      <%= driver_compliance.due_date.to_s(:form) %>
+      <%= driver_compliance.due_date.to_s(:long) %>
     </p>
   </td>
   <td>
@@ -11,7 +11,7 @@
   </td>
   <td>
     <p class="form-control-static">
-      <%= driver_compliance.compliance_date.try(:to_s, :form) %>
+      <%= driver_compliance.compliance_date.try(:to_s, :long) %>
     </p>
   </td>
   <% unless @readonly %>
