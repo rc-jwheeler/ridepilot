@@ -20,14 +20,14 @@ RSpec.describe Document, type: :model do
   end
 
   it "requires a document to be attached" do
-    document = build :document, document_file_name: nil, document_content_type: nil, document_file_size: nil
+    document = build :document, :no_attachement
     expect(document.valid?).to be_falsey
     expect(document.errors.keys).to include :document
 
     document.document_file_name = 'test.pdf'
     document.document_content_type = 'application/pdf'
     document.document_file_size = 1024
-    expect(document.valid?).to be_truthy    
+    expect(document.valid?).to be_truthy
   end
   
   describe "attached documents" do
