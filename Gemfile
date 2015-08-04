@@ -92,7 +92,10 @@ gem 'redis-rails', '~> 4.0.0'
 gem "font-awesome-rails"
 
 # jQuery full calendar plugin with resource views
-gem 'rails-fullcalendar-resourceviews', '~> 1.6.5.6', github: 'xudongcamsys/rails-fullcalendar-resourceviews'
+gem 'rails-fullcalendar-resourceviews', '~> 1.6.5.7', github: 'xudongcamsys/rails-fullcalendar-resourceviews'
+
+# overcome IE9 4096 per stylesheet limit
+gem 'css_splitter'
 
 group :integration, :qa, :production do 
   gem 'rails_12factor'

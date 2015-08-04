@@ -16,12 +16,12 @@ class RunsController < ApplicationController
     filter_runs
     
     @drivers = Driver.where(:provider_id=>current_provider_id)
-    @vehicles = Vehicle.active.where(:provider_id=>current_provider_id)
+    @vehicles = Vehicle.where(:provider_id=>current_provider_id)
     @start_pickup_date = Time.at(session[:start].to_i).to_date
     @end_pickup_date = Time.at(session[:end].to_i).to_date
     @days_of_week = run_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : run_sessions[:days_of_week].split(',').map(&:to_i)
 
-    @runs_json = @runs.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
+    @runs_json = @runs.has_scheduled_time.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
     @day_resources = []
 
     if @start_pickup_date > @end_pickup_date
@@ -133,23 +133,8 @@ class RunsController < ApplicationController
   private
   
   def setup_run
-    @drivers = Driver.where(:provider_id=>@run.provider_id)
+    @drivers = Driver.active.where(:provider_id=>@run.provider_id)
     @vehicles = Vehicle.active.where(:provider_id=>@run.provider_id)
-  end
-  
-  def filter_runs
-    if params[:end].present? && params[:start].present?
-      @week_start = Time.at params[:start].to_i
-      @week_end   = Time.at params[:end].to_i
-    else
-      time     = Time.now
-      @week_start = time.beginning_of_week
-      @week_end   = @week_start + 6.days
-    end
-    
-    @runs = @runs.
-      where("date >= '#{@week_start.to_s(:db)}'").
-      where("date < '#{@week_end.to_s(:db)}'")
   end
 
   def date_range(run)

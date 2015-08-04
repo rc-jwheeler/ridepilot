@@ -1,10 +1,13 @@
 .col-sm-12#calendar{style: 'padding: 0px;'}
 - resources = [] if !defined? resources
 - events = [] if !defined? events
+- currentDate = nil if !defined? currentDate
 
 :javascript
-  $(document).ready(function() {    
-    var calendar = $('#calendar').fullCalendar({
+  $(document).ready(function() { 
+
+    $('#calendar').fullCalendar({
+      currentDate: new Date(#{currentDate}),
       header: false,
       defaultView: 'resourceDay',
       minTime: RidePilot.business_hours.start,

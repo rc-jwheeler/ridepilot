@@ -13,35 +13,17 @@ class TripFilter
     filter_by_vehicle!
     filter_by_driver!
     filter_by_status!
-
-    @filters.each do |k, v|
-      next if [:start, :end, :days_of_week, :vehicle_id, :driver_id, :status_id].index(k) # has been processed above
-
-      @trips = @trips.where("#{k}": v) if !v.blank?
-    end
+    filter_by_result!
 
     @trips
   end
 
   private 
 
-  def parse_datetime(time_param)
-    return if !time_param.present? 
-
-    # this is to parse calendar params
-    # will be deprecated after new calendar gets in
-    if time_param.to_i.to_s == time_param.to_s
-      time = Time.at(time_param.to_i)
-    else
-      time = Date.strptime(time_param, '%d-%b-%Y %a') rescue nil
-    end
-
-    time.to_date.in_time_zone if time
-  end
-
   def filter_by_pickup_time!
-    t_start = parse_datetime(@filters[:start]) 
-    t_end = parse_datetime(@filters[:end]) 
+    utility = Utility.new
+    t_start = utility.parse_datetime(@filters[:start]) 
+    t_end = utility.parse_datetime(@filters[:end]) 
 
     if !t_start && !t_end
       time    = Time.now
@@ -90,6 +72,12 @@ class TripFilter
       else
         @trips = @trips.where("run_id is NULL and cab = false")
       end
+    end
+  end
+
+  def filter_by_result!
+    if @filters[:trip_result_id].present?  
+      @trips = @trips.where(trip_result_id: @filters[:trip_result_id]) 
     end
   end
 

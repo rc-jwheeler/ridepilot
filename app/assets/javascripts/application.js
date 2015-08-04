@@ -105,6 +105,15 @@ function createPopover(node_id) {
   });
 }
 
+// Displays an alert
+function show_alert(message) {
+    $('#messages').html('<div class="alert alert-danger fade in"><a class="close" data-dismiss="alert">x</a><div id="flash_notice">' + message + '</div></div>');
+}
+
+function hide_alert () {
+  $('#flash_notice').parents('.alert').hide();
+}
+
 $(function() {
   createPopover(".label-help");
 

@@ -66,6 +66,7 @@ class Trip < ActiveRecord::Base
   scope :called_back,        -> { where('called_back_at IS NOT NULL') }
   scope :not_called_back,    -> { where('called_back_at IS NULL') }
   scope :individual,         -> { joins(:customer).where(:customers => {:group => false}) }
+  scope :has_scheduled_time, -> { where.not(pickup_time: nil).where.not(appointment_time: nil) }
 
   DAYS_OF_WEEK = %w{monday tuesday wednesday thursday friday saturday sunday}
   
@@ -209,6 +210,10 @@ class Trip < ActiveRecord::Base
     (customer.blank? || customer.id.blank? || (provider.present? && provider.allow_trip_entry_from_runs_page)) && run.present?
   end
 
+  def adjusted_run_id
+    cab ? Run::CAB_RUN_ID : (run_id ? run_id : Run::UNSCHEDULED_RUN_ID)
+  end
+
   def as_calendar_json
     {
       id: id,
@@ -216,6 +221,15 @@ class Trip < ActiveRecord::Base
       end: appointment_time.iso8601,
       title: customer_name + "\n" + pickup_address.address_text,
       resource: pickup_time.to_date.to_s(:js)
+    }
+  end
+  def as_run_event_json
+    {
+      id: id,
+      start: pickup_time.iso8601,
+      end: appointment_time.iso8601,
+      title: customer_name + "\n" + pickup_address.address_text,
+      resource: adjusted_run_id
     }
   end
     

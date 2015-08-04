@@ -58,6 +58,7 @@ table.table
 // calendar
 .fc-view {
   overflow: scroll;
+  //max-height: 500px !important;
 
   table {
     min-width: 1000px !important;
@@ -70,4 +71,8 @@ th.fc-resourceName {
 
 .fc-event {
   cursor: pointer;
+}
+
+.row-highlight {
+  background-color: yellow !important; 
 }

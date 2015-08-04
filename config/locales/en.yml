@@ -31,8 +31,8 @@ en:
   phone_number: "Phone Number"
   in_district: "In TriMet District"
   unspecified: "Unspecified"
-  yes: "Yes"
-  no: "No"
+  "yes": "Yes" # yes, no: needs to put as string, otherwise won't be loaded as will be parsed as {false=>"No"}
+  "no": "No"
   default_trip_purpose: "Default Trip Purpose:"
   address_form_error_message:
     one: "%{count} error prohibited this address from being saved:"
@@ -42,6 +42,7 @@ en:
   address_search: "Address Search"
   address_notes: "Notes"
   #cab trips
+  cab: 'Cab'
   pickup_date: "Pickup Date"
   pickup_time: "Pickup Time"
   customer_name: "Customer Name"
@@ -648,9 +649,10 @@ en:
   license_plate: "License Plate"
   garaged_location: "Garaged Location"
   #runs
-  runs_form_error_message: 
+  run_form_error_message: 
     one: "%{count} error prohibited this run from being saved:"
-    other: "%{count} errors sprohibited this run from being saved:"
+    other: "%{count} errors sprohibited this run from being saved:"  
+  unavailable_at_run_time: 'is not available at run schedule time'
   scheduled_start_time: "Scheduled Start Time"
   scheduled_end_time: "Scheduled End Time"
   delete_run_link_text: "Delete Run (does not delete trips)"
@@ -812,6 +814,8 @@ en:
   status: 'Status'
   scheduled: 'Scheduled'
   unscheduled: 'Unscheduled'
+  schedule: 'Schedule'
+  unschedule: 'Unschedule'
   from_date: 'From Date'
   to_date: 'To Date'
   from_date_cannot_later_than_to_date: "From Date can not be later than To Date"
@@ -827,7 +831,16 @@ en:
   trip_round_trip_column: 'Round Trip?'
   guest_count_column: 'Guest Count'
   attendant_count_column: 'Attendant Count'
-
+  # trips runs tab
+  application_trips_runs_link_text: 'Trips Runs'
+  trips_runs: 'Trips Runs'
+  trips_runs_filter: 'Filter'
+  run_result: 'Result'
+  run_trip_day: 'Date'
+  not_fit_in_run_schedule: 'Trip schedule does not fit in run schedule'
+  vehicle_unavailable: 'Vehicle is not available'
+  driver_unavailable: 'Driver is not available'
+  unknown_error: 'There was something wrong with the request, please try again.'
 
   locales:
     en: "English"
