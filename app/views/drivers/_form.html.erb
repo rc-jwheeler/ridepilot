@@ -14,7 +14,7 @@
 
   <div class="row">
     <div class="col-sm-12 col-md-6">
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
         <div class="panel-heading">Details</div>
         <div class="panel-body form-horizontal">
           <div class="form-group">
@@ -50,7 +50,7 @@
         </div><!-- END .panel-body -->
       </div><!-- END .panel -->
       
-      <div class="panel panel-default">
+      <div class="panel panel-primary">
         <div class="panel-heading"><%= label_tag translate_helper("operating_hours_heading") %></div>
         <div class="panel-body form-inline">
           <table class="table table-condensed">
@@ -136,7 +136,7 @@
 
     <div class="col-sm-12 col-md-6">
       <% if @driver.persisted? %>
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
           <div class="panel-heading"><%= label_tag translate_helper("driver_documents_heading") %></div>
           <table class="table table-striped table-condensed" id="documents-table">
             <thead>
@@ -158,13 +158,13 @@
           <% unless @readonly %>
             <div class="panel-footer">
               <div class="clearfix">
-                <%= link_to translate_helper("driver_documents_add_link_title"), new_driver_document_path(@driver), class: "btn btn-default pull-right", remote: true %>
+                <%= link_to translate_helper("driver_documents_add_link_title"), new_driver_document_path(@driver), class: "btn action-button pull-right", remote: true %>
               </div>
             </div>
           <% end %>
         </div><!-- END .panel -->
 
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
           <div class="panel-heading"><%= label_tag translate_helper("driver_histories_heading") %></div>
           <table class="table table-striped table-condensed" id="driver_histories-table">
             <thead>
@@ -186,13 +186,13 @@
           <% unless @readonly %>
             <div class="panel-footer">
               <div class="clearfix">
-                <%= link_to translate_helper("driver_histories_add_link_title"), new_driver_driver_history_path(@driver), class: "btn btn-default pull-right", remote: true %>
+                <%= link_to translate_helper("driver_histories_add_link_title"), new_driver_driver_history_path(@driver), class: "btn action-button pull-right", remote: true %>
               </div>
             </div>
           <% end %>
         </div><!-- END .panel -->      
 
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
           <div class="panel-heading"><%= label_tag translate_helper("driver_compliances_heading") %></div>
           <table class="table table-striped table-condensed" id="driver_compliances-table">
 
@@ -216,7 +216,7 @@
           <% unless @readonly %>
             <div class="panel-footer">
               <div class="clearfix">
-                <%= link_to translate_helper("driver_compliances_add_link_title"), new_driver_driver_compliance_path(@driver), class: "btn btn-default pull-right", remote: true %>
+                <%= link_to translate_helper("driver_compliances_add_link_title"), new_driver_driver_compliance_path(@driver), class: "btn action-button pull-right", remote: true %>
               </div>
             </div>
           <% end %>

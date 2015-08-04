@@ -7,9 +7,9 @@
   <div class="col-sm-12 col-md-6">
     <div class="pull-right">
       <% unless Rails.env.production? or Rails.env.staging? %>
-        <%= link_to "Generate Events", generate_recurring_driver_compliances_path, method: :put, data: { confirm: "For testing purposes only. This button is not available in production. In production, event generation would be handled by a cron task.\n\nAre you sure you want to trigger event generation for ALL recurring events across ALL providers?" }, class: "btn btn-default btn-sm" %>
+        <%= link_to "Generate Events", generate_recurring_driver_compliances_path, method: :put, data: { confirm: "For testing purposes only. This button is not available in production. In production, event generation would be handled by a cron task.\n\nAre you sure you want to trigger event generation for ALL recurring events across ALL providers?" }, class: "btn action-button btn-sm" %>
       <% end %>
-      <%= link_to translate_helper("new_recurring_driver_compliance_link_text"), new_recurring_driver_compliance_path, class: "btn btn-default btn-sm" %>
+      <%= link_to translate_helper("new_recurring_driver_compliance_link_text"), new_recurring_driver_compliance_path, class: "btn action-button btn-sm" %>
     </div>
   </div>
 </div>
