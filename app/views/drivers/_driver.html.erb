@@ -11,4 +11,7 @@
   <td>
     <%= driver.available? ? translate_helper("driver_available") : translate_helper("driver_unavailable") %>
   </td>
+  <td>
+    <%= driver.compliant? ? translate_helper("no") : translate_helper("yes") %>
+  </td>
 </tr>

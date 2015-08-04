@@ -10,6 +10,12 @@ namespace :ridepilot do
 	  end
   end
 
+  desc "Reload database translations from scratch"
+  task reload_locales: :environment do
+    Rake::Task["ridepilot:clear_locales"].invoke
+    Rake::Task["ridepilot:load_locales"].invoke
+  end
+  
   desc "Clear up existing database translations"
   task clear_locales: :environment do
     TranslationKey.delete_all

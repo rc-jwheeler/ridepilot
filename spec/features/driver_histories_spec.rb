@@ -23,7 +23,7 @@ RSpec.describe "DriverHistories" do
       end
       
       it "shows the date of the history event" do
-        expect(page).to have_text @driver_history.event_date.to_s(:form)
+        expect(page).to have_text @driver_history.event_date.to_s(:long)
       end
     end
 

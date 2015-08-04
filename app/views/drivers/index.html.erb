@@ -7,21 +7,22 @@
   <div class="col-sm-12 col-md-6">
     <% if can? :manage, @driver %>
       <div class="pull-right">
-        <%= link_to translate_helper("new_driver_link_text"), new_driver_path, class: "btn btn-default btn-sm" %>
+        <%= link_to translate_helper("new_driver_link_text"), new_driver_path, class: "btn action-button btn-sm" %>
       </div>
     <% end %>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-sm-12 col-md-6">
     <table class="table table-striped table-bordered" id="documents-table">
       <thead>
         <tr>
-          <th class="col-md-6"><%= translate_helper("driver_form_name") %></th>
-          <th class="col-md-2"><%= translate_helper("driver_form_active") %></th>
-          <th class="col-md-2"><%= translate_helper("paid") %></th>
-          <th class="col-md-2"><%= translate_helper("driver_form_available") %></th>
+          <th class="col-sm-4"><%= translate_helper("driver_form_name") %></th>
+          <th class="col-sm-2"><%= translate_helper("driver_form_active") %></th>
+          <th class="col-sm-2"><%= translate_helper("paid") %></th>
+          <th class="col-sm-2"><%= translate_helper("driver_form_available") %></th>
+          <th class="col-sm-2"><%= translate_helper("driver_overdue_events") %></th>
         </tr>
       </thead>
       <tbody>

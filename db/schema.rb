@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150727030205) do
+ActiveRecord::Schema.define(version: 20150730192706) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
-  enable_extension "fuzzystrmatch"
   enable_extension "postgis_topology"
+  enable_extension "fuzzystrmatch"
 
   create_table "addresses", force: true do |t|
     t.string   "name"
@@ -137,9 +137,11 @@ ActiveRecord::Schema.define(version: 20150727030205) do
     t.date     "compliance_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "recurring_driver_compliance_id"
   end
 
   add_index "driver_compliances", ["driver_id"], :name => "index_driver_compliances_on_driver_id"
+  add_index "driver_compliances", ["recurring_driver_compliance_id"], :name => "index_driver_compliances_on_recurring_driver_compliance_id"
 
   create_table "driver_histories", force: true do |t|
     t.integer  "driver_id"
@@ -269,6 +271,24 @@ ActiveRecord::Schema.define(version: 20150727030205) do
     t.spatial  "region_se_corner",                                limit: {:srid=>4326, :type=>"point", :geographic=>true}
     t.spatial  "viewport_center",                                 limit: {:srid=>4326, :type=>"point", :geographic=>true}
   end
+
+  create_table "recurring_driver_compliances", force: true do |t|
+    t.integer  "provider_id"
+    t.string   "event_name"
+    t.text     "event_notes"
+    t.string   "recurrence_schedule"
+    t.integer  "recurrence_frequency"
+    t.text     "recurrence_notes"
+    t.date     "start_date"
+    t.string   "future_start_rule"
+    t.string   "future_start_schedule"
+    t.integer  "future_start_frequency"
+    t.boolean  "compliance_date_based_scheduling", default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "recurring_driver_compliances", ["provider_id"], :name => "index_recurring_driver_compliances_on_provider_id"
 
   create_table "regions", force: true do |t|
     t.string  "name"

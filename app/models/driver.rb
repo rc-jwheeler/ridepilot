@@ -9,12 +9,15 @@ class Driver < ActiveRecord::Base
 
   has_many :operating_hours, class_name: :OperatingHours, dependent: :destroy
   has_many :driver_histories, dependent: :destroy, inverse_of: :driver
-  has_many :driver_compliances, dependent: :destroy, inverse_of: :driver
   has_many :documents, as: :documentable, dependent: :destroy
+  
+  # We must specify :delete_all in order to avoid the before_destroy hook. See
+  # the DriverCompliance model for more details
+  has_many :driver_compliances, dependent: :delete_all, inverse_of: :driver
 
-  validates :user_id, uniqueness: {allow_nil: true}
-  validates :name, uniqueness: {scope: :provider_id}, length: {minimum: 2}
-  validates :email, format: {with: Devise.email_regexp, allow_blank: true}
+  validates :user_id, uniqueness: { allow_nil: true }
+  validates :name, uniqueness: { scope: :provider_id }, length: { minimum: 2 }
+  validates :email, format: { with: Devise.email_regexp, allow_blank: true }
 
   scope :users,         -> { where("drivers.user_id IS NOT NULL") }
   scope :active,        -> { where(active: true) }

@@ -3,5 +3,11 @@ FactoryGirl.define do
     driver
     event { Faker::Lorem.words(2).join(' ') }
     due_date { Date.current.tomorrow }
+    
+    trait :recurring do
+      after(:build) do |dc|
+        dc.recurring_driver_compliance = create :recurring_driver_compliance, provider: dc.driver.provider
+      end
+    end
   end
 end

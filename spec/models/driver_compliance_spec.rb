@@ -7,7 +7,7 @@ RSpec.describe DriverCompliance, type: :model do
     expect(compliance.errors.keys).to include :driver
   end
 
-  it "requires an event" do
+  it "requires an event name" do
     compliance = build :driver_compliance, event: nil
     expect(compliance.valid?).to be_falsey
     expect(compliance.errors.keys).to include :event
@@ -36,14 +36,81 @@ RSpec.describe DriverCompliance, type: :model do
       expect(compliance.reload.compliance_date).to eql Date.current
     end
   end
+
+  describe "#complete?" do
+    it "knows if the record is considered complete" do
+      compliance = create :driver_compliance
+      expect(compliance.complete?).to be_falsey
+      compliance.complete!
+      expect(compliance.reload.complete?).to be_truthy
+    end
+  end
+
+  describe "recurring events" do
+    it "does not allow modifying anything other than compliance date" do
+      compliance = create :driver_compliance, :recurring, event: "My Event", compliance_date: nil
+      compliance.event = "My New Event"
+      expect(compliance.valid?).to be_falsey
+      expect(compliance.errors.keys).to include :event
+
+      compliance.reload
+      compliance.compliance_date = Date.current
+      expect(compliance.valid?).to be_truthy
+    end
+  
+    it "does not allow destruction of the record" do
+      compliance = create :driver_compliance, :recurring
+      expect {
+        compliance.destroy
+      }.not_to change(DriverCompliance, :count)
+      expect(compliance.errors).not_to be_empty
+
+      compliance.valid? # Clear errors array, reload alone is not sufficient
+      compliance.update_attribute :recurring_driver_compliance, nil
+      expect {
+        compliance.destroy
+      }.to change(DriverCompliance, :count).by(-1)
+    end
+  end
+  
+  describe ".complete" do
+    it "finds compliance events that have a compliance date" do
+      compliance_1 = create :driver_compliance, compliance_date: nil
+      compliance_2 = create :driver_compliance, compliance_date: ""
+      compliance_3 = create :driver_compliance, compliance_date: Date.current
+      expect(DriverCompliance.complete).not_to include compliance_1
+      expect(DriverCompliance.complete).not_to include compliance_2
+      expect(DriverCompliance.complete).to include compliance_3
+    end
+  end
+  
+  describe ".incomplete" do
+    it "finds compliance events that do not have a compliance date" do
+      compliance_1 = create :driver_compliance, compliance_date: nil
+      compliance_2 = create :driver_compliance, compliance_date: ""
+      compliance_3 = create :driver_compliance, compliance_date: Date.current
+      expect(DriverCompliance.incomplete).to include compliance_1
+      expect(DriverCompliance.incomplete).to include compliance_2
+      expect(DriverCompliance.incomplete).not_to include compliance_3
+    end
+  end
   
   describe ".for" do
-    it "finds compliance events for a specified driver ID" do
-      driver_1 = create :driver
-      for_driver_1 = create :driver_compliance, driver: driver_1
-      for_driver_2 = create :driver_compliance
-      expect(DriverCompliance.for(driver_1.id)).to include for_driver_1
-      expect(DriverCompliance.for(driver_1.id)).not_to include for_driver_2
+    before do
+      @driver_1 = create :driver
+      @driver_2 = create :driver
+      @for_driver_1 = create :driver_compliance, driver: @driver_1
+      @for_driver_2 = create :driver_compliance, driver: @driver_2
+    end
+    
+    it "finds compliance events for a specified driver or driver id" do
+      expect(DriverCompliance.for(@driver_1)).to include @for_driver_1
+      expect(DriverCompliance.for(@driver_1)).not_to include @for_driver_2
+    end
+
+    it "can find compliance events for an array of drivers or driver ids" do
+      expect(DriverCompliance.for([@driver_1, @driver_2])).to include @for_driver_1
+      expect(DriverCompliance.for([@driver_1, @driver_2])).to include @for_driver_2
     end
   end
   
