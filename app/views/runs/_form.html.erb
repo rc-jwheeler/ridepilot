@@ -38,3 +38,5 @@
   </div>
   
 <% end %>
+
+<%= render 'shared/hide_invisible_form_fields_js', model_name: "run", table_name: 'runs', provider_id:  current_provider.try(:id) %>

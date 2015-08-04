@@ -219,7 +219,7 @@ class Trip < ActiveRecord::Base
       id: id,
       start: pickup_time.iso8601,
       end: appointment_time.iso8601,
-      title: customer_name + "\n" + pickup_address.address_text,
+      title: customer_name + "\n" + pickup_address.try(:address_text).to_s,
       resource: pickup_time.to_date.to_s(:js)
     }
   end
@@ -228,7 +228,7 @@ class Trip < ActiveRecord::Base
       id: id,
       start: pickup_time.iso8601,
       end: appointment_time.iso8601,
-      title: customer_name + "\n" + pickup_address.address_text,
+      title: customer_name + "\n" + pickup_address.try(:address_text).to_s,
       resource: adjusted_run_id
     }
   end

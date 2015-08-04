@@ -856,7 +856,8 @@ en:
   uploading: 'Uploading'
   upload_common_addresses: 'Upload Addresses'
   upload_common_addresses_notes: 'Please refer to address file specifications.'
-
+  # translation editing
+  create_translation: 'Create Translation'
 
   locales:
     en: "English"

@@ -230,6 +230,8 @@
   <% end %>
 <% end %> 
 
+<%= render 'shared/hide_invisible_form_fields_js', model_name: "driver", table_name: 'drivers', provider_id:  current_provider.try(:id) %>
+
 <div id="modal-dialog" class="modal fade col-sm-12" role="dialog" aria-hidden="true" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
