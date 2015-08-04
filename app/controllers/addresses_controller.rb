@@ -193,7 +193,6 @@ class AddressesController < ApplicationController
           begin
             # Make an object in your bucket for your upload
             s3_file = S3_BUCKET.object("/provider_addresses/" + address_file.original_filename)
-
             # Upload the file
             s3_file.put(body: address_file, acl: 'public-read')
 
