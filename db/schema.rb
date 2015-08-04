@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150803224056) do
+ActiveRecord::Schema.define(version: 20150804200356) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -124,6 +124,17 @@ ActiveRecord::Schema.define(version: 20150803224056) do
   end
 
   add_index "device_pools", ["provider_id"], :name => "index_device_pools_on_provider_id"
+
+  create_table "document_associations", force: true do |t|
+    t.integer  "document_id"
+    t.integer  "associable_id"
+    t.string   "associable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "document_associations", ["associable_id", "associable_type"], :name => "index_document_associations_on_associable_id_and_associable_typ"
+  add_index "document_associations", ["document_id"], :name => "index_document_associations_on_document_id"
 
   create_table "documents", force: true do |t|
     t.integer  "documentable_id"
