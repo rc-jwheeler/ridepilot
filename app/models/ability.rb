@@ -65,6 +65,7 @@ class Ability
       can :manage, LookupTable
       can :manage, ApplicationSetting
       can :manage, Translation
+      can :load,   Address
     else
       can :read, User, :roles => {:provider_id => provider.id}
     end
