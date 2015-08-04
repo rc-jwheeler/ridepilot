@@ -34,16 +34,16 @@ RSpec.describe RecurringDriverCompliancesController, type: :routing do
       expect(:delete => "/recurring_driver_compliances/1").to route_to("recurring_driver_compliances#destroy", :id => "1")
     end
 
-    it "routes to #preview_schedule" do
-      expect(:get => "/recurring_driver_compliances/preview_schedule").to route_to("recurring_driver_compliances#preview_schedule")
+    it "routes to #schedule_preview" do
+      expect(:get => "/recurring_driver_compliances/schedule_preview").to route_to("recurring_driver_compliances#schedule_preview")
     end
 
-    it "routes to #preview_future_schedule" do
-      expect(:get => "/recurring_driver_compliances/preview_future_schedule").to route_to("recurring_driver_compliances#preview_future_schedule")
+    it "routes to #future_schedule_preview" do
+      expect(:get => "/recurring_driver_compliances/future_schedule_preview").to route_to("recurring_driver_compliances#future_schedule_preview")
     end
 
-    it "routes to #preview_compliance_date_based_schedule" do
-      expect(:get => "/recurring_driver_compliances/preview_compliance_date_based_schedule").to route_to("recurring_driver_compliances#preview_compliance_date_based_schedule")
+    it "routes to #compliance_date_based_schedule_preview" do
+      expect(:get => "/recurring_driver_compliances/compliance_date_based_schedule_preview").to route_to("recurring_driver_compliances#compliance_date_based_schedule_preview")
     end
   end
 end

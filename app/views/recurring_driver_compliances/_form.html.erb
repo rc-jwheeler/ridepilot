@@ -68,14 +68,7 @@
           </div>
         </div><!-- END .panel-body -->
         <div class="panel-footer schedule-preview-panel">
-          <p><strong><%= translate_helper("recurring_driver_compliance_form_schedule_preview_header") %></strong></p>
-          <div class="schedule-preview">
-            <% if @schedule_preview.present? %>
-              <%= render partial: "schedule_preview", locals: {dates: @schedule_preview} %>
-            <% else %>
-              <p class="text-muted"><%= translate_helper("recurring_driver_compliance_form_schedule_preview_placeholder_text") %></p>
-            <% end %>
-          </div>
+          <%= render partial: "schedule_preview" %>
         </div><!-- END .panel-footer -->        
       </div><!-- END .panel -->
     </div><!-- END .col-md-6 -->
@@ -91,15 +84,8 @@
             <% end %>
           </div>
         </div><!-- END .panel-body -->
-        <div class="panel-footer compliance-date-based-scheduling-preview-panel">
-          <p><strong><%= translate_helper("recurring_driver_compliance_form_compliance_date_based_schedule_preview_header") %></strong></p>
-          <div class="schedule-preview">
-            <% if @compliance_date_based_schedule_preview.present? %>
-              <%= render partial: "schedule_preview", locals: {dates: @compliance_date_based_schedule_preview} %>
-            <% else %>
-              <p class="text-muted"><%= translate_helper("recurring_driver_compliance_form_compliance_date_based_schedule_preview_placeholder_text") %></p>
-            <% end %>
-          </div>
+        <div class="panel-footer compliance-date-based-schedule-preview-panel">
+          <%= render partial: "compliance_date_based_schedule_preview" %>
         </div><!-- END .panel-footer -->
       </div><!-- END .panel -->
 
@@ -126,20 +112,7 @@
           </div>
         </div><!-- END .panel-body -->
         <div class="panel-footer future-schedule-preview-panel">
-          <p><strong><%= translate_helper("recurring_driver_compliance_form_future_schedule_preview_header") %></strong></p>
-          <div class="schedule-preview">
-            <% if @future_schedule_preview.present? %>
-              <%= render partial: "schedule_preview", locals: {dates: @future_schedule_preview} %>
-            <% else %>
-              <% if @recurring_driver_compliance.future_start_rule.try(:to_sym) == :time_span %>
-                <p class="text-muted"><%= translate_helper("recurring_driver_compliance_form_future_schedule_time_span_preview_placeholder_text") %></p>
-              <% elsif @recurring_driver_compliance.future_start_rule.try(:to_sym) == :on_schedule %>
-                <p class="text-muted"><%= translate_helper("recurring_driver_compliance_form_future_schedule_on_schedule_preview_placeholder_text") %></p>
-              <% else %>
-                <p class="text-muted"><%= translate_helper("recurring_driver_compliance_form_future_schedule_immediately_preview_placeholder_text") %></p>
-              <% end %>
-            <% end %>
-          </div>
+          <%= render partial: "future_schedule_preview" %>
         </div><!-- END .panel-footer -->
       </div><!-- END .panel -->
     </div><!-- END .col-md-6 -->
@@ -161,9 +134,9 @@
 
     $("#recurring_driver_compliance_compliance_date_based_scheduling").on("change", function() {
       if ($(this).is(":checked")) {
-        $(".compliance-date-based-scheduling-preview-panel").fadeIn();
+        $(".compliance-date-based-schedule-preview-panel").fadeIn();
       } else {
-        $(".compliance-date-based-scheduling-preview-panel").fadeOut();
+        $(".compliance-date-based-schedule-preview-panel").fadeOut();
       }
     }).trigger("change");
   
@@ -174,17 +147,17 @@
           $(".schedule-preview-required"),
           $(".updates-schedule-preview"),
           '<p class="text-muted"><%= j translate_helper("recurring_driver_compliance_form_schedule_preview_placeholder_text") %></p>',
-          '<%= j preview_schedule_recurring_driver_compliances_path %>',
+          '<%= j schedule_preview_recurring_driver_compliances_path %>',
           'An error occurred generating the schedule preview.'
         );
 
         if ($("#recurring_driver_compliance_compliance_date_based_scheduling").is(":checked")) {
           RecurringDriverCompliance.updateSchedulePreview(
-            $(".compliance-date-based-scheduling-preview-panel"),
+            $(".compliance-date-based-schedule-preview-panel"),
             $(".schedule-preview-required"),
             $(".updates-schedule-preview"),
             '<p class="text-muted"><%= j translate_helper("recurring_driver_compliance_form_compliance_date_based_schedule_preview_placeholder_text") %></p>',
-            '<%= j preview_compliance_date_based_schedule_recurring_driver_compliances_path %>',
+            '<%= j compliance_date_based_schedule_preview_recurring_driver_compliances_path %>',
             'An error occurred generating the compliance date based schedule preview.'
           );
         }
@@ -209,7 +182,7 @@
           $schedulingInputs,
           $(".updates-future-schedule-preview"),
           defaultPreviewText,
-          '<%= j preview_future_schedule_recurring_driver_compliances_path %>',
+          '<%= j future_schedule_preview_recurring_driver_compliances_path %>',
           'An error occurred generating the future schedule preview.'
         );
       });
@@ -223,22 +196,25 @@
 
     updateSchedulePreview: function ($previewContainer, $schedulingInputs, $formInputs, defaultPreviewText, targetUrl, errorText) {
       var previewTarget = $previewContainer.find(".schedule-preview");
-      RecurringDriverCompliance.previewText(previewTarget, defaultPreviewText);
+      RecurringDriverCompliance.fadeInText(previewTarget, defaultPreviewText);
       if ($schedulingInputs.filter(function() { return $(this).val() == ""; }).length == 0) {
-        RecurringDriverCompliance.previewText(previewTarget, "Calculating...");
+        RecurringDriverCompliance.fadeInText(previewTarget, "Calculating...");
         $.get(targetUrl, $formInputs.serialize(), function(data) {
-          RecurringDriverCompliance.previewText(previewTarget, data);
+          // Replace the whole footer panel content
+          RecurringDriverCompliance.fadeInText($previewContainer, data);
         })
         .fail(function() {
           console.log(errorText, arguments);
-          RecurringDriverCompliance.previewText(previewTarget, '<p class="text-warning">' + errorText + ' Please make sure all scheduling fields are complete and valid.</p>');
+          // Replace only the date list
+          RecurringDriverCompliance.fadeInText(previewTarget, '<p class="text-warning">' + errorText + ' Please make sure all scheduling fields are complete and valid.</p>');
         })
       } else {
-        RecurringDriverCompliance.previewText(previewTarget, defaultPreviewText);
+        // Replace only the date list
+        RecurringDriverCompliance.fadeInText(previewTarget, defaultPreviewText);
       }
     },
 
-    previewText: function (target, new_text) {
+    fadeInText: function (target, new_text) {
       if (new_text != target.html()) {
         target.fadeOut(function(){ target.html(new_text).fadeIn(); });
       }

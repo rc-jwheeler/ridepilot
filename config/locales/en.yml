@@ -55,7 +55,7 @@ en:
   edit_multi_cab_heading: "Editing cab trips for %{formatted_week}"
   no_cab_trips_on_this_date: "No cab trips on this date"
   no_cab_trips_in_date_range: "No cab trips in this date range"
-  edit_x_cab_trips: 
+  edit_x_cab_trips:
     one: "Edit %{count} cab trip"
     other: "Edit %{count} cab trips"
   #customers
@@ -78,7 +78,7 @@ en:
   inactivated_reason: "Inactivated Reason"
   activated_date: "Activated Date"
   inactivated_date: "Inactivated Date"
-  customer_form_error_message: 
+  customer_form_error_message:
     one: "%{count} error prohibited this customer from being saved:"
     other: "%{count} errors prohibited this customer from being saved:"
   ignore_duplicates: "Ignore duplicates"
@@ -134,7 +134,7 @@ en:
   confirm_delete_message: "Are you sure you want to delete %{value}?"
   #device pool
   remove_device_pool_driver: "Remove"
-  device_pool_form_error_message: 
+  device_pool_form_error_message:
     one: "%{count} error prohibited this device pool from being saved:"
     other: "%{count} errors sprohibited this device pool from being saved:"
   device_pools: 'Device Pools'
@@ -200,7 +200,7 @@ en:
   operating_hours_unavailable: "Unavailable"
   operating_hours_24_hours: "24 Hours"
   operating_hours_open: "Open"
-  
+
   # Driver histories
   driver_histories_heading: "History Events"
   driver_histories_add_link_title: "Add history event"
@@ -215,7 +215,7 @@ en:
   driver_history_form_notes: "Notes"
   driver_history_form_event_date: "Event Date"
   driver_history_form_submit: "Save"
-  
+
   # Driver compliances
   driver_compliances_heading: "Compliance Events"
   driver_compliances_add_link_title: "Add compliance event"
@@ -231,7 +231,7 @@ en:
   driver_compliance_form_due_date: "Due Date"
   driver_compliance_form_compliance_date: "Compliance Date"
   driver_compliance_form_submit: "Save"
-  
+
   # Recurring Driver Compliance Events
   recurring_driver_compliances_link_text: "Recurring Driver Compliance Events"
   recurring_driver_compliances_index_heading: "Recurring Driver Compliance Events"
@@ -278,16 +278,20 @@ en:
   recurring_driver_compliance_form_readonly_notice_heading: "Please note"
   recurring_driver_compliance_form_readonly_notice: "You cannot modify the scheduling of this event since events have already been generated from it. However you can still adjust the recurrence note, event name, and event notes fields. Changes to the latter two fields will be copied to the generated events."
   recurring_driver_compliance_form_submit: "Save"
-  recurring_driver_compliance_form_schedule_preview_header: "Based on the schedule above, the first 6 events would be due:"
+  recurring_driver_compliance_form_schedule_preview_header:
+    one: "Based on the schedule above and the compliance date based scheduling option, the first event for each driver would be due:"
+    other: "Based on the schedule above the, first %{count} events for each driver would be due:"
   recurring_driver_compliance_form_schedule_preview_placeholder_text: "Complete all scheduling fields to see an example of the schedule."
-  recurring_driver_compliance_form_compliance_date_based_schedule_preview_header: "If a driver were to complete the first occurrence 1 day after the due date, the next event would be due:"
+  recurring_driver_compliance_form_compliance_date_based_schedule_preview_header: "If a driver were to complete the first occurrence 1 day after the due date, their next event would be due:"
   recurring_driver_compliance_form_compliance_date_based_schedule_preview_placeholder_text: "Complete all scheduling fields to see an example of how compliance date based scheduling works."
-  recurring_driver_compliance_form_future_schedule_preview_header: "If a new driver was created 1 day after the first due date, the next 6 events would be due:"
-  recurring_driver_compliance_form_future_immediately_schedule_preview_placeholder_text: "Complete all scheduling fields to see an example of future scheduling using 'Immediately'"
+  recurring_driver_compliance_form_future_schedule_preview_header:
+    one: "If a new driver was created 1 day after the first due date, their first event would be due:"
+    other: "If a new driver was created 1 day after the first due date, their first %{count} events would be due:"
+  recurring_driver_compliance_form_future_schedule_immediately_preview_placeholder_text: "Complete all scheduling fields to see an example of future scheduling using 'Immediately'"
   recurring_driver_compliance_form_future_schedule_on_schedule_preview_placeholder_text: "Complete all scheduling fields to see an example of future scheduling using 'On Schedule'"
   recurring_driver_compliance_form_future_schedule_time_span_preview_placeholder_text: "Complete all scheduling and new driver scheduling fields to see an example of future scheduling using 'After a time'"
   recurring_driver_compliance_events_scheduled_heading: "Events Scheduled"
-  
+
   # Documents
   driver_documents_heading: "Driver Documentation"
   driver_documents_add_link_title: "Add document"
@@ -649,9 +653,9 @@ en:
   license_plate: "License Plate"
   garaged_location: "Garaged Location"
   #runs
-  run_form_error_message: 
+  run_form_error_message:
     one: "%{count} error prohibited this run from being saved:"
-    other: "%{count} errors sprohibited this run from being saved:"  
+    other: "%{count} errors sprohibited this run from being saved:"
   unavailable_at_run_time: 'is not available at run schedule time'
   scheduled_start_time: "Scheduled Start Time"
   scheduled_end_time: "Scheduled End Time"
@@ -679,7 +683,7 @@ en:
   #trips
   trip: 'Trip'
   change_customer: "Change Customer"
-  trips_form_error_message: 
+  trips_form_error_message:
     one: "%{count} error prohibited this trip from being saved:"
     other: "%{count} errors sprohibited this trip from being saved:"
   appointment_time: "Appointment Time"
@@ -745,7 +749,7 @@ en:
   trip_result_column: 'Result'
   #users
   new_user_heading: "Create New User"
-  user_form_error_message: 
+  user_form_error_message:
     one: "%{count} error prohibited this user from being saved:"
     other: "%{count} errors sprohibited this user from being saved:"
   permissions: "Permissions"
@@ -773,7 +777,7 @@ en:
   new_maintenance_heading: "Add Maintenance Event"
   back_to_provider: "Back"
   #vehicles
-  vehicle_form_error_message: 
+  vehicle_form_error_message:
     one: "%{count} error prohibited this vehicle from being saved:"
     other: "%{count} errors sprohibited this vehicle from being saved:"
   vehicle_form_name_label: "Name"
