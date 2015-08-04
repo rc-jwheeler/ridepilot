@@ -138,39 +138,54 @@ RSpec.describe RecurringDriverCompliancesController, type: :controller do
     end
   end
 
-  describe "GET #preview_schedule" do
+  describe "GET #schedule_preview" do
     it "assigns a newly created but unsaved recurring_driver_compliance as @recurring_driver_compliance" do
-      get :preview_schedule, {:recurring_driver_compliance => valid_attributes}
+      get :schedule_preview, {:recurring_driver_compliance => valid_attributes}
       expect(assigns(:recurring_driver_compliance)).to be_a_new(RecurringDriverCompliance)
     end
 
+    it "assigns the preview dates to as @schedule_preview" do
+      get :schedule_preview, {:recurring_driver_compliance => valid_attributes}
+      expect(assigns(:schedule_preview)).not_to be_nil
+    end
+
     it "renders the 'schedule_preview' partial" do
-      get :preview_schedule, {:recurring_driver_compliance => valid_attributes}
+      get :schedule_preview, {:recurring_driver_compliance => valid_attributes}
       expect(response).to render_template(partial: "_schedule_preview")
     end
   end
 
-  describe "GET #preview_future_schedule" do
+  describe "GET #future_schedule_preview" do
     it "assigns a newly created but unsaved recurring_driver_compliance as @recurring_driver_compliance" do
-      get :preview_future_schedule, {:recurring_driver_compliance => valid_attributes}
+      get :future_schedule_preview, {:recurring_driver_compliance => valid_attributes}
       expect(assigns(:recurring_driver_compliance)).to be_a_new(RecurringDriverCompliance)
     end
 
-    it "renders the 'schedule_preview' partial" do
-      get :preview_future_schedule, {:recurring_driver_compliance => valid_attributes}
-      expect(response).to render_template(partial: "_schedule_preview")
+    it "assigns the preview dates to as @future_schedule_preview" do
+      get :future_schedule_preview, {:recurring_driver_compliance => valid_attributes}
+      expect(assigns(:future_schedule_preview)).not_to be_nil
+    end
+
+    it "renders the 'future_schedule_preview' partial" do
+      get :future_schedule_preview, {:recurring_driver_compliance => valid_attributes}
+      expect(response).to render_template(partial: "_future_schedule_preview")
     end
   end
 
-  describe "GET #preview_compliance_date_based_schedule" do
+  describe "GET #compliance_date_based_schedule_preview" do
     it "assigns a newly created but unsaved recurring_driver_compliance as @recurring_driver_compliance" do
-      get :preview_compliance_date_based_schedule, {:recurring_driver_compliance => valid_attributes}
+      get :compliance_date_based_schedule_preview, {:recurring_driver_compliance => valid_attributes}
       expect(assigns(:recurring_driver_compliance)).to be_a_new(RecurringDriverCompliance)
     end
 
-    it "renders the 'schedule_preview' partial" do
-      get :preview_compliance_date_based_schedule, {:recurring_driver_compliance => valid_attributes}
-      expect(response).to render_template(partial: "_schedule_preview")
+    it "assigns the preview dates to as @compliance_date_based_schedule_preview" do
+      get :compliance_date_based_schedule_preview, {:recurring_driver_compliance => valid_attributes}
+      expect(assigns(:compliance_date_based_schedule_preview)).not_to be_nil
+    end
+
+    it "renders the 'compliance_date_based_schedule_preview' partial" do
+      get :compliance_date_based_schedule_preview, {:recurring_driver_compliance => valid_attributes}
+      expect(response).to render_template(partial: "_compliance_date_based_schedule_preview")
     end
   end
 end

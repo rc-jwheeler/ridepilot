@@ -1,7 +1,9 @@
-<div class="clearfix">
-  <ul class="list-group col-sm-12 col-md-6" style="margin-left: 0">
-    <% dates.each do |date| %>
-      <li class="list-group-item"><%= date %></li>
-    <% end %>
-  </ul>
+<% count = @recurring_driver_compliance.compliance_date_based_scheduling? ? 1 : 6 %>
+<p><strong><%= translate_helper("recurring_driver_compliance_form_schedule_preview_header", count: count) %></strong></p>
+<div class="schedule-preview">
+  <% if @schedule_preview.present? %>
+    <%= render partial: "preview_dates", locals: {dates: @schedule_preview} %>
+  <% else %>
+    <p class="text-muted"><%= translate_helper("recurring_driver_compliance_form_schedule_preview_placeholder_text") %></p>
+  <% end %>
 </div>

@@ -1,8 +1,8 @@
 class RecurringDriverCompliancesController < ApplicationController
-  load_and_authorize_resource skip: [:preview_schedule, :preview_future_schedule, :preview_compliance_date_based_schedule]
+  load_and_authorize_resource skip: [:schedule_preview, :future_schedule_preview, :compliance_date_based_schedule_preview]
   
   before_filter :prep_form, only: [:new, :edit, :create, :update]  
-  before_filter :prep_preview, only: [:preview_schedule, :preview_future_schedule, :preview_compliance_date_based_schedule]
+  before_filter :prep_preview, only: [:schedule_preview, :future_schedule_preview, :compliance_date_based_schedule_preview]
   before_filter :generate_schedule_previews, only: [:show, :edit, :create, :update]
   
   # GET /recurring_driver_compliances
@@ -57,19 +57,22 @@ class RecurringDriverCompliancesController < ApplicationController
     redirect_to recurring_driver_compliances_url, notice: 'Recurring driver compliance was successfully destroyed.'
   end
   
-  # GET /recurring_driver_compliances/preview_schedule
-  def preview_schedule
-    render partial: "schedule_preview", locals: {dates: generate_schedule_preview}
+  # GET /recurring_driver_compliances/schedule_preview
+  def schedule_preview
+    generate_schedule_preview
+    render partial: "schedule_preview"
   end
 
-  # GET /recurring_driver_compliances/preview_future_schedule
-  def preview_future_schedule
-    render partial: "schedule_preview", locals: {dates: generate_future_schedule_preview}
+  # GET /recurring_driver_compliances/future_schedule_preview
+  def future_schedule_preview
+    generate_future_schedule_preview
+    render partial: "future_schedule_preview"
   end
 
-  # GET /recurring_driver_compliances/preview_compliance_date_based_schedule
-  def preview_compliance_date_based_schedule
-    render partial: "schedule_preview", locals: {dates: generate_compliance_date_based_schedule_preview}
+  # GET /recurring_driver_compliances/compliance_date_based_schedule_preview
+  def compliance_date_based_schedule_preview
+    generate_compliance_date_based_schedule_preview
+    render partial: "compliance_date_based_schedule_preview"
   end
   
   # PUT /recurring_driver_compliances/generate
@@ -100,17 +103,17 @@ class RecurringDriverCompliancesController < ApplicationController
   end
   
   def generate_schedule_preview
-    if @recurring_driver_compliance.compliance_date_based_scheduling?
+    @schedule_preview = if @recurring_driver_compliance.compliance_date_based_scheduling?
       # Return the first start date
-      @occurrence_dates = [@recurring_driver_compliance.start_date]
+      [@recurring_driver_compliance.start_date]
     else
       # Return the first 6 occurrences, beginning with the start date
-      @occurrence_dates = RecurringDriverCompliance.occurrence_dates_on_schedule_in_range @recurring_driver_compliance, range_start_date: Date.current, range_end_date: (@recurring_driver_compliance.start_date + (@recurring_driver_compliance.recurrence_frequency * 5).send(@recurring_driver_compliance.recurrence_schedule))
+      RecurringDriverCompliance.occurrence_dates_on_schedule_in_range @recurring_driver_compliance, range_start_date: Date.current, range_end_date: (@recurring_driver_compliance.start_date + (@recurring_driver_compliance.recurrence_frequency * 5).send(@recurring_driver_compliance.recurrence_schedule))
     end.collect{ |date| date.to_s(:long) }
   end
   
   def generate_future_schedule_preview
-    if @recurring_driver_compliance.compliance_date_based_scheduling?
+    @future_schedule_preview = if @recurring_driver_compliance.compliance_date_based_scheduling?
       # Return the adjusted start date, as of the day after the start date
       [RecurringDriverCompliance.adjusted_start_date(@recurring_driver_compliance, as_of: @recurring_driver_compliance.start_date.tomorrow)]
     else
@@ -123,7 +126,7 @@ class RecurringDriverCompliancesController < ApplicationController
   def generate_compliance_date_based_schedule_preview
     # Return the next occurance date, as of the day after the start date
     assumed_completion_date = @recurring_driver_compliance.start_date + 1.day
-    [RecurringDriverCompliance.next_occurrence_date_from_previous_date_in_range(@recurring_driver_compliance, assumed_completion_date, range_end_date: (assumed_completion_date + @recurring_driver_compliance.recurrence_frequency.send(@recurring_driver_compliance.recurrence_schedule)))].collect{ |date| date.to_s(:long) }
+    @compliance_date_based_schedule_preview = [RecurringDriverCompliance.next_occurrence_date_from_previous_date_in_range(@recurring_driver_compliance, assumed_completion_date, range_end_date: (assumed_completion_date + @recurring_driver_compliance.recurrence_frequency.send(@recurring_driver_compliance.recurrence_schedule)))].collect{ |date| date.to_s(:long) }
   end
   
   def prep_form
@@ -136,9 +139,9 @@ class RecurringDriverCompliancesController < ApplicationController
   
   def generate_schedule_previews
     if @recurring_driver_compliance.persisted? or @recurring_driver_compliance.valid?
-      @schedule_preview = generate_schedule_preview
-      @future_schedule_preview = generate_future_schedule_preview
-      @compliance_date_based_schedule_preview = generate_compliance_date_based_schedule_preview if @recurring_driver_compliance.compliance_date_based_scheduling?
+      generate_schedule_preview
+      generate_future_schedule_preview
+      generate_compliance_date_based_schedule_preview if @recurring_driver_compliance.compliance_date_based_scheduling?
     end
   end
 end
