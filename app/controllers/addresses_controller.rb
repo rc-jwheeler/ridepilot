@@ -197,8 +197,6 @@ class AddressesController < ApplicationController
             # Upload the file
             s3_file.put(body: address_file, acl: 'public-read')
 
-            current_provider.address_upload_flag.uploading!
-            #Address.load_addresses(address_file.path, current_provider)
             AddressUploadWorker.perform_async(s3_file.public_url, current_provider.id) #sidekiq needs to run
           rescue Exception => ex
             current_provider.address_upload_flag.uploaded!
