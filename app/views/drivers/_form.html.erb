@@ -60,9 +60,6 @@
                 <tr class="<%= (!hours.nil? and hours.errors.any?) ? "row_with_errors" : "" %>">
                   <td class="col-md-2">
                     <p class="form-control-static"><strong><%= day_name %></strong></p>
-                    <% if hours.try(:errors).try(:any?) %>
-                      <p class="text-danger"><%= msg %></p>
-                    <% end %>
                   </td>
                   <% if @readonly %>
                     <td class="col-md-10">
@@ -73,8 +70,8 @@
                           <%= translate_helper("operating_hours_24_hours") %>
                         <% else %>
                           <%= translate_helper("operating_hours_open") %>
-                          <%= hours.start_time.to_formatted_s(:time) %>
-                          - <%= hours.end_time.to_formatted_s(:time) %>
+                          <%= hours.start_time.strftime("%l:%M%P") %>
+                          - <%= hours.end_time.strftime("%l:%M%P") %>
                         <% end %>
                       </p>
                     </td>
@@ -105,8 +102,8 @@
                           <%= label_tag "start-hour-#{day_value}", "From", style: "font-weight: normal" %>
                           <select id="start-hour-<%= day_value %>" name="start_hour[<%= day_value %>]" class="form-control" <%= @readonly ? "readonly" : "" %>>
                             <% @start_hours.each do |hour| %>
-                              <option value="<%= hour %>" <%= !hours.nil? and hour.to_s(:time_utc) == hours.start_time.try(:to_s, :time_utc) ? "selected" : "" %>>
-                                <%= hour.strftime("%l:%M%P") %>
+                              <option value="<%= hour %>" <%= !hours.nil? and hour == hours.start_time.try(:to_s, :time_utc) ? "selected" : "" %>>
+                                <%= Time.zone.parse(hour).strftime("%l:%M%P") %>
                               </option>
                             <% end %>
                           </select>
@@ -117,13 +114,16 @@
                           <%= label_tag "end-hour-#{day_value}", "To", style: "font-weight: normal" %>
                           <select id="end-hour-<%= day_value %>" name="end_hour[<%= day_value %>]" class="form-control" <%= @readonly ? "readonly" : "" %>>
                             <% @end_hours.each do |hour| %>
-                              <option value="<%= hour %>" <%= !hours.nil? and hour.to_s(:time_utc) == hours.end_time.try(:to_s, :time_utc) ? "selected" : "" %>>
-                                <%= hour.strftime("%l:%M%P") %>
+                              <option value="<%= hour %>" <%= !hours.nil? and hour == hours.end_time.try(:to_s, :time_utc) ? "selected" : "" %>>
+                                <%= Time.zone.parse(hour).strftime("%l:%M%P") %>
                               </option>
                             <% end %>
                           </select>
                         </div>
                       </div>
+                      <% if hours.try(:errors).try(:any?) %>
+                        <p class="text-danger"><%= hours.errors.full_messages.to_sentence %></p>
+                      <% end %>
                     </td>
                   <% end %>
                 </tr>
