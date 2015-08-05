@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150803224056) do
+ActiveRecord::Schema.define(version: 20150804200701) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -178,6 +178,18 @@ ActiveRecord::Schema.define(version: 20150803224056) do
 
   add_index "drivers", ["provider_id"], :name => "index_drivers_on_provider_id"
   add_index "drivers", ["user_id"], :name => "index_drivers_on_user_id"
+
+  create_table "field_configs", force: true do |t|
+    t.integer  "provider_id",                 null: false
+    t.string   "table_name",                  null: false
+    t.string   "field_name",                  null: false
+    t.boolean  "visible",     default: true
+    t.boolean  "required",    default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "field_configs", ["provider_id"], :name => "index_field_configs_on_provider_id"
 
   create_table "funding_source_visibilities", force: true do |t|
     t.integer "funding_source_id"

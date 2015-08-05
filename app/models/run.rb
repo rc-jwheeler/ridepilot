@@ -1,4 +1,6 @@
 class Run < ActiveRecord::Base
+  include RequiredFieldValidatorModule
+  
   belongs_to :provider
   belongs_to :driver
   belongs_to :vehicle

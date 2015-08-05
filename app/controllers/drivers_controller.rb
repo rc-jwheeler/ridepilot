@@ -19,33 +19,42 @@ class DriversController < ApplicationController
   end
 
   def update
-    begin      
-      Driver.transaction do
-        @driver.update_attributes!(driver_params)
-        create_or_update_hours!
-      end
-      redirect_to @driver, notice: 'Driver was successfully updated.'
-    rescue ActiveRecord::RecordInvalid => e
-      Rails.logger.debug e.message
+    if !@driver.is_all_valid?(current_provider_id)
       prep_edit
       render action: :edit
+    else
+      begin      
+        Driver.transaction do
+          @driver.update_attributes!(driver_params)
+          create_or_update_hours!
+        end
+        redirect_to @driver, notice: 'Driver was successfully updated.'
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.debug e.message
+        prep_edit
+        render action: :edit
+      end
     end
   end
 
   def create
     @driver.provider = current_provider
-    
-    begin
-      Driver.transaction do
-        @driver.save!
-        create_or_update_hours!
-      end
-      flash.now[:notice] = "Driver created"
-      redirect_to @driver, notice: 'Driver was successfully created.'
-    rescue ActiveRecord::RecordInvalid => e
-      Rails.logger.debug e.message
+    if !@driver.is_all_valid?(current_provider_id)
       prep_edit
       render action: :new
+    else
+      begin
+        Driver.transaction do
+          @driver.save!
+          create_or_update_hours!
+        end
+        flash.now[:notice] = "Driver created"
+        redirect_to @driver, notice: 'Driver was successfully created.'
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.debug e.message
+        prep_edit
+        render action: :new
+      end
     end
   end
 
