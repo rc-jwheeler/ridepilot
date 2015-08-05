@@ -1,5 +1,5 @@
 class OperatingHours < ActiveRecord::Base
-  belongs_to :driver
+  belongs_to :driver, inverse_of: :operating_hours
 
   validates_presence_of :day_of_week, :driver
   validate :enforce_hour_sanity

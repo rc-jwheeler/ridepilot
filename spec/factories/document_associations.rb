@@ -1,16 +1,16 @@
 FactoryGirl.define do
   factory :document_association do
     transient do
-      force_valid_owners true
+      allow_invalid_owners false
     end
   
     document
     association :associable, factory: :driver_compliance
 
     after(:build) do |da, evaluator|
-      if evaluator.force_valid_owners and da.document.present? and da.associable.present?
-        # Document and associable must have the same owner
-        da.associable.driver = da.document.documentable
+      # Document and associable must have the same owner
+      if !evaluator.allow_invalid_owners and da.document.present? and da.associable.present? and da.associable.associable_owner != da.document.documentable
+        da.associable.associable_owner = da.document.documentable
       end
     end
   end

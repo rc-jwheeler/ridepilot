@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe DriverHistory, type: :model do
+  it_behaves_like "an associable for a document" do
+    before do
+      @owner = create :driver
+    end
+  end
+  
   it "requires a driver" do
     history = build :driver_history, driver: nil
     expect(history.valid?).to be_falsey

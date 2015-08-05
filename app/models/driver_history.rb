@@ -1,4 +1,6 @@
 class DriverHistory < ActiveRecord::Base
+  include DocumentAssociable
+  
   belongs_to :driver, inverse_of: :driver_histories
 
   validates_presence_of :driver, :event

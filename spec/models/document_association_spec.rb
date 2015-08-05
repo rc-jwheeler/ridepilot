@@ -16,7 +16,7 @@ RSpec.describe DocumentAssociation, type: :model do
   it "requires that the document and associable share the same parent object" do
     document = create :document
     associable = create :driver_compliance
-    association = build :document_association, document: document, associable: associable, force_valid_owners: false
+    association = build :document_association, document: document, associable: associable, allow_invalid_owners: true
     expect(association.valid?).to be_falsey
     expect(association.errors.keys).to include :base
     

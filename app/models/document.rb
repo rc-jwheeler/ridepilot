@@ -1,10 +1,11 @@
 class Document < ActiveRecord::Base
-  belongs_to :documentable, polymorphic: true
+  belongs_to :documentable, polymorphic: true, inverse_of: :documents
+  has_many :document_associations, inverse_of: :document, dependent: :destroy
   
   has_attached_file :document
 
   validates :description, presence: true
-  validates :documentable, presence: true, associated: true  
+  validates :documentable, presence: true, associated: true
   validates_attachment :document, presence: true,
     content_type: { :content_type => [
       "image/jpeg", "image/gif", "image/png", # image files (.png, .gif, .jpg)

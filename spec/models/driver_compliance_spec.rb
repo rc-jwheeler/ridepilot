@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe DriverCompliance, type: :model do
+  it_behaves_like "an associable for a document" do
+    before do
+      @owner = create :driver
+    end
+  end
+  
   it "requires a driver" do
     compliance = build :driver_compliance, driver: nil
     expect(compliance.valid?).to be_falsey
