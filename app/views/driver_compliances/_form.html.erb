@@ -1,5 +1,5 @@
 <% remote ||= false %>
-<%= form_for [@driver, @driver_compliance], remote: remote do |f| %>
+<%= nested_form_for [@driver, @driver_compliance], remote: remote do |f| %>
   <% if @driver_compliance.errors.any? %>
     <div class="panel panel-danger">
       <div class="panel-heading"><%= translate_helper("driver_compliance_form_error", count: @driver_compliance.errors.count) %></div>
@@ -56,6 +56,26 @@
             </div>
           </div>
         </div><!-- END .panel-body -->
+      </div><!-- END .panel -->
+      
+      <div class="panel panel-primary">
+        <div class="panel-heading"><%= label_tag translate_helper("document_associations_documents_heading") %></div>
+        <table class="table table-striped" id="document-associations">
+          <thead>
+            <tr>
+              <th width="96%"><%= translate_helper("document_associations_form_document_label") %></th>
+              <th width="4%"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= f.fields_for :document_associations, :wrapper => false %>
+          </tbody>
+        </table>
+        <div class="panel-footer">
+          <div class="clearfix">
+            <%= f.link_to_add translate_helper("document_associations_form_add_link_title"), :document_associations, data: { target: "#document-associations" }, class: "btn action-button pull-right" %>
+          </div>
+        </div>
       </div><!-- END .panel -->
     </div><!-- END .col-md-6 -->
   </div><!-- END .row -->

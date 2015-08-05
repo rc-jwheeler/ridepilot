@@ -2,14 +2,10 @@ class DocumentAssociation < ActiveRecord::Base
   belongs_to :document, inverse_of: :document_associations
   belongs_to :associable, polymorphic: true, inverse_of: :document_associations
   
-  validates :document, presence: true, associated: true
+  validates :document, presence: true, associated: true, uniqueness: {scope: [:associable_type, :associable_id]}
   validates :associable, presence: true
   validate  :ensure_same_owner
 
-  def to_s
-    associable.to_s
-  end
-  
   private
   
   def ensure_same_owner

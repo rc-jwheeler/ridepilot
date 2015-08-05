@@ -48,8 +48,13 @@
           <% end %>
         </div><!-- END .panel-body -->
       </div><!-- END .panel -->
-    </div><!-- END .col-md-6 -->
+
+      <div class="panel panel-primary">
+        <div class="panel-heading"><%= translate_helper("document_associations_associables_heading") %></div>
+        <%= render partial: "document_associations/document_association_for_document", locals: {document_associations: @document.document_associations} %>
+      </div><!-- END .panel -->
+    </div><!-- END .col-md-12 -->
   </div><!-- END .row -->
-  
+
   <div class="row form-actions"><%= f.submit translate_helper("document_form_submit"), class: "btn action-button" %></div>
 <% end %>

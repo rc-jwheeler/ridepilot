@@ -27,9 +27,7 @@ RSpec.shared_examples "an associable for a document" do
     end
 
     it "accepts nested document associations" do
-      @example.document_associations_attributes = 3.times.collect { 
-        attributes_for(:document_association, document_id: create(:document, documentable: @owner).id, associable: nil)
-      }
+      @example.document_associations_attributes = 3.times.collect { [document_id: create(:document, documentable: @owner).id] }
       expect {
         @example.save
       }.to change(DocumentAssociation, :count).by(3)
@@ -45,8 +43,8 @@ RSpec.shared_examples "an associable for a document" do
       }.to change(DocumentAssociation, :count).by(-3)
     end
     
-    it "rejects new document associations with blank attributes" do
-      @example.document_associations_attributes = [ attributes_for(:document_association, document: nil, associable: nil) ]
+    it "rejects new document associations with a blank document id" do
+      @example.document_associations_attributes = [[ document_id: nil ]]
       expect {
         @example.save
       }.not_to change(DocumentAssociation, :count)
