@@ -1,4 +1,6 @@
 class Trip < ActiveRecord::Base
+  include RequiredFieldValidatorModule
+
   attr_accessor :driver_id, :vehicle_id, :via_repeating_trip
 
   belongs_to :provider

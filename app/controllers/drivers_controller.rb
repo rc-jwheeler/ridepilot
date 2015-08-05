@@ -19,6 +19,11 @@ class DriversController < ApplicationController
   end
 
   def update
+    if !@driver.is_all_valid?(current_provider_id)
+      prep_edit
+      render action: :edit
+    end
+
     begin      
       Driver.transaction do
         @driver.update_attributes!(driver_params)
@@ -34,7 +39,11 @@ class DriversController < ApplicationController
 
   def create
     @driver.provider = current_provider
-    
+    if !@driver.is_all_valid?(current_provider_id)
+      prep_edit
+      render action: :new
+    end
+
     begin
       Driver.transaction do
         @driver.save!

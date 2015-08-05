@@ -1,4 +1,6 @@
 class Driver < ActiveRecord::Base
+  include RequiredFieldValidatorModule
+
   has_paper_trail
   
   belongs_to :provider
