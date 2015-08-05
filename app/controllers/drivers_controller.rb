@@ -22,18 +22,18 @@ class DriversController < ApplicationController
     if !@driver.is_all_valid?(current_provider_id)
       prep_edit
       render action: :edit
-    end
-
-    begin      
-      Driver.transaction do
-        @driver.update_attributes!(driver_params)
-        create_or_update_hours!
+    else
+      begin      
+        Driver.transaction do
+          @driver.update_attributes!(driver_params)
+          create_or_update_hours!
+        end
+        redirect_to @driver, notice: 'Driver was successfully updated.'
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.debug e.message
+        prep_edit
+        render action: :edit
       end
-      redirect_to @driver, notice: 'Driver was successfully updated.'
-    rescue ActiveRecord::RecordInvalid => e
-      Rails.logger.debug e.message
-      prep_edit
-      render action: :edit
     end
   end
 
@@ -42,19 +42,19 @@ class DriversController < ApplicationController
     if !@driver.is_all_valid?(current_provider_id)
       prep_edit
       render action: :new
-    end
-
-    begin
-      Driver.transaction do
-        @driver.save!
-        create_or_update_hours!
+    else
+      begin
+        Driver.transaction do
+          @driver.save!
+          create_or_update_hours!
+        end
+        flash.now[:notice] = "Driver created"
+        redirect_to @driver, notice: 'Driver was successfully created.'
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.debug e.message
+        prep_edit
+        render action: :new
       end
-      flash.now[:notice] = "Driver created"
-      redirect_to @driver, notice: 'Driver was successfully created.'
-    rescue ActiveRecord::RecordInvalid => e
-      Rails.logger.debug e.message
-      prep_edit
-      render action: :new
     end
   end
 
