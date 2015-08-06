@@ -1,13 +1,7 @@
-Ridepilot
+Ridepilot Verson 2
 ================
 
-RidePilot is a paratransit trip scheduling application. 
-
-RidePilot is originally a project of Ride Connection, a Portland-area community
-transportation provider.  It is primarily written by hackers at
-OpenPlans.
-
-#More to add
+The purpose of this project is to implement a Computer Aided Scheduling and Dispatch (CASD) software system to meet the needs of small scale human service transportation agencies. RidePilot, an open source, web-based scheduling, reporting, and dispatch application developed by Ride Connection in Portland Oregon, was identified to fill this need. Utah Transit Authority is participating in a joint software development project ([Ridepilot Version 2](https://ridepilot.camsys-apps.com)) to build upon RidePilot’s current functionality ([Ridepilot Version 1](https://github.com/rideconnection/ridepilot)) and expand it to meet the needs of human service agencies in the Wasatch Front region. 
 
 Status
 -------------
@@ -15,7 +9,9 @@ work in progress
 
 - development: check [develop](https://github.com/camsys/ridepilot/tree/develop)
 
-- latest stable: check [master](https://github.com/camsys/ridepilot/)
+- latest stable: check [master](https://github.com/camsys/ridepilot/tree/master)
+
+- Ridepilot Version 1 branch: check [ridepilot\_v1](https://github.com/camsys/ridepilot/tree/ridepilot_v1)
 
 Dependencies
 -------------
@@ -70,4 +66,4 @@ Set up development environment
 
 License
 -------
-  TODO
+  Dual-licensed under the [MIT](http://opensource.org/licenses/MIT]) and [GPL v3](https://www.gnu.org/licenses/gpl-3.0.txt) licenses.
