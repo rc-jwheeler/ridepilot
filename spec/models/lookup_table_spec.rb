@@ -36,7 +36,7 @@ RSpec.describe LookupTable, type: :model do
       sample_purpose = create(:trip_purpose, name: 'Sample Purpose')
       table = create(:lookup_table)
 
-      expect(table.find('Sample Purpose')).to eq(sample_purpose)
+      expect(table.find_by_value('Sample Purpose')).to eq(sample_purpose)
     end
   end
 
@@ -63,14 +63,14 @@ RSpec.describe LookupTable, type: :model do
     context "edit value" do
       it "edits value with edit_value_allowed permission" do 
         table = create(:lookup_table)
-        create(:trip_purpose, name: 'Sample Purpose')
-        table.update_value('Sample Purpose', 'New Purpose')
+        purpose = create(:trip_purpose, name: 'Sample Purpose')
+        table.update_value(purpose.id, 'New Purpose')
         expect(TripPurpose.first).to eq(TripPurpose.find_by_name('New Purpose'))
       end
       it "cannot edit value without edit_value_allowed permission" do 
         table = create(:lookup_table, edit_value_allowed: false)
-        create(:trip_purpose, name: 'Sample Purpose')
-        table.update_value('Sample Purpose', 'New Purpose')
+        purpose= create(:trip_purpose, name: 'Sample Purpose')
+        table.update_value(purpose.id, 'New Purpose')
         expect(TripPurpose.first).to eq(TripPurpose.find_by_name('Sample Purpose'))
       end
     end
@@ -78,14 +78,14 @@ RSpec.describe LookupTable, type: :model do
     context "delete value" do
       it "delets value with delete_value_allowed permission" do 
         table = create(:lookup_table)
-        create(:trip_purpose, name: 'Sample Purpose')
-        table.destroy_value('Sample Purpose')
+        purpose = create(:trip_purpose, name: 'Sample Purpose')
+        table.destroy_value(purpose.id)
         expect(TripPurpose.first).to eq(nil)
       end 
       it "cannot delete value without add_value_allowed permission" do
         table = create(:lookup_table, delete_value_allowed: false)
-        create(:trip_purpose, name: 'Sample Purpose')
-        table.destroy_value('Sample Purpose')
+        purpose= create(:trip_purpose, name: 'Sample Purpose')
+        table.destroy_value(purpose.id)
         expect(TripPurpose.first).to eq(TripPurpose.find_by_name('Sample Purpose'))
       end
     end

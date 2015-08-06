@@ -43,7 +43,7 @@ RSpec.describe LookupTablesController, type: :controller do
       post :add_value, id: @table, value: 'New Purpose'
     end
     it "assigns the added value to @item" do 
-      expect(assigns(:item)).to eq(@table.find('New Purpose'))
+      expect(assigns(:item)).to eq(@table.find_by_value('New Purpose'))
     end
 
     it "redirects to @table" do 
@@ -58,7 +58,7 @@ RSpec.describe LookupTablesController, type: :controller do
       put :update_value, id: @table, old_value: existing_purpose.name, value: 'New Purpose'
     end
     it "assigns the updated value to @item" do 
-      expect(assigns(:item)).to eq(@table.find('New Purpose'))
+      expect(assigns(:item)).to eq(@table.find_by_value('New Purpose'))
     end
 
     it "redirects to @table" do 

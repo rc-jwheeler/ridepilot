@@ -23,7 +23,7 @@
       var form = $(this).find('form');
       var baseUrl = "#{destroy_value_lookup_table_path(table)}";
       var currentValue = $('#lookupTable').DataTable().row($('#lookupTable .selected')).data();
-      var newUrl = baseUrl + "?value=" + currentValue;
+      var newUrl = baseUrl + "?model_id=" + $('#lookupTable .selected').data('model-id');
       form.prop('action', newUrl);
       form.find('.modal-body').html(confirm_delete_message.replace('%{value}', currentValue));
     });
