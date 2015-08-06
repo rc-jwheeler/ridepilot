@@ -18,12 +18,16 @@ RSpec.describe "DriverDocuments" do
         visit driver_path(id: @driver.to_param)
       end
       
-      it "shows the description of the document" do
+      it "shows the uploaded date of the document" do
         expect(page).to have_text @document.document_updated_at.to_s(:long)
       end
       
+      it "shows the description of the document" do
+        expect(page).to have_text @document.description
+      end
+      
       it "shows a direct link to the uploaded file" do
-        expect(page).to have_link @document.description, href: @document.document.url
+        expect(page).to have_link "Download", href: @document.document.url
       end
     end
 

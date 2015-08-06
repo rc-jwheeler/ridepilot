@@ -68,7 +68,9 @@
             </tr>
           </thead>
           <tbody>
-            <%= f.fields_for :document_associations, :wrapper => false %>
+            <%= f.fields_for :document_associations, :wrapper => false do |f| %>
+              <%= render partial: "document_associations/document_association_fields_for_associable", locals: {f: f, documents: @driver_compliance.driver.documents} %>
+            <% end %>
           </tbody>
         </table>
         <div class="panel-footer">
@@ -77,7 +79,7 @@
           </div>
         </div>
       </div><!-- END .panel -->
-    </div><!-- END .col-md-6 -->
+    </div><!-- END .col-md-12 -->
   </div><!-- END .row -->
   
   <div class="row form-actions"><%= f.submit translate_helper("driver_compliance_form_submit"), class: "btn action-button" %></div>

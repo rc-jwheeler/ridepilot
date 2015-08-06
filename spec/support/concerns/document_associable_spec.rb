@@ -22,12 +22,12 @@ RSpec.shared_examples "an associable for a document" do
     it "destroys associated document associations when it is destroyed" do
       3.times { create :document_association, document: create(:document, documentable: @owner), associable: @example }
       expect {
-        @example.destroy
+        @example.reload.destroy
       }.to change(DocumentAssociation, :count).by(-3)
     end
 
     it "accepts nested document associations" do
-      @example.document_associations_attributes = 3.times.collect { [document_id: create(:document, documentable: @owner).id] }
+      @example.document_associations_attributes = 3.times.collect { {document_id: create(:document, documentable: @owner).id} }
       expect {
         @example.save
       }.to change(DocumentAssociation, :count).by(3)
@@ -37,14 +37,26 @@ RSpec.shared_examples "an associable for a document" do
       3.times { create :document_association, document: create(:document, documentable: @owner), associable: @example }
       expect(@example.document_associations.count).to eql 3
       
-      @example.document_associations_attributes = @example.document_associations.collect { |association| association.attributes.merge({:_destroy => "1"}) }
+      @example.document_associations_attributes = @example.document_associations(true).collect { |association| association.attributes.merge({:_destroy => "1"}) }
       expect {
         @example.save
       }.to change(DocumentAssociation, :count).by(-3)
     end
     
     it "rejects new document associations with a blank document id" do
-      @example.document_associations_attributes = [[ document_id: nil ]]
+      @example.document_associations_attributes = [ { document_id: nil } ]
+      expect {
+        @example.save
+      }.not_to change(DocumentAssociation, :count)
+    end
+    
+    # Normally, validates_uniqueness_of with :scope only works on already 
+    # persisted records. With accepts_nested_attributes_for, we could be adding
+    # many new records at once, so we want to ensure that they are unique even
+    # before they are saved
+    it "does not allow duplicate nested document associations" do
+      document = create :document, documentable: @owner
+      @example.document_associations_attributes = 2.times.collect { {document_id: document.id} }
       expect {
         @example.save
       }.not_to change(DocumentAssociation, :count)

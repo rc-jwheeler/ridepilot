@@ -48,6 +48,6 @@ class DriverHistoriesController < ApplicationController
   private
 
   def driver_history_params
-    params.require(:driver_history).permit(:event, :notes, :event_date)
+    params.require(:driver_history).permit(:event, :notes, :event_date, document_associations_attributes: [:id, :document_id, :_destroy])
   end
 end

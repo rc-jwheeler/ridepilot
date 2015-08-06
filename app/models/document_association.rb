@@ -2,7 +2,8 @@ class DocumentAssociation < ActiveRecord::Base
   belongs_to :document, inverse_of: :document_associations
   belongs_to :associable, polymorphic: true, inverse_of: :document_associations
   
-  validates :document, presence: true, associated: true, uniqueness: {scope: [:associable_type, :associable_id]}
+  validates :document, presence: true, associated: true
+  validates :document_id, uniqueness: {scope: [:associable_type, :associable_id], message: 'can\'t be associated to the same record more than once.'}
   validates :associable, presence: true
   validate  :ensure_same_owner
 

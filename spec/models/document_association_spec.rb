@@ -32,7 +32,7 @@ RSpec.describe DocumentAssociation, type: :model do
     association = build :document_association, document: document, associable: associable_1
     
     expect(association.valid?).to be_falsey
-    expect(association.errors.keys).to include :document
+    expect(association.errors.keys).to include :document_id
     
     association.associable = associable_2
     expect(association.valid?).to be_truthy

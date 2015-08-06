@@ -15,13 +15,13 @@
     <% document_associations.each do |document_association| %>
       <tr>
         <td>
-          <%= document_association.class.name.humanize.capitalize %>
+          <%= document_association.associable.associable_date.to_s(:long) %>
         </td>
         <td>
-          <%= document_association.associable.date.to_s(:long) %>
+          <%= document_association.associable.associable_name %>
         </td>
         <td>
-          <%= document_association.associable.name %>
+          <%= document_association.associable.class.name.underscore.humanize.capitalize %>
         </td>
       </tr>
     <% end %>
