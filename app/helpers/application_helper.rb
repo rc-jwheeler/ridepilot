@@ -1,11 +1,15 @@
 module ApplicationHelper
   
+  def current_provider
+    current_user.try(:current_provider)
+  end
+
   def show_dispatch?
-    current_user && current_user.current_provider && current_user.current_provider.dispatch?
+    current_user && current_provider && current_provider.dispatch?
   end
   
   def show_scheduling?
-    current_user && current_user.current_provider.scheduling?
+    current_user && current_provider.scheduling?
   end
 
   def can_edit_role?(role)

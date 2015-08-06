@@ -10,8 +10,8 @@
     %th
       = table.value_column_name.titleize
   %tbody
-    - table.values.each do |item|
-      %tr
+    - table.values(current_provider.try(:id)).each do |item|
+      %tr{data: {"model-id": item.id}}
         %td
           = item[table.value_column_name]
 

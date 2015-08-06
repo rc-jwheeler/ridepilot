@@ -191,6 +191,18 @@ ActiveRecord::Schema.define(version: 20150806152735) do
   add_index "drivers", ["provider_id"], :name => "index_drivers_on_provider_id"
   add_index "drivers", ["user_id"], :name => "index_drivers_on_user_id"
 
+  create_table "field_configs", force: true do |t|
+    t.integer  "provider_id",                 null: false
+    t.string   "table_name",                  null: false
+    t.string   "field_name",                  null: false
+    t.boolean  "visible",     default: true
+    t.boolean  "required",    default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "field_configs", ["provider_id"], :name => "index_field_configs_on_provider_id"
+
   create_table "funding_source_visibilities", force: true do |t|
     t.integer "funding_source_id"
     t.integer "provider_id"
@@ -218,6 +230,8 @@ ActiveRecord::Schema.define(version: 20150806152735) do
     t.boolean  "add_value_allowed",    default: true
     t.boolean  "edit_value_allowed",   default: true
     t.boolean  "delete_value_allowed", default: true
+    t.boolean  "is_provider_specific", default: false
+    t.string   "model_name"
   end
 
   create_table "mobilities", force: true do |t|
