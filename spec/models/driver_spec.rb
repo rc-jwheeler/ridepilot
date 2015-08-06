@@ -98,7 +98,7 @@ RSpec.describe Driver, type: :model do
     end
     
     it "can check against irregular hours" do
-      hours = create :operating_hours, driver: @driver, day_of_week: @day_of_week, start_time: "12:00", end_time: "02:00"
+      hours = create :operating_hours, driver: @driver, day_of_week: @day_of_week, start_time: "12:00", end_time: "00:30"
       expect(@driver.available?(@day_of_week, @time_of_day)).to be_truthy
       
       hours.update_attributes start_time: "16:00"

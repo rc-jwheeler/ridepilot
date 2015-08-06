@@ -9,7 +9,7 @@ FactoryGirl.define do
     document_file_size { 1024 }
     document_updated_at { Time.current }
     
-    association :documentable, :factory => :driver
+    association :documentable, factory: :driver
     
     trait :no_attachment do
       document_file_name nil

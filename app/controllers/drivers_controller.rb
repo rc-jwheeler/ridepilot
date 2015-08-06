@@ -72,28 +72,9 @@ class DriversController < ApplicationController
     @available_users << @driver.user if @driver.user
     
     @hours = @driver.hours_hash
-    @start_hours = []
-    @end_hours = []
-    interval = 30.minutes
-    
-    # We only need the time as a string, but we'll use some temporary Time
-    # objects to help us do some simple time math. The dates returned are
-    # irrelevant
-    t1 = OperatingHours::START_OF_DAY
-    t2 = Time.zone.parse('00:00:00')
-    t  = Time.zone.parse(t1)
-    
-    while t.to_s(:time_utc) != t2.to_s(:time_utc) do
-      @start_hours << t
-      t += interval
-    end
-    
-    t = Time.parse(t1) + interval
-    while true do
-      @end_hours << t
-      break if t.to_s(:time_utc) == OperatingHours::END_OF_DAY
-      t += interval
-    end
+
+    @start_hours = OperatingHours.available_start_times
+    @end_hours = OperatingHours.available_end_times
   end
   
   def driver_params

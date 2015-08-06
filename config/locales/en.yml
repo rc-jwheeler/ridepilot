@@ -308,6 +308,20 @@ en:
   document_form_upload_date: "Uploaded At"
   document_form_file_name_currently: "Current file:"
   document_form_submit: "Save"
+  document_download: "Download"
+  
+  # Document Associations
+  document_associations_documents_heading: "Associated Documents"
+  document_associations_document_date_heading: "Uploaded At"
+  document_associations_document_description_heading: "Description"
+  document_associations_form_document_label: "Document"
+  document_associations_form_add_link_title: "Add associated document"
+  document_associations_documents_empty: "There are no associated documents"
+  document_associations_associables_heading: "Associated Events"
+  document_associations_associable_date_heading: "Date"
+  document_associations_associable_name_heading: "Name"
+  document_associations_associable_type_heading: "Type"
+  document_associations_associables_empty: "There are no associated events"
 
   # Funding sources
   funding_source_form_name: "Name"

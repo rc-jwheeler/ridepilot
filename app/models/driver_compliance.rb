@@ -1,4 +1,6 @@
 class DriverCompliance < ActiveRecord::Base
+  include DocumentAssociable
+  
   before_destroy :prevent_destroy_on_recurring_events
   
   belongs_to :driver, inverse_of: :driver_compliances

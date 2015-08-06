@@ -20,14 +20,14 @@ RSpec.describe Document, type: :model do
   end
 
   it "requires a document to be attached" do
-    document = build :document, document_file_name: nil, document_content_type: nil, document_file_size: nil
+    document = build :document, :no_attachment
     expect(document.valid?).to be_falsey
     expect(document.errors.keys).to include :document
 
     document.document_file_name = 'test.pdf'
     document.document_content_type = 'application/pdf'
     document.document_file_size = 1024
-    expect(document.valid?).to be_truthy    
+    expect(document.valid?).to be_truthy
   end
   
   describe "attached documents" do
@@ -89,6 +89,21 @@ RSpec.describe Document, type: :model do
 
       document.document_file_size = 2.gigabytes
       expect(document.valid?).to be_truthy
+    end
+  end
+  
+  describe "document associations" do
+    it "has many document associations" do
+      expect(Document.reflect_on_association(:document_associations).macro).to  eq :has_many       
+    end
+    
+    it "destroys associated document associations when it is destroyed" do
+      document = create :document
+      create :document_association, document: document
+      create :document_association, document: document
+      expect {
+        document.destroy
+      }.to change(DocumentAssociation, :count).by(-2)
     end
   end
 end
