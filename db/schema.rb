@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150804200701) do
+ActiveRecord::Schema.define(version: 20150805210628) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -218,6 +218,8 @@ ActiveRecord::Schema.define(version: 20150804200701) do
     t.boolean  "add_value_allowed",    default: true
     t.boolean  "edit_value_allowed",   default: true
     t.boolean  "delete_value_allowed", default: true
+    t.boolean  "is_provider_specific", default: false
+    t.string   "model_name"
   end
 
   create_table "mobilities", force: true do |t|
