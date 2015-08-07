@@ -47,14 +47,14 @@ Set up development environment
   -- fuzzy matching needed for Tiger
   CREATE EXTENSION fuzzystrmatch;
   ```
-   - `rake db:migrate`
    - `rake translation_engine:install`
+   - `rake db:migrate`
    - `rake db:seed`
 
 4. Testing
     - set up test database if not yet
       - make sure `config/database.yml` has the configurations for __test__ environment
-      - `RAILS_ENV=test rake db:create db:schema:load`
+      - `RAILS_ENV=test rake db:drop db:create db:schema:load`
     - update locales
       - `rake ridepilot:load_locales`
     - `rspec`
