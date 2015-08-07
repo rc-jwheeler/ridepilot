@@ -2,7 +2,7 @@ class VehiclesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    redirect_to provider_path(current_provider)
+    @vehicles = @vehicles.for_provider(current_provider.id)
   end
 
   def show; end
@@ -13,26 +13,24 @@ class VehiclesController < ApplicationController
 
   def update
     if @vehicle.update_attributes(vehicle_params)
-      flash.now[:notice] = "Vehicle updated"
-      redirect_to provider_path(current_provider)
+      redirect_to @vehicle, notice: 'Vehicle was successfully updated.'
     else
-      render :action => :edit
+      render action: :edit
     end 
   end
 
   def create
     @vehicle.provider = current_provider
     if @vehicle.save
-      flash.now[:notice] = "Vehicle created"
-      redirect_to provider_path(current_provider)
+      redirect_to @vehicle, notice: 'Vehicle was successfully created.'
     else
-      render :action => :new
+      render action: :new
     end
   end
 
   def destroy
     @vehicle.destroy
-    redirect_to provider_path(current_provider)
+    redirect_to vehicles_path, notice: 'Vehicle was successfully deleted.'
   end
 
   private
