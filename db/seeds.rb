@@ -13,7 +13,7 @@ ActiveRecord::Base.transaction do
   if !Provider.first.present?
     puts "Creating first Provider UTA..."
     provider = Provider.new(:name => 'UTA', :dispatch => true)
-    provider.logo = File.open(Rails.root.join("public", "uta_logo.png"))
+    #provider.logo = File.open(Rails.root.join("public", "uta_logo.png"))
     provider.save!
   
     puts "Creating first User..."
