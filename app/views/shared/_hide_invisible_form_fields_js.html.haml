@@ -5,5 +5,5 @@
     var fieldNames = #{invisible_field_names || []}
     fieldNames.forEach(function(fieldName) {
       var inputName = prefix + "\\[" + fieldName + "\\]";
-      $("form input[name="  + inputName + "], form select[name="  + inputName + "]").parents('.form-group, li').hide();
+      $("form input[name="  + inputName + "], form textarea[name="  + inputName + "], form select[name="  + inputName + "]").parents('.form-group, li').hide();
     });
