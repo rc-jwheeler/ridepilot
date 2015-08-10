@@ -78,7 +78,7 @@ class DriversController < ApplicationController
   end
   
   def driver_params
-    params.require(:driver).permit(:active, :paid, :name, :user_id)
+    params.require(:driver).permit(:active, :paid, :name, :email, :user_id)
   end
   
   def create_or_update_hours!
