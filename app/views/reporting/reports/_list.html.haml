@@ -6,13 +6,13 @@
     - if report_info[:is_generic]
       - report = Reporting::Report.find(report_info[:id])
       - if is_generic_report && report.id == report_id
-        %option{value: "#{reporting_report_path(report)}", selected: true}
+        %option{value: "#{reporting.report_path(report)}", selected: true}
           = report.name
       - else
-        %option{value: "#{reporting_report_path(report)}"}
+        %option{value: "#{reporting.report_path(report)}"}
           = report.name
     -else
-      - report = Report.find(report_info[:id])
+      - report = CustomReport.find(report_info[:id])
       - if !is_generic_report && report.id == report_id
         %option{value: "#{custom_report_path(report)}", selected: true}
           = report.name

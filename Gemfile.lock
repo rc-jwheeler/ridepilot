@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/camsys/reporting.git
-  revision: 0c0ce32879ef27f3d38dd2f927c3e9ef24d7f7bc
+  revision: 8e2b92a19008f0f9c1c5ba13b3c1606236bae7bc
   branch: master
   specs:
-    reporting (0.0.1)
+    reporting (0.0.2)
       haml-rails
       jquery-rails
       kaminari

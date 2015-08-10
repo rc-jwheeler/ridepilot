@@ -21,7 +21,7 @@ module Reporting::ReportHelper
     }
 
 
-    customized_report_infos = Report.active_per_provider(current_provider_id).map {
+    customized_report_infos = CustomReport.active_per_provider(current_provider_id).map {
       |report|
         {
           id: report.id,

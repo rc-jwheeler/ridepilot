@@ -10,9 +10,9 @@ module Reporting
         first_report = @reports.first
         @is_generic_report = first_report[:is_generic]
         if @is_generic_report
-          redirect_to reporting_report_path Report.find(first_report[:id])
+          redirect_to report_path Report.find(first_report[:id])
         else
-          redirect_to main_app.custom_report_path ::Report.find(first_report[:id])
+          redirect_to main_app.custom_report_path CustomReport.find(first_report[:id])
         end
       end
       
@@ -26,7 +26,7 @@ module Reporting
       @report.data_model.reset_column_information
 
       # find out filter_groups
-      @filter_groups = @report.reporting_specific_filter_groups.order(:sort_order)
+      @filter_groups = @report.specific_filter_groups.order(:sort_order)
     end
 
     private

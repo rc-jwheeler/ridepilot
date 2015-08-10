@@ -9,18 +9,18 @@ module Reporting
       page = params[:page]
       @per_page = params[:per_page] || Kaminari.config.default_per_page
 
-      @report = Reporting::Report.find params[:report_id]
+      @report = Report.find params[:report_id]
       @q = @report.data_model.ransack q_param
       @params = {q: q_param}
 
       # list all output fields
       # if output_fields is empty, then export all columns in this table
-      @fields = @report.reporting_output_fields.blank? ?
+      @fields = @report.output_fields.blank? ?
         @report.data_model.column_names.map{
           |x| {
             name: x 
           }
-        } : @report.reporting_output_fields
+        } : @report.output_fields
 
       # default order by :id
       if !@report.data_model.columns_hash.keys.index("id").nil? 
@@ -59,13 +59,13 @@ module Reporting
       # data access filtering 
       # either filter by provider_id or agency_id
       
-      Reporting::FilterField.includes(:reporting_lookup_table)
-        .where(reporting_filter_group_id: @report.reporting_filter_groups.pluck(:id).uniq).each do |field|
+      Reporting::FilterField.includes(:lookup_table)
+        .where(filter_group_id: @report.filter_groups.pluck(:id).uniq).each do |field|
         
         is_field_available = !@report.data_model.columns_hash.keys.index(field.name).nil? rescue false
         next if !is_field_available
 
-        data_access_type = field.reporting_lookup_table.data_access_type if field.reporting_lookup_table
+        data_access_type = field.lookup_table.data_access_type if field.lookup_table
         unless data_access_type.blank? || @report.data_model.columns_hash.keys.index(field.name).nil?
           
           field_name =  "\"#{field.name}\""

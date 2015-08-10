@@ -53,6 +53,13 @@ ActiveRecord::Schema.define(version: 20150811115350) do
   add_index "addresses", ["the_geom"], :name => "index_addresses_on_the_geom", :spatial => true
   add_index "addresses", ["trip_purpose_id"], :name => "index_addresses_on_trip_purpose_id"
 
+  create_table "custom_reports", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "redirect_to_results", default: false
+  end
+
   create_table "customers", force: true do |t|
     t.string   "first_name"
     t.string   "middle_initial"
@@ -286,14 +293,14 @@ ActiveRecord::Schema.define(version: 20150811115350) do
 
   create_table "provider_reports", force: true do |t|
     t.integer  "provider_id"
-    t.integer  "report_id"
+    t.integer  "custom_report_id"
     t.boolean  "inactive"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "provider_reports", ["custom_report_id"], :name => "index_provider_reports_on_custom_report_id"
   add_index "provider_reports", ["provider_id"], :name => "index_provider_reports_on_provider_id"
-  add_index "provider_reports", ["report_id"], :name => "index_provider_reports_on_report_id"
 
   create_table "providers", force: true do |t|
     t.string   "name"
@@ -438,22 +445,15 @@ ActiveRecord::Schema.define(version: 20150811115350) do
   end
 
   create_table "reporting_specific_filter_groups", force: true do |t|
-    t.integer  "reporting_report_id"
-    t.integer  "reporting_filter_group_id"
-    t.integer  "sort_order",                default: 1, null: false
+    t.integer  "report_id"
+    t.integer  "filter_group_id"
+    t.integer  "sort_order",      default: 1, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "reporting_specific_filter_groups", ["reporting_filter_group_id"], :name => "index_of_filter_group_on_specific_filter_group"
-  add_index "reporting_specific_filter_groups", ["reporting_report_id"], :name => "index_of_report_on_specific_filter_group"
-
-  create_table "reports", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "redirect_to_results", default: false
-  end
+  add_index "reporting_specific_filter_groups", ["filter_group_id"], :name => "index_of_filter_group_on_specific_filter_group"
+  add_index "reporting_specific_filter_groups", ["report_id"], :name => "index_of_report_on_specific_filter_group"
 
   create_table "roles", force: true do |t|
     t.integer "user_id"

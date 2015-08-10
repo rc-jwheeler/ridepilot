@@ -134,12 +134,8 @@ Rails.application.routes.draw do
     get "reports/:action", :controller=>:reports
     get "reports/:action/:id", :controller=>:reports
     # reporting engine
-    namespace :reporting do
-      get '/'  => 'reports#index'
-      resources :reports, only: [:index, :show] do
-        resources :results, only: [:index]
-      end
-    end
+    mount Reporting::Engine, at: "/reporting"
+    
 
     get "test_exception_notification" => "application#test_exception_notification"
 

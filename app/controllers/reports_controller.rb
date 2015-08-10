@@ -89,7 +89,7 @@ class ReportsController < ApplicationController
     drivers = Driver.active.for_provider(current_provider).default_order.accessible_by(current_ability)
     @drivers =  [all] + drivers
     @drivers_with_cab =  [all, cab] + drivers
-    @report = Report.find params[:id]
+    @report = CustomReport.find params[:id]
     
     @reports = all_report_infos # get all report infos (id, name) both generic and customized reports
     
@@ -136,7 +136,7 @@ class ReportsController < ApplicationController
     @provider = current_provider
 
     if !can? :read, @monthly
-      return redirect_to reporting_reports_path
+      return redirect_to reporting.reports_path
     end
 
     #computes number of trips in and out of district by purpose
