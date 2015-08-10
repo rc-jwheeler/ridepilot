@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150806152735) do
+ActiveRecord::Schema.define(version: 20150810231635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -538,8 +538,7 @@ ActiveRecord::Schema.define(version: 20150806152735) do
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
   create_table "vehicle_maintenance_events", force: true do |t|
-    t.integer  "vehicle_id",                                              null: false
-    t.integer  "provider_id",                                             null: false
+    t.integer  "vehicle_id"
     t.boolean  "reimbursable"
     t.date     "service_date"
     t.date     "invoice_date"
@@ -553,7 +552,6 @@ ActiveRecord::Schema.define(version: 20150806152735) do
     t.integer  "lock_version",                                default: 0
   end
 
-  add_index "vehicle_maintenance_events", ["provider_id"], :name => "index_vehicle_maintenance_events_on_provider_id"
   add_index "vehicle_maintenance_events", ["vehicle_id"], :name => "index_vehicle_maintenance_events_on_vehicle_id"
 
   create_table "vehicles", force: true do |t|

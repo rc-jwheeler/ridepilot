@@ -5,9 +5,13 @@ class VehiclesController < ApplicationController
     @vehicles = @vehicles.for_provider(current_provider.id)
   end
 
-  def show; end
+  def show
+    @readonly = true
+  end
 
-  def new; end
+  def new
+    @vehicle.provider = current_provider
+  end
 
   def edit; end
 

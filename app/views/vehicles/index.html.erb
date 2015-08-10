@@ -5,7 +5,7 @@
     <h1><%= translate_helper("index_vehicle_heading") %></h1>
   </div>
   <div class="col-sm-12 col-md-6">
-    <% if can? :manage, @vehicle %>
+    <% if can? :create, Vehicle %>
       <div class="pull-right">
         <%= link_to translate_helper("new_vehicle_link_text"), new_vehicle_path, class: "btn action-button" %>
       </div>
@@ -18,21 +18,20 @@
     <table class="table table-striped table-bordered" id="vehicles-table">
       <thead>
         <tr>
-          <th><%= translate_helper("name") %></th>
-          <th><%= translate_helper("vehicle_year") %></th>
-          <th><%= translate_helper("vehicle_make") %></th>
-          <th><%= translate_helper("vehicle_model") %></th>
-          <th><%= translate_helper("license_plate") %></th>
-          <th><%= translate_helper("vin") %></th>
-          <th><%= translate_helper("vehicle_location") %></th>
-          <th><%= translate_helper("default_driver") %></th>
-          <th></th>
+          <th class="col-sm-4"><%= translate_helper("name") %></th>
+          <th class="col-sm-4"><%= translate_helper("vehicle_year") %></th>
+          <th class="col-sm-4"><%= translate_helper("vehicle_make") %></th>
+          <th class="col-sm-4"><%= translate_helper("vehicle_model") %></th>
+          <th class="col-sm-4"><%= translate_helper("license_plate") %></th>
+          <th class="col-sm-4"><%= translate_helper("vin") %></th>
+          <th class="col-sm-4"><%= translate_helper("vehicle_location") %></th>
+          <th class="col-sm-4"><%= translate_helper("default_driver") %></th>
         </tr>
       </thead>
       <tbody>
         <% if @vehicles.empty? %>
           <tr>
-            <td colspan="4"><%= translate_helper("no_vehicles") %></td>
+            <td colspan="8"><%= translate_helper("no_vehicles") %></td>
           </tr>
         <% end %>
         <%= render partial: 'vehicle', collection: @vehicles %>

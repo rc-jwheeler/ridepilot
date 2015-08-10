@@ -2,9 +2,4 @@
   <h1><%= translate_helper("new_maintenance_heading") %></h1>
 </div>
 
-<%= render :partial=>'form' %>
-
-<% if current_user && can?(:edit, Provider) %>
-<hr />
-<%= link_to translate_helper("back_to_provider"), provider_path(current_user.current_provider), :class=>'action-bttn' %>
-<% end %>
+<%= render partial: "form" %>

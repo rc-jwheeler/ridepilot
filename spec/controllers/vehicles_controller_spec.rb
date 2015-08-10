@@ -31,6 +31,12 @@ RSpec.describe VehiclesController, type: :controller do
       get :show, {:id => vehicle.to_param}
       expect(assigns(:vehicle)).to eq(vehicle)
     end
+
+    it "sets @readonly to true" do
+      vehicle = create(:vehicle, :provider => @current_user.current_provider)
+      get :show, {:id => vehicle.to_param}
+      expect(assigns(:readonly)).to be_truthy
+    end
   end
 
   describe "GET #new" do
