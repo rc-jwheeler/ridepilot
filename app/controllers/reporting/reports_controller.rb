@@ -12,7 +12,7 @@ module Reporting
         if @is_generic_report
           redirect_to reporting_report_path Report.find(first_report[:id])
         else
-          redirect_to main_app.custom_report_path I18n.locale, ::Report.find(first_report[:id])
+          redirect_to main_app.custom_report_path ::Report.find(first_report[:id])
         end
       end
       
