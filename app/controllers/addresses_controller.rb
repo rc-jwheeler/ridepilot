@@ -170,8 +170,7 @@ class AddressesController < ApplicationController
       is_loading: current_provider.address_upload_flag.is_loading 
     }
 
-    status[:summary] = current_provider.address_upload_flag.last_upload_summary || 
-      TranslationEngine.translate_text(:address_file_uploaded) if !status[:is_loading]
+    status[:summary] = TranslationEngine.translate_text(:address_file_uploaded) if !status[:is_loading]
 
     render json: status
   end
