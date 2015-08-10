@@ -29,6 +29,13 @@
     puts 'Finished seeding lookup table configurations'
   end
 
+  desc 'Seed list of supporting custom reports'
+  task :seed_custom_reports => :environment do
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_custom_reports.rb')
+    load(seed_file) if File.exist?(seed_file)
+    puts 'Finished seeding supporting custom reports'
+  end
+
   desc 'Seed some fake data for testing'
   task :seed_test_data => :environment do
 

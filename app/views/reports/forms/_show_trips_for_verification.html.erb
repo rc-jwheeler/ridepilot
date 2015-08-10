@@ -1,0 +1,12 @@
+<h2 class="section-header">Verifications</h2>
+
+<%= form_for @trips_query, :url=>url_for(:action=>:show_trips_for_verification), :html=>{:method=>:get} do |f| %>
+  <fieldset class="select-month">
+    <h3><%= translate_helper("verify_trips") %> </h3>
+    <%= f.date_select  :start_date, :order => [:month,:day,:year] %>
+    <%= translate_helper("through") %>  
+    <%= f.date_select  :before_end_date, :order => [:month,:day,:year] %>
+    <%= f.select       :trip_display, TRIP_VERIFICATION_DISPLAY_OPTIONS %>
+    <%= f.submit translate_helper("show") %>
+  </fieldset>
+<% end %>

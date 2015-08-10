@@ -1,0 +1,8 @@
+<h2 class="section-header">Day's Trips Report</h2>
+
+<%= form_for @driver_query, :url=>url_for(:action=>:daily_trips), :html=>{:method=>:get} do |f| %>
+  <fieldset>
+    <%= f.date_select  :start_date %>
+    <%= f.submit translate_helper("show") %>
+  </fieldset>
+<% end %>

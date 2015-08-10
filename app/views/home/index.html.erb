@@ -6,7 +6,7 @@
   <% if show_scheduling? %><li><%= link_to translate_helper("funding_sources_link_text"), funding_sources_path %></li><% end %>
   <% if show_scheduling? %><li><%= link_to translate_helper("trips_link_text"), trips_path %></li><% end %>
   <% if show_scheduling? %><li><%= link_to translate_helper("runs_link_text"), runs_path %></li><% end %>
-  <% if show_scheduling? %><li><%= link_to translate_helper("reports_link_text"), reports_path %></li><% end %>
+  <% if show_scheduling? %><li><%= link_to translate_helper("reports_link_text"), reporting_reports_path %></li><% end %>
   <% if show_scheduling? %><li><%= link_to translate_helper("current_provider_link_text"), provider_path(current_user.current_provider) %></li><% end %>
   <% if show_dispatch? %><li><%= link_to translate_helper("dispatch_link_text"), dispatch_path %></li><% end %>
   <% if can? :manage, RecurringDriverCompliance %><li><%= link_to translate_helper("recurring_driver_compliances_link_text"), recurring_driver_compliances_path %></li><% end %>

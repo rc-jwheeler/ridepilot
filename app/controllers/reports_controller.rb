@@ -65,6 +65,7 @@ def bind(args)
 end
 
 class ReportsController < ApplicationController
+  include Reporting::ReportHelper
 
   def index
     @driver_query = Query.new :start_date => Date.today, :end_date => Date.today
@@ -76,6 +77,24 @@ class ReportsController < ApplicationController
     drivers = Driver.active.for_provider(current_provider).default_order.accessible_by(current_ability)
     @drivers =  [all] + drivers
     @drivers_with_cab =  [all, cab] + drivers
+  end
+
+  def show
+    @driver_query = Query.new :start_date => Date.today, :end_date => Date.today
+    @trips_query = Query.new
+    cab = Driver.new(:name=>"Cab")
+    cab.id = -1
+    all = Driver.new(:name=>"All")
+    all.id = -2
+    drivers = Driver.active.for_provider(current_provider).default_order.accessible_by(current_ability)
+    @drivers =  [all] + drivers
+    @drivers_with_cab =  [all, cab] + drivers
+    @report = Report.find params[:id]
+    
+    @reports = all_report_infos # get all report infos (id, name) both generic and customized reports
+    
+
+    redirect_to action: @report.name if @report.redirect_to_results
   end
 
   def vehicles_monthly
@@ -103,6 +122,10 @@ class ReportsController < ApplicationController
     end
   end
 
+  def monthlies
+    redirect_to monthlies_path
+  end
+
   def service_summary
     query_params = params[:query] || {}
     @query = Query.new(query_params)
@@ -113,7 +136,7 @@ class ReportsController < ApplicationController
     @provider = current_provider
 
     if !can? :read, @monthly
-      return redirect_to reports_path
+      return redirect_to reporting_reports_path
     end
 
     #computes number of trips in and out of district by purpose

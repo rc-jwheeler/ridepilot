@@ -129,9 +129,18 @@ Rails.application.routes.draw do
     end
     
     get "dispatch", :controller => :dispatch, :action => :index
-    get "reports", :controller=>:reports, :action=>:index
+    #get "reports", :controller=>:reports, :action=>:index
+    get "custom_reports/:id", :controller=>:reports, :action=>:show, as: :custom_report
     get "reports/:action", :controller=>:reports
     get "reports/:action/:id", :controller=>:reports
+    # reporting engine
+    namespace :reporting do
+      get '/'  => 'reports#index'
+      resources :reports, only: [:index, :show] do
+        resources :results, only: [:index]
+      end
+    end
+
     get "test_exception_notification" => "application#test_exception_notification"
 
     resources :lookup_tables, :only => [:index, :show] do 
@@ -140,7 +149,6 @@ Rails.application.routes.draw do
         put :update_value
         put :destroy_value
       end
-
     end
 
   end
