@@ -65,7 +65,6 @@ class Ability
       can :manage, RecurringDriverCompliance, :provider_id => provider.id
       can :manage, User, :roles => {:provider_id => provider.id}
       can :manage, LookupTable
-      can :manage, ApplicationSetting
       can :load,   Address
     else
       can :read, User, :roles => {:provider_id => provider.id}
