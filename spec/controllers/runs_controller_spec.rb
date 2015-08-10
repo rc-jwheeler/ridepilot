@@ -6,8 +6,13 @@ RSpec.describe RunsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Run. As you add validations to Run, be sure to
   # adjust the attributes here as well.
+  before(:each) do
+    @driver = create(:driver)
+    @vehicle = create(:vehicle)
+  end
+
   let(:valid_attributes) {
-    attributes_for(:run)
+    attributes_for(:run, :driver_id => @driver.id, :vehicle_id => @vehicle.id)
   }
 
   let(:invalid_attributes) {
