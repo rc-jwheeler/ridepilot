@@ -131,7 +131,7 @@ class Address < ActiveRecord::Base
 
       open(filename) do |f|
         #Poi.delete_all # delete existing ones
-        CSV.foreach(f, {:col_sep => ",", :headers => true}) do |row|
+        CSV.new(f, {:col_sep => ",", :headers => true}).each do |row|
           # address_type_name = row[9] # TODO: whether to add POI_TYPE into Ridepilot
           address_name = row[2]
           address_city = row[6]
