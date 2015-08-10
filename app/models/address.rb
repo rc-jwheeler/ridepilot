@@ -152,7 +152,7 @@ class Address < ActiveRecord::Base
                 city: address_city,
                 state: row[7],
                 zip: row[8],
-                trip_purpose: TripPurpose.find_by_name(row[11]),
+                trip_purpose: row[11].to_s.blank? ? nil : TripPurpose.find_by_name(row[11].to_s),
                 notes: row[12]
               })
               count_good += 1
