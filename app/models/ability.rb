@@ -57,14 +57,15 @@ class Ability
     can action,  Vehicle, :provider_id => provider.id
     can action,  VehicleMaintenanceEvent, :provider_id => provider.id
     
-    if role.admin?
+    if role.system_admin?
+      can :manage, Translation
+    elsif role.admin?
       can :manage, DriverHistory, :driver => {:provider_id => provider.id}
       can :manage, DriverCompliance, :driver => {:provider_id => provider.id}
       can :manage, RecurringDriverCompliance, :provider_id => provider.id
       can :manage, User, :roles => {:provider_id => provider.id}
       can :manage, LookupTable
       can :manage, ApplicationSetting
-      can :manage, Translation
       can :load,   Address
     else
       can :read, User, :roles => {:provider_id => provider.id}
