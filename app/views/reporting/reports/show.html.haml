@@ -2,4 +2,5 @@
 
 = render partial: 'list', locals: {reports: @reports, report_id: @report.id, is_generic_report: true}
 
-= render partial: 'reporting/filters/form', locals: {report: @report, filter_groups: @filter_groups}
+.filter-form
+  = render partial: 'reporting/filters/form', locals: {report: @report, filter_groups: @filter_groups}
