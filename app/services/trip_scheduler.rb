@@ -75,12 +75,12 @@ class TripScheduler
 
   def validate_vehicle_availability
     # TODO: revisit after vehicle capacity is added
-    @run.vehicle.active
+    @run.vehicle && @run.vehicle.active
   end
 
   def validate_driver_availability
     trip_pickup_time = @trip.pickup_time
-    @run.driver.active && @run.driver.available?(trip_pickup_time.wday, trip_pickup_time.strftime('%H:%M'))
+    @run.driver && @run.driver.active && @run.driver.available?(trip_pickup_time.wday, trip_pickup_time.strftime('%H:%M'))
   end
 
   def response_as_json(is_success, error_text = '')
