@@ -54,10 +54,18 @@ gem 'ice_cube', '~> 0.6.8'
 # Fork with Rails 4.x compatibility
 gem 'jc-validates_timeliness', '~> 3.1.1'
 
+# For attachment processing. Using Fog for storage so that we can use
+# AWS SDK v2 separately for other tasks.
 gem 'paperclip', '~> 4.3.0'
-gem 'aws-sdk', '~> 2.1.8'
+gem 'fog', '~> 1.32.0'
+
 gem 'will_paginate', '~> 3.0.7'
 gem 'attribute_normalizer', '~> 1.2.0'
+
+# For Address Uploading
+# Note: not used by Paperclip internally per
+# https://github.com/thoughtbot/paperclip/issues/1764
+gem 'aws-sdk', '~> 2.1.8'
 
 # For change tracking and auditing
 gem 'paper_trail', '~> 4.0.0.rc'
