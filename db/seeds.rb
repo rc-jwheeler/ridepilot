@@ -39,6 +39,9 @@ ActiveRecord::Base.transaction do
   puts "Seeding translations"
   Rake::Task["ridepilot:load_locales"].invoke
 
+  puts "Seeding custom reports"
+  Rake::Task["ridepilot:seed_custom_reports"].invoke
+
   puts "Done seeding"
 
 end
