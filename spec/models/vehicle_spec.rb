@@ -77,4 +77,28 @@ RSpec.describe Vehicle, type: :model do
       expect(vehicle.valid?).to be_truthy
     end
   end
+  
+  describe "#last_odometer_reading" do
+    before do
+      @vehicle = create :vehicle
+    end
+    
+    it "knows the last run's odometer reading" do
+      run_1 = create :run, vehicle: @vehicle, end_odometer: 123
+      run_2 = create :run, vehicle: @vehicle, end_odometer: 456
+      run_3 = create :run, vehicle: @vehicle
+      expect(@vehicle.last_odometer_reading).to eq 456
+    end
+    
+    it "fails gracefully when no runs are present" do
+      expect(@vehicle.last_odometer_reading).to eq 0
+    end
+    
+    it "fails gracefully when no runs have an end_odometer value" do
+      run_1 = create :run, vehicle: @vehicle
+      run_2 = create :run, vehicle: @vehicle
+      run_3 = create :run, vehicle: @vehicle
+      expect(@vehicle.last_odometer_reading).to eq 0
+    end
+  end
 end
