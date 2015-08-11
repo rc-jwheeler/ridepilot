@@ -28,6 +28,10 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
     compliance_date.present?
   end
   
+  def vehicle_odometer_reading
+    vehicle.last_odometer_reading
+  end
+  
   private
   
   def due_date_required?

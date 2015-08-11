@@ -210,24 +210,30 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
       @compliance_later = create :vehicle_maintenance_compliance, due_date: Date.current + 7.days
     end
 
-    it "finds items due as of today through the next 6 days by default" do
+    skip "finds items due as of today through the next 6 days by default" do
       pending
       compliances = VehicleMaintenanceCompliance.due_soon
       expect(compliances).to include @compliance_today, @compliance_tomorrow
       expect(compliances).to_not include @compliance_later
     end
     
-    it "can find items due as of a specific date" do
+    skip "can find items due as of a specific date" do
       pending
       compliances = VehicleMaintenanceCompliance.due_soon(as_of: Date.current.tomorrow)
       expect(compliances).to_not include @compliance_today
       expect(compliances).to include @compliance_tomorrow, @compliance_later
     end
     
-    it "can find items due through a specific date" do
+    skip "can find items due through a specific date" do
       pending
       compliances = VehicleMaintenanceCompliance.due_soon(through: Date.current + 7.days)
       expect(compliances).to include @compliance_today, @compliance_tomorrow, @compliance_later
     end
   end
+  
+  it "knows its vehicle's last odometer reading" do
+    compliance = create :vehicle_maintenance_compliance
+    expect(compliance.vehicle).to receive(:last_odometer_reading).and_return(123)
+    expect(compliance.vehicle_odometer_reading).to eq 123
+  end    
 end
