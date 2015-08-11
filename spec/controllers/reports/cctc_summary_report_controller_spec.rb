@@ -17,15 +17,17 @@ RSpec.describe ReportsController do
     
       @request.env["devise.mapping"] = Devise.mappings[:user]
       sign_in @test_user
+
+      @cctc_custom_report = create(:custom_report, name: 'cctc_summary_report')
     end
 
     it "is successful" do
-      get :cctc_summary_report
+      get :cctc_summary_report, id: @cctc_custom_report.id
       expect(response).to be_success
     end
 
     it "assigns the proper instance variables" do
-      get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
+      get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}, id: @cctc_custom_report.id
       expect(assigns(:provider)).to eq(@test_provider)
       expect(assigns(:start_date)).to eq(@test_start_date.to_date)
       expect(assigns(:report)).not_to be_nil
@@ -43,7 +45,7 @@ RSpec.describe ReportsController do
         create(:trip, provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, cab: true)
         create(:trip, provider: @test_provider, mileage: 1, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
 
-        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
+        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}, id: @cctc_custom_report.id
       end
       
       # TODO This test is failing on master. Uncomment after upgrade. Fix if
@@ -114,7 +116,7 @@ RSpec.describe ReportsController do
         create(:trip, provider: @test_provider, customer: nc_3, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
         create(:trip, provider: @test_provider, customer: nc_4, funding_source: @test_funding_sources[:rc], pickup_time: @test_start_date)
         
-        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
+        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}, id: @cctc_custom_report.id
       end
       
       describe "riders_new_this_month" do
@@ -187,7 +189,7 @@ RSpec.describe ReportsController do
         create(:trip, provider: @test_provider, run: r_5, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
         create(:trip, provider: @test_provider, run: r_6, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
 
-        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
+        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}, id: @cctc_custom_report.id
       end
       
       describe "number_of_driver_hours" do
@@ -251,7 +253,7 @@ RSpec.describe ReportsController do
         create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_result: ns_result)
         create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month, trip_result: ns_result)
 
-        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
+        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}, id: @cctc_custom_report.id
       end
       
       describe "turndowns" do
@@ -286,7 +288,7 @@ RSpec.describe ReportsController do
         create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, donation: 1.23)
         create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month, donation: 1.23)
 
-        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
+        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}, id: @cctc_custom_report.id
       end
       
       it "reports the correct amount of donations" do
@@ -357,7 +359,7 @@ RSpec.describe ReportsController do
           create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, round_trip: true)          
         end
         
-        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
+        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}, id: @cctc_custom_report.id
       end
       
       describe "trips" do
@@ -449,7 +451,7 @@ RSpec.describe ReportsController do
         create(:trip, provider: @test_provider, customer: c_4, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
         create(:trip, provider: @test_provider, customer: c_4, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
 
-        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}
+        get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}, id: @cctc_custom_report.id
       end
       
       describe "ethnicities" do
