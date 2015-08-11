@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Lookup Tables" do
   context "for admin" do
     before :each do 
-      @admin = create(:admin)
+      @admin = create(:super_admin)
       visit new_user_session_path
       fill_in 'Email', :with => @admin.email
       fill_in 'Password', :with => @admin.password

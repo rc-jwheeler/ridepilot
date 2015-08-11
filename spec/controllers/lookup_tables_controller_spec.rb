@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe LookupTablesController, type: :controller do
-  login_admin_as_current_user
+  login_super_admin_as_current_user
 
   describe "GET #index" do
     it "populates an array of lookup tables" do
