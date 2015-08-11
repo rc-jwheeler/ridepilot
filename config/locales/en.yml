@@ -509,7 +509,7 @@ en:
   age_and_ethnicity_report_heading: "Reports: Unduplicated Age &amp; Ethnicity"
   age_and_ethnicity_page_title: "Age and Ethnicity: %{provider}, %{start_date}"
 
-  report: "Report"
+  reports: "Reports"
   age_and_ethnicity_table_heading: "Unduplicated Age & Ethnicity Report"
 
   age: "Age"
