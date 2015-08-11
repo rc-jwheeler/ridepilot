@@ -18,6 +18,7 @@ class Driver < ActiveRecord::Base
   # TODO Look into using `#mark_for_destruction` and `#marked_for_destruction?`
   has_many :driver_compliances, dependent: :delete_all, inverse_of: :driver
 
+  validates :provider, presence: true
   validates :user_id, uniqueness: { allow_nil: true }
   validates :name, uniqueness: { scope: :provider_id }, length: { minimum: 2 }
   validates :email, format: { with: Devise.email_regexp, allow_blank: true }

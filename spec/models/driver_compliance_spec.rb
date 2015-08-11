@@ -25,8 +25,11 @@ RSpec.describe DriverCompliance, type: :model do
     expect(compliance.errors.keys).to include :due_date
   end
 
-  it "requires an compliance date on or before today" do
-    compliance = build :driver_compliance, due_date: Date.current, compliance_date: Date.current.tomorrow
+  it "requires compliance date to be on or before today, when specified" do
+    compliance = build :driver_compliance, compliance_date: nil
+    expect(compliance.valid?).to be_truthy
+
+    compliance.compliance_date = Date.current.tomorrow
     expect(compliance.valid?).to be_falsey
     expect(compliance.errors.keys).to include :compliance_date
 
