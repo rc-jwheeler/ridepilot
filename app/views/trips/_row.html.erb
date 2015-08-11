@@ -21,7 +21,9 @@
     <%= format_time_for_listing trip.appointment_time %>
   </td>
   <td>
-    <%= link_to_if trip.run.present?, trip.run_text, run_path(trip.run.id) %>
+    <% if trip.run.present? %>
+      <%= link_to trip.run_text, run_path(trip.run.id) %>
+    <% end %>
   </td>
   <td>
     <%= image_tag("tick-circle.png") if trip.customer_informed %>
