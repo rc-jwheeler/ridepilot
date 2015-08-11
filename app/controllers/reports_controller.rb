@@ -67,19 +67,7 @@ end
 class ReportsController < ApplicationController
   include Reporting::ReportHelper
 
-  before_action :set_reports, only: [:show, :vehicles_monthly, :service_summary, :donations, :cab, :age_and_ethnicity, :monthlies]
-
-  def index
-    @driver_query = Query.new :start_date => Date.today, :end_date => Date.today
-    @trips_query = Query.new
-    cab = Driver.new(:name=>"Cab")
-    cab.id = -1
-    all = Driver.new(:name=>"All")
-    all.id = -2
-    drivers = Driver.active.for_provider(current_provider).default_order.accessible_by(current_ability)
-    @drivers =  [all] + drivers
-    @drivers_with_cab =  [all, cab] + drivers
-  end
+  before_action :set_reports
 
   def show
     @driver_query = Query.new :start_date => Date.today, :end_date => Date.today
@@ -92,7 +80,7 @@ class ReportsController < ApplicationController
     @drivers =  [all] + drivers
     @drivers_with_cab =  [all, cab] + drivers
 
-    redirect_to action: @report.name if @report.redirect_to_results
+    redirect_to action: @custom_report.name if @custom_report.redirect_to_results
   end
 
   def vehicles_monthly
@@ -671,7 +659,7 @@ class ReportsController < ApplicationController
 
   def set_reports
     @reports = all_report_infos # get all report infos (id, name) both generic and customized reports
-    @report = CustomReport.find params[:id]
+    @custom_report = CustomReport.find params[:id]
   end
 
   def prep_with_cab
