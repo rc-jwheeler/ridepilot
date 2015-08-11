@@ -59,7 +59,7 @@ class Ability
     if role.admin?
       can :manage, DriverCompliance, :driver => {:provider_id => provider.id}
       can :manage, DriverHistory, :driver => {:provider_id => provider.id}
-      can :manage, LookupTable
+      # can :manage, LookupTable
       can :manage, RecurringDriverCompliance, :provider_id => provider.id
       can :manage, User, :roles => {:provider_id => provider.id}
       can :manage, VehicleMaintenanceEvent, :vehicle => {:provider_id => provider.id}
