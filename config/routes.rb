@@ -99,8 +99,9 @@ Rails.application.routes.draw do
     resources :funding_sources, :except => [:destroy]
     resources :monthlies, :except => [:show, :destroy]
     resources :provider_ethnicities
-    resources :vehicles
-    resources :vehicle_maintenance_events, :except => [:show, :destroy]
+    resources :vehicles do
+      resources :vehicle_maintenance_events, :except => [:index, :show]
+    end
 
     resources :runs do
       collection do

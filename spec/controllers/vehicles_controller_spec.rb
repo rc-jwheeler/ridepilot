@@ -17,9 +17,11 @@ RSpec.describe VehiclesController, type: :controller do
   }
 
   describe "GET #index" do
-    it "redirects to the current user's provider" do
+    it "assigns all vehicles for the current provider as @vehicles" do
+      vehicle_1 = create(:vehicle, :provider => @current_user.current_provider)
+      vehicle_2 = create(:vehicle)
       get :index, {}
-      expect(response).to redirect_to(@current_user.current_provider)
+      expect(assigns(:vehicles)).to eq([vehicle_1])
     end
   end
 
@@ -28,6 +30,12 @@ RSpec.describe VehiclesController, type: :controller do
       vehicle = create(:vehicle, :provider => @current_user.current_provider)
       get :show, {:id => vehicle.to_param}
       expect(assigns(:vehicle)).to eq(vehicle)
+    end
+
+    it "sets @readonly to true" do
+      vehicle = create(:vehicle, :provider => @current_user.current_provider)
+      get :show, {:id => vehicle.to_param}
+      expect(assigns(:readonly)).to be_truthy
     end
   end
 
@@ -60,9 +68,9 @@ RSpec.describe VehiclesController, type: :controller do
         expect(assigns(:vehicle)).to be_persisted
       end
 
-      it "redirects to the current user's provider" do
+      it "redirects to the new vehicle" do
         post :create, {:vehicle => valid_attributes}
-        expect(response).to redirect_to(@current_user.current_provider)
+        expect(response).to redirect_to(Vehicle.last)
       end
     end
 
@@ -109,10 +117,10 @@ RSpec.describe VehiclesController, type: :controller do
         expect(assigns(:vehicle)).to eq(vehicle)
       end
 
-      it "redirects to the current user's provider" do
+      it "redirects to the vehicle" do
         vehicle = create(:vehicle, :provider => @current_user.current_provider)
         put :update, {:id => vehicle.to_param, :vehicle => new_attributes}
-        expect(response).to redirect_to(@current_user.current_provider)
+        expect(response).to redirect_to(vehicle)
       end
     end
 
@@ -139,10 +147,10 @@ RSpec.describe VehiclesController, type: :controller do
       }.to change(Vehicle, :count).by(-1)
     end
 
-    it "redirects to the current user's provider" do
+    it "redirects to the vehicles list" do
       vehicle = create(:vehicle, :provider => @current_user.current_provider)
       delete :destroy, {:id => vehicle.to_param}
-      expect(response).to redirect_to(@current_user.current_provider)
+      expect(response).to redirect_to(vehicles_url)
     end
   end
 

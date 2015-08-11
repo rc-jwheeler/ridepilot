@@ -136,7 +136,7 @@ en:
   remove_device_pool_driver: "Remove"
   device_pool_form_error_message:
     one: "%{count} error prohibited this device pool from being saved:"
-    other: "%{count} errors sprohibited this device pool from being saved:"
+    other: "%{count} errors prohibited this device pool from being saved:"
   device_pools: 'Device Pools'
   device_pool_name: "Name"
   device_pool_color: "Color"
@@ -356,6 +356,7 @@ en:
   application_customers_link_text: "Customers"
   application_reports_link_text: "Reports"
   application_drivers_link_text: "Drivers"
+  application_vehicles_link_text: "Vehicles"
   application_dispatch_link_text: "Dispatch"
   application_admin_link_text: "Admin"
   current_provider_settings_link_text: "Settings"
@@ -669,7 +670,7 @@ en:
   #runs
   run_form_error_message:
     one: "%{count} error prohibited this run from being saved:"
-    other: "%{count} errors sprohibited this run from being saved:"
+    other: "%{count} errors prohibited this run from being saved:"
   unavailable_at_run_time: 'is not available at run schedule time'
   scheduled_start_time: "Scheduled Start Time"
   scheduled_end_time: "Scheduled End Time"
@@ -699,7 +700,7 @@ en:
   change_customer: "Change Customer"
   trips_form_error_message:
     one: "%{count} error prohibited this trip from being saved:"
-    other: "%{count} errors sprohibited this trip from being saved:"
+    other: "%{count} errors prohibited this trip from being saved:"
   appointment_time: "Appointment Time"
   pickup_address: "Pickup Address"
   customer_phone: "Customer Phone"
@@ -765,7 +766,7 @@ en:
   new_user_heading: "Create New User"
   user_form_error_message:
     one: "%{count} error prohibited this user from being saved:"
-    other: "%{count} errors sprohibited this user from being saved:"
+    other: "%{count} errors prohibited this user from being saved:"
   permissions: "Permissions"
   new_user_submit: "Create User"
   change_password_heading: "Change Password"
@@ -777,7 +778,11 @@ en:
   user_expires_at: "Inactivation Date"
   user_inactivation_reason: "Reasons"
   change_expiration_submit: "Update"
-  #vehicle maintenance
+
+  # Vehicle Maintenance Events
+  vehicle_maintenance_event_form_error:
+    one: "%{count} error prohibited this maintenance event from being saved:"
+    other: "%{count} errors prohibited this maintenance event from being saved:"
   service_date: "Service Date"
   invoice_date: "Invoice Date"
   odometer: "Odometer"
@@ -790,10 +795,11 @@ en:
   edit_maintenance_heading: "Edit Maintenance Event"
   new_maintenance_heading: "Add Maintenance Event"
   back_to_provider: "Back"
-  #vehicles
+
+  # Vehicles
   vehicle_form_error_message:
     one: "%{count} error prohibited this vehicle from being saved:"
-    other: "%{count} errors sprohibited this vehicle from being saved:"
+    other: "%{count} errors prohibited this vehicle from being saved:"
   vehicle_form_name_label: "Name"
   vehicle_form_year_label: "Year"
   vehicle_form_make_label: "Make"
@@ -808,8 +814,16 @@ en:
   edit_vehicle_heading: "Edit Vehicle"
   new_vehicle_heading: "New Vehicle"
   vehicle_show_heading: "Vehicle Details"
+  edit_vehicle_button: "Edit Vehicle"
+  delete_vehicle_button: "Delete Vehicle"
   add_maintenance_link_text: "Add Maintenance Event"
   edit_vehicle_link_text: "Edit Vehicle"
+  index_vehicle_heading: "Vehicles"
+  vehicle_maintenance_events_heading: "Maintenance Events"
+  vehicle_maintenance_events_empty: "There are no maintenance events"
+  vehicle_maintenance_event_add_link_title: "Add Maintenance Event"
+  vehicle_maintenance_event_delete_confirm: "Are you sure?"
+  
   # Application Settings
   application_settings_heading: "Application Settings"
   edit_application_settings_heading: "Editing Application Settings"
