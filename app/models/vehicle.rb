@@ -1,4 +1,6 @@
 class Vehicle < ActiveRecord::Base
+  OWNERSHIPS = [:agency, :volunteer].freeze
+
   has_paper_trail
 
   belongs_to :provider
@@ -16,6 +18,7 @@ class Vehicle < ActiveRecord::Base
     format: {with: /\A[^ioq]*\z/i, allow_nil: true}
   validates_date :registration_expiration_date, allow_blank: true
   validates :seating_capacity, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
+  validates :ownership, inclusion: { in: OWNERSHIPS.map(&:to_s), allow_blank: true }
 
   default_scope { order('active, name') }
   scope :active,       -> { where(:active => true) }

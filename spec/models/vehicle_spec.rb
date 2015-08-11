@@ -63,4 +63,18 @@ RSpec.describe Vehicle, type: :model do
     vehicle.seating_capacity = 1
     expect(vehicle.valid?).to be_truthy
   end
+
+  it "requires an ownership of either 'agency' or 'volunteer', or blank" do
+    vehicle = build :vehicle, ownership: nil
+    expect(vehicle.valid?).to be_truthy
+
+    vehicle.ownership = "foo"
+    expect(vehicle.valid?).to be_falsey
+    expect(vehicle.errors.keys).to include :ownership
+
+    %w(agency volunteer).each do |ownership|
+      vehicle.ownership = ownership
+      expect(vehicle.valid?).to be_truthy
+    end
+  end
 end

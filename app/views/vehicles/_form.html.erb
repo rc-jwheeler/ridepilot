@@ -86,9 +86,9 @@
           <div class="form-group">
             <%= f.label :ownership, translate_helper("vehicle_form_ownership_label"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
-              <%= f.text_field :ownership, class: "form-control", disabled: @readonly %>
+              <%= f.select :ownership, Vehicle::OWNERSHIPS.map(&:to_s), { selected: @vehicle.ownership, include_blank: true }, class: "form-control", disabled: @readonly %>
             </div>
-          </div>
+          </div>  
           <div class="form-group">
             <%= f.label :responsible_party, translate_helper("vehicle_form_responsible_party_label"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
