@@ -1,18 +1,15 @@
-<%= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'reports'%>
 <%= render 'custom_report_header'%>
-<div id="page-header" class="clearfix">
-  <h1><%= translate_helper("cab_log_heading") %></h1>
-  <h3><%= @query.start_date.strftime("%B %Y") %></h3>
-</div>
 
-<%= form_for @query, :url=>url_for(:action=>:cab), :html=>{:method=>:get} do |f| %>
-  <fieldset class="select-month">
-    <p>
-      <%= f.date_select  :start_date, :discard_day=>true %>
-      <%= f.submit translate_helper("cab_report_submit") %>
-    </p>
-  </fieldset>
-<% end %>
+<div class="filter-form" style="padding-top: 10px;">
+  <%= form_for @query, :url=>url_for(:action=>:cab), :html=>{:method=>:get} do |f| %>
+    <fieldset class="select-month">
+      <p>
+        <%= f.date_select  :start_date, :discard_day=>true %>
+        <%= f.submit translate_helper("cab_report_submit") %>
+      </p>
+    </fieldset>
+  <% end %>
+</div>
 
 <table>
   <tr>

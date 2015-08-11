@@ -1,5 +1,3 @@
-<h2 class="section-header"><%= translate_helper("cctc_summary_label") %></h2>
-
 <%= form_for @trips_query, :url=>url_for(:action=>:cctc_summary_report), :html=>{:method=>:get} do |f| %>
   <fieldset>
     <%= f.date_select :start_date, :order => [:month,:year] %>

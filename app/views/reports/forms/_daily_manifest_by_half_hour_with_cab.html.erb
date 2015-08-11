@@ -1,8 +1,5 @@
-<h2 class="section-header">Driver Manifests</h2>
-
 <%= form_for @driver_query, :url=>url_for(:action=>:daily_manifest_by_half_hour_with_cab), :html=>{:method=>:get} do |f| %>
   <fieldset>
-    <h3><%= translate_helper("daily_manifest_by_half_hour_with_cab_summary_label") %></h3>
     <%= f.date_select  :start_date %>
     <%= f.collection_select :driver_id, @drivers, :id, :name %>
     <%= f.submit translate_helper("show") %>

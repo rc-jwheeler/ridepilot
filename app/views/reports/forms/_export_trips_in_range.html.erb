@@ -1,5 +1,3 @@
-<h2 class="section-header"><%= translate_helper("export_trips_as_csv") %></h2>
-
 <%= form_for @trips_query, :url=>url_for(:action=>:export_trips_in_range), :html=>{:method=>:get} do |f| %>
   <fieldset>
     <%= f.date_select  :start_date, :order => [:month,:day,:year] %>
