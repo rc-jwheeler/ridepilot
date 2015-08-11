@@ -231,9 +231,76 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
     end
   end
   
-  it "knows its vehicle's last odometer reading" do
-    compliance = create :vehicle_maintenance_compliance
-    expect(compliance.vehicle).to receive(:last_odometer_reading).and_return(123)
-    expect(compliance.vehicle_odometer_reading).to eq 123
-  end    
+  describe "#vehicle_odometer_reading" do
+    it "knows its vehicle's last odometer reading" do
+      compliance = create :vehicle_maintenance_compliance
+      expect(compliance.vehicle).to receive(:last_odometer_reading).and_return(123)
+      expect(compliance.vehicle_odometer_reading).to eq 123
+    end
+  end
+  
+  describe "#overdue?" do
+    describe "with due_type" do
+      describe "date" do
+        before do
+          @compliance = create :vehicle_maintenance_compliance, due_type: "date", due_date: Date.current
+        end
+      
+        it "checks if the due_date is after Date.current, by default" do
+          expect(@compliance.overdue?).to be_falsey
+
+          Timecop.freeze(Date.current.tomorrow) do
+            expect(@compliance.overdue?).to be_truthy
+          end
+        end
+        
+        it "can optionally accept another date to check against the due_date" do
+          expect(@compliance.overdue?(as_of: Date.current.yesterday)).to be_falsey
+          expect(@compliance.overdue?(as_of: Date.current.tomorrow)).to be_truthy
+        end
+        
+        it "doesn't care about due_mileage" do
+          expect(@compliance).not_to receive(:due_mileage)
+          expect(@compliance.overdue?).to be_falsey
+        end
+      end
+
+      describe "mileage" do
+        before do
+          @compliance = create :vehicle_maintenance_compliance, due_type: "mileage", due_mileage: 100
+        end
+        
+        it "doesn't care about due_date" do
+          expect(@compliance).not_to receive(:due_date)
+          expect(@compliance.overdue?).to be_falsey
+        end
+
+        it "checks if the due_mileage is over the #vehicle_odometer_reading, by default" do
+          expect(@compliance).to receive(:vehicle_odometer_reading).and_return(100)
+          expect(@compliance.overdue?).to be_falsey
+
+          expect(@compliance).to receive(:vehicle_odometer_reading).and_return(101)
+          expect(@compliance.overdue?).to be_truthy
+        end
+        
+        it "can optionally accept another mileage to check against the due_mileage" do
+          expect(@compliance.overdue?(mileage: 100)).to be_falsey
+          expect(@compliance.overdue?(mileage: 101)).to be_truthy
+        end
+      end
+
+      describe "both" do
+        before do
+          @compliance = create :vehicle_maintenance_compliance, due_type: "both", due_date: Date.current, due_mileage: 100
+        end
+      
+        it "checks against both due_date and due_mileage" do
+          expect(@compliance.overdue?).to be_falsey
+          expect(@compliance.overdue?(as_of: Date.current.tomorrow)).to be_falsey
+          expect(@compliance.overdue?(mileage: 101)).to be_falsey
+          expect(@compliance.overdue?(as_of: Date.current.tomorrow, mileage: 101)).to be_truthy
+        end
+      end
+    end
+  end
 end

@@ -28,11 +28,30 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
     compliance_date.present?
   end
   
+  def overdue?(as_of: Date.current, mileage: vehicle_odometer_reading)
+    case due_type.to_sym
+    when :date
+      is_after_due_date? as_of
+    when :mileage
+      is_over_due_mileage? mileage
+    when :both
+      is_after_due_date?(as_of) && is_over_due_mileage?(mileage)
+    end
+  end
+  
   def vehicle_odometer_reading
     vehicle.last_odometer_reading
   end
   
   private
+  
+  def is_after_due_date?(as_of)
+    as_of > due_date
+  end
+  
+  def is_over_due_mileage?(mileage)
+    mileage > due_mileage
+  end
   
   def due_date_required?
     [:both, :date].include? due_type.try(:to_sym)
