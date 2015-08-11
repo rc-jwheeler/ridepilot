@@ -10,6 +10,7 @@ class Vehicle < ActiveRecord::Base
   has_one :device_pool, :through => :device_pool_driver
   
   has_many :vehicle_maintenance_events, dependent: :destroy, inverse_of: :vehicle
+  has_many :vehicle_maintenance_compliances, dependent: :destroy, inverse_of: :vehicle
 
   validates :provider, presence: true
   validates :default_driver, presence: true
