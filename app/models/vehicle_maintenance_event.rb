@@ -3,7 +3,9 @@ class VehicleMaintenanceEvent < ActiveRecord::Base
 
   belongs_to :vehicle, inverse_of: :vehicle_maintenance_events
   
-  validates_presence_of :vehicle
+  validates :vehicle, presence: true
+  validates :services_performed, presence: true
+  validates_date :service_date
 
   scope :default_order, -> { order("service_date DESC") }
 end

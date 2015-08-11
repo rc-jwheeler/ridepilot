@@ -7,13 +7,12 @@ RSpec.describe VehiclesController, type: :controller do
   # Vehicle. As you add validations to Vehicle, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) { 
-    # Nothing is required, but add a name to avoid a ParameterMissing error
-    attributes_for(:vehicle, :name => "Vehicle 1")
+    attributes_for(:vehicle, default_driver_id: create(:driver, :provider => @current_user.current_provider).id)
   }
 
   let(:invalid_attributes) { 
-    # Nothing is required, but VIN length must be <= 17
-    attributes_for(:vehicle, :vin => "123456789012345678") 
+    # Nothing is required, but VIN length must be 17
+    attributes_for(:vehicle, :vin => "1234")
   }
 
   describe "GET #index" do
@@ -91,16 +90,7 @@ RSpec.describe VehiclesController, type: :controller do
     context "with valid params" do
       let(:new_attributes) {
         {
-          :name => "Name",
-          :default_driver_id => 1,
-          :year => 2000,
-          :make => "Make",
-          :model => "Model",
-          :license_plate => "License Plate",
-          :vin => "12345678901234567",
-          :garaged_location => "Garaged Location",
-          :active => false,
-          :reportable => false
+          :garaged_location => "Garaged Location"
         }
       }
 

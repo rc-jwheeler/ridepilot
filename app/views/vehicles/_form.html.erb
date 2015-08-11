@@ -15,7 +15,7 @@
   <div class="row">
     <div class="col-sm-12 col-md-6">
       <div class="panel panel-primary">
-        <div class="panel-heading">Details</div>
+        <div class="panel-heading"><%= translate_helper("vehicle_form_details_heading") %></div>
         <div class="panel-body form-horizontal">
           <div class="form-group">
             <%= f.label :name, translate_helper("vehicle_form_name_label"), class: "col-md-2 control-label" %>
@@ -54,9 +54,9 @@
             </div>
           </div>  
           <div class="form-group">
-            <%= f.label :garaged_location, translate_helper("vehicle_form_location_label"), class: "col-md-2 control-label" %>
+            <%= f.label :default_driver_id, translate_helper("vehicle_form_driver_label"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
-              <%= f.text_field :garaged_location, class: "form-control", disabled: @readonly %>
+              <%= f.collection_select :default_driver_id, Driver.active.for_provider(current_user.current_provider_id), :id, :name, {include_blank: true}, { class: "form-control", disabled: @readonly } %>
             </div>
           </div>  
           <div class="form-group">
@@ -66,17 +66,66 @@
             </div>
           </div>  
           <div class="form-group">
-            <%= f.label :default_driver_id, translate_helper("vehicle_form_driver_label"), class: "col-md-2 control-label" %>
-            <div class="col-md-10">
-              <%= f.collection_select :default_driver_id, Driver.active.for_provider(current_user.current_provider_id), :id, :name, {include_blank: true}, { class: "form-control", disabled: @readonly } %>
-            </div>
-          </div>  
-          <div class="form-group">
             <%= f.label :reportable, translate_helper("vehicle_form_reportable_label"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
               <%= f.select :reportable, [["Yes", "true"], ["No", "false"]], {:selected => @vehicle.reportable.to_s }, class: "form-control", disabled: @readonly %>
             </div>
           </div>  
+        </div><!-- END .panel-body -->
+      </div><!-- END .panel -->
+
+      <div class="panel panel-primary">
+        <div class="panel-heading"><%= translate_helper("vehicle_form_information_heading") %></div>
+        <div class="panel-body form-horizontal">
+          <div class="form-group">
+            <%= f.label :garaged_location, translate_helper("vehicle_form_location_label"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.text_field :garaged_location, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :ownership, translate_helper("vehicle_form_ownership_label"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.select :ownership, Vehicle::OWNERSHIPS.map(&:to_s), { selected: @vehicle.ownership, include_blank: true }, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>  
+          <div class="form-group">
+            <%= f.label :responsible_party, translate_helper("vehicle_form_responsible_party_label"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.text_field :responsible_party, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :seating_capacity, translate_helper("vehicle_form_seating_capacity_label"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.number_field :seating_capacity, min: 1, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :registration_expiration_date, translate_helper("vehicle_form_registration_expiration_date_label"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <div class="input-group datepicker-icon">
+                <%= f.text_field :registration_expiration_date, class: "form-control datepicker", disabled: @readonly %>
+                <div class="input-group-btn">
+                  <button class="btn btn-default" type="button" <%= "disabled=\"disabled\"" if @readonly %>>
+                    <%= image_tag "calendar-clock.png" %>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :insurance_coverage_details, translate_helper("vehicle_form_insurance_coverage_details_label"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.text_area :insurance_coverage_details, class: "form-control", rows: 3, disabled: @readonly %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :accessibility_equipment, translate_helper("vehicle_form_accessibility_equipment_label"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.text_area :accessibility_equipment, class: "form-control", rows: 3, disabled: @readonly %>
+            </div>
+          </div>
         </div><!-- END .panel-body -->
       </div><!-- END .panel -->
     </div><!-- END .col-md-6 -->

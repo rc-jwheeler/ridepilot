@@ -20,14 +20,8 @@
           <div class="form-group">
             <%= f.label :service_date, translate_helper("service_date"), class: "col-md-3 control-label" %>
             <div class="col-md-9">
-              <%= f.text_field :service_date, class: "form-control" %>
-            </div>
-          </div>
-          <div class="form-group">
-            <%= f.label :invoice_date, translate_helper("invoice_date"), class: "col-md-3 control-label" %>
-            <div class="col-md-9">
               <div class="input-group datepicker-icon">
-                <%= f.text_field :invoice_date, class: "form-control datepicker" %>
+                <%= f.text_field :service_date, class: "form-control datepicker" %>
                 <div class="input-group-btn">
                   <button class="btn btn-default" type="button">
                     <%= image_tag "calendar-clock.png" %>
@@ -46,6 +40,19 @@
             <%= f.label :vendor_name, translate_helper("vendor_name"), class: "col-md-3 control-label" %>
             <div class="col-md-9">
               <%= f.text_field :vendor_name, class: "form-control" %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :invoice_date, translate_helper("invoice_date"), class: "col-md-3 control-label" %>
+            <div class="col-md-9">
+              <div class="input-group datepicker-icon">
+                <%= f.text_field :invoice_date, class: "form-control datepicker" %>
+                <div class="input-group-btn">
+                  <button class="btn btn-default" type="button">
+                    <%= image_tag "calendar-clock.png" %>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="form-group">

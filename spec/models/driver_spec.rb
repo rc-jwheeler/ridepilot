@@ -1,6 +1,12 @@
 require "rails_helper"
 
 RSpec.describe Driver, type: :model do
+  it "requires a provider" do
+    driver = build :driver, provider: nil
+    expect(driver.valid?).to be_falsey
+    expect(driver.errors.keys).to include :provider
+  end
+
   it "cannot be linked to the same user as another driver" do
     driver_1 = create :driver
     driver_2 = build :driver, user: driver_1.user

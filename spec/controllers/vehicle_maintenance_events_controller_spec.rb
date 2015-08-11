@@ -12,14 +12,11 @@ RSpec.describe VehicleMaintenanceEventsController, type: :controller do
     # valid VehicleMaintenanceEvent. As you add validations to
     # VehicleMaintenanceEvent, be sure to adjust the attributes here as well.
     let(:valid_attributes) { 
-      # Nothing is required, and the model has no validations, but we need to 
-      # specify something to avoid ActionController::ParameterMissing error
-      {odometer: "1234.5"}
+      attributes_for(:vehicle_maintenance_event)
     }
 
     let(:invalid_attributes) { 
-      # Nothing is required, and the model has no validations
-      {}
+      attributes_for(:vehicle_maintenance_event, services_performed: nil, service_date: nil)
     }
 
     describe "GET #new" do
