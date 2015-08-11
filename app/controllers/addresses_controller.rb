@@ -184,7 +184,7 @@ class AddressesController < ApplicationController
       address_file = params[:address][:file] if params[:address]
       
       if !address_file.nil?
-        if address_file.content_type != 'text/csv'
+        if File.extname(address_file.original_filename) != '.csv'
           error_msgs << TranslationEngine.translate_text(:address_file_should_be_csv)
         elsif current_provider.address_upload_flag.is_loading
           error_msgs << TranslationEngine.translate_text(:address_file_being_uploading)
