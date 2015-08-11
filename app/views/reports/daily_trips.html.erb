@@ -1,3 +1,4 @@
+<%= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'reports' %>
 <% content_for(:title){translate_helper("daily_trips_title") + " #{@date.strftime('%v')}"} %>
 <h1><%= translate_helper("daily_trips_heading") %></h1>
 <h2><%= format_date_for_daily_manifest @date %></h2>

@@ -15,10 +15,10 @@
       - report = CustomReport.find(report_info[:id])
       - if !is_generic_report && report.id == report_id
         %option{value: "#{custom_report_path(report)}", selected: true}
-          = report.name
+          = report.display_name
       - else
         %option{value: "#{custom_report_path(report)}"}
-          = report.name
+          = report.display_name
 
 
   

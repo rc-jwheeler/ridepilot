@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 20150811115350) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "redirect_to_results", default: false
+    t.string   "title"
   end
 
   create_table "customers", force: true do |t|

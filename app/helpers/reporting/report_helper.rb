@@ -25,7 +25,7 @@ module Reporting::ReportHelper
       |report|
         {
           id: report.id,
-          name: report.name,
+          name: report.display_name,
           is_generic: false
         }
     }

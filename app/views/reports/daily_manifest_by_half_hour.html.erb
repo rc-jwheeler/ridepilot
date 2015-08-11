@@ -1,3 +1,4 @@
+<%= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'reports' %>
 <% content_for(:title){translate_helper("daily_manifest_title") + " #{@date.strftime('%v')}"} %>
 <% i = 0 %>
 <% for driver, trips in @trips %>
