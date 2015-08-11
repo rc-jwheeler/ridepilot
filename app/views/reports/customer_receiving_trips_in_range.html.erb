@@ -1,3 +1,4 @@
+<%= render 'custom_report_header'%>
 <%= content_for :title, (translate_helper("crtr_report_title") + "#{@query.try(:start_date).try(:strftime, ": %B %Y")}#{@query.try(:start_date).try(:strftime, " - %B %Y")}") %>
 <div id="page-header" class="clearfix">
 <h1><%= translate_helper("crtr_verify_runs")%><%= @query.try(:start_date).try(:strftime, ": %B %Y") %><%= @query.try(:start_date).try(:strftime, " - %B %Y") %></h1>
@@ -10,7 +11,7 @@
         <%= f.date_select  :start_date, :order => [:month,:day,:year] %>
         <%= translate_helper("crtr_through")%> 
         <%= f.date_select  :before_end_date, :order => [:month,:day,:year] %>
-        <%= f.submit translate_helper("Update") %>
+        <%= f.submit translate_helper("update") %>
       </p>
     </fieldset>
   <% end %>

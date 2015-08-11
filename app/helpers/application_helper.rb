@@ -4,6 +4,10 @@ module ApplicationHelper
     current_user.try(:current_provider)
   end
 
+  def current_provider_id
+    current_provider.try(:id)
+  end
+
   def show_dispatch?
     current_user && current_provider && current_provider.dispatch?
   end

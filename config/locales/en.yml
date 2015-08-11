@@ -895,6 +895,11 @@ en:
   upload_common_addresses_notes: 'Please refer to address file specifications.'
   # translation editing
   create_translation: 'Create Translation'
+  # reporting engine
+  report_name: 'Reports'
+  report_parameters: 'Report Parameters'
+  reset_filter_panel: 'Reset Filter'
+  reset_all_filter: 'Reset All'
 
   locales:
     en: "English"

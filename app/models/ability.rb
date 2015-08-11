@@ -67,5 +67,7 @@ class Ability
     else
       can :read, User, :roles => {:provider_id => provider.id}
     end
+
+    can :access, Reporting::Report
   end
 end

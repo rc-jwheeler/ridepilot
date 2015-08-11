@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150811115350) do
+ActiveRecord::Schema.define(version: 20150811210219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,14 @@ ActiveRecord::Schema.define(version: 20150811115350) do
   add_index "addresses", ["provider_id"], :name => "index_addresses_on_provider_id"
   add_index "addresses", ["the_geom"], :name => "index_addresses_on_the_geom", :spatial => true
   add_index "addresses", ["trip_purpose_id"], :name => "index_addresses_on_trip_purpose_id"
+
+  create_table "custom_reports", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "redirect_to_results", default: false
+    t.string   "title"
+  end
 
   create_table "customers", force: true do |t|
     t.string   "first_name"
@@ -284,6 +292,17 @@ ActiveRecord::Schema.define(version: 20150811115350) do
 
   add_index "provider_ethnicities", ["provider_id"], :name => "index_provider_ethnicities_on_provider_id"
 
+  create_table "provider_reports", force: true do |t|
+    t.integer  "provider_id"
+    t.integer  "custom_report_id"
+    t.boolean  "inactive"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "provider_reports", ["custom_report_id"], :name => "index_provider_reports_on_custom_report_id"
+  add_index "provider_reports", ["provider_id"], :name => "index_provider_reports_on_provider_id"
+
   create_table "providers", force: true do |t|
     t.string   "name"
     t.string   "logo_file_name"
@@ -368,6 +387,75 @@ ActiveRecord::Schema.define(version: 20150811115350) do
   add_index "repeating_trips", ["provider_id"], :name => "index_repeating_trips_on_provider_id"
   add_index "repeating_trips", ["trip_purpose_id"], :name => "index_repeating_trips_on_trip_purpose_id"
   add_index "repeating_trips", ["vehicle_id"], :name => "index_repeating_trips_on_vehicle_id"
+
+  create_table "reporting_filter_fields", force: true do |t|
+    t.integer  "filter_group_id",             null: false
+    t.integer  "filter_type_id",              null: false
+    t.integer  "lookup_table_id"
+    t.string   "name",                        null: false
+    t.string   "title"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "sort_order",      default: 1, null: false
+    t.string   "value_type"
+  end
+
+  add_index "reporting_filter_fields", ["filter_group_id"], :name => "index_reporting_filter_fields_on_filter_group_id"
+  add_index "reporting_filter_fields", ["filter_type_id"], :name => "index_reporting_filter_fields_on_filter_type_id"
+  add_index "reporting_filter_fields", ["lookup_table_id"], :name => "index_reporting_filter_fields_on_lookup_table_id"
+
+  create_table "reporting_filter_groups", force: true do |t|
+    t.string   "name",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "reporting_filter_types", force: true do |t|
+    t.string   "name",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "reporting_lookup_tables", force: true do |t|
+    t.string   "name",                              null: false
+    t.string   "display_field_name",                null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.string   "id_field_name",      default: "id", null: false
+    t.string   "data_access_type"
+  end
+
+  create_table "reporting_output_fields", force: true do |t|
+    t.string   "name",              null: false
+    t.string   "title"
+    t.integer  "report_id",         null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.string   "formatter"
+    t.integer  "numeric_precision"
+  end
+
+  add_index "reporting_output_fields", ["report_id"], :name => "index_reporting_output_fields_on_report_id"
+
+  create_table "reporting_reports", force: true do |t|
+    t.string   "name",                       null: false
+    t.string   "description"
+    t.string   "data_source",                null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.string   "primary_key", default: "id", null: false
+  end
+
+  create_table "reporting_specific_filter_groups", force: true do |t|
+    t.integer  "report_id"
+    t.integer  "filter_group_id"
+    t.integer  "sort_order",      default: 1, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "reporting_specific_filter_groups", ["filter_group_id"], :name => "index_of_filter_group_on_specific_filter_group"
+  add_index "reporting_specific_filter_groups", ["report_id"], :name => "index_of_report_on_specific_filter_group"
 
   create_table "roles", force: true do |t|
     t.integer "user_id"

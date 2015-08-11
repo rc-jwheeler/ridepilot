@@ -1,3 +1,4 @@
+<%= render 'custom_report_header'%>
 <% content_for(:title){translate_helper("daily_manifest_title") + " #{@date.strftime('%v')}"} %>
 <% i = 0 %>
 <% for driver, trips in @trips %>

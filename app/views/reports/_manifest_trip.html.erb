@@ -33,7 +33,7 @@
         <%= translate_helper("trip_run_label") + trip.run_text %><span class='address_separator'></span>
       </td>
       <td>
-        <%= translate_helper("trip_result_label") <%= trip.trip_result_name || translate_helper("pending") %>
+        <%= translate_helper("trip_result_label") % trip.trip_result_name || translate_helper("pending") %>
       </td>
     </tr>
   <% end %>

@@ -11,6 +11,8 @@ class Provider < ActiveRecord::Base
   has_many :addresses, :dependent => :nullify
   has_many :recurring_driver_compliances, :dependent => :destroy
   has_one :address_upload_flag
+  has_many :provider_reports
+  has_many :reports, through: :provider_reports
 
   has_attached_file :logo, :styles => { :small => "150x150>" }
   
