@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150810231635) do
+ActiveRecord::Schema.define(version: 20150811115350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -563,12 +563,18 @@ ActiveRecord::Schema.define(version: 20150810231635) do
     t.string   "vin"
     t.string   "garaged_location"
     t.integer  "provider_id"
-    t.boolean  "active",            default: true
+    t.boolean  "active",                       default: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",      default: 0
+    t.integer  "lock_version",                 default: 0
     t.integer  "default_driver_id"
     t.boolean  "reportable"
+    t.text     "insurance_coverage_details"
+    t.string   "ownership"
+    t.string   "responsible_party"
+    t.date     "registration_expiration_date"
+    t.integer  "seating_capacity"
+    t.text     "accessibility_equipment"
   end
 
   add_index "vehicles", ["default_driver_id"], :name => "index_vehicles_on_default_driver_id"

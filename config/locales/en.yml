@@ -200,6 +200,7 @@ en:
   operating_hours_unavailable: "Unavailable"
   operating_hours_24_hours: "24 Hours"
   operating_hours_open: "Open"
+  driver_form_details_heading: "Details"
 
   # Driver histories
   driver_histories_heading: "History Events"
@@ -809,6 +810,14 @@ en:
   vehicle_form_location_label: "Garaged Location"
   vehicle_form_active_label: "Active"
   vehicle_form_driver_label: "Driver"
+  vehicle_form_insurance_coverage_details_label: "Insurance Coverage"
+  vehicle_form_ownership_label: "Ownership"
+  vehicle_form_responsible_party_label: "Responsible Party"
+  vehicle_form_registration_expiration_date_label: "Registration Exp Date"
+  vehicle_form_seating_capacity_label: "Seating Capacity"
+  vehicle_form_accessibility_equipment_label: "Accessibility Equipment"
+  vehicle_form_details_heading: "Details"
+  vehicle_form_information_heading: "Additional Information"
   vehicle_form_reportable_label: "Vehicle should appear on vehicle report"
   vehicle_form_submit: "Submit"
   edit_vehicle_heading: "Edit Vehicle"

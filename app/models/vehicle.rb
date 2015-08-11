@@ -14,6 +14,8 @@ class Vehicle < ActiveRecord::Base
   validates :name, presence: true
   validates :vin, length: {is: 17, allow_nil: true, allow_blank: true},
     format: {with: /\A[^ioq]*\z/i, allow_nil: true}
+  validates_date :registration_expiration_date, allow_blank: true
+  validates :seating_capacity, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
 
   default_scope { order('active, name') }
   scope :active,       -> { where(:active => true) }
