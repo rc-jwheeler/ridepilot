@@ -101,7 +101,7 @@ module Reporting::ReportHelper
 
     data_access_type = lookup_table.data_access_type
     
-    unless data_access_type.blank? || 
+    unless current_user.super_admin? || data_access_type.blank? || 
       lookup_table.data_model.columns_hash.keys.index(lookup_table.id_field_name).nil?
 
       # double quote in case field_name is in uppercase

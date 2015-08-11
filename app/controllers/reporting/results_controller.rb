@@ -56,26 +56,27 @@ module Reporting
     end
 
     def filter_data(results)
-      # data access filtering 
-      # either filter by provider_id or agency_id
+      # data access filtering by provider_id
       
-      Reporting::FilterField.includes(:lookup_table)
-        .where(filter_group_id: @report.filter_groups.pluck(:id).uniq).each do |field|
-        
-        is_field_available = !@report.data_model.columns_hash.keys.index(field.name).nil? rescue false
-        next if !is_field_available
-
-        data_access_type = field.lookup_table.data_access_type if field.lookup_table
-        unless data_access_type.blank? || @report.data_model.columns_hash.keys.index(field.name).nil?
+      unless current_user.super_admin?
+        Reporting::FilterField.includes(:lookup_table)
+          .where(filter_group_id: @report.filter_groups.pluck(:id).uniq).each do |field|
           
-          field_name =  "\"#{field.name}\""
+          is_field_available = !@report.data_model.columns_hash.keys.index(field.name).nil? rescue false
+          next if !is_field_available
 
-          if data_access_type.to_sym == :provider
-            results = results.where("#{field_name} = ?" , current_user.try(:current_provider).try(:id))
+          data_access_type = field.lookup_table.data_access_type if field.lookup_table
+          unless data_access_type.blank? || @report.data_model.columns_hash.keys.index(field.name).nil?
+            
+            field_name =  "\"#{field.name}\""
+
+            if data_access_type.to_sym == :provider
+              results = results.where("#{field_name} = ?" , current_user.try(:current_provider).try(:id))
+            end
+
           end
-
+           
         end
-         
       end
 
       results
