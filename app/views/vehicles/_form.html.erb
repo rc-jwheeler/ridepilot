@@ -162,7 +162,7 @@
                   <td colspan="8"><%= translate_helper("vehicle_maintenance_events_empty") %></td>
                 </tr>
               <% end %>
-              <%= render partial: 'vehicle_maintenance_events/vehicle_maintenance_event', collection: @vehicle.vehicle_maintenance_events %>
+              <%= render partial: 'vehicle_maintenance_events/vehicle_maintenance_event', collection: @vehicle.vehicle_maintenance_events.default_order %>
             </tbody>
           </table>
           <% unless @readonly %>
@@ -191,7 +191,7 @@
                   <td colspan="3"><%= translate_helper("vehicle_maintenance_compliances_empty") %></td>
                 </tr>
               <% end %>
-              <%= render partial: 'vehicle_maintenance_compliances/vehicle_maintenance_compliance', collection: @vehicle.vehicle_maintenance_compliances %>
+              <%= render partial: 'vehicle_maintenance_compliances/vehicle_maintenance_compliance', collection: @vehicle.vehicle_maintenance_compliances.default_order %>
             </tbody>
           </table>
           <% unless @readonly %>

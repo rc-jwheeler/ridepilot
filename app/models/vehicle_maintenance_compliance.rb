@@ -14,7 +14,7 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   scope :for, -> (vehicle_id) { where(vehicle_id: vehicle_id) }
   scope :complete, -> { where().not(compliance_date: nil) }
   scope :incomplete, -> { where(compliance_date: nil) }
-  scope :default_order, -> { order("due_date IS NOT NULL, due_date DESC, due_mileage DESC") }
+  scope :default_order, -> { order("due_date IS NULL, due_date DESC, due_mileage DESC") }
   
   # NOTE These 2 scopes rely on data from vehicles and runs
   # RADAR change to pure SQL if this routinely operates on large sets
