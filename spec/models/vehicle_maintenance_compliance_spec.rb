@@ -153,9 +153,11 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
       compliance_1 = create :vehicle_maintenance_compliance, compliance_date: nil
       compliance_2 = create :vehicle_maintenance_compliance, compliance_date: ""
       compliance_3 = create :vehicle_maintenance_compliance, compliance_date: Date.current
-      expect(VehicleMaintenanceCompliance.complete).not_to include compliance_1
-      expect(VehicleMaintenanceCompliance.complete).not_to include compliance_2
-      expect(VehicleMaintenanceCompliance.complete).to include compliance_3
+      
+      complete = VehicleMaintenanceCompliance.complete
+      expect(complete).not_to include compliance_1
+      expect(complete).not_to include compliance_2
+      expect(complete).to include compliance_3
     end
   end
   
@@ -164,9 +166,11 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
       compliance_1 = create :vehicle_maintenance_compliance, compliance_date: nil
       compliance_2 = create :vehicle_maintenance_compliance, compliance_date: ""
       compliance_3 = create :vehicle_maintenance_compliance, compliance_date: Date.current
-      expect(VehicleMaintenanceCompliance.incomplete).to include compliance_1
-      expect(VehicleMaintenanceCompliance.incomplete).to include compliance_2
-      expect(VehicleMaintenanceCompliance.incomplete).not_to include compliance_3
+      
+      incomplete = VehicleMaintenanceCompliance.incomplete
+      expect(incomplete).to include compliance_1
+      expect(incomplete).to include compliance_2
+      expect(incomplete).not_to include compliance_3
     end
   end
   
@@ -190,16 +194,42 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
   end
   
   describe ".overdue" do
-    it "finds compliance events overdue as of today by default" do
-      pending
-      compliance = create :vehicle_maintenance_compliance, due_date: Date.current.yesterday
-      expect(VehicleMaintenanceCompliance.overdue).to include compliance
+    before do
+      # Allow invalid due_mileage values so that we can force overdue values
+      allow_any_instance_of(VehicleMaintenanceCompliance).to receive(:valid?).and_return(true)
+      
+      # Overdue
+      @compliance_1 = create :vehicle_maintenance_compliance, due_type: "date", due_date: Date.current.yesterday
+      @compliance_2 = create :vehicle_maintenance_compliance, due_type: "mileage", due_mileage: -1
+      @compliance_3 = create :vehicle_maintenance_compliance, due_type: "both", due_date: Date.current.yesterday, due_mileage: -1
+
+      # Not Overdue
+      @compliance_4 = create :vehicle_maintenance_compliance, due_type: "date", due_date: Date.current.tomorrow
+      @compliance_5 = create :vehicle_maintenance_compliance, due_type: "mileage", due_mileage: 100
+      @compliance_6 = create :vehicle_maintenance_compliance, due_type: "both", due_date: Date.current.yesterday, due_mileage: 100
+      @compliance_7 = create :vehicle_maintenance_compliance, due_type: "both", due_date: Date.current.tomorrow, due_mileage: -1
+    end
+    
+    it "uses the #overdue? method to select overdue objects" do
+      overdue = VehicleMaintenanceCompliance.overdue
+      expect(overdue).to include @compliance_1
+      expect(overdue).to include @compliance_2
+      expect(overdue).to include @compliance_3
+      expect(overdue).not_to include @compliance_4
+      expect(overdue).not_to include @compliance_5
+      expect(overdue).not_to include @compliance_6
+      expect(overdue).not_to include @compliance_7
     end
   
-    it "can find overdue compliance events as of a specific date" do
-      pending
-      compliance = create :vehicle_maintenance_compliance, due_date: Date.current
-      expect(VehicleMaintenanceCompliance.overdue(as_of: Date.current.tomorrow)).to include compliance
+    it "can find overdue compliance events as of a specific date (but it won't affect mileage criteria)" do
+      overdue = VehicleMaintenanceCompliance.overdue as_of: Date.current.yesterday
+      expect(overdue).not_to include @compliance_1
+      expect(overdue).to include @compliance_2
+      expect(overdue).not_to include @compliance_3
+      expect(overdue).not_to include @compliance_4
+      expect(overdue).not_to include @compliance_5
+      expect(overdue).not_to include @compliance_6
+      expect(overdue).not_to include @compliance_7
     end
   end
   
@@ -232,7 +262,7 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
   end
   
   describe "#vehicle_odometer_reading" do
-    it "knows its vehicle's last odometer reading" do
+    it "returns its vehicle's last_odometer_reading" do
       compliance = create :vehicle_maintenance_compliance
       expect(compliance.vehicle).to receive(:last_odometer_reading).and_return(123)
       expect(compliance.vehicle_odometer_reading).to eq 123

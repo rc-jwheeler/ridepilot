@@ -12,13 +12,14 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   validates_date :compliance_date, on_or_before: -> { Date.current }, allow_blank: true
   
   scope :for, -> (vehicle_id) { where(vehicle_id: vehicle_id) }
-  scope :complete, -> { where("compliance_date IS NOT NULL") }
-  scope :incomplete, -> { where("compliance_date IS NULL") }
+  scope :complete, -> { where().not(compliance_date: nil) }
+  scope :incomplete, -> { where(compliance_date: nil) }
+  scope :default_order, -> { order("due_date IS NOT NULL, due_date DESC, due_mileage DESC") }
   
-  # TODO
-  # scope :overdue, -> (as_of: Date.current) { incomplete.where("due_date < ?", as_of) }
-  # scope :due_soon, -> (as_of: Date.current, through: nil) { incomplete.where(due_date: as_of..(through || as_of + 6.days)) }
-  # scope :default_order, -> { order("due_date DESC") }
+  # NOTE These 2 scopes rely on data from vehicles and runs
+  # RADAR change to pure SQL if this routinely operates on large sets
+  scope :overdue, -> (as_of: Date.current) { where(id: incomplete.select{ |r| r.overdue?(as_of: as_of) }.collect(&:id)) }
+  scope :due_soon, -> (as_of: Date.current, within_mileage: 500) { where(id: incomplete.select{ |r| r.overdue?(as_of: as_of, mileage: (r.vehicle_odometer_reading - within_mileage)) }.collect(&:id)) }
   
   def complete!
     update_attribute :compliance_date, Date.current
