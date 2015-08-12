@@ -25,6 +25,7 @@
 //= require idletimeout
 //= require constants
 //= require fullcalendar
+//= require moment
 //= require_self
 
 function ISODateFormatToDateObject(str) {

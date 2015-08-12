@@ -114,6 +114,9 @@ gem 'nested_form', '~> 0.3.2'
 # reporting engine
 gem 'reporting', :github => 'camsys/reporting', :branch => 'master'
 
+# momentjs for datetime parsing
+gem 'momentjs-rails'
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'

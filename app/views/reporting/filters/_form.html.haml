@@ -5,13 +5,13 @@
       - filter_groups.each do |filter_group|
         = render partial: 'reporting/filters/filter_group', locals: {report: report, filter_group: filter_group.filter_group, search_form: f}
       :javascript
-        $('.filter-form .is-date-field').datetimepicker({
+        $('.filter-form .is-date-field').datepicker({
           pickTime: false,
           format: 'MM/DD/YYYY',
           language: '#{I18n.locale}'
         });
 
-        $('.filter-form .is-time-field').datetimepicker({
+        $('.filter-form .is-time-field').timepicker({
           format: 'HH:mm',
           useSeconds: false,
           pickDate: false,
