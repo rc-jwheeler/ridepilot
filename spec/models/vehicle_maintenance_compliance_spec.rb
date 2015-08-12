@@ -34,17 +34,10 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
         @compliance = build :vehicle_maintenance_compliance, due_type: "date", due_date: Date.current, due_mileage: 1
       end
 
-      it "requires a due_date on or after today" do
+      it "requires a due_date" do
         @compliance.due_date = nil
         expect(@compliance.valid?).to be_falsey
         expect(@compliance.errors.keys).to include :due_date
-
-        @compliance.due_date = Date.current.yesterday
-        expect(@compliance.valid?).to be_falsey
-        expect(@compliance.errors.keys).to include :due_date
-
-        @compliance.due_date = Date.current
-        expect(@compliance.valid?).to be_truthy
       end
 
       it "does not require a due_mileage" do
@@ -86,17 +79,10 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
         @compliance = build :vehicle_maintenance_compliance, due_type: "both", due_date: Date.current, due_mileage: 1
       end
 
-      it "requires a due_date on or after today" do
+      it "requires a due_date" do
         @compliance.due_date = nil
         expect(@compliance.valid?).to be_falsey
         expect(@compliance.errors.keys).to include :due_date
-
-        @compliance.due_date = Date.current.yesterday
-        expect(@compliance.valid?).to be_falsey
-        expect(@compliance.errors.keys).to include :due_date
-
-        @compliance.due_date = Date.current
-        expect(@compliance.valid?).to be_truthy
       end
 
       it "requires due_mileage to be an integer > 0" do
@@ -148,18 +134,6 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
     end
   end
 
-  describe ".complete" do
-    it "finds compliance events that have a compliance date" do
-      compliance_1 = create :vehicle_maintenance_compliance, compliance_date: nil
-      compliance_2 = create :vehicle_maintenance_compliance, compliance_date: ""
-      compliance_3 = create :vehicle_maintenance_compliance, compliance_date: Date.current
-
-      complete = VehicleMaintenanceCompliance.complete
-      expect(complete).not_to include compliance_1, compliance_2
-      expect(complete).to include compliance_3
-    end
-  end
-
   describe ".incomplete" do
     it "finds compliance events that do not have a compliance date" do
       compliance_1 = create :vehicle_maintenance_compliance, compliance_date: nil
@@ -169,24 +143,6 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
       incomplete = VehicleMaintenanceCompliance.incomplete
       expect(incomplete).to include compliance_1, compliance_2
       expect(incomplete).not_to include compliance_3
-    end
-  end
-
-  describe ".for" do
-    before do
-      @vehicle_1 = create :vehicle
-      @vehicle_2 = create :vehicle
-      @for_vehicle_1 = create :vehicle_maintenance_compliance, vehicle: @vehicle_1
-      @for_vehicle_2 = create :vehicle_maintenance_compliance, vehicle: @vehicle_2
-    end
-
-    it "finds compliance events for a specified vehicle or vehicle_id" do
-      expect(VehicleMaintenanceCompliance.for(@vehicle_1)).to include @for_vehicle_1
-      expect(VehicleMaintenanceCompliance.for(@vehicle_1)).not_to include @for_vehicle_2
-    end
-
-    it "can find compliance events for an array of vehicles or vehicle_ids" do
-      expect(VehicleMaintenanceCompliance.for([@vehicle_1, @vehicle_2])).to include @for_vehicle_1, @for_vehicle_2
     end
   end
 
@@ -220,6 +176,7 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
     end
   end
 
+  # RADAR Not currently used, but will be by reports
   describe ".due_soon" do
     before do
       # Due today, or within 500 miles

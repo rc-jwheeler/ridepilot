@@ -101,4 +101,39 @@ RSpec.describe Vehicle, type: :model do
       expect(@vehicle.last_odometer_reading).to eq 0
     end
   end
+
+  describe "compliant?" do
+    before do
+      @vehicle = create :vehicle
+    end
+
+    it "returns true when a vehicle has no compliance entries" do
+      expect(@vehicle.compliant?).to be_truthy
+    end
+
+    it "returns true when a vehicle's compliance entries are all complete" do
+      create :vehicle_maintenance_compliance, vehicle: @vehicle, compliance_date: Date.current
+      expect(@vehicle.compliant?).to be_truthy
+    end
+
+    it "returns true when a vehicle's incomplete compliance entries are all not due" do
+      create :vehicle_maintenance_compliance, vehicle: @vehicle, due_type: 'date', due_date: Date.current.tomorrow
+      create :vehicle_maintenance_compliance, vehicle: @vehicle, due_type: 'mileage', due_mileage: 100
+      create :vehicle_maintenance_compliance, vehicle: @vehicle, due_type: 'both', due_date: Date.current.tomorrow, due_mileage: 100
+      expect(@vehicle.compliant?).to be_truthy
+    end
+    
+    it "returns false when a vehicle has over due compliance entries" do
+      allow(@vehicle).to receive(:last_odometer_reading).and_return(101)
+
+      compliance = create :vehicle_maintenance_compliance, vehicle: @vehicle, due_type: 'date', due_date: Date.current.yesterday, due_mileage: 100
+      expect(@vehicle.compliant?).to be_falsey
+
+      compliance.update_attributes due_type: 'mileage'
+      expect(@vehicle.reload.compliant?).to be_falsey
+
+      compliance.update_attributes due_type: 'both'
+      expect(@vehicle.reload.compliant?).to be_falsey
+    end
+  end  
 end

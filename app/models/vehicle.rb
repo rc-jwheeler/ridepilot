@@ -34,4 +34,8 @@ class Vehicle < ActiveRecord::Base
   def last_odometer_reading
     runs.where().not(end_odometer: nil).last.try(:end_odometer).to_i
   end
+
+  def compliant?(as_of: Date.current)
+    vehicle_maintenance_compliances.overdue(as_of: as_of).empty?
+  end  
 end

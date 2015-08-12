@@ -6,13 +6,11 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   validates_presence_of :vehicle, :event
   validates :due_type, inclusion: { in: DUE_TYPES.map(&:to_s) }
   validates :due_date, presence: { if: :due_date_required? }
-  validates_date :due_date, on_or_after: -> { Date.current }, allow_blank: true
+  validates_date :due_date, allow_blank: true
   validates :due_mileage, presence: { if: :due_mileage_required? }
   validates :due_mileage, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
   validates_date :compliance_date, on_or_before: -> { Date.current }, allow_blank: true
   
-  scope :for, -> (vehicle_id) { where(vehicle_id: vehicle_id) }
-  scope :complete, -> { where().not(compliance_date: nil) }
   scope :incomplete, -> { where(compliance_date: nil) }
   scope :default_order, -> { order("due_date IS NULL, due_date DESC, due_mileage DESC") }
   

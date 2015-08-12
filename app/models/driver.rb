@@ -64,7 +64,7 @@ class Driver < ActiveRecord::Base
   end
   
   def compliant?(as_of: Date.current)
-    driver_compliances.for(id).overdue(as_of: as_of).empty?
+    driver_compliances.overdue(as_of: as_of).empty?
   end
   
   private
