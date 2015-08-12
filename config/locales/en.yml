@@ -93,6 +93,7 @@ en:
   new_customer: "New Customer"
   new_trip_for_customer: "New Trip for This Customer"
   duplicate: "Duplicate"
+  merge: 'Merge'
   customer: "Customer"
   reassociate_customer_trips: "Associate this customer's trips with another customer."
   group_name: "Group Name"
