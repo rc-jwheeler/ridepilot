@@ -20,7 +20,7 @@ module Reporting
           |x| {
             name: x 
           }
-        } : @report.output_fields
+        } : @report.output_fields.order(:sort_order, :id)
 
       # default order by :id
       if !@report.data_model.columns_hash.keys.index("id").nil? 

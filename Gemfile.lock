@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/camsys/reporting.git
-  revision: 8e2b92a19008f0f9c1c5ba13b3c1606236bae7bc
+  revision: 732c92eca436131ef8843a946c89414860a01fcc
   branch: master
   specs:
     reporting (0.0.2)
@@ -86,12 +86,12 @@ GEM
     autoprefixer-rails (5.2.1.1)
       execjs
       json
-    aws-sdk (2.1.13)
-      aws-sdk-resources (= 2.1.13)
-    aws-sdk-core (2.1.13)
+    aws-sdk (2.1.14)
+      aws-sdk-resources (= 2.1.14)
+    aws-sdk-core (2.1.14)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.1.13)
-      aws-sdk-core (= 2.1.13)
+    aws-sdk-resources (2.1.14)
+      aws-sdk-core (= 2.1.14)
     bcrypt (3.1.10)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
@@ -199,7 +199,7 @@ GEM
       fog-core (~> 1.22)
       fog-json
       inflecto (~> 0.0.2)
-    fog-core (1.32.0)
+    fog-core (1.32.1)
       builder
       excon (~> 0.45)
       formatador (~> 0.2)

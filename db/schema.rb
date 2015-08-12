@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150811210219) do
+ActiveRecord::Schema.define(version: 20150812182535) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -433,6 +433,7 @@ ActiveRecord::Schema.define(version: 20150811210219) do
     t.datetime "updated_at",        null: false
     t.string   "formatter"
     t.integer  "numeric_precision"
+    t.integer  "sort_order"
   end
 
   add_index "reporting_output_fields", ["report_id"], :name => "index_reporting_output_fields_on_report_id"
