@@ -161,11 +161,6 @@ RSpec.describe Driver, type: :model do
       create :driver_compliance, driver: @driver, due_date: Date.current.yesterday
       expect(@driver.compliant?).to be_falsey
     end
-    
-    it "only checks against its own compliance entries" do
-      create :driver_compliance, due_date: Date.current.yesterday
-      expect(@driver.compliant?).to be_truthy
-    end
   end
   
   describe "documents" do

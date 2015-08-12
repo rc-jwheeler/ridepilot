@@ -10,6 +10,8 @@ class Vehicle < ActiveRecord::Base
   has_one :device_pool, :through => :device_pool_driver
   
   has_many :vehicle_maintenance_events, dependent: :destroy, inverse_of: :vehicle
+  has_many :vehicle_maintenance_compliances, dependent: :destroy, inverse_of: :vehicle
+  has_many :runs, inverse_of: :vehicle # TODO add :dependent rule
 
   validates :provider, presence: true
   validates :default_driver, presence: true
@@ -28,4 +30,12 @@ class Vehicle < ActiveRecord::Base
   def self.unassigned(provider)
     for_provider(provider).reject { |vehicle| vehicle.device_pool.present? }
   end
+
+  def last_odometer_reading
+    runs.where().not(end_odometer: nil).last.try(:end_odometer).to_i
+  end
+
+  def compliant?(as_of: Date.current)
+    vehicle_maintenance_compliances.overdue(as_of: as_of).empty?
+  end  
 end

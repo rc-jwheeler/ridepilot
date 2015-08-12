@@ -101,6 +101,7 @@ Rails.application.routes.draw do
     resources :provider_ethnicities
     resources :vehicles do
       resources :vehicle_maintenance_events, :except => [:index, :show]
+      resources :vehicle_maintenance_compliances, :except => [:index, :show]
     end
 
     resources :runs do
@@ -146,7 +147,5 @@ Rails.application.routes.draw do
         put :destroy_value
       end
     end
-
   end
-
 end

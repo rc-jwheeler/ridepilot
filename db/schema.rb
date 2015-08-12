@@ -626,6 +626,20 @@ ActiveRecord::Schema.define(version: 20150812182535) do
   add_index "users", ["password_changed_at"], :name => "index_users_on_password_changed_at"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
+  create_table "vehicle_maintenance_compliances", force: true do |t|
+    t.integer  "vehicle_id"
+    t.string   "event"
+    t.text     "notes"
+    t.date     "due_date"
+    t.integer  "due_mileage"
+    t.string   "due_type"
+    t.date     "compliance_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "vehicle_maintenance_compliances", ["vehicle_id"], :name => "index_vehicle_maintenance_compliances_on_vehicle_id"
+
   create_table "vehicle_maintenance_events", force: true do |t|
     t.integer  "vehicle_id"
     t.boolean  "reimbursable"
