@@ -24,11 +24,11 @@ RSpec.describe "Reports" do
           visit customer_path(:id => @customer.id)
         end
         
-        it "shows duplicate link" do
-          expect(page.has_link?("Duplicate")).to be
+        it "shows merge link" do
+          expect(page.has_link?("Merge")).to be
         end
         
-        it "renders the duplicate customer dialog" do
+        it "renders the merge customer dialog" do
           expect(page.has_selector?("#confirm-destroy", visible: false)).to be
         end
       end
