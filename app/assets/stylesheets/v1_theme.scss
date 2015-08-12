@@ -654,7 +654,10 @@ table th {
 table th {
   text-align: left;
   background: #2e6399;
-  color: #ddd;
+  color: white;
+  a {
+    color: white;
+  }
 }
 table tr.day th {
   background: #86B4EA;
