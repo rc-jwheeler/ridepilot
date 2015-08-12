@@ -821,6 +821,7 @@ en:
   vehicle_form_information_heading: "Additional Information"
   vehicle_form_reportable_label: "Vehicle should appear on vehicle report"
   vehicle_form_last_odometer_reading: "Last reported mileage"
+  vehicle_overdue_events: "Maintenance Overdue"
   vehicle_form_submit: "Submit"
   edit_vehicle_heading: "Edit Vehicle"
   new_vehicle_heading: "New Vehicle"
