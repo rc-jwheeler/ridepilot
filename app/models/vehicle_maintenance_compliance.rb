@@ -19,7 +19,7 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   # NOTE These 2 scopes rely on data from vehicles and runs
   # RADAR change to pure SQL if this routinely operates on large sets
   scope :overdue, -> (as_of: Date.current) { where(id: incomplete.select{ |r| r.overdue?(as_of: as_of) }.collect(&:id)) }
-  scope :due_soon, -> (as_of: Date.current, within_mileage: 500) { where(id: incomplete.select{ |r| r.overdue?(as_of: as_of, mileage: (r.vehicle_odometer_reading - within_mileage)) }.collect(&:id)) }
+  scope :due_soon, -> (as_of: Date.current, through: nil, within_mileage: 500) { where(id: incomplete.select{ |r|  r.overdue?(as_of: as_of..(through || as_of + 6.days), mileage: r.vehicle_odometer_reading..(r.vehicle_odometer_reading + within_mileage)) }.collect(&:id)) }
   
   def complete!
     update_attribute :compliance_date, Date.current
