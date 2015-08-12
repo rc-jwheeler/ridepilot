@@ -283,12 +283,16 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
             expect(@compliance.overdue?).to be_truthy
           end
         end
-        
+
         it "can optionally accept another date to check against the due_date" do
           expect(@compliance.overdue?(as_of: Date.current.yesterday)).to be_falsey
           expect(@compliance.overdue?(as_of: Date.current.tomorrow)).to be_truthy
         end
-        
+
+        it "can optionally accept a range of dates to check against the due_date" do
+          expect(@compliance.overdue?(as_of: Date.current..Date.current.tomorrow)).to be_truthy
+        end
+
         it "doesn't care about due_mileage" do
           expect(@compliance).not_to receive(:due_mileage)
           expect(@compliance.overdue?).to be_falsey
@@ -299,7 +303,7 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
         before do
           @compliance = create :vehicle_maintenance_compliance, due_type: "mileage", due_mileage: 100
         end
-        
+
         it "doesn't care about due_date" do
           expect(@compliance).not_to receive(:due_date)
           expect(@compliance.overdue?).to be_falsey
@@ -312,10 +316,14 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
           expect(@compliance).to receive(:vehicle_odometer_reading).and_return(101)
           expect(@compliance.overdue?).to be_truthy
         end
-        
+
         it "can optionally accept another mileage to check against the due_mileage" do
           expect(@compliance.overdue?(mileage: 100)).to be_falsey
           expect(@compliance.overdue?(mileage: 101)).to be_truthy
+        end
+        
+        it "can optionally accept a range of mileages to check against the due_mileage" do
+          expect(@compliance.overdue?(mileage: 100..101)).to be_truthy
         end
       end
 
@@ -323,7 +331,7 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
         before do
           @compliance = create :vehicle_maintenance_compliance, due_type: "both", due_date: Date.current, due_mileage: 100
         end
-      
+
         it "checks against both due_date and due_mileage" do
           expect(@compliance.overdue?).to be_falsey
           expect(@compliance.overdue?(as_of: Date.current.tomorrow)).to be_falsey
