@@ -168,7 +168,7 @@ RSpec.describe Driver, type: :model do
       @driver = create :driver
     end
 
-    it "destroys driver compliances when the driver is destroyed" do
+    it "destroys documents when the driver is destroyed" do
       3.times { create :document, documentable: @driver }
       expect {
         @driver.destroy
