@@ -100,6 +100,7 @@ Rails.application.routes.draw do
     resources :monthlies, :except => [:show, :destroy]
     resources :provider_ethnicities
     resources :vehicles do
+      resources :documents, except: [:index, :show]
       resources :vehicle_maintenance_events, :except => [:index, :show]
       resources :vehicle_maintenance_compliances, :except => [:index, :show]
       resources :vehicle_warranties, :except => [:index, :show]
