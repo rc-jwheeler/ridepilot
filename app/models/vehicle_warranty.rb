@@ -1,4 +1,6 @@
 class VehicleWarranty < ActiveRecord::Base
+  include DocumentAssociable
+
   belongs_to :vehicle, inverse_of: :vehicle_warranties
   
   validates_presence_of :vehicle, :description

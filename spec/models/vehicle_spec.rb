@@ -156,4 +156,17 @@ RSpec.describe Vehicle, type: :model do
       expect(@vehicle.expired?).to be_truthy
     end
   end
+  
+  describe "documents" do
+    before do
+      @vehicle = create :vehicle
+    end
+
+    it "destroys documents when the vehicle is destroyed" do
+      3.times { create :document, documentable: @vehicle }
+      expect {
+        @vehicle.destroy
+      }.to change(Document, :count).by(-3)
+    end
+  end
 end

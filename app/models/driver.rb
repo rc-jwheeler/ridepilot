@@ -66,12 +66,4 @@ class Driver < ActiveRecord::Base
   def compliant?(as_of: Date.current)
     driver_compliances.overdue(as_of: as_of).empty?
   end
-  
-  private
-  
-  def blank_document?(attributes)
-    attributes['document_file_name'].blank? ||
-      attributes['document_content_type'].blank? ||
-      attributes['document_file_size'].blank?
-  end
 end

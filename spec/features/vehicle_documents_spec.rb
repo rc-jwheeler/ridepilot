@@ -1,8 +1,8 @@
 require "rails_helper"
 
-RSpec.describe "VehicleWarranties" do
+RSpec.describe "VehicleDocuments" do
   context "for admin" do
-    before :each do
+    before do
       @admin = create(:admin)
       visit new_user_session_path
       fill_in 'Email', :with => @admin.email
@@ -10,25 +10,24 @@ RSpec.describe "VehicleWarranties" do
       click_button 'Log In'
       
       @vehicle = create :vehicle, :provider => @admin.current_provider
-      @vehicle_warranty = create :vehicle_warranty, vehicle: @vehicle
+      @document = create :document, documentable: @vehicle
     end
     
-    it_behaves_like "it accepts nested attributes for document associations" do
-      before do
-        @owner = @vehicle
-        @example = @vehicle_warranty
-      end
-    end
-
     describe "GET /vehicles/:id" do
-      it "shows the description of the warranty" do
+      before do
         visit vehicle_path(id: @vehicle.to_param)
-        expect(page).to have_text @vehicle_warranty.description
       end
       
-      it "shows the expiration date of the warranty" do
-        visit vehicle_path(id: @vehicle.to_param)
-        expect(page).to have_text @vehicle_warranty.expiration_date.to_s(:long)
+      it "shows the uploaded date of the document" do
+        expect(page).to have_text @document.document_updated_at.to_s(:long)
+      end
+      
+      it "shows the description of the document" do
+        expect(page).to have_text @document.description
+      end
+      
+      it "shows a direct link to the uploaded file" do
+        expect(page).to have_link "Download", href: @document.document.url
       end
     end
 
@@ -38,15 +37,15 @@ RSpec.describe "VehicleWarranties" do
       end
       
       # TODO Pending acceptance and merge of capybara_js branch into develop
-      skip "shows a link to delete the warranty", js: true do
+      skip "shows a link to delete the document", js: true do
       end
       
       # TODO Pending acceptance and merge of capybara_js branch into develop
-      skip "shows a link to edit the warranty", js: true do
+      skip "shows a link to edit the document", js: true do
       end
       
       # TODO Pending acceptance and merge of capybara_js branch into develop
-      skip "shows a link to add a new warranty", js: true do
+      skip "shows a link to add a new document", js: true do
       end
     end
   end

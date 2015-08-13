@@ -3,16 +3,17 @@ class Vehicle < ActiveRecord::Base
 
   has_paper_trail
 
-  belongs_to :provider
   belongs_to :default_driver, :class_name => "Driver"
+  belongs_to :provider
   
   has_one :device_pool_driver, :dependent => :destroy
   has_one :device_pool, :through => :device_pool_driver
   
-  has_many :vehicle_maintenance_events, dependent: :destroy, inverse_of: :vehicle
-  has_many :vehicle_maintenance_compliances, dependent: :destroy, inverse_of: :vehicle
-  has_many :vehicle_warranties, dependent: :destroy, inverse_of: :vehicle
+  has_many :documents, as: :documentable, dependent: :destroy, inverse_of: :documentable
   has_many :runs, inverse_of: :vehicle # TODO add :dependent rule
+  has_many :vehicle_maintenance_compliances, dependent: :destroy, inverse_of: :vehicle
+  has_many :vehicle_maintenance_events, dependent: :destroy, inverse_of: :vehicle
+  has_many :vehicle_warranties, dependent: :destroy, inverse_of: :vehicle
 
   validates :provider, presence: true
   validates :default_driver, presence: true

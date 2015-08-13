@@ -69,6 +69,8 @@
           </div>
         </div><!-- END .panel-body -->
       </div><!-- END .panel -->
+      
+      <%= render partial: "document_associations/form_panel", locals: {f: f, documents: @vehicle_maintenance_compliance.vehicle.documents} %>
     </div><!-- END .col-md-12 -->
   </div><!-- END .row -->
   

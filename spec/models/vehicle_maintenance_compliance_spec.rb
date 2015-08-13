@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe VehicleMaintenanceCompliance, type: :model do
+  it_behaves_like "an associable for a document" do
+    before do
+      @owner = create :vehicle
+    end
+  end
+  
   it "requires a vehicle" do
     compliance = build :vehicle_maintenance_compliance, vehicle: nil
     expect(compliance.valid?).to be_falsey

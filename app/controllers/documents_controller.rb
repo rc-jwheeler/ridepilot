@@ -1,10 +1,10 @@
 class DocumentsController < ApplicationController
   # Try to load any polymorphic associations
   load_resource :driver
-  # TODO load_resource :vehicle
+  load_resource :vehicle
   
   # Load documents through their associated parent
-  load_and_authorize_resource :document, through: [:driver] # TODO , :vehicle
+  load_and_authorize_resource :document, through: [:driver, :vehicle]
     
   before_filter :set_parent
   before_filter :authorize_parent
@@ -59,7 +59,7 @@ class DocumentsController < ApplicationController
   end
 
   def set_parent
-    @parent = @driver # TODO: || @vehicle
+    @parent = @driver || @vehicle
   end
 
   def authorize_parent
