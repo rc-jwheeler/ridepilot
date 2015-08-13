@@ -6,10 +6,12 @@ class DriverHistoriesController < ApplicationController
 
   # GET /driver_histories/new
   def new
+    prep_edit
   end
 
   # GET /driver_histories/1/edit
   def edit
+    prep_edit
   end
 
   # POST /driver_histories
@@ -20,6 +22,7 @@ class DriverHistoriesController < ApplicationController
         format.js
       end
     else
+      prep_edit
       render :new
     end
   end
@@ -32,6 +35,7 @@ class DriverHistoriesController < ApplicationController
         format.js
       end
     else
+      prep_edit
       render :edit
     end
   end
@@ -46,6 +50,10 @@ class DriverHistoriesController < ApplicationController
   end
 
   private
+
+  def prep_edit
+    @driver_history.document_associations.build
+  end
 
   def driver_history_params
     params.require(:driver_history).permit(:event, :notes, :event_date, document_associations_attributes: [:id, :document_id, :_destroy])

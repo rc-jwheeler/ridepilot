@@ -13,6 +13,13 @@ RSpec.describe "VehicleMaintenanceCompliances" do
       @vehicle_maintenance_compliance = create :vehicle_maintenance_compliance, vehicle: @vehicle, compliance_date: Date.current
     end
     
+    it_behaves_like "it accepts nested attributes for document associations" do
+      before do
+        @owner = @vehicle
+        @example = @vehicle_maintenance_compliance
+      end
+    end
+
     describe "GET /vehicles/:id" do
       it "shows the name of the compliance event" do
         visit vehicle_path(id: @vehicle.to_param)

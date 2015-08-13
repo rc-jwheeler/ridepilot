@@ -6,10 +6,12 @@ class VehicleMaintenanceCompliancesController < ApplicationController
 
   # GET /vehicle_maintenance_compliances/new
   def new
+    prep_edit
   end
 
   # GET /vehicle_maintenance_compliances/1/edit
   def edit
+    prep_edit
   end
 
   # POST /vehicle_maintenance_compliances
@@ -20,6 +22,7 @@ class VehicleMaintenanceCompliancesController < ApplicationController
         format.js
       end
     else
+      prep_edit
       render :new
     end
   end
@@ -32,6 +35,7 @@ class VehicleMaintenanceCompliancesController < ApplicationController
         format.js
       end
     else
+      prep_edit
       render :edit
     end
   end
@@ -47,7 +51,10 @@ class VehicleMaintenanceCompliancesController < ApplicationController
 
   private
 
-  # Only allow a trusted parameter "white list" through.
+  def prep_edit
+    @vehicle_maintenance_compliance.document_associations.build
+  end
+
   def vehicle_maintenance_compliance_params
     params.require(:vehicle_maintenance_compliance).permit(:event, :notes, :due_type, :due_date, :due_mileage, :compliance_date, document_associations_attributes: [:id, :document_id, :_destroy])
   end

@@ -13,6 +13,13 @@ RSpec.describe "VehicleWarranties" do
       @vehicle_warranty = create :vehicle_warranty, vehicle: @vehicle
     end
     
+    it_behaves_like "it accepts nested attributes for document associations" do
+      before do
+        @owner = @vehicle
+        @example = @vehicle_warranty
+      end
+    end
+
     describe "GET /vehicles/:id" do
       it "shows the description of the warranty" do
         visit vehicle_path(id: @vehicle.to_param)

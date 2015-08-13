@@ -6,10 +6,12 @@ class VehicleMaintenanceEventsController < ApplicationController
 
   # GET /vehicle_maintenance_events/new
   def new
+    prep_edit
   end
 
   # GET /vehicle_maintenance_events/1/edit
   def edit
+    prep_edit
   end
 
   # POST /vehicle_maintenance_events
@@ -20,6 +22,7 @@ class VehicleMaintenanceEventsController < ApplicationController
         format.js
       end
     else
+      prep_edit
       render :new
     end 
   end
@@ -32,6 +35,7 @@ class VehicleMaintenanceEventsController < ApplicationController
         format.js
       end
     else
+      prep_edit
       render :edit
     end
   end
@@ -47,8 +51,11 @@ class VehicleMaintenanceEventsController < ApplicationController
 
   private
   
+  def prep_edit
+    @vehicle_maintenance_event.document_associations.build
+  end
+
   def vehicle_maintenance_event_params
     params.require(:vehicle_maintenance_event).permit(:vehicle_id, :reimbursable, :service_date, :invoice_date, :services_performed, :odometer, :vendor_name, :invoice_number, :invoice_amount, document_associations_attributes: [:id, :document_id, :_destroy])
-  end
-  
+  end  
 end

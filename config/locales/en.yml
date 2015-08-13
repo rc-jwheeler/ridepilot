@@ -796,7 +796,7 @@ en:
   invoice_amount: "Invoice Amount"
   reimbursable: "Reimbursable"
   services_performed: "Services Performed"
-  maintenance_form_submit: "Submit"
+  maintenance_form_submit: "Save"
   edit_maintenance_heading: "Edit Maintenance Event"
   new_maintenance_heading: "Add Maintenance Event"
   back_to_provider: "Back"

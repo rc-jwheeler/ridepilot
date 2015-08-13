@@ -1,5 +1,5 @@
 <% remote ||= false %>
-<%= form_for [@vehicle, @vehicle_maintenance_event], remote: remote do |f| %>
+<%= nested_form_for [@vehicle, @vehicle_maintenance_event], remote: remote do |f| %>
   <% if @vehicle_maintenance_event.errors.any? %>
     <div class="panel panel-danger">
       <div class="panel-heading"><%= translate_helper("vehicle_maintenance_event_form_error", count: @vehicle_maintenance_event.errors.count) %></div>
@@ -88,6 +88,8 @@
           </div>
         </div><!-- END .panel-body -->
       </div><!-- END .panel -->
+      
+      <%= render partial: "document_associations/form_panel", locals: {f: f, documents: @vehicle_maintenance_event.vehicle.documents} %>
     </div><!-- END .col-md-12 -->
   </div><!-- END .row -->
   
