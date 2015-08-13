@@ -298,6 +298,9 @@ en:
   driver_documents_heading: "Driver Documentation"
   driver_documents_add_link_title: "Add document"
   driver_documents_empty: "No documents exist for this driver"
+  vehicle_documents_heading: "Vehicle Documentation"
+  vehicle_documents_add_link_title: "Add document"
+  vehicle_documents_empty: "No documents exist for this vehicle"
   document_delete_confirm: "Are you sure you want to delete this document?"
   document_form_error:
     one: "1 error prohibited this document from being saved"
