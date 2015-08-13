@@ -108,7 +108,8 @@ class Address < ActiveRecord::Base
       :phone_number => phone_number,
       :lat => latitude,
       :lon => longitude,
-      :default_trip_purpose => trip_purpose_name
+      :default_trip_purpose => trip_purpose_name,
+      :notes => notes
     }
   end
 

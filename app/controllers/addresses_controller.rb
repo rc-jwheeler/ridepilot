@@ -44,6 +44,7 @@ class AddressesController < ApplicationController
     addresses = Address.accessible_by(current_ability).where(["((LOWER(address) like '%' || ? || '%' ) and  (city || ', ' || state || ' ' || zip like ? || '%')) or LOWER(building_name) like '%' || ? || '%' or LOWER(name) like '%' || ? || '%' ", address, city_state_zip, term, term]).where(:provider_id => current_provider_id, :inactive => false)
 
     if addresses.size > 0
+
       #there are some existing addresses
       address_json = addresses.map { |address| address.json }
 
@@ -83,7 +84,8 @@ class AddressesController < ApplicationController
                     :city => address['city'],
                     :state => STATE_NAME_TO_POSTAL_ABBREVIATION[address['state'].upcase],
                     :zip => address['postcode'],
-                    :the_geom => RGeo::Geographic.spherical_factory(srid: 4326).point(address['lon'].to_f, address['lat'].to_f)
+                    :the_geom => RGeo::Geographic.spherical_factory(srid: 4326).point(address['lon'].to_f, address['lat'].to_f),
+                    :notes => address['notes']
                     )
         address_obj.json
 
