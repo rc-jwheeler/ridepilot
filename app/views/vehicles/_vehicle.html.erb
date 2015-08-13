@@ -32,4 +32,7 @@
   <td>
     <%= vehicle.compliant? ? translate_helper("no") : translate_helper("yes") %>
   </td>
+  <td>
+    <%= vehicle.expired? ? translate_helper("yes") : translate_helper("no") %>
+  </td>
 </tr>

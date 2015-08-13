@@ -102,6 +102,7 @@ Rails.application.routes.draw do
     resources :vehicles do
       resources :vehicle_maintenance_events, :except => [:index, :show]
       resources :vehicle_maintenance_compliances, :except => [:index, :show]
+      resources :vehicle_warranties, :except => [:index, :show]
     end
 
     resources :runs do

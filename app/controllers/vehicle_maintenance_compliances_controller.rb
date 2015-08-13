@@ -47,6 +47,7 @@ class VehicleMaintenanceCompliancesController < ApplicationController
 
   private
 
+  # Only allow a trusted parameter "white list" through.
   def vehicle_maintenance_compliance_params
     params.require(:vehicle_maintenance_compliance).permit(:event, :notes, :due_type, :due_date, :due_mileage, :compliance_date)
   end

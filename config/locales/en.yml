@@ -798,6 +798,21 @@ en:
   new_maintenance_heading: "Add Maintenance Event"
   back_to_provider: "Back"
 
+  # Vehicle Warranties
+  vehicle_warranties_heading: "Vehicle and Equipment Warranties"
+  vehicle_warranties_add_link_title: "Add warranty"
+  vehicle_warranties_empty: "No warranties exist for this vehicle"
+  vehicle_warranty_delete_confirm: "Are you sure you want to delete this warranty?"
+  vehicle_warranty_form_error:
+    one: "1 error prohibited this warranty from being saved"
+    other: "%{count} errors prohibited this warranty from being saved"
+  vehicle_warranty_form_new_heading: "New warranty"
+  vehicle_warranty_form_edit_heading: "Edit warranty"
+  vehicle_warranty_form_description: "Description"
+  vehicle_warranty_form_notes: "Notes"
+  vehicle_warranty_form_expiration_date: "Expiration Date"
+  vehicle_warranty_form_submit: "Save"
+
   # Vehicles
   vehicle_form_error_message:
     one: "%{count} error prohibited this vehicle from being saved:"
@@ -822,6 +837,7 @@ en:
   vehicle_form_reportable_label: "Vehicle should appear on vehicle report"
   vehicle_form_last_odometer_reading: "Last reported mileage"
   vehicle_overdue_events: "Maintenance Overdue"
+  vehicle_expired_warranties: "Expired Warranties"
   vehicle_form_submit: "Submit"
   edit_vehicle_heading: "Edit Vehicle"
   new_vehicle_heading: "New Vehicle"

@@ -29,12 +29,13 @@
           <th><%= translate_helper("vehicle_form_active_label") %></th>
           <th><%= translate_helper("vehicle_form_last_odometer_reading") %></th>
           <th><%= translate_helper("vehicle_overdue_events") %></th>
+          <th><%= translate_helper("vehicle_expired_warranties") %></th>
         </tr>
       </thead>
       <tbody>
         <% if @vehicles.empty? %>
           <tr>
-            <td colspan="9"><%= translate_helper("no_vehicles") %></td>
+            <td colspan="12"><%= translate_helper("no_vehicles") %></td>
           </tr>
         <% end %>
         <%= render partial: 'vehicle', collection: @vehicles %>

@@ -64,6 +64,7 @@ class Ability
       can :manage, User, :roles => {:provider_id => provider.id}
       can :manage, VehicleMaintenanceEvent, :vehicle => {:provider_id => provider.id}
       can :manage, VehicleMaintenanceCompliance, :vehicle => {:provider_id => provider.id}
+      can :manage, VehicleWarranty, :vehicle => {:provider_id => provider.id}
       can :load,   Address
     else
       can :read, User, :roles => {:provider_id => provider.id}

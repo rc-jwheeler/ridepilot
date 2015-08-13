@@ -11,6 +11,7 @@ class Vehicle < ActiveRecord::Base
   
   has_many :vehicle_maintenance_events, dependent: :destroy, inverse_of: :vehicle
   has_many :vehicle_maintenance_compliances, dependent: :destroy, inverse_of: :vehicle
+  has_many :vehicle_warranties, dependent: :destroy, inverse_of: :vehicle
   has_many :runs, inverse_of: :vehicle # TODO add :dependent rule
 
   validates :provider, presence: true
@@ -37,5 +38,9 @@ class Vehicle < ActiveRecord::Base
 
   def compliant?(as_of: Date.current)
     vehicle_maintenance_compliances.overdue(as_of: as_of).empty?
+  end  
+
+  def expired?(as_of: Date.current)
+    vehicle_warranties.expired(as_of: as_of).any?
   end  
 end

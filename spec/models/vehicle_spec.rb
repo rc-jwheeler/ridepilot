@@ -135,5 +135,25 @@ RSpec.describe Vehicle, type: :model do
       compliance.update_attributes due_type: 'both'
       expect(@vehicle.reload.compliant?).to be_falsey
     end
-  end  
+  end
+  
+  describe "expired?" do
+    before do
+      @vehicle = create :vehicle
+    end
+
+    it "returns false when a vehicle has no warranty entries" do
+      expect(@vehicle.expired?).to be_falsey
+    end
+
+    it "returns false when a vehicle's warranty entries all expire in the future" do
+      create :vehicle_warranty, vehicle: @vehicle, expiration_date: Date.current.tomorrow
+      expect(@vehicle.expired?).to be_falsey
+    end
+    
+    it "returns true when a vehicle has expired warranty entries" do
+      create :vehicle_warranty, vehicle: @vehicle, expiration_date: Date.current.yesterday
+      expect(@vehicle.expired?).to be_truthy
+    end
+  end
 end
