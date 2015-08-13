@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150812182535) do
+ActiveRecord::Schema.define(version: 20150813114622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -656,6 +656,17 @@ ActiveRecord::Schema.define(version: 20150812182535) do
   end
 
   add_index "vehicle_maintenance_events", ["vehicle_id"], :name => "index_vehicle_maintenance_events_on_vehicle_id"
+
+  create_table "vehicle_warranties", force: true do |t|
+    t.integer  "vehicle_id"
+    t.string   "description"
+    t.text     "notes"
+    t.date     "expiration_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "vehicle_warranties", ["vehicle_id"], :name => "index_vehicle_warranties_on_vehicle_id"
 
   create_table "vehicles", force: true do |t|
     t.string   "name"
