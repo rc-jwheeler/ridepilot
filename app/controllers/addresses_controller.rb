@@ -104,7 +104,7 @@ class AddressesController < ApplicationController
     address_params = {}
 
     # Some kind of faux strong parameters...
-    for param in ['name', 'building_name', 'address', 'city', 'state', 'zip', 'phone_number', 'in_district', 'trip_purpose_id']
+    for param in ['name', 'building_name', 'address', 'city', 'state', 'zip', 'phone_number', 'in_district', 'trip_purpose_id', 'notes']
       address_params[param] = params[prefix + "_" + param]
     end
 
@@ -144,6 +144,7 @@ class AddressesController < ApplicationController
   end
 
   def update
+
     if @address.update_attributes address_params
       flash.now[:notice] = "Address '#{@address.name}' was successfully updated"
       redirect_to provider_path(@address.provider)
