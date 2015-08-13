@@ -48,7 +48,7 @@ class VehicleMaintenanceEventsController < ApplicationController
   private
   
   def vehicle_maintenance_event_params
-    params.require(:vehicle_maintenance_event).permit(:vehicle_id, :reimbursable, :service_date, :invoice_date, :services_performed, :odometer, :vendor_name, :invoice_number, :invoice_amount)
+    params.require(:vehicle_maintenance_event).permit(:vehicle_id, :reimbursable, :service_date, :invoice_date, :services_performed, :odometer, :vendor_name, :invoice_number, :invoice_amount, document_associations_attributes: [:id, :document_id, :_destroy])
   end
   
 end

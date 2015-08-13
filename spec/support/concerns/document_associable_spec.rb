@@ -1,9 +1,5 @@
 require 'spec_helper'
 
-# The concern assumes that the associable will be either a DriverHistory, 
-# DriverCompliance, or (soon) some sort of vehicle event model, and thus that 
-# the owner will be either a Driver or a Vehicle, so these tests make those 
-# same assumptions.
 RSpec.shared_examples "an associable for a document" do
   describe "document_associations" do
     before do

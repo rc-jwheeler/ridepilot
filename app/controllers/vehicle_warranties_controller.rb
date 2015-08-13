@@ -49,6 +49,6 @@ class VehicleWarrantiesController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def vehicle_warranty_params
-    params.require(:vehicle_warranty).permit(:description, :notes, :expiration_date)
+    params.require(:vehicle_warranty).permit(:description, :notes, :expiration_date, document_associations_attributes: [:id, :document_id, :_destroy])
   end
 end

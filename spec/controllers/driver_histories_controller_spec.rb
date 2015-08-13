@@ -7,9 +7,15 @@ RSpec.describe DriverHistoriesController, type: :controller do
     before do
       @driver = create :driver, provider: @current_user.current_provider
     end
+    
+    it_behaves_like "a controller that accepts nested attributes for a document association" do
+      before do
+        @owner = @driver
+      end
+    end
 
-    # This should return the minimal set of attributes required to create a valid
-    # DriverHistory. As you add validations to DriverHistory, be sure to
+    # This should return the minimal set of attributes required to create a 
+    # valid DriverHistory. As you add validations to DriverHistory, be sure to
     # adjust the attributes here as well.
     let(:valid_attributes) {{
       event: "My History Event",
@@ -81,29 +87,6 @@ RSpec.describe DriverHistoriesController, type: :controller do
           post :create, {:driver_history => valid_attributes, driver_id: @driver.to_param}
           expect(response).to redirect_to(@driver)
         end
-
-        context "with nested document association attributes" do
-          it "creates new document associations" do
-            expect {
-              post :create, {:driver_history => valid_attributes.merge({
-                document_associations_attributes: [
-                  { document_id: create(:document, documentable: @driver) }
-                ]
-              }), driver_id: @driver.to_param}
-            }.to change(DocumentAssociation, :count).by(1)
-          end
-        
-          it "rejects document associations with blank document ids" do
-            expect {
-              post :create, {:driver_history => valid_attributes.merge({
-                document_associations_attributes: [
-                  { document_id: create(:document, documentable: @driver) },
-                  { document_id: nil }
-                ]
-              }), driver_id: @driver.to_param}
-            }.to change(DocumentAssociation, :count).by(1)
-          end
-        end
       end
 
       context "with invalid params" do
@@ -142,44 +125,6 @@ RSpec.describe DriverHistoriesController, type: :controller do
           driver_history = create :driver_history, driver: @driver
           put :update, {:id => driver_history.to_param, :driver_history => valid_attributes, driver_id: @driver.to_param}
           expect(response).to redirect_to(@driver)
-        end
-
-        context "with nested document association attributes" do
-          before do
-            @driver_history = create :driver_history, driver: @driver
-            @document_association = create :document_association, document: create(:document, documentable: @driver), associable: @driver_history
-          end
-          
-          it "updates document associations" do
-            new_document = create :document, documentable: @driver
-            expect {
-              put :update, {:id => @driver_history.to_param, :driver_history => valid_attributes.merge({
-                document_associations_attributes: [
-                  @document_association.attributes.merge({document_id: new_document.id})
-                ]
-              }), driver_id: @driver.to_param}
-            }.to change{ @document_association.reload.document_id }.to(new_document.id)
-          end
-        
-          it "allows new document associations to be added" do
-            expect {
-              put :update, {:id => @driver_history.to_param, :driver_history => valid_attributes.merge({
-                document_associations_attributes: [
-                  { document_id: create(:document, documentable: @driver) }
-                ]
-              }), driver_id: @driver.to_param}
-            }.to change(DocumentAssociation, :count).by(1)
-          end
-        
-          it "allows document associations to be destroyed" do
-            expect {
-              put :update, {:id => @driver_history.to_param, :driver_history => valid_attributes.merge({
-                document_associations_attributes: [
-                  @document_association.attributes.merge({:_destroy => "1"})
-                ]
-              }), driver_id: @driver.to_param}
-            }.to change(DocumentAssociation, :count).by(-1)
-          end
         end
       end
 
