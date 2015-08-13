@@ -1,4 +1,6 @@
 class VehicleMaintenanceCompliance < ActiveRecord::Base
+  include DocumentAssociable
+
   DUE_TYPES = [:date, :mileage, :both].freeze
   
   belongs_to :vehicle, inverse_of: :vehicle_maintenance_compliances

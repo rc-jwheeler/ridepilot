@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe VehicleWarranty, type: :model do
+  it_behaves_like "an associable for a document" do
+    before do
+      @owner = create :vehicle
+    end
+  end
+  
   it "requires a vehicle" do
     warranty = build :vehicle_warranty, vehicle: nil
     expect(warranty.valid?).to be_falsey

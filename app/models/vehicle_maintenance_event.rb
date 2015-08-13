@@ -1,4 +1,6 @@
 class VehicleMaintenanceEvent < ActiveRecord::Base
+  include DocumentAssociable
+
   has_paper_trail
 
   belongs_to :vehicle, inverse_of: :vehicle_maintenance_events
