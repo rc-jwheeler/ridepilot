@@ -108,7 +108,8 @@ class Address < ActiveRecord::Base
       :phone_number => phone_number,
       :lat => latitude,
       :lon => longitude,
-      :default_trip_purpose => trip_purpose_name
+      :default_trip_purpose => trip_purpose_name,
+      :notes => notes
     }
   end
 
@@ -131,7 +132,7 @@ class Address < ActiveRecord::Base
 
       open(filename) do |f|
         #Poi.delete_all # delete existing ones
-        CSV.foreach(f, {:col_sep => ",", :headers => true}) do |row|
+        CSV.new(f, {:col_sep => ",", :headers => true}).each do |row|
           # address_type_name = row[9] # TODO: whether to add POI_TYPE into Ridepilot
           address_name = row[2]
           address_city = row[6]
@@ -152,7 +153,7 @@ class Address < ActiveRecord::Base
                 city: address_city,
                 state: row[7],
                 zip: row[8],
-                trip_purpose: TripPurpose.find_by_name(row[11]),
+                trip_purpose: row[11].to_s.blank? ? nil : TripPurpose.find_by_name(row[11].to_s),
                 notes: row[12]
               })
               count_good += 1

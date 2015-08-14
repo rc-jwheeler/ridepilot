@@ -48,7 +48,6 @@ class DriversController < ApplicationController
           @driver.save!
           create_or_update_hours!
         end
-        flash.now[:notice] = "Driver created"
         redirect_to @driver, notice: 'Driver was successfully created.'
       rescue ActiveRecord::RecordInvalid => e
         Rails.logger.debug e.message
@@ -78,7 +77,7 @@ class DriversController < ApplicationController
   end
   
   def driver_params
-    params.require(:driver).permit(:active, :paid, :name, :user_id)
+    params.require(:driver).permit(:active, :paid, :name, :email, :user_id)
   end
   
   def create_or_update_hours!

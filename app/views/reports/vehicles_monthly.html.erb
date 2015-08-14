@@ -1,9 +1,7 @@
+<%= render 'custom_report_header'%>
 <%= content_for :title, translate_helper("vehicle_operations_title",provider:@provider.name,start_date:@start_date.strftime("%B %Y")) %>
 
-<div id="page-header" class="clearfix">
-  <h1><%= translate_helper("vehicle_operations_heading") %></h1>
-</div>
-
+<div class="filter-form" style="padding-top: 10px;">
 <%= form_for @query, :url=>url_for(:action=>:vehicles_monthly), :html=>{:method=>:get} do |f| %>
   <fieldset class="select-month">
     <p>
@@ -12,6 +10,7 @@
     </p>
   </fieldset>
 <% end %>
+</div>
 
 <%= render :partial => 'header' %>
 

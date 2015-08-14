@@ -15,7 +15,7 @@
   <div class="row">
     <div class="col-sm-12 col-md-6">
       <div class="panel panel-primary">
-        <div class="panel-heading">Details</div>
+        <div class="panel-heading"><%= translate_helper("driver_form_details_heading") %></div>
         <div class="panel-body form-horizontal">
           <div class="form-group">
             <%= f.label :name, translate_helper("driver_form_name"), class: "col-md-2 control-label" %>
@@ -153,7 +153,7 @@
                   <td colspan="2"><%= translate_helper("driver_documents_empty") %></td>
                 </tr>
               <% end %>
-              <%= render partial: 'documents/document', collection: @driver.documents %>
+              <%= render partial: 'documents/document', collection: @driver.documents.default_order %>
             </tbody>
           </table>
           <% unless @readonly %>
@@ -181,7 +181,7 @@
                   <td colspan="2"><%= translate_helper("driver_histories_empty") %></td>
                 </tr>
               <% end %>
-              <%= render partial: 'driver_histories/driver_history', collection: @driver.driver_histories %>
+              <%= render partial: 'driver_histories/driver_history', collection: @driver.driver_histories.default_order %>
             </tbody>
           </table>
           <% unless @readonly %>
@@ -210,7 +210,7 @@
                   <td colspan="3"><%= translate_helper("driver_compliances_empty") %></td>
                 </tr>
               <% end %>
-              <%= render partial: 'driver_compliances/driver_compliance', collection: @driver.driver_compliances %>
+              <%= render partial: 'driver_compliances/driver_compliance', collection: @driver.driver_compliances.default_order %>
             </tbody>
           </table>
           <% unless @readonly %>
@@ -221,8 +221,8 @@
             </div>
           <% end %>
         </div><!-- END .panel -->      
-      </div><!-- END .col-md-6 -->
-    <% end %>
+      <% end %>
+    </div><!-- END .col-md-6 -->
   </div><!-- END .row -->
 
   <% unless @readonly %>
@@ -232,21 +232,7 @@
 
 <%= render 'shared/hide_invisible_form_fields_js', model_name: "driver", table_name: 'drivers', provider_id:  current_provider.try(:id) %>
 
-<div id="driver-form-modal-dialog" class="modal fade" role="dialog" aria-hidden="true" tabindex="-1" aria-labelledby="modal-title">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h2 class="modal-title" id="modal-title"></h2>
-      </div>
-      <div class="modal-body"><div class="container-fluid"></div></div><!-- END .modal-body -->
-      <div class="modal-footer">
-        <button type="button" class="btn action-button" id="driver-form-modal-dialog-submit"><%= translate_helper("save") %></button>
-        <button type="button" class="btn action-button" data-dismiss="modal"><%= translate_helper("cancel") %></button>
-      </div><!-- END .modal-footer -->
-    </div><!-- END .modal-content -->
-  </div><!-- END .modal-dialog -->
-</div><!-- END .modal -->
+<%= render 'shared/modal_dialog', modal_id: "driver-form-modal-dialog" %>
 
 <%= javascript_tag do %>
   $(document).ready(function(){
@@ -263,17 +249,5 @@
         update_hours_enabled(i);
       });
     })(i);
-    
-    // modal form setup
-    $('#driver-form-modal-dialog').on('show.bs.modal', function (e) {
-      var $this = $(this);
-      var $modalBody = $this.find(".modal-body");
-      $modalBody.find(".panel:first").removeClass("panel-primary");
-      $modalBody.find(".form-actions").hide();
-    })
-    
-    $("#driver-form-modal-dialog-submit").on("click", function(){
-      $('#driver-form-modal-dialog .modal-body form').submit();
-    });
   });
 <% end %>

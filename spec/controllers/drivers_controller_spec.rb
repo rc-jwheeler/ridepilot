@@ -105,13 +105,13 @@ RSpec.describe DriversController, type: :controller do
 
       it "assigns the requested driver as @driver" do
         driver = create(:driver, :provider => @current_user.current_provider)
-        put :update, {:id => driver.to_param, :driver => valid_attributes}
+        put :update, {:id => driver.to_param, :driver => new_attributes}
         expect(assigns(:driver)).to eq(driver)
       end
 
       it "redirects to the driver" do
         driver = create(:driver, :provider => @current_user.current_provider)
-        put :update, {:id => driver.to_param, :driver => valid_attributes}
+        put :update, {:id => driver.to_param, :driver => new_attributes}
         expect(response).to redirect_to(driver)
       end
     end

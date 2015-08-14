@@ -3,7 +3,7 @@ class Run < ActiveRecord::Base
   
   belongs_to :provider
   belongs_to :driver
-  belongs_to :vehicle
+  belongs_to :vehicle, inverse_of: :runs
 
   has_many :trips, -> { order(:pickup_time) }, :dependent => :nullify
 
@@ -13,6 +13,8 @@ class Run < ActiveRecord::Base
   
   accepts_nested_attributes_for :trips
   
+  validates :driver, presence: true
+  validates :vehicle, presence: true
   validates_datetime :scheduled_end_time, :after => :scheduled_start_time, :allow_blank => true
   validates_datetime :actual_end_time, :after => :actual_start_time, :allow_blank => true
   validates_date :date

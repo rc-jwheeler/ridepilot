@@ -654,7 +654,10 @@ table th {
 table th {
   text-align: left;
   background: #2e6399;
-  color: #ddd;
+  color: white;
+  a {
+    color: white;
+  }
 }
 table tr.day th {
   background: #86B4EA;
@@ -1075,7 +1078,6 @@ body.reports table.trip td.mobility {
 
 body.reports #instructions, 
 body.reports #address, 
-body.reports #logo,
 body.reports #report-footer,
 body.reports th.table-header.print-only {
   display: none;
@@ -1392,6 +1394,9 @@ body.trips div.repeats>li {
  * Dispatch
  *
  */
+body.dispatch {
+  font-size: 13px !important;
+}
 .dispatch #main {
   padding: 10px 1% 10px 1%;
   margin-bottom: 10px;

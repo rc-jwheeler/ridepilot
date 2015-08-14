@@ -1,11 +1,28 @@
 class Vehicle < ActiveRecord::Base
-  belongs_to :provider
+  OWNERSHIPS = [:agency, :volunteer].freeze
+
+  has_paper_trail
+
   belongs_to :default_driver, :class_name => "Driver"
+  belongs_to :provider
   
   has_one :device_pool_driver, :dependent => :destroy
   has_one :device_pool, :through => :device_pool_driver
   
-  has_many :vehicle_maintenance_events
+  has_many :documents, as: :documentable, dependent: :destroy, inverse_of: :documentable
+  has_many :runs, inverse_of: :vehicle # TODO add :dependent rule
+  has_many :vehicle_maintenance_compliances, dependent: :destroy, inverse_of: :vehicle
+  has_many :vehicle_maintenance_events, dependent: :destroy, inverse_of: :vehicle
+  has_many :vehicle_warranties, dependent: :destroy, inverse_of: :vehicle
+
+  validates :provider, presence: true
+  validates :default_driver, presence: true
+  validates :name, presence: true
+  validates :vin, length: {is: 17, allow_nil: true, allow_blank: true},
+    format: {with: /\A[^ioq]*\z/i, allow_nil: true}
+  validates_date :registration_expiration_date, allow_blank: true
+  validates :seating_capacity, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
+  validates :ownership, inclusion: { in: OWNERSHIPS.map(&:to_s), allow_blank: true }
 
   default_scope { order('active, name') }
   scope :active,       -> { where(:active => true) }
@@ -16,8 +33,15 @@ class Vehicle < ActiveRecord::Base
     for_provider(provider).reject { |vehicle| vehicle.device_pool.present? }
   end
 
-  validates_length_of :vin, :is=>17, :allow_nil => true, :allow_blank => true
-  validates_format_of :vin, :with => /\A[^ioq]*\z/i, :allow_nil => true
+  def last_odometer_reading
+    runs.where().not(end_odometer: nil).last.try(:end_odometer).to_i
+  end
 
-  has_paper_trail
+  def compliant?(as_of: Date.current)
+    vehicle_maintenance_compliances.overdue(as_of: as_of).empty?
+  end  
+
+  def expired?(as_of: Date.current)
+    vehicle_warranties.expired(as_of: as_of).any?
+  end  
 end

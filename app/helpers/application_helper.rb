@@ -4,6 +4,10 @@ module ApplicationHelper
     current_user.try(:current_provider)
   end
 
+  def current_provider_id
+    current_provider.try(:id)
+  end
+
   def show_dispatch?
     current_user && current_provider && current_provider.dispatch?
   end
@@ -55,7 +59,7 @@ module ApplicationHelper
   
   def delete_trippable_link(trippable)
     if can? :destroy, trippable
-      link_to trippable.trips.present? ? translate_helper("duplicate") : translate_helper("delete"), trippable, :class => 'delete'
+      link_to trippable.trips.present? ? translate_helper("merge") : translate_helper("delete"), trippable, :class => 'delete'
     end
   end
   

@@ -99,8 +99,12 @@ Rails.application.routes.draw do
     resources :funding_sources, :except => [:destroy]
     resources :monthlies, :except => [:show, :destroy]
     resources :provider_ethnicities
-    resources :vehicles
-    resources :vehicle_maintenance_events, :except => [:show, :destroy]
+    resources :vehicles do
+      resources :documents, except: [:index, :show]
+      resources :vehicle_maintenance_events, :except => [:index, :show]
+      resources :vehicle_maintenance_compliances, :except => [:index, :show]
+      resources :vehicle_warranties, :except => [:index, :show]
+    end
 
     resources :runs do
       collection do
@@ -128,9 +132,14 @@ Rails.application.routes.draw do
     end
     
     get "dispatch", :controller => :dispatch, :action => :index
-    get "reports", :controller=>:reports, :action=>:index
+    #get "reports", :controller=>:reports, :action=>:index
+    get "custom_reports/:id", :controller=>:reports, :action=>:show, as: :custom_report
     get "reports/:action", :controller=>:reports
     get "reports/:action/:id", :controller=>:reports
+    # reporting engine
+    mount Reporting::Engine, at: "/reporting"
+    
+
     get "test_exception_notification" => "application#test_exception_notification"
 
     resources :lookup_tables, :only => [:index, :show] do 
@@ -139,9 +148,6 @@ Rails.application.routes.draw do
         put :update_value
         put :destroy_value
       end
-
     end
-
   end
-
 end

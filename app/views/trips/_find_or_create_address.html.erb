@@ -1,4 +1,4 @@
-<%= form_tag addresses_path, :class=>'address-search', :method=>:post, :remote=>true, 'data-id-element' => "#trip_#{prefix}_address_id", 'data-label-element' => "##{prefix}_search_address" do %> 
+ <%= form_tag addresses_path, :class=>'address-search', :method=>:post, :remote=>true, 'data-id-element' => "#trip_#{prefix}_address_id", 'data-label-element' => "##{prefix}_search_address" do %> 
   <%= hidden_field_tag 'address_id', address.id %>
   <%= hidden_field_tag 'prefix', prefix %>
   <%= hidden_field_tag 'lat' %>
@@ -42,7 +42,7 @@
 
   <li class="selfclear">
     <%= label_tag "#{prefix}_notes", translate_helper("address_notes") %>
-    <%= text_area_tag "#{prefix}_notes", address.phone_number %>
+    <%= text_area_tag "#{prefix}_notes", address.notes %>
   </li>
   
   <li class="selfclear">

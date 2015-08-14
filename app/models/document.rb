@@ -20,5 +20,5 @@ class Document < ActiveRecord::Base
     ]},
     :size => { :in => 0..2.gigabytes }
           
-  scope :default_order, -> { order("document_uploaded_at DESC") }
+  scope :default_order, -> { order(description: :asc) }
 end

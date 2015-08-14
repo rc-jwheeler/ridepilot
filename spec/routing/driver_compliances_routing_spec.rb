@@ -4,7 +4,7 @@ RSpec.describe DriverCompliancesController, type: :routing do
   describe "routing" do
     describe "nested on drivers" do
       it "does not route to #index" do
-        expect(:get => "/drivers/1/driver_compliances").not_to route_to("documents#index", driver_id: "1")
+        expect(:get => "/drivers/1/driver_compliances").not_to route_to("driver_compliances#index", driver_id: "1")
       end
 
       it "routes to #new" do
@@ -12,7 +12,7 @@ RSpec.describe DriverCompliancesController, type: :routing do
       end
 
       it "does not route to #show" do
-        expect(:get => "/drivers/1/driver_compliances/1").not_to route_to("driver_histories#show", id: "1", driver_id: "1")
+        expect(:get => "/drivers/1/driver_compliances/1").not_to route_to("driver_compliances#show", id: "1", driver_id: "1")
       end
 
       it "routes to #edit" do

@@ -5,7 +5,7 @@
     <h1><%= translate_helper("index_driver_heading") %></h1>
   </div>
   <div class="col-sm-12 col-md-6">
-    <% if can? :manage, @driver %>
+    <% if can? :create, Driver %>
       <div class="pull-right">
         <%= link_to translate_helper("new_driver_link_text"), new_driver_path, class: "btn action-button" %>
       </div>

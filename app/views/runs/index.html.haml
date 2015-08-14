@@ -1,6 +1,7 @@
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'runs'
 .clearfix.row#page-header{style: 'padding: 0px;'}
-  = link_to translate_helper("new_run_link_text"), new_run_path, :class=>'btn action-button pull-right'
+  - if can? :create, Run
+    = link_to translate_helper("new_run_link_text"), new_run_path, :class=>'btn action-button pull-right'
   %h1= translate_helper("runs")+ ": " + format_time_as_title_for_listing_day(@start_pickup_date) + " - " + format_time_as_title_for_listing_day(@end_pickup_date)
   .clearfix
 

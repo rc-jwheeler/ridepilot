@@ -1,6 +1,12 @@
 require "rails_helper"
 
 RSpec.describe Driver, type: :model do
+  it "requires a provider" do
+    driver = build :driver, provider: nil
+    expect(driver.valid?).to be_falsey
+    expect(driver.errors.keys).to include :provider
+  end
+
   it "cannot be linked to the same user as another driver" do
     driver_1 = create :driver
     driver_2 = build :driver, user: driver_1.user
@@ -155,11 +161,6 @@ RSpec.describe Driver, type: :model do
       create :driver_compliance, driver: @driver, due_date: Date.current.yesterday
       expect(@driver.compliant?).to be_falsey
     end
-    
-    it "only checks against its own compliance entries" do
-      create :driver_compliance, due_date: Date.current.yesterday
-      expect(@driver.compliant?).to be_truthy
-    end
   end
   
   describe "documents" do
@@ -167,7 +168,7 @@ RSpec.describe Driver, type: :model do
       @driver = create :driver
     end
 
-    it "destroys driver compliances when the driver is destroyed" do
+    it "destroys documents when the driver is destroyed" do
       3.times { create :document, documentable: @driver }
       expect {
         @driver.destroy

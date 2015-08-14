@@ -12,7 +12,6 @@ class DriverCompliance < ActiveRecord::Base
   validate :limit_updates_on_recurring_events, on: :update
   
   scope :for, -> (driver_id) { where(driver_id: driver_id) }
-  scope :complete, -> { where("compliance_date IS NOT NULL") }
   scope :incomplete, -> { where("compliance_date IS NULL") }
   scope :overdue, -> (as_of: Date.current) { incomplete.where("due_date < ?", as_of) }
   scope :due_soon, -> (as_of: Date.current, through: nil) { incomplete.where(due_date: as_of..(through || as_of + 6.days)) }

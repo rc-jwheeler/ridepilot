@@ -28,7 +28,7 @@ RSpec.describe "ApplicationSettings" do
       Devise.password_archiving_count = old_password_archiving_count
     end
   
-    it "only allows admins to access the application settings page" do
+    it "does not allow users to access the application settings page" do
       visit application_settings_path
     
       expect(current_path).to_not equal application_settings_path
@@ -36,7 +36,7 @@ RSpec.describe "ApplicationSettings" do
     end
   end
   
-  context "for admin" do
+  context "for provider admins" do
     before :each do 
       @admin = create(:admin)
       visit new_user_session_path
@@ -44,8 +44,25 @@ RSpec.describe "ApplicationSettings" do
       fill_in 'Password', :with => @admin.password
       click_button 'Log In'
     end
+  
+    it "does not allow provider admins to access the application settings page" do
+      visit application_settings_path
+    
+      expect(current_path).to_not equal application_settings_path
+      expect(page).to have_content "You are not allowed to take the action you requested"
+    end
+  end
+  
+  context "for super admins" do
+    before :each do 
+      @admin = create(:super_admin)
+      visit new_user_session_path
+      fill_in 'Email', :with => @admin.email
+      fill_in 'Password', :with => @admin.password
+      click_button 'Log In'
+    end
 
-    it "allows admins to view and edit application settings" do
+    it "allows suoer admins to view and edit application settings" do
       visit application_settings_path
       
       expect(page).to have_content "Expire password after"

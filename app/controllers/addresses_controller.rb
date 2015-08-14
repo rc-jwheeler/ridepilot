@@ -44,6 +44,7 @@ class AddressesController < ApplicationController
     addresses = Address.accessible_by(current_ability).where(["((LOWER(address) like '%' || ? || '%' ) and  (city || ', ' || state || ' ' || zip like ? || '%')) or LOWER(building_name) like '%' || ? || '%' or LOWER(name) like '%' || ? || '%' ", address, city_state_zip, term, term]).where(:provider_id => current_provider_id, :inactive => false)
 
     if addresses.size > 0
+
       #there are some existing addresses
       address_json = addresses.map { |address| address.json }
 
@@ -83,7 +84,8 @@ class AddressesController < ApplicationController
                     :city => address['city'],
                     :state => STATE_NAME_TO_POSTAL_ABBREVIATION[address['state'].upcase],
                     :zip => address['postcode'],
-                    :the_geom => RGeo::Geographic.spherical_factory(srid: 4326).point(address['lon'].to_f, address['lat'].to_f)
+                    :the_geom => RGeo::Geographic.spherical_factory(srid: 4326).point(address['lon'].to_f, address['lat'].to_f),
+                    :notes => address['notes']
                     )
         address_obj.json
 
@@ -104,7 +106,7 @@ class AddressesController < ApplicationController
     address_params = {}
 
     # Some kind of faux strong parameters...
-    for param in ['name', 'building_name', 'address', 'city', 'state', 'zip', 'phone_number', 'in_district', 'trip_purpose_id']
+    for param in ['name', 'building_name', 'address', 'city', 'state', 'zip', 'phone_number', 'in_district', 'trip_purpose_id', 'notes']
       address_params[param] = params[prefix + "_" + param]
     end
 
@@ -144,6 +146,7 @@ class AddressesController < ApplicationController
   end
 
   def update
+
     if @address.update_attributes address_params
       flash.now[:notice] = "Address '#{@address.name}' was successfully updated"
       redirect_to provider_path(@address.provider)
@@ -170,8 +173,7 @@ class AddressesController < ApplicationController
       is_loading: current_provider.address_upload_flag.is_loading 
     }
 
-    status[:summary] = current_provider.address_upload_flag.last_upload_summary || 
-      TranslationEngine.translate_text(:address_file_uploaded) if !status[:is_loading]
+    status[:summary] = TranslationEngine.translate_text(:address_file_uploaded) if !status[:is_loading]
 
     render json: status
   end
@@ -185,7 +187,7 @@ class AddressesController < ApplicationController
       address_file = params[:address][:file] if params[:address]
       
       if !address_file.nil?
-        if address_file.content_type != 'text/csv'
+        if File.extname(address_file.original_filename) != '.csv'
           error_msgs << TranslationEngine.translate_text(:address_file_should_be_csv)
         elsif current_provider.address_upload_flag.is_loading
           error_msgs << TranslationEngine.translate_text(:address_file_being_uploading)

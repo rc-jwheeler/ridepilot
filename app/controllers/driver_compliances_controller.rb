@@ -6,10 +6,12 @@ class DriverCompliancesController < ApplicationController
 
   # GET /driver_compliances/new
   def new
+    prep_edit
   end
 
   # GET /driver_compliances/1/edit
   def edit
+    prep_edit
   end
 
   # POST /driver_compliances
@@ -20,6 +22,7 @@ class DriverCompliancesController < ApplicationController
         format.js
       end
     else
+      prep_edit
       render :new
     end
   end
@@ -32,6 +35,7 @@ class DriverCompliancesController < ApplicationController
         format.js
       end
     else
+      prep_edit
       render :edit
     end
   end
@@ -46,6 +50,10 @@ class DriverCompliancesController < ApplicationController
   end
 
   private
+  
+  def prep_edit
+    @driver_compliance.document_associations.build
+  end
 
   def driver_compliance_params
     params.require(:driver_compliance).permit(:event, :notes, :due_date, :compliance_date, document_associations_attributes: [:id, :document_id, :_destroy])

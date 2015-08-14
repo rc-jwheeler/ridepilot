@@ -54,9 +54,8 @@ Set up development environment
 4. Testing
     - set up test database if not yet
       - make sure `config/database.yml` has the configurations for __test__ environment
-      - `RAILS_ENV=test rake db:drop db:create db:schema:load`
-    - update locales
-      - `rake ridepilot:load_locales`
+    - update schema and locales
+      - `rake db:test:prepare`
     - `rspec`
 
 5. Start application

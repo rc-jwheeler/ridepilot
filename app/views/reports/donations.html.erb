@@ -1,7 +1,6 @@
-<div id="page-header" class="clearfix">
-  <h1><%= translate_helper("donation_report_heading") %></h1>
-</div>
+<%= render 'custom_report_header'%>
 
+<div class="filter-form" style="padding-top: 10px;">
 <%= form_for @query, :url=>url_for(:action=>:donations), :html=>{:method=>:get} do |f| %>
   <fieldset>
     <p>
@@ -10,6 +9,7 @@
     </p>
   </fieldset>
 <% end %>
+</div>
 
 <table>
 <tr>

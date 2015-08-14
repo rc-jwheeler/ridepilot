@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
   end
   
   def current_provider
-    return current_user.current_provider
+    current_user.current_provider
   end
 
   def default_url_options(options={}) # This overrides/extends
@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_provider_id
-    return current_provider.try(:id)
+    current_provider.try(:id)
   end
 
   def do_not_track

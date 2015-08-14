@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :document do
+  factory :document, aliases: [:driver_document] do
     description { Faker::Lorem.words(2).join(' ') }
     
     # Avoid using fixture_file_upload with FactoryGirl and Paperclip
@@ -16,6 +16,10 @@ FactoryGirl.define do
       document_content_type nil
       document_file_size nil
       document_updated_at nil
+    end
+    
+    factory :vehicle_document do
+      association :documentable, factory: :vehicle
     end
   end
 end

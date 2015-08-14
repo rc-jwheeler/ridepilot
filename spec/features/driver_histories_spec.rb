@@ -13,6 +13,13 @@ RSpec.describe "DriverHistories" do
       @driver_history = create :driver_history, driver: @driver
     end
     
+    it_behaves_like "it accepts nested attributes for document associations" do
+      before do
+        @owner = @driver
+        @example = @driver_history
+      end
+    end
+
     describe "GET /drivers/:id" do
       before do
         visit driver_path(id: @driver.to_param)

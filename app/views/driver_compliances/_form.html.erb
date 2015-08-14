@@ -58,27 +58,7 @@
         </div><!-- END .panel-body -->
       </div><!-- END .panel -->
       
-      <div class="panel panel-primary">
-        <div class="panel-heading"><%= label_tag translate_helper("document_associations_documents_heading") %></div>
-        <table class="table table-striped" id="document-associations">
-          <thead>
-            <tr>
-              <th width="96%"><%= translate_helper("document_associations_form_document_label") %></th>
-              <th width="4%"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <%= f.fields_for :document_associations, :wrapper => false do |f| %>
-              <%= render partial: "document_associations/document_association_fields_for_associable", locals: {f: f, documents: @driver_compliance.driver.documents} %>
-            <% end %>
-          </tbody>
-        </table>
-        <div class="panel-footer">
-          <div class="clearfix">
-            <%= f.link_to_add translate_helper("document_associations_form_add_link_title"), :document_associations, data: { target: "#document-associations" }, class: "btn action-button pull-right" %>
-          </div>
-        </div>
-      </div><!-- END .panel -->
+      <%= render partial: "document_associations/form_panel", locals: {f: f, documents: @driver_compliance.driver.documents} %>
     </div><!-- END .col-md-12 -->
   </div><!-- END .row -->
   

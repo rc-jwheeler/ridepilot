@@ -1,4 +1,5 @@
 <% content_for(:title){translate_helper("daily_trips_title") + " #{@date.strftime('%v')}"} %>
+<%= render 'custom_report_header'%>
 <h1><%= translate_helper("daily_trips_heading") %></h1>
 <h2><%= format_date_for_daily_manifest @date %></h2>
 

@@ -55,19 +55,21 @@ class Ability
     can action,  Run, :provider_id => provider.id if provider.scheduling?
     can action,  Trip, :provider_id => provider.id if provider.scheduling?
     can action,  Vehicle, :provider_id => provider.id
-    can action,  VehicleMaintenanceEvent, :provider_id => provider.id
     
     if role.admin?
-      can :manage, DriverHistory, :driver => {:provider_id => provider.id}
       can :manage, DriverCompliance, :driver => {:provider_id => provider.id}
+      can :manage, DriverHistory, :driver => {:provider_id => provider.id}
+      # can :manage, LookupTable
       can :manage, RecurringDriverCompliance, :provider_id => provider.id
       can :manage, User, :roles => {:provider_id => provider.id}
-      can :manage, LookupTable
-      can :manage, ApplicationSetting
-      can :manage, Translation
+      can :manage, VehicleMaintenanceEvent, :vehicle => {:provider_id => provider.id}
+      can :manage, VehicleMaintenanceCompliance, :vehicle => {:provider_id => provider.id}
+      can :manage, VehicleWarranty, :vehicle => {:provider_id => provider.id}
       can :load,   Address
     else
       can :read, User, :roles => {:provider_id => provider.id}
     end
+
+    can :access, Reporting::Report
   end
 end

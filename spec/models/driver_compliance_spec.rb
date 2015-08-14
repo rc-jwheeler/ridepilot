@@ -25,8 +25,11 @@ RSpec.describe DriverCompliance, type: :model do
     expect(compliance.errors.keys).to include :due_date
   end
 
-  it "requires an compliance date on or before today" do
-    compliance = build :driver_compliance, due_date: Date.current, compliance_date: Date.current.tomorrow
+  it "requires compliance date to be on or before today, when specified" do
+    compliance = build :driver_compliance, compliance_date: nil
+    expect(compliance.valid?).to be_truthy
+
+    compliance.compliance_date = Date.current.tomorrow
     expect(compliance.valid?).to be_falsey
     expect(compliance.errors.keys).to include :compliance_date
 
@@ -79,17 +82,6 @@ RSpec.describe DriverCompliance, type: :model do
     end
   end
   
-  describe ".complete" do
-    it "finds compliance events that have a compliance date" do
-      compliance_1 = create :driver_compliance, compliance_date: nil
-      compliance_2 = create :driver_compliance, compliance_date: ""
-      compliance_3 = create :driver_compliance, compliance_date: Date.current
-      expect(DriverCompliance.complete).not_to include compliance_1
-      expect(DriverCompliance.complete).not_to include compliance_2
-      expect(DriverCompliance.complete).to include compliance_3
-    end
-  end
-  
   describe ".incomplete" do
     it "finds compliance events that do not have a compliance date" do
       compliance_1 = create :driver_compliance, compliance_date: nil
@@ -132,6 +124,7 @@ RSpec.describe DriverCompliance, type: :model do
     end
   end
   
+  # RADAR Not currently used, but will be by reports
   describe ".due_soon" do
     before do
       @compliance_today = create :driver_compliance, due_date: Date.current

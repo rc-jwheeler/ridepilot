@@ -93,6 +93,7 @@ en:
   new_customer: "New Customer"
   new_trip_for_customer: "New Trip for This Customer"
   duplicate: "Duplicate"
+  merge: 'Merge'
   customer: "Customer"
   reassociate_customer_trips: "Associate this customer's trips with another customer."
   group_name: "Group Name"
@@ -136,7 +137,7 @@ en:
   remove_device_pool_driver: "Remove"
   device_pool_form_error_message:
     one: "%{count} error prohibited this device pool from being saved:"
-    other: "%{count} errors sprohibited this device pool from being saved:"
+    other: "%{count} errors prohibited this device pool from being saved:"
   device_pools: 'Device Pools'
   device_pool_name: "Name"
   device_pool_color: "Color"
@@ -200,6 +201,7 @@ en:
   operating_hours_unavailable: "Unavailable"
   operating_hours_24_hours: "24 Hours"
   operating_hours_open: "Open"
+  driver_form_details_heading: "Details"
 
   # Driver histories
   driver_histories_heading: "History Events"
@@ -296,6 +298,9 @@ en:
   driver_documents_heading: "Driver Documentation"
   driver_documents_add_link_title: "Add document"
   driver_documents_empty: "No documents exist for this driver"
+  vehicle_documents_heading: "Vehicle Documentation"
+  vehicle_documents_add_link_title: "Add document"
+  vehicle_documents_empty: "No documents exist for this vehicle"
   document_delete_confirm: "Are you sure you want to delete this document?"
   document_form_error:
     one: "1 error prohibited this document from being saved"
@@ -356,6 +361,7 @@ en:
   application_customers_link_text: "Customers"
   application_reports_link_text: "Reports"
   application_drivers_link_text: "Drivers"
+  application_vehicles_link_text: "Vehicles"
   application_dispatch_link_text: "Dispatch"
   application_admin_link_text: "Admin"
   current_provider_settings_link_text: "Settings"
@@ -507,7 +513,7 @@ en:
   age_and_ethnicity_report_heading: "Reports: Unduplicated Age &amp; Ethnicity"
   age_and_ethnicity_page_title: "Age and Ethnicity: %{provider}, %{start_date}"
 
-  report: "Report"
+  reports: "Reports"
   age_and_ethnicity_table_heading: "Unduplicated Age & Ethnicity Report"
 
   age: "Age"
@@ -669,7 +675,7 @@ en:
   #runs
   run_form_error_message:
     one: "%{count} error prohibited this run from being saved:"
-    other: "%{count} errors sprohibited this run from being saved:"
+    other: "%{count} errors prohibited this run from being saved:"
   unavailable_at_run_time: 'is not available at run schedule time'
   scheduled_start_time: "Scheduled Start Time"
   scheduled_end_time: "Scheduled End Time"
@@ -699,7 +705,7 @@ en:
   change_customer: "Change Customer"
   trips_form_error_message:
     one: "%{count} error prohibited this trip from being saved:"
-    other: "%{count} errors sprohibited this trip from being saved:"
+    other: "%{count} errors prohibited this trip from being saved:"
   appointment_time: "Appointment Time"
   pickup_address: "Pickup Address"
   customer_phone: "Customer Phone"
@@ -765,7 +771,7 @@ en:
   new_user_heading: "Create New User"
   user_form_error_message:
     one: "%{count} error prohibited this user from being saved:"
-    other: "%{count} errors sprohibited this user from being saved:"
+    other: "%{count} errors prohibited this user from being saved:"
   permissions: "Permissions"
   new_user_submit: "Create User"
   change_password_heading: "Change Password"
@@ -777,7 +783,11 @@ en:
   user_expires_at: "Inactivation Date"
   user_inactivation_reason: "Reasons"
   change_expiration_submit: "Update"
-  #vehicle maintenance
+
+  # Vehicle Maintenance Events
+  vehicle_maintenance_event_form_error:
+    one: "%{count} error prohibited this maintenance event from being saved:"
+    other: "%{count} errors prohibited this maintenance event from being saved:"
   service_date: "Service Date"
   invoice_date: "Invoice Date"
   odometer: "Odometer"
@@ -786,14 +796,30 @@ en:
   invoice_amount: "Invoice Amount"
   reimbursable: "Reimbursable"
   services_performed: "Services Performed"
-  maintenance_form_submit: "Submit"
+  maintenance_form_submit: "Save"
   edit_maintenance_heading: "Edit Maintenance Event"
   new_maintenance_heading: "Add Maintenance Event"
   back_to_provider: "Back"
-  #vehicles
+
+  # Vehicle Warranties
+  vehicle_warranties_heading: "Vehicle and Equipment Warranties"
+  vehicle_warranties_add_link_title: "Add warranty"
+  vehicle_warranties_empty: "No warranties exist for this vehicle"
+  vehicle_warranty_delete_confirm: "Are you sure you want to delete this warranty?"
+  vehicle_warranty_form_error:
+    one: "1 error prohibited this warranty from being saved"
+    other: "%{count} errors prohibited this warranty from being saved"
+  vehicle_warranty_form_new_heading: "New warranty"
+  vehicle_warranty_form_edit_heading: "Edit warranty"
+  vehicle_warranty_form_description: "Description"
+  vehicle_warranty_form_notes: "Notes"
+  vehicle_warranty_form_expiration_date: "Expiration Date"
+  vehicle_warranty_form_submit: "Save"
+
+  # Vehicles
   vehicle_form_error_message:
     one: "%{count} error prohibited this vehicle from being saved:"
-    other: "%{count} errors sprohibited this vehicle from being saved:"
+    other: "%{count} errors prohibited this vehicle from being saved:"
   vehicle_form_name_label: "Name"
   vehicle_form_year_label: "Year"
   vehicle_form_make_label: "Make"
@@ -803,13 +829,51 @@ en:
   vehicle_form_location_label: "Garaged Location"
   vehicle_form_active_label: "Active"
   vehicle_form_driver_label: "Driver"
+  vehicle_form_insurance_coverage_details_label: "Insurance Coverage"
+  vehicle_form_ownership_label: "Ownership"
+  vehicle_form_responsible_party_label: "Responsible Party"
+  vehicle_form_registration_expiration_date_label: "Registration Exp Date"
+  vehicle_form_seating_capacity_label: "Seating Capacity"
+  vehicle_form_accessibility_equipment_label: "Accessibility Equipment"
+  vehicle_form_details_heading: "Details"
+  vehicle_form_information_heading: "Additional Information"
   vehicle_form_reportable_label: "Vehicle should appear on vehicle report"
+  vehicle_form_last_odometer_reading: "Last reported mileage"
+  vehicle_overdue_events: "Maintenance Overdue"
+  vehicle_expired_warranties: "Expired Warranties"
   vehicle_form_submit: "Submit"
   edit_vehicle_heading: "Edit Vehicle"
   new_vehicle_heading: "New Vehicle"
   vehicle_show_heading: "Vehicle Details"
+  edit_vehicle_button: "Edit Vehicle"
+  delete_vehicle_button: "Delete Vehicle"
   add_maintenance_link_text: "Add Maintenance Event"
   edit_vehicle_link_text: "Edit Vehicle"
+  index_vehicle_heading: "Vehicles"
+  vehicle_maintenance_events_heading: "Maintenance Events"
+  vehicle_maintenance_events_empty: "There are no maintenance events"
+  vehicle_maintenance_event_add_link_title: "Add Maintenance Event"
+  vehicle_maintenance_event_delete_confirm: "Are you sure?"
+  
+  # Vehicle Maintenance Compliances
+  vehicle_maintenance_compliances_heading: "Compliance Events"
+  vehicle_maintenance_compliances_add_link_title: "Add compliance event"
+  vehicle_maintenance_compliances_empty: "No compliance events exist for this driver"
+  vehicle_maintenance_compliance_delete_confirm: "Are you sure you want to delete this compliance event?"
+  vehicle_maintenance_compliance_form_error:
+    one: "1 error prohibited this vehicle compliance from being saved"
+    other: "%{count} errors prohibited this vehicle compliance from being saved"
+  vehicle_maintenance_compliance_form_new_heading: "New compliance event"
+  vehicle_maintenance_compliance_form_edit_heading: "Edit compliance event"
+  vehicle_maintenance_compliance_form_event: "Name"
+  vehicle_maintenance_compliance_form_notes: "Notes"
+  vehicle_maintenance_compliance_form_due_type: "Due Based On"
+  vehicle_maintenance_compliance_form_due_date: "Due Date"
+  vehicle_maintenance_compliance_form_due_mileage: "Due Mileage"
+  vehicle_maintenance_compliance_form_due_string: "Due"
+  vehicle_maintenance_compliance_form_compliance_date: "Compliance Date"
+  vehicle_maintenance_compliance_form_submit: "Save"
+
   # Application Settings
   application_settings_heading: "Application Settings"
   edit_application_settings_heading: "Editing Application Settings"
@@ -872,6 +936,11 @@ en:
   upload_common_addresses_notes: 'Please refer to address file specifications.'
   # translation editing
   create_translation: 'Create Translation'
+  # reporting engine
+  report_name: 'Reports'
+  report_parameters: 'Report Parameters'
+  reset_filter_panel: 'Reset Filter'
+  reset_all_filter: 'Reset All'
 
   locales:
     en: "English"
