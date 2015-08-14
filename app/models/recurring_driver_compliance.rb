@@ -99,7 +99,7 @@ class RecurringDriverCompliance < ActiveRecord::Base
     
     def schedule_compliance_date_based_occurrences!(recurrence, driver_collection)
       driver_collection.find_each do |driver|
-        previous_occurrences = recurrence.driver_compliances.for(driver)
+        previous_occurrences = recurrence.driver_compliances.for_driver(driver)
 
         if previous_occurrences.any?
           if previous_occurrences.last.complete?
@@ -120,7 +120,7 @@ class RecurringDriverCompliance < ActiveRecord::Base
     
     def schedule_due_date_based_occurrences!(recurrence, driver_collection)
       driver_collection.find_each do |driver|
-        previous_occurrences = recurrence.driver_compliances.for(driver)
+        previous_occurrences = recurrence.driver_compliances.for_driver(driver)
         next_occurence_dates = []
 
         if previous_occurrences.any?

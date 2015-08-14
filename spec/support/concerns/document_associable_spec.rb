@@ -2,7 +2,7 @@ require 'spec_helper'
 
 # For model specs
 RSpec.shared_examples "an associable for a document" do
-  describe "document_associations" do
+  describe "instance" do
     before do
       # Set @owner in the described class
       fail "@owner instance variable required" unless defined? @owner
@@ -63,7 +63,7 @@ end
 
 # For controller specs
 RSpec.shared_examples "a controller that accepts nested attributes for a document association" do
-  describe "with nested document association attributes" do
+  describe "accepts nested document association attributes" do
     before do
       # Set @owner in the described class
       fail "@owner instance variable required" unless defined? @owner
@@ -73,7 +73,7 @@ RSpec.shared_examples "a controller that accepts nested attributes for a documen
       @example = create @described_class_factory, @owner_factory => @owner
     end
     
-    describe "PUT #update" do
+    describe "to PUT #update" do
       context "with valid params" do
         before do
           @document_association = create :document_association, document: create(:document, documentable: @owner), associable: @example
@@ -112,7 +112,7 @@ RSpec.shared_examples "a controller that accepts nested attributes for a documen
       end
     end
 
-    describe "POST #create" do
+    describe "to POST #create" do
       context "with valid params" do
         it "creates new document associations" do
           expect {
@@ -156,7 +156,7 @@ RSpec.shared_examples "it accepts nested attributes for document associations" d
         @document_2 = create :document, documentable: @owner
       end
       
-      describe "GET /owner_path/:owner_id/example_path/new" do
+      describe "to GET /owner_path/:owner_id/example_path/new" do
         before do
           # Need to explicitly pass in :locale param to avoid UrlGenerationError
           visit new_polymorphic_path([@owner, @example_class], locale: :en)
@@ -181,7 +181,7 @@ RSpec.shared_examples "it accepts nested attributes for document associations" d
         skip "allows new associations to be added", js: true
       end
 
-      describe "GET /owner_path/:owner_id/example_path/:id/edit" do
+      describe "to GET /owner_path/:owner_id/example_path/:id/edit" do
         before do
           create :document_association, document: @document_1, associable: @example
 
@@ -225,7 +225,7 @@ RSpec.shared_examples "it accepts nested attributes for document associations" d
     end
   
     describe "without uploaded documents" do
-      describe "GET /owner_path/:owner_id/example_path/new without uploaded documents" do
+      describe "to GET /owner_path/:owner_id/example_path/new without uploaded documents" do
         before do
           # Need to explicitly pass in :locale param to avoid UrlGenerationError
           visit new_polymorphic_path([@owner, @example_class], locale: :en)
@@ -242,7 +242,7 @@ RSpec.shared_examples "it accepts nested attributes for document associations" d
         end
       end
 
-      describe "GET /owner_path/:owner_id/example_path/:id/edit" do
+      describe "to GET /owner_path/:owner_id/example_path/:id/edit" do
         before do
           # Need to explicitly pass in :locale param to avoid UrlGenerationError
           visit edit_polymorphic_path([@owner, @example], locale: :en)

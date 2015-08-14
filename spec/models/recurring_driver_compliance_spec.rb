@@ -460,7 +460,7 @@ RSpec.describe RecurringDriverCompliance, type: :model do
             }.to change(DriverCompliance, :count).by(13)
 
             expected_dates.each do |expected_date|
-              expect(@recurrence.driver_compliances.for(@driver).where(due_date: expected_date)).to exist
+              expect(@recurrence.driver_compliances.for_driver(@driver).where(due_date: expected_date)).to exist
             end
           end
 
