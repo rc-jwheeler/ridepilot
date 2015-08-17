@@ -1,100 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe RecurringDriverCompliance, type: :model do
-  it "requires a provider" do
-    recurrence = build :recurring_driver_compliance, provider: nil
-    expect(recurrence.valid?).to be_falsey
-    expect(recurrence.errors.keys).to include :provider
+  it_behaves_like "a recurring compliance event scheduler" do
+    before do
+      @occurrence_owner_class = Driver
+      @occurrence_class = DriverCompliance
+      @occurrence_association = :driver_compliances
+    end
   end
 
-  it "requires an event_name" do
-    recurrence = build :recurring_driver_compliance, event_name: nil
-    expect(recurrence.valid?).to be_falsey
-    expect(recurrence.errors.keys).to include :event_name
-  end
-
-  it "requires a recurrence_schedule of either 'days', 'weeks', 'months', or 'years'" do
+  it "requires a recurrence_schedule" do
     recurrence = build :recurring_driver_compliance, recurrence_schedule: nil
     expect(recurrence.valid?).to be_falsey
     expect(recurrence.errors.keys).to include :recurrence_schedule
-
-    recurrence.recurrence_schedule = "foo"
-    expect(recurrence.valid?).to be_falsey
-    expect(recurrence.errors.keys).to include :recurrence_schedule
-
-    %w(days weeks months years).each do |schedule|
-      recurrence.recurrence_schedule = schedule
-      expect(recurrence.valid?).to be_truthy
-    end
   end
 
-  it "requires a numeric recurrence_frequency greater than 0" do
+  it "requires a numeric recurrence_frequency" do
     recurrence = build :recurring_driver_compliance, recurrence_frequency: nil
     expect(recurrence.valid?).to be_falsey
     expect(recurrence.errors.keys).to include :recurrence_frequency
-
-    %w(foo -1 0).each do |frequency|
-      recurrence.recurrence_frequency = frequency
-      expect(recurrence.valid?).to be_falsey
-      expect(recurrence.errors.keys).to include :recurrence_frequency
-    end
-
-    recurrence.recurrence_frequency = "1"
-    expect(recurrence.valid?).to be_truthy
-  end
-
-  it "requires a valid start_date on or after today" do
-    recurrence = build :recurring_driver_compliance, start_date: nil
-    expect(recurrence.valid?).to be_falsey
-    expect(recurrence.errors.keys).to include :start_date
-
-    recurrence.start_date = Date.current
-    expect(recurrence.valid?).to be_truthy
-  end
-
-  it "requires a future_start_rule of either 'immediately', 'on_schedule' (i.e. based on start_date), or 'time_span'" do
-    recurrence = build :recurring_driver_compliance, future_start_rule: nil, future_start_schedule: "days", future_start_frequency: 1
-    expect(recurrence.valid?).to be_falsey
-    expect(recurrence.errors.keys).to include :future_start_rule
-
-    recurrence.future_start_rule = "foo"
-    expect(recurrence.valid?).to be_falsey
-    expect(recurrence.errors.keys).to include :future_start_rule
-
-    %w(immediately on_schedule time_span).each do |rule|
-      recurrence.future_start_rule = rule
-      expect(recurrence.valid?).to be_truthy
-    end
-  end
-
-  it "requires a future_start_schedule of either 'days', 'weeks', 'months', or 'years' when future_start_rule is 'time_span'" do
-    recurrence = build :recurring_driver_compliance, future_start_rule: 'time_span', future_start_schedule: nil, future_start_frequency: 1
-    expect(recurrence.valid?).to be_falsey
-    expect(recurrence.errors.keys).to include :future_start_schedule
-
-    recurrence.future_start_schedule = "foo"
-    expect(recurrence.valid?).to be_falsey
-    expect(recurrence.errors.keys).to include :future_start_schedule
-
-    %w(days weeks months years).each do |schedule|
-      recurrence.future_start_schedule = schedule
-      expect(recurrence.valid?).to be_truthy
-    end
-  end
-
-  it "requires a numeric future_start_frequency greater than 0 when future_start_rule is 'time_span'" do
-    recurrence = build :recurring_driver_compliance, future_start_rule: 'time_span', future_start_schedule: 'days', future_start_frequency: nil
-    expect(recurrence.valid?).to be_falsey
-    expect(recurrence.errors.keys).to include :future_start_frequency
-
-    %w(foo -1 0).each do |frequency|
-      recurrence.future_start_frequency = frequency
-      expect(recurrence.valid?).to be_falsey
-      expect(recurrence.errors.keys).to include :future_start_frequency
-    end
-
-    recurrence.future_start_frequency = "1"
-    expect(recurrence.valid?).to be_truthy
   end
 
   it "can prefer scheduling on compliance date over due date" do
@@ -109,62 +33,83 @@ RSpec.describe RecurringDriverCompliance, type: :model do
     end
   end
 
-  it "does not automatically generate child compliance events on creation (allowing for a period of time to modify the new event)" do
-    expect {
-      create :recurring_driver_compliance
-    }.not_to change(DriverCompliance, :count)
-  end
-  
-  describe "updates" do
-    it "only allows the recurrence_notes, event_name, and event_notes fields to be modified once it has spawned children" do
-      recurrence = create :recurring_driver_compliance, event_name: "My Event", event_notes: nil, recurrence_notes: nil
-      create :driver_compliance, recurring_driver_compliance: recurrence
+  describe ".adjusted_start_date" do
+    describe "when as_of is before the recurrence start_date" do
+      before do
+        # as_of defaults to the current date
+        @recurrence = create :recurring_driver_compliance,
+          start_date: Date.current.tomorrow,
+          recurrence_frequency: 1,
+          recurrence_schedule: "months"
+      end
 
-      recurrence.start_date = Date.tomorrow
-      expect(recurrence.valid?).to be_falsey
-      expect(recurrence.errors.keys).to include :start_date
+      describe "with a future_start_rule of 'immediately'" do
+        it "should return the start_date" do
+          expect(described_class.adjusted_start_date @recurrence).to eq @recurrence.start_date
+        end
+      end
 
-      recurrence.reload
-      recurrence.event_name = "My New Event"
-      recurrence.event_notes = "My Event Notes"
-      recurrence.recurrence_notes = "My Recurrence Notes"
-      expect(recurrence.valid?).to be_truthy
+      describe "with a future_start_rule of 'on_schedule'" do
+        before do
+          @recurrence.update_columns future_start_rule: "on_schedule"
+        end
+
+        it "should return the start_date" do
+          expect(described_class.adjusted_start_date @recurrence).to eq @recurrence.start_date
+        end
+      end
+
+      describe "with a future_start_rule of 'time_span'" do
+        before do
+          @recurrence.update_columns future_start_rule: "time_span", future_start_schedule: "days", future_start_frequency: 10
+        end
+
+        it "should return the start_date" do
+          expect(described_class.adjusted_start_date @recurrence).to eq @recurrence.start_date
+        end
+      end
     end
 
-    it "pushes changes to event_name and event_notes fields to children" do
-      recurrence = create :recurring_driver_compliance, event_name: "My Event", event_notes: nil
-      driver_compliance = create :driver_compliance, recurring_driver_compliance: recurrence
+    describe "when as_of is after the recurrence start_date" do
+      before do
+        # Time.now is now frozen at Monday, June 1, 2015
+        Timecop.freeze(Date.parse("2015-06-01"))
 
-      expect {
-        recurrence.update_attributes event_name: "My Update Event Name", event_notes: "My Updated Event Notes"
-      }.to change { [driver_compliance.reload.event, driver_compliance.reload.notes] }.to(["My Update Event Name", "My Updated Event Notes"])
-    end
-  end
+        @recurrence = create :recurring_driver_compliance,
+          start_date: Date.current,
+          recurrence_frequency: 1,
+          recurrence_schedule: "months"
+      end
 
-  describe "#destroy" do
-    it "nullifies the association on children when destroyed, by default" do
-      recurrence = create :recurring_driver_compliance, event_name: "My Event", event_notes: nil
-      driver_compliance = create :driver_compliance, recurring_driver_compliance: recurrence
+      after do
+        Timecop.return
+      end
 
-      expect {
-        recurrence.destroy
-      }.to change(RecurringDriverCompliance, :count).by(-1)
-      expect(driver_compliance.reload.recurring_driver_compliance).to be_nil
-    end
+      describe "with a future_start_rule of 'immediately'" do
+        it "should return the as_of date" do
+          expect(described_class.adjusted_start_date @recurrence, as_of: Date.current.tomorrow).to eq Date.current.tomorrow
+        end
+      end
 
-    it "can optionally delete incomplete children when destroyed, but will still nullify complete children" do
-      recurrence = create :recurring_driver_compliance, event_name: "My Event", event_notes: nil
-      driver_compliance_1 = create :driver_compliance, compliance_date: Date.current, recurring_driver_compliance: recurrence
-      driver_compliance_2 = create :driver_compliance, recurring_driver_compliance: recurrence
-      driver_compliance_3 = create :driver_compliance, :recurring
+      describe "with a future_start_rule of 'on_schedule'" do
+        before do
+          @recurrence.update_columns future_start_rule: "on_schedule"
+        end
 
-      expect {
-        recurrence.destroy_with_incomplete_children!
-      }.to change(RecurringDriverCompliance, :count).by(-1)
-      expect(driver_compliance_1.reload.recurring_driver_compliance).to be_nil
-      expect(DriverCompliance.all).to include driver_compliance_1
-      expect(DriverCompliance.all).not_to include driver_compliance_2
-      expect(DriverCompliance.all).to include driver_compliance_3
+        it "should return the next date of the occurrence on or after as_of, according to the recurrence schedule" do
+          expect(described_class.adjusted_start_date @recurrence, as_of: Date.current.tomorrow).to eq Date.parse("2015-07-01")
+        end
+      end
+
+      describe "with a future_start_rule of 'time_span'" do
+        before do
+          @recurrence.update_columns future_start_rule: "time_span", future_start_schedule: "days", future_start_frequency: 10
+        end
+
+        it "should return the next date of the occurrence starting after the time span from as_of" do
+          expect(described_class.adjusted_start_date @recurrence, as_of: Date.parse("2015-06-15")).to eq Date.parse("2015-06-25")
+        end
+      end
     end
   end
 
@@ -295,86 +240,6 @@ RSpec.describe RecurringDriverCompliance, type: :model do
     end
   end
 
-  describe ".adjusted_start_date" do
-    describe "when as_of is before the recurrence start_date" do
-      before do
-        # as_of defaults to the current date
-        @recurrence = create :recurring_driver_compliance,
-          start_date: Date.current.tomorrow,
-          recurrence_frequency: 1,
-          recurrence_schedule: "months"
-      end
-
-      describe "with a future_start_rule of 'immediately'" do
-        it "should return the start_date" do
-          expect(RecurringDriverCompliance.adjusted_start_date @recurrence).to eq @recurrence.start_date
-        end
-      end
-
-      describe "with a future_start_rule of 'on_schedule'" do
-        before do
-          @recurrence.update_columns future_start_rule: "on_schedule"
-        end
-  
-        it "should return the start_date" do
-          expect(RecurringDriverCompliance.adjusted_start_date @recurrence).to eq @recurrence.start_date
-        end
-      end
-
-      describe "with a future_start_rule of 'time_span'" do
-        before do
-          @recurrence.update_columns future_start_rule: "time_span", future_start_schedule: "days", future_start_frequency: 10
-        end
-  
-        it "should return the start_date" do
-          expect(RecurringDriverCompliance.adjusted_start_date @recurrence).to eq @recurrence.start_date
-        end
-      end
-    end
-
-    describe "when as_of is after the recurrence start_date" do
-      before do
-        # Time.now is now frozen at Monday, June 1, 2015
-        Timecop.freeze(Date.parse("2015-06-01"))
-
-        @recurrence = create :recurring_driver_compliance,
-          start_date: Date.current,
-          recurrence_frequency: 1,
-          recurrence_schedule: "months"
-      end
-
-      after do
-        Timecop.return
-      end
-
-      describe "with a future_start_rule of 'immediately'" do
-        it "should return the as_of date" do
-          expect(RecurringDriverCompliance.adjusted_start_date @recurrence, as_of: Date.current.tomorrow).to eq Date.current.tomorrow
-        end
-      end
-
-      describe "with a future_start_rule of 'on_schedule'" do
-        before do
-          @recurrence.update_columns future_start_rule: "on_schedule"
-        end
-  
-        it "should return the next date of the occurrence on or after as_of, according to the recurrence schedule" do
-          expect(RecurringDriverCompliance.adjusted_start_date @recurrence, as_of: Date.current.tomorrow).to eq Date.parse("2015-07-01")
-        end
-      end
-
-      describe "with a future_start_rule of 'time_span'" do
-        before do
-          @recurrence.update_columns future_start_rule: "time_span", future_start_schedule: "days", future_start_frequency: 10
-        end
-  
-        it "should return the next date of the occurrence starting after the time span from as_of" do
-          expect(RecurringDriverCompliance.adjusted_start_date @recurrence, as_of: Date.parse("2015-06-15")).to eq Date.parse("2015-06-25")
-        end
-      end
-    end
-  end
-
   describe ".generate!" do
     before do
       # Time.now is now frozen at Monday, June 1, 2015
@@ -395,41 +260,6 @@ RSpec.describe RecurringDriverCompliance, type: :model do
 
     after do
       Timecop.return
-    end
-
-    # Whether compliance date scheduling or due date scheduling is preferred,
-    # both use same private method to create new compliance events and both work
-    # on the same collection of drivers
-    describe "sanity check" do
-      before do
-        @driver = create :driver, provider: @provider
-      end
-
-      it "generates child compliance events for drivers of providers with recurrences defined" do
-        expect {
-          RecurringDriverCompliance.generate!
-        }.to change { @driver.driver_compliances.count }
-      end
-
-      it "doesn't generates child compliance events for drivers of providers without recurrences defined" do
-        driver_2 = create :driver
-        expect {
-          RecurringDriverCompliance.generate!
-        }.not_to change { driver_2.driver_compliances.count }
-      end
-
-      it "sets the name and notes of generated children to the recurrence's event_name and event_notes fields, respectively" do
-        RecurringDriverCompliance.generate!
-        expect(@driver.driver_compliances.first.event).to eq "Submit timesheet"
-        expect(@driver.driver_compliances.first.notes).to eq "Don't forget!"
-      end
-
-      it "is idempotent" do
-        RecurringDriverCompliance.generate!
-        expect {
-          RecurringDriverCompliance.generate!
-        }.not_to change(DriverCompliance, :count)
-      end
     end
 
     # Due date based scheduling is used when a compliance must be completed on
