@@ -177,19 +177,7 @@ RSpec.shared_examples "a recurring compliance event scheduler" do
 
     describe ".generate!" do
       before do
-        # Time.now is now frozen at Monday, June 1, 2015
-        Timecop.freeze(Date.parse("2015-06-01"))
-
-        # Start date is Tuesday, June 2, 2015
-        @recurrence = create @described_class_factory,
-          event_name: "Submit timesheet",
-          event_notes: "Don't forget!",
-          recurrence_frequency: 2,
-          recurrence_schedule: "weeks",
-          start_date: Date.parse("2015-06-02"),
-          future_start_rule: "immediately",
-          compliance_date_based_scheduling: false
-
+        @recurrence = create @described_class_factory
         @provider = @recurrence.provider
       end
 
@@ -198,7 +186,11 @@ RSpec.shared_examples "a recurring compliance event scheduler" do
       end
       
       # The described class should verify the implementation
-      it "defines a .generate! class method"
+      it "defines a .generate! class method" do
+        expect {
+          described_class.generate!
+        }.not_to raise_error
+      end
 
       # All implementations should at least pass these smoke tests
       describe "sanity check" do
@@ -221,8 +213,8 @@ RSpec.shared_examples "a recurring compliance event scheduler" do
 
         it "sets the name and notes of generated children to the recurrence's event_name and event_notes fields, respectively" do
           described_class.generate!
-          expect(@owner.send(@occurrence_association).first.event).to eq "Submit timesheet"
-          expect(@owner.send(@occurrence_association).first.notes).to eq "Don't forget!"
+          expect(@owner.send(@occurrence_association).first.event).to eq @recurrence.event_name
+          expect(@owner.send(@occurrence_association).first.notes).to eq @recurrence.event_notes
         end
 
         it "is idempotent" do

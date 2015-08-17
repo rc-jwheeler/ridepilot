@@ -22,14 +22,14 @@ RSpec.describe RecurringDriverCompliance, type: :model do
   end
 
   it "can prefer scheduling on compliance date over due date" do
-    recurrence = build :recurring_driver_compliance, compliance_date_based_scheduling: nil
+    recurrence = build :recurring_driver_compliance, compliance_based_scheduling: nil
     expect(recurrence.valid?).to be_falsey
-    expect(recurrence.errors.keys).to include :compliance_date_based_scheduling
+    expect(recurrence.errors.keys).to include :compliance_based_scheduling
 
     [true, false].each do |bool|
-      recurrence.compliance_date_based_scheduling = bool.to_s
+      recurrence.compliance_based_scheduling = bool.to_s
       expect(recurrence.valid?).to be_truthy
-      expect(recurrence.compliance_date_based_scheduling?).to eq(bool)
+      expect(recurrence.compliance_based_scheduling?).to eq(bool)
     end
   end
 
@@ -141,15 +141,15 @@ RSpec.describe RecurringDriverCompliance, type: :model do
     end
 
     it "can accept an optional range_first_date" do
-      expect(RecurringDriverCompliance.occurrence_dates_on_schedule_in_range(@recurrence, range_start_date: Date.current.tomorrow).first).to eq Date.parse("2015-02-01")
+      expect(RecurringDriverCompliance.occurrence_dates_on_schedule_in_range(@recurrence, date_range_start_date: Date.current.tomorrow).first).to eq Date.parse("2015-02-01")
     end
 
-    it "can accept an optional range_end_date" do
-      expect(RecurringDriverCompliance.occurrence_dates_on_schedule_in_range(@recurrence, range_end_date: Date.current.tomorrow).last).to eq Date.parse("2015-01-01")
+    it "can accept an optional date_range_end_date" do
+      expect(RecurringDriverCompliance.occurrence_dates_on_schedule_in_range(@recurrence, date_range_end_date: Date.current.tomorrow).last).to eq Date.parse("2015-01-01")
     end
 
-    it "setting a range_first_date influences the default range_end_date" do
-      expect(RecurringDriverCompliance.occurrence_dates_on_schedule_in_range(@recurrence, range_start_date: Date.parse("2015-07-01")).last).to eq Date.parse("2015-12-01")
+    it "setting a range_first_date influences the default date_range_end_date" do
+      expect(RecurringDriverCompliance.occurrence_dates_on_schedule_in_range(@recurrence, date_range_start_date: Date.parse("2015-07-01")).last).to eq Date.parse("2015-12-01")
     end
 
     # Add examples as edge-cases are discovered
@@ -164,8 +164,8 @@ RSpec.describe RecurringDriverCompliance, type: :model do
             recurrence_schedule: "months"
         end
 
-        it "properly finds the last day of each subsequent month, even when the range_start_date is far into the future" do
-          expect(RecurringDriverCompliance.occurrence_dates_on_schedule_in_range @recurrence, range_start_date: Date.parse("2023-09-15"), range_end_date: Date.parse("2024-09-14")).to eq [
+        it "properly finds the last day of each subsequent month, even when the date_range_start_date is far into the future" do
+          expect(RecurringDriverCompliance.occurrence_dates_on_schedule_in_range @recurrence, date_range_start_date: Date.parse("2023-09-15"), date_range_end_date: Date.parse("2024-09-14")).to eq [
             Date.parse("2023-09-30"),
             Date.parse("2023-10-31"),
             Date.parse("2023-11-30"),
@@ -193,7 +193,7 @@ RSpec.describe RecurringDriverCompliance, type: :model do
         start_date: Date.current,
         recurrence_frequency: 1,
         recurrence_schedule: "months",
-        compliance_date_based_scheduling: true
+        compliance_based_scheduling: true
     end
 
     it "returns the next occurrence date from previous_date" do
@@ -205,9 +205,9 @@ RSpec.describe RecurringDriverCompliance, type: :model do
       expect(RecurringDriverCompliance.next_occurrence_date_from_previous_date_in_range @recurrence, Date.parse("2015-01-01")).to be_nil
     end
 
-    it "can accept an optional range_end_date" do
+    it "can accept an optional date_range_end_date" do
       @recurrence.update_columns recurrence_schedule: "years"
-      expect(RecurringDriverCompliance.next_occurrence_date_from_previous_date_in_range @recurrence, Date.parse("2015-01-01"), range_end_date: Date.parse("2016-01-01")).to eq Date.parse("2016-01-01")
+      expect(RecurringDriverCompliance.next_occurrence_date_from_previous_date_in_range @recurrence, Date.parse("2015-01-01"), date_range_end_date: Date.parse("2016-01-01")).to eq Date.parse("2016-01-01")
     end
 
     it "doesn't care if we're super far into the future" do
@@ -228,7 +228,7 @@ RSpec.describe RecurringDriverCompliance, type: :model do
             start_date: Date.parse("2015-01-31"),
             recurrence_frequency: 1,
             recurrence_schedule: "months",
-            compliance_date_based_scheduling: true
+            compliance_based_scheduling: true
         end
 
         it "ignores irregular monthly traversals, because the next due date is based solely off of the previous compliance date" do
@@ -253,7 +253,7 @@ RSpec.describe RecurringDriverCompliance, type: :model do
         recurrence_schedule: "weeks",
         start_date: Date.parse("2015-06-02"),
         future_start_rule: "immediately",
-        compliance_date_based_scheduling: false
+        compliance_based_scheduling: false
 
       @provider = @recurrence.provider
     end
@@ -262,10 +262,10 @@ RSpec.describe RecurringDriverCompliance, type: :model do
       Timecop.return
     end
 
-    # Due date based scheduling is used when a compliance must be completed on
+    # Frequency based scheduling is used when a compliance must be completed on
     # a regular schedule, regardless of when the previous occurrences were
     # completed.
-    describe "when due date scheduling is preferred" do
+    describe "when frequency based scheduling is preferred" do
       describe "for drivers that already exist when the recurrence is created" do
         before do
           @driver = create :driver, provider: @provider
@@ -448,16 +448,16 @@ RSpec.describe RecurringDriverCompliance, type: :model do
       end
     end
 
-    # Compliance date based scheduling is used when a compliance is good for a
+    # Compliance based scheduling is used when a compliance is good for a
     # specific period of time. An example would be CPR certification, where the
     # certificate is only good for 1 year after the last time you completed
     # certification. For instance, if you completed certification on June 1,
     # 2015 it would be Good until May 30, 2016. If you then completed the
     # recertification on May 15, 2016, your new certificate would be good until
     # May 14, 2017.
-    describe "when compliance date scheduling is preferred" do
+    describe "when compliance based scheduling is preferred" do
       before do
-        @recurrence.update_columns compliance_date_based_scheduling: true
+        @recurrence.update_columns compliance_based_scheduling: true
       end
 
       describe "for drivers that already exist when the recurrence is created" do

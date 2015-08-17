@@ -7,49 +7,48 @@ class RecurringDriverCompliance < ActiveRecord::Base
   
   validates :recurrence_schedule, presence: true
   validates :recurrence_frequency, presence: true
-  validates :compliance_date_based_scheduling, inclusion: { in: [true, false] }
   
   class << self
-    def generate!(range_length: nil)
+    def generate!(date_range_length: nil)
       # Defaults to 6 months, but can be set longer
-      @default_range_length = range_length
+      @default_date_range_length = date_range_length
       
       transaction do
         find_each do |recurrence|
           # Ensures that the next steps all work off the same collection
           drivers = recurrence.drivers
 
-          if recurrence.compliance_date_based_scheduling?
-            schedule_compliance_date_based_occurrences! recurrence, drivers
+          if recurrence.compliance_based_scheduling?
+            schedule_compliance_based_occurrences! recurrence, drivers
           else
-            schedule_due_date_based_occurrences! recurrence, drivers
+            schedule_frequency_based_occurrences! recurrence, drivers
           end
         end
       end
     end
   
-    def occurrence_dates_on_schedule_in_range(recurrence, first_date: nil, range_start_date: nil, range_end_date: nil)
+    def occurrence_dates_on_schedule_in_range(recurrence, first_date: nil, date_range_start_date: nil, date_range_end_date: nil)
       first_date ||= recurrence.start_date
-      range_start_date ||= Date.current
-      range_end_date ||= (range_start_date + default_range_length - 1.day)
+      date_range_start_date ||= Date.current
+      date_range_end_date ||= (date_range_start_date + default_date_range_length - 1.day)
       next_date = first_date
       
       occurrences = []
       iterator = 0
       loop do
-        break if next_date > range_end_date
-        occurrences << next_date if next_date >= range_start_date
+        break if next_date > date_range_end_date
+        occurrences << next_date if next_date >= date_range_start_date
         next_date = first_date + (recurrence.recurrence_frequency * (iterator += 1)).send(recurrence.recurrence_schedule)
       end
       occurrences
     end
     
     # Public for testability purposes
-    def next_occurrence_date_from_previous_date_in_range(recurrence, previous_date, range_end_date: nil)
-      range_end_date ||= (Date.current + default_range_length - 1.day)
+    def next_occurrence_date_from_previous_date_in_range(recurrence, previous_date, date_range_end_date: nil)
+      date_range_end_date ||= (Date.current + default_date_range_length - 1.day)
       next_date = previous_date + recurrence.recurrence_frequency.send(recurrence.recurrence_schedule)
       
-      if next_date > range_end_date
+      if next_date > date_range_end_date
         nil
       else
         next_date
@@ -67,7 +66,7 @@ class RecurringDriverCompliance < ActiveRecord::Base
         when :immediately
           as_of
         when :on_schedule
-          occurrence_dates_on_schedule_in_range(recurrence, range_start_date: as_of, range_end_date: (as_of + recurrence.recurrence_frequency.send(recurrence.recurrence_schedule))).first
+          occurrence_dates_on_schedule_in_range(recurrence, date_range_start_date: as_of, date_range_end_date: (as_of + recurrence.recurrence_frequency.send(recurrence.recurrence_schedule))).first
         when :time_span
           as_of + recurrence.future_start_frequency.send(recurrence.future_start_schedule)
         end
@@ -76,7 +75,7 @@ class RecurringDriverCompliance < ActiveRecord::Base
 
     private
     
-    def schedule_compliance_date_based_occurrences!(recurrence, driver_collection)
+    def schedule_compliance_based_occurrences!(recurrence, driver_collection)
       driver_collection.find_each do |driver|
         previous_occurrences = recurrence.driver_compliances.for_driver(driver)
 
@@ -97,7 +96,7 @@ class RecurringDriverCompliance < ActiveRecord::Base
       end
     end
     
-    def schedule_due_date_based_occurrences!(recurrence, driver_collection)
+    def schedule_frequency_based_occurrences!(recurrence, driver_collection)
       driver_collection.find_each do |driver|
         previous_occurrences = recurrence.driver_compliances.for_driver(driver)
         next_occurence_dates = []
@@ -123,8 +122,8 @@ class RecurringDriverCompliance < ActiveRecord::Base
         recurring_driver_compliance: recurrence
     end
     
-    def default_range_length
-      @default_range_length || 6.months
+    def default_date_range_length
+      @default_date_range_length || 6.months
     end
   end  
 end

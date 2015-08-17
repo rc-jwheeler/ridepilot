@@ -42,8 +42,8 @@ RSpec.describe RecurringDriverCompliancesController, type: :routing do
       expect(:get => "/recurring_driver_compliances/future_schedule_preview").to route_to("recurring_driver_compliances#future_schedule_preview")
     end
 
-    it "routes to #compliance_date_based_schedule_preview" do
-      expect(:get => "/recurring_driver_compliances/compliance_date_based_schedule_preview").to route_to("recurring_driver_compliances#compliance_date_based_schedule_preview")
+    it "routes to #compliance_based_schedule_preview" do
+      expect(:get => "/recurring_driver_compliances/compliance_based_schedule_preview").to route_to("recurring_driver_compliances#compliance_based_schedule_preview")
     end
   end
 end

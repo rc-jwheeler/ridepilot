@@ -21,6 +21,7 @@ module RecurringComplianceEventScheduler
     validates :future_start_schedule, inclusion: { in: RECURRENCE_SCHEDULES.map(&:to_s), if: :future_start_rule_is_time_span? }
     validates :future_start_frequency, numericality: { only_integer: true, greater_than: 0, if: :future_start_rule_is_time_span? }
     validates_date :start_date, on_or_after: -> { Date.current }
+    validates :compliance_based_scheduling, inclusion: { in: [true, false] }
     validate :limit_updates_on_recurrences_with_children, on: :update
       
     def destroy_with_incomplete_children!

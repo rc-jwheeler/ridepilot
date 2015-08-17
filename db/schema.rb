@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150813114622) do
+ActiveRecord::Schema.define(version: 20150817135157) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -338,7 +338,7 @@ ActiveRecord::Schema.define(version: 20150813114622) do
     t.string   "future_start_rule"
     t.string   "future_start_schedule"
     t.integer  "future_start_frequency"
-    t.boolean  "compliance_date_based_scheduling", default: false
+    t.boolean  "compliance_based_scheduling", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
