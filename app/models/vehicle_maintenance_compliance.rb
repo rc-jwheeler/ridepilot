@@ -1,10 +1,12 @@
 class VehicleMaintenanceCompliance < ActiveRecord::Base
   include DocumentAssociable
   include ComplianceEvent
+  include RecurringComplianceEvent
 
   DUE_TYPES = [:date, :mileage, :both].freeze
   
   belongs_to :vehicle, inverse_of: :vehicle_maintenance_compliances
+  belongs_to :recurring_vehicle_maintenance_compliance, inverse_of: :vehicle_maintenance_compliances
   
   validates :vehicle, presence: true
   validates :due_type, inclusion: { in: DUE_TYPES.map(&:to_s) }
@@ -13,6 +15,7 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   validates :due_mileage, presence: { if: :due_mileage_required? }
   validates :due_mileage, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
   
+  scope :for_vehicle, -> (vehicle_id) { where(vehicle_id: vehicle_id) }
   scope :default_order, -> { order("due_date IS NULL, due_date DESC, due_mileage DESC") }
   
   # NOTE These 2 scopes rely on data from vehicles and runs
@@ -35,6 +38,16 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
     vehicle.last_odometer_reading
   end
   
+  # Only used internally, but public for testability
+  def editable_occurrence_attributes
+    [:compliance_date, :compliance_mileage]
+  end
+  
+  # Only used internally, but public for testability
+  def is_recurring?
+    recurring_vehicle_maintenance_compliance.present?
+  end
+
   private
   
   def is_after_due_date?(as_of)

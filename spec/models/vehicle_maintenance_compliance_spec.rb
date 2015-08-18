@@ -8,6 +8,13 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
   end
   
   it_behaves_like "a compliance event"
+  
+  it_behaves_like "a recurring compliance event" do
+    before do
+      @owner_class = RecurringVehicleMaintenanceCompliance
+      @unchangeable_attributes = [:event, :notes, :due_type, :due_date, :due_mileage]
+    end
+  end
 
   it "requires a vehicle" do
     compliance = build :vehicle_maintenance_compliance, vehicle: nil
@@ -106,6 +113,25 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
     end
   end
 
+  describe ".for_vehicle" do
+    before do
+      @vehicle_1 = create :vehicle
+      @vehicle_2 = create :vehicle
+      @for_vehicle_1 = create :vehicle_maintenance_compliance, vehicle: @vehicle_1
+      @for_vehicle_2 = create :vehicle_maintenance_compliance, vehicle: @vehicle_2
+    end
+    
+    it "finds compliance events for a specified vehicle or vehicle id" do
+      expect(VehicleMaintenanceCompliance.for_vehicle(@vehicle_1)).to include @for_vehicle_1
+      expect(VehicleMaintenanceCompliance.for_vehicle(@vehicle_1)).not_to include @for_vehicle_2
+    end
+
+    it "can find compliance events for an array of vehicles or vehicle ids" do
+      expect(VehicleMaintenanceCompliance.for_vehicle([@vehicle_1, @vehicle_2])).to include @for_vehicle_1
+      expect(VehicleMaintenanceCompliance.for_vehicle([@vehicle_1, @vehicle_2])).to include @for_vehicle_2
+    end
+  end
+  
   describe ".overdue" do
     before do
       # Allow invalid due_mileage values so that we can force overdue values

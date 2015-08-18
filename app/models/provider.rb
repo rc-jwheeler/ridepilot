@@ -10,6 +10,7 @@ class Provider < ActiveRecord::Base
   has_many :funding_sources, :through => :funding_source_visibilities
   has_many :addresses, :dependent => :nullify
   has_many :recurring_driver_compliances, :dependent => :destroy
+  has_many :recurring_vehicle_maintenance_compliances, :dependent => :destroy
   has_one :address_upload_flag
   has_many :provider_reports
   has_many :reports, through: :provider_reports

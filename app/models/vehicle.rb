@@ -11,9 +11,13 @@ class Vehicle < ActiveRecord::Base
   
   has_many :documents, as: :documentable, dependent: :destroy, inverse_of: :documentable
   has_many :runs, inverse_of: :vehicle # TODO add :dependent rule
-  has_many :vehicle_maintenance_compliances, dependent: :destroy, inverse_of: :vehicle
   has_many :vehicle_maintenance_events, dependent: :destroy, inverse_of: :vehicle
   has_many :vehicle_warranties, dependent: :destroy, inverse_of: :vehicle
+
+  # We must specify :delete_all in order to avoid the before_destroy hook. See
+  # the RecurringComplianceEvent concern for more details. 
+  # TODO Look into using `#mark_for_destruction` and `#marked_for_destruction?`
+  has_many :vehicle_maintenance_compliances, dependent: :delete_all, inverse_of: :vehicle
 
   validates :provider, presence: true
   validates :default_driver, presence: true
@@ -24,10 +28,10 @@ class Vehicle < ActiveRecord::Base
   validates :seating_capacity, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
   validates :ownership, inclusion: { in: OWNERSHIPS.map(&:to_s), allow_blank: true }
 
-  default_scope { order('active, name') }
-  scope :active,       -> { where(:active => true) }
-  scope :for_provider, -> (provider_id) { where(:provider_id => provider_id) }
-  scope :reportable,   -> { where(:reportable => true) }
+  scope :active,        -> { where(active: true) }
+  scope :for_provider,  -> (provider_id) { where(provider_id: provider_id) }
+  scope :reportable,    -> { where(reportable: true) }
+  scope :default_order, -> { order('active, name') }
 
   def self.unassigned(provider)
     for_provider(provider).reject { |vehicle| vehicle.device_pool.present? }
