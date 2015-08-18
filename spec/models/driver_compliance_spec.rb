@@ -11,7 +11,7 @@ RSpec.describe DriverCompliance, type: :model do
   
   it_behaves_like "a recurring compliance event" do
     before do
-      @owner_class_factory = :recurring_driver_compliance
+      @owner_class = RecurringDriverCompliance
       @unchangeable_attributes = [:event, :notes, :due_date]
     end
   end

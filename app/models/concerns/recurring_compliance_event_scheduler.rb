@@ -3,10 +3,10 @@ require 'active_support/concern'
 module RecurringComplianceEventScheduler
   extend ActiveSupport::Concern
 
+  RECURRENCE_SCHEDULES = [:days, :weeks, :months, :years].freeze
+  FUTURE_START_RULES = [:immediately, :on_schedule, :time_span].freeze
+
   included do
-    RECURRENCE_SCHEDULES = [:days, :weeks, :months, :years].freeze
-    FUTURE_START_RULES = [:immediately, :on_schedule, :time_span].freeze
-  
     belongs_to :provider
   
     after_update :update_children
@@ -26,12 +26,16 @@ module RecurringComplianceEventScheduler
       
     def destroy_with_incomplete_children!
       self.class.transaction do
-        child_ids = self.send(self.class.recurring_compliance_association).incomplete.pluck(:id)
+        child_ids = self.send(self.class.occurrence_association).incomplete.pluck(:id)
         self.destroy
-        self.class.recurring_compliance_class.destroy_all(id: child_ids)
+        self.class.occurrence_class.destroy_all(id: child_ids)
       end
     end
 
+    def occurrences_for_owner(owner)
+      send(self.class.occurrence_association).send(self.class.occurrence_association_scope_for_owner, owner)
+    end
+    
     private
     
     def future_start_rule_is_time_span?
@@ -39,9 +43,9 @@ module RecurringComplianceEventScheduler
     end
 
     # Only allow updating the event_name and event_notes fields if the record is
-    # associated with any DriverCompliance records
+    # associated with any compliance occurrences
     def limit_updates_on_recurrences_with_children
-      if self.send(self.class.recurring_compliance_association).any?
+      if self.send(self.class.occurrence_association).any?
         changed_attributes.except(:recurrence_notes, :event_name, :event_notes).keys.each do |key|
           errors.add(key, "cannot be modified once events have been generated")
         end
@@ -49,31 +53,155 @@ module RecurringComplianceEventScheduler
     end
 
     def update_children
-      self.send(self.class.recurring_compliance_association).update_all event: event_name, notes: event_notes
+      self.send(self.class.occurrence_association).update_all event: event_name, notes: event_notes
     end
   end
   
   module ClassMethods 
-    attr_reader :recurring_compliance_association
-    attr_reader :recurring_compliance_class
+    attr_reader :occurrence_association
+    attr_reader :occurrence_owner_association
+    attr_reader :occurrence_class
+    attr_reader :occurrence_association_scope_for_owner
 
-    def generate!
-      raise "Must be defined by including class"
+    def generate!(date_range_length: nil)
+      # Defaults to 6 months, but can be set longer
+      @default_date_range_length = date_range_length
+  
+      transaction do
+        find_each do |recurrence|
+          # Ensures that the next steps all work off the same collection
+          collection = recurrence.send(@occurrence_owner_association)
+
+          if recurrence.compliance_based_scheduling?
+            schedule_compliance_based_occurrences! recurrence, collection
+          else
+            schedule_frequency_based_occurrences! recurrence, collection
+          end
+        end
+      end
+    end
+
+    def occurrence_dates_on_schedule_in_range(recurrence, first_date: nil, range_start_date: nil, range_end_date: nil)
+      first_date ||= recurrence.start_date
+      range_start_date ||= Date.current
+      range_end_date ||= (range_start_date + default_date_range_length - 1.day)
+      next_date = first_date
+    
+      occurrences = []
+      iterator = 0
+      loop do
+        break if next_date > range_end_date
+        occurrences << next_date if next_date >= range_start_date
+        next_date = first_date + (recurrence.recurrence_frequency * (iterator += 1)).send(recurrence.recurrence_schedule)
+      end
+      occurrences
+    end
+  
+    # Public for testability purposes
+    def next_occurrence_date_from_previous_date_in_range(recurrence, previous_date, range_end_date: nil)
+      range_end_date ||= (Date.current + default_date_range_length - 1.day)
+      next_date = previous_date + recurrence.recurrence_frequency.send(recurrence.recurrence_schedule)
+    
+      if next_date > range_end_date
+        nil
+      else
+        next_date
+      end
+    end
+
+    # Public for testability purposes
+    def adjusted_start_date(recurrence, as_of: nil)
+      as_of ||= Date.current
+
+      if recurrence.start_date >= as_of
+        recurrence.start_date
+      else
+        case recurrence.future_start_rule.to_sym
+        when :immediately
+          as_of
+        when :on_schedule
+          occurrence_dates_on_schedule_in_range(recurrence, range_start_date: as_of, range_end_date: (as_of + recurrence.recurrence_frequency.send(recurrence.recurrence_schedule))).first
+        when :time_span
+          as_of + recurrence.future_start_frequency.send(recurrence.future_start_schedule)
+        end
+      end
     end
     
     private
 
-    def creates_occurrences_on(association, class_name: nil)
-      @recurring_compliance_association = association
-      @recurring_compliance_class = if class_name.present?
-        if class_name.is_a? String
-          class_name.constantize
-        else
+    # Setup method for including class
+    def creates_occurrences_for(association, on:, class_name: nil, for_scope: nil)
+      @occurrence_association = association
+      @occurrence_owner_association = on
+      @occurrence_class = if class_name.present?
+        if class_name.is_a? Class
           class_name
+        else
+          class_name.to_s.camelize.constantize
         end
       else
         association.to_s.singularize.camelize.constantize
       end
+      @occurrence_association_scope_for_owner = if for_scope.present?
+        for_scope
+      else
+        "for_#{@occurrence_owner_association.to_s.singularize}".to_sym
+      end
+
+      # Setup some dynamic associations
+      has_many @occurrence_owner_association, through: :provider
+      has_many @occurrence_association, :dependent => :nullify, inverse_of: name.underscore.to_sym
+    end
+    
+    def schedule_compliance_based_occurrences!(recurrence, collection)
+      collection.find_each do |record|
+        previous_occurrences = recurrence.occurrences_for_owner(record)
+
+        if previous_occurrences.any?
+          if previous_occurrences.last.complete?
+            # Schedule it based on whenever this one was complete
+            next_occurence_date = next_occurrence_date_from_previous_date_in_range recurrence, previous_occurrences.last.compliance_date
+          else
+            # Nothing to schedule as the last one is still incomplete
+            # noop
+          end
+        else
+          # No previous one, schedule based on the adjusted start date
+          next_occurence_date = adjusted_start_date(recurrence)
+        end
+
+        make_occurrence!(record, recurrence, next_occurence_date) if next_occurence_date.present?
+      end
+    end
+  
+    def schedule_frequency_based_occurrences!(recurrence, collection)
+      collection.find_each do |record|
+        previous_occurrences = recurrence.occurrences_for_owner(record)
+        next_occurence_dates = []
+
+        if previous_occurrences.any?
+          # Find missing occurrence dates in range
+          next_occurence_dates = occurrence_dates_on_schedule_in_range(recurrence) - previous_occurrences.pluck(:due_date)
+        else
+          # Find missing occurrence rates based on the adjusted start date
+          next_occurence_dates = occurrence_dates_on_schedule_in_range recurrence, first_date: adjusted_start_date(recurrence)
+        end
+
+        next_occurence_dates.each do |occurrence_date|
+          make_occurrence! record, recurrence, occurrence_date
+        end
+      end
+    end
+  
+    def make_occurrence!(owner, recurrence, occurrence_date)
+      owner.send(@occurrence_association).create! event: recurrence.event_name,
+        notes: recurrence.event_notes,
+        due_date: occurrence_date,
+        recurring_driver_compliance: recurrence
+    end
+
+    def default_date_range_length
+      @default_date_range_length || 6.months
     end
   end
 end

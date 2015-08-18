@@ -5,9 +5,12 @@ RSpec.shared_examples "a recurring compliance event" do
   describe "occurrence" do
     before do
       # Set @owner_class_factory in the described class
-      fail "@owner_class_factory instance variable required" unless defined? @owner_class_factory
+      fail "@owner_class instance variable required" unless defined? @owner_class
+
+      # Set @unchangeable_attributes in the described class
       fail "@unchangeable_attributes instance variable required" unless defined? @unchangeable_attributes
     
+      @owner_class_factory = @owner_class.name.underscore.to_sym
       @described_class_factory = described_class.name.underscore.to_sym
     end
 
