@@ -59,23 +59,25 @@ module RecurringComplianceEventScheduler
   
   module ClassMethods 
     attr_reader :occurrence_association
-    attr_reader :occurrence_owner_association
     attr_reader :occurrence_class
+    attr_reader :occurrence_owner_association
     attr_reader :occurrence_association_scope_for_owner
+    attr_reader :recurrence_attribute
+    attr_reader :occurrence_generator_block
+    attr_reader :occurrence_attribute_block
 
-    def generate!(date_range_length: nil)
-      # Defaults to 6 months, but can be set longer
-      @default_date_range_length = date_range_length
-  
+    def generate!(*opts)
+      set_generate_options(opts.extract_options!)
+      
       transaction do
         find_each do |recurrence|
           # Ensures that the next steps all work off the same collection
           collection = recurrence.send(@occurrence_owner_association)
-
-          if recurrence.compliance_based_scheduling?
-            schedule_compliance_based_occurrences! recurrence, collection
+          
+          if @occurrence_generator_block.is_a? Proc
+            @occurrence_generator_block.call recurrence, collection
           else
-            schedule_frequency_based_occurrences! recurrence, collection
+            default_generator recurrence, collection
           end
         end
       end
@@ -132,7 +134,6 @@ module RecurringComplianceEventScheduler
     # Setup method for including class
     def creates_occurrences_for(association, on:, class_name: nil, for_scope: nil)
       @occurrence_association = association
-      @occurrence_owner_association = on
       @occurrence_class = if class_name.present?
         if class_name.is_a? Class
           class_name
@@ -142,15 +143,46 @@ module RecurringComplianceEventScheduler
       else
         association.to_s.singularize.camelize.constantize
       end
+      @occurrence_owner_association = on
       @occurrence_association_scope_for_owner = if for_scope.present?
         for_scope
       else
         "for_#{@occurrence_owner_association.to_s.singularize}".to_sym
       end
+      @recurrence_attribute = name.underscore.to_sym
 
       # Setup some dynamic associations
       has_many @occurrence_owner_association, through: :provider
-      has_many @occurrence_association, :dependent => :nullify, inverse_of: name.underscore.to_sym
+      has_many @occurrence_association, :dependent => :nullify, inverse_of: @recurrence_attribute
+    end
+    
+    # Accepts a block. If present, it will be called instead of the
+    # default_generate method. This block should accept two arguments: the 
+    # recurrence instance, and a collection of owner objects.
+    def generates_occurrences_with
+      @occurrence_generator_block = Proc.new
+    end
+    
+    # Accepts a block. If present, it will be called instead of the
+    # default_occurrence_attributes method. This block should accept a minimum 
+    # of two arguments: the owner, and the recurrence, plus any necessary 
+    # options such as the occurrence_date
+    def make_occurence_with_attributes
+      @occurrence_attribute_block = Proc.new
+    end
+    
+    def set_generate_options(opts = {})
+      opts.each do |k, v|
+        instance_variable_set("@default_#{k}", v)
+      end
+    end
+    
+    def default_generator(recurrence, collection)
+      if recurrence.compliance_based_scheduling?
+        schedule_compliance_based_occurrences! recurrence, collection
+      else
+        schedule_frequency_based_occurrences! recurrence, collection
+      end
     end
     
     def schedule_compliance_based_occurrences!(recurrence, collection)
@@ -170,7 +202,7 @@ module RecurringComplianceEventScheduler
           next_occurence_date = adjusted_start_date(recurrence)
         end
 
-        make_occurrence!(record, recurrence, next_occurence_date) if next_occurence_date.present?
+        make_occurrence(record, recurrence, occurrence_date: next_occurence_date) if next_occurence_date.present?
       end
     end
   
@@ -188,16 +220,28 @@ module RecurringComplianceEventScheduler
         end
 
         next_occurence_dates.each do |occurrence_date|
-          make_occurrence! record, recurrence, occurrence_date
+          make_occurrence record, recurrence, occurrence_date: occurrence_date
         end
       end
     end
-  
-    def make_occurrence!(owner, recurrence, occurrence_date)
-      owner.send(@occurrence_association).create! event: recurrence.event_name,
+    
+    def default_occurrence_attributes(owner, recurrence, occurrence_date)
+      {
+        event: recurrence.event_name,
         notes: recurrence.event_notes,
         due_date: occurrence_date,
-        recurring_driver_compliance: recurrence
+        @recurrence_attribute => recurrence
+      }
+    end
+  
+    def make_occurrence(owner, recurrence, *opts)
+      attributes = if @occurrence_attribute_block.is_a? Proc
+        @occurrence_attribute_block.call owner, recurrence, opts.extract_options!
+      else
+        default_occurrence_attributes owner, recurrence, opts.extract_options![:occurrence_date]
+      end
+      
+      owner.send(@occurrence_association).create! attributes
     end
 
     def default_date_range_length
