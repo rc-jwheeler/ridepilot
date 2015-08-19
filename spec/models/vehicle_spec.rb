@@ -169,4 +169,48 @@ RSpec.describe Vehicle, type: :model do
       }.to change(Document, :count).by(-3)
     end
   end
+  
+  describe "tracking seating capacity" do
+    before do
+      @vehicle = create :vehicle, seating_capacity: 8
+      @run = create :run, vehicle: @vehicle
+
+      @start_time = Time.zone.parse("14:30")
+      @end_time   = Time.zone.parse("15:30")
+      
+      @starts_before_start_ends_before_end = create :trip, run: @run, pickup_time: @start_time - 15.minutes, appointment_time: @end_time
+      @starts_after_start_ends_after_end   = create :trip, run: @run, pickup_time: @start_time,              appointment_time: @end_time + 15.minutes
+      @starts_after_start_ends_before_end  = create :trip, run: @run, pickup_time: @start_time,              appointment_time: @end_time
+      @starts_before_start_ends_after_end  = create :trip, run: @run, pickup_time: @start_time - 15.minutes, appointment_time: @end_time + 15.minutes
+    end
+    
+    it "returns the maximum seating_capacity when no qualifying trips are present" do
+      Trip.destroy_all
+      expect(@vehicle.open_seating_capacity @start_time, @end_time).to eq 8
+    end
+    
+    it "assumes a minimum or 1 passenger per qualifying trip" do
+      expect(@vehicle.open_seating_capacity @start_time, @end_time).to eq 4
+    end
+
+    it "accounts for trip guests and attendants" do
+      @starts_before_start_ends_before_end.update_attributes guest_count: 1, attendant_count: 1
+      expect(@vehicle.open_seating_capacity @start_time, @end_time).to eq 2
+    end
+
+    it "doesn't care about trips that start and end before the start_time" do
+      create :trip, run: @run, pickup_time: @start_time - 15.minutes, appointment_time: @start_time
+      expect(@vehicle.open_seating_capacity @start_time, @end_time).to eq 4
+    end
+
+    it "doesn't care about trips that start and end after the end_time" do
+      create :trip, run: @run, pickup_time: @end_time, appointment_time: @end_time + 15.minutes
+      expect(@vehicle.open_seating_capacity @start_time, @end_time).to eq 4
+    end
+
+    it "doesn't care about trips for other vehicles" do
+      create :trip, pickup_time: @start_time, appointment_time: @end_time
+      expect(@vehicle.open_seating_capacity @start_time, @end_time).to eq 4
+    end
+  end
 end

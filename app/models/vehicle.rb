@@ -11,6 +11,7 @@ class Vehicle < ActiveRecord::Base
   
   has_many :documents, as: :documentable, dependent: :destroy, inverse_of: :documentable
   has_many :runs, inverse_of: :vehicle # TODO add :dependent rule
+  has_many :trips, through: :runs
   has_many :vehicle_maintenance_events, dependent: :destroy, inverse_of: :vehicle
   has_many :vehicle_warranties, dependent: :destroy, inverse_of: :vehicle
 
@@ -47,5 +48,9 @@ class Vehicle < ActiveRecord::Base
 
   def expired?(as_of: Date.current)
     vehicle_warranties.expired(as_of: as_of).any?
-  end  
+  end
+  
+  def open_seating_capacity(start_time, end_time)
+    seating_capacity - trips.incomplete.during(start_time, end_time).collect(&:trip_size).flatten.compact.sum
+  end
 end
