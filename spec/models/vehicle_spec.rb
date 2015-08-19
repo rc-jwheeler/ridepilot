@@ -48,9 +48,10 @@ RSpec.describe Vehicle, type: :model do
     expect(vehicle.valid?).to be_truthy
   end
 
-  it "requires seating_capacity to be an integer > 0, when specified" do
+  it "requires seating_capacity to be an integer > 0" do
     vehicle = build :vehicle, seating_capacity: nil
-    expect(vehicle.valid?).to be_truthy
+    expect(vehicle.valid?).to be_falsey
+    expect(vehicle.errors.keys).to include :seating_capacity
 
     vehicle.seating_capacity = 0
     expect(vehicle.valid?).to be_falsey
