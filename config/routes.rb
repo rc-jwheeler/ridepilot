@@ -77,6 +77,18 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :recurring_vehicle_maintenance_compliances do
+      collection do
+        get :schedule_preview
+        get :future_schedule_preview
+        get :compliance_based_schedule_preview
+        put :generate, action: "generate!"
+      end
+      member do
+        get :delete
+      end
+    end
+
     resources :addresses, :only => [:create, :edit, :update, :destroy] do
       collection do
         get :autocomplete

@@ -47,7 +47,7 @@ RSpec.shared_examples "a recurring compliance event scheduler" do
     it "can find associated occurrences for a particular owner" do
       recurrence = create @recurrence_class_factory
       owner = create @occurrence_owner_class_factory, provider: recurrence.provider
-      @recurrence_class.generate!      
+      @recurrence_class.generate!
       expect(recurrence.occurrences_for_owner(owner)).to match_array owner.send(@occurrence_association)
     end
 

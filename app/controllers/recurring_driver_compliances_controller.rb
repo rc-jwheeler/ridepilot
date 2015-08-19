@@ -80,7 +80,7 @@ class RecurringDriverCompliancesController < ApplicationController
     # This is in place only for testing. In production we would rely on a cron 
     # task to generate these regularly
     raise ActionController::RoutingError if Rails.env.production? or Rails.env.staging?
-    RecurringDriverCompliance.generate! range_length: 5.years
+    RecurringDriverCompliance.generate! date_range_length: 5.years
     redirect_to recurring_driver_compliances_url, notice: 'All recurring driver compliance events have been generated.'
   end  
 
