@@ -15,7 +15,7 @@ class DriverCompliance < ActiveRecord::Base
   scope :default_order, -> { order("due_date DESC") }
 
   # Only used internally, but public for testability
-  def editable_occurrence_attributes
+  def self.editable_occurrence_attributes
     [:compliance_date]
   end
   

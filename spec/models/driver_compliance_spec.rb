@@ -12,7 +12,14 @@ RSpec.describe DriverCompliance, type: :model do
   it_behaves_like "a recurring compliance event" do
     before do
       @owner_class = RecurringDriverCompliance
+
+      # All model attributes that are note included in 
+      # .editable_occurrence_attributes
       @unchangeable_attributes = [:event, :notes, :due_date]
+
+      # Sample values for the attributes returned by 
+      # .editable_occurrence_attributes
+      @changeable_attributes = {compliance_date: Date.current}
     end
   end
   

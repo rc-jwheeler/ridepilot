@@ -8,8 +8,10 @@ module RecurringComplianceEvent
     validate :limit_updates_on_recurring_events, on: :update
   end
   
-  def editable_occurrence_attributes
-    raise "Must be defined by including class"
+  module ClassMethods 
+    def editable_occurrence_attributes
+      raise "Must be defined by including class"
+    end
   end
 
   def is_recurring?
@@ -31,7 +33,7 @@ module RecurringComplianceEvent
   # with a RecurringDriverCompliance record
   def limit_updates_on_recurring_events
     if is_recurring?
-      changed_attributes.except(editable_occurrence_attributes).keys.each do |key|
+      changed_attributes.except(*self.class.editable_occurrence_attributes).keys.each do |key|
         errors.add(key, "cannot be modified on an automatically generated event")
       end
     end

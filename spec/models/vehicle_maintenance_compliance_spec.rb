@@ -12,7 +12,14 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
   it_behaves_like "a recurring compliance event" do
     before do
       @owner_class = RecurringVehicleMaintenanceCompliance
+
+      # All model attributes that are note included in 
+      # .editable_occurrence_attributes
       @unchangeable_attributes = [:event, :notes, :due_type, :due_date, :due_mileage]
+      
+      # Sample values for the attributes returned by 
+      # .editable_occurrence_attributes
+      @changeable_attributes = {compliance_date: Date.current, compliance_mileage: 123}
     end
   end
 
@@ -54,7 +61,7 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
     compliance.compliance_date = nil
     expect(compliance.valid?).to be_truthy
   end
-
+  
   describe "due_types" do
     describe "date" do
       before do

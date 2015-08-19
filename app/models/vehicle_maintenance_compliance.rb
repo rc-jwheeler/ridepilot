@@ -41,7 +41,7 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   end
   
   # Only used internally, but public for testability
-  def editable_occurrence_attributes
+  def self.editable_occurrence_attributes
     [:compliance_date, :compliance_mileage]
   end
   
