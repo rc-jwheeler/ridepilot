@@ -112,7 +112,7 @@ RSpec.describe Vehicle, type: :model do
     end
 
     it "returns true when a vehicle's compliance entries are all complete" do
-      create :vehicle_maintenance_compliance, vehicle: @vehicle, compliance_date: Date.current
+      create :vehicle_maintenance_compliance, :complete, vehicle: @vehicle
       expect(@vehicle.compliant?).to be_truthy
     end
 
