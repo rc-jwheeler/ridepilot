@@ -7,16 +7,26 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
     end
   end
   
+  it_behaves_like "a compliance event"
+  
+  it_behaves_like "a recurring compliance event" do
+    before do
+      @owner_class = RecurringVehicleMaintenanceCompliance
+
+      # All model attributes that are note included in 
+      # .editable_occurrence_attributes
+      @unchangeable_attributes = [:event, :notes, :due_type, :due_date, :due_mileage]
+      
+      # Sample values for the attributes returned by 
+      # .editable_occurrence_attributes
+      @changeable_attributes = {compliance_date: Date.current, compliance_mileage: 123}
+    end
+  end
+
   it "requires a vehicle" do
     compliance = build :vehicle_maintenance_compliance, vehicle: nil
     expect(compliance.valid?).to be_falsey
     expect(compliance.errors.keys).to include :vehicle
-  end
-
-  it "requires an event name" do
-    compliance = build :vehicle_maintenance_compliance, event: nil
-    expect(compliance.valid?).to be_falsey
-    expect(compliance.errors.keys).to include :event
   end
 
   it "requires a due_type of either 'date', 'mileage', or 'both'" do
@@ -34,6 +44,24 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
     end
   end
 
+  it "requires a compliance_date if compliance_mileage is present" do
+    compliance = build :vehicle_maintenance_compliance, compliance_date: nil, compliance_mileage: 1234
+    expect(compliance.valid?).to be_falsey
+    expect(compliance.errors.keys).to include :compliance_date
+
+    compliance.compliance_mileage = nil
+    expect(compliance.valid?).to be_truthy
+  end
+
+  it "requires a compliance_mileage if compliance_date is present" do
+    compliance = build :vehicle_maintenance_compliance, compliance_date: Date.current, compliance_mileage: nil
+    expect(compliance.valid?).to be_falsey
+    expect(compliance.errors.keys).to include :compliance_mileage
+
+    compliance.compliance_date = nil
+    expect(compliance.valid?).to be_truthy
+  end
+  
   describe "due_types" do
     describe "date" do
       before do
@@ -110,48 +138,25 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
     end
   end
 
-  it "requires compliance date to be on or before today, when specified" do
-    compliance = build :vehicle_maintenance_compliance, compliance_date: nil
-    expect(compliance.valid?).to be_truthy
+  describe ".for_vehicle" do
+    before do
+      @vehicle_1 = create :vehicle
+      @vehicle_2 = create :vehicle
+      @for_vehicle_1 = create :vehicle_maintenance_compliance, vehicle: @vehicle_1
+      @for_vehicle_2 = create :vehicle_maintenance_compliance, vehicle: @vehicle_2
+    end
+    
+    it "finds compliance events for a specified vehicle or vehicle id" do
+      expect(VehicleMaintenanceCompliance.for_vehicle(@vehicle_1)).to include @for_vehicle_1
+      expect(VehicleMaintenanceCompliance.for_vehicle(@vehicle_1)).not_to include @for_vehicle_2
+    end
 
-    compliance.compliance_date = Date.current.tomorrow
-    expect(compliance.valid?).to be_falsey
-    expect(compliance.errors.keys).to include :compliance_date
-
-    compliance.compliance_date = Date.current
-    expect(compliance.valid?).to be_truthy
-  end
-
-  describe "#complete!" do
-    it "instantly sets the compliance date to the current date" do
-      compliance = create :vehicle_maintenance_compliance
-      expect(compliance.compliance_date).to be_nil
-      compliance.complete!
-      expect(compliance.reload.compliance_date).to eql Date.current
+    it "can find compliance events for an array of vehicles or vehicle ids" do
+      expect(VehicleMaintenanceCompliance.for_vehicle([@vehicle_1, @vehicle_2])).to include @for_vehicle_1
+      expect(VehicleMaintenanceCompliance.for_vehicle([@vehicle_1, @vehicle_2])).to include @for_vehicle_2
     end
   end
-
-  describe "#complete?" do
-    it "knows if the record is considered complete" do
-      compliance = create :vehicle_maintenance_compliance
-      expect(compliance.complete?).to be_falsey
-      compliance.complete!
-      expect(compliance.reload.complete?).to be_truthy
-    end
-  end
-
-  describe ".incomplete" do
-    it "finds compliance events that do not have a compliance date" do
-      compliance_1 = create :vehicle_maintenance_compliance, compliance_date: nil
-      compliance_2 = create :vehicle_maintenance_compliance, compliance_date: ""
-      compliance_3 = create :vehicle_maintenance_compliance, compliance_date: Date.current
-
-      incomplete = VehicleMaintenanceCompliance.incomplete
-      expect(incomplete).to include compliance_1, compliance_2
-      expect(incomplete).not_to include compliance_3
-    end
-  end
-
+  
   describe ".overdue" do
     before do
       # Allow invalid due_mileage values so that we can force overdue values

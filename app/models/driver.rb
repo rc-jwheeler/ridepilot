@@ -14,7 +14,7 @@ class Driver < ActiveRecord::Base
   has_many :operating_hours, class_name: :OperatingHours, dependent: :destroy, inverse_of: :driver
   
   # We must specify :delete_all in order to avoid the before_destroy hook. See
-  # the DriverCompliance model for more details. 
+  # the RecurringComplianceEvent concern for more details. 
   # TODO Look into using `#mark_for_destruction` and `#marked_for_destruction?`
   has_many :driver_compliances, dependent: :delete_all, inverse_of: :driver
 

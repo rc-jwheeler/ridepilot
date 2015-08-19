@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150813114622) do
+ActiveRecord::Schema.define(version: 20150819004709) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -338,12 +338,32 @@ ActiveRecord::Schema.define(version: 20150813114622) do
     t.string   "future_start_rule"
     t.string   "future_start_schedule"
     t.integer  "future_start_frequency"
-    t.boolean  "compliance_date_based_scheduling", default: false
+    t.boolean  "compliance_based_scheduling", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "recurring_driver_compliances", ["provider_id"], :name => "index_recurring_driver_compliances_on_provider_id"
+
+  create_table "recurring_vehicle_maintenance_compliances", force: true do |t|
+    t.integer  "provider_id"
+    t.string   "event_name"
+    t.text     "event_notes"
+    t.string   "recurrence_type"
+    t.string   "recurrence_schedule"
+    t.integer  "recurrence_frequency"
+    t.integer  "recurrence_mileage"
+    t.text     "recurrence_notes"
+    t.date     "start_date"
+    t.string   "future_start_rule"
+    t.string   "future_start_schedule"
+    t.integer  "future_start_frequency"
+    t.boolean  "compliance_based_scheduling", default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "recurring_vehicle_maintenance_compliances", ["provider_id"], :name => "index_recurring_vehicle_maintenance_compliances_on_provider_id"
 
   create_table "regions", force: true do |t|
     t.string  "name"
@@ -636,8 +656,11 @@ ActiveRecord::Schema.define(version: 20150813114622) do
     t.date     "compliance_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "recurring_vehicle_maintenance_compliance_id"
+    t.integer  "compliance_mileage"
   end
 
+  add_index "vehicle_maintenance_compliances", ["recurring_vehicle_maintenance_compliance_id"], :name => "index_vehicle_maintenance_compliances_on_recurring_vehicle_main"
   add_index "vehicle_maintenance_compliances", ["vehicle_id"], :name => "index_vehicle_maintenance_compliances_on_vehicle_id"
 
   create_table "vehicle_maintenance_events", force: true do |t|

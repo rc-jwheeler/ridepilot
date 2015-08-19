@@ -75,17 +75,17 @@
 
     <div class="col-sm-12 col-md-6">
       <div class="panel panel-primary">
-        <div class="panel-heading"><%= translate_helper("recurring_driver_compliance_form_compliance_date_based_scheduling_heading") %></div>
+        <div class="panel-heading"><%= translate_helper("recurring_driver_compliance_form_compliance_based_scheduling_heading") %></div>
         <div class="panel-body form-horizontal">
           <div class="checkbox">
-            <%= f.label :compliance_date_based_scheduling do %>
-              <%= f.check_box :compliance_date_based_scheduling, disabled: @readonly, class: "updates-schedule-preview updates-future-schedule-preview" %>
-              <%= translate_helper("recurring_driver_compliance_form_compliance_date_based_scheduling") %>
+            <%= f.label :compliance_based_scheduling do %>
+              <%= f.check_box :compliance_based_scheduling, disabled: @readonly, class: "updates-schedule-preview updates-future-schedule-preview" %>
+              <%= translate_helper("recurring_driver_compliance_form_compliance_based_scheduling") %>
             <% end %>
           </div>
         </div><!-- END .panel-body -->
         <div class="panel-footer compliance-date-based-schedule-preview-panel">
-          <%= render partial: "compliance_date_based_schedule_preview" %>
+          <%= render partial: "compliance_based_schedule_preview" %>
         </div><!-- END .panel-footer -->
       </div><!-- END .panel -->
 
@@ -132,7 +132,7 @@
       }
     }).trigger("change");
 
-    $("#recurring_driver_compliance_compliance_date_based_scheduling").on("change", function() {
+    $("#recurring_driver_compliance_compliance_based_scheduling").on("change", function() {
       if ($(this).is(":checked")) {
         $(".compliance-date-based-schedule-preview-panel").fadeIn();
       } else {
@@ -151,14 +151,14 @@
           'An error occurred generating the schedule preview.'
         );
 
-        if ($("#recurring_driver_compliance_compliance_date_based_scheduling").is(":checked")) {
+        if ($("#recurring_driver_compliance_compliance_based_scheduling").is(":checked")) {
           RecurringDriverCompliance.updateSchedulePreview(
             $(".compliance-date-based-schedule-preview-panel"),
             $(".schedule-preview-required"),
             $(".updates-schedule-preview"),
-            '<p class="text-muted"><%= j translate_helper("recurring_driver_compliance_form_compliance_date_based_schedule_preview_placeholder_text") %></p>',
-            '<%= j compliance_date_based_schedule_preview_recurring_driver_compliances_path %>',
-            'An error occurred generating the compliance date based schedule preview.'
+            '<p class="text-muted"><%= j translate_helper("recurring_driver_compliance_form_compliance_based_schedule_preview_placeholder_text") %></p>',
+            '<%= j compliance_based_schedule_preview_recurring_driver_compliances_path %>',
+            'An error occurred generating the compliance based schedule preview.'
           );
         }
       });
@@ -174,7 +174,7 @@
         }
         else {
           var $schedulingInputs = $(".schedule-preview-required");
-          var defaultPreviewText = '<p class="text-muted"><%= j translate_helper("recurring_driver_compliance_form_future_immediately_schedule_preview_placeholder_text") %></p>';
+          var defaultPreviewText = '<p class="text-muted"><%= j translate_helper("recurring_driver_compliance_form_future_schedule_immediately_preview_placeholder_text") %></p>';
         }  
       
         RecurringDriverCompliance.updateSchedulePreview(

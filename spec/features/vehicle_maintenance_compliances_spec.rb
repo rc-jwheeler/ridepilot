@@ -10,7 +10,7 @@ RSpec.describe "VehicleMaintenanceCompliances" do
       click_button 'Log In'
       
       @vehicle = create :vehicle, :provider => @admin.current_provider
-      @vehicle_maintenance_compliance = create :vehicle_maintenance_compliance, vehicle: @vehicle, compliance_date: Date.current
+      @vehicle_maintenance_compliance = create :vehicle_maintenance_compliance, :complete, vehicle: @vehicle
     end
     
     it_behaves_like "it accepts nested attributes for document associations" do
