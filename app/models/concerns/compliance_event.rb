@@ -10,10 +10,6 @@ module ComplianceEvent
     scope :incomplete, -> { where(compliance_date: nil) }
   end
   
-  def complete!
-    update_attribute :compliance_date, Date.current
-  end
-  
   def complete?
     compliance_date.present?
   end

@@ -14,6 +14,8 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   validates_date :due_date, allow_blank: true
   validates :due_mileage, presence: { if: :due_mileage_required? }
   validates :due_mileage, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
+  validates :compliance_date, presence: { if: -> { self.compliance_mileage.present? } }
+  validates :compliance_mileage, presence: { if: -> { self.compliance_date.present? } }, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   
   scope :for_vehicle, -> (vehicle_id) { where(vehicle_id: vehicle_id) }
   scope :default_order, -> { order("due_date IS NULL, due_date DESC, due_mileage DESC") }

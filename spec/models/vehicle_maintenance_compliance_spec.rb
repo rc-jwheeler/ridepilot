@@ -37,6 +37,24 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
     end
   end
 
+  it "requires a compliance_date if compliance_mileage is present" do
+    compliance = build :vehicle_maintenance_compliance, compliance_date: nil, compliance_mileage: 1234
+    expect(compliance.valid?).to be_falsey
+    expect(compliance.errors.keys).to include :compliance_date
+
+    compliance.compliance_mileage = nil
+    expect(compliance.valid?).to be_truthy
+  end
+
+  it "requires a compliance_mileage if compliance_date is present" do
+    compliance = build :vehicle_maintenance_compliance, compliance_date: Date.current, compliance_mileage: nil
+    expect(compliance.valid?).to be_falsey
+    expect(compliance.errors.keys).to include :compliance_mileage
+
+    compliance.compliance_date = nil
+    expect(compliance.valid?).to be_truthy
+  end
+
   describe "due_types" do
     describe "date" do
       before do
