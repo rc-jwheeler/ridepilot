@@ -129,14 +129,17 @@ class Trip < ActiveRecord::Base
       "(No run specified)"
     end
   end
+  
+  def trip_size
+    if customer.group
+      group_size
+    else 
+      guest_count + attendant_count + 1
+    end
+  end
 
   def trip_count
-    if customer.group
-      count = group_size
-    else 
-      count = guest_count + attendant_count + 1
-    end
-    round_trip ? count * 2 : count
+    round_trip ? trip_size * 2 : trip_size
   end
 
   def repetition_driver_id=(value)
