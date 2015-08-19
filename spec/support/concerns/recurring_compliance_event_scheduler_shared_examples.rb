@@ -23,6 +23,14 @@ RSpec.shared_examples "a recurring compliance event scheduler" do
       # :recurring_vehicle_maintenance_compliance
       @recurrence_class = described_class
       @recurrence_class_factory = @recurrence_class.name.underscore.to_sym
+      
+      @complete = if defined? @complete_with and @complete_with.is_a? Proc
+        @complete_with
+      else
+        Proc.new do |compliance|
+          compliance.update_attributes compliance_date: Date.current
+        end
+      end
     end
 
     it "creates an association to its occurrences" do
@@ -198,7 +206,7 @@ RSpec.shared_examples "a recurring compliance event scheduler" do
 
       it "can optionally delete incomplete children when destroyed, but will still nullify complete children" do
         recurrence = create @recurrence_class_factory, event_name: "My Event", event_notes: nil
-        compliance_occurrence_1 = create @occurrence_class_factory, compliance_date: Date.current, @recurrence_class_factory => recurrence
+        compliance_occurrence_1 = create @occurrence_class_factory, :complete, @recurrence_class_factory => recurrence
         compliance_occurrence_2 = create @occurrence_class_factory, @recurrence_class_factory => recurrence
         compliance_occurrence_3 = create @occurrence_class_factory, :recurring
 
@@ -708,7 +716,7 @@ RSpec.shared_examples "a recurring compliance event scheduler" do
             describe "when the previous occurrence is complete" do
               before do
                 # Time is still frozen at Monday, June 1, 2015
-                @owner.send(@occurrence_association).last.update_columns compliance_date: Date.current
+                @complete.call @owner.send(@occurrence_association).last
               end
 
               it "schedules 1 new event" do

@@ -114,7 +114,7 @@ class RecurringDriverCompliancesController < ApplicationController
   
   def generate_future_schedule_preview
     @future_schedule_preview = if @recurring_driver_compliance.compliance_based_scheduling?
-      # Return the adjusted start date, as of the day after the start date
+      # Return the adjusted_start_date, as of the day after the start date
       [RecurringDriverCompliance.adjusted_start_date(@recurring_driver_compliance, as_of: @recurring_driver_compliance.start_date.tomorrow)]
     else
       # Return the first 6 occurrences, as of the day after the start date

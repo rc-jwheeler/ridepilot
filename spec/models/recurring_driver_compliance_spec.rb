@@ -21,4 +21,10 @@ RSpec.describe RecurringDriverCompliance, type: :model do
     expect(recurrence.valid?).to be_falsey
     expect(recurrence.errors.keys).to include :recurrence_frequency
   end
+
+  it "requires a start_date" do
+    recurrence = build :recurring_driver_compliance, start_date: nil
+    expect(recurrence.valid?).to be_falsey
+    expect(recurrence.errors.keys).to include :start_date
+  end
 end

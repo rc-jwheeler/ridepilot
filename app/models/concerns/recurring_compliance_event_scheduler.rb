@@ -20,7 +20,7 @@ module RecurringComplianceEventScheduler
     validates :future_start_rule, inclusion: { in: FUTURE_START_RULES.map(&:to_s) }
     validates :future_start_schedule, inclusion: { in: RECURRENCE_SCHEDULES.map(&:to_s), if: :future_start_rule_is_time_span? }
     validates :future_start_frequency, numericality: { only_integer: true, greater_than: 0, if: :future_start_rule_is_time_span? }
-    validates_date :start_date, on_or_after: -> { Date.current }
+    validates_date :start_date, on_or_after: -> { Date.current }, allow_blank: true
     validates :compliance_based_scheduling, inclusion: { in: [true, false] }
     validate :limit_updates_on_recurrences_with_children, on: :update
       
@@ -198,7 +198,7 @@ module RecurringComplianceEventScheduler
             # noop
           end
         else
-          # No previous one, schedule based on the adjusted start date
+          # No previous one, schedule based on the adjusted_start_date
           next_occurence_date = adjusted_start_date(recurrence)
         end
 
@@ -215,7 +215,7 @@ module RecurringComplianceEventScheduler
           # Find missing occurrence dates in range
           next_occurence_dates = occurrence_dates_on_schedule_in_range(recurrence) - previous_occurrences.pluck(:due_date)
         else
-          # Find missing occurrence rates based on the adjusted start date
+          # Find missing occurrence dates based on the adjusted_start_date
           next_occurence_dates = occurrence_dates_on_schedule_in_range recurrence, first_date: adjusted_start_date(recurrence)
         end
 

@@ -4,4 +4,5 @@ class RecurringDriverCompliance < ActiveRecord::Base
   
   validates :recurrence_schedule, presence: true
   validates :recurrence_frequency, presence: true
+  validates :start_date, presence: true
 end
