@@ -38,6 +38,7 @@ class Trip < ActiveRecord::Base
   validates_presence_of :appointment_time, :unless => :allow_addressless_trip?
   validates_presence_of :trip_purpose_id
   validate :driver_is_valid_for_vehicle
+  validate :vehicle_has_open_seating_capacity
   validates_associated :customer
   validates_associated :pickup_address
   validates_associated :dropoff_address
@@ -240,7 +241,7 @@ class Trip < ActiveRecord::Base
     }
   end
     
-private
+  private
   
   def create_repeating_trip
     if is_repeating_trip? && !via_repeating_trip
@@ -326,7 +327,14 @@ private
     # This will error if a run was found or extended for this vehicle and time, 
     # but the driver for the run is not the driver selected for the trip
     if self.run.try(:driver_id).present? && self.driver_id.present? && self.run.driver_id.to_i != self.driver_id.to_i
-      errors[:driver_id] << "is not the driver for the selected vehicle during this vehicle's run."
+      errors.add(:driver_id, "is not the driver for the selected vehicle during this vehicle's run.")
+    end
+  end
+
+  # Check if the run's vehicle has open capacity at the time of this trip
+  def vehicle_has_open_seating_capacity
+    if run.try(:vehicle_id).present? && pickup_time.present? && appointment_time.present?
+      errors.add(:base, "There's not enough open capacity on this run to accommodate this trip") if run.vehicle.open_seating_capacity(pickup_time, appointment_time) < trip_size
     end
   end
 
