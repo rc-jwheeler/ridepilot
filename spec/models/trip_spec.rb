@@ -214,4 +214,97 @@ RSpec.describe Trip do
       end
     end
   end
+  
+  describe "vehicle open seating capacity validation" do
+    before do
+      @start_time = Time.zone.parse("14:30")
+      @end_time   = Time.zone.parse("15:30")
+      
+      @trip = build :trip, run: create(:run), pickup_time: @start_time, appointment_time: @end_time
+    end
+    
+    it "ignores the validation if no run is present" do
+      @trip.run = nil
+      expect(@trip.valid?).to be_truthy
+    end
+    
+    it "is valid if there is available seating capacity" do
+      expect_any_instance_of(Vehicle).to receive(:open_seating_capacity).and_return(1)
+      expect(@trip.valid?).to be_truthy
+    end
+    
+    it "is not valid if there is not enough seating capacity to accommodate the full size of the trip" do
+      expect_any_instance_of(Vehicle).to receive(:open_seating_capacity).and_return(1)
+      allow(@trip).to receive(:trip_size).and_return(2)
+      expect(@trip.valid?).to be_falsey
+      expect(@trip.errors.keys).to include :base
+    end
+  end
+  
+  describe "#trip_size" do
+    before do
+      @trip = build :trip
+    end
+    
+    it "assumes a minimum size of 1" do
+      expect(@trip.trip_size).to eq 1
+    end
+
+    it "accounts for guests and attendants" do
+      @trip.guest_count = 1
+      @trip.attendant_count = 1
+      expect(@trip.trip_size).to eq 3
+    end
+
+    it "accounts for groups" do
+      @trip.customer = create :customer, group: true
+      @trip.group_size = 4
+      expect(@trip.trip_size).to eq 4
+    end
+  end
+
+  describe ".incomplete" do
+    it "returns trips without any trip_result" do
+      incomplete_1 = create :trip
+      incomplete_2 = create :trip
+      complete     = create :trip, :complete
+      turned_down  = create :trip, :turned_down
+      miscelaneous = create :trip, trip_result: create(:trip_result)
+      
+      incompletes = Trip.incomplete
+      expect(incompletes).to include incomplete_1, incomplete_2
+      expect(incompletes).not_to include complete, turned_down, miscelaneous
+    end
+  end
+
+  describe ".during" do
+    before do
+      @start_time = Time.zone.parse("14:30")
+      @end_time   = Time.zone.parse("15:30")
+      
+      @starts_and_ends_before_start        = create :trip, pickup_time: @start_time - 15.minutes, appointment_time: @start_time
+      @starts_before_start_ends_before_end = create :trip, pickup_time: @start_time - 15.minutes, appointment_time: @end_time
+      @starts_after_start_ends_after_end   = create :trip, pickup_time: @start_time,              appointment_time: @end_time + 15.minutes
+      @starts_after_start_ends_before_end  = create :trip, pickup_time: @start_time,              appointment_time: @end_time
+      @starts_and_ends_after_end           = create :trip, pickup_time: @end_time,                appointment_time: @end_time + 15.minutes
+      @starts_before_start_ends_after_end  = create :trip, pickup_time: @start_time - 15.minutes, appointment_time: @end_time + 15.minutes
+      
+      @during = Trip.during(@start_time, @end_time)
+    end
+    
+    it "returns trips that are occurring in the same time frame" do
+      expect(@during).to include @starts_before_start_ends_before_end, 
+                                 @starts_after_start_ends_after_end, 
+                                 @starts_after_start_ends_before_end, 
+                                 @starts_before_start_ends_after_end
+    end
+
+    it "ignores trips that start and end before the time frame" do
+      expect(@during).not_to include @starts_and_ends_before_start
+    end
+    
+    it "ignores trips that start and end after the time frame" do
+      expect(@during).not_to include @starts_and_ends_after_end
+    end
+  end
 end

@@ -38,6 +38,7 @@ class Trip < ActiveRecord::Base
   validates_presence_of :appointment_time, :unless => :allow_addressless_trip?
   validates_presence_of :trip_purpose_id
   validate :driver_is_valid_for_vehicle
+  validate :vehicle_has_open_seating_capacity
   validates_associated :customer
   validates_associated :pickup_address
   validates_associated :dropoff_address
@@ -69,6 +70,8 @@ class Trip < ActiveRecord::Base
   scope :not_called_back,    -> { where('called_back_at IS NULL') }
   scope :individual,         -> { joins(:customer).where(:customers => {:group => false}) }
   scope :has_scheduled_time, -> { where.not(pickup_time: nil).where.not(appointment_time: nil) }
+  scope :incomplete,         -> { where(trip_result: nil) }
+  scope :during,             -> (pickup_time, appointment_time) { where('NOT ((trips.pickup_time < ? AND trips.appointment_time < ?) OR (trips.pickup_time > ? AND trips.appointment_time > ?))', pickup_time.utc, appointment_time.utc, pickup_time.utc, appointment_time.utc) }
 
   DAYS_OF_WEEK = %w{monday tuesday wednesday thursday friday saturday sunday}
   
@@ -127,14 +130,17 @@ class Trip < ActiveRecord::Base
       "(No run specified)"
     end
   end
+  
+  def trip_size
+    if customer.group
+      group_size
+    else 
+      guest_count + attendant_count + 1
+    end
+  end
 
   def trip_count
-    if customer.group
-      count = group_size
-    else 
-      count = guest_count + attendant_count + 1
-    end
-    round_trip ? count * 2 : count
+    round_trip ? trip_size * 2 : trip_size
   end
 
   def repetition_driver_id=(value)
@@ -235,7 +241,7 @@ class Trip < ActiveRecord::Base
     }
   end
     
-private
+  private
   
   def create_repeating_trip
     if is_repeating_trip? && !via_repeating_trip
@@ -321,7 +327,14 @@ private
     # This will error if a run was found or extended for this vehicle and time, 
     # but the driver for the run is not the driver selected for the trip
     if self.run.try(:driver_id).present? && self.driver_id.present? && self.run.driver_id.to_i != self.driver_id.to_i
-      errors[:driver_id] << "is not the driver for the selected vehicle during this vehicle's run."
+      errors.add(:driver_id, "is not the driver for the selected vehicle during this vehicle's run.")
+    end
+  end
+
+  # Check if the run's vehicle has open capacity at the time of this trip
+  def vehicle_has_open_seating_capacity
+    if run.try(:vehicle_id).present? && pickup_time.present? && appointment_time.present?
+      errors.add(:base, "There's not enough open capacity on this run to accommodate this trip") if run.vehicle.open_seating_capacity(pickup_time, appointment_time) < trip_size
     end
   end
 
