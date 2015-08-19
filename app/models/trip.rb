@@ -69,6 +69,8 @@ class Trip < ActiveRecord::Base
   scope :not_called_back,    -> { where('called_back_at IS NULL') }
   scope :individual,         -> { joins(:customer).where(:customers => {:group => false}) }
   scope :has_scheduled_time, -> { where.not(pickup_time: nil).where.not(appointment_time: nil) }
+  scope :incomplete,         -> { where(trip_result: nil) }
+  scope :during,             -> (pickup_time, appointment_time) { where('NOT ((trips.pickup_time < ? AND trips.appointment_time < ?) OR (trips.pickup_time > ? AND trips.appointment_time > ?))', pickup_time.utc, appointment_time.utc, pickup_time.utc, appointment_time.utc) }
 
   DAYS_OF_WEEK = %w{monday tuesday wednesday thursday friday saturday sunday}
   

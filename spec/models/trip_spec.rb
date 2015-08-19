@@ -214,4 +214,49 @@ RSpec.describe Trip do
       end
     end
   end
+
+  describe ".incomplete" do
+    it "returns trips without any trip_result" do
+      incomplete_1 = create :trip
+      incomplete_2 = create :trip
+      complete     = create :trip, :complete
+      turned_down  = create :trip, :turned_down
+      miscelaneous = create :trip, trip_result: create(:trip_result)
+      
+      incompletes = Trip.incomplete
+      expect(incompletes).to include incomplete_1, incomplete_2
+      expect(incompletes).not_to include complete, turned_down, miscelaneous
+    end
+  end
+
+  describe ".during" do
+    before do
+      @start_time = Time.zone.parse("14:30")
+      @end_time   = Time.zone.parse("15:30")
+      
+      @starts_and_ends_before_start        = create :trip, pickup_time: @start_time - 15.minutes, appointment_time: @start_time
+      @starts_before_start_ends_before_end = create :trip, pickup_time: @start_time - 15.minutes, appointment_time: @end_time
+      @starts_after_start_ends_after_end   = create :trip, pickup_time: @start_time,              appointment_time: @end_time + 15.minutes
+      @starts_after_start_ends_before_end  = create :trip, pickup_time: @start_time,              appointment_time: @end_time
+      @starts_and_ends_after_end           = create :trip, pickup_time: @end_time,                appointment_time: @end_time + 15.minutes
+      @starts_before_start_ends_after_end  = create :trip, pickup_time: @start_time - 15.minutes, appointment_time: @end_time + 15.minutes
+      
+      @during = Trip.during(@start_time, @end_time)
+    end
+    
+    it "returns trips that are occurring in the same time frame" do
+      expect(@during).to include @starts_before_start_ends_before_end, 
+                                 @starts_after_start_ends_after_end, 
+                                 @starts_after_start_ends_before_end, 
+                                 @starts_before_start_ends_after_end
+    end
+
+    it "ignores trips that start and end before the time frame" do
+      expect(@during).not_to include @starts_and_ends_before_start
+    end
+    
+    it "ignores trips that start and end after the time frame" do
+      expect(@during).not_to include @starts_and_ends_after_end
+    end
+  end
 end
