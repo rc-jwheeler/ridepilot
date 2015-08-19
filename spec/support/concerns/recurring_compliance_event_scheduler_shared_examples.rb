@@ -83,8 +83,12 @@ RSpec.shared_examples "a recurring compliance event scheduler" do
       expect(recurrence.valid?).to be_truthy
     end
 
+    # The described class may decide this is not a required field, but the
+    # values should still be restricted to this list
     it "requires a valid start_date on or after today" do
       recurrence = build @recurrence_class_factory, start_date: nil
+
+      recurrence.start_date = "foo"
       expect(recurrence.valid?).to be_falsey
       expect(recurrence.errors.keys).to include :start_date
 
@@ -315,7 +319,7 @@ RSpec.shared_examples "a recurring compliance event scheduler" do
         expect(@recurrence_class.occurrence_dates_on_schedule_in_range(@recurrence).last).to eq Date.parse("2015-06-01")
       end
 
-      it "can accept an optional range_first_date" do
+      it "can accept an optional range_start_date" do
         expect(@recurrence_class.occurrence_dates_on_schedule_in_range(@recurrence, range_start_date: Date.current.tomorrow).first).to eq Date.parse("2015-02-01")
       end
 
@@ -323,7 +327,7 @@ RSpec.shared_examples "a recurring compliance event scheduler" do
         expect(@recurrence_class.occurrence_dates_on_schedule_in_range(@recurrence, range_end_date: Date.current.tomorrow).last).to eq Date.parse("2015-01-01")
       end
 
-      it "setting a range_first_date influences the default range_end_date" do
+      it "setting a range_start_date influences the default range_end_date" do
         expect(@recurrence_class.occurrence_dates_on_schedule_in_range(@recurrence, range_start_date: Date.parse("2015-07-01")).last).to eq Date.parse("2015-12-01")
       end
 
@@ -367,8 +371,11 @@ RSpec.shared_examples "a recurring compliance event scheduler" do
         @recurrence = create @recurrence_class_factory,
           start_date: Date.current,
           recurrence_frequency: 1,
-          recurrence_schedule: "months",
-          compliance_based_scheduling: true
+          recurrence_schedule: "months"
+      end
+
+      after do
+        Timecop.return
       end
 
       it "returns the next occurrence date from previous_date" do
