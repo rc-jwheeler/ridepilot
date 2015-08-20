@@ -50,7 +50,7 @@ class Vehicle < ActiveRecord::Base
     vehicle_warranties.expired(as_of: as_of).any?
   end
   
-  def open_seating_capacity(start_time, end_time)
-    seating_capacity - trips.incomplete.during(start_time, end_time).collect(&:trip_size).flatten.compact.sum
+  def open_seating_capacity(start_time, end_time, ignore: nil)
+    seating_capacity - (trips.incomplete.during(start_time, end_time) - Array(ignore)).collect(&:trip_size).flatten.compact.sum
   end
 end

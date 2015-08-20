@@ -213,5 +213,9 @@ RSpec.describe Vehicle, type: :model do
       create :trip, pickup_time: @start_time, appointment_time: @end_time
       expect(@vehicle.open_seating_capacity @start_time, @end_time).to eq 4
     end
+    
+    it "can accept an optional trip or set of trips to ignore" do
+      expect(@vehicle.open_seating_capacity @start_time, @end_time, ignore: @starts_before_start_ends_before_end).to eq 5
+    end
   end
 end
