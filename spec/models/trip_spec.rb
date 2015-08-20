@@ -220,7 +220,9 @@ RSpec.describe Trip do
       @start_time = Time.zone.parse("14:30")
       @end_time   = Time.zone.parse("15:30")
       
-      @trip = build :trip, run: create(:run), pickup_time: @start_time, appointment_time: @end_time
+      @vehicle = create :vehicle, seating_capacity: 1
+      @run = create :run, vehicle: @vehicle
+      @trip = build :trip, run: @run, pickup_time: @start_time, appointment_time: @end_time
     end
     
     it "ignores the validation if no run is present" do
@@ -229,15 +231,31 @@ RSpec.describe Trip do
     end
     
     it "is valid if there is available seating capacity" do
-      expect_any_instance_of(Vehicle).to receive(:open_seating_capacity).and_return(1)
       expect(@trip.valid?).to be_truthy
     end
     
     it "is not valid if there is not enough seating capacity to accommodate the full size of the trip" do
-      expect_any_instance_of(Vehicle).to receive(:open_seating_capacity).and_return(1)
-      allow(@trip).to receive(:trip_size).and_return(2)
+      @trip.guest_count = 1
       expect(@trip.valid?).to be_falsey
       expect(@trip.errors.keys).to include :base
+
+      @trip.guest_count = 0
+      expect(@trip.valid?).to be_truthy
+    end
+    
+    it "doesn't include it's past seat occupancy when checking open capacity on updates" do
+      @trip.save!
+      expect(@trip.valid?).to be_truthy
+    end
+    
+    it "is not valid if the seating capacity increases on update beyond what's available" do
+      @trip.save!
+      @trip.guest_count = 1
+      expect(@trip.valid?).to be_falsey
+      expect(@trip.errors.keys).to include :base
+
+      @trip.guest_count = 0
+      expect(@trip.valid?).to be_truthy
     end
   end
   

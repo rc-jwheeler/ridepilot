@@ -334,7 +334,7 @@ class Trip < ActiveRecord::Base
   # Check if the run's vehicle has open capacity at the time of this trip
   def vehicle_has_open_seating_capacity
     if run.try(:vehicle_id).present? && pickup_time.present? && appointment_time.present?
-      errors.add(:base, "There's not enough open capacity on this run to accommodate this trip") if run.vehicle.open_seating_capacity(pickup_time, appointment_time) < trip_size
+      errors.add(:base, "There's not enough open capacity on this run to accommodate this trip") if run.vehicle.open_seating_capacity(pickup_time, appointment_time, ignore: self) < trip_size
     end
   end
 
