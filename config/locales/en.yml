@@ -52,6 +52,7 @@ en:
   attendant_count: "Attendant Count"
   result: "Result"
   listing_cab_runs: "Listing Cab Runs"
+  trips_reimbursement_cost: "Reimbursement"
   edit_multi_cab_heading: "Editing cab trips for %{formatted_week}"
   no_cab_trips_on_this_date: "No cab trips on this date"
   no_cab_trips_in_date_range: "No cab trips in this date range"

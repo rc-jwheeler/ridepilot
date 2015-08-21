@@ -10,5 +10,8 @@
         No trips
       <% end %>
     </td>
+    <td>
+      <%= reimbursement_cost_for_trips current_provider, @grouped_cab_trips[day.to_s] %>
+    </td>
   </tr>
 <% end %>

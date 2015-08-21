@@ -131,4 +131,8 @@ module ApplicationHelper
       return html.html_safe
     end
   end
+
+  def reimbursement_cost_for_trips(provider, trips)
+    number_to_currency ReimbursementRateCalculator.new(provider).total_reimbursement_due_for_trips(trips)
+  end
 end
