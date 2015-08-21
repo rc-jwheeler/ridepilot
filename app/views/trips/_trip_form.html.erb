@@ -42,6 +42,9 @@
   <td>
     <%= trip_fields.select :trip_result_id, @trip_results, :include_blank => true %>
   </td>
+  <td>
+    <%= reimbursement_cost_for_trips trip.provider, trip %>
+  </td>
   <td class="nowrap">
     <%= link_to translate_helper("edit_trip_link_text"), [:edit,trip], :class => "edit" %>
   </td>

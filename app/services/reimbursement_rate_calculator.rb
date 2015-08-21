@@ -15,7 +15,8 @@ class ReimbursementRateCalculator
     @provider = provider
   end
 
-  def reimbursements_due_for_trips(trips)
+  # Public for testability
+  def reimbursements_due_for_trips_by_funding_source(trips)
     stats = stats_for_trips_by_funding_source trips
     {
       oaa3b:            reimbursement_from_stats(stats, oaa3b_per_ride_reimbursement_rate, :oaa3b),
@@ -33,11 +34,11 @@ class ReimbursementRateCalculator
           mileage:      reimbursement_from_stats(stats, stf_taxi_per_mile_ambulatory_reimbursement_rate, :stf_taxi, :ambulatory, :mileage)
         }
       }
-    }
+    }    
   end
-
-  def reimbursement_due_for_run(run)
-    reimbursements = reimbursements_due_for_trips run.trips
+  
+  def total_reimbursement_due_for_trips(trips)
+    reimbursements = reimbursements_due_for_trips_by_funding_source ensure_trips_relation trips
     reimbursements[:oaa3b] +
       reimbursements[:rc] +
       reimbursements[:trimet] +
@@ -75,5 +76,18 @@ class ReimbursementRateCalculator
 
   def reimbursement_from_stats(stats, rate, *keys)
     keys.inject(stats, :fetch) * rate.to_f
+  end
+  
+  # A safety method that allows us to catch when trips is an array 
+  # instead of a relation, and convert it to a relation instead.
+  def ensure_trips_relation(trips)
+    unless trips.is_a? ActiveRecord::Relation
+      if trips.is_a?(Trip) or trips.is_a?(Array)
+        trips = Trip.where id: Array(trips)
+      else
+        trips = Trip.none
+      end
+    end
+    trips
   end
 end
