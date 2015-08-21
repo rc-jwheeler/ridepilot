@@ -7,6 +7,7 @@
     %th= translate_helper("run_vehicle_column") 
     %th= translate_helper("run_driver_column") 
     %th= translate_helper("run_result_column") 
+    %th= translate_helper("run_reimbursement_cost") 
 
   - @runs.each do |run|
     = render "row", :run => run

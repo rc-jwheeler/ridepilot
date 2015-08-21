@@ -975,6 +975,7 @@ en:
   run_vehicle_column: 'Vehicle'
   run_driver_column: 'Driver'
   run_result_column: 'Result'
+  run_reimbursement_cost: 'Reimbursement'
   # ride_trips table
   trip_purpose_column: 'Purpose'
   trip_round_trip_column: 'Round Trip?'

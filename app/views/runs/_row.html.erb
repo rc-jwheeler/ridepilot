@@ -6,4 +6,5 @@
   <td><%= run.vehicle ? run.vehicle.name : translate_helper('no_vehicle') %></td>
   <td><%= run.driver  ? run.driver.name : translate_helper('no_driver') %></td>
   <td><%= run.complete ? translate_helper('complete') : translate_helper('incomplete') %></td>
+  <td><%= reimbursement_cost run %></td>
 </tr>

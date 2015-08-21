@@ -57,6 +57,8 @@ class Trip < ActiveRecord::Base
   scope :for_driver,         -> (driver_id) { not_for_cab.where(:runs => {:driver_id => driver_id}).joins(:run) }
   scope :for_vehicle,        -> (vehicle_id) { not_for_cab.where(:runs => {:vehicle_id => vehicle_id}).joins(:run) }
   scope :by_result,          -> (code) { includes(:trip_result).references(:trip_result).where("trip_results.code = ?", code) }
+  scope :by_funding_source,  -> (name) { includes(:funding_source).references(:funding_source).where("funding_sources.name = ?", name) }
+  scope :by_trip_purpose,    -> (name) { includes(:trip_purpose).references(:trip_purpose).where("trip_purposes.name = ?", name) }
   scope :scheduled,          -> { includes(:trip_result).references(:trip_result).where("trips.trip_result_id is NULL or trip_results.code = 'COMP'") }
   scope :completed,          -> { Trip.by_result('COMP') }
   scope :turned_down,        -> { Trip.by_result('TD') }
