@@ -26,6 +26,11 @@
         <%= f.label :allow_trip_entry_from_runs_page, translate_helper("provider_form_trip_entry_from_runs") %>
         <%= f.check_box :allow_trip_entry_from_runs_page %>
       </li>
+      
+      <li>
+        <%= f.label :fields_required_for_run_completion, translate_helper("provider_form_fields_required_for_run_completion") %>
+        <%= f.select :fields_required_for_run_completion, Run::FIELDS_FOR_COMPLETION, { prompt: "Select Required Fields" }, { multiple: true, size: Run::FIELDS_FOR_COMPLETION.size } %>
+      </li>
     </ol>
 
     <div class="actions">
