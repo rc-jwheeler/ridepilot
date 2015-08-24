@@ -942,6 +942,7 @@ en:
   vehicle_maintenance_compliance_form_due_mileage: "Due Mileage"
   vehicle_maintenance_compliance_form_due_string: "Due"
   vehicle_maintenance_compliance_form_compliance_date: "Compliance Date"
+  vehicle_maintenance_compliance_form_compliance_mileage: "Compliance Mileage"
   vehicle_maintenance_compliance_form_submit: "Save"
 
   # Application Settings
