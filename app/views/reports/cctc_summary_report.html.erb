@@ -43,10 +43,6 @@
   .b {font-weight: bold}
   
   @media print {
-    #session-timeout-warning, #header, #crossbar, #page-header, #new_query, p.notice {
-      display: none;
-    }
-    
     /* Unfortunately, it is still not possible for us to reasonably support 
      * precise printing of page-breaks across web browsers.
      */
@@ -163,7 +159,7 @@
       <% end %>
       <tr>
         <td><%= @report[:trip_purposes].size + 2 %></td>
-        <td class="a_l b"><%= translate_helper("cctc_one-way-rides_label") %></td>
+        <td class="a_l b"><%= translate_helper("cctc_one_way_rides_label") %></td>
         <td><%= @report[:trip_purposes][:total_rides][:oaa3b] %></td>
         <td><%= @report[:trip_purposes][:total_rides][:rc] %></td>
         <td><%= @report[:trip_purposes][:total_rides][:trimet] %></td>
