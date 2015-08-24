@@ -56,6 +56,6 @@ class VehicleMaintenanceCompliancesController < ApplicationController
   end
 
   def vehicle_maintenance_compliance_params
-    params.require(:vehicle_maintenance_compliance).permit(:event, :notes, :due_type, :due_date, :due_mileage, :compliance_date, document_associations_attributes: [:id, :document_id, :_destroy])
+    params.require(:vehicle_maintenance_compliance).permit(:event, :notes, :due_type, :due_date, :due_mileage, :compliance_date, :compliance_mileage, document_associations_attributes: [:id, :document_id, :_destroy])
   end
 end
