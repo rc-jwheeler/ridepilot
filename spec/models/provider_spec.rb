@@ -1,6 +1,21 @@
 require "rails_helper"
 
 RSpec.describe Provider do
+  describe "#fields_required_for_run_completion" do
+    it "is a serialized text field" do
+      provider = build :provider
+      expect(provider.fields_required_for_run_completion).to be_an Array
+    end
+    
+    it "only accepts values from Runs::FIELDS_FOR_COMPLETION" do
+      provider = build :provider, fields_required_for_run_completion: ["foo"]
+      expect(provider.valid?).to be_falsey
+      expect(provider.errors.keys).to include :fields_required_for_run_completion
+      
+      provider.fields_required_for_run_completion = Run::FIELDS_FOR_COMPLETION
+      expect(provider.valid?).to be_truthy
+    end
+  end
   
   describe "reimbursement rates" do
     describe "oaa3b_per_ride_reimbursement_rate" do
