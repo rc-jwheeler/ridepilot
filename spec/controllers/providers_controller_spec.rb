@@ -200,12 +200,12 @@ RSpec.describe ProvidersController, type: :controller do
   describe "POST #change_fields_required_for_run_completion" do
     it "updates the fields_required_for_run_completion flag on the requested provider" do
       expect {
-        post :change_fields_required_for_run_completion, {:id => @current_user.current_provider.id, :fields_required_for_run_completion => false}
-      }.to change{ @current_user.current_provider.reload.fields_required_for_run_completion }.from(nil).to(false)
+        post :change_fields_required_for_run_completion, {:id => @current_user.current_provider.id, :fields_required_for_run_completion => Run::FIELDS_FOR_COMPLETION}
+      }.to change{ @current_user.current_provider.reload.fields_required_for_run_completion }.from([])
     end
 
     it "redirects to the provider" do
-      post :change_fields_required_for_run_completion, {:id => @current_user.current_provider.id, :fields_required_for_run_completion => true}
+      post :change_fields_required_for_run_completion, {:id => @current_user.current_provider.id, :fields_required_for_run_completion => []}
       expect(response).to redirect_to(@current_user.current_provider)
     end
   end
