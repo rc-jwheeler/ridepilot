@@ -137,6 +137,32 @@
   <% end %>
 <% end %>
 
+<h2 class="section-header"><%= translate_helper("provider_form_fields_required_for_run_completion") %></h2>
+<% if can? :edit, @provider %>
+  <%= form_tag change_fields_required_for_run_completion_provider_path(@provider) do %>
+    <fieldset>
+      <% field_groups = Run::FIELDS_FOR_COMPLETION.map(&:to_s).sort.in_groups(2) %>
+      <% %w(first second).each do |group| %>
+        <ol class="section <%= group %>">
+          <% field_groups.send(group).each do |field| %>
+            <% if field.present? %>
+              <li>
+                <%= label_tag do %>
+                  <%= check_box_tag "fields_required_for_run_completion[]", field, @provider.fields_required_for_run_completion.include?(field) %>
+                  <%= field.humanize %>
+                <% end %>
+              </li>
+            <% end %>
+          <% end %>
+        </ol>
+      <% end %>
+      <div class="actions">
+        <%= submit_tag translate_helper("submit_fields_required_for_run_completion") %>
+      </div>
+    </fieldset>
+  <% end %>
+<% end %>
+
 <h2 class="section-header"><%= translate_helper("reimbursement_rates") %></h2>
 <% if can? :edit, @provider %>
   <%= form_tag change_reimbursement_rates_provider_path(@provider) do %>

@@ -3,18 +3,25 @@ class Run < ActiveRecord::Base
   
   has_paper_trail
   
+  # Ignores:
+  #   Already required:
+  #     date
+  #     driver_id
+  #     provider_id
+  #     vehicle_id
+  #   Already checked by set_complete:
+  #     actual_end_time
+  #     actual_start_time (by virtue of actual_end_time)
+  #   Meta
+  #     created_at
+  #     updated_at
+  #     lock_version
   FIELDS_FOR_COMPLETION = [
     :name, 
-    :date, 
     :start_odometer, 
     :end_odometer, 
-    :scheduled_start_time, 
-    :scheduled_end_time, 
     :unpaid_driver_break_time, 
-    :vehicle_id, 
-    :driver_id, 
     :paid, 
-    :provider_id, 
     :actual_start_time, 
     :actual_end_time, 
   ].freeze
@@ -27,20 +34,20 @@ class Run < ActiveRecord::Base
 
   accepts_nested_attributes_for :trips
   
-  before_validation :fix_dates, :set_complete 
+  before_validation :fix_dates, :set_complete
+  
   validates                 :driver, presence: true
   validates                 :provider, presence: true
   validates                 :vehicle, presence: true
-  validates_datetime        :scheduled_start_time, :allow_blank => true
-  validates_datetime        :scheduled_end_time, :after => :scheduled_start_time, :allow_blank => true
-  validates_datetime        :actual_start_time, :allow_blank => true
-  validates_datetime        :actual_end_time, :after => :actual_start_time, :allow_blank => true
   validates_date            :date
-  validates_numericality_of :start_odometer, :allow_nil => true
-  validates_numericality_of :end_odometer, :allow_nil => true
-  validates_numericality_of :end_odometer, :allow_nil => true, :greater_than => Proc.new {|run| run.start_odometer }, :if => Proc.new {|run| run.start_odometer.present? }
-  validates_numericality_of :end_odometer, :allow_nil => true, :less_than => Proc.new {|run| run.start_odometer + 500 }, :if => Proc.new {|run| run.start_odometer.present? }
-  validates_numericality_of :unpaid_driver_break_time, :allow_nil => true
+  validates_datetime        :actual_start_time, allow_blank: true
+  validates_datetime        :actual_end_time, after: :actual_start_time, allow_blank: true
+  validates_datetime        :scheduled_start_time, allow_blank: true
+  validates_datetime        :scheduled_end_time, after: :scheduled_start_time, allow_blank: true
+  validates_numericality_of :start_odometer, allow_nil: true
+  validates_numericality_of :end_odometer, allow_nil: true
+  validates_numericality_of :end_odometer, greater_than: -> (run){ run.start_odometer }, less_than: -> (run){ run.start_odometer + 500 }, if: -> (run){ run.start_odometer.present? }, allow_nil: true
+  validates_numericality_of :unpaid_driver_break_time, allow_nil: true
   # TODO discuss when to enable this:
   # validate                  :driver_availability
   

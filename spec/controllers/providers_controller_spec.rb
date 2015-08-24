@@ -172,6 +172,44 @@ RSpec.describe ProvidersController, type: :controller do
     end
   end
 
+  describe "POST #change_reimbursement_rates" do
+    context "with valid attributes" do
+      Provider::REIMBURSEMENT_ATTRIBUTES.each do |attr|
+        it "updates the reimbursement rates on the requested provider" do
+          expect {
+            post :change_reimbursement_rates, {:id => @current_user.current_provider.id, attr => 0.99}
+          }.to change{ @current_user.current_provider.reload.send(attr) }.from(nil).to(0.99)
+        end
+      end
+
+      it "redirects to the provider" do
+        post :change_reimbursement_rates, {:id => @current_user.current_provider.id, Provider::REIMBURSEMENT_ATTRIBUTES.first => 0}
+        expect(response).to redirect_to(@current_user.current_provider)
+      end
+    end
+    
+    context "with invalid attributes" do
+      it "doesn't change the requested provider" do
+        expect {
+          post :change_reimbursement_rates, {:id => @current_user.current_provider.id, :bad_reimbursement_rate => 0.99}
+        }.to_not change{ @current_user.current_provider.reload }
+      end
+    end
+  end
+
+  describe "POST #change_fields_required_for_run_completion" do
+    it "updates the fields_required_for_run_completion flag on the requested provider" do
+      expect {
+        post :change_fields_required_for_run_completion, {:id => @current_user.current_provider.id, :fields_required_for_run_completion => false}
+      }.to change{ @current_user.current_provider.reload.fields_required_for_run_completion }.from(nil).to(false)
+    end
+
+    it "redirects to the provider" do
+      post :change_fields_required_for_run_completion, {:id => @current_user.current_provider.id, :fields_required_for_run_completion => true}
+      expect(response).to redirect_to(@current_user.current_provider)
+    end
+  end
+
   describe "POST #save_region" do
     it "updates the region_nw_corner flag on the requested provider" do
       expect {
@@ -207,31 +245,6 @@ RSpec.describe ProvidersController, type: :controller do
     it "redirects to the provider" do
       post :save_viewport, {:id => @current_user.current_provider.id, :viewport_lat => 1.0, :viewport_lng => 1.0}
       expect(response).to redirect_to(@current_user.current_provider)
-    end
-  end
-
-  describe "POST #change_reimbursement_rates" do
-    context "with valid attributes" do
-      Provider::REIMBURSEMENT_ATTRIBUTES.each do |attr|
-        it "updates the reimbursement rates on the requested provider" do
-          expect {
-            post :change_reimbursement_rates, {:id => @current_user.current_provider.id, attr => 0.99}
-          }.to change{ @current_user.current_provider.reload.send(attr) }.from(nil).to(0.99)
-        end
-      end
-
-      it "redirects to the provider" do
-        post :change_reimbursement_rates, {:id => @current_user.current_provider.id, Provider::REIMBURSEMENT_ATTRIBUTES.first => 0}
-        expect(response).to redirect_to(@current_user.current_provider)
-      end
-    end
-    
-    context "with invalid attributes" do
-      it "doesn't change the requested provider" do
-        expect {
-          post :change_reimbursement_rates, {:id => @current_user.current_provider.id, :bad_reimbursement_rate => 0.99}
-        }.to_not change{ @current_user.current_provider.reload }
-      end
     end
   end
   
