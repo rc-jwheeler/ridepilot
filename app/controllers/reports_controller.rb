@@ -317,7 +317,7 @@ class ReportsController < ApplicationController
 
     cab = Driver.new(:name=>'Cab') #dummy driver for cab trips
 
-    trips = Trip.scheduled.for_provider(current_provider_id).for_date(@date).includes(:pickup_address,:dropoff_address,:customer,:mobility,{:run => :driver}).order(:pickup_time)
+    trips = Trip.scheduled.for_provider(current_provider_id).for_date(@date).includes(:pickup_address, :dropoff_address, :customer, :mobility, {run: :driver}).order(:pickup_time)
     if @query.driver_id == -2 # All
       # No additional filtering
     elsif @query.driver_id == -1 # Cab
@@ -327,6 +327,7 @@ class ReportsController < ApplicationController
       trips = trips.for_driver(@query.driver_id)
     end
     @trips = trips.group_by {|trip| trip.run ? trip.run.driver : cab }
+    @trips_by_customer = trips.group_by(&:customer)
   end
 
   def daily_manifest_with_cab

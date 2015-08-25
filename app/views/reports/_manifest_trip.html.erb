@@ -37,4 +37,11 @@
       </td>
     </tr>
   <% end %>
+  <% if @trips_by_customer && (later_customer_trips = @trips_by_customer[trip.customer].select{ |ot| ot.pickup_time > trip.pickup_time }).any? %>
+    <tr>
+      <td colspan="2" class="later-rides">
+        <%= later_trips later_customer_trips %>
+      </td>
+    </tr>
+  <% end %>
 </table>

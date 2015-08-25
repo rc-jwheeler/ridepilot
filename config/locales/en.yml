@@ -578,8 +578,7 @@ en:
   trip_result_label: "Result: "
   trip_result: 'Trip Result'
   pending: "Pending"
-  manifest_trip_link_text: "manifest_trip"
-
+  later_trips: "Later ride today"
   age_and_ethnicity_report_heading: "Reports: Unduplicated Age &amp; Ethnicity"
   age_and_ethnicity_page_title: "Age and Ethnicity: %{provider}, %{start_date}"
 
