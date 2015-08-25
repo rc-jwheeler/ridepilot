@@ -1,5 +1,5 @@
 <%= render 'custom_report_header'%>
-<% content_for(:title){translate_helper("daily_manifest_title") + " #{@date.strftime('%v')}"} %>
+<% content_for :title, translate_helper("daily_manifest_title") + " #{@date.strftime('%v')}" %>
 <% i = 0 %>
 <% for driver, trips in @trips %>
   <% i += 1 %>
@@ -17,6 +17,6 @@
   <%= render 'manifest_trips', :trips => trips %>
 
   <% if i != @trips.size %>
-    <br style="page-break-after:always" /> 
+    <br style="page-break-after: always" />
   <% end %>
 <% end %>

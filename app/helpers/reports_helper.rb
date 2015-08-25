@@ -14,4 +14,10 @@ module ReportsHelper
       number_to_currency(reimbursement_due, :precesion => 2)
     end
   end
+  
+  def later_trips(trips)
+    trips.collect do |trip| 
+      "#{translate_helper("later_trips")} at #{trip.pickup_time.strftime('%l:%M %P')} with #{trip.run ? trip.run.driver.name : "Cab"}"
+    end.join("<br>").html_safe
+  end
 end
