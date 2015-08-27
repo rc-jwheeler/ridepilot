@@ -37,10 +37,16 @@
       </td>
     </tr>
   <% end %>
-  <% if @trips_by_customer && (later_customer_trips = @trips_by_customer[trip.customer].select{ |ot| ot.pickup_time > trip.pickup_time }).any? %>
+  <% if (later_customer_trips = later_trips_for_customer(trip.customer, trip)).any? %>
     <tr>
       <td colspan="2" class="later-rides">
-        <%= later_trips later_customer_trips %>
+        <% later_customer_trips.each do |trip| %>
+          <p>
+            <%= translate_helper("later_trips") %> at 
+            <%= trip.pickup_time.strftime('%l:%M %P') %> with 
+            <%= trip.run ? trip.run.driver.name : "Cab" %>
+          </p>
+        <% end %>
       </td>
     </tr>
   <% end %>

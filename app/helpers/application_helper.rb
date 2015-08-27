@@ -1,5 +1,4 @@
-module ApplicationHelper
-  
+module ApplicationHelper  
   def current_provider
     current_user.try(:current_provider)
   end
