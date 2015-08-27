@@ -225,7 +225,7 @@ RSpec.describe ProvidersController, type: :controller do
 
     it "redirects to the provider" do
       post :save_region, {:id => @current_user.current_provider.id}
-      expect(response).to redirect_to(@current_user.current_provider)
+      expect(response).to redirect_to(provider_url @current_user.current_provider, anchor: "region")
     end
   end
 
@@ -244,7 +244,7 @@ RSpec.describe ProvidersController, type: :controller do
 
     it "redirects to the provider" do
       post :save_viewport, {:id => @current_user.current_provider.id, :viewport_lat => 1.0, :viewport_lng => 1.0}
-      expect(response).to redirect_to(@current_user.current_provider)
+      expect(response).to redirect_to(provider_url @current_user.current_provider, anchor: "viewport")
     end
   end
   
