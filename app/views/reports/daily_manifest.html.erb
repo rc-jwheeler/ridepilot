@@ -1,5 +1,29 @@
-<%= render 'custom_report_header'%>
+<% content_for :head do %>
+  <style>
+    .manifest-map {
+      width: 600px;
+      height: 600px;
+    }
+  
+    @media print {
+      /* Unfortunately, it is still not possible for us to reasonably support 
+       * precise printing of page-breaks across web browsers.
+       */
+    
+      .manifest-map {
+        page-break-inside: avoid;
+      }
+    
+      .manifest-break {
+        page-break-after: always;
+        height: 0;
+        border-width: 0;
+      }
+    }
+  </style>
+<% end %>
 <% content_for :title, translate_helper("daily_manifest_title") + " #{@date.strftime('%v')}" %>
+<%= render 'custom_report_header'%>
 <% i = 0 %>
 <% for driver, trips in @trips %>
   <% i += 1 %>
@@ -16,7 +40,90 @@
 
   <%= render 'manifest_trips', :trips => trips %>
 
+  <br class="manifest-break">
+  
+  <div id="manifest-map-<%= driver.id %>" class="manifest-map center-block"></div>
+  
+  <%= javascript_tag do %>
+    function fitAllMarkers (manifest_map) {
+      if (manifest_map.markers.length > 0) {
+        var bounds = new google.maps.LatLngBounds();
+        // If we wanted to always include the provider's region, we would
+        // uncomment the following two lines:
+        // bounds.extend(manifest_map.bounds.getNorthEast());
+        // bounds.extend(manifest_map.bounds.getSouthWest());
+        for(var i = 0; i < manifest_map.markers.length; i++) {
+          bounds.extend(manifest_map.markers[i].getPosition());
+        }
+        manifest_map.map.fitBounds(bounds);
+      }
+    }
+    
+    $(document).ready(function() {      
+      var manifest_map = new GoogleMap($("#manifest-map-<%= driver.id %>"), GoogleMapDefaults.bounds, GoogleMapDefaults.viewport);
+      
+      if (manifest_map.errors.length > 0) {
+        html = "<h3>Mapping Errors</h3><ul>";
+        for (i in manifest_map.errors) {
+          html += '<li>' + manifest_map.errors[i] + '</li>';
+        }
+        html += '</ul>';
+        $("#manifest-map-<%= driver.id %>").css("border", "none").addClass("error").append(html);
+      } else {
+        manifest_map.display_region();
+
+        var infoWindow = new google.maps.InfoWindow({ content : "" });
+        google.maps.event.addListener(manifest_map.map, "click", function(){
+          infoWindow.close();
+        });
+
+        var geocoder = new google.maps.Geocoder();
+        manifest_map.mapping_errors = [];
+        manifest_map.markers = [];
+        $.when(
+          <% trips.each_with_index do |trip, index| %>
+            <% [:pickup, :dropoff].each_with_index do |address_type, index_2| %>
+              $.Deferred(function(deferred) {
+                geocoder.geocode({address: "<%= j trip.send("#{address_type}_address").address_text %>"}, function(results, status) {
+                  if (status == google.maps.GeocoderStatus.OK) {
+                    var result = results[0];
+                    var search_marker = new google.maps.Marker({
+                      map: manifest_map.map,
+                      position: result.geometry.location,
+                      animation: google.maps.Animation.DROP,
+                      title: result.formatted_address
+                    });
+                    manifest_map.markers.push(search_marker);
+                    search_marker.html = '<div class="marker_detail">' +
+                      '<strong><%= address_type.to_s.capitalize %> - <%= (address_type == :pickup ? trip.pickup_time : trip.appointment_time).strftime('%l:%M %P') %></strong>' +
+                      '<p>' + result.formatted_address + '</p>' +
+                    '</div>';
+                    google.maps.event.addListener(search_marker, "click", function(){
+                      infoWindow.setContent(search_marker.html);
+                      infoWindow.open(manifest_map.map, search_marker);
+                    });
+                  } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
+                    manifest_map.mapping_errors.push("No results found.");
+                  } else {
+                    manifest_map.mapping_errors.push("Unable to locate address: " + status);
+                  }
+                  deferred.resolve();
+                });
+              }).promise()<%= "," unless index_2 == 1 and (index + 1) == trips.size %>
+            <% end %>
+          <% end %>
+        ).done(function() {
+          fitAllMarkers(manifest_map);
+          if (manifest_map.mapping_errors.length > 0) console.log(manifest_map.mapping_errors);
+        });
+      }
+    });
+  <% end %>
+
   <% if i != @trips.size %>
     <br style="page-break-after: always" />
   <% end %>
+<% end %>
+<% content_for :footer do %>
+  <%= render "shared/google_maps/content_for_footer" %>
 <% end %>

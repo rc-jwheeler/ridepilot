@@ -1,6 +1,5 @@
 <%= javascript_include_tag "//maps.google.com/maps/api/js?v=3.12&sensor=false" %>
 <%= javascript_include_tag "google_map.js" %>
-<%= javascript_include_tag "styledmarker.js" %>
 <%= javascript_tag do %>
   var GoogleMapDefaults = {
     <% if current_user.current_provider.viewport_center && current_user.current_provider.viewport_zoom %>

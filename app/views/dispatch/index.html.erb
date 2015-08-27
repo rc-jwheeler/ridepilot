@@ -36,6 +36,8 @@
 </div>
 
 <% content_for :footer do %>
+  <%= render "shared/google_maps/content_for_footer" %>
+  <%= javascript_include_tag "styledmarker.js" %>
   <%= javascript_include_tag "jquery.jstree.js" %>
   <%= javascript_include_tag "jquery.layout.js" %>
   <%= javascript_include_tag "dispatcher.js" %>
@@ -74,5 +76,4 @@
       }
     });
   <% end %>
-  <%= render "shared/google_maps/content_for_footer" %>
 <% end %>

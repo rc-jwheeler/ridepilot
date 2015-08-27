@@ -297,8 +297,7 @@ function Dispatcher (tree_id, map, bounds, viewport) {
     $("#search-spinner").css("visibility", "visible");
     $("#search-message").html("");
     var geocoder = new google.maps.Geocoder();
-    geocoder.geocode({address: address, bounds: self.bounds},
-                     function(results, status) {
+    geocoder.geocode({address: address, bounds: self.bounds}, function(results, status) {
       $("#search-spinner").css("visibility", "hidden");
       if (status == google.maps.GeocoderStatus.OK) {
         self.showSearchResult(results[0]);
