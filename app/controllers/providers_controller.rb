@@ -39,7 +39,7 @@ class ProvidersController < ApplicationController
       @provider.region_se_corner = RGeo::Geographic.spherical_factory(srid: 4326).point(east, south)
     end
     @provider.save!
-    redirect_to provider_path(@provider)
+    redirect_to provider_path(@provider, anchor: "region")
   end
 
   # POST /providers/:id/save_viewport
@@ -59,7 +59,7 @@ class ProvidersController < ApplicationController
       @provider.viewport_center = RGeo::Geographic.spherical_factory(srid: 4326).point(lng, lat)
     end
     @provider.save!
-    redirect_to provider_path(@provider)
+    redirect_to provider_path(@provider, anchor: "viewport")
   end
 
   def delete_role
