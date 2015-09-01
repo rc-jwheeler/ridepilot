@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150824144415) do
+ActiveRecord::Schema.define(version: 20150901150415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,16 @@ ActiveRecord::Schema.define(version: 20150824144415) do
   add_index "addresses", ["provider_id"], :name => "index_addresses_on_provider_id"
   add_index "addresses", ["the_geom"], :name => "index_addresses_on_the_geom", :spatial => true
   add_index "addresses", ["trip_purpose_id"], :name => "index_addresses_on_trip_purpose_id"
+
+  create_table "addresses_customers", force: true do |t|
+    t.integer  "customer_id"
+    t.integer  "address_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "addresses_customers", ["address_id"], :name => "index_addresses_customers_on_address_id"
+  add_index "addresses_customers", ["customer_id"], :name => "index_addresses_customers_on_customer_id"
 
   create_table "custom_reports", force: true do |t|
     t.string   "name"
