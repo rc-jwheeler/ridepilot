@@ -274,7 +274,7 @@ class Trip < ActiveRecord::Base
   end
 
   def instantiate_repeating_trips
-    repeating_trip.instantiate if !repeating_trip_id.nil? && !via_repeating_trip
+    repeating_trip.instantiate! if !repeating_trip_id.nil? && !via_repeating_trip
   end
 
   def destroy_future_repeating_trips

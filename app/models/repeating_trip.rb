@@ -1,10 +1,11 @@
 class RepeatingTrip < ActiveRecord::Base
   include ScheduleAttributes
+  include RecurringRideCoordinatorScheduler
 
   belongs_to :provider
   belongs_to :customer
-  belongs_to :pickup_address, :class_name=>"Address"
-  belongs_to :dropoff_address, :class_name=>"Address"
+  belongs_to :pickup_address, class_name: "Address"
+  belongs_to :dropoff_address, class_name: "Address"
   belongs_to :repeating_trip
   belongs_to :trip_purpose
 
@@ -21,21 +22,21 @@ class RepeatingTrip < ActiveRecord::Base
 
   #Create concrete trips from all repeating trips.  This method
   #is idempotent.
-  def self.create_trips
+  def self.generate!
     for repeating_trip in RepeatingTrip.all
-      repeating_trip.instantiate
+      repeating_trip.instantiate!
     end
   end
 
   def pickup_time=(datetime)
-    write_attribute :pickup_time, format_datetime( datetime )
+    write_attribute :pickup_time, format_datetime(datetime)
   end
   
   def appointment_time=(datetime)
-    write_attribute :appointment_time, format_datetime( datetime )
+    write_attribute :appointment_time, format_datetime(datetime)
   end
 
-  def instantiate
+  def instantiate!
     now = Date.today + 1.day
     later = now.advance(:days=>20) 
     for date in schedule.occurrences_between(now, later)
@@ -56,11 +57,12 @@ class RepeatingTrip < ActiveRecord::Base
   private
   
   def format_datetime(datetime)
-    if datetime.is_a?( String ) 
-      if %w{a p}.include?( datetime.last.downcase ) 
-        Time.parse("#{datetime}m")
-      else
+    if datetime.is_a?(String)
+      datetime = "#{datetime}m" if %w{a p}.include?(datetime.last.downcase)
+      begin
         Time.parse(datetime)
+      rescue 
+        nil
       end
     else
       datetime
