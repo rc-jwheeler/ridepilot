@@ -1,5 +1,4 @@
 class RepeatingTrip < ActiveRecord::Base
-  include ScheduleAttributes
   include RecurringRideCoordinatorScheduler
 
   belongs_to :provider
