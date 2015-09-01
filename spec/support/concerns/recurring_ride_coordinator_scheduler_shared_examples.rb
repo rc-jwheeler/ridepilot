@@ -8,6 +8,15 @@ RSpec.shared_examples "a recurring ride coordinator scheduler" do
     end
   end
   
+  describe ".generate!" do
+    it "generates trips for all repeating trips" do
+      repeating_trip = create :repeating_trip
+      allow(RepeatingTrip).to receive(:all).and_return([repeating_trip])
+      expect(repeating_trip).to receive(:instantiate!)
+      RepeatingTrip.generate!
+    end
+  end
+  
   describe "ScheduleAttributes module" do
     describe "#schedule_attributes" do
       before do

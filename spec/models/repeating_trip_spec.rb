@@ -21,10 +21,6 @@ RSpec.describe RepeatingTrip, type: :model do
     expect(repeating_trip.valid?).to be_truthy
   end
   
-  describe ".generate!" do
-    it "generates trips for all repeating trips"
-  end
-  
   describe "#instantiate!" do
     it "generates trips"
   end

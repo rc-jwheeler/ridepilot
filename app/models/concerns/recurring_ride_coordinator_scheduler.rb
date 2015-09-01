@@ -10,6 +10,13 @@ module RecurringRideCoordinatorScheduler
   end
   
   module ClassMethods
+    # Create occurrences from all schedulers. This method is idempotent.
+    def generate!
+      for scheduler in self.all
+        scheduler.instantiate!
+      end
+    end
+
     def trip_attributes  
       attribute_names - NON_TRIP_ATTRIBUTES
     end

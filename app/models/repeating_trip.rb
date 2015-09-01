@@ -13,14 +13,6 @@ class RepeatingTrip < ActiveRecord::Base
 
   has_paper_trail
 
-  #Create concrete trips from all repeating trips.  This method
-  #is idempotent.
-  def self.generate!
-    for repeating_trip in RepeatingTrip.all
-      repeating_trip.instantiate!
-    end
-  end
-
   def pickup_time=(datetime)
     write_attribute :pickup_time, format_datetime(datetime)
   end
