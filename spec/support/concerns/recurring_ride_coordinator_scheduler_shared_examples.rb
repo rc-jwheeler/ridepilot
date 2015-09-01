@@ -2,6 +2,12 @@ require 'spec_helper'
 
 # For model specs
 RSpec.shared_examples "a recurring ride coordinator scheduler" do
+  describe ".trip_attributes" do
+    it "knows which of its attributes are trip attributes" do
+      expect(RepeatingTrip.trip_attributes).not_to include "id", "recurrence", "schedule_yaml", "created_at", "updated_at", "lock_version"
+    end
+  end
+  
   describe "ScheduleAttributes module" do
     describe "#schedule_attributes" do
       before do

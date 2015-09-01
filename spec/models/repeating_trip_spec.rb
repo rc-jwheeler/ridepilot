@@ -21,12 +21,6 @@ RSpec.describe RepeatingTrip, type: :model do
     expect(repeating_trip.valid?).to be_truthy
   end
   
-  describe ".trip_attributes" do
-    it "knows which of its attributes are trip attributes" do
-      expect(RepeatingTrip.trip_attributes).not_to include "id", "recurrence", "schedule_yaml", "created_at", "updated_at", "lock_version"
-    end
-  end
-  
   describe ".generate!" do
     it "generates trips for all repeating trips"
   end

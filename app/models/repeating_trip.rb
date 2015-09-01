@@ -13,12 +13,6 @@ class RepeatingTrip < ActiveRecord::Base
 
   has_paper_trail
 
-  NON_TRIP_ATTRIBUTES = %w(id recurrence schedule_yaml created_at updated_at lock_version)
-
-  def self.trip_attributes  
-    self.new.attributes.keys - NON_TRIP_ATTRIBUTES
-  end
-
   #Create concrete trips from all repeating trips.  This method
   #is idempotent.
   def self.generate!
