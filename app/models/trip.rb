@@ -315,16 +315,6 @@ class Trip < ActiveRecord::Base
     attrs
   end
 
-  def format_datetime(datetime)
-    if datetime.is_a?( String ) 
-      Time.zone.parse(datetime.gsub(/\b(a|p)\b/i, '\1m').upcase)
-    elsif datetime.present?
-      datetime
-    else
-      nil
-    end
-  end
-
   def driver_is_valid_for_vehicle
     # This will error if a run was found or extended for this vehicle and time, 
     # but the driver for the run is not the driver selected for the trip

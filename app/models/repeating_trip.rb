@@ -38,19 +38,4 @@ class RepeatingTrip < ActiveRecord::Base
       end
     end
   end
-
-  private
-  
-  def format_datetime(datetime)
-    if datetime.is_a?(String)
-      datetime = "#{datetime}m" if %w{a p}.include?(datetime.last.downcase)
-      begin
-        Time.parse(datetime)
-      rescue 
-        nil
-      end
-    else
-      datetime
-    end
-  end
 end
