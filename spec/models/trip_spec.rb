@@ -429,58 +429,6 @@ RSpec.describe Trip do
       it "returns #trip_size * 2 if it's round_trip"
     end
   
-    describe "#repetition_driver_id=" do
-      it "sets the @repetition_driver_id instance variable"
-      it "converts blank values ('') to nil"
-      it "converts non-blank values to integers"
-    end
-  
-    describe "#repetition_driver_id" do
-      it "returns the @repetition_driver_id instance variable if it's present"
-      it "returns the repeating_trip.driver_id if @repetition_driver_id is nil and the repeating_trip is present"
-      it "sets the @repetition_driver_id instance variable if it is nil and the repeating_trip is present"
-    end
-  
-    describe "#repetition_vehicle_id=" do
-      it "sets the @repetition_vehicle_id instance variable"
-      it "converts blank values ('') to nil"
-      it "converts non-blank values to integers"
-    end
-  
-    describe "#repetition_vehicle_id" do
-      it "returns the @repetition_vehicle_id instance variable if it's present"
-      it "returns the repeating_trip.vehicle_id if @repetition_vehicle_id is nil and the repeating_trip is present"
-      it "sets the @repetition_vehicle_id instance variable if it is nil and the repeating_trip is present"
-    end
-  
-    describe "#repetition_customer_informed=" do
-      it "sets the @repetition_customer_informed instance variable"
-      it "converts 1 and truthy values to true"
-      it "converts other values to false"
-    end
-  
-    describe "#repetition_customer_informed" do
-      it "returns the @repetition_customer_informed instance variable if it's present"
-      it "returns the repeating_trip.customer_informed if @repetition_customer_informed is nil and the repeating_trip is present"
-      it "sets the @repetition_customer_informed instance variable if it is nil and the repeating_trip is present"
-    end
-
-    describe "#repetition_interval=" do
-      it "sets the @repetition_interval instance variable"
-      it "converts values to integers"
-    end
-  
-    describe "#repetition_interval" do
-      it "returns the @repetition_interval instance variable if it's present"
-      it "returns the repeating_trip.schedule_attributes.interval if @repetition_interval is nil and the repeating_trip is present"
-      it "sets the @repetition_interval instance variable if it is nil and the repeating_trip is present"
-      it "returns 1 if @repetition_interval is nil and the repeating_trip is not present"
-    end
-
-    describe "#is_repeating_trip?" do
-      it "checks whether repetition_interval is greater than 0 and at least one of the repeats_x methods returns true"
-    end
-
     describe "#is_in_district?" do
       it "checks whether the pickup_address and the dropoff_address are both considered in_district?"
     end
