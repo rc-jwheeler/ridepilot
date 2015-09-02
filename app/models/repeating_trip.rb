@@ -1,3 +1,6 @@
+# This is a 'dumb' model. It is managed by a Trip instance, which creates a 
+# repeating instance of itself when instructed to. Validation is very basic 
+# since all data should already have been vetted by the Trip instance.
 class RepeatingTrip < ActiveRecord::Base
   include RecurringRideCoordinatorScheduler
 
@@ -5,7 +8,6 @@ class RepeatingTrip < ActiveRecord::Base
   belongs_to :customer
   belongs_to :pickup_address, class_name: "Address"
   belongs_to :dropoff_address, class_name: "Address"
-  belongs_to :repeating_trip
   belongs_to :trip_purpose
 
   validates_date :pickup_time

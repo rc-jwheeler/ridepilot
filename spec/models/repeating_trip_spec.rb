@@ -29,15 +29,15 @@ RSpec.describe RepeatingTrip, type: :model do
     repeating_trip = build :repeating_trip
     time = "1976-05-09 01:00:00 a"
     repeating_trip.pickup_time = time
-    expect(repeating_trip.pickup_time).not_to eq Time.parse(time)
-    expect(repeating_trip.pickup_time).to eq Time.parse("#{time}m")
+    expect(repeating_trip.pickup_time).not_to eq Time.zone.parse(time)
+    expect(repeating_trip.pickup_time).to eq Time.zone.parse("#{time}m")
   end
 
   it "if appointment_time is assigned a string that ends in 'a', it automatically appends an 'm' before parsing" do
     repeating_trip = build :repeating_trip
     time = "1976-05-09 01:00:00 a"
     repeating_trip.appointment_time = time
-    expect(repeating_trip.appointment_time).not_to eq Time.parse(time)
-    expect(repeating_trip.appointment_time).to eq Time.parse("#{time}m")
+    expect(repeating_trip.appointment_time).not_to eq Time.zone.parse(time)
+    expect(repeating_trip.appointment_time).to eq Time.zone.parse("#{time}m")
   end
 end

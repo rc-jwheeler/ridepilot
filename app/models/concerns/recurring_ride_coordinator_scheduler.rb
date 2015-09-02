@@ -9,6 +9,10 @@ module RecurringRideCoordinatorScheduler
   included do
   end
   
+  def instantiate!
+    raise "Must be defined by including model!"
+  end
+  
   module ClassMethods
     # Create occurrences from all schedulers. This method is idempotent.
     def generate!
