@@ -1,27 +1,16 @@
 # This is a 'dumb' model. It is managed by a Trip instance, which creates a 
-# repeating instance of itself when instructed to. Validation is very basic 
+# repeating instance of itself when instructed to. Validation is nonexistent 
 # since all data should already have been vetted by the Trip instance.
 class RepeatingTrip < ActiveRecord::Base
   include RecurringRideCoordinatorScheduler
+
+  has_paper_trail
 
   belongs_to :provider
   belongs_to :customer
   belongs_to :pickup_address, class_name: "Address"
   belongs_to :dropoff_address, class_name: "Address"
   belongs_to :trip_purpose
-
-  validates_date :pickup_time
-  validates_date :appointment_time
-
-  has_paper_trail
-
-  def pickup_time=(datetime)
-    write_attribute :pickup_time, format_datetime(datetime)
-  end
-  
-  def appointment_time=(datetime)
-    write_attribute :appointment_time, format_datetime(datetime)
-  end
 
   def instantiate!
     now = Date.today + 1.day
