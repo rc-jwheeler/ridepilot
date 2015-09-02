@@ -229,7 +229,7 @@ RSpec.shared_examples "a recurring ride coordinator" do
     end
   end
 
-  describe "#is_repeating_trip?" do
+  describe "#is_recurring_ride_coordinator?" do
     before do
       @coordinator = build @described_class_factory
     end
@@ -237,22 +237,22 @@ RSpec.shared_examples "a recurring ride coordinator" do
     it "is true if repetition_interval is greater than 0 and at least one of the repeats_x methods returns true" do
       allow(@coordinator).to receive(:repetition_interval).and_return(1)
       allow(@coordinator).to receive(:repeats_sundays).and_return(true)
-      expect(@coordinator.is_repeating_trip?).to be_truthy
+      expect(@coordinator.is_recurring_ride_coordinator?).to be_truthy
     end
 
     it "is false if repetition_interval <= 0, even if one of the repeats_x methods returns true" do
       allow(@coordinator).to receive(:repeats_sundays).and_return(true)
       @coordinator.repetition_interval = 0
-      expect(@coordinator.is_repeating_trip?).to be_falsey
+      expect(@coordinator.is_recurring_ride_coordinator?).to be_falsey
       @coordinator.repetition_interval = 1
-      expect(@coordinator.is_repeating_trip?).to be_truthy
+      expect(@coordinator.is_recurring_ride_coordinator?).to be_truthy
     end
     
     it "is false if none of the repeats_x methods return true, even if repetition_interval > 0" do
       allow(@coordinator).to receive(:repetition_interval).and_return(1)
-      expect(@coordinator.is_repeating_trip?).to be_falsey
+      expect(@coordinator.is_recurring_ride_coordinator?).to be_falsey
       @coordinator.repeats_sundays = true
-      expect(@coordinator.is_repeating_trip?).to be_truthy
+      expect(@coordinator.is_recurring_ride_coordinator?).to be_truthy
     end
   end    
 end

@@ -1,10 +1,11 @@
 class Trip < ActiveRecord::Base
   include RequiredFieldValidatorModule
   include RecurringRideCoordinator
+  schedules_occurrences_with :repeating_trip
 
   has_paper_trail
   
-  attr_accessor :driver_id, :vehicle_id, :via_repeating_trip
+  attr_accessor :driver_id, :vehicle_id
 
   belongs_to :called_back_by, class_name: "User"
   belongs_to :customer
@@ -13,7 +14,6 @@ class Trip < ActiveRecord::Base
   belongs_to :mobility
   belongs_to :pickup_address, class_name: "Address"
   belongs_to :provider
-  belongs_to :repeating_trip
   belongs_to :run
   belongs_to :service_level
   belongs_to :trip_purpose
@@ -26,9 +26,6 @@ class Trip < ActiveRecord::Base
   delegate :name, to: :service_level, prefix: :service_level, allow_nil: true
 
   before_validation :compute_run
-  before_create     :create_repeating_trip
-  before_update     :update_repeating_trip
-  after_save        :instantiate_repeating_trips
   
   serialize :guests
 
@@ -67,7 +64,6 @@ class Trip < ActiveRecord::Base
   scope :after_today,        -> { where('CAST(trips.pickup_time AS date) > ?', Date.today.in_time_zone.utc) }
   scope :prior_to,           -> (pickup_time) { where('trips.pickup_time < ?', pickup_time.to_datetime.in_time_zone.utc) }
   scope :after,              -> (pickup_time) { where('trips.pickup_time > ?', pickup_time.utc) }
-  scope :repeating_based_on, -> (repeating_trip) { where(repeating_trip_id: repeating_trip.id) }
   scope :called_back,        -> { where('called_back_at IS NOT NULL') }
   scope :not_called_back,    -> { where('called_back_at IS NULL') }
   scope :individual,         -> { joins(:customer).where(customers: {group: false}) }
@@ -162,76 +158,6 @@ class Trip < ActiveRecord::Base
     
   private
   
-  def create_repeating_trip
-    if is_repeating_trip? && !via_repeating_trip
-      self.repeating_trip = RepeatingTrip.create!(repeating_trip_attributes)
-    end
-  end
-
-  def update_repeating_trip
-    if is_repeating_trip? 
-      #this is a repeating trip, so we need to edit both
-      #the repeating trip, and the instance for today
-      if repeating_trip.blank?
-        create_repeating_trip
-      else
-        repeating_trip.attributes = repeating_trip_attributes
-        if repeating_trip.changed?
-          repeating_trip.save!
-          destroy_future_repeating_trips
-        end
-      end
-    elsif !is_repeating_trip? && repeating_trip.present?
-      destroy_future_repeating_trips
-      unlink_past_trips
-      rt = repeating_trip
-      self.repeating_trip_id = nil
-      rt.destroy
-    end
-  end
-
-  def instantiate_repeating_trips
-    repeating_trip.instantiate! if !repeating_trip_id.nil? && !via_repeating_trip
-  end
-
-  def destroy_future_repeating_trips
-    if pickup_time < Time.now #Be sure not delete trips that have already happened.
-      Trip.repeating_based_on(repeating_trip).after_today.not_called_back.destroy_all
-    else 
-      Trip.repeating_based_on(repeating_trip).after(pickup_time).not_called_back.destroy_all
-    end
-  end
-
-  def unlink_past_trips
-    if pickup_time < Time.now 
-      Trip.repeating_based_on(repeating_trip).today_and_prior.update_all 'repeating_trip_id = NULL'
-    else 
-      Trip.repeating_based_on(repeating_trip).prior_to(pickup_time).update_all 'repeating_trip_id = NULL'
-    end
-  end
-
-  def repeating_trip_attributes
-    attrs = {}
-    RepeatingTrip.trip_attributes.each {|attr| attrs[attr] = self.send(attr) }
-    attrs['driver_id'] = repetition_driver_id
-    attrs['vehicle_id'] = repetition_vehicle_id
-    attrs['customer_informed'] = repetition_customer_informed
-    attrs['schedule_attributes'] = {
-      repeat:        1,
-      interval_unit: "week", 
-      start_date:    pickup_time.to_date.to_s,
-      interval:      repetition_interval, 
-      monday:        repeats_mondays    ? 1 : 0,
-      tuesday:       repeats_tuesdays   ? 1 : 0,
-      wednesday:     repeats_wednesdays ? 1 : 0,
-      thursday:      repeats_thursdays  ? 1 : 0,
-      friday:        repeats_fridays    ? 1 : 0,
-      saturday:      repeats_saturdays  ? 1 : 0,
-      sunday:        repeats_sundays    ? 1 : 0
-    }
-    attrs
-  end
-
   def driver_is_valid_for_vehicle
     # This will error if a run was found or extended for this vehicle and time, 
     # but the driver for the run is not the driver selected for the trip
