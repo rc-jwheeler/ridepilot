@@ -1,5 +1,6 @@
 class Trip < ActiveRecord::Base
   include RequiredFieldValidatorModule
+  include RecurringRideCoordinator
 
   has_paper_trail
   
@@ -73,26 +74,6 @@ class Trip < ActiveRecord::Base
   scope :has_scheduled_time, -> { where.not(pickup_time: nil).where.not(appointment_time: nil) }
   scope :incomplete,         -> { where(trip_result: nil) }
   scope :during,             -> (pickup_time, appointment_time) { where('NOT ((trips.pickup_time < ? AND trips.appointment_time < ?) OR (trips.pickup_time > ? AND trips.appointment_time > ?))', pickup_time.utc, appointment_time.utc, pickup_time.utc, appointment_time.utc) }
-
-  DAYS_OF_WEEK = %w{monday tuesday wednesday thursday friday saturday sunday}
-  
-  DAYS_OF_WEEK.each do |day|
-    define_method "repeats_#{day}s=" do |value|
-      instance_variable_set "@repeats_#{day}s", (value == "1" || value == true)
-    end
-
-    define_method "repeats_#{day}s" do
-      if instance_variable_get("@repeats_#{day}s").nil?
-        if repeating_trip.present?
-          instance_variable_set "@repeats_#{day}s", repeating_trip.schedule_attributes.send(day) == 1
-        else
-          instance_variable_set "@repeats_#{day}s", false 
-        end
-      else
-        instance_variable_get("@repeats_#{day}s")
-      end
-    end
-  end
 
   def date
     pickup_time.to_date

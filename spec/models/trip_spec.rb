@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Trip do
+  it_behaves_like "a recurring ride coordinator"
+  
   it "requires pickup_time to be a valid date" do
     trip = build :trip, pickup_time: "13/13/13", appointment_time: "12/12/12"
     expect(trip.valid?).to be_falsey
@@ -35,30 +37,6 @@ RSpec.describe Trip do
     expect(trip.appointment_time).to eq Time.zone.parse("#{time}m")
   end
 
-  describe "DAYS_OF_WEEK" do
-    it "contains a list of the days of the week" do
-      expect(Trip::DAYS_OF_WEEK).to include "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
-    end
-    
-    it "defines a method that checks whether it repeats for each given day of the week" do
-      trip = build :trip
-      expect(trip).to respond_to :repeats_sundays
-      expect(trip).to respond_to :repeats_sundays=
-      expect(trip).to respond_to :repeats_mondays
-      expect(trip).to respond_to :repeats_mondays=
-      expect(trip).to respond_to :repeats_tuesdays
-      expect(trip).to respond_to :repeats_tuesdays=
-      expect(trip).to respond_to :repeats_wednesdays
-      expect(trip).to respond_to :repeats_wednesdays=
-      expect(trip).to respond_to :repeats_thursdays
-      expect(trip).to respond_to :repeats_thursdays=
-      expect(trip).to respond_to :repeats_fridays
-      expect(trip).to respond_to :repeats_fridays=
-      expect(trip).to respond_to :repeats_saturdays
-      expect(trip).to respond_to :repeats_saturdays=
-    end
-  end
-  
   describe "mileage" do
     it "should be an integer" do
       t = Trip.new
