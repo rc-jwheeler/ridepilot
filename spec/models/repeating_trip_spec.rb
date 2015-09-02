@@ -22,6 +22,9 @@ RSpec.describe RepeatingTrip, type: :model do
   end
   
   describe "#instantiate!" do
+    # TODO Add some robust examples. This set of commits didn't change any of
+    # the #instantiate! code, but it did include backfilling missing specs, so 
+    # I added this as a placeholder.
     it "generates trips"
   end
   

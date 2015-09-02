@@ -2,51 +2,55 @@ require 'spec_helper'
 
 # For model specs
 RSpec.shared_examples "a recurring ride coordinator scheduler" do
+  before do
+    @described_class_factory = described_class.name.underscore.to_sym
+  end
+
   describe ".trip_attributes" do
     it "knows which of its attributes are trip attributes" do
-      expect(RepeatingTrip.trip_attributes).not_to include "id", "recurrence", "schedule_yaml", "created_at", "updated_at", "lock_version"
+      expect(described_class.trip_attributes).not_to include "id", "recurrence", "schedule_yaml", "created_at", "updated_at", "lock_version"
     end
   end
   
   describe ".generate!" do
     it "generates trips for all repeating trips" do
-      repeating_trip = create :repeating_trip
-      allow(RepeatingTrip).to receive(:all).and_return([repeating_trip])
-      expect(repeating_trip).to receive(:instantiate!)
-      RepeatingTrip.generate!
+      scheduler = create @described_class_factory
+      allow(described_class).to receive(:all).and_return([scheduler])
+      expect(scheduler).to receive(:instantiate!)
+      described_class.generate!
     end
   end
   
   describe "ScheduleAttributes module" do
     describe "#schedule_attributes" do
       before do
-        @repeating_trip = build :repeating_trip
+        @scheduler = build @described_class_factory
       end
     
       it "returns an openstruct" do
-        expect(@repeating_trip.schedule_attributes).to be_a OpenStruct
+        expect(@scheduler.schedule_attributes).to be_a OpenStruct
       end
     end
   
     describe "#schedule_attributes=" do
       before do
-        @repeating_trip = build :repeating_trip
+        @scheduler = build @described_class_factory
       end
     
       it "populates the schedule_yaml field" do
-        expect(@repeating_trip.schedule_yaml).to be_nil
-        @repeating_trip.schedule_attributes = {}
-        expect(@repeating_trip.schedule_yaml).not_to be_nil
+        expect(@scheduler.schedule_yaml).to be_nil
+        @scheduler.schedule_attributes = {}
+        expect(@scheduler.schedule_yaml).not_to be_nil
       end
     end
   
     describe "#schedule" do
       before do
-        @repeating_trip = build :repeating_trip
+        @scheduler = build @described_class_factory
       end
 
       it "returns an IceCube::Schedule" do
-        expect(@repeating_trip.schedule).to be_a IceCube::Schedule
+        expect(@scheduler.schedule).to be_a IceCube::Schedule
       end
     end
   end
