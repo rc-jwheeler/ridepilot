@@ -1,6 +1,64 @@
 require "rails_helper"
 
 RSpec.describe Trip do
+  it "requires pickup_time to be a valid date" do
+    trip = build :trip, pickup_time: "13/13/13", appointment_time: "12/12/12"
+    expect(trip.valid?).to be_falsey
+    expect(trip.errors.keys).to include :pickup_time
+  
+    trip.pickup_time = "12/12/12"
+    expect(trip.valid?).to be_truthy
+  end
+  
+  it "requires appointment_time to be a valid date" do
+    trip = build :trip, appointment_time: "13/13/13"
+    expect(trip.valid?).to be_falsey
+    expect(trip.errors.keys).to include :appointment_time
+  
+    trip.appointment_time = "12/12/12"
+    expect(trip.valid?).to be_truthy
+  end
+
+  it "if pickup_time is assigned a string that ends in 'a', it automatically appends an 'm' before parsing" do
+    trip = build :trip
+    time = "1976-05-09 01:00:00 a"
+    trip.pickup_time = time
+    expect(trip.pickup_time).not_to eq Time.zone.parse(time)
+    expect(trip.pickup_time).to eq Time.zone.parse("#{time}m")
+  end
+
+  it "if appointment_time is assigned a string that ends in 'a', it automatically appends an 'm' before parsing" do
+    trip = build :trip
+    time = "1976-05-09 01:00:00 a"
+    trip.appointment_time = time
+    expect(trip.appointment_time).not_to eq Time.zone.parse(time)
+    expect(trip.appointment_time).to eq Time.zone.parse("#{time}m")
+  end
+
+  describe "DAYS_OF_WEEK" do
+    it "contains a list of the days of the week" do
+      expect(Trip::DAYS_OF_WEEK).to include "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"
+    end
+    
+    it "defines a method that checks whether it repeats for each given day of the week" do
+      trip = build :trip
+      expect(trip).to respond_to :repeats_sundays
+      expect(trip).to respond_to :repeats_sundays=
+      expect(trip).to respond_to :repeats_mondays
+      expect(trip).to respond_to :repeats_mondays=
+      expect(trip).to respond_to :repeats_tuesdays
+      expect(trip).to respond_to :repeats_tuesdays=
+      expect(trip).to respond_to :repeats_wednesdays
+      expect(trip).to respond_to :repeats_wednesdays=
+      expect(trip).to respond_to :repeats_thursdays
+      expect(trip).to respond_to :repeats_thursdays=
+      expect(trip).to respond_to :repeats_fridays
+      expect(trip).to respond_to :repeats_fridays=
+      expect(trip).to respond_to :repeats_saturdays
+      expect(trip).to respond_to :repeats_saturdays=
+    end
+  end
+  
   describe "mileage" do
     it "should be an integer" do
       t = Trip.new
@@ -357,6 +415,114 @@ RSpec.describe Trip do
       expect(Trip.by_trip_purpose("Foo")).not_to include @trip_2
       expect(Trip.by_trip_purpose("Bar")).to include @trip_2
       expect(Trip.by_trip_purpose("Bar")).not_to include @trip_1
+    end
+  end
+
+  # TODO complete these backfilled examples
+  describe "incomplete examples" do
+    describe "#date" do
+      it "returns a date based on pickup_time"
+    end
+
+    describe "#complete" do
+      it "checks whether the trip_result code is 'COMP'"
+    end
+  
+    describe "#pending" do
+      it "checks whether the trip_result is blank"
+    end
+  
+    describe "#vehicle_id" do
+      it "returns the run vehicle_id if a run is present, or the @vehicle_id instance variable"
+    end
+  
+    describe "#driver_id" do
+      it "returns the @driver_id instance variable if present, or the run driver_id if the run is present, or nil"
+    end
+  
+    describe "#run_text" do
+      it "returns 'Cab' if it's a cab trip"
+      it "returns the run label if it's not a cab trip and a run is present"
+      it "returns '(No run specified)' if it's not a cab and no run is present"
+    end
+  
+    describe "#trip_count" do
+      it "returns #trip_size if it's not round_trip"
+      it "returns #trip_size * 2 if it's round_trip"
+    end
+  
+    describe "#repetition_driver_id=" do
+      it "sets the @repetition_driver_id instance variable"
+      it "converts blank values ('') to nil"
+      it "converts non-blank values to integers"
+    end
+  
+    describe "#repetition_driver_id" do
+      it "returns the @repetition_driver_id instance variable if it's present"
+      it "returns the repeating_trip.driver_id if @repetition_driver_id is nil and the repeating_trip is present"
+      it "sets the @repetition_driver_id instance variable if it is nil and the repeating_trip is present"
+    end
+  
+    describe "#repetition_vehicle_id=" do
+      it "sets the @repetition_vehicle_id instance variable"
+      it "converts blank values ('') to nil"
+      it "converts non-blank values to integers"
+    end
+  
+    describe "#repetition_vehicle_id" do
+      it "returns the @repetition_vehicle_id instance variable if it's present"
+      it "returns the repeating_trip.vehicle_id if @repetition_vehicle_id is nil and the repeating_trip is present"
+      it "sets the @repetition_vehicle_id instance variable if it is nil and the repeating_trip is present"
+    end
+  
+    describe "#repetition_customer_informed=" do
+      it "sets the @repetition_customer_informed instance variable"
+      it "converts 1 and truthy values to true"
+      it "converts other values to false"
+    end
+  
+    describe "#repetition_customer_informed" do
+      it "returns the @repetition_customer_informed instance variable if it's present"
+      it "returns the repeating_trip.customer_informed if @repetition_customer_informed is nil and the repeating_trip is present"
+      it "sets the @repetition_customer_informed instance variable if it is nil and the repeating_trip is present"
+    end
+
+    describe "#repetition_interval=" do
+      it "sets the @repetition_interval instance variable"
+      it "converts values to integers"
+    end
+  
+    describe "#repetition_interval" do
+      it "returns the @repetition_interval instance variable if it's present"
+      it "returns the repeating_trip.schedule_attributes.interval if @repetition_interval is nil and the repeating_trip is present"
+      it "sets the @repetition_interval instance variable if it is nil and the repeating_trip is present"
+      it "returns 1 if @repetition_interval is nil and the repeating_trip is not present"
+    end
+
+    describe "#is_repeating_trip?" do
+      it "checks whether repetition_interval is greater than 0 and at least one of the repeats_x methods returns true"
+    end
+
+    describe "#is_in_district?" do
+      it "checks whether the pickup_address and the dropoff_address are both considered in_district?"
+    end
+
+    describe "#allow_addressless_trip?" do
+      it "checks whether the pickup_address and the dropoff_address are both considered in_district?"
+    end
+
+    describe "#adjusted_run_id" do
+      it "returns Run::CAB_RUN_ID if it's a cab trip"
+      it "returns the run_id if it's not a cab trip and a run is present"
+      it "returns Run::UNSCHEDULED_RUN_ID if it's not a cab trip and a run is not present"
+    end
+  
+    describe "#as_calendar_json" do
+      it "returns a hash"
+    end
+
+    describe "#as_run_event_json" do
+      it "returns a hash"
     end
   end
 end

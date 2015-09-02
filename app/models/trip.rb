@@ -1,61 +1,60 @@
 class Trip < ActiveRecord::Base
   include RequiredFieldValidatorModule
 
+  has_paper_trail
+  
   attr_accessor :driver_id, :vehicle_id, :via_repeating_trip
 
-  belongs_to :provider
-  belongs_to :run
-  delegate :label, to: :run, prefix: :run, allow_nil: true
+  belongs_to :called_back_by, class_name: "User"
   belongs_to :customer
-  delegate :name, to: :customer, prefix: :customer, allow_nil: true
+  belongs_to :dropoff_address, class_name: "Address"
   belongs_to :funding_source
   belongs_to :mobility
-  belongs_to :pickup_address, :class_name=>"Address"
-  belongs_to :dropoff_address, :class_name=>"Address"
-  belongs_to :called_back_by, :class_name=>"User"
+  belongs_to :pickup_address, class_name: "Address"
+  belongs_to :provider
   belongs_to :repeating_trip
-
-  belongs_to :trip_purpose
-  delegate :name, to: :trip_purpose, prefix: :trip_purpose, allow_nil: true
-
-  belongs_to :trip_result
-  delegate :code, :name, to: :trip_result, prefix: :trip_result, allow_nil: true
-
+  belongs_to :run
   belongs_to :service_level
+  belongs_to :trip_purpose
+  belongs_to :trip_result
+
+  delegate :label, to: :run, prefix: :run, allow_nil: true
+  delegate :name, to: :customer, prefix: :customer, allow_nil: true
+  delegate :name, to: :trip_purpose, prefix: :trip_purpose, allow_nil: true
+  delegate :code, :name, to: :trip_result, prefix: :trip_result, allow_nil: true
   delegate :name, to: :service_level, prefix: :service_level, allow_nil: true
 
   before_validation :compute_run
-  before_create :create_repeating_trip
-  before_update :update_repeating_trip
-  after_save    :instantiate_repeating_trips
+  before_create     :create_repeating_trip
+  before_update     :update_repeating_trip
+  after_save        :instantiate_repeating_trips
   
   serialize :guests
 
-  validates_presence_of :customer
-  validates_presence_of :pickup_address,   :unless => :allow_addressless_trip?
-  validates_presence_of :dropoff_address,  :unless => :allow_addressless_trip?
-  validates_presence_of :pickup_time,      :unless => :allow_addressless_trip?
-  validates_presence_of :appointment_time, :unless => :allow_addressless_trip?
-  validates_presence_of :trip_purpose_id
+  validates :appointment_time, presence: {unless: :allow_addressless_trip?}
+  validates :attendant_count, numericality: {greater_than_or_equal_to: 0}
+  validates :customer, associated: true
+  validates :customer, presence: true
+  validates :dropoff_address, associated: true, presence: {unless: :allow_addressless_trip?}
+  validates :guest_count, numericality: {greater_than_or_equal_to: 0}
+  validates :mileage, numericality: {greater_than: 0, allow_blank: true}
+  validates :pickup_address, associated: true, presence: {unless: :allow_addressless_trip?}
+  validates :pickup_time, presence: {unless: :allow_addressless_trip?}
+  validates :trip_purpose_id, presence: true
+  validates_datetime :appointment_time, unless: :allow_addressless_trip?
+  validates_datetime :pickup_time, unless: :allow_addressless_trip?
   validate :driver_is_valid_for_vehicle
   validate :vehicle_has_open_seating_capacity
-  validates_associated :customer
-  validates_associated :pickup_address
-  validates_associated :dropoff_address
-  validates_numericality_of :guest_count, :greater_than_or_equal_to => 0
-  validates_numericality_of :attendant_count, :greater_than_or_equal_to => 0
-  validates_numericality_of :mileage, :greater_than => 0, :allow_blank => true
-  accepts_nested_attributes_for :customer # TODO make sure these are accounted for in Strong Param setup
 
-  has_paper_trail
-  
-  scope :for_cab,            -> { where(:cab => true) }
-  scope :not_for_cab,        -> { where(:cab => false) }
-  scope :for_provider,       -> (provider_id) { where( :provider_id => provider_id ) }
+  accepts_nested_attributes_for :customer
+
+  scope :for_cab,            -> { where(cab: true) }
+  scope :not_for_cab,        -> { where(cab: false) }
+  scope :for_provider,       -> (provider_id) { where(provider_id: provider_id) }
   scope :for_date,           -> (date) { where('trips.pickup_time >= ? AND trips.pickup_time < ?', date.to_datetime.in_time_zone.utc, date.to_datetime.in_time_zone.utc + 1.day) }
   scope :for_date_range,     -> (start_date, end_date) { where('trips.pickup_time >= ? AND trips.pickup_time < ?', start_date.to_datetime.in_time_zone.utc, end_date.to_datetime.in_time_zone.utc) }
-  scope :for_driver,         -> (driver_id) { not_for_cab.where(:runs => {:driver_id => driver_id}).joins(:run) }
-  scope :for_vehicle,        -> (vehicle_id) { not_for_cab.where(:runs => {:vehicle_id => vehicle_id}).joins(:run) }
+  scope :for_driver,         -> (driver_id) { not_for_cab.where(runs: {driver_id: driver_id}).joins(:run) }
+  scope :for_vehicle,        -> (vehicle_id) { not_for_cab.where(runs: {vehicle_id: vehicle_id}).joins(:run) }
   scope :by_result,          -> (code) { includes(:trip_result).references(:trip_result).where("trip_results.code = ?", code) }
   scope :by_funding_source,  -> (name) { includes(:funding_source).references(:funding_source).where("funding_sources.name = ?", name) }
   scope :by_trip_purpose,    -> (name) { includes(:trip_purpose).references(:trip_purpose).where("trip_purposes.name = ?", name) }
@@ -67,10 +66,10 @@ class Trip < ActiveRecord::Base
   scope :after_today,        -> { where('CAST(trips.pickup_time AS date) > ?', Date.today.in_time_zone.utc) }
   scope :prior_to,           -> (pickup_time) { where('trips.pickup_time < ?', pickup_time.to_datetime.in_time_zone.utc) }
   scope :after,              -> (pickup_time) { where('trips.pickup_time > ?', pickup_time.utc) }
-  scope :repeating_based_on, -> (repeating_trip) { where(:repeating_trip_id => repeating_trip.id) }
+  scope :repeating_based_on, -> (repeating_trip) { where(repeating_trip_id: repeating_trip.id) }
   scope :called_back,        -> { where('called_back_at IS NOT NULL') }
   scope :not_called_back,    -> { where('called_back_at IS NULL') }
-  scope :individual,         -> { joins(:customer).where(:customers => {:group => false}) }
+  scope :individual,         -> { joins(:customer).where(customers: {group: false}) }
   scope :has_scheduled_time, -> { where.not(pickup_time: nil).where.not(appointment_time: nil) }
   scope :incomplete,         -> { where(trip_result: nil) }
   scope :during,             -> (pickup_time, appointment_time) { where('NOT ((trips.pickup_time < ? AND trips.appointment_time < ?) OR (trips.pickup_time > ? AND trips.appointment_time > ?))', pickup_time.utc, appointment_time.utc, pickup_time.utc, appointment_time.utc) }
@@ -116,11 +115,11 @@ class Trip < ActiveRecord::Base
   end
   
   def pickup_time=(datetime)
-    write_attribute :pickup_time, format_datetime( datetime ) 
+    write_attribute :pickup_time, format_datetime(datetime)
   end
   
   def appointment_time=(datetime)
-    write_attribute :appointment_time, format_datetime( datetime )
+    write_attribute :appointment_time, format_datetime(datetime)
   end
 
   def run_text
@@ -214,9 +213,9 @@ class Trip < ActiveRecord::Base
   end
   
   def allow_addressless_trip?
-    # The provider_id is assigned via the customer. If the customer isn't present,
-    # then the whole trip is invalid. So in that case, ignore the address errors
-    # until there is a customer.
+    # The provider_id is assigned via the customer. If the customer isn't 
+    # present, then the whole trip is invalid. So in that case, ignore the 
+    # address errors until there is a customer.
     (customer.blank? || customer.id.blank? || (provider.present? && provider.allow_trip_entry_from_runs_page)) && run.present?
   end
 
@@ -233,6 +232,7 @@ class Trip < ActiveRecord::Base
       resource: pickup_time.to_date.to_s(:js)
     }
   end
+  
   def as_run_event_json
     {
       id: id,
@@ -300,17 +300,17 @@ class Trip < ActiveRecord::Base
     attrs['vehicle_id'] = repetition_vehicle_id
     attrs['customer_informed'] = repetition_customer_informed
     attrs['schedule_attributes'] = {
-      :repeat        => 1,
-      :interval_unit => "week", 
-      :start_date    => pickup_time.to_date.to_s,
-      :interval      => repetition_interval, 
-      :monday        => repeats_mondays    ? 1 : 0,
-      :tuesday       => repeats_tuesdays   ? 1 : 0,
-      :wednesday     => repeats_wednesdays ? 1 : 0,
-      :thursday      => repeats_thursdays  ? 1 : 0,
-      :friday        => repeats_fridays    ? 1 : 0,
-      :saturday      => repeats_saturdays  ? 1 : 0,
-      :sunday        => repeats_sundays    ? 1 : 0
+      repeat:        1,
+      interval_unit: "week", 
+      start_date:    pickup_time.to_date.to_s,
+      interval:      repetition_interval, 
+      monday:        repeats_mondays    ? 1 : 0,
+      tuesday:       repeats_tuesdays   ? 1 : 0,
+      wednesday:     repeats_wednesdays ? 1 : 0,
+      thursday:      repeats_thursdays  ? 1 : 0,
+      friday:        repeats_fridays    ? 1 : 0,
+      saturday:      repeats_saturdays  ? 1 : 0,
+      sunday:        repeats_sundays    ? 1 : 0
     }
     attrs
   end
@@ -363,7 +363,7 @@ class Trip < ActiveRecord::Base
             self.run = make_run
           else
             self.run = previous_run
-            previous_run.update_attributes! :scheduled_end_time => run.appointment_time
+            previous_run.update_attributes! scheduled_end_time: run.appointment_time
           end
         end
       else
@@ -373,7 +373,7 @@ class Trip < ActiveRecord::Base
             self.run = make_run
           else
             self.run = next_run
-            next_run.update_attributes! :scheduled_start_time => run.pickup_time
+            next_run.update_attributes! scheduled_start_time: run.pickup_time
           end
         else
           #no overlap, create a new run
@@ -395,8 +395,8 @@ class Trip < ActiveRecord::Base
     first_trip = next_run.trips.first
     if first_trip.scheduled_start_time > appointment_time
       #yes, we can
-      next_run.update_attributes! :scheduled_start_time => appointment_time
-      previous_run.update_attributes! :scheduled_end_time => appointment_time
+      next_run.update_attributes! scheduled_start_time: appointment_time
+      previous_run.update_attributes! scheduled_end_time: appointment_time
       self.run = previous_run
     else
       #no, the second run is fixed. Can we push the end of the
@@ -404,8 +404,8 @@ class Trip < ActiveRecord::Base
       last_trip = previous_run.trips.last
       if last_trip.scheduled_end_time <= pickup_time
         #yes, we can
-        previous_run.update_attributes! :scheduled_end_time => pickup_time
-        next_run.update_attributes! :scheduled_start_time => appointment_time
+        previous_run.update_attributes! scheduled_end_time: pickup_time
+        next_run.update_attributes! scheduled_start_time: appointment_time
         self.run = next_run
       else
         return false
@@ -414,7 +414,7 @@ class Trip < ActiveRecord::Base
   end
 
   def unify_runs(before, after)
-    before.update_attributes! :scheduled_end_time => after.scheduled_end_time, :end_odometer => after.end_odometer
+    before.update_attributes! scheduled_end_time: after.scheduled_end_time, end_odometer: after.end_odometer
     for trip in after.trips
       trip.run = before
     end
@@ -424,23 +424,38 @@ class Trip < ActiveRecord::Base
 
   def make_run
     Run.create({
-      :provider_id          => provider_id,
-      :date                 => pickup_time.to_date,
-      :scheduled_start_time => Time.zone.local(pickup_time.year,
-                                               pickup_time.month,
-                                               pickup_time.day,
-                                               BUSINESS_HOURS[:start],
-                                               0, 0),
-      :scheduled_end_time   => Time.zone.local(pickup_time.year,
-                                               pickup_time.month,
-                                               pickup_time.day,
-                                               BUSINESS_HOURS[:end],
-                                               0, 0),
-      :vehicle_id           => vehicle_id,
-      :driver_id            => driver_id,
-      :complete             => false,
-      :paid                 => true
+      provider_id:          provider_id,
+      date:                 pickup_time.to_date,
+      scheduled_start_time: Time.zone.local(
+        pickup_time.year,
+        pickup_time.month,
+        pickup_time.day,
+        BUSINESS_HOURS[:start],
+        0, 0
+      ),
+      scheduled_end_time:   Time.zone.local(
+        pickup_time.year,
+        pickup_time.month,
+        pickup_time.day,
+        BUSINESS_HOURS[:end],
+        0, 0
+      ),
+      vehicle_id:           vehicle_id,
+      driver_id:            driver_id,
+      complete:             false,
+      paid:                 true
     })
   end
 
+  def format_datetime(datetime)
+    if datetime.is_a?(String)
+      begin
+        Time.zone.parse(datetime.gsub(/\b(a|p)\b/i, '\1m').upcase)
+      rescue 
+        nil
+      end
+    else
+      datetime
+    end
+  end
 end
