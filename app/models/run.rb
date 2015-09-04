@@ -1,5 +1,42 @@
 class Run < ActiveRecord::Base
   include RequiredFieldValidatorModule
+  include RecurringRideCoordinator
+  schedules_occurrences_with :repeating_run, 
+    with_attributes: -> (run) {
+      attrs = {}
+      RepeatingRun.ride_coordinator_attributes.each {|attr| attrs[attr] = run.send(attr) }
+      attrs['driver_id'] = run.repetition_driver_id
+      attrs['vehicle_id'] = run.repetition_vehicle_id
+      attrs['schedule_attributes'] = {
+        repeat:        1,
+        interval_unit: "week",
+        start_date:    run.date.to_s,
+        interval:      run.repetition_interval, 
+        monday:        run.repeats_mondays    ? 1 : 0,
+        tuesday:       run.repeats_tuesdays   ? 1 : 0,
+        wednesday:     run.repeats_wednesdays ? 1 : 0,
+        thursday:      run.repeats_thursdays  ? 1 : 0,
+        friday:        run.repeats_fridays    ? 1 : 0,
+        saturday:      run.repeats_saturdays  ? 1 : 0,
+        sunday:        run.repeats_sundays    ? 1 : 0
+      }
+      attrs
+    },
+    destroy_future_occurrences_with: -> (run) {
+      # Be sure not delete occurrences that have already been completed.
+      if run.date < Date.today
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after_today.incomplete.destroy_all
+      else 
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after(run.date).incomplete.destroy_all
+      end
+    },
+    unlink_past_occurrences_with: -> (run) {
+      if run.date < Date.today
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).today_and_prior.update_all "repeating_run_id = NULL"
+      else 
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).prior_to(run.date).update_all "repeating_run_id = NULL"
+      end
+    }
   
   has_paper_trail
   
@@ -51,14 +88,20 @@ class Run < ActiveRecord::Base
   # TODO discuss when to enable this:
   # validate                  :driver_availability
   
-  scope :for_provider,           -> (provider_id) { where( :provider_id => provider_id ) }
-  scope :for_vehicle,            -> (vehicle_id) { where(:vehicle_id => vehicle_id )}
-  scope :for_paid_driver,        -> { where(:paid => true) }
-  scope :for_volunteer_driver,   -> { where(:paid => false) }
-  scope :incomplete_on,          -> (date) { where(:complete => false, :date => date) }
+  scope :after,                  -> (date) { where('runs.date > ?', date) }
+  scope :after_today,            -> { where('runs.date = ?', Date.today) }
+  scope :for_date,               -> (date) { where('runs.date = ?', date) }
   scope :for_date_range,         -> (start_date, end_date) { where("runs.date >= ? and runs.date < ?", start_date, end_date) }
-  scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
+  scope :for_paid_driver,        -> { where(paid: true) }
+  scope :for_provider,           -> (provider_id) { where(provider_id: provider_id) }
+  scope :for_vehicle,            -> (vehicle_id) { where(vehicle_id: vehicle_id) }
+  scope :for_volunteer_driver,   -> { where(paid: false) }
   scope :has_scheduled_time,     -> { where.not(scheduled_start_time: nil).where.not(scheduled_end_time: nil) }
+  scope :incomplete,             -> { where(complete: false) }
+  scope :incomplete_on,          -> (date) { incomplete.for_date(date) }
+  scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
+  scope :prior_to,               -> (date) { where('runs.date < ?', date) }
+  scope :today_and_prior,        -> { where('runs.date <= ?', Date.today) }
 
   CAB_RUN_ID = -1 # id for cab runs 
   UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)
@@ -103,7 +146,7 @@ class Run < ActiveRecord::Base
 
   private
 
-  # A trip is considered complete if:
+  # A run is considered complete if:
   #  actual_end_time is valued (which requires that actual_start_time is also valued)
   #  actual_end_time is before "now"
   #  None of its trips are still considered pending
@@ -113,7 +156,7 @@ class Run < ActiveRecord::Base
     true
   end
 
-  def fix_dates 
+  def fix_dates
     d = self.date
     unless d.nil?
       unless scheduled_start_time.nil?

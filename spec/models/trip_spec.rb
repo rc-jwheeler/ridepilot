@@ -1,6 +1,105 @@
 require "rails_helper"
 
 RSpec.describe Trip do
+  it_behaves_like "a recurring ride coordinator" do
+    before do
+      # These options reflect the concern setup method:
+      # schedules_occurrences_with :repeating_trip
+      @occurrence_scheduler_association = :repeating_trip
+      
+      # To help us know what attribute to check occurrence dates against
+      @occurrence_date_attribute = :pickup_time
+    end
+  end
+  
+  it "requires pickup_time to be a valid date" do
+    trip = build :trip, pickup_time: "13/13/13", appointment_time: "12/12/12"
+    expect(trip.valid?).to be_falsey
+    expect(trip.errors.keys).to include :pickup_time
+  
+    trip.pickup_time = "12/12/12"
+    expect(trip.valid?).to be_truthy
+  end
+  
+  it "requires appointment_time to be a valid date" do
+    trip = build :trip, appointment_time: "13/13/13"
+    expect(trip.valid?).to be_falsey
+    expect(trip.errors.keys).to include :appointment_time
+  
+    trip.appointment_time = "12/12/12"
+    expect(trip.valid?).to be_truthy
+  end
+
+  it "if pickup_time is assigned a string that ends in 'a', it automatically appends an 'm' before parsing" do
+    trip = build :trip
+    time = "1976-05-09 01:00:00 a"
+    trip.pickup_time = time
+    expect(trip.pickup_time).not_to eq Time.zone.parse(time)
+    expect(trip.pickup_time).to eq Time.zone.parse("#{time}m")
+  end
+
+  it "if appointment_time is assigned a string that ends in 'a', it automatically appends an 'm' before parsing" do
+    trip = build :trip
+    time = "1976-05-09 01:00:00 a"
+    trip.appointment_time = time
+    expect(trip.appointment_time).not_to eq Time.zone.parse(time)
+    expect(trip.appointment_time).to eq Time.zone.parse("#{time}m")
+  end
+
+  describe "#repetition_customer_informed=" do
+    before do
+      @trip = build :trip
+    end
+
+    it "sets the @repetition_customer_informed instance variable" do
+      expect(@trip.instance_variable_get("@repetition_customer_informed")).to be_nil
+      @trip.repetition_customer_informed = true
+      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq true
+    end
+
+    it "converts '1' and truthy values to true" do
+      @trip.repetition_customer_informed = "1"
+      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq true
+
+      @trip.repetition_customer_informed = true
+      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq true
+    end
+  
+    it "converts other values to false" do
+      @trip.repetition_customer_informed = "0"
+      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq false
+
+      @trip.repetition_customer_informed = "false"
+      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq false
+
+      @trip.repetition_customer_informed = false
+      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq false
+    end
+  end
+
+  describe "#repetition_customer_informed" do
+    before do
+      @trip = build :trip
+    end
+
+    it "returns the @repetition_customer_informed instance variable if it's present" do
+      @trip.instance_variable_set "@repetition_customer_informed", true
+      expect(@trip.repetition_customer_informed).to eq true
+    end
+  
+    it "returns the scheduler's customer_informed if @repetition_customer_informed is nil and the scheduler is present" do
+      @trip.repeating_trip = create :repeating_trip, customer_informed: true
+      expect(@trip.repetition_customer_informed).to eq true
+    end
+
+    # TODO make repeating_trip including-class agnostic
+    it "sets the @repetition_customer_informed instance variable if it is nil and the repeating_trip is present" do
+      @trip.repeating_trip = create :repeating_trip, customer_informed: true
+      expect(@trip.repetition_customer_informed).to eq true
+      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq true
+    end
+  end
+
   describe "mileage" do
     it "should be an integer" do
       t = Trip.new
@@ -61,160 +160,6 @@ RSpec.describe Trip do
     end
   end
 
-  describe "after validation for trips with repetition:" do
-    attr_accessor :trip
-    
-    before do
-      @trip = build(:trip,
-        :repeats_mondays => true, 
-        :repeats_tuesdays => false,
-        :repeats_wednesdays => false,
-        :repeats_thursdays => false,
-        :repeats_fridays => false,
-        :repeats_saturdays => false,
-        :repeats_sundays => false,
-        :repetition_vehicle_id => -1,
-        :repetition_driver_id => 1,
-        :repetition_interval => 1)
-      expect(RepeatingTrip.count).to eq(0)
-    end
-
-    context "when creating a trip with repeating trip data" do
-      it "should accept repeating trip values" do
-        expect(trip.repeats_mondays).to eq(true)
-        expect(trip.repeats_tuesdays).to eq(false)
-        expect(trip.repeats_wednesdays).to eq(false)
-        expect(trip.repeats_thursdays).to eq(false)
-        expect(trip.repeats_fridays).to eq(false)
-        expect(trip.repeats_saturdays).to eq(false)
-        expect(trip.repeats_sundays).to eq(false)
-        expect(trip.repetition_vehicle_id).to eq(-1)
-        expect(trip.repetition_driver_id).to eq(1)
-        expect(trip.repetition_interval).to eq(1)
-      end
-
-      it "should create a repeating trip when saved" do
-        expect {
-          trip.save
-          expect(trip.repeating_trip).not_to be_nil
-        }.to change(RepeatingTrip, :count).by(1)
-        expect(trip.repeating_trip_id).not_to be_nil
-      end
-
-      it "should instantiate trips for three weeks out" do
-        skip('failed: Need to double check with Chris')
-        trip.save
-        r_id = trip.repeating_trip_id
-        # The trip we just created, which is next week, plus 2 more
-        expect(Trip.where(:repeating_trip_id => r_id).count).to eq(3)
-      end
-    end
-
-    context "when updating a future trip with repeating trip data," do
-      before do
-        trip.save
-        trip.repeats_mondays = false
-        trip.repeats_tuesdays = true
-        trip.repetition_vehicle_id = 2
-        trip.repetition_driver_id = 2
-        trip.save
-        trip.reload
-      end
-
-      it "should have the correct repeating trip attributes" do
-        expect(trip.repeating_trip.schedule_attributes.monday).to be_nil
-        expect(trip.repeating_trip.schedule_attributes.tuesday).to eq(1)
-      end
-
-      # TODO This test is failing on master. Uncomment after upgrade. Fix if
-      # time allows.
-      it "should have new child trips on the correct day" do
-        pending('failed during rideconnection rails upgrade')
-        count = 0
-        Trip.where(:repeating_trip_id => trip.repeating_trip_id).where("id <> ?",trip.id).each do |t|
-          count += 1 if t.pickup_time.strftime("%u") == "2"
-        end
-        count.should == 1
-      end
-
-      it "should have no child trips on the old day" do
-        count = 0
-        Trip.where(:repeating_trip_id => trip.repeating_trip_id).where("id <> ?",trip.id).each do |t|
-          count += 1 if t.pickup_time.strftime("%u") == "1"
-        end
-        expect(count).to eq(0)
-      end
-
-      it "should tell me the correct repeating trip data when reloading the trip" do
-        trip.reload
-        expect(trip.repeats_mondays).to eq(false)
-        expect(trip.repeats_tuesdays).to eq(true)
-        expect(trip.repetition_vehicle_id).to eq(2)
-        expect(trip.repetition_driver_id).to eq(2)
-      end
-    end
-   
-    context "when updating a past trip with repeating trip data," do
-      before do
-        trip.pickup_time = Time.now - 1.week
-        trip.appointment_time = trip.pickup_time + 30.minutes
-        trip.save
-        trip.repeats_mondays = false
-        trip.repeats_tuesdays = true
-        trip.repetition_vehicle_id = 2
-        trip.repetition_driver_id = 2
-        trip.save
-        trip.reload
-      end
-
-      it "should have the correct repeating trip attributes" do
-        expect(trip.repeating_trip.schedule_attributes.monday).to be_nil
-        expect(trip.repeating_trip.schedule_attributes.tuesday).to eq(1)
-      end
-
-      # TODO This test is failing on master. Uncomment after upgrade. Fix if
-      # time allows.
-      it "should have new child trips on the correct day" do
-        pending('failed during rideconnection rails upgrade')
-        count = 0
-        Trip.where(:repeating_trip_id => trip.repeating_trip_id).where("id <> ?",trip.id).each do |t|
-          count += 1 if t.pickup_time.strftime("%u") == "2"
-        end
-        count.should == 2
-      end
-
-      it "should have no child trips on the old day" do
-        count = 0
-        Trip.where(:repeating_trip_id => trip.repeating_trip_id).where("id <> ?",trip.id).each do |t|
-          count += 1 if t.pickup_time.strftime("%u") == "1"
-        end
-        expect(count).to eq(0)
-      end
-
-      it "should tell me the correct repeating trip data when reloading the trip" do
-        trip.reload
-        expect(trip.repeats_mondays).to eq(false)
-        expect(trip.repeats_tuesdays).to eq(true)
-        expect(trip.repetition_vehicle_id).to eq(2)
-        expect(trip.repetition_driver_id).to eq(2)
-      end
-    end
-
-    context "when I clear out the repetition data" do
-      before do
-        trip.save
-        trip.repeats_mondays = false
-        @repeating_trip_id = trip.repeating_trip_id
-        trip.save
-      end
-
-      it "should remove all future trips after the trip and delete the repeating trip record" do 
-        expect(Trip.where(:repeating_trip_id => @repeating_trip_id).count).to eq(0)
-        expect(RepeatingTrip.find_by_id(@repeating_trip_id)).to be_nil
-      end
-    end
-  end
-  
   describe "vehicle open seating capacity validation" do
     before do
       @start_time = Time.zone.parse("14:30")
@@ -357,6 +302,62 @@ RSpec.describe Trip do
       expect(Trip.by_trip_purpose("Foo")).not_to include @trip_2
       expect(Trip.by_trip_purpose("Bar")).to include @trip_2
       expect(Trip.by_trip_purpose("Bar")).not_to include @trip_1
+    end
+  end
+
+  # TODO complete these backfilled examples
+  describe "incomplete examples" do
+    describe "#date" do
+      it "returns a date based on pickup_time"
+    end
+
+    describe "#complete" do
+      it "checks whether the trip_result code is 'COMP'"
+    end
+  
+    describe "#pending" do
+      it "checks whether the trip_result is blank"
+    end
+  
+    describe "#vehicle_id" do
+      it "returns the run vehicle_id if a run is present, or the @vehicle_id instance variable"
+    end
+  
+    describe "#driver_id" do
+      it "returns the @driver_id instance variable if present, or the run driver_id if the run is present, or nil"
+    end
+  
+    describe "#run_text" do
+      it "returns 'Cab' if it's a cab trip"
+      it "returns the run label if it's not a cab trip and a run is present"
+      it "returns '(No run specified)' if it's not a cab and no run is present"
+    end
+  
+    describe "#trip_count" do
+      it "returns #trip_size if it's not round_trip"
+      it "returns #trip_size * 2 if it's round_trip"
+    end
+  
+    describe "#is_in_district?" do
+      it "checks whether the pickup_address and the dropoff_address are both considered in_district?"
+    end
+
+    describe "#allow_addressless_trip?" do
+      it "checks whether the pickup_address and the dropoff_address are both considered in_district?"
+    end
+
+    describe "#adjusted_run_id" do
+      it "returns Run::CAB_RUN_ID if it's a cab trip"
+      it "returns the run_id if it's not a cab trip and a run is present"
+      it "returns Run::UNSCHEDULED_RUN_ID if it's not a cab trip and a run is not present"
+    end
+  
+    describe "#as_calendar_json" do
+      it "returns a hash"
+    end
+
+    describe "#as_run_event_json" do
+      it "returns a hash"
     end
   end
 end

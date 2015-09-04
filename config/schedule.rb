@@ -4,7 +4,10 @@
 
 every 1.day, :at => '12:00 am' do
   # Schedule repeating trips
-  runner "RepeatingTrip.create_trips"
+  runner "RepeatingTrip.generate!"
+
+  # Schedule repeating runs
+  runner "RepeatingRun.generate!"
 
   # Schedule recurring driver compliance events 5 years out
   runner "RecurringDriverCompliance.generate! date_range_length: 5.years"

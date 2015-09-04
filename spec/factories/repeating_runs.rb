@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :run do
+  factory :repeating_run do
     date { Date.today }
     vehicle
     driver
