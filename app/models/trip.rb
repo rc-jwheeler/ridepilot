@@ -1,7 +1,43 @@
 class Trip < ActiveRecord::Base
   include RequiredFieldValidatorModule
   include RecurringRideCoordinator
-  schedules_occurrences_with :repeating_trip
+  schedules_occurrences_with :repeating_trip,
+    with_attributes: -> (trip) {
+      attrs = {}
+      RepeatingTrip.ride_coordinator_attributes.each {|attr| attrs[attr] = trip.send(attr) }
+      attrs['driver_id'] = trip.repetition_driver_id
+      attrs['vehicle_id'] = trip.repetition_vehicle_id
+      attrs['customer_informed'] = trip.repetition_customer_informed
+      attrs['schedule_attributes'] = {
+        repeat:        1,
+        interval_unit: "week", 
+        start_date:    trip.pickup_time.to_date.to_s,
+        interval:      trip.repetition_interval, 
+        monday:        trip.repeats_mondays    ? 1 : 0,
+        tuesday:       trip.repeats_tuesdays   ? 1 : 0,
+        wednesday:     trip.repeats_wednesdays ? 1 : 0,
+        thursday:      trip.repeats_thursdays  ? 1 : 0,
+        friday:        trip.repeats_fridays    ? 1 : 0,
+        saturday:      trip.repeats_saturdays  ? 1 : 0,
+        sunday:        trip.repeats_sundays    ? 1 : 0
+      }
+      attrs
+    },
+    destroy_future_occurrences_with: -> (trip) {
+      # Be sure not delete occurrences that have already happened.
+      if trip.pickup_time < Time.zone.now
+        Trip.repeating_based_on(trip.repeating_trip).after_today.not_called_back.destroy_all
+      else 
+        Trip.repeating_based_on(trip.repeating_trip).after(trip.pickup_time).not_called_back.destroy_all
+      end
+    },
+    unlink_past_occurrences_with: -> (trip) {
+      if trip.pickup_time < Time.zone.now
+        Trip.repeating_based_on(trip.repeating_trip).today_and_prior.update_all "repeating_trip_id = NULL"
+      else 
+        Trip.repeating_based_on(trip.repeating_trip).prior_to(trip.pickup_time).update_all "repeating_trip_id = NULL"
+      end
+    }
 
   has_paper_trail
   

@@ -1,5 +1,42 @@
 class Run < ActiveRecord::Base
   include RequiredFieldValidatorModule
+  include RecurringRideCoordinator
+  schedules_occurrences_with :repeating_run, 
+    with_attributes: -> (run) {
+      attrs = {}
+      RepeatingRun.ride_coordinator_attributes.each {|attr| attrs[attr] = run.send(attr) }
+      attrs['driver_id'] = run.repetition_driver_id
+      attrs['vehicle_id'] = run.repetition_vehicle_id
+      attrs['schedule_attributes'] = {
+        repeat:        1,
+        interval_unit: "week",
+        start_date:    run.date.to_s,
+        interval:      run.repetition_interval, 
+        monday:        run.repeats_mondays    ? 1 : 0,
+        tuesday:       run.repeats_tuesdays   ? 1 : 0,
+        wednesday:     run.repeats_wednesdays ? 1 : 0,
+        thursday:      run.repeats_thursdays  ? 1 : 0,
+        friday:        run.repeats_fridays    ? 1 : 0,
+        saturday:      run.repeats_saturdays  ? 1 : 0,
+        sunday:        run.repeats_sundays    ? 1 : 0
+      }
+      attrs
+    },
+    destroy_future_occurrences_with: -> (run) {
+      # Be sure not delete occurrences that have already been completed.
+      if run.date < Date.today
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after_today.incomplete.destroy_all
+      else 
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after(run.date).incomplete.destroy_all
+      end
+    },
+    unlink_past_occurrences_with: -> (run) {
+      if run.date < Date.today
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).today_and_prior.update_all "repeating_run_id = NULL"
+      else 
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).prior_to(run.date).update_all "repeating_run_id = NULL"
+      end
+    }
   
   has_paper_trail
   

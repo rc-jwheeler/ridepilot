@@ -35,13 +35,35 @@ module RecurringRideCoordinator
     attr_reader :occurrence_scheduler_association
     attr_reader :occurrence_scheduler_association_id
     attr_reader :occurrence_scheduler_class
+    attr_reader :occurrence_attribute_block
+    attr_reader :occurrence_destroy_future_recurring_ride_coordinators_block
+    attr_reader :occurrence_unlink_past_recurring_ride_coordinators_block
 
     private
 
-    # Setup method for including class
-    def schedules_occurrences_with(association, class_name: nil)
+    # Setup method for including class. Accepts 1 unnamed argument and 3 - 4
+    # named arguments:
+    #   Unnamed:
+    #     association: A symbol representing the association for the scheduler
+    #   Named:
+    #     with_attributes: A proc that accepts one argument, the coordinator 
+    #       itself (i.e. a trip or run), to be called by 
+    #       #recurring_ride_coordinator_attributes
+    #     destroy_future_occurrences_with: A proc that accepts one argument, 
+    #       the coordinator itself (i.e. a trip or run), to be called by
+    #       #destroy_future_recurring_ride_coordinators
+    #     unlink_past_occurrences_with: A proc that accepts one argument, the 
+    #       coordinator itself (i.e. a trip or run), to be called by 
+    #       #unlink_past_recurring_ride_coordinators
+    #     class_name: (optional) A string representing the class name of the 
+    #       associated scheduler if it can't be inferred from the association 
+    #       argument
+    def schedules_occurrences_with(association, with_attributes:, destroy_future_occurrences_with:, unlink_past_occurrences_with:, class_name: nil)
       @occurrence_scheduler_association = association
       @occurrence_scheduler_association_id = "#{association}_id"
+      @occurrence_attribute_block = with_attributes
+      @occurrence_destroy_future_recurring_ride_coordinators_block = destroy_future_occurrences_with
+      @occurrence_unlink_past_recurring_ride_coordinators_block = unlink_past_occurrences_with
       @occurrence_scheduler_class = if class_name.present?
         if class_name.is_a? Class
           class_name
@@ -146,41 +168,14 @@ module RecurringRideCoordinator
   end
 
   def destroy_future_recurring_ride_coordinators
-    # Be sure not delete occurrences that have already happened.
-    if pickup_time < Time.now 
-      self.class.repeating_based_on(send(self.class.occurrence_scheduler_association)).after_today.not_called_back.destroy_all
-    else 
-      self.class.repeating_based_on(send(self.class.occurrence_scheduler_association)).after(pickup_time).not_called_back.destroy_all
-    end
+    self.class.occurrence_destroy_future_recurring_ride_coordinators_block.call self
   end
 
   def unlink_past_recurring_ride_coordinators
-    if pickup_time < Time.now 
-      self.class.repeating_based_on(send(self.class.occurrence_scheduler_association)).today_and_prior.update_all "#{self.class.occurrence_scheduler_association_id} = NULL"
-    else 
-      self.class.repeating_based_on(send(self.class.occurrence_scheduler_association)).prior_to(pickup_time).update_all "#{self.class.occurrence_scheduler_association_id} = NULL"
-    end
+    self.class.occurrence_unlink_past_recurring_ride_coordinators_block.call self
   end
 
   def recurring_ride_coordinator_attributes
-    attrs = {}
-    self.class.occurrence_scheduler_class.ride_coordinator_attributes.each {|attr| attrs[attr] = self.send(attr) }
-    attrs['driver_id'] = repetition_driver_id
-    attrs['vehicle_id'] = repetition_vehicle_id
-    attrs['customer_informed'] = repetition_customer_informed
-    attrs['schedule_attributes'] = {
-      repeat:        1,
-      interval_unit: "week", 
-      start_date:    pickup_time.to_date.to_s,
-      interval:      repetition_interval, 
-      monday:        repeats_mondays    ? 1 : 0,
-      tuesday:       repeats_tuesdays   ? 1 : 0,
-      wednesday:     repeats_wednesdays ? 1 : 0,
-      thursday:      repeats_thursdays  ? 1 : 0,
-      friday:        repeats_fridays    ? 1 : 0,
-      saturday:      repeats_saturdays  ? 1 : 0,
-      sunday:        repeats_sundays    ? 1 : 0
-    }
-    attrs
+    self.class.occurrence_attribute_block.call self
   end  
 end
