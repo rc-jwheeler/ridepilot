@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150901150415) do
+ActiveRecord::Schema.define(version: 20150902182615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +62,11 @@ ActiveRecord::Schema.define(version: 20150901150415) do
 
   add_index "addresses_customers", ["address_id"], :name => "index_addresses_customers_on_address_id"
   add_index "addresses_customers", ["customer_id"], :name => "index_addresses_customers_on_customer_id"
+
+  create_table "boolean_lookup", force: true do |t|
+    t.string "name", limit: 16
+    t.string "note", limit: 16
+  end
 
   create_table "custom_reports", force: true do |t|
     t.string   "name"
@@ -383,6 +388,25 @@ ActiveRecord::Schema.define(version: 20150901150415) do
 
   add_index "regions", ["the_geom"], :name => "index_regions_on_the_geom", :spatial => true
 
+  create_table "repeating_runs", force: true do |t|
+    t.text     "schedule_yaml"
+    t.string   "name"
+    t.date     "date"
+    t.datetime "scheduled_start_time"
+    t.datetime "scheduled_end_time"
+    t.integer  "vehicle_id"
+    t.integer  "driver_id"
+    t.boolean  "paid"
+    t.integer  "provider_id"
+    t.integer  "lock_version",         default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "repeating_runs", ["driver_id"], :name => "index_repeating_runs_on_driver_id"
+  add_index "repeating_runs", ["provider_id"], :name => "index_repeating_runs_on_provider_id"
+  add_index "repeating_runs", ["vehicle_id"], :name => "index_repeating_runs_on_vehicle_id"
+
   create_table "repeating_trips", force: true do |t|
     t.text     "schedule_yaml"
     t.integer  "provider_id"
@@ -516,11 +540,13 @@ ActiveRecord::Schema.define(version: 20150901150415) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",             default: 0
+    t.integer  "repeating_run_id"
   end
 
   add_index "runs", ["driver_id"], :name => "index_runs_on_driver_id"
   add_index "runs", ["provider_id", "date"], :name => "index_runs_on_provider_id_and_date"
   add_index "runs", ["provider_id", "scheduled_start_time"], :name => "index_runs_on_provider_id_and_scheduled_start_time"
+  add_index "runs", ["repeating_run_id"], :name => "index_runs_on_repeating_run_id"
   add_index "runs", ["vehicle_id"], :name => "index_runs_on_vehicle_id"
 
   create_table "service_levels", force: true do |t|
@@ -656,6 +682,11 @@ ActiveRecord::Schema.define(version: 20150901150415) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["password_changed_at"], :name => "index_users_on_password_changed_at"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "vehicle_maintenance_compliance_due_types", force: true do |t|
+    t.string "name", limit: 16
+    t.string "note", limit: 16
+  end
 
   create_table "vehicle_maintenance_compliances", force: true do |t|
     t.integer  "vehicle_id"
