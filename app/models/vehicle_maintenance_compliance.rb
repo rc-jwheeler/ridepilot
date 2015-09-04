@@ -54,20 +54,16 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   
   def is_after_due_date?(as_of)
     if as_of.is_a? Range
-      logger.debug "Does #{as_of.first}..#{as_of.last} include #{due_date}?"
       as_of.include? due_date
     else
-      logger.debug "Is #{as_of} > #{due_date}?"
       as_of > due_date
     end
   end
   
   def is_over_due_mileage?(mileage)
     if mileage.is_a? Range
-      logger.debug "Does #{mileage.first}..#{mileage.last} include #{due_mileage}?"
       mileage.include? due_mileage
     else
-      logger.debug "Is #{mileage} > #{due_mileage}?"
       mileage > due_mileage
     end
   end

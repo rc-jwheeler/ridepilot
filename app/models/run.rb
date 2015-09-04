@@ -88,14 +88,20 @@ class Run < ActiveRecord::Base
   # TODO discuss when to enable this:
   # validate                  :driver_availability
   
-  scope :for_provider,           -> (provider_id) { where( :provider_id => provider_id ) }
-  scope :for_vehicle,            -> (vehicle_id) { where(:vehicle_id => vehicle_id )}
-  scope :for_paid_driver,        -> { where(:paid => true) }
-  scope :for_volunteer_driver,   -> { where(:paid => false) }
-  scope :incomplete_on,          -> (date) { where(:complete => false, :date => date) }
+  scope :after,                  -> (date) { where('runs.date > ?', date) }
+  scope :after_today,            -> { where('runs.date = ?', Date.today) }
+  scope :for_date,               -> (date) { where('runs.date = ?', date) }
   scope :for_date_range,         -> (start_date, end_date) { where("runs.date >= ? and runs.date < ?", start_date, end_date) }
-  scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
+  scope :for_paid_driver,        -> { where(paid: true) }
+  scope :for_provider,           -> (provider_id) { where(provider_id: provider_id) }
+  scope :for_vehicle,            -> (vehicle_id) { where(vehicle_id: vehicle_id) }
+  scope :for_volunteer_driver,   -> { where(paid: false) }
   scope :has_scheduled_time,     -> { where.not(scheduled_start_time: nil).where.not(scheduled_end_time: nil) }
+  scope :incomplete,             -> { where(complete: false) }
+  scope :incomplete_on,          -> (date) { incomplete.for_date(date) }
+  scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
+  scope :prior_to,               -> (date) { where('runs.date < ?', date) }
+  scope :today_and_prior,        -> { where('runs.date <= ?', Date.today) }
 
   CAB_RUN_ID = -1 # id for cab runs 
   UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)

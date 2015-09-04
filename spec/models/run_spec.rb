@@ -1,6 +1,17 @@
 require "rails_helper"
 
 RSpec.describe Run, type: :model do
+  it_behaves_like "a recurring ride coordinator" do
+    before do
+      # These options reflect the concern setup method:
+      # schedules_occurrences_with :repeating_run
+      @occurrence_scheduler_association = :repeating_run
+      
+      # To help us know what attribute to check occurrence dates against
+      @occurrence_date_attribute = :date
+    end
+  end
+
   describe "set_complete" do
     it "is called before validation" do
       run = build :run

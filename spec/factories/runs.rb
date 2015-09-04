@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :run do
-    date { Time.zone.now }
+    date { Date.today }
     vehicle
     driver
     provider

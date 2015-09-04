@@ -24,7 +24,7 @@ class UsersController < ApplicationController
           @user.password = User.generate_password
           raw, enc = Devise.token_generator.generate(User, :reset_password_token)
           @user.reset_password_token = enc
-          @user.reset_password_sent_at = Time.now.utc
+          @user.reset_password_sent_at = Time.zone.now.utc
           @user.current_provider = current_provider
           @user.save!
           new_user = true

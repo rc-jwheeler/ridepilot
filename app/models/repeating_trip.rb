@@ -17,17 +17,21 @@ class RepeatingTrip < ActiveRecord::Base
   
   def instantiate!
     now = Date.today + 1.day
-    later = now.advance(:days=>20) 
-    for date in schedule.occurrences_between(now, later)
-      this_trip_pickup_time = Time.zone.local(date.year, date.month, date.day, pickup_time.hour, pickup_time.min, pickup_time.sec)
+    later = now.advance(days: 20)
+    RepeatingTrip.transaction do
+      for date in schedule.occurrences_between(now, later)
+        this_trip_pickup_time = Time.zone.local(date.year, date.month, date.day, pickup_time.hour, pickup_time.min, pickup_time.sec)
       
-      unless Trip.repeating_based_on(self).for_date(date).exists?
-        attributes = self.attributes.select{ |k, v| RepeatingTrip.ride_coordinator_attributes.include? k.to_s }
-        attributes["repeating_trip_id"] = id
-        attributes["pickup_time"] = this_trip_pickup_time
-        attributes["appointment_time"] = this_trip_pickup_time + (appointment_time - pickup_time)
-        attributes["via_recurring_ride_coordinator_scheduler"] = true
-        Trip.new(attributes).save!
+        unless Trip.repeating_based_on(self).for_date(date).exists?
+          attributes = self.attributes.select{ |k, v| RepeatingTrip.ride_coordinator_attributes.include? k.to_s }
+          attributes["repeating_trip_id"] = id
+          attributes["pickup_time"] = this_trip_pickup_time
+          attributes["appointment_time"] = this_trip_pickup_time + (appointment_time - pickup_time)
+          attributes["via_recurring_ride_coordinator_scheduler"] = true
+          trip = Trip.new attributes
+          # debugger unless trip.valid?
+          trip.save!
+        end
       end
     end
   end
