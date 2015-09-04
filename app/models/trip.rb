@@ -121,6 +121,18 @@ class Trip < ActiveRecord::Base
     round_trip ? trip_size * 2 : trip_size
   end
 
+  def repetition_customer_informed=(value)
+    @repetition_customer_informed = (value == "1" || value == true)
+  end
+
+  def repetition_customer_informed
+    if @repetition_customer_informed.nil?
+      @repetition_customer_informed = repeating_trip.try :customer_informed
+    else
+      @repetition_customer_informed
+    end
+  end
+
   def is_in_district?
     pickup_address.try(:in_district) && dropoff_address.try(:in_district)
   end

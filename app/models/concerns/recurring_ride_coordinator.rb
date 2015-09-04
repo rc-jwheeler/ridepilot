@@ -82,18 +82,6 @@ module RecurringRideCoordinator
     end
   end
 
-  def repetition_customer_informed=(value)
-    @repetition_customer_informed = (value == "1" || value == true)
-  end
-
-  def repetition_customer_informed
-    if @repetition_customer_informed.nil?
-      @repetition_customer_informed = send(self.class.occurrence_scheduler_association).try :customer_informed
-    else
-      @repetition_customer_informed
-    end
-  end
-
   def repetition_interval=(value)
     @repetition_interval = value.to_i
   end

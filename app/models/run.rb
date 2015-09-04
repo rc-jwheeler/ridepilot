@@ -103,7 +103,7 @@ class Run < ActiveRecord::Base
 
   private
 
-  # A trip is considered complete if:
+  # A run is considered complete if:
   #  actual_end_time is valued (which requires that actual_start_time is also valued)
   #  actual_end_time is before "now"
   #  None of its trips are still considered pending
@@ -113,7 +113,7 @@ class Run < ActiveRecord::Base
     true
   end
 
-  def fix_dates 
+  def fix_dates
     d = self.date
     unless d.nil?
       unless scheduled_start_time.nil?
