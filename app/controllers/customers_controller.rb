@@ -55,6 +55,8 @@ class CustomersController < ApplicationController
       @read_only_customer = true if @customer.provider_id != current_provider.id
     end
 
+    prep_edit
+
     @trips    = @customer.trips.reorder('pickup_time desc').paginate :page => params[:page], :per_page => PER_PAGE
 
     respond_to do |format|

@@ -60,6 +60,13 @@ en:
     one: "Edit %{count} cab trip"
     other: "Edit %{count} cab trips"
   #customers
+  customer_details_panel: 'Details'
+  customer_addresses_panel: 'Addresses'
+  customer_providers_panel: 'Authorized Providers'
+  customer_eligibility_panel: 'Eligibility'
+  customer_donations_panel: 'Donations'
+  customer_others_panel: 'Others'
+  customer_inactivate_panel: 'Inactivate'
   name: "Name"
   phone: "Phone"
   alternate_phone: "Alternate Phone"
@@ -84,24 +91,27 @@ en:
     other: "%{count} errors prohibited this customer from being saved:"
   ignore_duplicates: "Ignore duplicates"
   group: "Group"
+  new_group: 'New Group'
   first_name: "First Name"
   middle_initial: "Middle Initial"
   last_name: "Last Name:"
   alternate_phone_number: "Alternate Phone"
   inactivation_reason: "Inactivation Reason"
   editing_customer: "Editing Customer: %{customer_name}"
-  customer_listing: "Customer Listing"
+  customer_listing: "Customers"
   new_customer: "New Customer"
   new_trip_for_customer: "New Trip for This Customer"
   duplicate: "Duplicate"
   merge: 'Merge'
   customer: "Customer"
+  customer_active: 'Active?'
   reassociate_customer_trips: "Associate this customer's trips with another customer."
   group_name: "Group Name"
   no_trips_yet: "No trips yet."
   cctc_RC_label: "RC"
   cctc_STF_label: "STF"
   cctc_new_riders_label: "# Riders New This Month"
+  delete_customer_confirm: "Are you sure to delete this customer?"
   # Lookup tables
   add_value: "Add Value"
   delete_value: "Delete Value"

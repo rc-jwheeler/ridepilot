@@ -1,0 +1,26 @@
+<h2>Trips</h2>
+
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th><%=translate_helper("pickup_time")%></th>
+    <th><%=translate_helper("result")%></th>
+  </tr>
+  <% if @trips.present? %>
+    <% for trip in @trips %>
+    <tr>
+      <%- if @read_only_customer %>
+        <td><%= link_to trip.pickup_time.strftime('%m-%d-%Y %I:%M%P'), trip_path(trip) %></td>
+      <%- else %>
+        <td><%= link_to trip.pickup_time.strftime('%m-%d-%Y %I:%M%P'), edit_trip_path(trip) %></td>
+      <% end %>
+      <td><%= trip.trip_result_name %></td>
+    </tr>
+    <% end %>
+  <% else %>
+    <tr>
+      <td><%= translate_helper("no_trips_yet") %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= will_paginate @trips %>

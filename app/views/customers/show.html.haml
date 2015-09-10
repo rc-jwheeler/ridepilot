@@ -1,0 +1,6 @@
+= render 'form', edit_mode: :show, is_group: @customer.group
+
+= render 'trips'
+
+:javascript
+  $(".customer_form :input").attr("disabled","disabled");
