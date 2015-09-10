@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150902182615) do
+ActiveRecord::Schema.define(version: 20150910191026) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -209,8 +209,10 @@ ActiveRecord::Schema.define(version: 20150902182615) do
     t.integer  "lock_version", default: 0
     t.integer  "user_id"
     t.string   "email"
+    t.integer  "address_id"
   end
 
+  add_index "drivers", ["address_id"], :name => "index_drivers_on_address_id"
   add_index "drivers", ["provider_id"], :name => "index_drivers_on_provider_id"
   add_index "drivers", ["user_id"], :name => "index_drivers_on_user_id"
 

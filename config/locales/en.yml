@@ -203,6 +203,7 @@ en:
   operating_hours_24_hours: "24 Hours"
   operating_hours_open: "Open"
   driver_form_details_heading: "Details"
+  driver_address_heading: "Address"
 
   # Driver histories
   driver_histories_heading: "History Events"
