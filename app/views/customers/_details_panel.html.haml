@@ -10,7 +10,7 @@
         .col-sm-3
           = f.label :ignore_dups, translate_helper(:ignore_duplicates) 
         .col-sm-9
-          = f.check_box :ignore_dups
+          = check_box_tag :ignore_dups 
     .form-group.col-sm-12.firstname
       .col-sm-3
         = f.label :first_name, translate_helper(:first_name) 
