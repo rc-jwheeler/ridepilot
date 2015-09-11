@@ -11,7 +11,7 @@ script:
 - bundle exec /usr/bin/env RAILS_ENV=test rspec
 branches:
   only:
-  - develop
+  - iteration2
 deploy:
   provider: heroku
   api_key:
