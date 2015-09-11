@@ -1,9 +1,0 @@
-- edit_mode = :edit if !defined? edit_mode
-
-.panel.panel-primary#customer_addresses_panel
-  .panel-heading
-    %h3.panel-title
-      = translate_helper(:customer_addresses_panel)
-  .panel-body{style: 'padding: 5px;'}
-    = f.fields_for :address, @customer.address do |address_form|
-      = render 'addresses/bootstrap_form', :form=>address_form, :editing_address => false

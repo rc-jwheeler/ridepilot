@@ -39,16 +39,18 @@
   </div>
 
   <div class="col-sm-12 col-md-6">
-    <%= render 'addresses_panel', f: f %>
-    <%= render 'eligibility_panel', f: f  if !is_group %>
+    <%= render 'common_addresses_panel', edit_mode: edit_mode %>
+    <%#= render 'eligibility_panel', f: f  if !is_group %>
     <%= render 'providers_panel', f: f %>
-    <%= render 'donations_panel', f: f %>
-    <%= render 'others_panel', f: f %>
+    <%#= render 'donations_panel', f: f %>
+    <%#= render 'others_panel', f: f %>
   </div>
 
 <% end %>
 
 <%= render 'inactivate_dialog' if edit_mode == :edit %>
+<%= render 'add_address_dialog' if edit_mode == :edit || edit_mode == :new %>
+
 
 <script>
 // hide middle/last names for group customer

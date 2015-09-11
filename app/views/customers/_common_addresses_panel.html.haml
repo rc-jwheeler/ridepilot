@@ -1,0 +1,37 @@
+- edit_mode = :edit if !defined? edit_mode
+- is_editing = edit_mode == :edit || edit_mode == :new
+
+.panel.panel-primary#customer_common_addresses_panel
+  .panel-heading
+    %h3.panel-title
+      = translate_helper(:customer_addresses_panel)
+  .panel-body{style: 'padding: 5px;'}
+    %table.table
+      %thead
+        %tr
+          - if is_editing
+            %th
+          %th
+            = translate_helper(:address_nickname)
+          %th
+            = translate_helper(:address)
+          %th
+            = translate_helper(:is_mailing_address)
+      %tbody
+        - @customer.addresses.each do |address|
+          %tr
+            - if is_editing
+              %td
+            %td
+              = address.name
+            %td
+              = address.address_text
+            %td
+              = radio_button_tag(:mailing)
+    - if is_editing
+      .pull-right
+        %button.btn.action-button#addCustomerCommonAddress
+          = translate_helper(:add)
+
+
+    

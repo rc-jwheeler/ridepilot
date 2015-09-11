@@ -175,6 +175,7 @@ first_name, first_name, first_name, first_name,
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
       else
+        prep_edit
         format.html { render :action => "edit" }
         format.xml  { render :xml => @customer.errors, :status => :unprocessable_entity }
       end

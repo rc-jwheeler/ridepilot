@@ -1,0 +1,39 @@
+.address-form#customer-common-address-form
+  = render 'addresses/validate_form', :prefix=>'customer-common', address: Address.new
+
+:javascript 
+  $(document).ready(function() {
+    function makeDialogs() {
+      $( ".address-form" ).dialog({
+          autoOpen: false,
+          height: 395,
+          width: 600,
+          modal: true,
+          buttons: {
+              "Add Address": function() {
+                  form = $( this )[0].children[0];
+                  $(form).trigger('submit'); 
+              },
+              Cancel: function() {
+                $( this ).dialog( "close" );
+              }
+          },
+          close: function() {
+              var prefix = $(this).attr("id").replace(/\-address\-form/, "");
+              var field  = $( "#" + prefix + "_search_address" );
+              field.val( field.attr("data-original-value") );
+              $("#trip_" + prefix + "_address_id").val(field.attr("data-original-id"));
+              if (parseInt(field.attr("data-original-id")) > 0)
+                  $("." + prefix + "_address_details").show();
+          }
+      });
+    };
+    
+    makeDialogs();
+
+    $('#addCustomerCommonAddress').click(function(e) {
+      e.preventDefault();
+      var form = $("#customer-common-address-form");
+      form.dialog( "open" );  
+    });
+  });
