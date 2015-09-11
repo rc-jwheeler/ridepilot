@@ -59,8 +59,6 @@ class Run < ActiveRecord::Base
     :end_odometer, 
     :unpaid_driver_break_time, 
     :paid, 
-    :actual_start_time, 
-    :actual_end_time, 
   ].freeze
   
   belongs_to :provider
