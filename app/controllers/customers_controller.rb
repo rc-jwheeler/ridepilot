@@ -67,7 +67,7 @@ class CustomersController < ApplicationController
 
   def new
     @customer = Customer.new name_options
-    @customer.address ||= @customer.build_address :provider => current_provider
+    #@customer.address ||= @customer.build_address :provider => current_provider
     prep_edit
 
     respond_to do |format|
@@ -128,6 +128,8 @@ first_name, first_name, first_name, first_name,
     end
 
     @customer.authorized_providers = providers
+
+    edit_addresses @customer
 
     respond_to do |format|
       if @customer.save
@@ -266,6 +268,11 @@ first_name, first_name, first_name, first_name,
     @ethnicity_names = (current_provider.ethnicities.collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
     @funding_sources = FundingSource.by_provider(current_provider)
     @service_levels = ServiceLevel.pluck(:name, :id)
+  end
+
+  def edit_addresses(customer)
+    addresses = JSON.parse(params[:addresses])
+    customer.edit_addresses addresses, params[:mailing_address_index].to_i || 0
   end
 
 end

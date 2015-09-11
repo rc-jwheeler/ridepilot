@@ -14,6 +14,7 @@ class Customer < ActiveRecord::Base
 
   validates_presence_of :first_name
   validates_associated :address
+  validate :address_required
   accepts_nested_attributes_for :address
 
   normalize_attribute :first_name, :with=> [:squish, :titleize]
@@ -204,6 +205,38 @@ class Customer < ActiveRecord::Base
       return "(LOWER(%s) = ? or LOWER(%s) LIKE ? )" % [field, field], [value, like]
     else
       return "(LOWER(%s) like ?)" % [field], [like]
+    end
+  end
+
+  def edit_addresses(address_objects, mailing_address_index)
+    prev_addr_ids = addresses.pluck(:id)
+    existing_addr_ids = address_objects.select {|r| r[:id] != nil}.map{|r| r[:id]}
+
+    # remove non-existing ones
+
+    new_addresses = []
+    address_objects.each_with_index do |addr_hash, index|
+      addr = if addr_hash[:id]
+        Address.find addr_hash[:id]
+      else
+        Address.create(addr_hash)
+      end
+
+      address = addr if index == mailing_address_index
+      new_addresses << addr
+    end
+
+    self.addresses = new_addresses
+
+    # update mailing_address
+    Address.where(id: prev_addr_ids-existing_addr_ids).delete_all
+  end
+
+  private 
+
+  def address_required
+    if addresses.empty?
+      errors.add :addresses, TranslationEngine.translate_text(:must_have_one_address)
     end
   end
 

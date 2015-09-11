@@ -20,7 +20,9 @@
   
 <% end %>
 
-<%= simple_form_for @customer, html: { class: 'customer_form' } do |f| %>
+<%= simple_form_for @customer, html: { class: 'customer_form', id: 'customerForm' } do |f| %>
+  <%= hidden_field_tag 'addresses' %>
+  <%= hidden_field_tag 'mailing_address_index' %>
   <%= f.hidden_field :group, value: is_group %>
   <%= render 'form_header', edit_mode: edit_mode, f: f %>
   <% if @customer.errors.any? %>
@@ -65,4 +67,29 @@
   };
   updateGroupField();
   $('input#customer_group').click(updateGroupField);
+
+  $('#customerForm').submit(function() {
+    if($('#customerCommonAddressTable tbody tr').length == 0) {
+      show_alert("<%= translate_helper(:must_have_one_address)%>");
+      return false;
+    }
+
+    var mailingAddressIndex = 0;
+
+    // serializing addresses
+    var rowIndex = -1;
+    var addresses = [];
+    $('#customerCommonAddressTable tbody tr').each(function() {
+      rowIndex ++;
+
+      if($(this).find('input[name=mailing]').prop('checked')) {
+        mailingAddressIndex = rowIndex;
+      }
+
+      addresses.push($(this).data('address'));
+    });
+
+    $('#customerForm input[name=mailing_address_index').val(mailingAddressIndex);
+    $('#customerForm input[name=addresses').val(JSON.stringify(addresses));
+  });
 </script>

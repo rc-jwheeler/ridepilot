@@ -157,9 +157,12 @@ class AddressesController < ApplicationController
     end
 
     if address.valid?
-      attrs = address.attributes
-      attrs[:prefix] = prefix
-      render :json => attrs.to_json
+      render :json => {
+        success: true,
+        prefix: prefix,
+        address_text: address.address_text,
+        attributes: address.attributes
+      }
     else
       errors = address.errors.messages
       errors[:prefix] = prefix

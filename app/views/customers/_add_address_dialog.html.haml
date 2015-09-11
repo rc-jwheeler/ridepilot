@@ -1,39 +1,28 @@
-.address-form#customer-common-address-form
-  = render 'addresses/validate_form', :prefix=>'customer-common', address: Address.new
+.address-form#customer-address-form
+  = render 'addresses/validate_form', :prefix=>'customer', address: Address.new
+
+= render 'new_address_js'
 
 :javascript 
   $(document).ready(function() {
-    function makeDialogs() {
-      $( ".address-form" ).dialog({
-          autoOpen: false,
-          height: 395,
-          width: 600,
-          modal: true,
-          buttons: {
-              "Add Address": function() {
-                  form = $( this )[0].children[0];
-                  $(form).trigger('submit'); 
-              },
-              Cancel: function() {
-                $( this ).dialog( "close" );
-              }
-          },
-          close: function() {
-              var prefix = $(this).attr("id").replace(/\-address\-form/, "");
-              var field  = $( "#" + prefix + "_search_address" );
-              field.val( field.attr("data-original-value") );
-              $("#trip_" + prefix + "_address_id").val(field.attr("data-original-id"));
-              if (parseInt(field.attr("data-original-id")) > 0)
-                  $("." + prefix + "_address_details").show();
-          }
-      });
-    };
-    
-    makeDialogs();
-
     $('#addCustomerCommonAddress').click(function(e) {
       e.preventDefault();
-      var form = $("#customer-common-address-form");
+      var form = $("#customer-address-form");
       form.dialog( "open" );  
+      form.find('form')[0].reset();
+      form.find('.error').remove();
+    });
+
+    $('#customerCommonAddressTable').on('click', '.deleteCustomerAddress', function(e) {
+      e.preventDefault();
+
+      $(this).parents('tr').remove();
+    });
+
+    $('#customerCommonAddressTable').on('click', '.viewAddress', function(e) {
+      e.preventDefault();
+
+      $("#customer-address-form").dialog( "open" );
+      populate_address_form( 'customer', $(this).parents('tr').data('address'));
     });
   });
