@@ -55,6 +55,8 @@ class CustomersController < ApplicationController
       @read_only_customer = true if @customer.provider_id != current_provider.id
     end
 
+    prep_edit
+
     @trips    = @customer.trips.reorder('pickup_time desc').paginate :page => params[:page], :per_page => PER_PAGE
 
     respond_to do |format|
@@ -65,7 +67,7 @@ class CustomersController < ApplicationController
 
   def new
     @customer = Customer.new name_options
-    @customer.address ||= @customer.build_address :provider => current_provider
+    #@customer.address ||= @customer.build_address :provider => current_provider
     prep_edit
 
     respond_to do |format|
@@ -127,6 +129,8 @@ first_name, first_name, first_name, first_name,
 
     @customer.authorized_providers = providers
 
+    edit_addresses @customer
+
     respond_to do |format|
       if @customer.save
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
@@ -168,11 +172,14 @@ first_name, first_name, first_name, first_name,
     end
     @customer.authorized_providers = providers
     
+    edit_addresses @customer
+    
     respond_to do |format|
       if @customer.save
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
       else
+        prep_edit
         format.html { render :action => "edit" }
         format.xml  { render :xml => @customer.errors, :status => :unprocessable_entity }
       end
@@ -263,6 +270,13 @@ first_name, first_name, first_name, first_name,
     @ethnicity_names = (current_provider.ethnicities.collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
     @funding_sources = FundingSource.by_provider(current_provider)
     @service_levels = ServiceLevel.pluck(:name, :id)
+  end
+
+  def edit_addresses(customer)
+    if params[:addresses]
+      addresses = JSON.parse(params[:addresses])
+      customer.edit_addresses addresses, params[:mailing_address_index].to_i || 0
+    end
   end
 
 end
