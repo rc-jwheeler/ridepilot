@@ -14,7 +14,7 @@ class Customer < ActiveRecord::Base
 
   validates_presence_of :first_name
   validates_associated :address
-  validate :address_required
+  #validate :address_required
   accepts_nested_attributes_for :address
 
   normalize_attribute :first_name, :with=> [:squish, :titleize]

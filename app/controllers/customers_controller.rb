@@ -273,8 +273,10 @@ first_name, first_name, first_name, first_name,
   end
 
   def edit_addresses(customer)
-    addresses = JSON.parse(params[:addresses])
-    customer.edit_addresses addresses, params[:mailing_address_index].to_i || 0
+    if params[:addresses]
+      addresses = JSON.parse(params[:addresses])
+      customer.edit_addresses addresses, params[:mailing_address_index].to_i || 0
+    end
   end
 
 end
