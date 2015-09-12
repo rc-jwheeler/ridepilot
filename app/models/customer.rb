@@ -209,11 +209,12 @@ class Customer < ActiveRecord::Base
   end
 
   def edit_addresses(address_objects, mailing_address_index)
+    # remove non-existing ones
     prev_addr_ids = addresses.pluck(:id)
     existing_addr_ids = address_objects.select {|r| r[:id] != nil}.map{|r| r[:id]}
+    Address.where(id: prev_addr_ids-existing_addr_ids).delete_all
 
-    # remove non-existing ones
-
+    # update addresses
     new_addresses = []
     address_objects.each_with_index do |addr_hash, index|
       addr = if addr_hash[:id]
@@ -222,14 +223,11 @@ class Customer < ActiveRecord::Base
         Address.create(addr_hash)
       end
 
-      address = addr if index == mailing_address_index
+      self.address = addr if index == mailing_address_index
       new_addresses << addr
     end
 
     self.addresses = new_addresses
-
-    # update mailing_address
-    Address.where(id: prev_addr_ids-existing_addr_ids).delete_all
   end
 
   private 

@@ -172,6 +172,8 @@ first_name, first_name, first_name, first_name,
     end
     @customer.authorized_providers = providers
     
+    edit_addresses @customer
+    
     respond_to do |format|
       if @customer.save
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }

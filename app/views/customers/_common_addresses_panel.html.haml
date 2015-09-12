@@ -30,7 +30,7 @@
             %td
               = address.address_text
             %td
-              = radio_button_tag(:mailing, address == @customer.address)
+              = radio_button_tag(:mailing, address.id, address == @customer.address)
     - if is_editing
       .pull-right
         %button.btn.action-button#addCustomerCommonAddress

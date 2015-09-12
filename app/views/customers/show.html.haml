@@ -4,4 +4,8 @@
   = render 'trips'
 
 :javascript
-  $(".customer_form :input").attr("disabled","disabled");
+  $(document).ready(function() {
+    $(".customer_form :input").attr("disabled","disabled");
+    $(".address-form :input").attr("disabled","disabled");
+    $('.ui-dialog button').hide();
+  });
