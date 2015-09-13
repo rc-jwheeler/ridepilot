@@ -132,7 +132,7 @@ first_name, first_name, first_name, first_name,
     edit_addresses @customer
 
     respond_to do |format|
-      if @customer.save
+      if @customer.is_all_valid?(current_provider_id) && @customer.save
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
@@ -175,7 +175,7 @@ first_name, first_name, first_name, first_name,
     edit_addresses @customer
     
     respond_to do |format|
-      if @customer.save
+      if @customer.is_all_valid?(current_provider_id) && @customer.save
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
       else
