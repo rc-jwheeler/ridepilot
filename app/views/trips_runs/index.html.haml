@@ -37,8 +37,8 @@
           } else {
             hide_alert();
             // update data-run-id for run dropdown in trips table 
-            $('.trip-run-options[data-run-id=' + prevRunId+ ']').attr('data-run-id',runId); 
-            $('.trip-run-options[data-run-id=' + runId+ ']').val(runId); 
+            $('.trip-run-options[data-trip-id='+ tripId + '][data-run-id=' + prevRunId+ ']').attr('data-run-id',runId); 
+            $('.trip-run-options[data-trip-id='+ tripId + '][data-run-id=' + runId+ ']').val(runId); 
 
             var calendar = $('#calendar').data('fullCalendar');
             calendar.removeEvents(resp.trip_event_json.id);
