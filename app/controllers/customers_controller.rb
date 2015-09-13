@@ -203,6 +203,7 @@ first_name, first_name, first_name, first_name,
   
   def customer_params
     params.require(:customer).permit(
+      :gender,
       :ada_eligible,
       :birth_date,
       :default_funding_source_id,

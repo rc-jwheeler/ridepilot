@@ -73,6 +73,9 @@ en:
   customer_inactivate_panel: 'Inactivate'
   name: "Name"
   phone: "Phone"
+  gender: 'Gender'
+  male: 'Male'
+  female: 'Female'
   alternate_phone: "Alternate Phone"
   email: "Email"
   date_of_birth: "Date of Birth"
