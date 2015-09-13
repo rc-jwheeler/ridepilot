@@ -62,7 +62,7 @@
       .col-sm-3
         = f.label :ethnicity, translate_helper(:ethnicity) 
       .col-sm-9
-        = f.select :ethnicity, @ethnicity_names, {}, {class: 'form-control'}
+        = f.select :ethnicity, @ethnicity_names, {include_blank: true}, {class: 'form-control'}
     .form-group.col-sm-12
       .col-sm-3
         = f.label :mobility_id, translate_helper(:mobility) 
