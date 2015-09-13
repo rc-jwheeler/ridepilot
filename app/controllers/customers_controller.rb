@@ -225,6 +225,7 @@ first_name, first_name, first_name, first_name,
       :private_notes,
       :public_notes,
       :authorized_provider_ids,
+      :is_elderly,
       :address_attributes => [
         :address,
         :building_name,
