@@ -2,7 +2,7 @@ class DriversController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @drivers = @drivers.for_provider(current_provider.id)
+    @drivers = @drivers.default_order.for_provider(current_provider.id)
   end
 
   def show
