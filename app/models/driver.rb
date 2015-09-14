@@ -25,6 +25,7 @@ class Driver < ActiveRecord::Base
   validates :email, format: { with: Devise.email_regexp, allow_blank: true }
   validates :name, uniqueness: { scope: :provider_id }, length: { minimum: 2 }
   validates :provider, presence: true
+  validates :user, presence: true
   validates :user_id, uniqueness: { allow_nil: true }
 
   scope :users,         -> { where("drivers.user_id IS NOT NULL") }

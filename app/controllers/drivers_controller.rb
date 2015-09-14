@@ -19,13 +19,14 @@ class DriversController < ApplicationController
   end
 
   def update
+    @driver.attributes = driver_params
     if !@driver.is_all_valid?(current_provider_id)
       prep_edit
       render action: :edit
     else
       begin      
         Driver.transaction do
-          @driver.update_attributes!(driver_params)
+          @driver.save!
           create_or_update_hours!
         end
         redirect_to @driver, notice: 'Driver was successfully updated.'
@@ -69,6 +70,7 @@ class DriversController < ApplicationController
     
     @available_users = @driver.provider.users - User.drivers(@driver.provider)
     @available_users << @driver.user if @driver.user
+    @available_users = @available_users.sort_by(&:email) 
     
     @hours = @driver.hours_hash
 
