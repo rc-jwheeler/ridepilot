@@ -67,6 +67,7 @@ class CustomersController < ApplicationController
 
   def new
     @customer = Customer.new name_options
+    @customer.provider = current_provider
     #@customer.address ||= @customer.build_address :provider => current_provider
     prep_edit
 
@@ -86,6 +87,7 @@ class CustomersController < ApplicationController
     @customer = Customer.new customer_params
     @customer.provider = current_provider
     @customer.activated_date = Date.today
+    edit_addresses @customer
 
     if params[:ignore_dups] != "1"
       #check for duplicates
@@ -127,9 +129,7 @@ first_name, first_name, first_name, first_name,
       providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
     end
 
-    @customer.authorized_providers = providers
-
-    edit_addresses @customer
+    @customer.authorized_providers = (providers << @customer.provider).uniq
 
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
@@ -159,6 +159,7 @@ first_name, first_name, first_name, first_name,
     authorize! :update, @customer if !@customer.authorized_for_provider(current_provider.id)
 
     @customer.assign_attributes customer_params
+    edit_addresses @customer
 
     #save address changes
     if address_attributes_param && address_attributes_param[:id].present?
@@ -170,9 +171,9 @@ first_name, first_name, first_name, first_name,
     params[:customer][:authorized_provider_ids].each do |authorized_provider_id|
       providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
     end
-    @customer.authorized_providers = providers
+    @customer.authorized_providers = (providers << @customer.provider).uniq
     
-    edit_addresses @customer
+    
     
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
