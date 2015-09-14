@@ -30,11 +30,7 @@
       .col-sm-3
         = f.label :gender, translate_helper(:gender) 
       .col-sm-9
-        %input.radio_buttons.optional#customer_gender_male{name: "customer[gender]", type: "radio", value: :male, checked: (@customer.gender == "male" ? "checked" : nil)}
-        %label.radio_buttons.optional{for: "customer_gender_male"} #{translate_helper(:male)}
-
-        %input.radio_buttons.optional#customer_gender_female{name: "customer[gender]", type: "radio", value: :female, checked: (@customer.gender == "female" ? "checked" : nil)}
-        %label.radio_buttons.optional{for: "customer_gender_female"} #{translate_helper(:female)}
+        = f.collection_select :gender, [[:male, translate_helper(:male)], [:female, translate_helper(:female)]], :first, :last, {include_blank: true}, {class: 'form-control'}
     .form-group.col-sm-12
       .col-sm-3
         = f.label :phone_number_1, translate_helper(:phone_number) 
