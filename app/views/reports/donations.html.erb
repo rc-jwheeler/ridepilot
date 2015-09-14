@@ -4,7 +4,7 @@
 <%= form_for @query, :url=>url_for(:action=>:donations), :html=>{:method=>:get} do |f| %>
   <fieldset>
     <p>
-      <%= f.date_select  :start_date, :discard_day=>true %>
+      <%= f.date_select  :start_date, :discard_day=>true rescue nil%>
       <%= f.submit translate_helper("donation_report_submit") %>
     </p>
   </fieldset>

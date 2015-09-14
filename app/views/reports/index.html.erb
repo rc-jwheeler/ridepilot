@@ -18,9 +18,9 @@
 
 <%= form_for @trips_query, :url=>url_for(:action=>:export_trips_in_range), :html=>{:method=>:get} do |f| %>
   <fieldset>
-    <%= f.date_select  :start_date, :order => [:month,:day,:year] %>
+    <%= f.date_select  :start_date, :order => [:month,:day,:year] rescue nil%>
     <%= translate_helper("through") %> 
-    <%= f.date_select  :before_end_date, :order => [:month,:day,:year] %>
+    <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
     <%= f.submit translate_helper("export") %>
   </fieldset>
 <% end %>
@@ -31,7 +31,7 @@
 
 <%= form_for @trips_query, :url=>url_for(:action=>:cctc_summary_report), :html=>{:method=>:get} do |f| %>
   <fieldset>
-    <%= f.date_select :start_date, :order => [:month,:year] %>
+    <%= f.date_select :start_date, :order => [:month,:year] rescue nil%>
     <%= f.submit translate_helper("show") %>
   </fieldset>
 <% end %>
@@ -42,7 +42,7 @@
 
 <%= form_for @driver_query, :url=>url_for(:action=>:daily_trips), :html=>{:method=>:get} do |f| %>
   <fieldset>
-    <%= f.date_select  :start_date %>
+    <%= f.date_select  :start_date rescue nil%>
     <%= f.submit translate_helper("show") %>
   </fieldset>
 <% end %>
@@ -53,9 +53,9 @@
 
 <%= form_for @trips_query, :url=>url_for(:action=>:customer_receiving_trips_in_range), :html=>{:method=>:get} do |f| %>
   <fieldset>
-    <%= f.date_select  :start_date, :order => [:month,:day,:year] %>
+    <%= f.date_select  :start_date, :order => [:month,:day,:year] rescue nil%>
     <%= translate_helper("through") %>  
-    <%= f.date_select  :before_end_date, :order => [:month,:day,:year] %>
+    <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
     <%= f.submit translate_helper("show") %>
   </fieldset>
 <% end %>
@@ -67,7 +67,7 @@
 <%= form_for @driver_query, :url=>url_for(:action=>:daily_manifest), :html=>{:method=>:get} do |f| %>
   <fieldset>
     <h3><%= translate_helper("daily_manifest_label") %> </h3>
-    <%= f.date_select  :start_date %>
+    <%= f.date_select  :start_date rescue nil%>
     <%= f.collection_select :driver_id, @drivers_with_cab, :id, :name %>
     <%= f.submit translate_helper("show") %>
   </fieldset>
@@ -76,7 +76,7 @@
 <%= form_for @driver_query, :url=>url_for(:action=>:daily_manifest_with_cab), :html=>{:method=>:get} do |f| %>
   <fieldset>
     <h3><%= translate_helper("daily_manifest_with_cab_summary_label") %></h3>
-    <%= f.date_select  :start_date %>
+    <%= f.date_select  :start_date rescue nil%>
     <%= f.collection_select :driver_id, @drivers, :id, :name %>
     <%= f.submit translate_helper("show") %>
   </fieldset>
@@ -85,7 +85,7 @@
 <%= form_for @driver_query, :url=>url_for(:action=>:daily_manifest_by_half_hour), :html=>{:method=>:get} do |f| %>
   <fieldset>
     <h3><%= translate_helper("daily_manifest_by_half_hour_label") %></h3>
-    <%= f.date_select  :start_date %>
+    <%= f.date_select  :start_date rescue nil%>
     <%= f.collection_select :driver_id, @drivers_with_cab, :id, :name %>
     <%= f.submit translate_helper("show") %>
   </fieldset>
@@ -94,7 +94,7 @@
 <%= form_for @driver_query, :url=>url_for(:action=>:daily_manifest_by_half_hour_with_cab), :html=>{:method=>:get} do |f| %>
   <fieldset>
     <h3><%= translate_helper("daily_manifest_by_half_hour_with_cab_summary_label") %></h3>
-    <%= f.date_select  :start_date %>
+    <%= f.date_select  :start_date rescue nil%>
     <%= f.collection_select :driver_id, @drivers, :id, :name %>
     <%= f.submit translate_helper("show") %>
   </fieldset>
@@ -107,9 +107,9 @@
 <%= form_for @trips_query, :url=>url_for(:action=>:show_trips_for_verification), :html=>{:method=>:get} do |f| %>
   <fieldset class="select-month">
     <h3><%= translate_helper("verify_trips") %> </h3>
-    <%= f.date_select  :start_date, :order => [:month,:day,:year] %>
+    <%= f.date_select  :start_date, :order => [:month,:day,:year] rescue nil%>
     <%= translate_helper("through") %>  
-    <%= f.date_select  :before_end_date, :order => [:month,:day,:year] %>
+    <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
     <%= f.select       :trip_display, TRIP_VERIFICATION_DISPLAY_OPTIONS %>
     <%= f.submit translate_helper("show") %>
   </fieldset>
@@ -118,9 +118,9 @@
 <%= form_for @trips_query, :url=>url_for(:action=>:show_runs_for_verification), :html=>{:method=>:get} do |f| %>
   <fieldset class="select-month">
     <h3><%= translate_helper("verify_runs") %></h3>
-    <%= f.date_select  :start_date, :order => [:month,:day,:year] %>
+    <%= f.date_select  :start_date, :order => [:month,:day,:year] rescue nil%>
     <%= translate_helper("through") %>  
-    <%= f.date_select  :before_end_date, :order => [:month,:day,:year] %>
+    <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
     <%= f.submit translate_helper("show") %>
   </fieldset>
 <% end %>
