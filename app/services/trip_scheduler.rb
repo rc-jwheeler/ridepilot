@@ -80,7 +80,7 @@ class TripScheduler
 
   def validate_driver_availability
     trip_pickup_time = @trip.pickup_time
-    @run.driver && @run.driver.active && @run.driver.available?(trip_pickup_time.wday, trip_pickup_time.strftime('%H:%M'))
+    @run.driver ?  @run.driver.active && @run.driver.available?(trip_pickup_time.wday, trip_pickup_time.strftime('%H:%M')) : true
   end
 
   def response_as_json(is_success, error_text = '')
