@@ -5,7 +5,7 @@
 <%= form_for @query, :url=>url_for(:action=>:service_summary), :html=>{:method=>:get} do |f| %>
   <fieldset class="select-month">
     <p>
-      <%= f.date_select  :start_date, :order => [:month,:year] %>
+      <%= f.date_select  :start_date, :order => [:month,:year] rescue nil%>
       <%= f.submit translate_helper("service_summary_report_submit") %>
     </p>
   </fieldset>

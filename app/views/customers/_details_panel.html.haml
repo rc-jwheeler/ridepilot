@@ -51,8 +51,7 @@
         = f.label :birth_date, translate_helper(:date_of_birth) 
       .col-sm-9
         - date_order_parameters = translate_helper("date_order_parameter").split(",").collect do |param| param.to_sym end 
-        = f.date_select :birth_date, :start_year => 1896, :use_short_month => true, :include_blank => true, order: date_order_parameters
-        /= f.text_field :birth_date, :class => 'datepicker form-control'
+        = f.date_select :birth_date, :start_year => 1896, :use_short_month => true, :include_blank => true, order: date_order_parameters rescue nil
     .form-group.col-sm-12
       .col-sm-3
         = f.label :is_elderly, translate_helper(:is_elderly) 

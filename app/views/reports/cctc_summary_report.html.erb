@@ -69,7 +69,7 @@
   <%= form_for @query, :url=>url_for(:action=>:cctc_summary_report), :html=>{:method=>:get} do |f| %>
     <fieldset class="select-month">
       <p>
-        <%= f.date_select :start_date, :order => [:month,:year] %>
+        <%= f.date_select :start_date, :order => [:month,:year] rescue nil%>
         <%= f.submit translate_helper("update") %>
       </p>
     </fieldset>

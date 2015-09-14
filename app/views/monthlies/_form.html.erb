@@ -7,7 +7,7 @@
     <ol class="section first">
       <li>
         <%= f.label :start_date, translate_helper("monthlies_start_date") %>
-        <%= f.date_select :start_date, :order => [:month, :year] %>    
+        <%= f.date_select :start_date, :order => [:month, :year] rescue nil%>    
       </li>
 
       <li>

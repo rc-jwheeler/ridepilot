@@ -72,7 +72,7 @@ class Run < ActiveRecord::Base
   before_validation :fix_dates, :set_complete
   
   validates                 :name, presence: true
-  validates                 :driver, presence: true
+  #validates                 :driver, presence: true
   validates                 :provider, presence: true
   validates                 :vehicle, presence: true
   validates_date            :date

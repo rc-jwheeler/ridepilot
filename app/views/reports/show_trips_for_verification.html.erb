@@ -8,9 +8,9 @@
   <%= form_for @query, :url=>url_for(:action=>:show_trips_for_verification), :html=>{:method=>:get} do |f| %>
     <fieldset class="select-month">
       <p>
-        <%= f.date_select  :start_date, :order => [:month,:day,:year] %>
+        <%= f.date_select  :start_date, :order => [:month,:day,:year] rescue nil%>
         through 
-        <%= f.date_select  :before_end_date, :order => [:month,:day,:year] %>
+        <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
         <%= f.select       :trip_display, TRIP_VERIFICATION_DISPLAY_OPTIONS %>
         <%= f.submit translate_helper("show_trips_submit") %>
       </p>
