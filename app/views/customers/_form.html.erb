@@ -50,7 +50,7 @@
 
 <% end %>
 
-<%= render 'inactivate_dialog' if edit_mode == :edit %>
+<%= render 'inactivate_dialog' if edit_mode == :show %>
 <%= render 'add_address_dialog' %>
 
 <%= render 'shared/hide_invisible_form_fields_js', model_name: "customer", table_name: 'customers', provider_id:  current_provider.try(:id) %>

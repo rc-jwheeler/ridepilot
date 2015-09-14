@@ -6,6 +6,7 @@
 :javascript
   $(document).ready(function() {
     $(".customer_form :input").attr("disabled","disabled");
+    $('#inactivateCustomer').removeAttr('disabled');
     $(".address-form :input").attr("disabled","disabled");
     $('.ui-dialog button').hide();
   });
