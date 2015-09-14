@@ -73,6 +73,9 @@ en:
   customer_inactivate_panel: 'Inactivate'
   name: "Name"
   phone: "Phone"
+  gender: 'Gender'
+  male: 'Male'
+  female: 'Female'
   alternate_phone: "Alternate Phone"
   email: "Email"
   date_of_birth: "Date of Birth"
@@ -987,6 +990,7 @@ en:
   to_date: 'To Date'
   from_date_cannot_later_than_to_date: "From Date can not be later than To Date"
   # runs table
+  run_name_column: 'Name'
   run_date_column: 'Date'
   run_start_time_column: 'Start Time'
   run_end_time_column: 'End Time'
