@@ -10,7 +10,6 @@
       <th><%=translate_helper("customer_active")%></th>
       <th><%=translate_helper("activated_date")%></th>
       <th><%=translate_helper("inactivated_date")%></th>
-      <th></th>
     </tr>
   </thead>
 
@@ -25,7 +24,6 @@
       <td><%= image_tag("tick-circle.png") if customer.active? %></td>
       <td><%= customer.activated_date %></td>
       <td><%= customer.inactivated_date %></td>
-      <td><%= link_to translate_helper("new_trip_link_text"), new_trip_path(:customer_id=>customer.id), :class=>'new-trip' %></td>
     </tr>
     <% end %>
   </tbody>
