@@ -60,31 +60,42 @@ class AddressesController < ApplicationController
         #do not geocode too-short terms
         return render :json => [Address::NewAddressOption]
       end
-      url = "http://open.mapquestapi.com/nominatim/v1/search?format=json&addressdetails=1&countrycodes=us&q=" + CGI.escape(term)
+
+      # MapRequest API change, comment out old calling url
+      # url = "http://open.mapquestapi.com/nominatim/v1/search?format=json&addressdetails=1&countrycodes=us&q=" + CGI.escape(term)
+      url = "http://open.mapquestapi.com/nominatim/v1/search.php?key=#{ENV['MAPREQUEST_API_KEY']}&format=json&addressdetails=1&countrycodes=us&q=" + CGI.escape(term)
 
       result = OpenURI.open_uri(url).read
 
       addresses = ActiveSupport::JSON.decode(result)
 
       #only addresses within one decimal degree of the trimet district
-      addresses = addresses.find_all { |address|
-        point = RGeo::Geographic.spherical_factory(srid: 4326).point(address['lon'].to_f, address['lat'].to_f)
-        Region.count(:conditions => ["name='TriMet' and st_distance(the_geom, ?) <= 1", point]) > 0
-      }
+      if current_provider.region_nw_corner && current_provider.region_se_corner
+        min_lon = current_provider.region_nw_corner.x 
+        max_lon = current_provider.region_se_corner.x 
+        min_lat = current_provider.region_se_corner.y 
+        max_lat = current_provider.region_nw_corner.y 
+
+        addresses = addresses.find_all { |address|
+          lon = address['lon'].to_f
+          lat = address['lat'].to_f
+          lon && lat && lon >= min_lon && lon <= max_lon && lat >= min_lat && lat <= max_lat
+        }
+      end
 
       #now, convert addresses to local json format
-      address_json = addresses.map { |address|
+      address_json = addresses.map { |raw_address|
         # TODO add apt numbers
-        address = address['address']
+        address = raw_address['address']
         street_address = '%s %s' % [address['house_number'], address['road']]
         address_obj = Address.new(
                     :name => '',
                     :building_name => '',
                     :address => street_address,
-                    :city => address['city'],
+                    :city => address['city'] || address['town'] || address['hamlet'],
                     :state => STATE_NAME_TO_POSTAL_ABBREVIATION[address['state'].upcase],
                     :zip => address['postcode'],
-                    :the_geom => RGeo::Geographic.spherical_factory(srid: 4326).point(address['lon'].to_f, address['lat'].to_f),
+                    :the_geom => RGeo::Geographic.spherical_factory(srid: 4326).point(raw_address['lon'].to_f, raw_address['lat'].to_f),
                     :notes => address['notes']
                     )
         address_obj.json
