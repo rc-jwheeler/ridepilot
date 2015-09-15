@@ -49,7 +49,7 @@ class Address < ActiveRecord::Base
   
   def compute_in_trimet_district
     if the_geom and in_district.nil?
-      in_district = Region.count(:conditions => ["name='TriMet' and st_contains(the_geom, ?)", the_geom]) > 0
+      in_district = Region.count(:conditions => ["is_primary = 't' and st_contains(the_geom, ?)", the_geom]) > 0
     end 
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150915132551) do
+ActiveRecord::Schema.define(version: 20150915200747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -400,6 +400,7 @@ ActiveRecord::Schema.define(version: 20150915132551) do
     t.string   "name"
     t.spatial  "the_geom",   limit: {:srid=>4326, :type=>"polygon", :geographic=>true}
     t.datetime "deleted_at"
+    t.boolean  "is_primary"
   end
 
   add_index "regions", ["deleted_at"], :name => "index_regions_on_deleted_at"
