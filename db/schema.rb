@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150915200747) do
+ActiveRecord::Schema.define(version: 20150915203332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,6 +105,7 @@ ActiveRecord::Schema.define(version: 20150915200747) do
     t.boolean  "is_elderly"
     t.string   "gender"
     t.datetime "deleted_at"
+    t.text     "message"
   end
 
   add_index "customers", ["address_id"], :name => "index_customers_on_address_id"

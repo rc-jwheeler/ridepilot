@@ -5,3 +5,8 @@
     %h3.panel-title
       = translate_helper(:customer_others_panel)
   .panel-body{style: 'padding: 5px;'}
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :message, translate_helper(:customer_message) 
+      .col-sm-9
+        = f.text_area :message, class: 'form-control'

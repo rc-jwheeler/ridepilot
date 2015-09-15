@@ -120,6 +120,7 @@ en:
   cctc_STF_label: "STF"
   cctc_new_riders_label: "# Riders New This Month"
   delete_customer_confirm: "Are you sure to delete this customer?"
+  customer_message: 'Message'
   # Lookup tables
   add_value: "Add Value"
   delete_value: "Delete Value"

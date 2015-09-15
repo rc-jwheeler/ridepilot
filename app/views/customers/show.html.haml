@@ -1,3 +1,6 @@
+- if !@customer.message.blank?
+  #customer_flag_message.alert.alert-danger
+    = @customer.message
 = render 'form', edit_mode: :show, is_group: @customer.group
 
 .col-sm-12

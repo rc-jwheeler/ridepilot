@@ -226,6 +226,7 @@ first_name, first_name, first_name, first_name,
       :public_notes,
       :authorized_provider_ids,
       :is_elderly,
+      :message,
       :address_attributes => [
         :address,
         :building_name,
