@@ -76,3 +76,10 @@ th.fc-resourceName {
 .row-highlight {
   background-color: yellow !important; 
 }
+
+/* overwrite .form-control that has 100% width */
+.form-control-inline {
+  min-width: 0;
+  width: auto;
+  display: inline;
+}
