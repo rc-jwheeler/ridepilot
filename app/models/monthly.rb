@@ -1,4 +1,6 @@
 class Monthly < ActiveRecord::Base
+  acts_as_paranoid # soft delete
+  
   belongs_to :provider
   belongs_to :funding_source
 
