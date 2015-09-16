@@ -178,6 +178,20 @@ ActiveRecord::Schema.define(version: 20150916180653) do
 
   add_index "documents", ["documentable_id", "documentable_type"], :name => "index_documents_on_documentable_id_and_documentable_type"
 
+  create_table "donations", force: true do |t|
+    t.datetime "date"
+    t.float    "amount"
+    t.text     "notes"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "customer_id"
+    t.integer  "user_id"
+  end
+
+  add_index "donations", ["customer_id"], :name => "index_donations_on_customer_id"
+  add_index "donations", ["user_id"], :name => "index_donations_on_user_id"
+
   create_table "driver_compliances", force: true do |t|
     t.integer  "driver_id"
     t.string   "event"

@@ -11,6 +11,7 @@ class Customer < ActiveRecord::Base
   belongs_to :mobility
   belongs_to :default_funding_source, :class_name=>'FundingSource'
   has_many   :trips, :dependent => :destroy
+  has_many   :donations, :dependent => :destroy
 
   belongs_to :service_level
   delegate :name, to: :service_level, prefix: :service_level, allow_nil: true

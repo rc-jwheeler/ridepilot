@@ -44,8 +44,8 @@
     <%= render 'common_addresses_panel', edit_mode: edit_mode %>
     <%#= render 'eligibility_panel', f: f  if !is_group %>
     <%= render 'providers_panel', f: f %>
-    <%#= render 'donations_panel', f: f %>
-    <%= render 'others_panel', f: f %>
+    <%= render 'donations_panel', f: f, edit_mode: edit_mode  %>
+    <%= render 'others_panel', f: f, edit_mode: edit_mode %>
   </div>
 
 <% end %>

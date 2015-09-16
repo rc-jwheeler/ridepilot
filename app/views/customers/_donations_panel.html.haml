@@ -1,7 +1,39 @@
 - edit_mode = :edit if !defined? edit_mode
+- is_editing = edit_mode == :edit || edit_mode == :new
 
 .panel.panel-primary#customer_donations_panel
   .panel-heading
     %h3.panel-title
       = translate_helper(:customer_donations_panel)
   .panel-body{style: 'padding: 5px;'}
+    %table.table.table-striped.table-bordered#customerDonationsTable
+      %thead
+        %tr
+          - if is_editing
+            %th{width: 50}
+          %th
+            = translate_helper(:donation_date)
+          %th
+            = translate_helper(:donation_amount)
+          %th
+            = translate_helper(:donation_notes)
+      %tbody
+        - @customer.donations.each do |donation|
+          %tr{data: {donation: donation.to_json}}
+            - if is_editing
+              %td
+                = button_tag :type => 'button', class: 'deleteCustomerDonation btn-danger' do 
+                  = translate_helper(:delete)
+            %td
+              = donation.date.to_date.to_s if donation.date
+            %td
+              = donation.amount
+            %td
+              = donation.notes
+    - if is_editing
+      .pull-right
+        %button.btn.action-button#addCustomerDonation
+          = translate_helper(:add)
+
+
+    
