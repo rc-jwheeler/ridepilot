@@ -65,6 +65,23 @@ RSpec.describe Vehicle, type: :model do
     expect(vehicle.valid?).to be_truthy
   end
 
+  it "requires mobility_device_accommodations to be an integer >= 0" do
+    vehicle = build :vehicle, mobility_device_accommodations: nil
+    expect(vehicle.valid?).to be_falsey
+    expect(vehicle.errors.keys).to include :mobility_device_accommodations
+
+    vehicle.mobility_device_accommodations = -1
+    expect(vehicle.valid?).to be_falsey
+    expect(vehicle.errors.keys).to include :mobility_device_accommodations
+
+    vehicle.mobility_device_accommodations = 1.2
+    expect(vehicle.valid?).to be_falsey
+    expect(vehicle.errors.keys).to include :mobility_device_accommodations
+
+    vehicle.mobility_device_accommodations = 0
+    expect(vehicle.valid?).to be_truthy
+  end
+
   it "requires an ownership of either 'agency' or 'volunteer', or blank" do
     vehicle = build :vehicle, ownership: nil
     expect(vehicle.valid?).to be_truthy

@@ -78,7 +78,19 @@
                 <%= number_to_human @vehicle.last_odometer_reading %> mi.
               </p>
             </div>
-          </div>  
+          </div>
+          <div class="form-group">
+            <%= f.label :seating_capacity, translate_helper("vehicle_form_seating_capacity_label"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.number_field :seating_capacity, min: 1, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.label :mobility_device_accommodations, translate_helper("vehicle_form_mobility_device_accommodations_label"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.number_field :mobility_device_accommodations, min: 0, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>
         </div><!-- END .panel-body -->
       </div><!-- END .panel -->
 
@@ -101,12 +113,6 @@
             <%= f.label :responsible_party, translate_helper("vehicle_form_responsible_party_label"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
               <%= f.text_field :responsible_party, class: "form-control", disabled: @readonly %>
-            </div>
-          </div>
-          <div class="form-group">
-            <%= f.label :seating_capacity, translate_helper("vehicle_form_seating_capacity_label"), class: "col-md-2 control-label" %>
-            <div class="col-md-10">
-              <%= f.number_field :seating_capacity, min: 1, class: "form-control", disabled: @readonly %>
             </div>
           </div>
           <div class="form-group">
