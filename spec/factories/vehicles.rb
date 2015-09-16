@@ -4,5 +4,6 @@ FactoryGirl.define do
     provider
     association :default_driver, factory: :driver
     seating_capacity 10
+    mobility_device_accommodations 2
   end
 end
