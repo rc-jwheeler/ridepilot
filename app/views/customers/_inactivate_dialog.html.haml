@@ -1,4 +1,4 @@
-#inactivateCustomerDialog.modal.fade.col-sm-12{"aria-describedby" => translate_helper(:add_value), :role => "dialog", "aria-hidden" => 'true', :tabindex => "-1"}
+#inactivateCustomerDialog.modal.fade.col-sm-12{:role => "dialog", "aria-hidden" => 'true', :tabindex => "-1"}
   .modal-dialog
     .modal-content
       = form_for @customer, :url=>customer_inactivate_path(@customer), :html=>{:method=>:post} do |f|
