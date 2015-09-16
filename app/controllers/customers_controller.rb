@@ -3,7 +3,7 @@ class CustomersController < ApplicationController
 
   def autocomplete
     customers = Customer.for_provider(current_provider_id).by_term( params['term'].downcase, 10 ).accessible_by(current_ability)
-    
+    customers = customers.where(inactivated_date: nil) if params[:active_only] == 'true'
     render :json => customers.map { |customer| customer.as_autocomplete }
   end
 
@@ -18,22 +18,23 @@ class CustomersController < ApplicationController
   end
 
   def index
-    # only active customers
-    @show_inactivated_date = false
-    @customers = Customer.for_provider(current_provider_id).where(:inactivated_date => nil)
+    @active_only = true
+    if params[:active_only] == 'true' || params[:active_only] == 'false'
+      @active_only = eval params[:active_only]
+      session[:active_customers_only] = @active_only
+    else
+      @active_only = session[:active_customers_only] unless session[:active_customers_only].nil?
+    end
+
+    @customers = Customer.for_provider(current_provider_id).accessible_by(current_ability)
     @customers = @customers.by_letter(params[:letter]) if params[:letter].present?
-    
+
+    @customers = @customers.where(:inactivated_date => nil) if @active_only
+
     respond_to do |format|
       format.html { @customers = @customers.paginate :page => params[:page], :per_page => PER_PAGE }
       format.xml  { render :xml => @customers }
     end
-  end
-  
-  def all
-    @show_inactivated_date = true
-    @customers = Customer.for_provider(current_provider_id).accessible_by(current_ability)
-    @customers = @customers.paginate :page => params[:page], :per_page => PER_PAGE
-    render :action => :index
   end
 
   def search
@@ -150,7 +151,17 @@ first_name, first_name, first_name, first_name,
     @customer.inactivated_date = Date.today
     @customer.inactivated_reason = params[:customer][:inactivated_reason]
     @customer.save
-    redirect_to :action => :index
+    redirect_to action: :index
+  end
+
+  def activate
+    @customer = Customer.find(params[:customer_id])
+    authorize! :edit, @customer
+
+    @customer.inactivated_date = nil
+    @customer.inactivated_reason = nil
+    @customer.save
+    redirect_to action: :index
   end
 
   def update

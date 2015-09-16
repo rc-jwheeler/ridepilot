@@ -29,9 +29,9 @@ Rails.application.routes.draw do
 
     resources :customers do
       post :inactivate, :as => :inactivate
+      post :activate, :as => :activate
       
       collection do
-        get :all
         get :autocomplete
         get :found
         get :search

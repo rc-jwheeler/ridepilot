@@ -23,16 +23,6 @@ RSpec.describe CustomersController, type: :controller do
       expect(assigns(:customers)).to_not include(customer_2)
     end
   end
-
-  describe "GET #all" do
-    it "assigns *all* customers as @customers" do
-      customer_1 = create(:customer, :provider => @current_user.current_provider)
-      customer_2 = create(:customer, :provider => @current_user.current_provider, :inactivated_date => Date.today)
-      get :all, {}
-      expect(assigns(:customers)).to include(customer_1)
-      expect(assigns(:customers)).to include(customer_2)
-    end
-  end
   
   describe "GET #show" do
     it "assigns the requested customer as @customer" do
@@ -206,6 +196,28 @@ RSpec.describe CustomersController, type: :controller do
     it "redirects to the :index" do
       customer = create(:customer, :provider => @current_user.current_provider)
       post :inactivate, {:customer_id => customer.id, :customer => {:inactivated_reason => "because"}}
+      expect(response).to redirect_to(customers_path)
+    end
+  end
+
+  describe "POST #activate" do
+    it "activates the requested Customer" do
+      yesterday = Date.yesterday
+      customer = create(:customer, :provider => @current_user.current_provider, inactivated_date: yesterday)
+      expect {
+        post :activate, {:customer_id => customer.id}
+      }.to change{ customer.reload.inactivated_date.try(:in_time_zone).to_i }.from(yesterday.in_time_zone.to_i).to(0)
+    end
+
+    it "assigns the requested customer as @customer" do
+      customer = create(:customer, :provider => @current_user.current_provider, inactivated_date: Date.yesterday)
+      post :activate, {:customer_id => customer.id }
+      expect(assigns(:customer)).to eq(customer)
+    end
+
+    it "redirects to the :index" do
+      customer = create(:customer, :provider => @current_user.current_provider, inactivated_date: Date.yesterday)
+      post :activate, {:customer_id => customer.id}
       expect(response).to redirect_to(customers_path)
     end
   end
