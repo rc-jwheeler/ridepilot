@@ -27,7 +27,7 @@
     <%= vehicle.active ? translate_helper("active") : translate_helper("inactive") %>
   </td>
   <td>
-    <%= number_to_human vehicle.last_odometer_reading %> mi.
+    <%= number_with_delimiter vehicle.last_odometer_reading %> mi.
   </td>
   <td>
     <%= vehicle.compliant? ? translate_helper("no") : translate_helper("yes") %>
