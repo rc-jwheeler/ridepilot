@@ -21,9 +21,9 @@
     
     .pull-right
       - if @active_only
-        = link_to translate_helper("all_customers_link_text"), all_customers_path
+        = link_to translate_helper("all_customers_link_text"), customers_path(active_only: false)
       - else
-        = link_to translate_helper("active_customers_link_text"), customers_path
+        = link_to translate_helper("active_customers_link_text"), customers_path(active_only: true)
 
 .row.col-sm-12{style: 'text-align: center; padding: 5px 0px;'}
   - ("A".."Z").to_a.each do |letter| 
@@ -32,10 +32,10 @@
         = letter
     - else 
       - if @active_only
-        = link_to letter, customers_path(:letter => letter)
+        = link_to letter, customers_path(letter: letter)
       - else
-        = link_to letter, all_customers_path(:letter => letter)
+        = link_to letter, customers_path(letter: letter)
 
 .row.col-sm-12
-  = render :partial=>"customer_listing", :locals=>{:show_inactivated_date=>@show_inactivated_date}
+  = render :partial=>"customer_listing"
   = will_paginate @customers

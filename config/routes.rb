@@ -32,7 +32,6 @@ Rails.application.routes.draw do
       post :activate, :as => :activate
       
       collection do
-        get :all
         get :autocomplete
         get :found
         get :search
