@@ -35,16 +35,16 @@ RSpec.describe CustomersController, type: :routing do
       expect(:post => "/customers/1/inactivate").to route_to("customers#inactivate", :customer_id => "1")
     end
 
+    it "routes to #create" do
+      expect(:post => "/customers/1/activate").to route_to("customers#activate", :customer_id => "1")
+    end
+
     it "routes to #autocomplete" do
       expect(:get => "/customers/autocomplete").to route_to("customers#autocomplete")
     end
 
     it "routes to #search" do
       expect(:get => "/customers/search").to route_to("customers#search")
-    end
-
-    it "routes to #all" do
-      expect(:get => "/customers/all").to route_to("customers#all")
     end
 
     it "routes to #found" do
