@@ -107,6 +107,7 @@ en:
   inactivation_reason: "Inactivation Reason"
   editing_customer: "Editing Customer: %{customer_name}"
   customer_listing: "Customers"
+  active_customer_listing: "Active Customers"
   new_customer: "New Customer"
   new_trip_for_customer: "New Trip for This Customer"
   duplicate: "Duplicate"

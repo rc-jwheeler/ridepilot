@@ -3,7 +3,7 @@ class CustomersController < ApplicationController
 
   def autocomplete
     customers = Customer.for_provider(current_provider_id).by_term( params['term'].downcase, 10 ).accessible_by(current_ability)
-    customers = customers.where(inactivated_date: nil) if params[:active_only] = true
+    customers = customers.where(inactivated_date: nil) if params[:active_only] == 'true'
     render :json => customers.map { |customer| customer.as_autocomplete }
   end
 
@@ -20,6 +20,7 @@ class CustomersController < ApplicationController
   def index
     # only active customers
     @show_inactivated_date = false
+    @active_only = true
     @customers = Customer.for_provider(current_provider_id).where(:inactivated_date => nil)
     @customers = @customers.by_letter(params[:letter]) if params[:letter].present?
     
@@ -31,7 +32,9 @@ class CustomersController < ApplicationController
   
   def all
     @show_inactivated_date = true
+    @active_only = false
     @customers = Customer.for_provider(current_provider_id).accessible_by(current_ability)
+    @customers = @customers.by_letter(params[:letter]) if params[:letter].present?
     @customers = @customers.paginate :page => params[:page], :per_page => PER_PAGE
     render :action => :index
   end
