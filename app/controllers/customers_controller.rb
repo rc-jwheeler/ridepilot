@@ -3,7 +3,7 @@ class CustomersController < ApplicationController
 
   def autocomplete
     customers = Customer.for_provider(current_provider_id).by_term( params['term'].downcase, 10 ).accessible_by(current_ability)
-    
+    customers = customers.where(inactivated_date: nil) if params[:active_only] = true
     render :json => customers.map { |customer| customer.as_autocomplete }
   end
 
