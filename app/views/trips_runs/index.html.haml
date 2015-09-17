@@ -83,7 +83,7 @@
     });
 
     $('#tripsTable').on('change', '.trip-run-options', function() {
-      assignTripToRun(parseInt($(this).attr('data-trip-id') ), parseInt($(this).val()), getSelectedTripPrevRunId() );
+      assignTripToRun(parseInt($(this).attr('data-trip-id') ), parseInt($(this).val()), parseInt($(this).attr('data-run-id') ) );
     });
 
     function manageSchedulingButtons() {
