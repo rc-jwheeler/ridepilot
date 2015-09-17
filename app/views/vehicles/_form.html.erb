@@ -75,7 +75,7 @@
             <%= label_tag nil, translate_helper("vehicle_form_last_odometer_reading"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
               <p class="form-control-static">
-                <%= number_to_human @vehicle.last_odometer_reading %> mi.
+                <%= number_with_delimiter @vehicle.last_odometer_reading %> mi.
               </p>
             </div>
           </div>
