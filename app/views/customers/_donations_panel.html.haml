@@ -18,7 +18,7 @@
           %th
             = translate_helper(:donation_notes)
       %tbody
-        - @customer.donations.each do |donation|
+        - @donations.each do |donation|
           %tr{data: {donation: donation.to_json}}
             - if is_editing
               %td
@@ -32,8 +32,39 @@
               = donation.notes
     - if is_editing
       .pull-right
-        %button.btn.action-button#addCustomerDonation
-          = translate_helper(:add)
+        = button_tag :type => 'button', id: 'addCustomerDonation', "data-target" => "#addDonationDialog", "data-toggle" => "modal", :class => "btn action-button" do
+          = translate_helper(:add_donation)
+= render 'shared/date_time_picker_javascript'
+
+:javascript 
+  $(document).ready(function() {
+    makeDatePickers();
+    $('#customerDonationsTable').on('click', '.deleteCustomerDonation', function(e) {
+      e.preventDefault();
+
+      $(this).parents('tr').remove();
+    });
+    $('#addDonationDialog').on('show.bs.modal', function () {
+      $('#addDonationDialog form')[0].reset();
+    });
+
+    function insertDonationRow(donationData) {
+      $('#customerDonationsTable').append("<tr data-address='" + JSON.stringify(donationData) + "'>" +
+          '<td><button class="deleteCustomerDonation btn-danger" name="button" type="button">Delete</button></td>' +
+          "<td>" + donationData.date + '</td>' +
+          "<td>" + donationData.amount + "</td>" +
+          "<td>" + donationData.notes + "</td>" +
+          "</tr>");
+    }
+
+    $('#addDonationDialog form').submit(function() {
+
+      //TODO: insert donation
+      $('#addDonationDialog').modal('hide');
+
+      return false; //no http submission
+    });
+  });
 
 
     

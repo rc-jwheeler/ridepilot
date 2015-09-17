@@ -57,6 +57,7 @@ class Trip < ActiveRecord::Base
   belongs_to :service_level
   belongs_to :trip_purpose
   belongs_to :trip_result
+  has_one    :donation
 
   delegate :label, to: :run, prefix: :run, allow_nil: true
   delegate :name, to: :customer, prefix: :customer, allow_nil: true
@@ -205,6 +206,17 @@ class Trip < ActiveRecord::Base
       title: customer_name + "\n" + pickup_address.try(:address_text).to_s,
       resource: adjusted_run_id
     }
+  end
+
+  def update_donation(user, amount)
+    return unless user && amount
+
+    if self.donation
+      self.donation.update_attributes(user: user, amount: amount)
+    elsif self.id && self.customer
+      self.donation = Donation.create(date: Time.now.in_time_zone, user: user, customer: self.customer, trip: self, amount: amount)
+      self.save
+    end
   end
     
   private

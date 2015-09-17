@@ -1,0 +1,29 @@
+#addDonationDialog.modal.fade.col-sm-12{:role => "dialog", "aria-hidden" => 'true', :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      = form_for Donation.new, :url=>'#' do |f|
+        .modal-header
+          .pull-right
+            = button_tag translate_helper(:ok), type: :submit, style: "margin-right: 5px;", class: "btn action-button"
+            = button_tag class: 'btn action-button', data: {dismiss: 'modal'} do
+              = translate_helper(:cancel)
+          .modal-title{:style => "text-align:left;"}
+            %strong
+              = translate_helper(:add_donation)
+        .modal-body.row{:style => "text-align:left;"}
+          .form-group.col-sm-12
+            .col-sm-3
+              = f.label :date, translate_helper("donation_date")
+            .col-sm-9  
+              = f.text_field :date, :value => format_time_for_listing_day(Time.now.in_time_zone), class: 'date-picker form-control', readonly: true
+          .form-group.col-sm-12
+            .col-sm-3
+              = f.label :amount, translate_helper(:donation_amount) 
+            .col-sm-9
+              = f.number_field :amount, min: 0, step: 0.01, size: 8, required: true, class: 'form-control'
+          .form-group.col-sm-12
+            .col-sm-3
+              = f.label :notes, translate_helper(:donation_notes) 
+            .col-sm-9
+              = f.text_area :notes, class: 'form-control'
+

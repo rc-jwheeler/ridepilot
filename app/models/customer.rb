@@ -234,6 +234,22 @@ class Customer < ActiveRecord::Base
     self.addresses = new_addresses
   end
 
+  def edit_donations(donation_objects, user)
+    # remove non-existing ones
+    prev_donation_ids = donations.pluck(:id)
+    existing_donation_ids = donation_objects.select {|r| r[:id] != nil}.map{|r| r[:id]}
+    Donation.where(id: prev_donation_ids-existing_donation_ids).delete_all
+
+    # update donations
+    new_donations = []
+    donation_objects.select {|r| r[:id].blank? }.each do |donation_hash|
+      d = Donation.new(donation_hash)
+      d.customer = self
+      d.user = user
+      d.save
+    end
+  end
+
   private 
 
   def address_required
