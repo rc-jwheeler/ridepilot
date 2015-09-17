@@ -23,6 +23,7 @@
 <%= simple_form_for @customer, html: { class: 'customer_form', id: 'customerForm' } do |f| %>
   <%= hidden_field_tag 'addresses' %>
   <%= hidden_field_tag 'mailing_address_index' %>
+  <%= hidden_field_tag 'donations' %>
   <%= f.hidden_field :group, value: is_group %>
   <%= render 'form_header', edit_mode: edit_mode, f: f %>
   <% if @customer.errors.any? %>
@@ -91,7 +92,15 @@
       addresses.push($(this).data('address'));
     });
 
-    $('#customerForm input[name=mailing_address_index').val(mailingAddressIndex);
-    $('#customerForm input[name=addresses').val(JSON.stringify(addresses));
+    $('#customerForm input[name=mailing_address_index]').val(mailingAddressIndex);
+    $('#customerForm input[name=addresses]').val(JSON.stringify(addresses));
+
+    // serializing donations
+    var donations = [];
+    $('#customerDonationsTable tbody tr').each(function() {
+      donations.push($(this).data('donation'));
+    });
+
+    $('#customerForm input[name=donations]').val(JSON.stringify(donations));
   });
 </script>

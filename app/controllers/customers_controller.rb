@@ -291,22 +291,28 @@ first_name, first_name, first_name, first_name,
 
   def edit_addresses(customer)
     if params[:addresses]
-      addresses = JSON.parse(params[:addresses])
+      addresses = JSON.parse(params[:addresses], symbolize_names: true)
       customer.edit_addresses addresses, params[:mailing_address_index].to_i || 0
     end
   end
 
   def get_donations
     if params[:donations]
-      @donations = JSON.parse(params[:donations]).map {|d_obj| Donation.new(d_obj)}
+      @donations = JSON.parse(params[:donations], symbolize_names: true).map {|d_obj| 
+        if d_obj[:id]
+          Donation.where(id: d_obj[:id].to_i).first
+        else
+          Donation.parse donation_hash, nil, current_user
+        end
+      }
     else
-      @donations = @customer.donations
+      @donations = @customer.donations.order('date desc')
     end
   end
 
   def edit_donations(customer)
     if params[:donations]
-      donations = JSON.parse(params[:donations])
+      donations = JSON.parse(params[:donations], symbolize_names: true)
       customer.edit_donations donations, current_user
     end
   end
