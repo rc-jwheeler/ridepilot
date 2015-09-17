@@ -65,4 +65,4 @@ Set up development environment
 
 License
 -------
-  Dual-licensed under the [MIT](http://opensource.org/licenses/MIT]) and [GPL v3](https://www.gnu.org/licenses/gpl-3.0.txt) licenses.
+  The RidePilot platform source code is released as open-source software under the GNU Affero General Public License v3 (http://www.gnu.org/licenses/agpl-3.0.en.html) license.
