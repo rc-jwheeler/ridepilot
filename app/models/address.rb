@@ -1,4 +1,6 @@
 class Address < ActiveRecord::Base
+  acts_as_paranoid # soft delete
+  
   belongs_to :provider
 
   belongs_to :trip_purpose
@@ -17,7 +19,7 @@ class Address < ActiveRecord::Base
   validates :state,   :length => { :is => 2 }
   validates :zip,     :length => { :is => 5, :if => lambda { |a| a.zip.present? } }
   
-  before_validation :compute_in_trimet_district
+  before_validation :compute_in_district
 
   has_paper_trail
   
@@ -45,9 +47,9 @@ class Address < ActiveRecord::Base
     self.class.find address_id
   end
   
-  def compute_in_trimet_district
+  def compute_in_district
     if the_geom and in_district.nil?
-      in_district = Region.count(:conditions => ["name='TriMet' and st_contains(the_geom, ?)", the_geom]) > 0
+      in_district = Region.count(:conditions => ["is_primary = 't' and st_contains(the_geom, ?)", the_geom]) > 0
     end 
   end
 

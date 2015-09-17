@@ -7,6 +7,12 @@ RSpec.describe Driver, type: :model do
     expect(driver.errors.keys).to include :provider
   end
 
+  it "requires a user" do
+    driver = build :driver, user: nil
+    expect(driver.valid?).to be_falsey
+    expect(driver.errors.keys).to include :user
+  end
+
   it "cannot be linked to the same user as another driver" do
     driver_1 = create :driver
     driver_2 = build :driver, user: driver_1.user

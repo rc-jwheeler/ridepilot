@@ -7,7 +7,7 @@ RSpec.describe DriversController, type: :controller do
   # Driver. As you add validations to Driver, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    attributes_for(:driver)
+    attributes_for(:driver, user_id: create(:user, :current_provider => @current_user.current_provider).id)
   }
 
   let(:invalid_attributes) {

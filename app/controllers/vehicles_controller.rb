@@ -2,7 +2,7 @@ class VehiclesController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @vehicles = @vehicles.for_provider(current_provider.id)
+    @vehicles = @vehicles.default_order.for_provider(current_provider.id)
   end
 
   def show
@@ -16,7 +16,8 @@ class VehiclesController < ApplicationController
   def edit; end
 
   def update
-    if @vehicle.update_attributes(vehicle_params)
+    @vehicle.assign_attributes vehicle_params
+    if @vehicle.is_all_valid?(current_provider_id) && @vehicle.save
       redirect_to @vehicle, notice: 'Vehicle was successfully updated.'
     else
       render action: :edit
@@ -25,7 +26,7 @@ class VehiclesController < ApplicationController
 
   def create
     @vehicle.provider = current_provider
-    if @vehicle.save
+    if @vehicle.is_all_valid?(current_provider_id) && @vehicle.save
       redirect_to @vehicle, notice: 'Vehicle was successfully created.'
     else
       render action: :new
@@ -40,7 +41,7 @@ class VehiclesController < ApplicationController
   private
   
   def vehicle_params
-    params.require(:vehicle).permit(:name, :year, :make, :model, :license_plate, :vin, :garaged_location, :active, :default_driver_id, :reportable, :insurance_coverage_details, :ownership, :responsible_party, :registration_expiration_date, :seating_capacity, :accessibility_equipment)
+    params.require(:vehicle).permit(:name, :year, :make, :model, :license_plate, :vin, :garaged_location, :active, :default_driver_id, :reportable, :insurance_coverage_details, :ownership, :responsible_party, :registration_expiration_date, :seating_capacity, :mobility_device_accommodations, :accessibility_equipment)
   end
   
 end

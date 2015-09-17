@@ -2,7 +2,7 @@ class DriversController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @drivers = @drivers.for_provider(current_provider.id)
+    @drivers = @drivers.default_order.for_provider(current_provider.id)
   end
 
   def show
@@ -19,13 +19,14 @@ class DriversController < ApplicationController
   end
 
   def update
+    @driver.attributes = driver_params
     if !@driver.is_all_valid?(current_provider_id)
       prep_edit
       render action: :edit
     else
       begin      
         Driver.transaction do
-          @driver.update_attributes!(driver_params)
+          @driver.save!
           create_or_update_hours!
         end
         redirect_to @driver, notice: 'Driver was successfully updated.'
@@ -69,15 +70,35 @@ class DriversController < ApplicationController
     
     @available_users = @driver.provider.users - User.drivers(@driver.provider)
     @available_users << @driver.user if @driver.user
+    @available_users = @available_users.sort_by(&:email) 
     
     @hours = @driver.hours_hash
 
     @start_hours = OperatingHours.available_start_times
     @end_hours = OperatingHours.available_end_times
+    
+    @driver.address ||= @driver.build_address provider: @driver.provider
   end
   
   def driver_params
-    params.require(:driver).permit(:active, :paid, :name, :email, :user_id)
+    params.require(:driver).permit(
+      :active, 
+      :paid, 
+      :name, 
+      :email, 
+      :user_id,
+      :address_attributes => [
+        :address,
+        :building_name,
+        :city,
+        :name,
+        :provider_id,
+        :state,
+        :zip,
+        :notes,
+        :phone_number
+      ],
+    )
   end
   
   def create_or_update_hours!

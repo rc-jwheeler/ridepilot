@@ -1,4 +1,8 @@
 class Vehicle < ActiveRecord::Base
+  include RequiredFieldValidatorModule 
+
+  acts_as_paranoid # soft delete
+  
   OWNERSHIPS = [:agency, :volunteer].freeze
 
   has_paper_trail
@@ -27,12 +31,13 @@ class Vehicle < ActiveRecord::Base
     format: {with: /\A[^ioq]*\z/i, allow_nil: true}
   validates_date :registration_expiration_date, allow_blank: true
   validates :seating_capacity, numericality: { only_integer: true, greater_than: 0 }
+  validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :ownership, inclusion: { in: OWNERSHIPS.map(&:to_s), allow_blank: true }
 
   scope :active,        -> { where(active: true) }
   scope :for_provider,  -> (provider_id) { where(provider_id: provider_id) }
   scope :reportable,    -> { where(reportable: true) }
-  scope :default_order, -> { order('active, name') }
+  scope :default_order, -> { order(:name) }
 
   def self.unassigned(provider)
     for_provider(provider).reject { |vehicle| vehicle.device_pool.present? }

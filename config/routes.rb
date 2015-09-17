@@ -29,9 +29,9 @@ Rails.application.routes.draw do
 
     resources :customers do
       post :inactivate, :as => :inactivate
+      post :activate, :as => :activate
       
       collection do
-        get :all
         get :autocomplete
         get :found
         get :search
@@ -92,6 +92,7 @@ Rails.application.routes.draw do
 
     resources :addresses, :only => [:create, :edit, :update, :destroy] do
       collection do
+        post :validate
         get :autocomplete
         get :search
         patch :upload

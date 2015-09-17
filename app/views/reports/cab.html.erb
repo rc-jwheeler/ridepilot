@@ -4,7 +4,7 @@
   <%= form_for @query, :url=>url_for(:action=>:cab), :html=>{:method=>:get} do |f| %>
     <fieldset class="select-month">
       <p>
-        <%= f.date_select  :start_date, :discard_day=>true %>
+        <%= f.date_select  :start_date, :discard_day=>true rescue nil%>
         <%= f.submit translate_helper("cab_report_submit") %>
       </p>
     </fieldset>

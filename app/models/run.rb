@@ -1,6 +1,9 @@
 class Run < ActiveRecord::Base
   include RequiredFieldValidatorModule
   include RecurringRideCoordinator
+
+  acts_as_paranoid # soft delete
+  
   schedules_occurrences_with :repeating_run, 
     with_attributes: -> (run) {
       attrs = {}
@@ -59,8 +62,6 @@ class Run < ActiveRecord::Base
     :end_odometer, 
     :unpaid_driver_break_time, 
     :paid, 
-    :actual_start_time, 
-    :actual_end_time, 
   ].freeze
   
   belongs_to :provider
@@ -73,7 +74,8 @@ class Run < ActiveRecord::Base
   
   before_validation :fix_dates, :set_complete
   
-  validates                 :driver, presence: true
+  validates                 :name, presence: true
+  #validates                 :driver, presence: true
   validates                 :provider, presence: true
   validates                 :vehicle, presence: true
   validates_date            :date
