@@ -5,7 +5,7 @@
       <div class="panel-heading"><%= translate_helper("document_form_error", count: @document.errors.count) %></div>
       <div class="panel-body">
         <ul>
-          <% @document.errors.full_messages.uniq.each do |msg| %>
+          <% @document.errors.full_messages.each do |msg| %>
             <li><%= msg %></li>
           <% end %>
         </ul>
