@@ -5,9 +5,9 @@ class Document < ActiveRecord::Base
   has_attached_file :document
 
   validates :description, presence: true
-  validates :documentable, presence: true, associated: true
-  validates_attachment :document, presence: true,
-    content_type: { :content_type => [
+  validates :documentable, presence: true
+  validates_attachment_presence :document
+  validates_attachment_content_type :document, content_type: [
       "image/jpeg", "image/gif", "image/png", # image files (.png, .gif, .jpg)
       "text/plain",                           # plain text files (.txt)
       "application/pdf",                      # PDF (.pdf)
@@ -17,8 +17,8 @@ class Document < ActiveRecord::Base
       
       # MS Word (.doc, .docx)
       "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ]},
-    :size => { :in => 0..2.gigabytes }
+    ], if: lambda { |d| d.document.present? }
+  validates_attachment_size :document, :in => 1..2.gigabytes, if: lambda { |d| d.document.present? }
           
   scope :default_order, -> { order(description: :asc) }
 end
