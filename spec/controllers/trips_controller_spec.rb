@@ -237,7 +237,6 @@ RSpec.describe TripsController, type: :controller do
           :trip_purpose_id => create(:trip_purpose, name: 'New purpose').id,
           :trip_result_id => create(:trip_result).id,
           :notes => "MyText",
-          :donation => "9.99",
           :customer_informed => false,
           :cab => false,
           :cab_notified => false,

@@ -217,18 +217,10 @@ class ReportsController < ApplicationController
     query_params = params[:query] || {}
     @query = Query.new(query_params)
 
-    @donations_by_customer = {}
-    @total = 0
-    for trip in Trip.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).where(["donation > 0"]).order(:pickup_time)
-      customer = trip.customer
-      if ! @donations_by_customer.member? customer
-        @donations_by_customer[customer] = trip.donation
-      else
-        @donations_by_customer[customer] += trip.donation
-      end
-      @total += trip.donation
-    end
-    @customers = @donations_by_customer.keys.sort_by {|customer| [customer.last_name, customer.first_name] }
+    donations = Donation.for_date_range(@query.start_date, @query.end_date)
+    @total = donations.sum(:amount)
+    @customers = Customer.where(id: donations.pluck(:customer_id).uniq)
+    @donations_by_customer = donations.group(:customer_id).sum(:amount)
   end
 
   def cab
@@ -575,8 +567,8 @@ class ReportsController < ApplicationController
         },
       },
       rider_donations: {
-        rc: trip_queries[:in_range][:rc].sum(:donation),
-        stf: trip_queries[:in_range][:stf][:all].sum(:donation),
+        rc: trip_queries[:in_range][:rc].joins(:donation).sum("donations.amount"),
+        stf: trip_queries[:in_range][:stf][:all].joins(:donation).sum("donations.amount"),
       },
       trip_purposes: {trips: [], total_rides: {}, reimbursements_due: {}}, # We will loop over and add these later
       new_rider_ethinic_heritage: {ethnicities: []}, # We will loop over and add the rest of these later

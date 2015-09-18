@@ -85,8 +85,8 @@ RSpec.describe Monthly do
       @p1 = create :provider
       @p2 = create :provider
       
-      @f1 = FundingSource.create(name: "FS1")
-      @f2 = FundingSource.create(name: "FS2")
+      @f1 = create(:funding_source, name: "FS1")
+      @f2 = create(:funding_source, name: "FS2")
     end
     
     it "should validate start_date uniqueness based on provider_id and funding_source_id" do

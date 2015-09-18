@@ -160,16 +160,16 @@ RSpec.describe ReportsController do
         
         # Runs for existing drivers, in report range
         vehicle = create(:vehicle)
-        r_1 = Run.create(name: 'run_1', provider: @test_provider, driver: ed_1, paid: true,  date: @test_start_date, actual_start_time: @test_start_date, actual_end_time: @test_start_date + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
-        r_2 = Run.create(name: 'run_2', provider: @test_provider, driver: ed_2, paid: false, date: @test_start_date, actual_start_time: @test_start_date, actual_end_time: @test_start_date + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
+        r_1 = create(:run, name: 'run_1', provider: @test_provider, driver: ed_1, paid: true,  date: @test_start_date, actual_start_time: @test_start_date, actual_end_time: @test_start_date + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
+        r_2 = create(:run, name: 'run_2', provider: @test_provider, driver: ed_2, paid: false, date: @test_start_date, actual_start_time: @test_start_date, actual_end_time: @test_start_date + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
 
         # Runs for existing drivers, outside report range
-        r_3 = Run.create(name: 'run_3', provider: @test_provider, driver: ed_1, paid: true,  date: @test_start_date - 1.month, actual_start_time: @test_start_date - 1.month, actual_end_time: @test_start_date - 1.month + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
-        r_4 = Run.create(name: 'run_4', provider: @test_provider, driver: ed_2, paid: false, date: @test_start_date - 1.month, actual_start_time: @test_start_date - 1.month, actual_end_time: @test_start_date - 1.month + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
+        r_3 = create(:run, name: 'run_3', provider: @test_provider, driver: ed_1, paid: true,  date: @test_start_date - 1.month, actual_start_time: @test_start_date - 1.month, actual_end_time: @test_start_date - 1.month + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
+        r_4 = create(:run, name: 'run_4', provider: @test_provider, driver: ed_2, paid: false, date: @test_start_date - 1.month, actual_start_time: @test_start_date - 1.month, actual_end_time: @test_start_date - 1.month + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
 
         # Runs for new drivers, in report range
-        r_5 = Run.create(name: 'run_5', provider: @test_provider, driver: nd_1, paid: true,  date: @test_start_date, actual_start_time: @test_start_date, actual_end_time: @test_start_date + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
-        r_6 = Run.create(name: 'run_6', provider: @test_provider, driver: nd_2, paid: false, date: @test_start_date, actual_start_time: @test_start_date, actual_end_time: @test_start_date + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
+        r_5 = create(:run, name: 'run_5', provider: @test_provider, driver: nd_1, paid: true,  date: @test_start_date, actual_start_time: @test_start_date, actual_end_time: @test_start_date + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
+        r_6 = create(:run, name: 'run_6', provider: @test_provider, driver: nd_2, paid: false, date: @test_start_date, actual_start_time: @test_start_date, actual_end_time: @test_start_date + 30.minutes, unpaid_driver_break_time: 5, vehicle: vehicle)
 
         # Rides for existing drivers, in report range
         create(:trip, provider: @test_provider, run: r_1, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
@@ -281,12 +281,18 @@ RSpec.describe ReportsController do
     describe "rider_donations" do
       before do
         # In report range
-        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date, donation: 1.23)
-        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, donation: 1.23)
+        trip_1 = create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date)
+        trip_2 = create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date)
 
         # Outside report range
-        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, donation: 1.23)
-        create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month, donation: 1.23)
+        trip_3 = create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month)
+        trip_4 = create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:rc],  pickup_time: @test_start_date - 1.month)
+
+        # donations
+        create(:donation, trip: trip_1, customer: trip_1.customer, date: trip_1.pickup_time, amount: 1.23)
+        create(:donation, trip: trip_2, customer: trip_2.customer, date: trip_2.pickup_time, amount: 1.23)
+        create(:donation, trip: trip_3, customer: trip_3.customer, date: trip_3.pickup_time, amount: 1.23)
+        create(:donation, trip: trip_4, customer: trip_4.customer, date: trip_4.pickup_time, amount: 1.23)
 
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}, id: @cctc_custom_report.id
       end

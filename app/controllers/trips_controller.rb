@@ -182,7 +182,7 @@ class TripsController < ApplicationController
     respond_to do |format|
       prep_view
       if @trip.is_all_valid?(current_provider_id) && @trip.save
-        @trip.update_donation current_user, params[:customer_donation].to_f
+        @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
         format.html {
           if params[:run_id].present?
             redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
@@ -211,7 +211,7 @@ class TripsController < ApplicationController
 
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.update_attributes(trip_params)
-        @trip.update_donation current_user, params[:customer_donation].to_f
+        @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
         format.html { redirect_to(trips_path, :notice => 'Trip was successfully updated.')  }
         format.js { 
           render :json => {:status => "success"}, :content_type => "text/json"
