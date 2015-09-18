@@ -59,9 +59,7 @@ class Ability
     if role.admin?
       can :manage, DriverCompliance, :driver => {:provider_id => provider.id}
       can :manage, DriverHistory, :driver => {:provider_id => provider.id}
-      # can :manage, LookupTable
-      can :manage, RecurringDriverCompliance, :provider_id => provider.id
-      can :manage, RecurringVehicleMaintenanceCompliance, :provider_id => provider.id
+      can :manage, LookupTable
       can :manage, User, :roles => {:provider_id => provider.id}
       can :manage, VehicleMaintenanceEvent, :vehicle => {:provider_id => provider.id}
       can :manage, VehicleMaintenanceCompliance, :vehicle => {:provider_id => provider.id}
@@ -69,6 +67,11 @@ class Ability
       can :load,   Address
     else
       can :read, User, :roles => {:provider_id => provider.id}
+    end
+
+    if role.editor?
+      can :manage, RecurringDriverCompliance, :provider_id => provider.id
+      can :manage, RecurringVehicleMaintenanceCompliance, :provider_id => provider.id
     end
 
     can :access, Reporting::Report
