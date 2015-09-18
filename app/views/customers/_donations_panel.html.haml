@@ -1,7 +1,76 @@
 - edit_mode = :edit if !defined? edit_mode
+- is_editing = edit_mode == :edit || edit_mode == :new
 
 .panel.panel-primary#customer_donations_panel
   .panel-heading
     %h3.panel-title
       = translate_helper(:customer_donations_panel)
   .panel-body{style: 'padding: 5px;'}
+    %table.table.table-striped.table-bordered#customerDonationsTable
+      %thead
+        %tr
+          - if is_editing
+            %th{width: 50}
+          %th
+            = translate_helper(:donation_date)
+          %th
+            = translate_helper(:donation_amount)
+          %th
+            = translate_helper(:donation_notes)
+      %tbody
+        - @donations.each do |donation|
+          %tr{data: {donation: donation.to_json}}
+            - if is_editing
+              %td
+                = button_tag :type => 'button', class: 'deleteCustomerDonation btn-danger' do 
+                  = translate_helper(:delete)
+            %td
+              = format_time_for_listing_day donation.date if donation.date
+            %td
+              = donation.amount
+            %td
+              = donation.notes
+    - if is_editing
+      .pull-right
+        = button_tag :type => 'button', id: 'addCustomerDonation', "data-target" => "#addDonationDialog", "data-toggle" => "modal", :class => "btn action-button" do
+          = translate_helper(:add_donation)
+= render 'shared/date_time_picker_javascript'
+
+:javascript 
+  $(document).ready(function() {
+    makeDatePickers();
+    $('#customerDonationsTable').on('click', '.deleteCustomerDonation', function(e) {
+      e.preventDefault();
+
+      $(this).parents('tr').remove();
+    });
+    $('#addDonationDialog').on('show.bs.modal', function () {
+      $('#addDonationDialog form')[0].reset();
+    });
+
+    function insertDonationRow(donationData) {
+      $('#customerDonationsTable').append("<tr data-donation='" + JSON.stringify(donationData) + "'>" +
+          '<td><button class="deleteCustomerDonation btn-danger" name="button" type="button">Delete</button></td>' +
+          "<td>" + donationData.date + '</td>' +
+          "<td>" + donationData.amount + "</td>" +
+          "<td>" + donationData.notes + "</td>" +
+          "</tr>");
+    }
+
+    $('#addDonationDialog form').submit(function() {
+      var donationData = {
+        date: $('#donation_date').val(),
+        amount: $('#donation_amount').val(),
+        notes: $('#donation_notes').val()
+
+      };
+      //insert new donation row
+      $('#addDonationDialog').modal('hide');
+      insertDonationRow(donationData);
+
+      return false; //no http submission
+    });
+  });
+
+
+    

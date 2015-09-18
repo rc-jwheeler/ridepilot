@@ -11,6 +11,7 @@ class Customer < ActiveRecord::Base
   belongs_to :mobility
   belongs_to :default_funding_source, :class_name=>'FundingSource'
   has_many   :trips, :dependent => :destroy
+  has_many   :donations, :dependent => :destroy
 
   belongs_to :service_level
   delegate :name, to: :service_level, prefix: :service_level, allow_nil: true
@@ -213,7 +214,7 @@ class Customer < ActiveRecord::Base
 
   def edit_addresses(address_objects, mailing_address_index)
     # remove non-existing ones
-    prev_addr_ids = addresses.pluck(:id)
+    prev_addr_ids = self.addresses.pluck(:id)
     existing_addr_ids = address_objects.select {|r| r[:id] != nil}.map{|r| r[:id]}
     Address.where(id: prev_addr_ids-existing_addr_ids).delete_all
 
@@ -231,6 +232,19 @@ class Customer < ActiveRecord::Base
     end
 
     self.addresses = new_addresses
+  end
+
+  def edit_donations(donation_objects, user)
+    # remove non-existing ones
+    prev_donation_ids = donations.pluck(:id)
+    existing_donation_ids = donation_objects.select {|r| r[:id] != nil}.map{|r| r[:id]}
+    Donation.where(id: prev_donation_ids-existing_donation_ids).delete_all
+
+    # update donations
+    donation_objects.select {|r| r[:id].blank? }.each do |donation_hash|
+      d = Donation.parse donation_hash, self, user
+      d.save
+    end
   end
 
   private 

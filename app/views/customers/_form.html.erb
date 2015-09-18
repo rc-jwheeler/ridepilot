@@ -23,6 +23,7 @@
 <%= simple_form_for @customer, html: { class: 'customer_form', id: 'customerForm' } do |f| %>
   <%= hidden_field_tag 'addresses' %>
   <%= hidden_field_tag 'mailing_address_index' %>
+  <%= hidden_field_tag 'donations' %>
   <%= f.hidden_field :group, value: is_group %>
   <%= render 'form_header', edit_mode: edit_mode, f: f %>
   <% if @customer.errors.any? %>
@@ -44,14 +45,15 @@
     <%= render 'common_addresses_panel', edit_mode: edit_mode %>
     <%#= render 'eligibility_panel', f: f  if !is_group %>
     <%= render 'providers_panel', f: f %>
-    <%#= render 'donations_panel', f: f %>
-    <%= render 'others_panel', f: f %>
+    <%= render 'donations_panel', f: f, edit_mode: edit_mode  %>
+    <%= render 'others_panel', f: f, edit_mode: edit_mode %>
   </div>
 
 <% end %>
 
 <%= render 'inactivate_dialog' if edit_mode == :show %>
-<%= render 'add_address_dialog' %>
+<%= render 'add_donation_dialog' if edit_mode == :edit || edit_mode == :new %>
+<%= render 'add_address_dialog' if edit_mode == :edit || edit_mode == :new %>
 
 <%= render 'shared/hide_invisible_form_fields_js', model_name: "customer", table_name: 'customers', provider_id:  current_provider.try(:id) %>
 
@@ -90,7 +92,15 @@
       addresses.push($(this).data('address'));
     });
 
-    $('#customerForm input[name=mailing_address_index').val(mailingAddressIndex);
-    $('#customerForm input[name=addresses').val(JSON.stringify(addresses));
+    $('#customerForm input[name=mailing_address_index]').val(mailingAddressIndex);
+    $('#customerForm input[name=addresses]').val(JSON.stringify(addresses));
+
+    // serializing donations
+    var donations = [];
+    $('#customerDonationsTable tbody tr').each(function() {
+      donations.push($(this).data('donation'));
+    });
+
+    $('#customerForm input[name=donations]').val(JSON.stringify(donations));
   });
 </script>

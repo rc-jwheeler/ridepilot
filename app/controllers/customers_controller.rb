@@ -134,6 +134,7 @@ first_name, first_name, first_name, first_name,
 
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
+        edit_donations @customer
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
@@ -183,11 +184,10 @@ first_name, first_name, first_name, first_name,
       providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
     end
     @customer.authorized_providers = (providers << @customer.provider).uniq
-    
-    
-    
+
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
+        edit_donations @customer
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
       else
@@ -285,12 +285,35 @@ first_name, first_name, first_name, first_name,
     @ethnicity_names = (current_provider.ethnicities.collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
     @funding_sources = FundingSource.by_provider(current_provider)
     @service_levels = ServiceLevel.pluck(:name, :id)
+
+    get_donations
   end
 
   def edit_addresses(customer)
     if params[:addresses]
-      addresses = JSON.parse(params[:addresses])
+      addresses = JSON.parse(params[:addresses], symbolize_names: true)
       customer.edit_addresses addresses, params[:mailing_address_index].to_i || 0
+    end
+  end
+
+  def get_donations
+    if params[:donations]
+      @donations = JSON.parse(params[:donations], symbolize_names: true).map {|d_obj| 
+        if d_obj[:id]
+          Donation.where(id: d_obj[:id].to_i).first
+        else
+          Donation.parse donation_hash, nil, current_user
+        end
+      }
+    else
+      @donations = @customer.donations.order('date desc')
+    end
+  end
+
+  def edit_donations(customer)
+    if params[:donations]
+      donations = JSON.parse(params[:donations], symbolize_names: true)
+      customer.edit_donations donations, current_user
     end
   end
 

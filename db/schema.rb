@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150916180653) do
+
+ActiveRecord::Schema.define(version: 20150916194929) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -177,6 +178,22 @@ ActiveRecord::Schema.define(version: 20150916180653) do
   end
 
   add_index "documents", ["documentable_id", "documentable_type"], :name => "index_documents_on_documentable_id_and_documentable_type"
+
+  create_table "donations", force: true do |t|
+    t.datetime "date"
+    t.float    "amount"
+    t.text     "notes"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "customer_id"
+    t.integer  "user_id"
+    t.integer  "trip_id"
+  end
+
+  add_index "donations", ["customer_id"], :name => "index_donations_on_customer_id"
+  add_index "donations", ["trip_id"], :name => "index_donations_on_trip_id"
+  add_index "donations", ["user_id"], :name => "index_donations_on_user_id"
 
   create_table "driver_compliances", force: true do |t|
     t.integer  "driver_id"
@@ -646,7 +663,7 @@ ActiveRecord::Schema.define(version: 20150916180653) do
     t.string   "trip_purpose_old"
     t.string   "trip_result_old",                             default: ""
     t.text     "notes"
-    t.decimal  "donation",           precision: 10, scale: 2, default: 0.0
+    t.decimal  "donation_old",       precision: 10, scale: 2, default: 0.0
     t.integer  "provider_id"
     t.datetime "called_back_at"
     t.boolean  "customer_informed",                           default: false

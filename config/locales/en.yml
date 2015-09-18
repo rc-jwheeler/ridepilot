@@ -695,6 +695,11 @@ en:
   donation_report_heading: "Reports: Donations"
   donation_report_submit: "Report"
   total_donations: "Total Donations"
+  donation_date: 'Date'
+  donation_amount: 'Amount'
+  donation_notes: 'Notes'
+  add_donation: 'Add'
+  add_donation_dialog_title: 'Add Donation' 
   total: "Total"
   reports_heading: "Reports"
   service_summary_link_text: "Service Summary"
