@@ -281,10 +281,10 @@ first_name, first_name, first_name, first_name,
   end
   
   def prep_edit
-    @mobilities = Mobility.all
-    @ethnicity_names = (current_provider.ethnicities.collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
+    @mobilities = Mobility.by_provider(current_provider)
+    @ethnicity_names = (ProviderEthnicity.by_provider(current_provider).collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
     @funding_sources = FundingSource.by_provider(current_provider)
-    @service_levels = ServiceLevel.pluck(:name, :id)
+    @service_levels = ServiceLevel.by_provider(current_provider).pluck(:name, :id)
 
     get_donations
   end

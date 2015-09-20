@@ -7,6 +7,7 @@ class FundingSource < ActiveRecord::Base
   validates_length_of :name, :minimum=>2
 
   def self.by_provider(provider)
-    return FundingSource.joins(:funding_source_visibilities).where("funding_source_visibilities.provider_id = ?", provider.id)
+    hidden_ids = HiddenLookupTableValue.hidden_ids self.table_name, provider.try(:id)
+    where.not(id: hidden_ids)
   end
 end

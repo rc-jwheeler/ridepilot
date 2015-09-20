@@ -8,4 +8,9 @@ class ProviderEthnicity < ActiveRecord::Base
   default_scope { order('name') }
 
   has_paper_trail
+
+  def self.by_provider(provider)
+    hidden_ids = HiddenLookupTableValue.hidden_ids self.table_name, provider.try(:id)
+    where.not(id: hidden_ids)
+  end
 end
