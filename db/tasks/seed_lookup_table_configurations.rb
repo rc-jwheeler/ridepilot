@@ -28,9 +28,8 @@
   },
   {
     name: 'provider_ethnicities',
-    caption: 'Provider Ethnicity',
-    value_column_name: 'name',
-    is_provider_specific: true
+    caption: 'Ethnicity',
+    value_column_name: 'name'
   }
 ].each do | config_data|
   config = LookupTable.find_by(name: config_data[:name])

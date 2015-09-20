@@ -26,6 +26,16 @@ class LookupTablesController < ApplicationController
     redirect_to_show_page
   end
 
+  def hide_value
+    @item = @lookup_table.hide_value(params[:model_id], current_provider_id)
+    redirect_to_show_page
+  end
+
+  def show_value
+    @item = @lookup_table.show_value(params[:model_id], current_provider_id)
+    redirect_to_show_page
+  end
+
   private
 
   def set_lookup_tables

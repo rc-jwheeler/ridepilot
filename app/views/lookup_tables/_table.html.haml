@@ -1,17 +1,22 @@
 .col-sm-12{style: 'padding: 10px 0px;'}
-  - if table.add_value_allowed
-    = render partial: 'add_value_button', locals: {table: table}
-  - if table.edit_value_allowed
-    = render partial: 'edit_value_button', locals: {table: table}
-  - if table.delete_value_allowed
-    = render partial: 'delete_value_button', locals: {table: table}
+  - if current_user.super_admin?
+    - if table.add_value_allowed
+      = render partial: 'add_value_button', locals: {table: table}
+    - if table.edit_value_allowed
+      = render partial: 'edit_value_button', locals: {table: table}
+    - if table.delete_value_allowed
+      = render partial: 'delete_value_button', locals: {table: table}
+  = render partial: 'hide_value_button', locals: {table: table}
+  = render partial: 'show_value_button', locals: {table: table}
 %table.table.table-condensed.table-striped.table-bordered.table-hover#lookupTable
   %thead
     %th
       = table.value_column_name.titleize
   %tbody
-    - table.values(current_provider.try(:id)).each do |item|
-      %tr{data: {"model-id": item.id}}
+    - hidden_ids = HiddenLookupTableValue.hidden_ids table.name, current_provider_id
+    - table.values.each do |item|
+      - row_class = hidden_ids.index(item.id) ? 'hidden-lookup-value' : ''
+      %tr{data: {"model-id": item.id}, class: row_class}
         %td
           = item[table.value_column_name]
 
@@ -27,6 +32,21 @@
       $('#deleteLookupTableValue').prop('disabled', 'disabled');
     };
 
+    var hideVisibilityButtons = function() {
+      $('#showLookupTableValue').hide();
+      $('#hideLookupTableValue').hide();
+    };
+
+    var enableShowButton = function() {
+      $('#showLookupTableValue').show();
+      $('#hideLookupTableValue').hide();
+    };
+
+    var enableHideButton = function() {
+      $('#hideLookupTableValue').show();
+      $('#showLookupTableValue').hide();
+    };
+
     var table = $('#lookupTable').dataTable();
 
     // select & deselect table row
@@ -34,11 +54,18 @@
       if ( $(this).hasClass('selected') ) {
         $(this).removeClass('selected');
         disableEditingButtons();
+        hideVisibilityButtons();
       }
       else {
         table.$('tr.selected').removeClass('selected');
         $(this).addClass('selected');
         enableEditingButtons();
+
+        if($(this).hasClass('hidden-lookup-value')) {
+          enableShowButton();
+        } else {
+          enableHideButton();
+        }
       }
     } );
     

@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20150916194929) do
+ActiveRecord::Schema.define(version: 20150920153515) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -266,6 +265,16 @@ ActiveRecord::Schema.define(version: 20150916194929) do
 
   add_index "funding_sources", ["deleted_at"], :name => "index_funding_sources_on_deleted_at"
 
+  create_table "hidden_lookup_table_values", force: true do |t|
+    t.integer  "provider_id"
+    t.string   "table_name"
+    t.integer  "value_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "hidden_lookup_table_values", ["provider_id"], :name => "index_hidden_lookup_table_values_on_provider_id"
+
   create_table "locales", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -281,7 +290,6 @@ ActiveRecord::Schema.define(version: 20150916194929) do
     t.boolean  "add_value_allowed",    default: true
     t.boolean  "edit_value_allowed",   default: true
     t.boolean  "delete_value_allowed", default: true
-    t.boolean  "is_provider_specific", default: false
     t.string   "model_name"
   end
 
