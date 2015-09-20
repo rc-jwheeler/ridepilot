@@ -24,7 +24,7 @@
         = f.select :run_result_id, options_for_select( [[translate_helper(:complete), 1], [translate_helper(:incomplete), 2]], session[:run_result_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }
       .col-sm-12{style: 'padding: 5px;'}
         = f.label :trip_result_id, translate_helper(:trip_result)
-        = f.select :trip_result_id, options_from_collection_for_select( TripResult.all, :id, :name, session[:trip_result_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }
+        = f.select :trip_result_id, options_from_collection_for_select( TripResult.by_provider(current_provider), :id, :name, session[:trip_result_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }
 
 = render "shared/date_time_picker_javascript"
 :javascript

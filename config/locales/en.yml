@@ -127,8 +127,12 @@ en:
   delete_value: "Delete Value"
   lookup_table: "Lookup Table"
   edit_value: "Edit Value"
+  hide_value: 'Hide Value'
+  show_value: 'Show Value'
   value: "Value"
   key: "Key"
+  confirm_hide_lookup_value_message: 'Are you sure to change %{value} to be invisible?'
+  confirm_show_lookup_value_message: 'Are you sure to change %{value} to be visible?'
   #Shared
   site_title: "Ridepilot"
   new_trip: "New Trip"

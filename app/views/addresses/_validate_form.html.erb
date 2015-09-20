@@ -47,7 +47,7 @@
   
   <li class="selfclear">
     <%= label_tag "#{prefix}_trip_purpose", translate_helper("trip_purpose") %>
-    <%= select_tag "#{prefix}_trip_purpose_id", options_for_select(TripPurpose.all.map { |tp| [tp.name, tp.id] }, address.trip_purpose_id), :include_blank => true %>
+    <%= select_tag "#{prefix}_trip_purpose_id", options_for_select(TripPurpose.by_provider(current_provider).map { |tp| [tp.name, tp.id] }, address.trip_purpose_id), :include_blank => true %>
   </li>
 
   <li class="selfclear">

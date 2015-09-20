@@ -130,7 +130,7 @@ class ReportsController < ApplicationController
         .includes(:customer, :pickup_address, :dropoff_address).completed
 
     by_purpose = {}
-    TripPurpose.all.each do |purpose|
+    TripPurpose.by_provider(current_provider).by_provider(current_provider).all.each do |purpose|
       by_purpose[purpose.name] = {'purpose' => purpose.name, 'in_district' => 0, 'out_of_district' => 0}
     end
     @total = {'in_district' => 0, 'out_of_district' => 0}
@@ -149,7 +149,7 @@ class ReportsController < ApplicationController
     end
 
     @trips_by_purpose = []
-    TripPurpose.all.each do |purpose|
+    TripPurpose.by_provider(current_provider).all.each do |purpose|
       @trips_by_purpose << by_purpose[purpose.name]
     end
 
@@ -173,7 +173,7 @@ class ReportsController < ApplicationController
   def show_trips_for_verification
     query_params = params[:query] || {}
     @query = Query.new(query_params)
-    @trip_results = TripResult.pluck(:name, :id)
+    @trip_results = TripResult.by_provider(current_provider).pluck(:name, :id)
 
     unless @trips.present?
       @trips = Trip.for_provider(current_provider_id).for_date_range(@query.start_date,@query.end_date).
@@ -188,7 +188,7 @@ class ReportsController < ApplicationController
     if @trips.empty?
       redirect_to({:action => :show_trips_for_verification}, :notice => "Trips updated successfully" )
     else
-      @trip_results = TripResult.pluck(:name, :id)
+      @trip_results = TripResult.by_provider(current_provider).pluck(:name, :id)
       render :action => :show_trips_for_verification
     end
   end

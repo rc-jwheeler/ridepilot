@@ -277,15 +277,15 @@ class TripsController < ApplicationController
 
   def prep_view
     @customer           = @trip.customer
-    @mobilities         = Mobility.order(:name).all
+    @mobilities         = Mobility.by_provider(current_provider).order(:name)
     @funding_sources    = FundingSource.by_provider(current_provider)
-    @trip_results       = TripResult.pluck(:name, :id)
-    @trip_purposes      = TripPurpose.all
+    @trip_results       = TripResult.by_provider(current_provider).pluck(:name, :id)
+    @trip_purposes      = TripPurpose.by_provider(current_provider)
     @drivers            = Driver.active.for_provider @trip.provider_id
     @trips              = [] if @trips.nil?
     @vehicles           = add_cab(Vehicle.active.for_provider(@trip.provider_id))
     @repeating_vehicles = @vehicles 
-    @service_levels     = ServiceLevel.pluck(:name, :id)
+    @service_levels     = ServiceLevel.by_provider(current_provider).pluck(:name, :id)
 
     @trip.run_id = -1 if @trip.cab
 

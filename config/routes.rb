@@ -163,6 +163,8 @@ Rails.application.routes.draw do
         post :add_value
         put :update_value
         put :destroy_value
+        put :hide_value
+        put :show_value
       end
     end
   end
