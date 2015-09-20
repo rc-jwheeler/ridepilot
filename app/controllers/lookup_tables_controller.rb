@@ -12,7 +12,7 @@ class LookupTablesController < ApplicationController
   end
 
   def add_value
-    @item = @lookup_table.add_value(params[:value], current_provider_id)
+    @item = @lookup_table.add_value(params[:value])
     redirect_to_show_page
   end
 
@@ -27,12 +27,14 @@ class LookupTablesController < ApplicationController
   end
 
   def hide_value
-    @item = @lookup_table.hide_value(params[:model_id], current_provider_id)
+    @lookup_table.hide_value(params[:model_id], current_provider_id)
+    @item = @lookup_table.get_value params[:model_id]
     redirect_to_show_page
   end
 
   def show_value
-    @item = @lookup_table.show_value(params[:model_id], current_provider_id)
+    @lookup_table.show_value(params[:model_id], current_provider_id)
+    @item = @lookup_table.get_value params[:model_id]
     redirect_to_show_page
   end
 

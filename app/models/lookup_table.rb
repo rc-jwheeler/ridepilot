@@ -10,11 +10,11 @@ class LookupTable < ActiveRecord::Base
     (model_name || name.classify).constantize
   end
 
-  def find_by_value(value, provider_id = nil)
+  def find_by_value(value)
     model.find_by("#{value_column_name}": value)
   end
 
-  def add_value(value, provider_id = nil)
+  def add_value(value)
     model.create("#{value_column_name}": value) rescue nil if add_value_allowed
   end
 
@@ -29,6 +29,10 @@ class LookupTable < ActiveRecord::Base
     item.destroy if item && delete_value_allowed
 
     item
+  end
+
+  def get_value(model_id)
+    model.find_by_id(model_id)
   end
 
   def hide_value(model_id, provider_id)
