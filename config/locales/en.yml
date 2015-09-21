@@ -586,6 +586,9 @@ en:
   zoom_level: "Zoom Level"
   zoom: "Zoom:"
   save_viewport_submit: "Save Viewport"
+  min_trip_time_gap_in_mins_text: 'Configure the default time gap between trip pickup and appointment times (mins)'
+  min_trip_time_gap_in_mins_label: 'Time gap (in minutes)'
+  update_min_trip_time_gap: 'Update'
   #reports
   service_performed: "Service Performed"
   odometer_reading: "Odometer Reading"

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150920153515) do
+ActiveRecord::Schema.define(version: 20150921173350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -380,6 +380,7 @@ ActiveRecord::Schema.define(version: 20150920153515) do
     t.spatial  "viewport_center",                                 limit: {:srid=>4326, :type=>"point", :geographic=>true}
     t.text     "fields_required_for_run_completion"
     t.datetime "deleted_at"
+    t.integer  "min_trip_time_gap_in_mins",                                                                                                        default: 30
   end
 
   add_index "providers", ["deleted_at"], :name => "index_providers_on_deleted_at"

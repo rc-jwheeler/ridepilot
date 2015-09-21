@@ -138,6 +138,21 @@
   <% end %>
 <% end %>
 
+<h2 class="section-header"><%= translate_helper("min_trip_time_gap_in_mins_text") %></h2>
+<% if can? :edit, @provider %>
+  <%= form_tag update_min_trip_time_gap_provider_path(@provider) do %>
+    <fieldset>
+      <li>
+        <%= label_tag :min_trip_time_gap_in_mins, translate_helper("min_trip_time_gap_in_mins_label") %>
+        <%= number_field_tag :min_trip_time_gap_in_mins, number_with_precision(@provider.min_trip_time_gap_in_mins, :precision => 0), :size => 4, :min => "0", :step => "1", :required => "required" %>
+      </li>
+      <div class="actions">
+        <%= submit_tag translate_helper("update_min_trip_time_gap") %>
+      </div>
+    </fieldset>
+  <% end %>
+<% end %>
+
 <h2 class="section-header"><%= translate_helper("provider_form_fields_required_for_run_completion") %></h2>
 <% if can? :edit, @provider %>
   <%= form_tag change_fields_required_for_run_completion_provider_path(@provider) do %>

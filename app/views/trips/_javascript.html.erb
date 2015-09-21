@@ -139,19 +139,19 @@
       autocompleted(selected.item, 'dropoff');
     });
     
-    $("body").on('change', '#trip_pickup_time', function() {
-      var date = ISODateFormatToDateObject( $(this).val() );
-      var date_formatted = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
-      $.getJSON("<%= for_date_runs_path %>", { date : date_formatted }, function(data){
-        selected = $("#trip_run_id").val();
-        $("#trip_run_id option").remove();
-        $("#trip_run_id").append( $("<option>") );
-        $.each( data, function(i, run){
-          var option = $("<option>").val(run.id).text(run.label);
-          $("#trip_run_id").append( option );
-        })
-        $("#trip_run_id").val(selected);
-      })
-    });
+    //$("body").on('change', '#trip_pickup_time', function() {
+      //var date = ISODateFormatToDateObject( $(this).val() );
+      //var date_formatted = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+      // $.getJSON("<%= for_date_runs_path %>", { date : date_formatted }, function(data){
+      //   selected = $("#trip_run_id").val();
+      //   $("#trip_run_id option").remove();
+      //   $("#trip_run_id").append( $("<option>") );
+      //   $.each( data, function(i, run){
+      //     var option = $("<option>").val(run.id).text(run.label);
+      //     $("#trip_run_id").append( option );
+      //   })
+      //   $("#trip_run_id").val(selected);
+      // })
+    //});
   });
 </script>

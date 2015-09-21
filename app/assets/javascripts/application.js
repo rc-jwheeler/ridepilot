@@ -174,19 +174,6 @@ $(function() {
     $(e.currentTarget).closest('.datepicker-icon').find('.datepicker').datepicker('show');
   });
   
-  // when trip pickup time is changed, update appointment time and displayed week
-  $("body").on('change', '#trip_pickup_time', function() {
-    var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time').val());
-    var appointmentTimeDate = new Date(pickupTimeDate.getTime() + (1000 * 60 * 30));
-
-    $('#trip_appointment_time').attr( "value", appointmentTimeDate.format("ddd yyyy-mm-dd hh:MM tt"));
-    
-    if ( week_differs(appointmentTimeDate.getTime()) ) {
-      $("#calendar").weekCalendar("gotoWeek", appointmentTimeDate.getTime());
-      set_calendar_time(appointmentTimeDate.getTime());
-    }    
-  });
-  
   // needs to be -1 for field nulling
   $("#trip_vehicle_id option:contains(cab)").attr("value", "-1");
   
