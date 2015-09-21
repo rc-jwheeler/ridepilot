@@ -9,6 +9,9 @@
           = translate_helper(:days_of_week)
       .col-sm-9
         - day_names = TranslationEngine.translate_text("date.day_names").split(",")
+        = f.check_box :repeats_sundays 
+        = day_names[0][0]
+        &nbsp;
         = f.check_box :repeats_mondays 
         = day_names[1][0] 
         &nbsp;
@@ -23,6 +26,9 @@
         &nbsp;
         = f.check_box :repeats_fridays 
         = day_names[5][0]
+        &nbsp;
+        = f.check_box :repeats_saturdays 
+        = day_names[6][0]
         &nbsp;
     .form-group.col-sm-12
       .col-sm-3
