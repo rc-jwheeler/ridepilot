@@ -19,7 +19,8 @@
       :address_id                => "#trip_pickup_address_id",
       :address                   => "#pickup_search_address",
       :default_funding_source_id => "#trip_funding_source_id",
-      :default_service_level     => "#trip_service_level"
+      :default_service_level     => "#trip_service_level",
+      :message                   => "#customer_flag_message"
     },
     :class => "form-control",
     :style => @customer.try(:id).present? ? 'display: none' : '', :autocomplete => "off"
@@ -32,5 +33,17 @@
     event.preventDefault();
     $('#trip_customer_name_wrapper').hide();
     $('#customer_name').show();
+  });
+
+  function popupFlagMessage(message) {
+    if(message) {
+      $('#customerFlagMessageText').text(message);
+      $('#customerFlagMessageDialog').modal('show');
+    }
+  }
+
+  // after a customer item is selected
+  $('#customer_name').bind('railsAutocomplete.select', function(event, data){
+    popupFlagMessage(data.item.message);
   });
 <% end %>

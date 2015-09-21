@@ -33,6 +33,7 @@
 <% end %>
 
 <% if edit_mode != :show %>
+  <%= render 'customer_message_dialog' %>
   <% unless add_new_trip_via_run_page? %>
     <div class="address-form" id="pickup-address-form">
       <%= render :partial=>'find_or_create_address', :locals=>{:prefix=>'pickup', :address => @trip.pickup_address || @trip.build_pickup_address } %>
