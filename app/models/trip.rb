@@ -83,6 +83,7 @@ class Trip < ActiveRecord::Base
   validates_datetime :pickup_time, unless: :allow_addressless_trip?
   validate :driver_is_valid_for_vehicle
   validate :vehicle_has_open_seating_capacity
+  validate :completable_until_day_of_trip
 
   accepts_nested_attributes_for :customer
 
@@ -225,14 +226,21 @@ class Trip < ActiveRecord::Base
     # This will error if a run was found or extended for this vehicle and time, 
     # but the driver for the run is not the driver selected for the trip
     if self.run.try(:driver_id).present? && self.driver_id.present? && self.run.driver_id.to_i != self.driver_id.to_i
-      errors.add(:driver_id, "is not the driver for the selected vehicle during this vehicle's run.")
+      errors.add(:driver_id, TranslationEngine.translate_text(:driver_is_valid_for_vehicle_validation_error))
     end
   end
 
   # Check if the run's vehicle has open capacity at the time of this trip
   def vehicle_has_open_seating_capacity
     if run.try(:vehicle_id).present? && pickup_time.present? && appointment_time.present?
-      errors.add(:base, "There's not enough open capacity on this run to accommodate this trip") if run.vehicle.open_seating_capacity(pickup_time, appointment_time, ignore: self) < trip_size
+      errors.add(:base, TranslationEngine.translate_text(:vehicle_has_open_seating_capacity_validation_error)) if run.vehicle.open_seating_capacity(pickup_time, appointment_time, ignore: self) < trip_size
+    end
+  end
+
+  # Can only allow to set trip as complete until day of the trip
+  def completable_until_day_of_trip
+    if complete && Time.current.to_date < pickup_time.in_time_zone.to_date
+      errors.add(:trip_result_id, TranslationEngine.translate_text(:completable_until_day_of_trip_validation_error))
     end
   end
 

@@ -373,7 +373,7 @@ RSpec.describe TripsController, type: :controller do
     
     it "updates the trip_result of the requested trip to \"COMP\"" do
       create(:trip_result, code:"COMP", name: 'Complete')
-      trip = create(:trip, :provider => @current_user.current_provider)
+      trip = create(:trip, :pickup_time => Time.current, :provider => @current_user.current_provider)
       expect {
         post :confirm, {:trip_id => trip.to_param}
       }.to change{ trip.reload.trip_result.try(:code) }.to("COMP")
@@ -442,7 +442,7 @@ RSpec.describe TripsController, type: :controller do
     
     it "marks the trip as a cab trip and sets the trip_result \"COMP\"" do
       comp_result = create(:trip_result, code:"COMP", name: 'Complete')
-      trip = create(:trip, :provider => @current_user.current_provider)
+      trip = create(:trip, :pickup_time => Time.current, :provider => @current_user.current_provider)
       expect {
         post :send_to_cab, {:trip_id => trip.to_param}
       }.to change{[
@@ -496,8 +496,8 @@ RSpec.describe TripsController, type: :controller do
       ns_result = create(:trip_result, code: 'NS', name:"No-show")
 
       trip_1 = create(:cab_trip, :provider => @current_user.current_provider, :trip_result => ns_result)
-      trip_2 = create(:cab_trip, :provider => @current_user.current_provider, :trip_result => comp_result)
-      trip_3 = create(:trip, :provider => @current_user.current_provider, :trip_result => comp_result)
+      trip_2 = create(:cab_trip, :provider => @current_user.current_provider, :trip_result => comp_result, :pickup_time => Time.current)
+      trip_3 = create(:trip, :provider => @current_user.current_provider, :trip_result => comp_result, :pickup_time => Time.current)
       trip_4 = create(:cab_trip, :provider => @current_user.current_provider, :trip_result => td_result)
       get :reconcile_cab, {}
       expect(assigns(:trips)).to include(trip_1)
