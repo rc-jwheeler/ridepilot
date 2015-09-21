@@ -30,3 +30,9 @@
       .col-sm-9
         %textarea.form-control#customer_private_notes{name:"customer_private_notes", readonly:"readonly"}
           = @customer.try :private_notes
+    .form-group.col-sm-12{style: 'display: none;', disabled: 'disabled'}
+      %label.col-sm-3{for:"customer_flag_message"}
+        = translate_helper("customer_flag_message")
+      .col-sm-9
+        %textarea.form-control#customer_flag_message{name:"customer_flag_message", readonly:"readonly"}
+      
