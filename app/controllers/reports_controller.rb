@@ -117,6 +117,9 @@ class ReportsController < ApplicationController
     @query = Query.new(query_params)
     @start_date = @query.start_date
     @end_date = @query.end_date
+    if @end_date && @start_date && @end_date < @start_date
+      flash.now[:alert] = TranslationEngine.translate_text(:service_summary_end_date_earlier_than_start_date)
+    end
     @monthly = Monthly.where(:start_date => @start_date, :provider_id=>current_provider_id).first
     @monthly = Monthly.new(:start_date=>@start_date, :provider_id=>current_provider_id) if @monthly.nil?
     @provider = current_provider
@@ -130,7 +133,7 @@ class ReportsController < ApplicationController
         .includes(:customer, :pickup_address, :dropoff_address).completed
 
     by_purpose = {}
-    TripPurpose.by_provider(current_provider).by_provider(current_provider).all.each do |purpose|
+    TripPurpose.by_provider(current_provider).each do |purpose|
       by_purpose[purpose.name] = {'purpose' => purpose.name, 'in_district' => 0, 'out_of_district' => 0}
     end
     @total = {'in_district' => 0, 'out_of_district' => 0}

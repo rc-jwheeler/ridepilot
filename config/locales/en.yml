@@ -731,6 +731,9 @@ en:
   daily_manifest_by_half_hour_with_cab_summary_label: "Daily Manifest By Half Hour with Cab Summary"
   verify_runs: "Verify Runs"
   #service summary
+  service_summary_start_date: 'Start Date:'
+  service_summary_end_date: 'End Date:'
+  service_summary_end_date_earlier_than_start_date: 'End Date should be no earlier than Start Date'
   service_summary_title: "Service Summary: %{provider}, %{start_date}"
   service_summary_heading: "Reports: Service Summary"
   service_summary_report_submit: "Report"
