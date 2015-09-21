@@ -371,7 +371,7 @@ class ReportsController < ApplicationController
     end
 
     attrs = {
-      filename:    "export_trips_in_range-#{@query.start_date.strftime('%b %d %Y').downcase.parameterize}-#{@query.before_end_date.strftime('%b %d %Y').downcase.parameterize}.csv",
+      filename:    "#{Time.current.strftime('%Y%m%d%H%M')}_export_trips_in_range-#{@query.start_date.strftime('%b %d %Y').downcase.parameterize}-#{@query.before_end_date.strftime('%b %d %Y').downcase.parameterize}.csv",
       type:        Mime::CSV,
       disposition: "attachment",
       streaming:   "true",

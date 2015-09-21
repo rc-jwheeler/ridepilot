@@ -43,7 +43,7 @@ module Reporting
       respond_to do |format|
         format.html
         format.csv do 
-          render_csv("#{@report.name.underscore}.csv", total_results, @fields)
+          render_csv("#{Time.current.strftime('%Y%m%d%H%M')}_#{@report.name.underscore}.csv", total_results, @fields)
         end
       end
 
