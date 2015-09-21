@@ -13,6 +13,7 @@ FactoryGirl.define do
     
     trait :complete do
       after(:build) do |trip|
+        trip.pickup_time = Time.current
         trip.trip_result = create :trip_result, code: "COMP"
       end
     end

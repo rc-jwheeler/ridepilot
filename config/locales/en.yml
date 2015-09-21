@@ -472,6 +472,10 @@ en:
   unscheduled_trips_link_text: "Unscheduled Trips"
   reconcile_cab_log_link_text: "Reconcile Cab Log"
   trips_requiring_callback_link_text: "Trips Requiring Callback"
+  #trips validation erros
+  driver_is_valid_for_vehicle_validation_error: "is not the driver for the selected vehicle during this vehicle's run."
+  vehicle_has_open_seating_capacity_validation_error: "There's not enough open capacity on this run to accommodate this trip"
+  completable_until_day_of_trip_validation_error: "cannot be set as complete until day of the trip"
   #monthlies
   monthlies_start_date: "Month"
   funding_source: "Funding Source"
