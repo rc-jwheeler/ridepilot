@@ -13,15 +13,6 @@ module Reporting
       @q = @report.data_model.ransack q_param
       @params = {q: q_param}
 
-      # list all output fields
-      # if output_fields is empty, then export all columns in this table
-      @fields = @report.output_fields.blank? ?
-        @report.data_model.column_names.map{
-          |x| {
-            name: x 
-          }
-        } : @report.output_fields.order(:sort_order, :id)
-
       # default order by :id
       if !@report.data_model.columns_hash.keys.index("id").nil? 
         @q.sorts = "id asc" if @q.sorts.empty?
@@ -35,6 +26,35 @@ module Reporting
       
       # @results is for html display; only render current page
       @results = total_results.page(page).per(@per_page)
+
+      # list all output fields
+      # if output_fields is empty, then export all columns in this table
+      if @report.output_fields.blank?
+        @fields = @report.data_model.column_names.map{
+          |x| {
+            name: x 
+          }
+        }
+      else
+        @fields = []
+        @report.output_fields.order(:sort_order, :id).each do |output_field| 
+          alias_name = output_field.alias_name.try(:downcase)
+          if alias_name
+            @results = @results.select(output_field.name + " as " + alias_name)
+          else
+            @results = @results.select(output_field.name)
+          end
+
+          if output_field.is_group
+            @results = @results.group(output_field.name)
+          end
+
+          @fields << {
+            name: alias_name || output_field.name,
+            title: output_field.title
+          }
+        end
+      end
 
       # this is used to test if any sql exception is triggered in querying
       # commen errors: table not found
