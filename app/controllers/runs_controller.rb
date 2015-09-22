@@ -196,7 +196,6 @@ class RunsController < ApplicationController
         :repetition_driver_id,
         :repetition_interval,
         :repetition_vehicle_id,
-        :round_trip,
         :run_id,
         :service_level_id,
         :trip_purpose_id,

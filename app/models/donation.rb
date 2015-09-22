@@ -13,7 +13,7 @@ class Donation < ActiveRecord::Base
   def self.parse(donation_hash, customer, user)
     utility = Utility.new
     Donation.new({
-      date: utility.parse_datetime(donation_hash[:date]).try(:utc) ,
+      date: utility.parse_date(donation_hash[:date]),
       amount: donation_hash[:amount].to_f,
       notes: donation_hash[:notes],
       customer: customer,

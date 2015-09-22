@@ -264,7 +264,6 @@ class TripsController < ApplicationController
       :repetition_driver_id,
       :repetition_interval,
       :repetition_vehicle_id,
-      :round_trip,
       :run_id,
       :cab,
       :service_level_id,

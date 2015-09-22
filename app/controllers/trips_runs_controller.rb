@@ -16,7 +16,7 @@ class TripsRunsController < ApplicationController
     
     @vehicles        = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
     @drivers         = Driver.active.for_provider current_provider_id
-    @run_trip_day    = Utility.new.parse_datetime(session[:run_trip_day])
+    @run_trip_day    = Utility.new.parse_date(session[:run_trip_day])
 
     @runs_array       = add_unscheduled_run(add_cab_run(@runs)).map{ |run|
       as_resource_json(run)

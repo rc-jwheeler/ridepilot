@@ -7,7 +7,7 @@ RSpec.describe TripFilter do
 
   context "filter by pickup time" do 
     before do 
-      start_date = Time.now.in_time_zone 
+      start_date = Time.current 
       end_date = start_date + 2.days
       filters = {
         start: start_date.to_i,
