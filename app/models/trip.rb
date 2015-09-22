@@ -159,7 +159,7 @@ class Trip < ActiveRecord::Base
   end
 
   def trip_count
-    round_trip ? trip_size * 2 : trip_size
+    trip_size
   end
 
   def repetition_customer_informed=(value)

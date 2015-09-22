@@ -337,32 +337,32 @@ RSpec.describe ReportsController do
           @test_funding_sources.keys.reject{|k| k == :stf}.each do |funding_source|
             # In report range, 
             create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date, trip_purpose: trip_purpose )
-            create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date, trip_purpose: trip_purpose, round_trip: true)
+            create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date, trip_purpose: trip_purpose)
           
             # Outside report range
             create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose)
-            create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, round_trip: true)
+            create(:trip, provider: @test_provider, funding_source: @test_funding_sources[funding_source], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose)
           end
           
           # STF taxi rides, in report range
           create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: wheelchair_service_level, mileage: 1, cab: true)
-          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: wheelchair_service_level, mileage: 1, cab: true, round_trip: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: wheelchair_service_level, mileage: 1, cab: true)
           create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: ambulatory_service_level, mileage: 1, cab: true)
-          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: ambulatory_service_level, mileage: 1, cab: true, round_trip: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, service_level: ambulatory_service_level, mileage: 1, cab: true)
           
           # STF taxi rides, outside report range
           create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: wheelchair_service_level, mileage: 1, cab: true)
-          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: wheelchair_service_level, mileage: 1, cab: true, round_trip: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: wheelchair_service_level, mileage: 1, cab: true)
           create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: ambulatory_service_level, mileage: 1, cab: true)
-          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: ambulatory_service_level, mileage: 1, cab: true, round_trip: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, service_level: ambulatory_service_level, mileage: 1, cab: true)
           
           # STF non-taxi rides, in report range
           create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose)
-          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose, round_trip: true)
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date, trip_purpose: trip_purpose)
           
           # STF non-taxi rides, outside report range
           create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose)
-          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose, round_trip: true)          
+          create(:trip, provider: @test_provider, funding_source: @test_funding_sources[:stf], pickup_time: @test_start_date - 1.month, trip_purpose: trip_purpose)          
         end
         
         get :cctc_summary_report, query: {start_date: @test_start_date.to_date.to_s}, id: @cctc_custom_report.id

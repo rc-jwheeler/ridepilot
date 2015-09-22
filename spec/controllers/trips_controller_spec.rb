@@ -241,7 +241,6 @@ RSpec.describe TripsController, type: :controller do
           :cab => false,
           :cab_notified => false,
           :guests => "MyText",
-          :round_trip => false,
           :medicaid_eligible => false,
           :mileage => 1,
           :service_level_id => create(:service_level),

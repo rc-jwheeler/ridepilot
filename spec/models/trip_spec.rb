@@ -334,8 +334,7 @@ RSpec.describe Trip do
     end
   
     describe "#trip_count" do
-      it "returns #trip_size if it's not round_trip"
-      it "returns #trip_size * 2 if it's round_trip"
+      it "returns #trip_size"
     end
   
     describe "#is_in_district?" do

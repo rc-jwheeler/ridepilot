@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150921173350) do
+ActiveRecord::Schema.define(version: 20150922010335) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -470,12 +470,12 @@ ActiveRecord::Schema.define(version: 20150921173350) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",       default: 0
-    t.boolean  "round_trip"
     t.integer  "driver_id"
     t.integer  "vehicle_id"
     t.boolean  "cab",                default: false
     t.boolean  "customer_informed"
     t.integer  "trip_purpose_id"
+    t.string   "direction",          default: "outbound"
   end
 
   add_index "repeating_trips", ["customer_id"], :name => "index_repeating_trips_on_customer_id"
@@ -684,7 +684,6 @@ ActiveRecord::Schema.define(version: 20150921173350) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",                                default: 0
-    t.boolean  "round_trip"
     t.boolean  "medicaid_eligible"
     t.integer  "mileage"
     t.string   "service_level_old"
@@ -692,6 +691,7 @@ ActiveRecord::Schema.define(version: 20150921173350) do
     t.integer  "trip_result_id"
     t.integer  "service_level_id"
     t.datetime "deleted_at"
+    t.string   "direction",                                   default: "outbound"
   end
 
   add_index "trips", ["called_back_by_id"], :name => "index_trips_on_called_back_by_id"

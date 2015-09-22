@@ -19,9 +19,6 @@
 <td>
   <%= trip.trip_purpose_name %>
 </td>
-<td>
-  <%= image_tag("tick-circle.png") if trip.round_trip %>
-</td>
 <% if trip.customer.group %>
   <td>
     Group size:

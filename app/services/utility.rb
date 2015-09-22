@@ -1,5 +1,5 @@
 class Utility
-  def parse_datetime(time_param)
+  def parse_date(time_param)
     return if !time_param.present? 
 
     # this is to parse calendar params
