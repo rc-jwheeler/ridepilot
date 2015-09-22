@@ -351,6 +351,7 @@ class ReportsController < ApplicationController
     @date = @query.start_date
 
     @trips = Trip.for_provider(current_provider_id).for_date(@date).includes(:pickup_address,:dropoff_address,:customer,:mobility,{:run => :driver}).order(:pickup_time)
+    @trips_by_customer = @trips.group_by(&:customer)
   end
 
   def export_trips_in_range
