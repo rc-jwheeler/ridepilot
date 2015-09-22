@@ -45,7 +45,7 @@ module Reporting
             @results = @results.select(output_field.name)
           end
 
-          if output_field.is_group
+          if output_field.group_by
             @results = @results.group(output_field.name)
           end
 
