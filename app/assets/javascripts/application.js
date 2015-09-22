@@ -376,7 +376,7 @@ $(function() {
 
   $('[data-behavior=time-picker]').timepicker({
     ampm: true,
-    stepMinute: 15,
+    //stepMinute: 15,
     stepHour: 1,
     //hourMin: RidePilot.business_hours.start,
     //hourMax: RidePilot.business_hours.end,
