@@ -56,19 +56,19 @@ class TripsRunsController < ApplicationController
   end
 
   def runs_trips_params
-    raw_params = params[:run_trip_filters]
-    if raw_params
+    raw_params = params[:run_trip_filters] || {}
+    
+    if params[:run_trip_filters]
       raw_params[:run_trip_day] = Date.today.in_time_zone.to_i if raw_params[:run_trip_day].blank?
-      raw_params[:start] = raw_params[:run_trip_day]
-      raw_params[:end] = raw_params[:run_trip_day]
-    elsif session[:run_trip_day]
-      raw_params = {}
-      raw_params[:run_trip_day] = Utility.new.parse_date(session[:run_trip_day]).try(:to_i)
-      raw_params[:start] = raw_params[:run_trip_day]
-      raw_params[:end] = raw_params[:run_trip_day]
+    else
+      if session[:run_trip_day]
+        raw_params[:run_trip_day] = Utility.new.parse_date(session[:run_trip_day]).try(:to_i) 
+      else
+        raw_params[:run_trip_day] = Date.today.in_time_zone.to_i
+      end
     end
 
-    raw_params || {}
+    raw_params
   end
 
   def update_sessions(params = {})
