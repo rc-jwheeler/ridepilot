@@ -77,6 +77,14 @@ th.fc-resourceName {
   background-color: yellow !important; 
 }
 
+.fc-day {
+  min-width: 60px;
+}
+
+.fc-state-highlight {
+  background-color: white !important;
+}
+
 /* overwrite .form-control that has 100% width */
 .form-control-inline {
   min-width: 0;
