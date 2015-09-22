@@ -23,9 +23,6 @@ module Reporting
 
       # filter data based on accessibility
       total_results = filter_data(total_results)
-      
-      # @results is for html display; only render current page
-      @results = total_results.page(page).per(@per_page)
 
       # list all output fields
       # if output_fields is empty, then export all columns in this table
@@ -40,13 +37,13 @@ module Reporting
         @report.output_fields.order(:sort_order, :id).each do |output_field| 
           alias_name = output_field.alias_name.try(:downcase)
           if alias_name
-            @results = @results.select(output_field.name + " as " + alias_name)
+            total_results = total_results.select(output_field.name + " as " + alias_name)
           else
-            @results = @results.select(output_field.name)
+            total_results = total_results.select(output_field.name)
           end
 
           if output_field.group_by
-            @results = @results.group(output_field.name)
+            total_results = total_results.group(output_field.name)
           end
 
           @fields << {
@@ -56,6 +53,8 @@ module Reporting
         end
       end
 
+      # @results is for html display; only render current page
+      @results = total_results.page(page).per(@per_page)
       # this is used to test if any sql exception is triggered in querying
       # commen errors: table not found
       first_result = @results.limit(1) 
@@ -152,7 +151,7 @@ module Reporting
           data.find_each do |row|
             y << fields.map { |field|
               format_output row.send(field[:name]), 
-                @report.data_model.columns_hash[field[:name].to_s].type,  
+                @report.data_model.columns_hash[field[:name].to_s].try(:type),  
                 field[:formatter]
             }.to_csv
           end
