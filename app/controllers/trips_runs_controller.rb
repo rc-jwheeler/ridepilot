@@ -3,7 +3,6 @@ class TripsRunsController < ApplicationController
 
   def index
     Date.beginning_of_week= :sunday
-
     filters_hash = runs_trips_params || {}
     update_sessions(filters_hash.except(:start, :end))
     
@@ -57,14 +56,19 @@ class TripsRunsController < ApplicationController
   end
 
   def runs_trips_params
-    raw_params = params[:run_trip_filters] || {}
+    raw_params = params[:run_trip_filters]
     if raw_params
       raw_params[:run_trip_day] = Date.today.in_time_zone.to_i if raw_params[:run_trip_day].blank?
       raw_params[:start] = raw_params[:run_trip_day]
       raw_params[:end] = raw_params[:run_trip_day]
+    elsif session[:run_trip_day]
+      raw_params = {}
+      raw_params[:run_trip_day] = Utility.new.parse_date(session[:run_trip_day]).try(:to_i)
+      raw_params[:start] = raw_params[:run_trip_day]
+      raw_params[:end] = raw_params[:run_trip_day]
     end
 
-    raw_params
+    raw_params || {}
   end
 
   def update_sessions(params = {})
