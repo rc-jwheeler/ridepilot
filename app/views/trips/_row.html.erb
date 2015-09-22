@@ -9,6 +9,9 @@
     <%= link_to trip.customer.name, trip.customer, :title => translate_helper("view_customer_record_link_text") %>
   </td>
   <td>
+    <%= trip.is_return? ? translate_helper("return_trip") : translate_helper("outbound_trip") %>
+  </td>
+  <td>
     <%= trip.pickup_address.try :address_text %>
   </td>
   <td>

@@ -812,6 +812,9 @@ en:
       other: "%{count} errors prohibited this record from being saved:"
   #trips
   trip: 'Trip'
+  trip_direction: 'Direction'
+  return_trip: 'Return'
+  outbound_trip: 'Outbound'
   change_customer: "Change Customer"
   trips_form_error_message:
     one: "%{count} error prohibited this trip from being saved:"
@@ -877,6 +880,7 @@ en:
   trip_status_column: 'Status'
   trip_called_back_column: 'Called back?'
   trip_result_column: 'Result'
+  trip_direction_column: 'Trip Direction'
   #users
   new_user_heading: "Create New User"
   user_form_error_message:

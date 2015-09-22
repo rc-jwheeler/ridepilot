@@ -15,6 +15,12 @@
       .col-sm-9
         = f.text_field :appointment_time, :value => @trip.appointment_time.try(:to_s, :form), class: 'datetime-picker form-control', readonly: true
 
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :direction, translate_helper("trip_direction")
+      .col-sm-9
+        = @trip.is_return? ? translate_helper("return_trip") : translate_helper("outbound_trip")
+
     - unless add_new_trip_via_run_page?
       .form-group.col-sm-12
         .col-sm-3

@@ -162,6 +162,10 @@ class Trip < ActiveRecord::Base
     trip_size
   end
 
+  def is_return?
+    direction.try(:to_sym) == :return
+  end
+
   def repetition_customer_informed=(value)
     @repetition_customer_informed = (value == "1" || value == true)
   end
