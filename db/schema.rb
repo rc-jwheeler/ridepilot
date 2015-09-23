@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150922224713) do
+ActiveRecord::Schema.define(version: 20150923143433) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,18 @@ ActiveRecord::Schema.define(version: 20150922224713) do
     t.boolean  "redirect_to_results", default: false
     t.string   "title"
   end
+
+  create_table "customer_eligibilities", force: true do |t|
+    t.integer  "customer_id"
+    t.integer  "eligibility_id"
+    t.text     "ineligible_reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "eligible"
+  end
+
+  add_index "customer_eligibilities", ["customer_id"], :name => "index_customer_eligibilities_on_customer_id"
+  add_index "customer_eligibilities", ["eligibility_id"], :name => "index_customer_eligibilities_on_eligibility_id"
 
   create_table "customers", force: true do |t|
     t.string   "first_name"
@@ -237,6 +249,13 @@ ActiveRecord::Schema.define(version: 20150922224713) do
   add_index "drivers", ["deleted_at"], :name => "index_drivers_on_deleted_at"
   add_index "drivers", ["provider_id"], :name => "index_drivers_on_provider_id"
   add_index "drivers", ["user_id"], :name => "index_drivers_on_user_id"
+
+  create_table "eligibilities", force: true do |t|
+    t.string   "code",        null: false
+    t.string   "description", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "field_configs", force: true do |t|
     t.integer  "provider_id",                 null: false

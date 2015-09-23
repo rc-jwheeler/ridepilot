@@ -13,6 +13,9 @@ class Customer < ActiveRecord::Base
   has_many   :trips, :dependent => :destroy
   has_many   :donations, :dependent => :destroy
 
+  has_many  :eligibilities, through: :customer_eligibilities
+  has_many  :customer_eligibilities
+
   belongs_to :service_level
   delegate :name, to: :service_level, prefix: :service_level, allow_nil: true
 
@@ -245,6 +248,22 @@ class Customer < ActiveRecord::Base
     donation_objects.select {|r| r[:id].blank? }.each do |donation_hash|
       d = Donation.parse donation_hash, self, user
       d.save
+    end
+  end
+
+  def edit_eligibilities(eligibility_params)
+    return if !eligibility_params
+
+    eligibility_params.each do |code, data|
+      item = customer_eligibilities.includes(:eligibility).where(eligibilities: {code: code}).first
+      item = CustomerEligibility.create(customer: self, eligibility: Eligibility.find_by_code(code)) if !item
+    
+      eligible = data["eligible"] == 'true' ? true : (data["eligible"] == 'false' ? false: nil)
+      if eligible != false
+        data["ineligible_reason"] = nil
+      end
+
+      item.update_attributes eligible: eligible, ineligible_reason: data["ineligible_reason"]
     end
   end
 
