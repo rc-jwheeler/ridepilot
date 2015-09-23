@@ -271,6 +271,7 @@ class TripsController < ApplicationController
       :service_level_id,
       :trip_purpose_id,
       :trip_result_id,
+      :result_reason,
       :vehicle_id,
       customer_attributes: [:id]
     )
