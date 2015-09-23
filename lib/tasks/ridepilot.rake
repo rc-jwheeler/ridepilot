@@ -36,6 +36,13 @@
     puts 'Finished seeding supporting custom reports'
   end
 
+  desc 'Seed list of eligibility factors'
+  task :seed_eligibilities => :environment do
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_eligibilities.rb')
+    load(seed_file) if File.exist?(seed_file)
+    puts 'Finished seeding eligibilities'
+  end
+
   desc 'Seed some fake data for testing'
   task :seed_test_data => :environment do
 

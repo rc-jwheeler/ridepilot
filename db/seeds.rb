@@ -42,6 +42,9 @@ ActiveRecord::Base.transaction do
   puts "Seeding custom reports"
   Rake::Task["ridepilot:seed_custom_reports"].invoke
 
+  puts "Seeding eligibilities"
+  Rake::Task["ridepilot:seed_eligibilites"].invoke
+
   puts "Done seeding"
 
 end
