@@ -1,23 +1,23 @@
 [
   {
     code: 'veteran',
-    description: 'Are you a military veteran?'
+    description: 'Veteran'
   },
   {
     code: 'disabled',
-    description: 'Do you have a permanent or temporary disability?'
+    description: 'Disabled'
   }, 
   {
     code: 'low_income',
-    description: 'Are you low income?'
+    description: 'Low Income'
   }, 
   {
     code: 'ada_eligible',
-    description: 'Are you eligible for ADA paratransit?'
+    description: 'ADA Eligible'
   }, 
   {
     code: 'nemt_eligible',
-    description: 'Are you eligible for medicaid?'
+    description: 'Medicaid'
   },
 ].each do |eligible_data|
   item = Eligibility.where(code: eligible_data[:code]).first_or_create

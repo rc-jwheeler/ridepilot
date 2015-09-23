@@ -88,7 +88,7 @@ class CustomersController < ApplicationController
     @customer = Customer.new customer_params
     @customer.provider = current_provider
     @customer.activated_date = Date.today
-    edit_addresses @customer
+    edit_addresses
 
     if params[:ignore_dups] != "1"
       #check for duplicates
@@ -134,7 +134,8 @@ first_name, first_name, first_name, first_name,
 
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
-        edit_donations @customer
+        edit_donations
+        edit_eligibilities
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
@@ -171,7 +172,7 @@ first_name, first_name, first_name, first_name,
     authorize! :update, @customer if !@customer.authorized_for_provider(current_provider.id)
 
     @customer.assign_attributes customer_params
-    edit_addresses @customer
+    edit_addresses
 
     #save address changes
     if address_attributes_param && address_attributes_param[:id].present?
@@ -187,7 +188,8 @@ first_name, first_name, first_name, first_name,
 
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
-        edit_donations @customer
+        edit_donations
+        edit_eligibilities
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
       else
@@ -289,10 +291,10 @@ first_name, first_name, first_name, first_name,
     get_donations
   end
 
-  def edit_addresses(customer)
+  def edit_addresses
     if params[:addresses]
       addresses = JSON.parse(params[:addresses], symbolize_names: true)
-      customer.edit_addresses addresses, params[:mailing_address_index].to_i || 0
+      @customer.edit_addresses addresses, params[:mailing_address_index].to_i || 0
     end
   end
 
@@ -310,11 +312,15 @@ first_name, first_name, first_name, first_name,
     end
   end
 
-  def edit_donations(customer)
+  def edit_donations
     if params[:donations]
       donations = JSON.parse(params[:donations], symbolize_names: true)
-      customer.edit_donations donations, current_user
+      @customer.edit_donations donations, current_user
     end
+  end
+
+  def edit_eligibilities
+    @customer.edit_eligibilities params[:eligibilities]
   end
 
 end

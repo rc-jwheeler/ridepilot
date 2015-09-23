@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150923133847) do
+ActiveRecord::Schema.define(version: 20150923143433) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,18 @@ ActiveRecord::Schema.define(version: 20150923133847) do
     t.boolean  "redirect_to_results", default: false
     t.string   "title"
   end
+
+  create_table "customer_eligibilities", force: true do |t|
+    t.integer  "customer_id"
+    t.integer  "eligibility_id"
+    t.text     "ineligible_reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "eligible"
+  end
+
+  add_index "customer_eligibilities", ["customer_id"], :name => "index_customer_eligibilities_on_customer_id"
+  add_index "customer_eligibilities", ["eligibility_id"], :name => "index_customer_eligibilities_on_eligibility_id"
 
   create_table "customers", force: true do |t|
     t.string   "first_name"

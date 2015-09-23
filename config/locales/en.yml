@@ -62,6 +62,10 @@ en:
   edit_x_cab_trips:
     one: "Edit %{count} cab trip"
     other: "Edit %{count} cab trips"
+  #eligibilities
+  eligible: 'Eligible'
+  not_eligible: 'Not Eligible'
+  ineligible_reason: 'Why not eligible?'
   #customers
   customer_details_panel: 'Details'
   customer_addresses_panel: 'Addresses'

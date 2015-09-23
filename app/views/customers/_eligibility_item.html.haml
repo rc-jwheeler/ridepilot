@@ -1,0 +1,13 @@
+.form-group.col-sm-12
+  .col-sm-7.control-label{id: "#{item.code}_label", for: "eligibility_#{item.code}"}
+    = item.description
+  .col-sm-5
+    - customer_eligibility = @customer.customer_eligibilities.where(eligibility_id: item.id).first
+    - is_ineligible = customer_eligibility.try(:eligible) == false
+    = select_tag "eligibilities[#{item.code}][eligible]", options_for_select([[translate_helper(:eligible), true], [translate_helper(:not_eligible), false]], customer_eligibility.try(:eligible)), include_blank: true, class: 'form-control customer-eligibility', id: "eligibility_#{item.code}"
+    - ineligible_reason = customer_eligibility.ineligible_reason if customer_eligibility && !customer_eligibility.eligible
+  .col-sm-10.pull-right.ineligible-reason{style: is_ineligible ? '' : 'display: none;'}
+    .col-sm-4.control-label{id: "#{item.code}_ineligible_label", for: "eligibility_#{item.code}_ineligible_reason"}
+      = translate_helper(:ineligible_reason)
+    .col-sm-8
+      = text_area_tag "eligibilities[#{item.code}][ineligible_reason]", ineligible_reason, class: 'form-control', id: "eligibility_#{item.code}_ineligible_reason"
