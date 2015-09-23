@@ -614,6 +614,7 @@ en:
   trip_run_label: "Run: "
   trip_result_label: "Result: "
   trip_result: 'Trip Result'
+  trip_result_reason: 'Reason'
   pending: "Pending"
   later_trips: "Later ride today"
   age_and_ethnicity_report_heading: "Reports: Unduplicated Age &amp; Ethnicity"
