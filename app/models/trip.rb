@@ -223,6 +223,10 @@ class Trip < ActiveRecord::Base
       self.save
     end
   end
+
+  def is_no_show_or_turn_down?
+    trip_result && ['NS', 'TD'].index(trip_result.code)
+  end
     
   private
   
