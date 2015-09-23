@@ -1,8 +1,9 @@
 FactoryGirl.define do
   factory :customer_eligibility do
-    customer nil
-eligibility nil
-ineligible_reason "MyText"
+    customer 
+    eligibility 
+    eligible nil
+    ineligible_reason nil
   end
 
 end

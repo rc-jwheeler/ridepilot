@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :eligibility do
-    code "MyString"
-description "MyString"
+    code  {|n| "eligibility_#{n}" }
+    description "MyString"
   end
 
 end
