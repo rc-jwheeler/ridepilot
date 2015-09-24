@@ -1,0 +1,18 @@
+#applicationAlertDialog.modal.fade.col-sm-12{:role => "dialog", "aria-hidden" => 'true', :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        = button_tag class: 'btn action-button pull-right', data: {dismiss: 'modal'} do
+          = translate_helper(:ok)
+        .modal-title{:style => "text-align:left;"}
+          %strong
+            = translate_helper(:site_title)
+      .modal-body{:style => "text-align:left;"}
+        .alert-message.alert.alert-warning
+
+:javascript
+  $(document).ready(function() {
+    $('#applicationAlertDialog').on('hidden.bs.modal', function (e) {
+      $('#applicationAlertDialog .alert-message').text('');
+    })
+  });

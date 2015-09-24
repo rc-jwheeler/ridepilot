@@ -117,8 +117,9 @@ function hide_alert () {
 }
 
 // TODO: show a alert modal dialog
-function show_alert_modal(message) {
-
+function show_alert_dialog(message) {
+  $('#applicationAlertDialog .alert-message').text(message || '');
+  $('#applicationAlertDialog').modal('show');
 }
 
 $(function() {
