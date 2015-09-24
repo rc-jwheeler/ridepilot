@@ -254,7 +254,7 @@ class Trip < ActiveRecord::Base
   end
 
   def provider_availability
-    if pickup_time && !provider.available?(pickup_time.wday, pickup_time.strftime('%H:%M'))
+    if pickup_time && provider && !provider.available?(pickup_time.wday, pickup_time.strftime('%H:%M'))
       errors.add(:base, TranslationEngine.translate_text(:provider_not_available_for_trip))
     end
   end
