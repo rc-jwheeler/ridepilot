@@ -78,6 +78,8 @@
 
   <%= render partial: 'layouts/footer' %>
   <%= yield :footer %>
+  
+  <%= render 'shared/application_alert_dialog' %>
 
   <% if current_user %>
     <%= javascript_tag do %>

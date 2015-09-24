@@ -13,6 +13,9 @@ class TripsController < ApplicationController
     @start_pickup_date = Time.at(session[:start].to_i).to_date
     @end_pickup_date = Time.at(session[:end].to_i).to_date
     @days_of_week = trip_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : trip_sessions[:days_of_week].split(',').map(&:to_i)
+    if can? :edit, Trip
+      @trip_results = TripResult.by_provider(current_provider).pluck(:name, :id)
+    end
 
     @trips_json = @trips.has_scheduled_time.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
     @day_resources = []
@@ -117,6 +120,43 @@ class TripsController < ApplicationController
       @trip.save
     end
     redirect_to :action=>:unscheduled
+  end
+
+  def callback
+    @trip = Trip.find(params[:trip_id])
+    @prev_customer_informed = @trip.customer_informed ? true: false
+
+    if can? :edit, @trip
+      @trip.customer_informed = params[:trip][:customer_informed]
+      if !@trip.save
+        @message = @trip.errors.full_messages.join(';')
+      end
+    else
+      @message = TranslationEngine.translate_text(:operation_not_authorized)
+    end
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def change_result
+    @trip = Trip.find(params[:trip_id])
+    @prev_trip_result_id = @trip.trip_result_id
+
+    if can? :edit, @trip
+      if !@trip.update_attributes( trip_result_id: params[:trip][:trip_result_id] )
+        @message = @trip.errors.full_messages.join(';')
+      else
+        @trip_result_filters = trip_sessions[:trip_result_id]
+      end
+    else
+      @message = TranslationEngine.translate_text(:operation_not_authorized)
+    end
+    
+    respond_to do |format|
+      format.js
+    end
   end
 
   def new

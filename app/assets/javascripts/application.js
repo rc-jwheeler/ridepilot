@@ -116,6 +116,12 @@ function hide_alert () {
   $('#flash_notice').parents('.alert').hide();
 }
 
+// TODO: show a alert modal dialog
+function show_alert_dialog(message) {
+  $('#applicationAlertDialog .alert-message').text(message || '');
+  $('#applicationAlertDialog').modal('show');
+}
+
 $(function() {
   createPopover(".label-help");
 
