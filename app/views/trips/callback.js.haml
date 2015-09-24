@@ -1,0 +1,3 @@
+- if !@message.blank?
+  show_alert("#{@message}");
+  $('#tripsTable tr[data-trip-id="#{@trip.id}"] .change-trip-callback input[type=checkbox]').val(#{@prev_customer_informed});

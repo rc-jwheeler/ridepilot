@@ -46,6 +46,8 @@ Rails.application.routes.draw do
       post :reached
       post :send_to_cab
       post :turndown
+      patch :callback
+      patch :change_result
 
       collection do
         get :reconcile_cab

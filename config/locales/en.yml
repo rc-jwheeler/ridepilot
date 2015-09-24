@@ -163,6 +163,7 @@ en:
   inactive: "Inactive"
   operation_failed: "The operation has failed, please try again"
   confirm_delete_message: "Are you sure you want to delete %{value}?"
+  operation_not_authorized: 'You are not authorized to execute the operation.'
   #device pool
   remove_device_pool_driver: "Remove"
   device_pool_form_error_message:
@@ -878,6 +879,7 @@ en:
   #trips table
   pickup_date_column: 'Pickup Date'
   customer_column: 'Customer'
+  customer_phone_number_column: 'Phone'
   pickup_address_column: 'Pickup Address'
   pickup_time_column: 'Pickup Time'
   dropoff_address_column: 'Dropoff Address'
