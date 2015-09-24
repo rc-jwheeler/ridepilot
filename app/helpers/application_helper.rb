@@ -134,4 +134,13 @@ module ApplicationHelper
   def reimbursement_cost_for_trips(provider, trips)
     number_to_currency ReimbursementRateCalculator.new(provider).total_reimbursement_due_for_trips(trips)
   end
+
+
+  def can_access_admin_tab(a_user)
+    a_user && a_user.editor? && can?(:read, a_user)
+  end
+
+  def can_access_provider_settings_tab(a_user, a_provider)
+    a_user && a_user.admin? && can?(:read, a_provider)
+  end
 end
