@@ -1,5 +1,5 @@
 class Donation < ActiveRecord::Base
-  belongs_to :customer
+  belongs_to :customer, inverse_of: :donations
   belongs_to :user
   belongs_to :trip
 

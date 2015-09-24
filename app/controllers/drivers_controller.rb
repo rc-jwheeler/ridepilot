@@ -102,45 +102,10 @@ class DriversController < ApplicationController
   end
   
   def create_or_update_hours!
-    params[:hours] ||= {}
-    hours = @driver.hours_hash
-    if !hours.empty? and hours.length < 7
-      hours.each_pair { |day, h| h.destroy }
-      hours = {}
-    end
-    if hours.empty?
-      (0..6).each do |d|
-        hours[d] = OperatingHours.new day_of_week: d, driver: @driver
-      end
-    end
-    errors = false
-    params[:hours].each_pair do |day, value|
-      begin
-        day = day.to_i
-        day_hours = hours[day]
-        if day_hours.nil?
-          day_hours = OperatingHours.new day_of_week: day, driver: @driver
-        end
-        case value
-        when 'unavailable'
-          day_hours.make_unavailable
-        when 'open24'
-          day_hours.make_24_hours
-        when 'open'
-          day_hours.start_time = params[:start_hour][day.to_s]
-          day_hours.end_time = params[:end_hour][day.to_s]
-        else
-          @driver.errors.add :operating_hours, 'must be "unavailable", "open24", or "open".'
-          raise ActiveRecord::RecordInvalid.new(@driver)
-        end
-        day_hours.save!
-      rescue ActiveRecord::RecordInvalid => e
-        Rails.logger.debug e.message
-        errors = true
-      end
-    end
-    if errors
-      raise ActiveRecord::RecordInvalid.new(@driver)
-    end
+    OperatingHoursProcessor.new(@driver, {
+      hours: params[:hours],
+      start_hour: params[:start_hour],
+      end_hour: params[:end_hour]
+      }).process!
   end
 end

@@ -1,7 +1,7 @@
 class OperatingHours < ActiveRecord::Base
-  belongs_to :driver, inverse_of: :operating_hours
+  belongs_to :operatable, polymorphic: true
 
-  validates_presence_of :day_of_week, :driver
+  validates_presence_of :day_of_week, :operatable
   validate :enforce_hour_sanity
 
   default_scope -> { order :day_of_week }

@@ -20,6 +20,17 @@ class ProvidersController < ApplicationController
       memo[values.first.to_s] = values.last.to_s
       memo
     end
+
+    @hours = @provider.hours_hash
+
+    @start_hours = OperatingHours.available_start_times
+    @end_hours = OperatingHours.available_end_times
+  end
+
+  def save_operating_hours
+    create_or_update_hours!
+
+    redirect_to @provider
   end
 
   # POST /providers/:id/save_region
@@ -120,5 +131,13 @@ class ProvidersController < ApplicationController
 
   def reimbursement_params
     params.permit(*Provider::REIMBURSEMENT_ATTRIBUTES)
+  end
+
+  def create_or_update_hours!
+    OperatingHoursProcessor.new(@provider, {
+      hours: params[:hours],
+      start_hour: params[:start_hour],
+      end_hour: params[:end_hour]
+      }).process!
   end
 end
