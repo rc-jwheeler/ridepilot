@@ -7,10 +7,10 @@ RSpec.describe OperatingHours, type: :model do
     expect(hours.errors.keys).to include :day_of_week
   end
 
-  it "requires a driver" do
-    hours = build :operating_hours, driver: nil
+  it "requires a operatable object" do
+    hours = build :operating_hours, operatable: nil
     expect(hours.valid?).to be_falsey
-    expect(hours.errors.keys).to include :driver
+    expect(hours.errors.keys).to include :operatable
   end
   
   it "orders records by day_of_week" do

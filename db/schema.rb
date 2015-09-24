@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150923201439) do
+ActiveRecord::Schema.define(version: 20150924203254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -343,15 +343,17 @@ ActiveRecord::Schema.define(version: 20150923201439) do
   add_index "old_passwords", ["password_archivable_type", "password_archivable_id"], :name => "index_password_archivable"
 
   create_table "operating_hours", force: true do |t|
-    t.integer  "driver_id"
+    t.integer  "operatable_id"
     t.integer  "day_of_week"
     t.time     "start_time"
     t.time     "end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "operatable_type"
   end
 
-  add_index "operating_hours", ["driver_id"], :name => "index_operating_hours_on_driver_id"
+  add_index "operating_hours", ["operatable_id", "operatable_type"], :name => "index_operating_hours_on_operatable_id_and_operatable_type"
+  add_index "operating_hours", ["operatable_id"], :name => "index_operating_hours_on_operatable_id"
 
   create_table "provider_ethnicities", force: true do |t|
     t.integer  "provider_id"

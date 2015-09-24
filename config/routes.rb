@@ -68,6 +68,7 @@ Rails.application.routes.draw do
         post :save_region
         post :save_viewport
         post :update_min_trip_time_gap
+        patch :save_operating_hours
       end
     end
     

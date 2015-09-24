@@ -10,8 +10,8 @@ class Customer < ActiveRecord::Base
   belongs_to :address
   belongs_to :mobility
   belongs_to :default_funding_source, :class_name=>'FundingSource'
-  has_many   :trips, :dependent => :destroy
-  has_many   :donations, :dependent => :destroy
+  has_many   :trips, :dependent => :destroy, inverse_of: :customer
+  has_many   :donations, :dependent => :destroy, inverse_of: :customer
 
   has_many  :eligibilities, through: :customer_eligibilities
   has_many  :customer_eligibilities

@@ -93,12 +93,18 @@ class UsersController < ApplicationController
   end
 
   def change_provider
+    is_on_provider_page = request.referrer == provider_url(current_provider)
     provider = Provider.find(params[:provider_id])
     if can? :read, provider
       current_user.current_provider = provider
       current_user.save!
     end
-    redirect_to provider_path(provider)
+
+    if is_on_provider_page
+      redirect_to provider_path(provider)
+    else
+      redirect_to :back
+    end
   end
 
   def check_session

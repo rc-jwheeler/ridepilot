@@ -92,6 +92,28 @@
 
 <hr />
 
+<h2 class="section-header"><%=translate_helper("configure_provider_operating_hours")%></h2>
+<%= form_for current_provider, url: save_operating_hours_provider_path(current_provider) do |f| %>
+  <% if current_provider.errors.any? %>
+    <div class="panel panel-danger">
+      <div class="panel-heading"><%= translate_helper("driver_form_error", count: current_provider.errors.count) %></div>
+      <div class="panel-body">
+        <ul>
+          <% current_provider.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+  <%= render 'shared/operating_hours' %>
+  <div class="actions">
+    <%= submit_tag translate_helper("update_provider_operating_hours") %>
+  </div>
+<% end %>
+
+<hr />
+
 <h2 class="section-header"><%=translate_helper("dispatch")%></h2>
 <% if can? :edit, @provider %>
   <%= form_tag change_dispatch_provider_path(@provider) do %>

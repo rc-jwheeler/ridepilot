@@ -47,7 +47,7 @@ class Trip < ActiveRecord::Base
   attr_accessor :driver_id, :vehicle_id
 
   belongs_to :called_back_by, class_name: "User"
-  belongs_to :customer
+  belongs_to :customer, inverse_of: :trips
   belongs_to :dropoff_address, class_name: "Address"
   belongs_to :funding_source
   belongs_to :mobility
@@ -84,6 +84,7 @@ class Trip < ActiveRecord::Base
   validate :driver_is_valid_for_vehicle
   validate :vehicle_has_open_seating_capacity
   validate :completable_until_day_of_trip
+  validate :provider_availability
 
   accepts_nested_attributes_for :customer
 
@@ -248,7 +249,13 @@ class Trip < ActiveRecord::Base
   # Can only allow to set trip as complete until day of the trip
   def completable_until_day_of_trip
     if complete && Time.current.to_date < pickup_time.in_time_zone.to_date
-      errors.add(:trip_result_id, TranslationEngine.translate_text(:completable_until_day_of_trip_validation_error))
+      errors.add(:base, TranslationEngine.translate_text(:completable_until_day_of_trip_validation_error))
+    end
+  end
+
+  def provider_availability
+    if pickup_time && provider && !provider.available?(pickup_time.wday, pickup_time.strftime('%H:%M'))
+      errors.add(:base, TranslationEngine.translate_text(:provider_not_available_for_trip))
     end
   end
 
