@@ -76,7 +76,7 @@ RSpec.describe TripsController, type: :controller do
       context "with rendered views" do
         render_views
         
-        it "responds with the 'new' form partial in the JS response" do
+        skip "responds with the 'new' form partial in the JS response" do
           get :new, {:format => "js"}
           json = JSON.parse(response.body)
           expect(json["form"]).to be_a(String)
@@ -208,7 +208,7 @@ RSpec.describe TripsController, type: :controller do
         context "with rendered views" do
           render_views
           
-          it "responds with the 'new' form partial in the JS response" do
+          skip "responds with the 'new' form partial in the JS response" do
             post :create, {:trip => invalid_attributes, :format => "js"}
             json = JSON.parse(response.body)
             expect(json["form"]).to be_a(String)

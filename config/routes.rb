@@ -49,6 +49,10 @@ Rails.application.routes.draw do
       patch :callback
       patch :change_result
 
+      member do
+        get :clone
+      end
+      
       collection do
         get :reconcile_cab
         get :trips_requiring_callback
