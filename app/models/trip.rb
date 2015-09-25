@@ -232,20 +232,15 @@ class Trip < ActiveRecord::Base
   def clone_for_future!
     cloned_trip = self.dup
     
-    if !cloned_trip.pickup_time.future?  
-      cloned_trip.pickup_time = cloned_trip.pickup_time + (Time.current.to_date - cloned_trip.pickup_time.to_date).days 
-    end
-
-    if !cloned_trip.appointment_time.future?
-      cloned_trip.appointment_time = cloned_trip.appointment_time + (Time.current.to_date - cloned_trip.appointment_time.to_date).days 
-    end
-    
+    cloned_trip.pickup_time = nil
+    cloned_trip.appointment_time = nil
     cloned_trip.trip_result = nil
     cloned_trip.customer_informed = false
     cloned_trip.called_back_by = nil
     cloned_trip.donation = nil
     cloned_trip.run = nil
     cloned_trip.cab = false
+    cloned_trip.repeating_trip = nil
 
     cloned_trip
   end
