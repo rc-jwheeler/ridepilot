@@ -200,7 +200,11 @@ class TripsController < ApplicationController
     @trip = @trip.clone_for_future!
     prep_view
     
-    render action: :new
+    respond_to do |format|
+      format.html { render action: :new }
+      format.xml  { render :xml => @trip }
+      format.js   { @remote = true; render :json => {:form => render_to_string(:partial => 'form') }, :content_type => "text/json" }
+    end
   end
 
   def show
