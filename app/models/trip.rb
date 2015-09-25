@@ -229,6 +229,27 @@ class Trip < ActiveRecord::Base
     trip_result && ['NS', 'TD'].index(trip_result.code)
   end
     
+  def clone_for_future!
+    cloned_trip = self.dup
+    
+    if !cloned_trip.pickup_time.future?  
+      cloned_trip.pickup_time = cloned_trip.pickup_time + (Time.current.to_date - cloned_trip.pickup_time.to_date).days 
+    end
+
+    if !cloned_trip.appointment_time.future?
+      cloned_trip.appointment_time = cloned_trip.appointment_time + (Time.current.to_date - cloned_trip.appointment_time.to_date).days 
+    end
+    
+    cloned_trip.trip_result = nil
+    cloned_trip.customer_informed = false
+    cloned_trip.called_back_by = nil
+    cloned_trip.donation = nil
+    cloned_trip.run = nil
+    cloned_trip.cab = false
+
+    cloned_trip
+  end
+
   private
   
   def driver_is_valid_for_vehicle

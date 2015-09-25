@@ -196,6 +196,13 @@ class TripsController < ApplicationController
     end
   end
 
+  def clone
+    @trip = @trip.clone_for_future!
+    prep_view
+    
+    render action: :new
+  end
+
   def show
     @trip = Trip.find(params[:id])
     prep_view
@@ -333,7 +340,7 @@ class TripsController < ApplicationController
 
     cab_run = Run.new :cab => true
     cab_run.id = -1
-    @runs = Run.for_provider(@trip.provider_id).incomplete_on(@trip.pickup_time.try(:to_date)) << cab_run
+    #@runs = Run.for_provider(@trip.provider_id).incomplete_on(@trip.pickup_time.try(:to_date)) << cab_run
   end
   
   def handle_trip_params(trip_params)

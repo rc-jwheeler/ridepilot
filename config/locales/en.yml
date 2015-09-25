@@ -855,6 +855,7 @@ en:
   delete_trip_confirm: "Are you sure?"
   back_to_view_trips: "Back to View Trips"
   edit_trip_link_text: "Edit Trip"
+  clone_trip: "Clone"
   edit_run_link_text: "Edit Run"
   cab_trip: "Cab Trip"
   view_customer_record_link_text: "Click to view customer record"
