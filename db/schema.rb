@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150924203254) do
+ActiveRecord::Schema.define(version: 20150926192913) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -716,6 +716,7 @@ ActiveRecord::Schema.define(version: 20150924203254) do
     t.datetime "deleted_at"
     t.string   "direction",                                   default: "outbound"
     t.text     "result_reason"
+    t.integer  "linking_trip_id"
   end
 
   add_index "trips", ["called_back_by_id"], :name => "index_trips_on_called_back_by_id"
@@ -723,6 +724,7 @@ ActiveRecord::Schema.define(version: 20150924203254) do
   add_index "trips", ["deleted_at"], :name => "index_trips_on_deleted_at"
   add_index "trips", ["dropoff_address_id"], :name => "index_trips_on_dropoff_address_id"
   add_index "trips", ["funding_source_id"], :name => "index_trips_on_funding_source_id"
+  add_index "trips", ["linking_trip_id"], :name => "index_trips_on_linking_trip_id"
   add_index "trips", ["mobility_id"], :name => "index_trips_on_mobility_id"
   add_index "trips", ["pickup_address_id"], :name => "index_trips_on_pickup_address_id"
   add_index "trips", ["provider_id", "appointment_time"], :name => "index_trips_on_provider_id_and_appointment_time"

@@ -16,6 +16,8 @@
 
   <!-- the customer id needs to be passed in this action -->
   <%= f.hidden_field :customer_id %>
+  <%= f.hidden_field :direction %>
+  <%= hidden_field_tag "trip[outbound_trip_id]", @trip.outbound_trip.try(:id) %>
   <%= hidden_field_tag :run_id, add_new_trip_via_run_page? ? params[:run_id] : "" %>
 
   <div class="col-sm-12 col-md-6">

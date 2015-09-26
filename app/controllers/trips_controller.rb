@@ -207,6 +207,18 @@ class TripsController < ApplicationController
     end
   end
 
+  def return
+    @trip = @trip.clone_for_return!
+    @outbound_trip_id = params[:trip_id]
+    prep_view
+    
+    respond_to do |format|
+      format.html { render action: :new }
+      format.xml  { render :xml => @trip }
+      format.js   { @remote = true; render :json => {:form => render_to_string(:partial => 'form') }, :content_type => "text/json" }
+    end
+  end
+
   def show
     @trip = Trip.find(params[:id])
     prep_view
@@ -229,16 +241,25 @@ class TripsController < ApplicationController
     handle_trip_params params[:trip]
     @trip = Trip.new(trip_params)
     authorize! :manage, @trip
-    
+
+    if @trip.is_return? && params[:trip][:outbound_trip_id].present?
+      @trip.outbound_trip = Trip.find_by_id(params[:trip][:outbound_trip_id])
+    end
+
     respond_to do |format|
       prep_view
       if @trip.is_all_valid?(current_provider_id) && @trip.save
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
+        @ask_for_return_trip = true if @trip.is_outbound?
         format.html {
-          if params[:run_id].present?
-            redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
+          if @ask_for_return_trip
+            render action: :show
           else
-            redirect_to(trips_path, :notice => 'Trip was successfully created.') 
+            if params[:run_id].present?
+              redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
+            else
+              redirect_to(trips_path, :notice => 'Trip was successfully created.') 
+            end
           end
         }
         format.js { render :json => {:status => "success", :trip => render_to_string(:partial => 'runs/trip', :locals => {:trip => @trip})}, :content_type => "text/json" }
@@ -290,6 +311,8 @@ class TripsController < ApplicationController
   
   def trip_params
     params.require(:trip).permit(
+      :direction,
+      :linking_trip_id,
       :appointment_time,
       :attendant_count,
       :customer_id,
