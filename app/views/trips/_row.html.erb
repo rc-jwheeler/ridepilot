@@ -19,6 +19,19 @@
   </td>
   <td>
     <%= trip.is_return? ? translate_helper("return_trip") : translate_helper("outbound_trip") %>
+    <% if trip.is_linked? %>
+      <br>
+      (<%= translate_helper(:linking_to) %>: 
+      <% if trip.is_return? %>
+        <a href="<%=trip_path(trip.outbound_trip)%>">
+          <%= trip.outbound_trip.id %>
+        </a>
+      <% else %>
+        <a href="<%=trip_path(trip.return_trip)%>">
+          <%= trip.return_trip.id %>
+        </a>
+      <% end %>)
+    <% end %>
   </td>
   <td>
     <%= trip.pickup_address.try :address_text %>

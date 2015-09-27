@@ -881,6 +881,8 @@ en:
   n_a: 'N/A'
   view: 'View'
   trip_form_error_message: 'Please correct following errors'
+  ask_for_creating_return_trip_message: 'Would you like to create a return trip?'
+  linking_to: 'Link to'
   #trips table
   pickup_date_column: 'Pickup Date'
   customer_column: 'Customer'

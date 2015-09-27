@@ -51,6 +51,7 @@ Rails.application.routes.draw do
 
       member do
         get :clone
+        get :return
       end
       
       collection do

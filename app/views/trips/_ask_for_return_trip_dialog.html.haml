@@ -1,0 +1,12 @@
+#askCreatingReturnTripDialog.modal.fade.col-sm-12{:role => "dialog", "aria-hidden" => 'true', :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        .pull-right
+          = link_to translate_helper(:yes), return_trip_path(@trip), class: "btn action-button"
+          = link_to translate_helper(:no), trips_path, class: "btn action-button"
+        .modal-title{:style => "text-align:left;"}
+          %strong
+            = translate_helper(:site_title)
+      .modal-body{:style => "text-align:left;"}
+        = translate_helper(:ask_for_creating_return_trip_message)

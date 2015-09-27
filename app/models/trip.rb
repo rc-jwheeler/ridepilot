@@ -58,6 +58,9 @@ class Trip < ActiveRecord::Base
   belongs_to :trip_purpose
   belongs_to :trip_result
   has_one    :donation
+  has_one    :return_trip, class_name: "Trip", foreign_key: :linking_trip_id
+  belongs_to :outbound_trip, class_name: 'Trip', foreign_key: :linking_trip_id
+
 
   delegate :label, to: :run, prefix: :run, allow_nil: true
   delegate :name, to: :customer, prefix: :customer, allow_nil: true
@@ -163,10 +166,6 @@ class Trip < ActiveRecord::Base
     trip_size
   end
 
-  def is_return?
-    direction.try(:to_sym) == :return
-  end
-
   def repetition_customer_informed=(value)
     @repetition_customer_informed = (value == "1" || value == true)
   end
@@ -243,6 +242,28 @@ class Trip < ActiveRecord::Base
     cloned_trip.repeating_trip = nil
 
     cloned_trip
+  end
+
+  def clone_for_return!
+    return_trip = self.dup
+    return_trip.direction = :return
+    return_trip.pickup_address = self.dropoff_address
+    return_trip.dropoff_address = self.pickup_address
+    return_trip.outbound_trip = self
+
+    return_trip
+  end
+
+  def is_linked?
+    (is_return? && outbound_trip) || (is_outbound? && return_trip)
+  end
+
+  def is_return?
+    direction.try(:to_sym) == :return
+  end
+
+  def is_outbound?
+    direction.try(:to_sym) == :outbound
   end
 
   private

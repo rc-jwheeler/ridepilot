@@ -143,4 +143,13 @@ module ApplicationHelper
   def can_access_provider_settings_tab(a_user, a_provider)
     a_user && a_user.admin? && can?(:read, a_provider)
   end
+
+  def display_linked_trip_info(trip)
+    linking_to_text = translate_helper(:linking_to)
+    if trip.is_return?
+      trip.outbound_trip ? "<a href='#{trip_path(trip.outbound_trip)}'>#{linking_to_text}: #{trip.outbound_trip.id}</a>" : ""
+    else
+      trip.return_trip ? "<a href='#{trip_path(trip.return_trip)}'>#{linking_to_text}: #{trip.return_trip.id}</a>" : ""
+    end
+  end
 end
