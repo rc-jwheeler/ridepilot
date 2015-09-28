@@ -42,7 +42,11 @@ class AddressesController < ApplicationController
     end
 
     addresses = Address.accessible_by(current_ability).where(["((LOWER(address) like '%' || ? || '%' ) and  (city || ', ' || state || ' ' || zip like ? || '%')) or LOWER(building_name) like '%' || ? || '%' or LOWER(name) like '%' || ? || '%' ", address, city_state_zip, term, term]).where(:provider_id => current_provider_id, :inactive => false)
-
+    if params[:customer_id].present?
+      addresses = addresses.where("customer_id is NULL or customer_id = ?", params[:customer_id]) 
+    else
+      addresses = addresses.where("customer_id is NULL") #only provider common addresses if customer is not given
+    end
     if addresses.size > 0
 
       #there are some existing addresses

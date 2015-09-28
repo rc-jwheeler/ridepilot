@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150926192913) do
+ActiveRecord::Schema.define(version: 20150927215504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,22 +48,24 @@ ActiveRecord::Schema.define(version: 20150926192913) do
     t.integer  "trip_purpose_id"
     t.text     "notes"
     t.datetime "deleted_at"
+    t.integer  "customer_id"
   end
 
+  add_index "addresses", ["customer_id"], :name => "index_addresses_on_customer_id"
   add_index "addresses", ["deleted_at"], :name => "index_addresses_on_deleted_at"
   add_index "addresses", ["provider_id"], :name => "index_addresses_on_provider_id"
   add_index "addresses", ["the_geom"], :name => "index_addresses_on_the_geom", :spatial => true
   add_index "addresses", ["trip_purpose_id"], :name => "index_addresses_on_trip_purpose_id"
 
-  create_table "addresses_customers", force: true do |t|
+  create_table "addresses_customers_old", force: true do |t|
     t.integer  "customer_id"
     t.integer  "address_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "addresses_customers", ["address_id"], :name => "index_addresses_customers_on_address_id"
-  add_index "addresses_customers", ["customer_id"], :name => "index_addresses_customers_on_customer_id"
+  add_index "addresses_customers_old", ["address_id"], :name => "index_addresses_customers_old_on_address_id"
+  add_index "addresses_customers_old", ["customer_id"], :name => "index_addresses_customers_old_on_customer_id"
 
   create_table "custom_reports", force: true do |t|
     t.string   "name"
