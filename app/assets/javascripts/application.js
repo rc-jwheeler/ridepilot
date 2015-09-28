@@ -209,16 +209,6 @@ $(function() {
     }, "json");
   });
   
-  $('#new_trip #customer_name').bind('railsAutocomplete.select', function(event, data){ 
-    if ($("#trip_group").val() == "true") {
-      $("li.passengers").hide();
-      $("li.group_size").show();
-    } else {
-      $("li.passengers").show();
-      $("li.group_size").hide();
-    }
-  });
-  
   $('.new_trip #customer_name, .edit_trip #customer_name').bind('railsAutocomplete.select', function(event, data){ 
     if (parseInt(data.address_id) > 0)
       autocompleted(data.address_data, 'pickup');

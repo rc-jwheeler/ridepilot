@@ -4,10 +4,10 @@ class Customer < ActiveRecord::Base
   acts_as_paranoid # soft delete
 
   has_and_belongs_to_many :authorized_providers, :class_name => 'Provider', :through => 'customers_providers'
-  has_and_belongs_to_many :addresses, :class_name => 'Address', :through => 'addresses_customers'
 
   belongs_to :provider
   belongs_to :address
+  has_many   :addresses, :dependent => :destroy, inverse_of: :customer
   belongs_to :mobility
   belongs_to :default_funding_source, :class_name=>'FundingSource'
   has_many   :trips, :dependent => :destroy, inverse_of: :customer
@@ -223,19 +223,15 @@ class Customer < ActiveRecord::Base
     Address.where(id: prev_addr_ids-existing_addr_ids).delete_all
 
     # update addresses
-    new_addresses = []
     address_objects.each_with_index do |addr_hash, index|
       addr = if addr_hash[:id]
         Address.find addr_hash[:id]
       else
-        Address.create(addr_hash)
+        addresses.new(addr_hash.merge(customer_id: self.try(:id)))
       end
 
       self.address = addr if index == mailing_address_index
-      new_addresses << addr
     end
-
-    self.addresses = new_addresses
   end
 
   def edit_donations(donation_objects, user)

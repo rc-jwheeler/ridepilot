@@ -3,7 +3,7 @@ class Address < ActiveRecord::Base
   
   belongs_to :provider
 
-  has_many :customer_addresses, :class_name => 'CustomerAddress'
+  belongs_to :customer, inverse_of: :addresses
 
   belongs_to :trip_purpose
   delegate :name, to: :trip_purpose, prefix: :trip_purpose, allow_nil: true

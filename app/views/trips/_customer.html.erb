@@ -29,21 +29,36 @@
   <input type="button" class="btn" name="new_customer" value="<%= translate_helper("new") %>" id="new_customer" data-path="<%= new_customer_path %>">
 <%- end -%>
 <%= javascript_tag do %>
-  $('#change_trip_customer_link').click(function(event){
-    event.preventDefault();
-    $('#trip_customer_name_wrapper').hide();
-    $('#customer_name').show();
-  });
+  $(document).ready(function(){
+    $('#change_trip_customer_link').click(function(event){
+      event.preventDefault();
+      $('#trip_customer_name_wrapper').hide();
+      $('#customer_name').show();
+    });
 
-  function popupFlagMessage(message) {
-    if(message) {
-      $('#customerFlagMessageText').text(message);
-      $('#customerFlagMessageDialog').modal('show');
+    function popupFlagMessage(message) {
+      if(message) {
+        $('#customerFlagMessageText').text(message);
+        $('#customerFlagMessageDialog').modal('show');
+      }
     }
-  }
 
-  // after a customer item is selected
-  $('#customer_name').bind('railsAutocomplete.select', function(event, data){
-    popupFlagMessage(data.item.message);
+    // after a customer item is selected
+    $('#customer_name').bind('railsAutocomplete.select', function(event, data){
+      popupFlagMessage(data.item.message);
+    });
+
+    $('#new_trip #customer_name').bind('railsAutocomplete.select', function(event, data){ 
+      if ($("#trip_group").val() == "true") {
+        $("li.passengers").hide();
+        $("li.group_size").show();
+      } else {
+        $("li.passengers").show();
+        $("li.group_size").hide();
+      }
+
+      $('#pickup_search_address').attr('data-autocomplete', "<%=autocomplete_addresses_path%>?customer_id=" + data.item.id);
+      $('#dropoff_search_address').attr('data-autocomplete', "<%=autocomplete_addresses_path%>?customer_id=" + data.item.id);
+    });
   });
 <% end %>
