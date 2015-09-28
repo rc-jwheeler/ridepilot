@@ -72,18 +72,17 @@ class Trip < ActiveRecord::Base
   
   serialize :guests
 
-  validates :appointment_time, presence: {unless: :allow_addressless_trip?}
+  validates :appointment_time, presence: true
   validates :attendant_count, numericality: {greater_than_or_equal_to: 0}
-  validates :customer, associated: true
-  validates :customer, presence: true
-  validates :dropoff_address, associated: true, presence: {unless: :allow_addressless_trip?}
+  validates :customer, associated: true, presence: true
+  validates :dropoff_address, associated: true, presence: true
   validates :guest_count, numericality: {greater_than_or_equal_to: 0}
   validates :mileage, numericality: {greater_than: 0, allow_blank: true}
-  validates :pickup_address, associated: true, presence: {unless: :allow_addressless_trip?}
-  validates :pickup_time, presence: {unless: :allow_addressless_trip?}
+  validates :pickup_address, associated: true, presence: true
+  validates :pickup_time, presence: true
   validates :trip_purpose_id, presence: true
-  validates_datetime :appointment_time, unless: :allow_addressless_trip?
-  validates_datetime :pickup_time, unless: :allow_addressless_trip?
+  validates_datetime :appointment_time, presence: true
+  validates_datetime :pickup_time, presence: true
   validate :driver_is_valid_for_vehicle
   validate :vehicle_has_open_seating_capacity
   validate :completable_until_day_of_trip
@@ -180,13 +179,6 @@ class Trip < ActiveRecord::Base
 
   def is_in_district?
     pickup_address.try(:in_district) && dropoff_address.try(:in_district)
-  end
-  
-  def allow_addressless_trip?
-    # The provider_id is assigned via the customer. If the customer isn't 
-    # present, then the whole trip is invalid. So in that case, ignore the 
-    # address errors until there is a customer.
-    (customer.blank? || customer.id.blank? || (provider.present? && provider.allow_trip_entry_from_runs_page)) && run.present?
   end
 
   def adjusted_run_id
