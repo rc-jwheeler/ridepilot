@@ -16,7 +16,7 @@ class TripPlanner
   end
 
   def get_drive_itineraries(try_count=3)
-    return nil if !OPEN_TRIP_PLANNER_URL.present?
+    return nil unless OPEN_TRIP_PLANNER_URL.present? && params_valid?
 
     try = 1
     result = nil
@@ -39,6 +39,43 @@ class TripPlanner
 
     return result, response
 
+  end
+
+  def get_drive_time
+    return nil if !params_valid?
+
+    result, response = get_drive_itineraries
+    itinerary = response['itineraries'].try(:first) if response
+    
+    itinerary['duration'] rescue nil
+  end
+
+  def get_drive_distance
+    return nil if !params_valid?
+
+    result, response = get_drive_itineraries
+    itinerary = response['itineraries'].try(:first) if response
+    
+    itinerary['legs'].first['distance'] * METERS_TO_MILES rescue nil
+  end
+
+  private
+
+  def build_url
+    time = @trip_datetime.strftime("%-I:%M%p")
+    date = @trip_datetime.strftime("%Y-%m-%d")
+
+    url_options = "mode=CAR"
+    url_options += "&date=#{date}"
+    url_options += "&time=#{time}"
+    url_options += "&fromPlace=#{@from_lat.to_s},#{@from_lon.to_s}" 
+    url_options += "&toPlace=#{@to_lat.to_s},#{@to_lon.to_s}"
+
+    OPEN_TRIP_PLANNER_URL + url_options
+  end
+
+  def params_valid?
+    @from_lon && @from_lat && @to_lat && @to_lon && @trip_datetime
   end
 
   def get_drive_itineraries_once
@@ -68,35 +105,6 @@ class TripPlanner
       return true, result['plan']
     end
 
-  end
-
-  def get_drive_time
-    result, response = get_drive_itineraries
-    itinerary = response['itineraries'].try(:first)
-    
-    itinerary['duration'] rescue nil
-  end
-
-  def get_drive_distance
-    result, response = get_drive_itineraries
-    itinerary = response['itineraries'].try(:first)
-    
-    itinerary['legs'].first['distance'] * METERS_TO_MILES rescue nil
-  end
-
-  private
-
-  def build_url
-    time = @trip_datetime.strftime("%-I:%M%p")
-    date = @trip_datetime.strftime("%Y-%m-%d")
-
-    url_options = "mode=CAR"
-    url_options += "&date=#{date}"
-    url_options += "&time=#{time}"
-    url_options += "&fromPlace=#{@from_lat.to_s},#{@from_lon.to_s}" 
-    url_options += "&toPlace=#{@to_lat.to_s},#{@to_lon.to_s}"
-
-    OPEN_TRIP_PLANNER_URL + url_options
   end
 
 end

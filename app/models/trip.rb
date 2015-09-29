@@ -258,6 +258,17 @@ class Trip < ActiveRecord::Base
     direction.try(:to_sym) == :outbound
   end
 
+  def update_drive_distance!
+    from_lat = pickup_address.try(:latitude)
+    from_lon = pickup_address.try(:longitude)
+    to_lat = dropoff_address.try(:latitude)
+    to_lon = dropoff_address.try(:longitude)
+
+    drive_distance = TripPlanner.new(from_lat, from_lon, to_lat, to_lon, pickup_time).get_drive_distance
+
+    self.save
+  end
+
   private
   
   def driver_is_valid_for_vehicle
@@ -271,7 +282,9 @@ class Trip < ActiveRecord::Base
   # Check if the run's vehicle has open capacity at the time of this trip
   def vehicle_has_open_seating_capacity
     if run.try(:vehicle_id).present? && pickup_time.present? && appointment_time.present?
-      errors.add(:base, TranslationEngine.translate_text(:vehicle_has_open_seating_capacity_validation_error)) if run.vehicle.open_seating_capacity(pickup_time, appointment_time, ignore: self) < trip_size
+      vehicle_open_seating_capacity = run.vehicle.try(:open_seating_capacity, pickup_time, appointment_time, ignore: self)
+      no_enough_capacity = !vehicle_open_seating_capacity ||  vehicle_open_seating_capacity < trip_size
+      errors.add(:base, TranslationEngine.translate_text(:vehicle_has_open_seating_capacity_validation_error)) if no_enough_capacity
     end
   end
 
