@@ -72,18 +72,17 @@ class Trip < ActiveRecord::Base
   
   serialize :guests
 
-  validates :appointment_time, presence: {unless: :allow_addressless_trip?}
+  validates :appointment_time, presence: true
   validates :attendant_count, numericality: {greater_than_or_equal_to: 0}
-  validates :customer, associated: true
-  validates :customer, presence: true
-  validates :dropoff_address, associated: true, presence: {unless: :allow_addressless_trip?}
+  validates :customer, associated: true, presence: true
+  validates :dropoff_address, associated: true, presence: true
   validates :guest_count, numericality: {greater_than_or_equal_to: 0}
   validates :mileage, numericality: {greater_than: 0, allow_blank: true}
-  validates :pickup_address, associated: true, presence: {unless: :allow_addressless_trip?}
-  validates :pickup_time, presence: {unless: :allow_addressless_trip?}
+  validates :pickup_address, associated: true, presence: true
+  validates :pickup_time, presence: true
   validates :trip_purpose_id, presence: true
-  validates_datetime :appointment_time, unless: :allow_addressless_trip?
-  validates_datetime :pickup_time, unless: :allow_addressless_trip?
+  validates_datetime :appointment_time, presence: true
+  validates_datetime :pickup_time, presence: true
   validate :driver_is_valid_for_vehicle
   validate :vehicle_has_open_seating_capacity
   validate :completable_until_day_of_trip
@@ -181,13 +180,6 @@ class Trip < ActiveRecord::Base
   def is_in_district?
     pickup_address.try(:in_district) && dropoff_address.try(:in_district)
   end
-  
-  def allow_addressless_trip?
-    # The provider_id is assigned via the customer. If the customer isn't 
-    # present, then the whole trip is invalid. So in that case, ignore the 
-    # address errors until there is a customer.
-    (customer.blank? || customer.id.blank? || (provider.present? && provider.allow_trip_entry_from_runs_page)) && run.present?
-  end
 
   def adjusted_run_id
     cab ? Run::CAB_RUN_ID : (run_id ? run_id : Run::UNSCHEDULED_RUN_ID)
@@ -266,6 +258,16 @@ class Trip < ActiveRecord::Base
     direction.try(:to_sym) == :outbound
   end
 
+  def update_drive_distance!
+    from_lat = pickup_address.try(:latitude)
+    from_lon = pickup_address.try(:longitude)
+    to_lat = dropoff_address.try(:latitude)
+    to_lon = dropoff_address.try(:longitude)
+
+    self.drive_distance = TripPlanner.new(from_lat, from_lon, to_lat, to_lon, pickup_time).get_drive_distance
+    self.save
+  end
+
   private
   
   def driver_is_valid_for_vehicle
@@ -279,7 +281,9 @@ class Trip < ActiveRecord::Base
   # Check if the run's vehicle has open capacity at the time of this trip
   def vehicle_has_open_seating_capacity
     if run.try(:vehicle_id).present? && pickup_time.present? && appointment_time.present?
-      errors.add(:base, TranslationEngine.translate_text(:vehicle_has_open_seating_capacity_validation_error)) if run.vehicle.open_seating_capacity(pickup_time, appointment_time, ignore: self) < trip_size
+      vehicle_open_seating_capacity = run.vehicle.try(:open_seating_capacity, pickup_time, appointment_time, ignore: self)
+      no_enough_capacity = !vehicle_open_seating_capacity ||  vehicle_open_seating_capacity < trip_size
+      errors.add(:base, TranslationEngine.translate_text(:vehicle_has_open_seating_capacity_validation_error)) if no_enough_capacity
     end
   end
 

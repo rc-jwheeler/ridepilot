@@ -62,6 +62,15 @@ class Customer < ActiveRecord::Base
   end
   
   def as_autocomplete
+    { 
+      :label                     => name, 
+      :id                        => id,
+      :group                     => group,
+      :message                   => message.try(:strip)
+    }
+  end
+
+  def trip_related_data
     if address.present?
       address_text = address.text.gsub(/\s+/, ' ')
       address_id = address.id
@@ -69,8 +78,9 @@ class Customer < ActiveRecord::Base
       address_data[:label] = address_text
     end
 
-    { :label                     => name, 
-      :id                        => id,
+    { :id                        => id,
+      :label                     => name, 
+      :medicaid_eligible         => is_medicaid_eligible?,
       :phone_number_1            => phone_number_1, 
       :phone_number_2            => phone_number_2,
       :mobility_notes            => mobility_notes,
@@ -78,12 +88,14 @@ class Customer < ActiveRecord::Base
       :address                   => address_text,
       :address_id                => address_id,
       :private_notes             => private_notes,
-      :group                     => group,
       :address_data              => address_data,
       :default_funding_source_id => default_funding_source_id,
-      :default_service_level     => service_level_name,
-      :message                   => message.try(:strip)
+      :default_service_level     => service_level_name
     }
+  end
+
+  def is_medicaid_eligible?
+    customer_eligibilities.includes(:eligibility).references(:eligibility).where(eligibilities: {code: 'nemt_eligible'}, eligible: true).first.present?
   end
   
   def replace_with!(other_customer_id)

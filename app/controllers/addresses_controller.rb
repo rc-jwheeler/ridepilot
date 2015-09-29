@@ -116,7 +116,7 @@ class AddressesController < ApplicationController
   
   def create
     
-    the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f, 4326) : nil
+    the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f) : nil
     prefix         = params['prefix'] || ""
     address_params = {}
 
@@ -152,7 +152,7 @@ class AddressesController < ApplicationController
 
   def validate
     
-    the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f, 4326) : nil
+    the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f) : nil
     prefix         = params['prefix'] || ""
     address_params = {}
 
@@ -196,7 +196,8 @@ class AddressesController < ApplicationController
   end
 
   def update
-
+    the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f) : nil
+    address_params[:the_geom] = the_geom
     if @address.update_attributes address_params
       flash.now[:notice] = "Address '#{@address.name}' was successfully updated"
       redirect_to provider_path(@address.provider)

@@ -56,27 +56,19 @@ class Address < ActiveRecord::Base
   end
 
   def latitude
-    if the_geom
-      return the_geom.x
-    else
-      return nil
-    end
+    the_geom.y if the_geom
   end
 
   def longitude
-    if the_geom
-      return the_geom.y
-    else
-      return nil
-    end
+    the_geom.x if the_geom
   end
 
-  def latitude=(x)
-    the_geom.x = x
+  def latitude=(y)
+    the_geom.y = y if the_geom
   end
 
-  def longitude=(y)
-    the_geom.y = y
+  def longitude=(x)
+    the_geom.x = x if the_geom
   end
 
   def text

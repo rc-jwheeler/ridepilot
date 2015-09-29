@@ -7,6 +7,11 @@ class CustomersController < ApplicationController
     render :json => customers.map { |customer| customer.as_autocomplete }
   end
 
+  def data_for_trip
+    @customer = Customer.for_provider(current_provider_id).where(id: params[:customer_id]).first
+    render :json => @customer ? @customer.trip_related_data : {}
+  end
+
   def found
     if params[:customer_id].blank?
       redirect_to search_customers_path( :term => params[:customer_name] )

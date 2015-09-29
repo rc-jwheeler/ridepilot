@@ -250,6 +250,7 @@ class TripsController < ApplicationController
       prep_view
       if @trip.is_all_valid?(current_provider_id) && @trip.save
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
+        TripDistanceCalculationWorker.perform_async(@trip.id) #sidekiq needs to run
         @ask_for_return_trip = true if @trip.is_outbound?
         format.html {
           if @ask_for_return_trip
@@ -281,9 +282,12 @@ class TripsController < ApplicationController
     handle_trip_params params[:trip]
     authorize! :manage, @trip
 
+    @trip.assign_attributes(trip_params)
+    is_address_changed = @trip.pickup_address_id_changed? || @trip.dropoff_address_id_changed?
     respond_to do |format|
-      if @trip.is_all_valid?(current_provider_id) && @trip.update_attributes(trip_params)
+      if @trip.is_all_valid?(current_provider_id) && @trip.save
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
+        TripDistanceCalculationWorker.perform_async(@trip.id) if is_address_changed
         format.html { redirect_to(trips_path, :notice => 'Trip was successfully updated.')  }
         format.js { 
           render :json => {:status => "success"}, :content_type => "text/json"

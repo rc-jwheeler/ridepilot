@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150927215504) do
+ActiveRecord::Schema.define(version: 20150928194320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -719,6 +719,7 @@ ActiveRecord::Schema.define(version: 20150927215504) do
     t.string   "direction",                                   default: "outbound"
     t.text     "result_reason"
     t.integer  "linking_trip_id"
+    t.float    "drive_distance"
   end
 
   add_index "trips", ["called_back_by_id"], :name => "index_trips_on_called_back_by_id"
