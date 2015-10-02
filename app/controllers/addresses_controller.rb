@@ -188,7 +188,7 @@ class AddressesController < ApplicationController
   def search
     @term      = params[:name].downcase
     @provider  = Provider.find params[:provider_id]
-    @addresses = Address.accessible_by(current_ability).for_provider(@provider).order(:address, :name).search_for_term(@term)
+    @addresses = Address.accessible_by(current_ability).for_provider(@provider).where(customer_id: nil).order(:address, :name).search_for_term(@term)
 
     respond_to do |format|
       format.json { render :text => render_to_string(:partial => "results.html") }
