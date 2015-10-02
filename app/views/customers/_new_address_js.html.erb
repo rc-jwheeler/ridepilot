@@ -16,7 +16,7 @@
   }
 
   function insertAddressRow(addressData, addressText) {
-    $('#customerCommonAddressTable').append("<tr data-address='" + JSON.stringify(addressData) + "'>" +
+    $('#customerCommonAddressTable').append("<tr data-address='" + escapeQuotes(JSON.stringify(addressData)) + "'>" +
         '<td><button class="deleteCustomerAddress btn-danger" name="button" type="button">Delete</button></td>' +
         "<td>" + addressData.name + '&nbsp;<a class="viewAddress" href="#">(View details)</a></td>' +
         "<td>" + addressText + "</td>" +
