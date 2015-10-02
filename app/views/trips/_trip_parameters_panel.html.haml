@@ -117,12 +117,6 @@
 
       .form-group.col-sm-12
         .col-sm-3
-          = f.label :mobility_device_accommodations, translate_helper("trip_form_mobility_device_accommodations_label")
-        .col-sm-9
-          = f.number_field :mobility_device_accommodations, min: 0, class: "form-control"
-
-      .form-group.col-sm-12
-        .col-sm-3
           = f.label :notes, translate_helper("trip_notes")
         .col-sm-9
           = f.text_area :notes, class: 'form-control'
