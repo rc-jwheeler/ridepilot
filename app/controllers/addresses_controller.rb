@@ -125,6 +125,7 @@ class AddressesController < ApplicationController
       address_params[param] = params[prefix + "_" + param]
     end
 
+    address_params[:customer_id] = params[:customer_id] if params[:customer_id].present?
     address_params[:provider_id] = current_provider_id
     address_params[:the_geom]    = the_geom
 

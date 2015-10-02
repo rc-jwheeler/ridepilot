@@ -1,5 +1,6 @@
  <%= form_tag addresses_path, :class=>'address-search', :method=>:post, :remote=>true, 'data-id-element' => "#trip_#{prefix}_address_id", 'data-label-element' => "##{prefix}_search_address" do %> 
   <%= hidden_field_tag 'address_id', address.id %>
+  <%= hidden_field_tag 'customer_id', address.customer_id %>
   <%= hidden_field_tag 'prefix', prefix %>
   <%= hidden_field_tag 'lat' %>
   <%= hidden_field_tag 'lon' %>
