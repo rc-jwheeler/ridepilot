@@ -885,6 +885,7 @@ en:
   ask_for_creating_return_trip_message: 'Would you like to create a return trip?'
   linking_to: 'Link to'
   trip_form_mobility_device_accommodations_label: 'Mobility Device Count'
+  eligibility_and_accommodation: 'Eligibility and Accommodation'
   #trips table
   pickup_date_column: 'Pickup Date'
   customer_column: 'Customer'
