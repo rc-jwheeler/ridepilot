@@ -481,6 +481,7 @@ en:
   driver_is_valid_for_vehicle_validation_error: "is not the driver for the selected vehicle during this vehicle's run."
   vehicle_has_open_seating_capacity_validation_error: "There's not enough open capacity on this run to accommodate this trip"
   completable_until_trip_appointment_time_validation_error: "cannot be set as complete until end time of the trip"
+  vehicle_has_mobility_device_capacity_validation_error: "There's not enough mobility device capacity on this run to accommodate this trip"
   #monthlies
   monthlies_start_date: "Month"
   funding_source: "Funding Source"
@@ -883,6 +884,7 @@ en:
   trip_form_error_message: 'Please correct following errors'
   ask_for_creating_return_trip_message: 'Would you like to create a return trip?'
   linking_to: 'Link to'
+  trip_form_mobility_device_accommodations_label: 'Mobility Device Count'
   #trips table
   pickup_date_column: 'Pickup Date'
   customer_column: 'Customer'

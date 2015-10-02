@@ -74,7 +74,6 @@ class TripScheduler
   end
 
   def validate_vehicle_availability
-    # TODO: revisit after vehicle capacity is added
     @run.vehicle && @run.vehicle.active
   end
 

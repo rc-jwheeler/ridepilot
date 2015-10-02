@@ -351,6 +351,7 @@ class TripsController < ApplicationController
       :trip_result_id,
       :result_reason,
       :vehicle_id,
+      :mobility_device_accommodations,
       customer_attributes: [:id]
     )
   end

@@ -58,4 +58,8 @@ class Vehicle < ActiveRecord::Base
   def open_seating_capacity(start_time, end_time, ignore: nil)
     seating_capacity - (trips.incomplete.during(start_time, end_time) - Array(ignore)).collect(&:trip_size).flatten.compact.sum if seating_capacity
   end
+
+  def open_mobility_device_capacity(start_time, end_time, ignore: nil)
+    mobility_device_accommodations - (trips.incomplete.during(start_time, end_time) - Array(ignore)).collect(&:mobility_device_accommodations).flatten.compact.sum if mobility_device_accommodations
+  end
 end

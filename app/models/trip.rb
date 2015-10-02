@@ -85,8 +85,10 @@ class Trip < ActiveRecord::Base
   validates_datetime :pickup_time, presence: true
   validate :driver_is_valid_for_vehicle
   validate :vehicle_has_open_seating_capacity
+  validate :vehicle_has_mobility_device_capacity
   validate :completable_until_trip_appointment_time
   validate :provider_availability
+  validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
   accepts_nested_attributes_for :customer
 
@@ -284,6 +286,15 @@ class Trip < ActiveRecord::Base
       vehicle_open_seating_capacity = run.vehicle.try(:open_seating_capacity, pickup_time, appointment_time, ignore: self)
       no_enough_capacity = !vehicle_open_seating_capacity ||  vehicle_open_seating_capacity < trip_size
       errors.add(:base, TranslationEngine.translate_text(:vehicle_has_open_seating_capacity_validation_error)) if no_enough_capacity
+    end
+  end
+
+  # Check if the run's vehicle has enough mobility accommodations at the time of this trip
+  def vehicle_has_mobility_device_capacity
+    if mobility_device_accommodations && run.try(:vehicle_id).present? && pickup_time.present? && appointment_time.present?
+      vehicle_mobility_capacity = run.vehicle.try(:open_mobility_device_capacity, pickup_time, appointment_time, ignore: self)
+      no_enough_capacity = !vehicle_mobility_capacity ||  vehicle_mobility_capacity < mobility_device_accommodations
+      errors.add(:base, TranslationEngine.translate_text(:vehicle_has_mobility_device_capacity_validation_error)) if no_enough_capacity
     end
   end
 
