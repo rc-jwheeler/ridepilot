@@ -139,7 +139,7 @@ class ReportsController < ApplicationController
     @total = {'in_district' => 0, 'out_of_district' => 0}
 
     counts_by_purpose.each do |row|
-      purpose = row.trip_purpose
+      purpose = row.trip_purpose.try(:name)
       next unless by_purpose.member?(purpose)
 
       if row.is_in_district?
