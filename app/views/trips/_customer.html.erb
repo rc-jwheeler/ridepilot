@@ -52,7 +52,7 @@
       $('#trip_medicaid_eligible').attr('checked',customerData.medicaid_eligible);
     }
 
-    $('#new_trip #customer_name').bind('railsAutocomplete.select', function(event, data){ 
+    $('.trip_form #customer_name').bind('railsAutocomplete.select', function(event, data){ 
       if ($("#trip_group").val() == "true") {
         $("li.passengers").hide();
         $("li.group_size").show();

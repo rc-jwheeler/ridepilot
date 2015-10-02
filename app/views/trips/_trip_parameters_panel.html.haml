@@ -26,7 +26,7 @@
         .col-sm-3
           = f.label :pickup_address_label, translate_helper("pickup_address")
         .col-sm-9
-          = autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:address_text), autocomplete_addresses_path, :size => 30, :id_element => "#trip_pickup_address_id", :class => "nearly-full form-control", "data-original-value" => @trip.pickup_address.try(:text), "data-original-id" => @trip.pickup_address.try(:id)  
+          = autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:address_text), autocomplete_addresses_path(customer_id: @trip.try(:customer_id)), :size => 30, :id_element => "#trip_pickup_address_id", :class => "nearly-full form-control", "data-original-value" => @trip.pickup_address.try(:text), "data-original-id" => @trip.pickup_address.try(:id)  
           - if edit_mode != :show
             = f.hidden_field :pickup_address_id
             - display_style = @trip.pickup_address.try(:id).present? ? 'inline' : 'none'
@@ -52,7 +52,7 @@
         .col-sm-3
           = f.label :dropoff_address_label, translate_helper("dropoff_address") 
         .col-sm-9
-          = autocomplete_field_tag "dropoff_search_address", @trip.dropoff_address.try(:address_text), autocomplete_addresses_path, :size                => 30, :update_elements => { :id => '#trip_dropoff_address_id', :default_trip_purpose => '#trip_trip_purpose'},:class => "nearly-full form-control", "data-original-value" => @trip.dropoff_address.try(:text), "data-original-id" => @trip.dropoff_address.try(:id) 
+          = autocomplete_field_tag "dropoff_search_address", @trip.dropoff_address.try(:address_text), autocomplete_addresses_path(customer_id: @trip.try(:customer_id)), :size                => 30, :update_elements => { :id => '#trip_dropoff_address_id', :default_trip_purpose => '#trip_trip_purpose'},:class => "nearly-full form-control", "data-original-value" => @trip.dropoff_address.try(:text), "data-original-id" => @trip.dropoff_address.try(:id) 
           - if edit_mode != :show
             = f.hidden_field :dropoff_address_id     
             - display_style = @trip.dropoff_address.try(:id).present? ? "inline" : "none"
