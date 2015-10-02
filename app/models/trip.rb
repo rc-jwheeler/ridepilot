@@ -85,7 +85,7 @@ class Trip < ActiveRecord::Base
   validates_datetime :pickup_time, presence: true
   validate :driver_is_valid_for_vehicle
   validate :vehicle_has_open_seating_capacity
-  validate :completable_until_day_of_trip
+  validate :completable_until_trip_appointment_time
   validate :provider_availability
 
   accepts_nested_attributes_for :customer
@@ -288,9 +288,9 @@ class Trip < ActiveRecord::Base
   end
 
   # Can only allow to set trip as complete until day of the trip
-  def completable_until_day_of_trip
-    if complete && Time.current.to_date < pickup_time.in_time_zone.to_date
-      errors.add(:base, TranslationEngine.translate_text(:completable_until_day_of_trip_validation_error))
+  def completable_until_trip_appointment_time
+    if complete && Time.current < appointment_time.in_time_zone
+      errors.add(:base, TranslationEngine.translate_text(:completable_until_trip_appointment_time_validation_error))
     end
   end
 
