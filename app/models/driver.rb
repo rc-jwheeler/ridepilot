@@ -29,6 +29,7 @@ class Driver < ActiveRecord::Base
   validates :provider, presence: true
   validates :user, presence: true
   validates :user_id, uniqueness: { allow_nil: true }
+  validates :phone_number, presence: true
 
   scope :users,         -> { where("drivers.user_id IS NOT NULL") }
   scope :active,        -> { where(active: true) }
