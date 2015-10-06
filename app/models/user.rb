@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
     :timeoutable, :password_expirable, :password_archivable, :account_expireable
 
   # Let Devise handle the email format requirement
-  validates :email, uniqueness: true
+  validates :email, uniqueness: { conditions: -> { where(deleted_at: nil) } }
   
   # Let Devise handle the password length requirement
   validates :password, confirmation: true, format: {

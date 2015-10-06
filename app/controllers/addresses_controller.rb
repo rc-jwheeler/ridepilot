@@ -41,7 +41,9 @@ class AddressesController < ApplicationController
       city_state_zip = ''
     end
 
-    addresses = Address.accessible_by(current_ability).where(["((LOWER(address) like '%' || ? || '%' ) and  (city || ', ' || state || ' ' || zip like ? || '%')) or LOWER(building_name) like '%' || ? || '%' or LOWER(name) like '%' || ? || '%' ", address, city_state_zip, term, term]).where(:provider_id => current_provider_id, :inactive => false)
+    addresses = Address.accessible_by(current_ability)
+      .where(is_driver_associated: false)
+      .where(["((LOWER(address) like '%' || ? || '%' ) and  (city || ', ' || state || ' ' || zip like ? || '%')) or LOWER(building_name) like '%' || ? || '%' or LOWER(name) like '%' || ? || '%' ", address, city_state_zip, term, term]).where(:provider_id => current_provider_id, :inactive => false)
     if params[:customer_id].present?
       addresses = addresses.where("customer_id is NULL or customer_id = ?", params[:customer_id]) 
     else
