@@ -23,7 +23,7 @@ class Driver < ActiveRecord::Base
 
   accepts_nested_attributes_for :address, update_only: true
 
-  validates :address, associated: true
+  validates :address, associated: true, presence: true
   validates :email, format: { with: Devise.email_regexp, allow_blank: true }
   validates :name, uniqueness: { scope: :provider_id }, length: { minimum: 2 }
   validates :provider, presence: true
