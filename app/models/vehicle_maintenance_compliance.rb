@@ -25,16 +25,18 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   scope :overdue, -> (as_of: Date.current) { where(id: incomplete.select{ |r| r.overdue?(as_of: as_of) }.collect(&:id)) }
   scope :due_soon, -> (as_of: Date.current, through: nil, within_mileage: 500) { where(id: incomplete.select{ |r|  r.overdue?(as_of: as_of..(through || as_of + 6.days), mileage: r.vehicle_odometer_reading..(r.vehicle_odometer_reading + within_mileage)) }.collect(&:id)) }
   
-  def overdue?(as_of: Date.current, mileage: vehicle_odometer_reading)
+  # Extend the #overdue? method from the ComplianceEvent concern
+  def overdue_with_due_type?(as_of: Date.current, mileage: vehicle_odometer_reading)
     case due_type.to_sym
     when :date
-      is_after_due_date? as_of
+      overdue_without_due_type? as_of: as_of
     when :mileage
       is_over_due_mileage? mileage
     when :both
-      is_after_due_date?(as_of) && is_over_due_mileage?(mileage)
+      overdue_without_due_type?(as_of: as_of) && is_over_due_mileage?(mileage)
     end
   end
+  alias_method_chain :overdue?, :due_type
   
   def vehicle_odometer_reading
     vehicle.last_odometer_reading
@@ -51,14 +53,6 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   end
 
   private
-  
-  def is_after_due_date?(as_of)
-    if as_of.is_a? Range
-      as_of.include? due_date
-    else
-      as_of > due_date
-    end
-  end
   
   def is_over_due_mileage?(mileage)
     if mileage.is_a? Range

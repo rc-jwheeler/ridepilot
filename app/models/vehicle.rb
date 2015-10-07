@@ -25,7 +25,6 @@ class Vehicle < ActiveRecord::Base
   has_many :vehicle_maintenance_compliances, dependent: :delete_all, inverse_of: :vehicle
 
   validates :provider, presence: true
-  validates :default_driver, presence: true
   validates :name, presence: true
   validates :vin, length: {is: 17, allow_nil: true, allow_blank: true},
     format: {with: /\A[^ioq]*\z/i, allow_nil: true}

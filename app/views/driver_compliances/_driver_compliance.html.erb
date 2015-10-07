@@ -1,4 +1,4 @@
-<tr class="driver_compliance-<%= driver_compliance.id %>">
+<tr class="driver_compliance-<%= driver_compliance.id %><%= " overdue_compliance_event danger" if driver_compliance.overdue? %>">
   <td>
     <p class="form-control-static">
       <%= driver_compliance.due_date.to_s(:long) %>

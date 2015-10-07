@@ -7,12 +7,6 @@ RSpec.describe Vehicle, type: :model do
     expect(vehicle.errors.keys).to include :provider
   end
   
-  it "requires a default_driver" do
-    vehicle = build :vehicle, default_driver: nil
-    expect(vehicle.valid?).to be_falsey
-    expect(vehicle.errors.keys).to include :default_driver
-  end
-  
   it "requires a name" do
     vehicle = build :vehicle, name: nil
     expect(vehicle.valid?).to be_falsey
