@@ -1,6 +1,8 @@
 class Customer < ActiveRecord::Base
   include RequiredFieldValidatorModule 
   
+  before_validation :generate_uuid_token, on: :create
+
   acts_as_paranoid # soft delete
 
   has_and_belongs_to_many :authorized_providers, :class_name => 'Provider', :through => 'customers_providers'
@@ -115,7 +117,7 @@ class Customer < ActiveRecord::Base
   end
 
   def authorized_for_provider provider_id
-    Customer.for_provider(provider_id).where("id = ?", self.id).count > 0
+    !Customer.for_provider(provider_id).where("id = ?", self.id).empty?
   end
 
   def self.by_term( term, limit = nil )
@@ -281,6 +283,10 @@ class Customer < ActiveRecord::Base
     if addresses.empty?
       errors.add :addresses, TranslationEngine.translate_text(:must_have_one_address)
     end
+  end
+
+  def generate_uuid_token
+    self.token = SecureRandom.uuid
   end
 
 end

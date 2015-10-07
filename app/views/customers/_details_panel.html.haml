@@ -11,6 +11,12 @@
           = f.label :ignore_dups, translate_helper(:ignore_duplicates) 
         .col-sm-9
           = check_box_tag :ignore_dups 
+    - if edit_mode == :show
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :token, translate_helper(:customer_token_label) 
+        .col-sm-9
+          = @customer.token
     .form-group.col-sm-12.firstname
       .col-sm-3
         = f.label :first_name, translate_helper(:first_name) 

@@ -1076,6 +1076,13 @@ en:
   report_parameters: 'Report Parameters'
   reset_filter_panel: 'Reset Filter'
   reset_all_filter: 'Reset All'
+  # api
+  ridepilot_token_required: 'Ridepilot token is required.'
+  invalid_ridepilot_token: 'Ridepilot token is not valid.'
+  customer_token_label: 'Token'
+  customer_not_exist: 'Customer does not exist based on given id and token.'
+  unauthorized_customer_for_provider: 'Customer is not authorized to access given provider.'
+  provider_not_exist: 'Provider does not exist based on given id.'
 
   locales:
     en: "English"
