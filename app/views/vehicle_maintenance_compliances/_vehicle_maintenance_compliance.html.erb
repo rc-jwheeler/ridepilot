@@ -1,4 +1,4 @@
-<tr class="vehicle_maintenance_compliance-<%= vehicle_maintenance_compliance.id %>">
+<tr class="vehicle_maintenance_compliance-<%= vehicle_maintenance_compliance.id %><%= " overdue_compliance_event danger" if vehicle_maintenance_compliance.overdue? %>">
   <td>
     <p class="form-control-static">
       <%= due_string vehicle_maintenance_compliance %>
