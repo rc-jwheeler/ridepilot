@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151006222637) do
+ActiveRecord::Schema.define(version: 20151007210204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,17 @@ ActiveRecord::Schema.define(version: 20151006222637) do
   add_index "addresses_customers_old", ["address_id"], :name => "index_addresses_customers_old_on_address_id"
   add_index "addresses_customers_old", ["customer_id"], :name => "index_addresses_customers_old_on_customer_id"
 
+  create_table "booking_users", force: true do |t|
+    t.integer  "user_id"
+    t.string   "token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.string   "url"
+  end
+
+  add_index "booking_users", ["user_id"], :name => "index_booking_users_on_user_id"
+
   create_table "custom_reports", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -121,6 +132,7 @@ ActiveRecord::Schema.define(version: 20151006222637) do
     t.string   "gender"
     t.datetime "deleted_at"
     t.text     "message"
+    t.string   "token"
   end
 
   add_index "customers", ["address_id"], :name => "index_customers_on_address_id"

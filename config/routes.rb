@@ -178,4 +178,10 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      get "authenticate_customer", :controller => :customers, :action => :show
+    end
+  end
 end
