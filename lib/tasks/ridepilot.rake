@@ -102,5 +102,12 @@
     puts 'Finished seeding reporting filter types.'
 
   end # task
+
+  desc "mark addresses if associated with a driver"
+  task mark_address_if_driver_associated: :environment do
+    Driver.includes(:address).each do |driver|
+      driver.address.update_attributes(is_driver_associated: true) if driver.address
+    end
+  end
   #------------- End of Incremental Seeding --------------
 end

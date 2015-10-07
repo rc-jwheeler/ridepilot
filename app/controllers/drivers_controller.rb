@@ -87,6 +87,7 @@ class DriversController < ApplicationController
       :name, 
       :email, 
       :user_id,
+      :phone_number,
       :address_attributes => [
         :address,
         :building_name,
@@ -95,8 +96,7 @@ class DriversController < ApplicationController
         :provider_id,
         :state,
         :zip,
-        :notes,
-        :phone_number
+        :notes
       ],
     )
   end

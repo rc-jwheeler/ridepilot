@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151002192228) do
+ActiveRecord::Schema.define(version: 20151006222637) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,19 +36,20 @@ ActiveRecord::Schema.define(version: 20151002192228) do
     t.string   "city"
     t.string   "state"
     t.string   "zip"
-    t.boolean  "in_district",                                                               default: false
+    t.boolean  "in_district",                                                                   default: false
     t.integer  "provider_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",                                                              default: 0
+    t.integer  "lock_version",                                                                  default: 0
     t.string   "phone_number"
-    t.boolean  "inactive",                                                                  default: false
+    t.boolean  "inactive",                                                                      default: false
     t.string   "trip_purpose_old"
-    t.spatial  "the_geom",         limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.spatial  "the_geom",             limit: {:srid=>4326, :type=>"point", :geographic=>true}
     t.integer  "trip_purpose_id"
     t.text     "notes"
     t.datetime "deleted_at"
     t.integer  "customer_id"
+    t.boolean  "is_driver_associated",                                                          default: false
   end
 
   add_index "addresses", ["customer_id"], :name => "index_addresses_on_customer_id"
@@ -245,6 +246,7 @@ ActiveRecord::Schema.define(version: 20151002192228) do
     t.string   "email"
     t.integer  "address_id"
     t.datetime "deleted_at"
+    t.string   "phone_number"
   end
 
   add_index "drivers", ["address_id"], :name => "index_drivers_on_address_id"
