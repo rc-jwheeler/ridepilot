@@ -1,6 +1,7 @@
 class API::ApiController < ActionController::Base
   skip_before_action :authenticate_user!, :verify_authenticity_token
-  before_action :cors_preflight_check, :authenticate_user_from_token!, :cors_set_access_control_headers
+  before_action :cors_preflight_check, :authenticate_user_from_token!
+  after_action :cors_set_access_control_headers
 
   # necessary in all controllers that will respond with JSON
   respond_to :json 
@@ -22,17 +23,21 @@ class API::ApiController < ActionController::Base
       headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE, OPTIONS'
       headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-Prototype-Version, Token, X-RIDEPILOT-TOKEN'
       headers['Access-Control-Max-Age'] = '1728000'
+      head(:ok)
     end
   end
 
   def authenticate_user_from_token!
-    token = request.headers['X-RIDEPILOT-TOKEN']
-
+    token = request.headers['X-RIDEPILOT-TOKEN']    
     if token.blank? 
-      return error(:forbidden, TranslationEngine.translate_text(:ridepilot_token_required))
+      error(:forbidden, TranslationEngine.translate_text(:ridepilot_token_required))
     else
-      @booking_user = BookingUser.find_by_token(token)
-      return error(:unauthorized, TranslationEngine.translate_text(:invalid_ridepilot_token)) if !@booking_user.try(:user)
+      begin
+        @booking_user = BookingUser.find_by_token(token)
+      rescue => e
+        Rails.logger.error e.message
+      end
+      error(:unauthorized, TranslationEngine.translate_text(:invalid_ridepilot_token)) if !@booking_user.try(:user)
     end
   end
 
@@ -45,8 +50,6 @@ class API::ApiController < ActionController::Base
       headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE, OPTIONS'
       headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept, Authorization, Token'
       headers['Access-Control-Max-Age'] = "1728000"
-    else
-      headers['Access-Control-Allow-Origin'] = nil
     end
   end
 
