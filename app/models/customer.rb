@@ -1,5 +1,6 @@
 class Customer < ActiveRecord::Base
   include RequiredFieldValidatorModule 
+  before_validation :generate_uuid_token, on: :create
 
   acts_as_paranoid # soft delete
 
@@ -283,6 +284,10 @@ class Customer < ActiveRecord::Base
     if addresses.empty?
       errors.add :addresses, TranslationEngine.translate_text(:must_have_one_address)
     end
+  end
+
+  def generate_uuid_token
+    self.token = SecureRandom.hex(5)
   end
 
 end

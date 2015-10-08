@@ -270,7 +270,7 @@ class Trip < ActiveRecord::Base
     self.save
   end
 
-  def as_api_json
+  def as_profile_json
     {
       trip_id: id,
       pickup_time: pickup_time.try(:iso8601),
