@@ -5,12 +5,12 @@ RSpec.describe "API::V1::customers" do
   context "User authentication" do
 
     it "returns 403 when not passing user token in request header" do
-      get api_v1_authenticate_customer_url
+      get api_v1_authenticate_customer_path
       expect(response.status).to be(403)
     end
 
     it "returns 401 when not passing invalid user token in request header" do
-      get api_v1_authenticate_customer_url, nil, {"X-RIDEPILOT-TOKEN" => "randome_string"}
+      get api_v1_authenticate_customer_path, nil, {"X-RIDEPILOT-TOKEN" => "randome_string"}
       expect(response.status).to be(401)
     end   
 
@@ -22,7 +22,7 @@ RSpec.describe "API::V1::customers" do
       customer = create(:customer)
       booking_user = create(:booking_user, url: "http://localhost:3000")
       
-      get api_v1_authenticate_customer_url, {
+      get api_v1_authenticate_customer_path, {
         customer_id: customer.id, 
         customer_token: customer.token,
         provider_id: customer.provider_id
