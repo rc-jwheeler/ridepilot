@@ -1,5 +1,3 @@
-require 'securerandom'
-  
 namespace :ridepilot do
 
   #------------- Incremental Seeding ------------------

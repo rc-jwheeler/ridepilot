@@ -6,16 +6,16 @@ class API::V1::TripsController < API::ApiController
     authenticate_provider
     authenticate_trip_purpose
 
-    from_address_params = JSON.parse(params[:from_address], symbolize_names: true).merge{
+    from_address_params = JSON.parse(params[:from_address], symbolize_names: true).merge({
         customer_id: @customer.id,
         provider_id: @provider.id
-        }
+        })
 
-    to_address_params = JSON.parse(params[:to_address], symbolize_names: true).merge{
+    to_address_params = JSON.parse(params[:to_address], symbolize_names: true).merge({
         customer_id: @customer.id,
         provider_id: @provider.id,
         trip_purpose_id: @trip_purpose.id
-        }
+        })
 
     @trip = Trip.new(
       customer: @customer, 
