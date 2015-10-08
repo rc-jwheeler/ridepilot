@@ -184,4 +184,17 @@ class Address < ActiveRecord::Base
     summary_info
   end
 
+  def self.parse_api_params(address_params)
+    address_data = GooglePlaceParser.new(address_params[:address]).parse || {}
+
+    Address.new( address_data.merge{
+      customer_id: address_params[:customer_id],
+      trip_purpose_id: address_params[:trip_purpose_id],
+      provider_id: address_params[:provider_id],
+      name: address_params[:address_name],
+      notes: address_params[:note],
+      in_district: address_params[:in_district]
+      } )
+  end
+
 end
