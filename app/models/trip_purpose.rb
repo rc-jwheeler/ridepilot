@@ -11,7 +11,7 @@ class TripPurpose < ActiveRecord::Base
   def as_api_json
     {
       name: name,
-      code: name
+      code: id
     }
   end
 end
