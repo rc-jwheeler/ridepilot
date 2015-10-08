@@ -184,6 +184,9 @@ Rails.application.routes.draw do
       match "authenticate_customer", :controller => :customers, :action => :show, :via => [:get, :options]
       match "authenticate_provider", :controller => :providers, :action => :show, :via => [:get, :options]
       match "trip_purposes", :controller => :trip_purposes, :action => :index, :via => [:get, :options]
+      match "create_trip", :controller => :trips, :action => :create, :via => [:post, :options]
+      match "cancel_trip", :controller => :trips, :action => :destroy, :via => [:delete, :options]
+      match "trip_status", :controller => :trips, :action => :show, :via => [:get, :options]
     end
   end
 end

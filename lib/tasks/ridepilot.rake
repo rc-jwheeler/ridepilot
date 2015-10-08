@@ -1,5 +1,3 @@
-require 'securerandom'
-  
 namespace :ridepilot do
 
   #------------- Incremental Seeding ------------------
@@ -109,13 +107,6 @@ namespace :ridepilot do
   task mark_address_if_driver_associated: :environment do
     Driver.includes(:address).each do |driver|
       driver.address.update_attributes(is_driver_associated: true) if driver.address
-    end
-  end
-
-  desc "Generate customer token"
-  task generate_customer_token: :environment do
-    Customer.where(token: nil).each do |customer|
-      customer.update_attribute(:token, SecureRandom.uuid)
     end
   end
   #------------- End of Incremental Seeding --------------

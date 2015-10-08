@@ -1,7 +1,5 @@
 class Customer < ActiveRecord::Base
   include RequiredFieldValidatorModule 
-  
-  before_validation :generate_uuid_token, on: :create
 
   acts_as_paranoid # soft delete
 
@@ -24,6 +22,8 @@ class Customer < ActiveRecord::Base
   validates_presence_of :first_name
   validates_associated :address
   #validate :address_required
+  # Token is auto-generated at database level via uuid extension
+  
   accepts_nested_attributes_for :address
 
   normalize_attribute :first_name, :with=> [:squish, :titleize]
@@ -283,10 +283,6 @@ class Customer < ActiveRecord::Base
     if addresses.empty?
       errors.add :addresses, TranslationEngine.translate_text(:must_have_one_address)
     end
-  end
-
-  def generate_uuid_token
-    self.token = SecureRandom.uuid
   end
 
 end

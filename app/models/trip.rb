@@ -270,6 +270,57 @@ class Trip < ActiveRecord::Base
     self.save
   end
 
+  def as_api_json
+    {
+      trip_id: id,
+      pickup_time: pickup_time.try(:iso8601),
+      dropff_time: appointment_time.try(:iso8601),
+      comments: notes,
+      status: status_json
+    }
+  end
+
+  def status_json
+    {
+      code: status_code,
+      message: status_message
+    }
+  end
+
+  def status_code
+    if trip_result
+      trip_result.code
+    elsif run
+      :scheduled
+    elsif cab
+      :scheduled_to_cab
+    else  
+      :booked
+    end
+  end
+
+  def status_message
+    if trip_result
+      trip_result.name
+    elsif run
+      TranslationEngine.translate_text(:trip_has_been_scheduled)
+    elsif cab
+      TranslationEngine.translate_text(:trip_has_been_scheduled_to_cab)
+    else  
+      TranslationEngine.translate_text(:trip_has_been_booked)
+    end
+  end
+
+  # potentially support multi-leg trips
+  # need revisit when multi-leg is supported as direction field needs to be refactored
+  def self.parse_leg_as_direction(leg)
+    if leg.try(:to_s) == '2'
+      :return
+    else
+      :outbound
+    end
+  end
+
   private
   
   def driver_is_valid_for_vehicle
