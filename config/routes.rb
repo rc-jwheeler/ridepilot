@@ -181,9 +181,9 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      get "authenticate_customer", :controller => :customers, :action => :show
-      get "authenticate_provider", :controller => :providers, :action => :show
-      get "trip_purposes", :controller => :trip_purposes, :action => :index
+      match "authenticate_customer", :controller => :customers, :action => :show, :via => [:get, :options]
+      match "authenticate_provider", :controller => :providers, :action => :show, :via => [:get, :options]
+      match "trip_purposes", :controller => :trip_purposes, :action => :index, :via => [:get, :options]
     end
   end
 end
