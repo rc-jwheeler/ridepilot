@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151007210204) do
+ActiveRecord::Schema.define(version: 20151008153741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
   enable_extension "postgis_topology"
   enable_extension "fuzzystrmatch"
+  enable_extension "uuid-ossp"
 
   create_table "address_upload_flags", force: true do |t|
     t.boolean  "is_loading",          default: false
@@ -70,11 +71,11 @@ ActiveRecord::Schema.define(version: 20151007210204) do
 
   create_table "booking_users", force: true do |t|
     t.integer  "user_id"
-    t.string   "token"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.string   "url"
+    t.uuid     "token",      default: "uuid_generate_v4()"
   end
 
   add_index "booking_users", ["user_id"], :name => "index_booking_users_on_user_id"
@@ -132,7 +133,7 @@ ActiveRecord::Schema.define(version: 20151007210204) do
     t.string   "gender"
     t.datetime "deleted_at"
     t.text     "message"
-    t.string   "token"
+    t.uuid     "token",                     default: "uuid_generate_v4()"
   end
 
   add_index "customers", ["address_id"], :name => "index_customers_on_address_id"
