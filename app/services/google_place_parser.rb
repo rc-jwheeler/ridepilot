@@ -17,6 +17,7 @@ class GooglePlaceParser
         city: address_data[:city],
         state: address_data[:state],
         zip: address_data[:zipcode],
+        building_name: @raw_data[:name],
         the_geom: parse_geom
       }
     rescue => e
@@ -26,21 +27,20 @@ class GooglePlaceParser
 
   private
 
-  def address_data
+  def parse_address_data
     address_params = @raw_data[:address_components]
 
     address_data = {}
-    if !address_components.empty?
-      address_components.each do |comp|
+    if !address_params.empty?
+      address_params.each do |comp|
         if comp && comp.keys.index(:types)
-          case comp[:types]
-          when index("street_address")
-            address_data[:address] = comp[:long_name]
-          when index("locality")
+          if comp[:types].index("street_address")
+            address_data[:street_address] = comp[:long_name]
+          elsif comp[:types].index("locality")
             address_data[:city] = comp[:long_name]
-          when index("administrative_area_level_1")
+          elsif comp[:types].index("administrative_area_level_1")
             address_data[:state] = comp[:long_name]
-          when index("postal_code")
+          elsif comp[:types].index("postal_code")
             address_data[:zipcode] = comp[:long_name]
           end 
         end
