@@ -114,6 +114,9 @@ gem 'nested_form', '~> 0.3.2'
 # reporting engine
 gem 'reporting', :github => 'camsys/reporting', :branch => 'master'
 
+# styling
+gem 'bootstrap-kaminari-views'
+
 # momentjs for datetime parsing
 gem 'momentjs-rails'
 
