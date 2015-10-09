@@ -67,6 +67,7 @@ en:
   not_eligible: 'Not Eligible'
   ineligible_reason: 'Why not eligible?'
   #customers
+  customer_id_label: 'ID'
   customer_details_panel: 'Details'
   customer_addresses_panel: 'Addresses'
   is_mailing_address: 'Mailing'
