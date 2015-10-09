@@ -85,16 +85,6 @@
         = f.text_field :mobility_notes, class: 'form-control'
     .form-group.col-sm-12
       .col-sm-3
-        = f.label :medicaid_eligible, translate_helper(:medicaid_eligible) 
-      .col-sm-9
-        = f.check_box :medicaid_eligible
-    .form-group.col-sm-12
-      .col-sm-3
-        = f.label :ada_eligible, translate_helper(:ada_eligible) 
-      .col-sm-9
-        = f.check_box :ada_eligible
-    .form-group.col-sm-12
-      .col-sm-3
         = f.label :default_service_level, translate_helper(:default_service_level) 
       .col-sm-9
         = f.select :service_level_id, @service_levels, {:include_blank => true}, {class: 'form-control'}
