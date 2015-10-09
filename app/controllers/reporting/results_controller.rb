@@ -19,7 +19,7 @@ module Reporting
       end
 
       # total_results is for exporting
-      total_results = @q.result(:district => true)
+      total_results = @q.result
 
       # filter data based on accessibility
       total_results = filter_data(total_results)
@@ -51,6 +51,10 @@ module Reporting
             title: output_field.title
           }
         end
+      end
+
+      if q_param[:s].present?
+        total_results = total_results.order(q_param[:s])
       end
 
       # @results is for html display; only render current page
