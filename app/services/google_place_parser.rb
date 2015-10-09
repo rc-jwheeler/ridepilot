@@ -33,6 +33,7 @@ class GooglePlaceParser
     address_data = {}
     if !address_params.empty?
       address_params.each do |comp|
+        comp = comp.deep_symbolize_keys if comp.is_a? Hash
         if comp && comp.keys.index(:types)
           if comp[:types].index("street_address")
             address_data[:street_address] = comp[:long_name]
