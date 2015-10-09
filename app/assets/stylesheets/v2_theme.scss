@@ -97,6 +97,12 @@ th.fc-resourceName {
   color: white !important;
 }
 
+table.dataTable tbody tr.selected {
+  background-color: #b0bed9 !important;
+  font-weight: bold;
+  font-style: italic;
+}
+
 .ineligible-reason {
   padding: 10px 0px;
 }
