@@ -59,7 +59,7 @@
       <%= image_tag("tick-circle.png") if trip.customer_informed %>
     <% end %>
   </td>
-  <td>
+  <td class="trip_table_result_column">
     <% if can? :edit, trip  %>
       <%= form_for trip, url: trip_change_result_path(trip), remote: true, method: :patch, html: { class: 'change-trip-result' }  do |f| %>
         <%= f.select :trip_result_id, @trip_results,  { :include_blank => true }, {class: 'form-control', :onchange => "$(this).parents('form').submit()"}  %>
