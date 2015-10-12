@@ -295,7 +295,7 @@ class Trip < ActiveRecord::Base
     elsif cab
       :scheduled_to_cab
     else  
-      :booked
+      :requested
     end
   end
 
@@ -307,7 +307,7 @@ class Trip < ActiveRecord::Base
     elsif cab
       TranslationEngine.translate_text(:trip_has_been_scheduled_to_cab)
     else  
-      TranslationEngine.translate_text(:trip_has_been_booked)
+      TranslationEngine.translate_text(:trip_has_been_requested)
     end
   end
 

@@ -1087,7 +1087,7 @@ en:
   unauthorized_customer_for_trip: 'Customer is not authorized to access given trip.'
   trip_has_been_scheduled: 'Your trip has been scheduled.'
   trip_has_been_scheduled_to_cab: 'Your trip has been scheduled to a cab.'
-  trip_has_been_booked: 'Your trip has been booked.'
+  trip_has_been_requested: 'Your trip request has been accepted.'
   trip_purpose_not_exist: 'Trip purpose does not exist for given provider.'
 
   locales:
