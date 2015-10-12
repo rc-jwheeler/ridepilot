@@ -1,41 +1,17 @@
+<div class="address-form" id="provider-address-form">
+  <%= render 'addresses/new_form', :prefix=>'provider', address: Address.new %>
+</div>
+
 <script type='text/javascript'>
-
-  function populate_address_form(field, address) {
-    form = $("#" + field + "-address-form");
-    form.find('#address_id').val(address.id);
-    form.find('#' + field + '_name').val(address.name);
-    form.find('#' + field + '_building_name').val(address.building_name);
-    form.find('#' + field + '_address').val(address.address);
-    form.find('#' + field + '_city').val(address.city);
-    form.find('#' + field + '_state').val(address.state);
-    form.find('#' + field + '_zip').val(address.zip);
-    form.find('#' + field + '_lat').val(address.lat);
-    form.find('#' + field + '_lon').val(address.lon);
-    form.find('#' + field + '_in_district').val(address.in_district);
-    form.find('#' + field + '_notes').val(address.notes);
-  }
-
-  function insertAddressRow(addressData, addressText) {
-    $('#customerCommonAddressTable').append("<tr data-address='" + escapeQuotes(JSON.stringify(addressData)) + "'>" +
-        '<td><button class="deleteCustomerAddress btn-danger" name="button" type="button">Delete</button></td>' +
-        "<td>" + addressData.name + '&nbsp;<a class="viewAddress" href="#">(View details)</a></td>' +
-        "<td>" + addressText + "</td>" +
-        '<td><input name="mailing" type="radio" value=false></td>' +
-        "</tr>");
-  }
-
   $(document).ready(function() {
     
     // happens after you submit an address (not autocomplete)
     // an id should be returned, and then the form should close.
     // if no id is returned, error messages are filled in. 
-    $("body").on('ajax:success', '.address-validate', function(evt, data, status, xhr){
-      if (data.success) {
+    $("body").on('ajax:success', '.address-search', function(evt, data, status, xhr){
+      if (data && data.hasOwnProperty('id')) {
         $( $(this)[0].parentNode ).dialog( "close" );
-
-        //insert a new address row
-        insertAddressRow(data.attributes, data.address_text);
-        
+        show_alert('Address was successfully created.', 'info');
       } else {
         $(this).find('.error').remove();
         //failed to create an address
@@ -74,5 +50,13 @@
     };
     
     makeDialogs();
+
+    $('#addProviderCommonAddress').click(function(e) {
+      e.preventDefault();
+      var form = $("#provider-address-form");
+      form.dialog( "open" );  
+      form.find('form')[0].reset();
+      form.find('.error').remove();
+    });
   });
 </script>

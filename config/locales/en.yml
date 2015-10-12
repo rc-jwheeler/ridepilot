@@ -44,6 +44,7 @@ en:
   address_search: "Address Search"
   address_notes: "Notes"
   must_have_one_address: 'Must have at least one address'
+  create_provider_address_text: 'Create Address'
   #cab trips
   cab: 'Cab'
   pickup_date: "Pickup Date"

@@ -74,7 +74,7 @@
     // an id should be returned, and then the form should close.
     // if no id is returned, error messages are filled in. 
     $("body").on('ajax:success', '.address-search', function(evt, data, status, xhr){
-      if (data.id) {
+      if (data && data.hasOwnProperty('id')) {
         update_address_fields(data.prefix, data);      
 
         if (data.prefix == 'dropoff') {
@@ -87,6 +87,7 @@
         $("." + data.prefix + "_address_details").show();
       } else {
         //failed to create an address
+        $(this).find('.error').remove();
         for (var field in data) {
           text_field = $('#' + data.prefix + "_" + field);
           error_element = text_field.attr('data-error-element');

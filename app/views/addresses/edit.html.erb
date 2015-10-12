@@ -19,10 +19,16 @@
       </ul>
     </div>
   <% end %>
+
+  <%= form.hidden_field :provider_id %>
   
   <fieldset>
     <ol class="section first">
-      <%= render 'form', :form => form, :editing_address => true %>
+      <%= render 'form', :form => form %>
+      <li class="selfclear">
+        <%= form.label :inactive, translate_helper("inactive") %>
+        <%= form.check_box :inactive %>
+      </li>
     </ol>
   </fieldset>
   

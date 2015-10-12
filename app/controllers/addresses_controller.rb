@@ -117,14 +117,13 @@ class AddressesController < ApplicationController
   def edit; end
   
   def create
-    
     the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f) : nil
     prefix         = params['prefix'] || ""
     address_params = {}
 
     # Some kind of faux strong parameters...
     for param in ['name', 'building_name', 'address', 'city', 'state', 'zip', 'phone_number', 'in_district', 'trip_purpose_id', 'notes']
-      address_params[param] = params[prefix + "_" + param]
+      address_params[param] = params[prefix][param]
     end
 
     address_params[:customer_id] = params[:customer_id] if params[:customer_id].present?
@@ -161,7 +160,7 @@ class AddressesController < ApplicationController
 
     # Some kind of faux strong parameters...
     for param in ['name', 'building_name', 'address', 'city', 'state', 'zip', 'phone_number', 'in_district', 'trip_purpose_id', 'notes']
-      address_params[param] = params[prefix + "_" + param]
+      address_params[param] = params[prefix][param]
     end
 
     address_params[:provider_id] = current_provider_id

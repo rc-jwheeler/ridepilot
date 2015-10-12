@@ -1,4 +1,4 @@
-<%= javascript_include_tag "//maps.google.com/maps/api/js?v=3&sensor=false&libraries=places" %>
+<%= render 'shared/google_maps/google_map_api' %>
 <%= javascript_include_tag "google_map.js" %>
 <%= javascript_tag do %>
   var GoogleMapDefaults = {
