@@ -8,6 +8,7 @@
 <% end %>
 <%= autocomplete_field_tag 'customer_name', @customer.try(:name), autocomplete_customers_path(active_only: true), 
     :size => 30, 
+    :delay => 500, 
     :update_elements => {
       :id                        => '#trip_customer_id,#trip_customer_attributes_id',
       :group                        => '#trip_group',

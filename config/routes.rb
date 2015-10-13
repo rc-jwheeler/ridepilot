@@ -106,6 +106,7 @@ Rails.application.routes.draw do
       collection do
         post :validate
         get :autocomplete
+        get :autocomplete_public
         get :search
         patch :upload
         get :check_loading_status

@@ -25,6 +25,7 @@ en:
   address_name: "Address Name"
   address_nickname: "Nickname"
   building_name: "Building Name"
+  full_address_name: 'Address'
   address: "Address"
   view_address_details: 'View Details'
   city: "City"
@@ -44,6 +45,7 @@ en:
   address_search: "Address Search"
   address_notes: "Notes"
   must_have_one_address: 'Must have at least one address'
+  create_provider_address_text: 'Create Address'
   #cab trips
   cab: 'Cab'
   pickup_date: "Pickup Date"
@@ -1087,7 +1089,7 @@ en:
   unauthorized_customer_for_trip: 'Customer is not authorized to access given trip.'
   trip_has_been_scheduled: 'Your trip has been scheduled.'
   trip_has_been_scheduled_to_cab: 'Your trip has been scheduled to a cab.'
-  trip_has_been_booked: 'Your trip has been booked.'
+  trip_has_been_requested: 'Your trip request has been accepted.'
   trip_purpose_not_exist: 'Trip purpose does not exist for given provider.'
 
   locales:

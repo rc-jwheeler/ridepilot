@@ -27,7 +27,8 @@
     <th><%= translate_helper("city") %></th>
     <th><%= translate_helper("state") %></th>
     <th><%= translate_helper("phone_number") %></th>
-    <th></th>
+    <th><%= translate_helper("in_district") %></th>
+    <th><%= translate_helper("address_notes") %></th>
     <% if can? :edit, Vehicle %>
     <th></th>
     <% end %>
@@ -40,6 +41,10 @@
 </table>
 
 <%= render 'addresses/upload_form', provider: @provider %>
+
+<%= render 'new_address_dialog' %>
+
+<p><%= link_to translate_helper("create_provider_address_text"), '#', id: 'addProviderCommonAddress', class:'newAddress action-bttn' %></p>
 
 <hr />
 

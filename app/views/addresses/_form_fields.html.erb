@@ -1,0 +1,62 @@
+<% defined?(prefix) ? prefix : prefix = "address"%>
+<%= form.hidden_field :address %>
+<%= form.hidden_field :city %>
+<%= form.hidden_field :state %>
+<%= form.hidden_field :zip %>
+<%= hidden_field_tag :lat, address.latitude %>
+<%= hidden_field_tag :lon, address.longitude %>
+
+<li class="selfclear">
+  <%= form.label :name, translate_helper("address_name") %>
+  <%= form.text_field :name %>
+</li>
+
+<li class="selfclear">
+  <%= form.label :building_name, translate_helper("building_name") %>
+  <%= form.text_field :building_name %>
+</li>
+
+<li class="selfclear full_address">
+  <%= label_tag "#{prefix}_full_address", translate_helper("full_address_name") %>
+
+  <%= autocomplete_field_tag "#{prefix}_full_address", address.try(:address_text), autocomplete_public_addresses_path, :size => 30, :delay => 500, :class => "nearly-full", "data-original-value" => address.try(:text), "data-original-id" => address.try(:id)  %>
+</li>
+
+<li class="selfclear">
+  <%= form.label :phone_number, translate_helper("phone_number") %>
+  <%= form.text_field :phone_number %>
+</li>
+
+<li class="selfclear">
+  <%= form.label :default_trip_purpose, translate_helper("default_trip_purpose") %>
+  <%= form.select :trip_purpose_id, TripPurpose.by_provider(current_provider).map { |tp| [tp.name, tp.id] }, :include_blank => true %>
+</li>
+
+<li class="selfclear">
+  <%= form.label :in_district, translate_helper("in_district") %>
+  <%= form.select :in_district, [[translate_helper("unspecified"),nil], [translate_helper("yes"), true], [translate_helper("no"), false]] %>
+</li>
+
+<li class="selfclear">
+  <%= form.label :notes, translate_helper("address_notes") %>
+  <%= form.text_area :notes %>
+</li>
+
+<script>
+  $(document).ready(function() {
+    var prefix = "<%=prefix%>";
+    
+    function fillInAddressDetails(form, address) {
+      $('#' + prefix + '_address').val(address.address);
+      $('#' + prefix + '_city').val(address.city);
+      $('#' + prefix + '_state').val(address.state);
+      $('#' + prefix + '_zip').val(address.zip);
+      $('#lat').val(address.lat);
+      $('#lon').val(address.lon);
+    }
+
+    $("body").on('railsAutocomplete.select', "#" + prefix + "_full_address", function(e, selected){
+      fillInAddressDetails($(this).parents('form'), selected.item);
+    });
+  });
+</script>

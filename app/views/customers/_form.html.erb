@@ -10,7 +10,7 @@
         <ol class="section">
           <li>
           <%= label_tag translate_helper("customer_name") %>
-          <%= autocomplete_field_tag 'customer_name', '', autocomplete_customers_path, :size => 30, :id_element => "#customer_id", "submit-buttons" => "#show_details #new_trip" %>
+          <%= autocomplete_field_tag 'customer_name', '', autocomplete_customers_path, :size => 30, :delay => 500, :id_element => "#customer_id", "submit-buttons" => "#show_details #new_trip" %>
           <%= hidden_field_tag 'customer_id' %>
           </li>
         </ol>
@@ -53,10 +53,9 @@
 
 <%= render 'inactivate_dialog' if edit_mode == :show %>
 <%= render 'add_donation_dialog' if edit_mode == :edit || edit_mode == :new %>
-<%= render 'add_address_dialog' if edit_mode == :edit || edit_mode == :new %>
+<%= render 'add_address_dialog' %>
 
 <%= render 'shared/hide_invisible_form_fields_js', model_name: "customer", table_name: 'customers', provider_id:  current_provider.try(:id) %>
-
 <script>
 // hide middle/last names for group customer
   var updateGroupField = function() {
