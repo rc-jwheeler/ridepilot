@@ -1,0 +1,62 @@
+<% prefix = "driver_address_attributes" %>
+<div class="panel panel-primary">
+  <div class="panel-heading"><%= translate_helper("driver_address_heading") %></div>
+  <div class="panel-body form-horizontal">
+    <%= f.fields_for :address, @driver.address do |address_form| %>
+      <%= address_form.hidden_field :provider_id %>
+      <%= address_form.hidden_field :address %>
+      <%= address_form.hidden_field :city %>
+      <%= address_form.hidden_field :state %>
+      <%= address_form.hidden_field :zip %>
+      <%= hidden_field_tag :lat, @driver.address.latitude %>
+      <%= hidden_field_tag :lon, @driver.address.longitude %>
+
+      <div class="form-group">
+          <%= address_form.label :name, translate_helper("address_name"), class: "col-md-2 control-label" %>
+        <div class="col-md-10">
+          <%= address_form.text_field :name, class: "form-control", disabled: @readonly %>
+        </div>
+      </div> 
+
+      <div class="form-group">
+          <%= address_form.label :building_name, translate_helper("building_name"), class: "col-md-2 control-label" %>
+        <div class="col-md-10">
+          <%= address_form.text_field :building_name, class: "form-control", disabled: @readonly %>
+        </div>
+      </div>  
+
+      <div class="form-group">
+          <%= label_tag "#{prefix}_full_address", translate_helper("full_address_name"), class: "col-md-2 control-label" %>
+        <div class="col-md-10">
+          <%= autocomplete_field_tag "#{prefix}_full_address", @driver.address.try(:address_text), autocomplete_public_addresses_path, :size => 30, :delay => 500, :class => "nearly-full form-control", "data-original-value" => @driver.address.try(:text), "data-original-id" => @driver.address.try(:id), disabled: @readonly %>
+        </div>
+      </div>  
+
+      <div class="form-group">
+          <%= address_form.label :notes, translate_helper("address_notes"), class: "col-md-2 control-label" %>
+        <div class="col-md-10">
+          <%= address_form.text_area :notes, rows: 3, class: "form-control", disabled: @readonly %>
+        </div>
+      </div>  
+    <% end %>
+  </div><!-- END .panel-body -->
+</div><!-- END .panel -->
+
+<script>
+  $(document).ready(function() {
+    var prefix = "<%=prefix%>";
+    
+    function fillInAddressDetails(form, address) {
+      $('#' + prefix + '_address').val(address.address);
+      $('#' + prefix + '_city').val(address.city);
+      $('#' + prefix + '_state').val(address.state);
+      $('#' + prefix + '_zip').val(address.zip);
+      $('#lat').val(address.lat);
+      $('#lon').val(address.lon);
+    }
+
+    $("body").on('railsAutocomplete.select', "#" + prefix + "_full_address", function(e, selected){
+      fillInAddressDetails($(this).parents('form'), selected.item);
+    });
+  });
+</script>
