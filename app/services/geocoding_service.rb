@@ -33,7 +33,7 @@ class GeocodingService
                   :the_geom => RGeo::Geographic.spherical_factory(srid: 4326).point(raw_address['lon'].to_f, raw_address['lat'].to_f)
                   )
       next if !address_obj.valid?
-      address_obj.json
+      address_obj.json.merge({label: raw_address["display_name"]})
 
     }
 
