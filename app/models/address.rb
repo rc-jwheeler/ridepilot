@@ -90,7 +90,11 @@ class Address < ActiveRecord::Base
   end
 
   def address_text
-    ("%s, %s, %s %s" % [address, city, state, zip]).strip
+    if address
+      ("%s, %s, %s %s" % [address, city, state, zip]).strip 
+    else
+      ''
+    end
   end
 
   def json

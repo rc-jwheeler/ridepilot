@@ -2,11 +2,9 @@
   <%= hidden_field_tag 'address_id', address.id %>
   <%= hidden_field_tag 'customer_id', address.customer_id %>
   <%= hidden_field_tag 'prefix', prefix %>
-  <%= hidden_field_tag 'lat' %>
-  <%= hidden_field_tag 'lon' %>
   <fieldset>
   <ol class="section">
-    <%= render 'addresses/form', form: form %>
+    <%= render 'addresses/form_fields', form: form, address: address, prefix: prefix %>
   </ol>
   </fieldset>
 <% end %>

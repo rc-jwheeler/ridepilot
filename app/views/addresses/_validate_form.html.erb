@@ -1,11 +1,9 @@
  <%= form_for address, url: validate_addresses_path, as: prefix, :method=>:post, html: { :class=>'address-validate', :remote=>true, 'data-id-element' => "#trip_#{prefix}_address_id", 'data-label-element' => "##{prefix}_search_address" } do |form| %> 
   <%= hidden_field_tag 'address_id', address.id %>
   <%= hidden_field_tag 'prefix', prefix %>
-  <%= hidden_field_tag 'lat' %>
-  <%= hidden_field_tag 'lon' %>
   <fieldset>
   <ol class="section">
-    <%= render 'addresses/form', form: form %>
+    <%= render 'addresses/form_fields', form: form, address: address, prefix: prefix %>
   </ol>
   </fieldset>
 <% end %>

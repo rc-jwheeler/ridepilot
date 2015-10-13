@@ -10,7 +10,7 @@
         <ol class="section">
           <li>
           <%= label_tag translate_helper("customer_name") %>
-          <%= autocomplete_field_tag 'customer_name', '', autocomplete_customers_path, :size => 30, :id_element => "#customer_id", "submit-buttons" => "#show_details #new_trip" %>
+          <%= autocomplete_field_tag 'customer_name', '', autocomplete_customers_path, :size => 30, :delay => 500, :id_element => "#customer_id", "submit-buttons" => "#show_details #new_trip" %>
           <%= hidden_field_tag 'customer_id' %>
           </li>
         </ol>

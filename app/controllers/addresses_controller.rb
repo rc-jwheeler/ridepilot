@@ -5,27 +5,7 @@ class AddressesController < ApplicationController
   authorize_resource
 
   def autocomplete
-    term = params['term'].downcase.strip
-
-    #clean up address
-    term.gsub!(' apt ', ' #')
-    term.gsub!(' apartment ', ' #')
-    term.gsub!(' suite ', ' #')
-
-    term.gsub!(' n ', ' north ')
-    term.gsub!(' ne ', ' northeast ')
-    term.gsub!(' e ', ' east ')
-    term.gsub!(' se ', ' southeast ')
-    term.gsub!(' s ', ' south ')
-    term.gsub!(' sw ', ' southwest ')
-    term.gsub!(' w ', ' west ')
-    term.gsub!(' nw ', ' northwest ')
-
-    term.gsub!(' ave,', 'avenue,')
-    term.gsub!(' dr,', 'drive,')
-    term.gsub!(' st,', 'street,')
-    term.gsub!(' blvd,', 'boulevard,')
-    term.gsub!(' pkwy,', 'parkway,')
+    term = parse_search_term
 
     #three ways to match:
     #- name
@@ -58,60 +38,17 @@ class AddressesController < ApplicationController
 
       render :json => address_json
     else
-      #no existing addresses, try geocoding
-
-      term.gsub!(","," ") #nominatim hates commas
-
-      if term.size < 5 or ! term.match /[a-z]{2}/
-        #do not geocode too-short terms
-        return render :json => [Address::NewAddressOption]
-      end
-
-      # MapRequest API change, comment out old calling url
-      # url = "http://open.mapquestapi.com/nominatim/v1/search?format=json&addressdetails=1&countrycodes=us&q=" + CGI.escape(term)
-      url = "http://open.mapquestapi.com/nominatim/v1/search.php?key=#{ENV['MAPREQUEST_API_KEY']}&format=json&addressdetails=1&countrycodes=us&q=" + CGI.escape(term)
-
-      result = OpenURI.open_uri(url).read
-
-      addresses = ActiveSupport::JSON.decode(result)
-
-      #only addresses within one decimal degree of the trimet district
-      if current_provider.region_nw_corner && current_provider.region_se_corner
-        min_lon = current_provider.region_nw_corner.x 
-        max_lon = current_provider.region_se_corner.x 
-        min_lat = current_provider.region_se_corner.y 
-        max_lat = current_provider.region_nw_corner.y 
-
-        addresses = addresses.find_all { |address|
-          lon = address['lon'].to_f
-          lat = address['lat'].to_f
-          lon && lat && lon >= min_lon && lon <= max_lon && lat >= min_lat && lat <= max_lat
-        }
-      end
-
-      #now, convert addresses to local json format
-      address_json = addresses.map { |raw_address|
-        # TODO add apt numbers
-        address = raw_address['address']
-        street_address = '%s %s' % [address['house_number'], address['road']]
-        address_obj = Address.new(
-                    :name => '',
-                    :building_name => '',
-                    :address => street_address,
-                    :city => address['city'] || address['town'] || address['hamlet'],
-                    :state => STATE_NAME_TO_POSTAL_ABBREVIATION[address['state'].upcase],
-                    :zip => address['postcode'],
-                    :the_geom => RGeo::Geographic.spherical_factory(srid: 4326).point(raw_address['lon'].to_f, raw_address['lat'].to_f),
-                    :notes => address['notes']
-                    )
-        address_obj.json
-
-      }
-
-      address_json << Address::NewAddressOption unless request.env["HTTP_REFERER"].try(:match, /addresses\/[0-9]+\/edit/)
-
-      render :json => address_json
+      #no existing addresses
+      return render :json => [Address::NewAddressOption]
     end
+  end
+
+  def autocomplete_public
+    term = parse_search_term
+
+    address_json = GeocodingService.new(term, current_provider).execute
+
+    render :json => address_json
   end
 
   def edit; end
@@ -153,7 +90,6 @@ class AddressesController < ApplicationController
   end
 
   def validate
-    
     the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f) : nil
     prefix         = params['prefix'] || ""
     address_params = {}
@@ -198,9 +134,11 @@ class AddressesController < ApplicationController
   end
 
   def update
+    new_addr_params = address_params
     the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f) : nil
-    address_params[:the_geom] = the_geom
-    if @address.update_attributes address_params
+    new_addr_params[:the_geom] = the_geom
+    
+    if @address.update_attributes new_addr_params
       flash.now[:notice] = "Address '#{@address.name}' was successfully updated"
       redirect_to provider_path(@address.provider)
     else
@@ -276,5 +214,31 @@ class AddressesController < ApplicationController
   
   def address_params
     params.require(:address).permit(:name, :building_name, :address, :city, :state, :zip, :in_district, :provider_id, :phone_number, :inactive, :trip_purpose_id, :notes)
+  end
+
+  def parse_search_term
+    term = params['term'].downcase.strip
+
+    #clean up address
+    term.gsub!(' apt ', ' #')
+    term.gsub!(' apartment ', ' #')
+    term.gsub!(' suite ', ' #')
+
+    term.gsub!(' n ', ' north ')
+    term.gsub!(' ne ', ' northeast ')
+    term.gsub!(' e ', ' east ')
+    term.gsub!(' se ', ' southeast ')
+    term.gsub!(' s ', ' south ')
+    term.gsub!(' sw ', ' southwest ')
+    term.gsub!(' w ', ' west ')
+    term.gsub!(' nw ', ' northwest ')
+
+    term.gsub!(' ave,', 'avenue,')
+    term.gsub!(' dr,', 'drive,')
+    term.gsub!(' st,', 'street,')
+    term.gsub!(' blvd,', 'boulevard,')
+    term.gsub!(' pkwy,', 'parkway,')
+
+    term
   end
 end

@@ -25,6 +25,7 @@ en:
   address_name: "Address Name"
   address_nickname: "Nickname"
   building_name: "Building Name"
+  full_address_name: 'Address'
   address: "Address"
   view_address_details: 'View Details'
   city: "City"

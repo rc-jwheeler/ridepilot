@@ -120,6 +120,9 @@ gem 'bootstrap-kaminari-views'
 # momentjs for datetime parsing
 gem 'momentjs-rails'
 
+# twitter typeahed
+gem 'twitter-typeahead-rails'
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'

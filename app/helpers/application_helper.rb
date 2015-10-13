@@ -152,4 +152,5 @@ module ApplicationHelper
       trip.return_trip ? "<a href='#{trip_path(trip.return_trip)}'>#{linking_to_text}: #{trip.return_trip.id}</a>" : ""
     end
   end
+
 end

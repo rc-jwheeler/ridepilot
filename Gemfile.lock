@@ -470,6 +470,10 @@ GEM
     timeliness (0.3.7)
     timers (4.0.1)
       hitimes
+    twitter-typeahead-rails (0.11.1)
+      actionpack (>= 3.1)
+      jquery-rails
+      railties (>= 3.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (2.7.1)
@@ -548,6 +552,7 @@ DEPENDENCIES
   therubyracer
   timecop (~> 0.8)
   translation_engine!
+  twitter-typeahead-rails
   uglifier (>= 1.3.0)
   unicorn
   whenever (~> 0.9.4)
