@@ -121,7 +121,7 @@ gem 'bootstrap-kaminari-views'
 gem 'momentjs-rails'
 
 # twitter typeahed
-gem 'twitter-typeahead-rails'
+#gem 'twitter-typeahead-rails'
 
 group :integration, :qa, :production do 
   gem 'rails_12factor'

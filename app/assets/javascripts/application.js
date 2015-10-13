@@ -26,8 +26,6 @@
 //= require constants
 //= require fullcalendar
 //= require moment
-//= require twitter/typeahead
-//= require typeahead-addresspicker
 //= require_self
   
 function ISODateFormatToDateObject(str) {
