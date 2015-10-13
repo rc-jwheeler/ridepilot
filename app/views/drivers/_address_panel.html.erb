@@ -47,12 +47,12 @@
     var prefix = "<%=prefix%>";
     
     function fillInAddressDetails(form, address) {
-      $('#' + prefix + '_address').val(address.address);
-      $('#' + prefix + '_city').val(address.city);
-      $('#' + prefix + '_state').val(address.state);
-      $('#' + prefix + '_zip').val(address.zip);
-      $('#lat').val(address.lat);
-      $('#lon').val(address.lon);
+      $(form).find('#' + prefix + '_address').val(address.address);
+      $(form).find('#' + prefix + '_city').val(address.city);
+      $(form).find('#' + prefix + '_state').val(address.state);
+      $(form).find('#' + prefix + '_zip').val(address.zip);
+      $(form).find('#lat').val(address.lat);
+      $(form).find('#lon').val(address.lon);
     }
 
     $("body").on('railsAutocomplete.select', "#" + prefix + "_full_address", function(e, selected){
