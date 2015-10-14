@@ -26,6 +26,8 @@
 //= require constants
 //= require fullcalendar
 //= require moment
+//= require jquery.geocomplete
+//= require google_place_parser
 //= require_self
   
 function ISODateFormatToDateObject(str) {

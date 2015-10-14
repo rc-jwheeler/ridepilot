@@ -35,15 +35,27 @@ class GooglePlaceParser
       address_params.each do |comp|
         comp = comp.deep_symbolize_keys if comp.is_a? Hash
         if comp && comp.keys.index(:types)
-          if comp[:types].index("street_address")
+          if comp[:types].index("street_number")
+            street_number = comp[:long_name]
+          elsif comp[:types].index("route")
+            route = comp[:long_name]
+          elsif comp[:types].index("street_address")
             address_data[:street_address] = comp[:long_name]
-          elsif comp[:types].index("locality")
+          elsif comp[:types].index("locality") || comp[:types].index("administrative_area3") || comp[:types].index("administrative_area_level_2")
             address_data[:city] = comp[:long_name]
           elsif comp[:types].index("administrative_area_level_1")
-            address_data[:state] = comp[:long_name]
+            address_data[:state] = comp[:short_name]
           elsif comp[:types].index("postal_code")
             address_data[:zipcode] = comp[:long_name]
           end 
+
+          if !address_data[:street_address]
+            if street_number && route
+              address_data[:street_address] = street_number + " " + route
+            elsif @raw_data[:name]
+              address_data[:street_address] = @raw_data[:name]
+            end
+          end
         end
       end
     end

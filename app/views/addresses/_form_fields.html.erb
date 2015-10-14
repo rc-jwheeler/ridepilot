@@ -1,10 +1,10 @@
 <% defined?(prefix) ? prefix : prefix = "address"%>
-<%= form.hidden_field :address %>
-<%= form.hidden_field :city %>
-<%= form.hidden_field :state %>
-<%= form.hidden_field :zip %>
-<%= hidden_field_tag :lat, address.latitude %>
-<%= hidden_field_tag :lon, address.longitude %>
+<%= form.hidden_field :address, class: 'address_text' %>
+<%= form.hidden_field :city, class: 'address_city' %>
+<%= form.hidden_field :state, class: 'address_state' %>
+<%= form.hidden_field :zip, class: 'address_zip' %>
+<%= hidden_field_tag :lat, address.latitude, class: 'address_lat' %>
+<%= hidden_field_tag :lon, address.longitude, class: 'address_lon' %>
 
 <li class="selfclear">
   <%= form.label :name, translate_helper("address_name") %>
@@ -18,8 +18,7 @@
 
 <li class="selfclear full_address">
   <%= label_tag "#{prefix}_full_address", translate_helper("full_address_name") %>
-
-  <%= autocomplete_field_tag "#{prefix}_full_address", address.try(:address_text), autocomplete_public_addresses_path, :size => 30, :delay => 500, :class => "nearly-full", "data-original-value" => address.try(:text), "data-original-id" => address.try(:id)  %>
+  <%= text_field_tag "#{prefix}_full_address", address.try(:address_text), class: 'address_search'  %>
 </li>
 
 <li class="selfclear">
@@ -42,21 +41,4 @@
   <%= form.text_area :notes %>
 </li>
 
-<script>
-  $(document).ready(function() {
-    var prefix = "<%=prefix%>";
-    
-    function fillInAddressDetails(form, address) {
-      $(form).find('#' + prefix + '_address').val(address.address);
-      $(form).find('#' + prefix + '_city').val(address.city);
-      $(form).find('#' + prefix + '_state').val(address.state);
-      $(form).find('#' + prefix + '_zip').val(address.zip);
-      $(form).find('#lat').val(address.lat);
-      $(form).find('#lon').val(address.lon);
-    }
-
-    $("body").on('railsAutocomplete.select', "#" + prefix + "_full_address", function(e, selected){
-      fillInAddressDetails($(this).parents('form'), selected.item);
-    });
-  });
-</script>
+<%= render 'addresses/google_place_autocomplete_js' if prefix != 'pickup' %>
