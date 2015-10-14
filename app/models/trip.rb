@@ -89,6 +89,7 @@ class Trip < ActiveRecord::Base
   validate :completable_until_trip_appointment_time
   validate :provider_availability
   validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validate :return_trip_later_than_outbound_trip
 
   accepts_nested_attributes_for :customer
 
@@ -243,6 +244,9 @@ class Trip < ActiveRecord::Base
     return_trip.direction = :return
     return_trip.pickup_address = self.dropoff_address
     return_trip.dropoff_address = self.pickup_address
+    return_time_gap = self.provider.try(:min_trip_time_gap_in_mins) || 30
+    return_trip.pickup_time = self.appointment_time + return_time_gap.minutes
+    return_trip.appointment_time = return_trip.pickup_time + return_time_gap.minutes
     return_trip.outbound_trip = self
 
     return_trip
@@ -359,6 +363,16 @@ class Trip < ActiveRecord::Base
   def provider_availability
     if pickup_time && provider && !provider.available?(pickup_time.wday, pickup_time.strftime('%H:%M'))
       errors.add(:base, TranslationEngine.translate_text(:provider_not_available_for_trip))
+    end
+  end
+
+  def return_trip_later_than_outbound_trip
+    if is_linked?
+      if is_outbound? && appointment_time
+        errors.add(:base, TranslationEngine.translate_text(:outbound_trip_dropoff_time_no_later_than_return_trip_pickup_time)) if appointment_time > return_trip.pickup_time
+      elsif is_return? && pickup_time
+        errors.add(:base, TranslationEngine.translate_text(:return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time)) if pickup_time < outbound_trip.appointment_time
+      end
     end
   end
 

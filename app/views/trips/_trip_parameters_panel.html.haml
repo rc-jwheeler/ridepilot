@@ -6,7 +6,7 @@
     - if edit_mode == :show && @trip.is_linked?
       .form-group.col-sm-12
         .col-sm-3
-          = label_tag :linked_trip, @trip.is_return? ? translate_helper("return_trip_label") : translate_helper("outbound_trip_label")
+          = label_tag :linked_trip, @trip.is_return? ?  translate_helper("outbound_trip_label") : translate_helper("return_trip_label")
         .col-sm-9
           - if @trip.is_return?
             %a{href: trip_path(@trip.outbound_trip) }
@@ -127,7 +127,7 @@
 :javascript
   // when trip pickup time is changed, update appointment time and displayed week
   $("body").on('change', '#trip_pickup_time', function() {
-    var minDiff = 1000 * 60 * #{current_provider.try(:min_trip_time_gap_in_mins) || 30};
+    var minDiff = 1000 * 60 * #{current_provider.try(:min_trip_time_gap_in_mins)};
     var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time').val());
     var appointmentTimeDate      = ISODateFormatToDateObject( $('#trip_appointment_time').val());
     if(!appointmentTimeDate || (appointmentTimeDate.getTime() - pickupTimeDate.getTime()) < minDiff ) {
