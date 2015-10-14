@@ -149,13 +149,13 @@ class AddressesController < ApplicationController
   def destroy
     if @address.trips.present?
       if new_address = @address.replace_with!(params[:address_id])
-        redirect_to new_address.provider, :notice => "#Address was successfully replaced with #{new_address.name}."
+        redirect_to new_address.provider, :notice => "Address #{@address.name} was successfully replaced with new address #{new_address.name}."
       else
-        redirect_to edit_address_path(@address), :notice => "#{@address.name} can't be deleted without associating trips with another address."
+        redirect_to edit_address_path(@address), :notice => "Address #{@address.name} can't be deleted without associating trips with another address."
       end
     else
       @address.destroy
-      redirect_to current_provider, :notice => "#{@address.name} was successfully deleted."
+      redirect_to current_provider, :notice => "Address #{@address.name} was successfully deleted."
     end
   end
 
