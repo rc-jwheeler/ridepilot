@@ -828,6 +828,8 @@ en:
   trip_direction: 'Direction'
   return_trip: 'Return'
   outbound_trip: 'Outbound'
+  return_trip_label: 'Return Trip'
+  outbound_trip_label: 'Outbound Trip'
   change_customer: "Change Customer"
   trips_form_error_message:
     one: "%{count} error prohibited this trip from being saved:"
