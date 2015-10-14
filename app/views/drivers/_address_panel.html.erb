@@ -4,12 +4,12 @@
   <div class="panel-body form-horizontal">
     <%= f.fields_for :address, @driver.address do |address_form| %>
       <%= address_form.hidden_field :provider_id %>
-      <%= address_form.hidden_field :address %>
-      <%= address_form.hidden_field :city %>
-      <%= address_form.hidden_field :state %>
-      <%= address_form.hidden_field :zip %>
-      <%= hidden_field_tag :lat, @driver.address.latitude %>
-      <%= hidden_field_tag :lon, @driver.address.longitude %>
+      <%= address_form.hidden_field :address, class: 'address_text' %>
+      <%= address_form.hidden_field :city, class: 'address_city' %>
+      <%= address_form.hidden_field :state, class: 'address_state' %>
+      <%= address_form.hidden_field :zip, class: 'address_zip' %>
+      <%= hidden_field_tag :lat, @driver.address.latitude, class: 'address_lat' %>
+      <%= hidden_field_tag :lon, @driver.address.longitude, class: 'address_lon' %>
 
       <div class="form-group">
           <%= address_form.label :name, translate_helper("address_name"), class: "col-md-2 control-label" %>
@@ -28,7 +28,7 @@
       <div class="form-group">
           <%= label_tag "#{prefix}_full_address", translate_helper("full_address_name"), class: "col-md-2 control-label" %>
         <div class="col-md-10">
-          <%= autocomplete_field_tag "#{prefix}_full_address", @driver.address.try(:address_text), autocomplete_public_addresses_path, :size => 30, :delay => 500, :class => "nearly-full form-control", "data-original-value" => @driver.address.try(:text), "data-original-id" => @driver.address.try(:id), disabled: @readonly %>
+          <%= text_field_tag "#{prefix}_full_address", @driver.address.try(:address_text), class: 'form-control address_search', disabled: @readonly %>
         </div>
       </div>  
 
@@ -42,21 +42,4 @@
   </div><!-- END .panel-body -->
 </div><!-- END .panel -->
 
-<script>
-  $(document).ready(function() {
-    var prefix = "<%=prefix%>";
-    
-    function fillInAddressDetails(form, address) {
-      $(form).find('#' + prefix + '_address').val(address.address);
-      $(form).find('#' + prefix + '_city').val(address.city);
-      $(form).find('#' + prefix + '_state').val(address.state);
-      $(form).find('#' + prefix + '_zip').val(address.zip);
-      $(form).find('#lat').val(address.lat);
-      $(form).find('#lon').val(address.lon);
-    }
-
-    $("body").on('railsAutocomplete.select', "#" + prefix + "_full_address", function(e, selected){
-      fillInAddressDetails($(this).parents('form'), selected.item);
-    });
-  });
-</script>
+<%= render 'addresses/google_place_autocomplete_js'%>

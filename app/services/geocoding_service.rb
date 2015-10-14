@@ -43,19 +43,9 @@ class GeocodingService
   private
 
   def add_search_viewbox_to_url
-    if @provider && @provider.region_nw_corner && @provider.region_se_corner
-      min_lon = @provider.region_nw_corner.x 
-      max_lon = @provider.region_se_corner.x 
-      min_lat = @provider.region_se_corner.y 
-      max_lat = @provider.region_nw_corner.y 
-    elsif GOOGLE_MAP_DEFAULTS && GOOGLE_MAP_DEFAULTS[:bounds]
-      min_lon = GOOGLE_MAP_DEFAULTS[:bounds][:west]
-      max_lon = GOOGLE_MAP_DEFAULTS[:bounds][:east]
-      min_lat = GOOGLE_MAP_DEFAULTS[:bounds][:south]
-      max_lat = GOOGLE_MAP_DEFAULTS[:bounds][:north]
-    end
+    bounds = Utility.new.get_provider_bounds(@provider)
 
-    viewbox_str = "&viewbox=#{min_lon},#{max_lat},#{max_lon},#{min_lat}" if min_lon && max_lat && max_lon && min_lat
+    viewbox_str = "&viewbox=#{bounds[:min_lon]},#{bounds[:max_lat]},#{bounds[:max_lon]},#{bounds[:min_lat]}" if bounds
 
     viewbox_str
   end

@@ -110,11 +110,12 @@ class AddressesController < ApplicationController
     end
 
     if address.valid?
+      label = address.address_text
       render :json => {
         success: true,
         prefix: prefix,
-        address_text: address.address_text,
-        attributes: address.attributes
+        address_text: label,
+        attributes: address.attributes.merge({label: label})
       }
     else
       errors = address.errors.messages
