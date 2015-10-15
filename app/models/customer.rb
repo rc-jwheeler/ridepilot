@@ -242,7 +242,7 @@ class Customer < ActiveRecord::Base
       addr = if addr_hash[:id]
         Address.find addr_hash[:id]
       else
-        addresses.new(addr_hash.merge(customer_id: self.try(:id)))
+        addresses.new(addr_hash.except(:label).merge(customer_id: self.try(:id)))
       end
 
       self.address = addr if index == mailing_address_index
