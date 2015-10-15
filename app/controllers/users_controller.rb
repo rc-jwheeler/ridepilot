@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     authorize! :edit, current_user.current_provider
     
     @user = User.only_deleted.find_by_email(params[:user][:email])
-    @is_user_deleted = @user.deleted_at.present?
+    @is_user_deleted = @user.try(:deleted_at).present?
 
     if !@is_user_deleted
       #this user might already be a member of the site, but not of this
