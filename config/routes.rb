@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       post "change_provider" => "users#change_provider"
       get "check_session" => "users#check_session"
       get "touch_session" => "users#touch_session"
+      get "restore_user" => "users#restore"
     end
 
     resource :application_settings, only: [:edit, :update] do

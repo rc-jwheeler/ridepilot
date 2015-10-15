@@ -67,10 +67,10 @@
   <div id="main">
     <div id="messages" class="wrap selfclear">
       <% if notice %>
-        <p class="notice"><%= notice %></p>
+        <p class="alert alert-info"><%= notice %></p>
       <% end %>
       <% if alert %>
-        <p class="alert"><%= alert %></p>
+        <p class="alert alert-danger"><%= alert %></p>
       <% end %>
     </div>
     <%= content_for?(:menu_bar) ? yield(:menu_bar) : '' %>

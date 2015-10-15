@@ -538,6 +538,9 @@ en:
   change_role: "Change role"
   delete_role_confirm: "Are you sure?"
   create_user_link_text: "Create User"
+  restore_user_link_text: 'Restore User'
+  user_was_deleted: 'This user was deleted. You can find the option below to restore it.'
+  user_was_restored: 'User has been successfully restored.'
   switch_providers_to_create_user: "<p>You are currently logged in to %{current_provider}.  To create a user for %{provider} , please switch providers by using the dropdown menu at the top of this page.</p>"
   enabled: "Enabled?"
   dispatch: "Dispatch"
