@@ -11,7 +11,7 @@ RSpec.describe AddressesController, type: :controller do
   }
 
   let(:invalid_attributes) {
-    attributes_for(:address, :address => "")
+    attributes_for(:address, :state => "")
   }
 
   describe "GET #edit" do
@@ -96,7 +96,7 @@ RSpec.describe AddressesController, type: :controller do
 
     context "with invalid params" do
       let(:invalid_create_attributes) {
-        valid_create_attributes["pickup"]["address"] = ""
+        valid_create_attributes["pickup"]["state"] = ""
 
         valid_create_attributes
       }
@@ -109,8 +109,8 @@ RSpec.describe AddressesController, type: :controller do
       it "includes validation errors in the json response" do
         post :create, invalid_create_attributes
         json = JSON.parse(response.body)
-        expect(json["address"]).to be_a(Array)
-        expect(json["address"].first).to include("is too short")
+        expect(json["state"]).to be_a(Array)
+        expect(json["state"].first).to include("is the wrong length")
       end
 
       it "includes the address type in the json response" do
