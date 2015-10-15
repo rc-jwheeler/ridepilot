@@ -18,8 +18,8 @@ class Address < ActiveRecord::Base
   normalize_attribute :address, :with=> [:squish, :titleize]
   normalize_attribute :city, :with=> [:squish, :titleize]
 
-  validates :address, :length => { :minimum => 5 }
-  validates :city,    :length => { :minimum => 2 }
+  #validates :address, :length => { :minimum => 5 }
+  #validates :city,    :length => { :minimum => 2 }
   validates :state,   :length => { :is => 2 }
   validates :zip,     :length => { :is => 5, :if => lambda { |a| a.zip.present? } }
   
@@ -90,11 +90,7 @@ class Address < ActiveRecord::Base
   end
 
   def address_text
-    if address
-      ("%s, %s, %s %s" % [address, city, state, zip]).strip 
-    else
-      ''
-    end
+    ("%s, %s, %s %s" % [address, city, state, zip]).strip 
   end
 
   def json

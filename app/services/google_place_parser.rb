@@ -41,7 +41,7 @@ class GooglePlaceParser
             route = comp[:long_name]
           elsif comp[:types].index("street_address")
             address_data[:street_address] = comp[:long_name]
-          elsif comp[:types].index("locality") || comp[:types].index("administrative_area3") || comp[:types].index("administrative_area_level_2")
+          elsif comp[:types].index("locality") || comp[:types].index("administrative_area3")
             address_data[:city] = comp[:long_name]
           elsif comp[:types].index("administrative_area_level_1")
             address_data[:state] = comp[:short_name]

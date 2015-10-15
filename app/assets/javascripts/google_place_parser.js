@@ -23,8 +23,7 @@ function googlePlaceParser(place) {
       addrData.address = comp.long_name;
     } else if(
       comp.types.indexOf('locality') >= 0 || 
-      comp.types.indexOf('administrative_area_level_3') >= 0 ||
-      comp.types.indexOf('administrative_area_level_2') >= 0 //county if necessary
+      comp.types.indexOf('administrative_area_level_3') >= 0
       ) {
       addrData.city = comp.long_name;
     } else if(comp.types.indexOf('administrative_area_level_1') >= 0) {
