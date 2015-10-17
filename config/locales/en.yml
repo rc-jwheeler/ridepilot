@@ -1028,6 +1028,7 @@ en:
   application_settings_default_value: "Default Value"
   application_settings_edit_link_text: "Edit Application Settings"
   # General
+  translations: 'Translations'
   translation_engine_link_text: "Translations"
   save: "Save"
   confirm_message: "Are you sure you want to delete this record?"
@@ -1081,6 +1082,7 @@ en:
   upload_common_addresses_notes: 'Please refer to address file specifications.'
   # translation editing
   create_translation: 'Create Translation'
+  confirm_msg: 'Are you sure to delete it?'
   # reporting engine
   report_name: 'Reports'
   report_parameters: 'Report Parameters'
