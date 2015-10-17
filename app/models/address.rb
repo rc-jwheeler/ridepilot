@@ -39,13 +39,9 @@ class Address < ActiveRecord::Base
   def replace_with!(address_id)
     return false unless address_id.present? && self.class.exists?(address_id)
     
-    self.trips_from.each do |trip|
-      trip.update_attribute :pickup_address_id, address_id
-    end
+    self.trips_from.update_all pickup_address_id: address_id
     
-    self.trips_to.each do |trip|
-      trip.update_attribute :dropoff_address_id, address_id
-    end
+    self.trips_to.update_all dropoff_address_id: address_id
     
     self.destroy
     self.class.find address_id
