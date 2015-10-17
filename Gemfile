@@ -123,6 +123,9 @@ gem 'momentjs-rails'
 # twitter typeahed
 #gem 'twitter-typeahead-rails'
 
+# new relic for app monitoring
+gem 'newrelic_rpm'
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'
