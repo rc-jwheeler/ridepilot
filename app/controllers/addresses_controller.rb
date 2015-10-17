@@ -29,6 +29,11 @@ class AddressesController < ApplicationController
     else
       addresses = addresses.where("customer_id is NULL") #only provider common addresses if customer is not given
     end
+
+    if params[:exclude].present?
+      addresses = addresses.where.not(id: params[:exclude].split(','))
+    end
+
     if addresses.size > 0
 
       #there are some existing addresses
