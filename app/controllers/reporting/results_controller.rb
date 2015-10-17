@@ -7,7 +7,7 @@ module Reporting
     def index
       q_param = params[:q]
       page = params[:page]
-      @per_page = params[:per_page] || Kaminari.config.default_per_page
+      @per_page = (params[:per_page] || Kaminari.config.default_per_page).to_i
 
       @report = Report.find params[:report_id]
       @q = @report.data_model.ransack q_param
