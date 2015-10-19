@@ -20,8 +20,9 @@ class Address < ActiveRecord::Base
 
   #validates :address, :length => { :minimum => 5 }
   #validates :city,    :length => { :minimum => 2 }
-  validates :state,   :length => { :is => 2 }
-  validates :zip,     :length => { :is => 5, :if => lambda { |a| a.zip.present? } }
+  #validates :state,   :length => { :is => 2 }
+  #validates :zip,     :length => { :is => 5, :if => lambda { |a| a.zip.present? } }
+  validate :address_presented
   
   before_validation :compute_in_district
 
@@ -211,6 +212,10 @@ class Address < ActiveRecord::Base
 
   def self.search_existing_address(criteria)
     where(criteria).first
+  end
+
+  def address_presented
+    errors.add(:base, TranslationEngine.translate_text(:address_text_required)) if !address_text.present?
   end
 
 end
