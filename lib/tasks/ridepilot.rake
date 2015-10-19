@@ -48,6 +48,12 @@ namespace :ridepilot do
     puts 'Finished seeding eligibilities'
   end
 
+  desc 'Update lookup configs for ethnicities'
+  task :update_ethnicity_lookup_config => :environment do
+    config = LookupTable.find_by_name('provider_ethnicities')
+    config.update_attributes(name: 'ethnicities', caption: 'Ethnicity') if config
+  end
+
   desc 'Seed some fake data for testing'
   task :seed_test_data => :environment do
 
