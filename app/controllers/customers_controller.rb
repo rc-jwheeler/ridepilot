@@ -289,7 +289,7 @@ first_name, first_name, first_name, first_name,
   
   def prep_edit
     @mobilities = Mobility.by_provider(current_provider)
-    @ethnicity_names = (ProviderEthnicity.by_provider(current_provider).collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
+    @ethnicity_names = (Ethnicity.by_provider(current_provider).collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
     @funding_sources = FundingSource.by_provider(current_provider)
     @service_levels = ServiceLevel.by_provider(current_provider).pluck(:name, :id)
 

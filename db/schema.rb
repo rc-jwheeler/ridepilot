@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151008194507) do
+ActiveRecord::Schema.define(version: 20151019181344) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -274,6 +274,15 @@ ActiveRecord::Schema.define(version: 20151008194507) do
     t.datetime "updated_at"
   end
 
+  create_table "ethnicities", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  add_index "ethnicities", ["deleted_at"], :name => "index_ethnicities_on_deleted_at"
+
   create_table "field_configs", force: true do |t|
     t.integer  "provider_id",                 null: false
     t.string   "table_name",                  null: false
@@ -371,17 +380,6 @@ ActiveRecord::Schema.define(version: 20151008194507) do
 
   add_index "operating_hours", ["operatable_id", "operatable_type"], :name => "index_operating_hours_on_operatable_id_and_operatable_type"
   add_index "operating_hours", ["operatable_id"], :name => "index_operating_hours_on_operatable_id"
-
-  create_table "provider_ethnicities", force: true do |t|
-    t.integer  "provider_id"
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-  end
-
-  add_index "provider_ethnicities", ["deleted_at"], :name => "index_provider_ethnicities_on_deleted_at"
-  add_index "provider_ethnicities", ["provider_id"], :name => "index_provider_ethnicities_on_provider_id"
 
   create_table "provider_reports", force: true do |t|
     t.integer  "provider_id"
