@@ -632,7 +632,7 @@ class ReportsController < ApplicationController
     }
 
     non_other_ethnicities = []
-    @provider.ethnicities.each do |e|
+    Ethnicity.by_provider(@provider).each do |e|
       next if e.name == "Other"
       @report[:new_rider_ethinic_heritage][:ethnicities] << {
         name: e.name,

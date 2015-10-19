@@ -7,11 +7,11 @@ RSpec.describe ReportsController do
       @test_provider = @test_user.current_provider
     
       @test_funding_sources = {}
-      @test_funding_sources[:oaa3b]        = @test_provider.funding_sources.create(:name => "OAA")
-      @test_funding_sources[:trimet]       = @test_provider.funding_sources.create(:name => "TriMet Non-Medical")
-      @test_funding_sources[:rc]           = @test_provider.funding_sources.create(:name => "Ride Connection")
-      @test_funding_sources[:stf]          = @test_provider.funding_sources.create(:name => "STF")
-      @test_funding_sources[:unreimbursed] = @test_provider.funding_sources.create(:name => "Unreimbursed")
+      @test_funding_sources[:oaa3b]        = create(:funding_source, :name => "OAA")
+      @test_funding_sources[:trimet]       = create(:funding_source, :name => "TriMet Non-Medical")
+      @test_funding_sources[:rc]           = create(:funding_source, :name => "Ride Connection")
+      @test_funding_sources[:stf]          = create(:funding_source, :name => "STF")
+      @test_funding_sources[:unreimbursed] = create(:funding_source, :name => "Unreimbursed")
     
       @test_start_date = DateTime.new(2013, 2, 1).in_time_zone
     
@@ -428,9 +428,9 @@ RSpec.describe ReportsController do
     
     describe "new_rider_ethinic_heritage" do
       before do
-        e_1 = @test_provider.ethnicities.create(:name => "Ethnicity 1")
-        e_2 = @test_provider.ethnicities.create(:name => "Ethnicity 2")
-        e_3 = @test_provider.ethnicities.create(:name => "Other")
+        e_1 = create(:ethnicity, :name => "Ethnicity 1")
+        e_2 = create(:ethnicity, :name => "Ethnicity 2")
+        e_3 = create(:ethnicity, :name => "Other")
         
         c_1 = create(:customer, ethnicity: e_1.name)
         c_2 = create(:customer, ethnicity: e_2.name)
@@ -462,9 +462,9 @@ RSpec.describe ReportsController do
       
       describe "ethnicities" do
         it "reports the correct ethnicity information" do
-          expect(assigns(:report)[:new_rider_ethinic_heritage][:ethnicities].collect{|e| e[:name]}).to match(@test_provider.ethnicities.collect(&:name))
+          expect(assigns(:report)[:new_rider_ethinic_heritage][:ethnicities].collect{|e| e[:name]}).to match(Ethnicity.by_provider(@test_provider).collect(&:name))
                     
-          @test_provider.ethnicities.reject{|e| e.name == "Other"}.each do |ethnicity|
+          Ethnicity.by_provider(@test_provider).reject{|e| e.name == "Other"}.each do |ethnicity|
             e = assigns(:report)[:new_rider_ethinic_heritage][:ethnicities].find{|e| e[:name] == ethnicity.name}
             expect(e).not_to be_nil
             expect(e[:trips][:rc]).to eq(1)

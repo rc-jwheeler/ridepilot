@@ -8,9 +8,6 @@ class Provider < ActiveRecord::Base
   has_many :addresses, :dependent => :nullify
   has_many :device_pools, :dependent => :destroy
   has_many :drivers, :dependent => :destroy
-  has_many :ethnicities, :class_name=>'ProviderEthnicity', :dependent => :destroy
-  has_many :funding_sources, :through => :funding_source_visibilities
-  has_many :funding_source_visibilities, :dependent => :destroy
   has_many :monthlies, :dependent => :destroy
   has_many :provider_reports
   has_many :recurring_driver_compliances, :dependent => :destroy

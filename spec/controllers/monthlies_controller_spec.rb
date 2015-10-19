@@ -7,7 +7,7 @@ RSpec.describe MonthliesController, type: :controller do
   # Monthly. As you add validations to Monthly, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    attributes_for(:monthly, :funding_source_id => create(:funding_source, :provider => @current_user.current_provider).id)
+    attributes_for(:monthly, :funding_source_id => create(:funding_source).id)
   }
 
   let(:invalid_attributes) {
@@ -77,7 +77,7 @@ RSpec.describe MonthliesController, type: :controller do
           :start_date => Date.today.to_s,
           :volunteer_escort_hours => 1,
           :volunteer_admin_hours => 1,
-          :funding_source_id => create(:funding_source, :provider => @current_user.current_provider).id,
+          :funding_source_id => create(:funding_source).id,
         }
       }
 

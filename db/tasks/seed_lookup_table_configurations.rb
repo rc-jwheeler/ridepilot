@@ -27,7 +27,7 @@
     value_column_name: 'name'
   },
   {
-    name: 'provider_ethnicities',
+    name: 'ethnicities',
     caption: 'Ethnicity',
     value_column_name: 'name'
   }

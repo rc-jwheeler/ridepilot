@@ -498,18 +498,6 @@ en:
   no_monthly_reports_available: "No monthly reports yet."
   new_monthly_link_text:  "Add New Monthly Data"
   new_monthly_heading: "Create Monthly Report"
-  #provider_ethnicities
-  provider_ethnicity_form_error_message:
-    one: "%{count} error prohibited this provider ethnicity from being saved:"
-    other: "%{count} errors prohibited this provider ethnicity from being saved:"
-  provider_ethnicity_form_name: "Name"
-  provider_ethnicity_form_submit: "Submit"
-  edit_ethnicity_heading: "Edit Ethnicity"
-  new_ethnicity_heading: "New Ethnicity"
-  show_ethnicity_heading: "Ethnicity Details"
-  edit_ethnicity_link_text: "Edit Ethnicity"
-  edit_ethnicity_provider_label: "Provider"
-  edit_ethnicity_name_label: "Name"
   #Providers
   customer_authorized_providers: "Authorized Providers"
   provider_form_name: "Name"
@@ -587,7 +575,6 @@ en:
   new_vehicle_link_text: "Create Vehicle"
   switch_providers_to_create_vehicle: "<p>You are currently logged in to %{current_provider}.  To create a vehicle for %{provider} , please switch providers by using the dropdown menu at the top of this page.</p>"
   no_ethnicities: "No ethnicities yet."
-  delete_provider_ethnicity_confirm: "Are you sure?"
   new_ethnicity_link_text: "Create Ethnicity"
   switch_providers_to_create_ethnicity: "<p>You are currently logged in to %{current_provider}.  To create an ethnicity for %{provider} , please switch providers by using the dropdown menu at the top of this page.</p>"
   region_heading: "Region Boundaries"

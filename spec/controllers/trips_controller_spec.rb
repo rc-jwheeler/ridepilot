@@ -234,7 +234,7 @@ RSpec.describe TripsController, type: :controller do
           :pickup_address_id => create(:address, :provider => @current_user.current_provider).id,
           :dropoff_address_id => create(:address, :provider => @current_user.current_provider).id,
           :mobility_id => create(:mobility),
-          :funding_source_id => create(:funding_source, :provider => @current_user.current_provider).id,
+          :funding_source_id => create(:funding_source).id,
           :trip_purpose_id => create(:trip_purpose, name: 'New purpose').id,
           :trip_result_id => create(:trip_result).id,
           :notes => "MyText",
