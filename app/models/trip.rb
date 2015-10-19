@@ -130,6 +130,10 @@ class Trip < ActiveRecord::Base
     trip_result.blank?
   end
 
+  def cancel!
+    update_attributes( trip_result: TripResult.find_by_code('CANC') )
+  end
+
   def vehicle_id
     run ? run.vehicle_id : @vehicle_id
   end
@@ -157,7 +161,7 @@ class Trip < ActiveRecord::Base
   end
   
   def trip_size
-    if customer.group
+    if customer.try(:group)
       group_size
     else 
       guest_count + attendant_count + 1
