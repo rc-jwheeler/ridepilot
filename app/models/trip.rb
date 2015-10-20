@@ -289,34 +289,29 @@ class Trip < ActiveRecord::Base
   end
 
   def status_json
+    if trip_result
+      code = trip_result.code
+      short_desc = trip_result.name
+      message = trip_result.description
+    elsif run
+      code = :scheduled
+      short_desc = 'Scheduled'
+      message = TranslationEngine.translate_text(:trip_has_been_scheduled)
+    elsif cab
+      code = :scheduled_to_cab
+      short_desc = 'Scheduled'
+      message = TranslationEngine.translate_text(:trip_has_been_scheduled_to_cab)
+    else  
+      code = :requested
+      short_desc = 'Requested'
+      message = TranslationEngine.translate_text(:trip_has_been_requested)
+    end
+
     {
-      code: status_code,
-      message: status_message
+      code: code,
+      short_description: short_desc,
+      message: message
     }
-  end
-
-  def status_code
-    if trip_result
-      trip_result.code
-    elsif run
-      :scheduled
-    elsif cab
-      :scheduled_to_cab
-    else  
-      :requested
-    end
-  end
-
-  def status_message
-    if trip_result
-      trip_result.name
-    elsif run
-      TranslationEngine.translate_text(:trip_has_been_scheduled)
-    elsif cab
-      TranslationEngine.translate_text(:trip_has_been_scheduled_to_cab)
-    else  
-      TranslationEngine.translate_text(:trip_has_been_requested)
-    end
   end
 
   # potentially support multi-leg trips
