@@ -12,7 +12,7 @@
       $(".address-form :input").removeAttr("disabled");
       $('.ui-dialog button').show();
       form.find('form')[0].reset();
-      form.find('.error').remove();
+      form.find('.error').html('');
     });
 
     $('#customerCommonAddressTable').on('click', '.deleteCustomerAddress', function(e) {

@@ -13,19 +13,17 @@
         $( $(this)[0].parentNode ).dialog( "close" );
         show_alert('Address was successfully created.', 'info');
       } else {
-        $(this).find('.error').remove();
         //failed to create an address
+        $(this).find('.error').html('');
         for (var field in data) {
           text_field = $('#' + data.prefix + "_" + field);
-          error_element = text_field.attr('data-error-element');
+          error_element_id = data.prefix + "_" + field + '_error';
           error_message = field + " " + data[field] + "; ";
-          if (!error_element) {
-            error_element_id = data.prefix + "_" + field
+          if ($("#" + error_element_id).length === 0) {
             text_field.after('<span class="error" id="' + error_element_id + '">' + error_message + "</span>");
-            error_element = "#" + error_element_id;
-            text_field.attr('data-error-element', error_element);
+            text_field.attr('data-error-element', "#" + error_element_id);
           }
-          $(error_element).innerHtml = error_message;
+          $("#" + error_element_id).html(error_message);
         }
       }
     })
@@ -57,7 +55,7 @@
       var form = $("#provider-address-form");
       form.dialog( "open" );  
       form.find('form')[0].reset();
-      form.find('.error').remove();
+      form.find('.error').html('');
     });
   });
 </script>
