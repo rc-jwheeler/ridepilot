@@ -291,25 +291,25 @@ class Trip < ActiveRecord::Base
   def status_json
     if trip_result
       code = trip_result.code
-      short_desc = trip_result.name
+      name = trip_result.name
       message = trip_result.description
     elsif run
       code = :scheduled
-      short_desc = 'Scheduled'
+      name = 'Scheduled'
       message = TranslationEngine.translate_text(:trip_has_been_scheduled)
     elsif cab
       code = :scheduled_to_cab
-      short_desc = 'Scheduled'
+      name = 'Scheduled to Cab'
       message = TranslationEngine.translate_text(:trip_has_been_scheduled_to_cab)
     else  
       code = :requested
-      short_desc = 'Requested'
+      name = 'Requested'
       message = TranslationEngine.translate_text(:trip_has_been_requested)
     end
 
     {
       code: code,
-      short_description: short_desc,
+      name: name,
       message: message
     }
   end
