@@ -418,6 +418,31 @@ function hinted_field(f) {
 }
 
 /*
+ Shared among several address related partials to display errors on address form
+ */
+function showAddressValidationErrors(form, data) {
+  //failed to create an address
+  $(form).find('.error').html('');
+  for (var field in data) {
+    if(field == 'base') {
+      if($(form).find('.base-error').length == 0) {
+        $(form).prepend('<span class="error base-error"></span>');
+      }
+      $(form).find('.base-error').html(data[field]);
+    } else {
+      text_field = $('#' + data.prefix + "_" + field);
+      error_element_id = data.prefix + "_" + field + '_error';
+      error_message = field + " " + data[field] + "; ";
+      if ($("#" + error_element_id).length === 0) {
+        text_field.after('<span class="error" id="' + error_element_id + '">' + error_message + "</span>");
+        text_field.attr('data-error-element', "#" + error_element_id);
+      }
+      $("#" + error_element_id).html(error_message);
+    }
+  }
+}
+
+/*
  * show loading mask
  */
 (function($) {

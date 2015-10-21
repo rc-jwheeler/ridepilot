@@ -46,7 +46,7 @@ en:
   address_notes: "Notes"
   must_have_one_address: 'Must have at least one address'
   create_provider_address_text: 'Create Address'
-  full_address_text_required: 'is required'
+  geocode_address_required: 'A geocoded address is required, please type and select an address in the Address field'
   #cab trips
   cab: 'Cab'
   pickup_date: "Pickup Date"

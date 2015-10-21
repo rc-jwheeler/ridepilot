@@ -215,7 +215,7 @@ class Address < ActiveRecord::Base
   end
 
   def address_presented
-    errors.add(:full_address, TranslationEngine.translate_text(:full_address_text_required)) if !address_text.present?
+    errors.add(:base, TranslationEngine.translate_text(:geocode_address_required)) if !address_text.present?
   end
 
 end

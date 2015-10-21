@@ -112,7 +112,7 @@ RSpec.describe AddressesController, type: :controller do
       it "includes validation errors in the json response" do
         post :create, invalid_create_attributes
         json = JSON.parse(response.body)
-        expect(json["base"].first).to include("Address is required.")
+        expect(json["base"].first).to include("A geocoded address is required, please type and select an address in the Address field")
       end
 
       it "includes the address type in the json response" do
