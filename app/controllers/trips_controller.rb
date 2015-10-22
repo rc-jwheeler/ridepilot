@@ -232,12 +232,7 @@ class TripsController < ApplicationController
   end
 
   def create
-    if params[:trip][:customer_id] && customer = Customer.find_by_id(params[:trip][:customer_id])
-      #authorize! :read, customer
-      params[:trip][:provider_id] = customer.provider.id if customer.provider.present?
-    else
-      params[:trip][:customer_id] = ""
-    end    
+    params[:trip][:provider_id] = current_provider_id   
     handle_trip_params params[:trip]
     @trip = Trip.new(trip_params)
     authorize! :manage, @trip
@@ -351,6 +346,7 @@ class TripsController < ApplicationController
       :trip_result_id,
       :result_reason,
       :vehicle_id,
+      :mobility_device_accommodations,
       customer_attributes: [:id]
     )
   end

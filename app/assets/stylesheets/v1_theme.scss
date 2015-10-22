@@ -393,8 +393,6 @@ body.reports #primary-nav li.vehicles-drivers-users a:hover, body.reports #prima
   border-radius: 5px;
 }
 .alert {
-  color: #fff;
-  background-color: #e5004d;
   font-size: 18px;
   font-weight: bold;
   padding: 10px;
@@ -403,9 +401,7 @@ body.reports #primary-nav li.vehicles-drivers-users a:hover, body.reports #prima
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-.alert a {
-  color: #ffffc6;
-}
+
 fieldset ol.section li div.field_with_errors {
   display: inline;
   color: #e5004d;

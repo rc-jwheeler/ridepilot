@@ -122,7 +122,7 @@ RSpec.describe CustomersController, type: :controller do
           :group => false,
           :medicaid_eligible => false,
           :prime_number => "MyString",
-          :default_funding_source_id => create(:funding_source, :provider => @current_user.current_provider).id,
+          :default_funding_source_id => create(:funding_source).id,
           :ada_eligible => false,
           :service_level_id => create(:service_level).id,
           :authorized_provider_ids => []

@@ -9,8 +9,3 @@ TRIP_RESULT_CODES = {
 TRIP_RESULT_CODES.each do |code, text|
   result = TripResult.where(code: code).first_or_create.update(name: text)
 end
-
-# migrate existing trip_result data in Trips table
-Trip.all.each do |trip|
-  trip.update trip_result: TripResult.find_by(code: trip.trip_result_old)
-end

@@ -5,6 +5,8 @@ class Driver < ActiveRecord::Base
   acts_as_paranoid # soft delete
 
   has_paper_trail
+
+  before_save :mark_address_as_driver_associated
   
   belongs_to :address
   belongs_to :provider
@@ -23,12 +25,13 @@ class Driver < ActiveRecord::Base
 
   accepts_nested_attributes_for :address, update_only: true
 
-  validates :address, associated: true
+  validates :address, associated: true, presence: true
   validates :email, format: { with: Devise.email_regexp, allow_blank: true }
-  validates :name, uniqueness: { scope: :provider_id }, length: { minimum: 2 }
+  validates :name, uniqueness: { scope: :provider_id, conditions: -> { where(deleted_at: nil) } }, length: { minimum: 2 }
   validates :provider, presence: true
   validates :user, presence: true
-  validates :user_id, uniqueness: { allow_nil: true }
+  validates :user_id, uniqueness: { allow_nil: true, conditions: -> { where(deleted_at: nil) } }
+  validates :phone_number, presence: true
 
   scope :users,         -> { where("drivers.user_id IS NOT NULL") }
   scope :active,        -> { where(active: true) }
@@ -41,5 +44,11 @@ class Driver < ActiveRecord::Base
   
   def compliant?(as_of: Date.current)
     driver_compliances.overdue(as_of: as_of).empty?
+  end
+
+  private
+
+  def mark_address_as_driver_associated
+    self.address.is_driver_associated = true if self.address
   end
 end

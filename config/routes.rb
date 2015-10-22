@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       post "change_provider" => "users#change_provider"
       get "check_session" => "users#check_session"
       get "touch_session" => "users#touch_session"
+      get "restore_user" => "users#restore"
     end
 
     resource :application_settings, only: [:edit, :update] do
@@ -106,6 +107,7 @@ Rails.application.routes.draw do
       collection do
         post :validate
         get :autocomplete
+        get :autocomplete_public
         get :search
         patch :upload
         get :check_loading_status
@@ -122,9 +124,7 @@ Rails.application.routes.draw do
       resources :driver_histories, except: [:index, :show]
       resources :driver_compliances, except: [:index, :show]
     end
-    resources :funding_sources, :except => [:destroy]
     resources :monthlies, :except => [:show, :destroy]
-    resources :provider_ethnicities
     resources :vehicles do
       resources :documents, except: [:index, :show]
       resources :vehicle_maintenance_events, :except => [:index, :show]
@@ -176,6 +176,17 @@ Rails.application.routes.draw do
         put :hide_value
         put :show_value
       end
+    end
+  end
+
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      match "authenticate_customer", :controller => :customers, :action => :show, :via => [:get, :options]
+      match "authenticate_provider", :controller => :providers, :action => :show, :via => [:get, :options]
+      match "trip_purposes", :controller => :trip_purposes, :action => :index, :via => [:get, :options]
+      match "create_trip", :controller => :trips, :action => :create, :via => [:post, :options]
+      match "cancel_trip", :controller => :trips, :action => :destroy, :via => [:delete, :options]
+      match "trip_status", :controller => :trips, :action => :show, :via => [:get, :options]
     end
   end
 end

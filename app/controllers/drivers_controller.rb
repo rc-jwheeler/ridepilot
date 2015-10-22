@@ -20,6 +20,8 @@ class DriversController < ApplicationController
 
   def update
     @driver.attributes = driver_params
+    process_address_geom
+    
     if !@driver.is_all_valid?(current_provider_id)
       prep_edit
       render action: :edit
@@ -39,6 +41,7 @@ class DriversController < ApplicationController
   end
 
   def create
+    process_address_geom
     @driver.provider = current_provider
     if !@driver.is_all_valid?(current_provider_id)
       prep_edit
@@ -87,6 +90,7 @@ class DriversController < ApplicationController
       :name, 
       :email, 
       :user_id,
+      :phone_number,
       :address_attributes => [
         :address,
         :building_name,
@@ -95,8 +99,7 @@ class DriversController < ApplicationController
         :provider_id,
         :state,
         :zip,
-        :notes,
-        :phone_number
+        :notes
       ],
     )
   end
@@ -107,5 +110,11 @@ class DriversController < ApplicationController
       start_hour: params[:start_hour],
       end_hour: params[:end_hour]
       }).process!
+  end
+
+  def process_address_geom
+    if @driver && @driver.address && params[:lat].present? && params[:lon].present?
+      @driver.address.the_geom = RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f)
+    end
   end
 end

@@ -114,8 +114,17 @@ gem 'nested_form', '~> 0.3.2'
 # reporting engine
 gem 'reporting', :github => 'camsys/reporting', :branch => 'master'
 
+# styling
+gem 'bootstrap-kaminari-views'
+
 # momentjs for datetime parsing
 gem 'momentjs-rails'
+
+# twitter typeahed
+#gem 'twitter-typeahead-rails'
+
+# new relic for app monitoring
+gem 'newrelic_rpm'
 
 group :integration, :qa, :production do 
   gem 'rails_12factor'

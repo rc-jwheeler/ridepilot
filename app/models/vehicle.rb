@@ -25,7 +25,6 @@ class Vehicle < ActiveRecord::Base
   has_many :vehicle_maintenance_compliances, dependent: :delete_all, inverse_of: :vehicle
 
   validates :provider, presence: true
-  validates :default_driver, presence: true
   validates :name, presence: true
   validates :vin, length: {is: 17, allow_nil: true, allow_blank: true},
     format: {with: /\A[^ioq]*\z/i, allow_nil: true}
@@ -57,5 +56,9 @@ class Vehicle < ActiveRecord::Base
   
   def open_seating_capacity(start_time, end_time, ignore: nil)
     seating_capacity - (trips.incomplete.during(start_time, end_time) - Array(ignore)).collect(&:trip_size).flatten.compact.sum if seating_capacity
+  end
+
+  def open_mobility_device_capacity(start_time, end_time, ignore: nil)
+    mobility_device_accommodations - (trips.incomplete.during(start_time, end_time) - Array(ignore)).collect(&:mobility_device_accommodations).flatten.compact.sum if mobility_device_accommodations
   end
 end

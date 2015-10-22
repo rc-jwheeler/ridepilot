@@ -10,51 +10,61 @@ class UsersController < ApplicationController
   def create_user
     authorize! :edit, current_user.current_provider
     
-    #this user might already be a member of the site, but not of this
-    #provider, in which case we ought to just set up the role
-    @user = User.find_by_email(params[:user][:email])
-    @role = Role.new
-    new_password = nil
-    new_user = false
-    record_valid = false
-    User.transaction do
-      begin
-        if not @user
-          @user = User.new(create_user_params)
-          @user.password = User.generate_password
-          raw, enc = Devise.token_generator.generate(User, :reset_password_token)
-          @user.reset_password_token = enc
-          @user.reset_password_sent_at = Time.zone.now.utc
-          @user.current_provider = current_provider
-          @user.save!
-          new_user = true
+    @user = User.only_deleted.find_by_email(params[:user][:email])
+    @is_user_deleted = @user.try(:deleted_at).present?
+
+    if !@is_user_deleted
+      #this user might already be a member of the site, but not of this
+      #provider, in which case we ought to just set up the role
+      @user = User.find_by_email(params[:user][:email])
+      @role = Role.new
+      new_password = nil
+      new_user = false
+      record_valid = false
+      User.transaction do
+        begin
+          if not @user
+            @user = User.new(create_user_params)
+            @user.password = User.generate_password
+            raw, enc = Devise.token_generator.generate(User, :reset_password_token)
+            @user.reset_password_token = enc
+            @user.reset_password_sent_at = Time.zone.now.utc
+            @user.current_provider = current_provider
+            @user.save!
+            new_user = true
+          end
+
+          @role.user = @user
+          @role.provider = current_provider
+          @role.level = params[:role][:level]
+          @role.save!
+
+          record_valid = true
+        rescue => e
+          Rails.logger.info(e)
+          raise ActiveRecord::Rollback
         end
-
-        @role.user = @user
-        @role.provider = current_provider
-        @role.level = params[:role][:level]
-        @role.save!
-
-        record_valid = true
-      rescue => e
-        Rails.logger.info(e)
-        raise ActiveRecord::Rollback
       end
-    end
 
-    if record_valid
-      # NewUserMailer doesn't server the purpose by design
-      #NewUserMailer.new_user_email(@user, new_password).deliver if new_user
+      if record_valid
+        # NewUserMailer doesn't server the purpose by design
+        #NewUserMailer.new_user_email(@user, new_password).deliver if new_user
 
-      # send password reset instructions instead
-      @user.send_reset_password_instructions  if new_user
+        # send password reset instructions instead
+        @user.send_reset_password_instructions  if new_user
 
-      flash.now[:notice] = "%s has been added and the instructions has been emailed" % @user.email
-      redirect_to provider_path(current_provider)
-    else
-      user_errors = @user.valid? ? {} : @user.errors.messages
-      role_errors = @role.valid? ? {} : @role.errors.messages
-      @errors = user_errors.merge(role_errors)
+        flash.now[:notice] = "%s has been added and the instructions has been emailed" % @user.email
+        redirect_to provider_path(current_provider)
+      else
+        user_errors = @user.valid? ? {} : @user.errors.messages
+
+        role_errors = @role.valid? ? {} : @role.errors.messages
+        @errors = user_errors.merge(role_errors)
+        render :action => :new_user
+      end
+    else # deleted user
+      flash.now[:alert] = TranslationEngine.translate_text(:user_was_deleted)
+      @errors = {}
       render :action => :new_user
     end
   end
@@ -119,6 +129,20 @@ class UsersController < ApplicationController
 
   def touch_session
     render :text => 'OK'
+  end
+
+  def restore
+    @user = User.only_deleted.find_by_id(params[:id])
+
+    @user.restore(recursive: true) if @user
+
+    if !@user.deleted_at
+      flash.now[:notice] = TranslationEngine.translate_text(:user_been_restored)
+      redirect_to provider_path(current_provider)
+    else
+      flash.now[:alert] = TranslationEngine.translate_text(:unknown_error)
+      redirect_to :back
+    end
   end
 
   private

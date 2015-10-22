@@ -11,7 +11,7 @@ RSpec.describe AddressesController, type: :controller do
   }
 
   let(:invalid_attributes) {
-    attributes_for(:address, :address => "")
+    attributes_for(:address, :state => "", :address => '', :city => '')
   }
 
   describe "GET #edit" do
@@ -26,9 +26,10 @@ RSpec.describe AddressesController, type: :controller do
     let(:valid_create_attributes) {
       # Convert the params to a flat list of params because that's what the
       # controller expects
-      params = {"prefix" => "pickup"}
+      prefix = "pickup"
+      params = {"prefix" => prefix, "#{prefix}" => {}}
       valid_attributes.each do |k,v|
-        params["#{params["prefix"]}_#{k}"] = v
+        params["#{prefix}"]["#{k}"] = v
       end
       params
     }
@@ -37,6 +38,7 @@ RSpec.describe AddressesController, type: :controller do
       context "specifying an existing address" do
         it "does not create a new Address" do
           address = create(:address, :provider => @current_user.current_provider)
+          
           expect {
             post :create, valid_create_attributes.merge({:address_id => address.id})
           }.to_not change(Address, :count)
@@ -44,8 +46,9 @@ RSpec.describe AddressesController, type: :controller do
 
         it "updates the requested vehicle" do
           address = create(:address, :provider => @current_user.current_provider, :address => "Foobar")
+          valid_create_attributes["pickup"]["address"] = "Barfoo"
           expect {
-            post :create, valid_create_attributes.merge({:address_id => address.id, :pickup_address => "Barfoo"})
+            post :create, valid_create_attributes.merge({:address_id => address.id})
           }.to change { address.reload.address }.from("Foobar").to("Barfoo")
         end
 
@@ -93,7 +96,12 @@ RSpec.describe AddressesController, type: :controller do
 
     context "with invalid params" do
       let(:invalid_create_attributes) {
-        valid_create_attributes.merge({"pickup_address" => ""})
+        valid_create_attributes["pickup"]["address"] = ""
+        valid_create_attributes["pickup"]["city"] = ""
+        valid_create_attributes["pickup"]["state"] = ""
+        valid_create_attributes["pickup"]["zip"] = ""
+
+        valid_create_attributes
       }
 
       it "responds with JSON" do
@@ -104,8 +112,7 @@ RSpec.describe AddressesController, type: :controller do
       it "includes validation errors in the json response" do
         post :create, invalid_create_attributes
         json = JSON.parse(response.body)
-        expect(json["address"]).to be_a(Array)
-        expect(json["address"].first).to include("is too short")
+        expect(json["base"].first).to include("A geocoded address is required, please type and select an address in the Address field")
       end
 
       it "includes the address type in the json response" do

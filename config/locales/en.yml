@@ -25,6 +25,7 @@ en:
   address_name: "Address Name"
   address_nickname: "Nickname"
   building_name: "Building Name"
+  full_address_name: 'Address'
   address: "Address"
   view_address_details: 'View Details'
   city: "City"
@@ -44,6 +45,8 @@ en:
   address_search: "Address Search"
   address_notes: "Notes"
   must_have_one_address: 'Must have at least one address'
+  create_provider_address_text: 'Create Address'
+  geocode_address_required: 'A geocoded address is required, please type and select an address in the Address field'
   #cab trips
   cab: 'Cab'
   pickup_date: "Pickup Date"
@@ -67,6 +70,7 @@ en:
   not_eligible: 'Not Eligible'
   ineligible_reason: 'Why not eligible?'
   #customers
+  customer_id_label: 'ID'
   customer_details_panel: 'Details'
   customer_addresses_panel: 'Addresses'
   is_mailing_address: 'Mailing'
@@ -480,7 +484,10 @@ en:
   #trips validation erros
   driver_is_valid_for_vehicle_validation_error: "is not the driver for the selected vehicle during this vehicle's run."
   vehicle_has_open_seating_capacity_validation_error: "There's not enough open capacity on this run to accommodate this trip"
-  completable_until_day_of_trip_validation_error: "cannot be set as complete until day of the trip"
+  completable_until_trip_appointment_time_validation_error: "cannot be set as complete until end time of the trip"
+  vehicle_has_mobility_device_capacity_validation_error: "There's not enough mobility device capacity on this run to accommodate this trip"
+  outbound_trip_dropoff_time_no_later_than_return_trip_pickup_time: "Dropoff time should be no later than return trip's pickup time"
+  return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time: "Pickup time should be no earlier than outbound trip's appointment time"
   #monthlies
   monthlies_start_date: "Month"
   funding_source: "Funding Source"
@@ -491,18 +498,6 @@ en:
   no_monthly_reports_available: "No monthly reports yet."
   new_monthly_link_text:  "Add New Monthly Data"
   new_monthly_heading: "Create Monthly Report"
-  #provider_ethnicities
-  provider_ethnicity_form_error_message:
-    one: "%{count} error prohibited this provider ethnicity from being saved:"
-    other: "%{count} errors prohibited this provider ethnicity from being saved:"
-  provider_ethnicity_form_name: "Name"
-  provider_ethnicity_form_submit: "Submit"
-  edit_ethnicity_heading: "Edit Ethnicity"
-  new_ethnicity_heading: "New Ethnicity"
-  show_ethnicity_heading: "Ethnicity Details"
-  edit_ethnicity_link_text: "Edit Ethnicity"
-  edit_ethnicity_provider_label: "Provider"
-  edit_ethnicity_name_label: "Name"
   #Providers
   customer_authorized_providers: "Authorized Providers"
   provider_form_name: "Name"
@@ -532,6 +527,9 @@ en:
   change_role: "Change role"
   delete_role_confirm: "Are you sure?"
   create_user_link_text: "Create User"
+  restore_user_link_text: 'Restore User'
+  user_was_deleted: 'This user was deleted. You can find the option below to restore it.'
+  user_was_restored: 'User has been successfully restored.'
   switch_providers_to_create_user: "<p>You are currently logged in to %{current_provider}.  To create a user for %{provider} , please switch providers by using the dropdown menu at the top of this page.</p>"
   enabled: "Enabled?"
   dispatch: "Dispatch"
@@ -577,7 +575,6 @@ en:
   new_vehicle_link_text: "Create Vehicle"
   switch_providers_to_create_vehicle: "<p>You are currently logged in to %{current_provider}.  To create a vehicle for %{provider} , please switch providers by using the dropdown menu at the top of this page.</p>"
   no_ethnicities: "No ethnicities yet."
-  delete_provider_ethnicity_confirm: "Are you sure?"
   new_ethnicity_link_text: "Create Ethnicity"
   switch_providers_to_create_ethnicity: "<p>You are currently logged in to %{current_provider}.  To create an ethnicity for %{provider} , please switch providers by using the dropdown menu at the top of this page.</p>"
   region_heading: "Region Boundaries"
@@ -824,6 +821,8 @@ en:
   trip_direction: 'Direction'
   return_trip: 'Return'
   outbound_trip: 'Outbound'
+  return_trip_label: 'Return Trip'
+  outbound_trip_label: 'Outbound Trip'
   change_customer: "Change Customer"
   trips_form_error_message:
     one: "%{count} error prohibited this trip from being saved:"
@@ -883,6 +882,8 @@ en:
   trip_form_error_message: 'Please correct following errors'
   ask_for_creating_return_trip_message: 'Would you like to create a return trip?'
   linking_to: 'Link to'
+  trip_form_mobility_device_accommodations_label: 'Mobility Device Count'
+  eligibility_and_accommodation: 'Eligibility and Accommodation'
   #trips table
   pickup_date_column: 'Pickup Date'
   customer_column: 'Customer'
@@ -1015,6 +1016,7 @@ en:
   application_settings_default_value: "Default Value"
   application_settings_edit_link_text: "Edit Application Settings"
   # General
+  translations: 'Translations'
   translation_engine_link_text: "Translations"
   save: "Save"
   confirm_message: "Are you sure you want to delete this record?"
@@ -1068,11 +1070,24 @@ en:
   upload_common_addresses_notes: 'Please refer to address file specifications.'
   # translation editing
   create_translation: 'Create Translation'
+  confirm_msg: 'Are you sure to delete it?'
   # reporting engine
   report_name: 'Reports'
   report_parameters: 'Report Parameters'
   reset_filter_panel: 'Reset Filter'
   reset_all_filter: 'Reset All'
+  # api
+  ridepilot_token_required: 'Ridepilot token is required.'
+  invalid_ridepilot_token: 'Ridepilot token is not valid.'
+  customer_token_label: 'Token'
+  customer_not_exist: 'Customer does not exist based on given id and token.'
+  unauthorized_customer_for_provider: 'Customer is not authorized to access given provider.'
+  provider_not_exist: 'Provider does not exist based on given id.'
+  unauthorized_customer_for_trip: 'Customer is not authorized to access given trip.'
+  trip_has_been_scheduled: 'Your trip has been scheduled.'
+  trip_has_been_scheduled_to_cab: 'Your trip has been scheduled to a cab.'
+  trip_has_been_requested: 'Your trip request has been accepted.'
+  trip_purpose_not_exist: 'Trip purpose does not exist for given provider.'
 
   locales:
     en: "English"

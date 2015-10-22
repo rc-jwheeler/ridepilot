@@ -34,15 +34,15 @@ class TripScheduler
   end
 
   def unschedule
-    @trip.cab = false
-    @trip.run = nil
-    response_as_json @trip.save, @trip.errors.full_messages.join(';')
+    @trip.update_attribute :cab, false
+    @trip.update_attribute :run, nil
+    response_as_json true
   end
 
   def schedule_to_cab
-    @trip.cab = true
-    @trip.run = nil
-    response_as_json @trip.save, @trip.errors.full_messages.join(';')
+    @trip.update_attribute :cab, true
+    @trip.update_attribute :run, nil
+    response_as_json true
   end
 
   def schedule_to_run
@@ -74,7 +74,6 @@ class TripScheduler
   end
 
   def validate_vehicle_availability
-    # TODO: revisit after vehicle capacity is added
     @run.vehicle && @run.vehicle.active
   end
 

@@ -8,6 +8,7 @@
 <% end %>
 <%= autocomplete_field_tag 'customer_name', @customer.try(:name), autocomplete_customers_path(active_only: true), 
     :size => 30, 
+    :delay => 500, 
     :update_elements => {
       :id                        => '#trip_customer_id,#trip_customer_attributes_id',
       :group                        => '#trip_group',
@@ -52,7 +53,7 @@
       $('#trip_medicaid_eligible').attr('checked',customerData.medicaid_eligible);
     }
 
-    $('#new_trip #customer_name').bind('railsAutocomplete.select', function(event, data){ 
+    $('.trip_form #customer_name').bind('railsAutocomplete.select', function(event, data){ 
       if ($("#trip_group").val() == "true") {
         $("li.passengers").hide();
         $("li.group_size").show();
@@ -64,6 +65,7 @@
       var customerId = data.item.id;
       $('#pickup_search_address').attr('data-autocomplete', "<%=autocomplete_addresses_path%>?customer_id=" + customerId);
       $('#dropoff_search_address').attr('data-autocomplete', "<%=autocomplete_addresses_path%>?customer_id=" + customerId);
+      $('.address-search input[name=customer_id]').val(customerId);
 
       $.post("<%= data_for_trip_customers_path %>", {
           customer_id: customerId

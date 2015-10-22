@@ -49,7 +49,7 @@
     });
 
     function insertDonationRow(donationData) {
-      $('#customerDonationsTable').append("<tr data-donation='" + JSON.stringify(donationData) + "'>" +
+      $('#customerDonationsTable').append("<tr data-donation='" + escapeQuotes(JSON.stringify(donationData)) + "'>" +
           '<td><button class="deleteCustomerDonation btn-danger" name="button" type="button">Delete</button></td>' +
           "<td>" + donationData.date + '</td>' +
           "<td>" + donationData.amount + "</td>" +

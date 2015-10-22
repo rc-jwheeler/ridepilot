@@ -1,6 +1,7 @@
 class Customer < ActiveRecord::Base
   include RequiredFieldValidatorModule 
-  
+  before_validation :generate_uuid_token, on: :create
+
   acts_as_paranoid # soft delete
 
   has_and_belongs_to_many :authorized_providers, :class_name => 'Provider', :through => 'customers_providers'
@@ -22,6 +23,8 @@ class Customer < ActiveRecord::Base
   validates_presence_of :first_name
   validates_associated :address
   #validate :address_required
+  # Token is auto-generated at database level via uuid extension
+  
   accepts_nested_attributes_for :address
 
   normalize_attribute :first_name, :with=> [:squish, :titleize]
@@ -115,7 +118,7 @@ class Customer < ActiveRecord::Base
   end
 
   def authorized_for_provider provider_id
-    Customer.for_provider(provider_id).where("id = ?", self.id).count > 0
+    !Customer.for_provider(provider_id).where("id = ?", self.id).empty?
   end
 
   def self.by_term( term, limit = nil )
@@ -239,7 +242,7 @@ class Customer < ActiveRecord::Base
       addr = if addr_hash[:id]
         Address.find addr_hash[:id]
       else
-        addresses.new(addr_hash.merge(customer_id: self.try(:id)))
+        addresses.new(addr_hash.except(:label).merge(customer_id: self.try(:id)))
       end
 
       self.address = addr if index == mailing_address_index
@@ -281,6 +284,10 @@ class Customer < ActiveRecord::Base
     if addresses.empty?
       errors.add :addresses, TranslationEngine.translate_text(:must_have_one_address)
     end
+  end
+
+  def generate_uuid_token
+    self.token = SecureRandom.hex(5)
   end
 
 end

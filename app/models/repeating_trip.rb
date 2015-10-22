@@ -14,6 +14,7 @@ class RepeatingTrip < ActiveRecord::Base
   belongs_to :pickup_address, class_name: "Address"
   belongs_to :provider
   belongs_to :vehicle
+  belongs_to :trip_purpose
   
   def instantiate!
     now = Date.today + 1.day

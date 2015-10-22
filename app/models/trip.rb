@@ -85,8 +85,11 @@ class Trip < ActiveRecord::Base
   validates_datetime :pickup_time, presence: true
   validate :driver_is_valid_for_vehicle
   validate :vehicle_has_open_seating_capacity
-  validate :completable_until_day_of_trip
+  validate :vehicle_has_mobility_device_capacity
+  validate :completable_until_trip_appointment_time
   validate :provider_availability
+  validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validate :return_trip_later_than_outbound_trip
 
   accepts_nested_attributes_for :customer
 
@@ -127,6 +130,10 @@ class Trip < ActiveRecord::Base
     trip_result.blank?
   end
 
+  def cancel!
+    update_attributes( trip_result: TripResult.find_by_code('CANC') )
+  end
+
   def vehicle_id
     run ? run.vehicle_id : @vehicle_id
   end
@@ -154,7 +161,7 @@ class Trip < ActiveRecord::Base
   end
   
   def trip_size
-    if customer.group
+    if customer.try(:group)
       group_size
     else 
       guest_count + attendant_count + 1
@@ -241,6 +248,9 @@ class Trip < ActiveRecord::Base
     return_trip.direction = :return
     return_trip.pickup_address = self.dropoff_address
     return_trip.dropoff_address = self.pickup_address
+    return_time_gap = self.provider.try(:min_trip_time_gap_in_mins) || 30
+    return_trip.pickup_time = self.appointment_time + return_time_gap.minutes
+    return_trip.appointment_time = return_trip.pickup_time + return_time_gap.minutes
     return_trip.outbound_trip = self
 
     return_trip
@@ -268,6 +278,52 @@ class Trip < ActiveRecord::Base
     self.save
   end
 
+  def as_profile_json
+    {
+      trip_id: id,
+      pickup_time: pickup_time.try(:iso8601),
+      dropff_time: appointment_time.try(:iso8601),
+      comments: notes,
+      status: status_json
+    }
+  end
+
+  def status_json
+    if trip_result
+      code = trip_result.code
+      name = trip_result.name
+      message = trip_result.description
+    elsif run
+      code = :scheduled
+      name = 'Scheduled'
+      message = TranslationEngine.translate_text(:trip_has_been_scheduled)
+    elsif cab
+      code = :scheduled_to_cab
+      name = 'Scheduled to Cab'
+      message = TranslationEngine.translate_text(:trip_has_been_scheduled_to_cab)
+    else  
+      code = :requested
+      name = 'Requested'
+      message = TranslationEngine.translate_text(:trip_has_been_requested)
+    end
+
+    {
+      code: code,
+      name: name,
+      message: message
+    }
+  end
+
+  # potentially support multi-leg trips
+  # need revisit when multi-leg is supported as direction field needs to be refactored
+  def self.parse_leg_as_direction(leg)
+    if leg.try(:to_s) == '2'
+      :return
+    else
+      :outbound
+    end
+  end
+
   private
   
   def driver_is_valid_for_vehicle
@@ -287,16 +343,35 @@ class Trip < ActiveRecord::Base
     end
   end
 
+  # Check if the run's vehicle has enough mobility accommodations at the time of this trip
+  def vehicle_has_mobility_device_capacity
+    if mobility_device_accommodations && run.try(:vehicle_id).present? && pickup_time.present? && appointment_time.present?
+      vehicle_mobility_capacity = run.vehicle.try(:open_mobility_device_capacity, pickup_time, appointment_time, ignore: self)
+      no_enough_capacity = !vehicle_mobility_capacity ||  vehicle_mobility_capacity < mobility_device_accommodations
+      errors.add(:base, TranslationEngine.translate_text(:vehicle_has_mobility_device_capacity_validation_error)) if no_enough_capacity
+    end
+  end
+
   # Can only allow to set trip as complete until day of the trip
-  def completable_until_day_of_trip
-    if complete && Time.current.to_date < pickup_time.in_time_zone.to_date
-      errors.add(:base, TranslationEngine.translate_text(:completable_until_day_of_trip_validation_error))
+  def completable_until_trip_appointment_time
+    if complete && Time.current < appointment_time.in_time_zone
+      errors.add(:base, TranslationEngine.translate_text(:completable_until_trip_appointment_time_validation_error))
     end
   end
 
   def provider_availability
     if pickup_time && provider && !provider.available?(pickup_time.wday, pickup_time.strftime('%H:%M'))
       errors.add(:base, TranslationEngine.translate_text(:provider_not_available_for_trip))
+    end
+  end
+
+  def return_trip_later_than_outbound_trip
+    if is_linked?
+      if is_outbound? && appointment_time
+        errors.add(:base, TranslationEngine.translate_text(:outbound_trip_dropoff_time_no_later_than_return_trip_pickup_time)) if appointment_time > return_trip.pickup_time
+      elsif is_return? && pickup_time
+        errors.add(:base, TranslationEngine.translate_text(:return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time)) if pickup_time < outbound_trip.appointment_time
+      end
     end
   end
 

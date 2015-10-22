@@ -97,6 +97,29 @@ th.fc-resourceName {
   color: white !important;
 }
 
+table.dataTable tbody tr.selected {
+  background-color: #b0bed9 !important;
+  font-weight: bold;
+  font-style: italic;
+}
+
 .ineligible-reason {
   padding: 10px 0px;
+}
+
+.trip_table_result_column {
+  min-width: 120px;
+}
+
+.label-help {
+  font-size: small;
+}
+
+.pac-container {
+    /* put Google geocomplete list on top of Bootstrap modal */
+    z-index: 9999;
+}
+
+.address_search {
+  width: 100%;
 }

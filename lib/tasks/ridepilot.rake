@@ -1,4 +1,4 @@
-  namespace :ridepilot do
+namespace :ridepilot do
 
   #------------- Incremental Seeding ------------------
   desc 'Seed default lookup tables and configurations'
@@ -23,6 +23,11 @@
     load(seed_file) if File.exist?(seed_file)
     puts 'Finished seeding mobilities'
 
+    puts 'ethnicities...'
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_ethnicities.rb')
+    load(seed_file) if File.exist?(seed_file)
+    puts 'Finished seeding ethnicities'
+
     puts 'lookup table configurations...'
     seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_lookup_table_configurations.rb')
     load(seed_file) if File.exist?(seed_file)
@@ -41,6 +46,12 @@
     seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_eligibilities.rb')
     load(seed_file) if File.exist?(seed_file)
     puts 'Finished seeding eligibilities'
+  end
+
+  desc 'Update lookup configs for ethnicities'
+  task :update_ethnicity_lookup_config => :environment do
+    config = LookupTable.find_by_name('provider_ethnicities')
+    config.update_attributes(name: 'ethnicities', caption: 'Ethnicity') if config
   end
 
   desc 'Seed some fake data for testing'
@@ -102,5 +113,19 @@
     puts 'Finished seeding reporting filter types.'
 
   end # task
+
+  desc "mark addresses if associated with a driver"
+  task mark_address_if_driver_associated: :environment do
+    Driver.includes(:address).each do |driver|
+      driver.address.update_attributes(is_driver_associated: true) if driver.address
+    end
+  end
+
+  desc "Generate customer token"    
+  task generate_customer_token: :environment do    
+    Customer.where(token: nil).each do |customer|    
+      customer.update_attribute(:token, SecureRandom.hex(5))   
+    end    
+  end
   #------------- End of Incremental Seeding --------------
 end

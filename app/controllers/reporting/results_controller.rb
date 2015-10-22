@@ -7,7 +7,7 @@ module Reporting
     def index
       q_param = params[:q]
       page = params[:page]
-      @per_page = params[:per_page] || Kaminari.config.default_per_page
+      @per_page = (params[:per_page] || Kaminari.config.default_per_page).to_i
 
       @report = Report.find params[:report_id]
       @q = @report.data_model.ransack q_param
@@ -19,7 +19,7 @@ module Reporting
       end
 
       # total_results is for exporting
-      total_results = @q.result(:district => true)
+      total_results = @q.result
 
       # filter data based on accessibility
       total_results = filter_data(total_results)
@@ -51,6 +51,10 @@ module Reporting
             title: output_field.title
           }
         end
+      end
+
+      if q_param[:s].present?
+        total_results = total_results.order(q_param[:s])
       end
 
       # @results is for html display; only render current page
