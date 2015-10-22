@@ -47,7 +47,7 @@ class Trip < ActiveRecord::Base
   attr_accessor :driver_id, :vehicle_id
 
   belongs_to :called_back_by, class_name: "User"
-  belongs_to :customer
+  belongs_to :customer, inverse_of: :trips
   belongs_to :dropoff_address, class_name: "Address"
   belongs_to :funding_source
   belongs_to :mobility
@@ -57,6 +57,10 @@ class Trip < ActiveRecord::Base
   belongs_to :service_level
   belongs_to :trip_purpose
   belongs_to :trip_result
+  has_one    :donation
+  has_one    :return_trip, class_name: "Trip", foreign_key: :linking_trip_id
+  belongs_to :outbound_trip, class_name: 'Trip', foreign_key: :linking_trip_id
+
 
   delegate :label, to: :run, prefix: :run, allow_nil: true
   delegate :name, to: :customer, prefix: :customer, allow_nil: true
@@ -68,20 +72,24 @@ class Trip < ActiveRecord::Base
   
   serialize :guests
 
-  validates :appointment_time, presence: {unless: :allow_addressless_trip?}
+  validates :appointment_time, presence: true
   validates :attendant_count, numericality: {greater_than_or_equal_to: 0}
-  validates :customer, associated: true
-  validates :customer, presence: true
-  validates :dropoff_address, associated: true, presence: {unless: :allow_addressless_trip?}
+  validates :customer, associated: true, presence: true
+  validates :dropoff_address, associated: true, presence: true
   validates :guest_count, numericality: {greater_than_or_equal_to: 0}
   validates :mileage, numericality: {greater_than: 0, allow_blank: true}
-  validates :pickup_address, associated: true, presence: {unless: :allow_addressless_trip?}
-  validates :pickup_time, presence: {unless: :allow_addressless_trip?}
+  validates :pickup_address, associated: true, presence: true
+  validates :pickup_time, presence: true
   validates :trip_purpose_id, presence: true
-  validates_datetime :appointment_time, unless: :allow_addressless_trip?
-  validates_datetime :pickup_time, unless: :allow_addressless_trip?
+  validates_datetime :appointment_time, presence: true
+  validates_datetime :pickup_time, presence: true
   validate :driver_is_valid_for_vehicle
   validate :vehicle_has_open_seating_capacity
+  validate :vehicle_has_mobility_device_capacity
+  validate :completable_until_trip_appointment_time
+  validate :provider_availability
+  validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validate :return_trip_later_than_outbound_trip
 
   accepts_nested_attributes_for :customer
 
@@ -122,6 +130,10 @@ class Trip < ActiveRecord::Base
     trip_result.blank?
   end
 
+  def cancel!
+    update_attributes( trip_result: TripResult.find_by_code('CANC') )
+  end
+
   def vehicle_id
     run ? run.vehicle_id : @vehicle_id
   end
@@ -149,7 +161,7 @@ class Trip < ActiveRecord::Base
   end
   
   def trip_size
-    if customer.group
+    if customer.try(:group)
       group_size
     else 
       guest_count + attendant_count + 1
@@ -157,7 +169,7 @@ class Trip < ActiveRecord::Base
   end
 
   def trip_count
-    round_trip ? trip_size * 2 : trip_size
+    trip_size
   end
 
   def repetition_customer_informed=(value)
@@ -174,13 +186,6 @@ class Trip < ActiveRecord::Base
 
   def is_in_district?
     pickup_address.try(:in_district) && dropoff_address.try(:in_district)
-  end
-  
-  def allow_addressless_trip?
-    # The provider_id is assigned via the customer. If the customer isn't 
-    # present, then the whole trip is invalid. So in that case, ignore the 
-    # address errors until there is a customer.
-    (customer.blank? || customer.id.blank? || (provider.present? && provider.allow_trip_entry_from_runs_page)) && run.present?
   end
 
   def adjusted_run_id
@@ -206,21 +211,167 @@ class Trip < ActiveRecord::Base
       resource: adjusted_run_id
     }
   end
+
+  def update_donation(user, amount)
+    return unless user && amount
+
+    if self.donation
+      self.donation.update_attributes(user: user, amount: amount)
+    elsif self.id && self.customer
+      self.donation = Donation.create(date: Time.now.in_time_zone, user: user, customer: self.customer, trip: self, amount: amount)
+      self.save
+    end
+  end
+
+  def is_no_show_or_turn_down?
+    trip_result && ['NS', 'TD'].index(trip_result.code)
+  end
     
+  def clone_for_future!
+    cloned_trip = self.dup
+    
+    cloned_trip.pickup_time = nil
+    cloned_trip.appointment_time = nil
+    cloned_trip.trip_result = nil
+    cloned_trip.customer_informed = false
+    cloned_trip.called_back_by = nil
+    cloned_trip.donation = nil
+    cloned_trip.run = nil
+    cloned_trip.cab = false
+    cloned_trip.repeating_trip = nil
+
+    cloned_trip
+  end
+
+  def clone_for_return!
+    return_trip = self.dup
+    return_trip.direction = :return
+    return_trip.pickup_address = self.dropoff_address
+    return_trip.dropoff_address = self.pickup_address
+    return_time_gap = self.provider.try(:min_trip_time_gap_in_mins) || 30
+    return_trip.pickup_time = self.appointment_time + return_time_gap.minutes
+    return_trip.appointment_time = return_trip.pickup_time + return_time_gap.minutes
+    return_trip.outbound_trip = self
+
+    return_trip
+  end
+
+  def is_linked?
+    (is_return? && outbound_trip) || (is_outbound? && return_trip)
+  end
+
+  def is_return?
+    direction.try(:to_sym) == :return
+  end
+
+  def is_outbound?
+    direction.try(:to_sym) == :outbound
+  end
+
+  def update_drive_distance!
+    from_lat = pickup_address.try(:latitude)
+    from_lon = pickup_address.try(:longitude)
+    to_lat = dropoff_address.try(:latitude)
+    to_lon = dropoff_address.try(:longitude)
+
+    self.drive_distance = TripPlanner.new(from_lat, from_lon, to_lat, to_lon, pickup_time).get_drive_distance
+    self.save
+  end
+
+  def as_profile_json
+    {
+      trip_id: id,
+      pickup_time: pickup_time.try(:iso8601),
+      dropff_time: appointment_time.try(:iso8601),
+      comments: notes,
+      status: status_json
+    }
+  end
+
+  def status_json
+    if trip_result
+      code = trip_result.code
+      name = trip_result.name
+      message = trip_result.description
+    elsif run
+      code = :scheduled
+      name = 'Scheduled'
+      message = TranslationEngine.translate_text(:trip_has_been_scheduled)
+    elsif cab
+      code = :scheduled_to_cab
+      name = 'Scheduled to Cab'
+      message = TranslationEngine.translate_text(:trip_has_been_scheduled_to_cab)
+    else  
+      code = :requested
+      name = 'Requested'
+      message = TranslationEngine.translate_text(:trip_has_been_requested)
+    end
+
+    {
+      code: code,
+      name: name,
+      message: message
+    }
+  end
+
+  # potentially support multi-leg trips
+  # need revisit when multi-leg is supported as direction field needs to be refactored
+  def self.parse_leg_as_direction(leg)
+    if leg.try(:to_s) == '2'
+      :return
+    else
+      :outbound
+    end
+  end
+
   private
   
   def driver_is_valid_for_vehicle
     # This will error if a run was found or extended for this vehicle and time, 
     # but the driver for the run is not the driver selected for the trip
     if self.run.try(:driver_id).present? && self.driver_id.present? && self.run.driver_id.to_i != self.driver_id.to_i
-      errors.add(:driver_id, "is not the driver for the selected vehicle during this vehicle's run.")
+      errors.add(:driver_id, TranslationEngine.translate_text(:driver_is_valid_for_vehicle_validation_error))
     end
   end
 
   # Check if the run's vehicle has open capacity at the time of this trip
   def vehicle_has_open_seating_capacity
     if run.try(:vehicle_id).present? && pickup_time.present? && appointment_time.present?
-      errors.add(:base, "There's not enough open capacity on this run to accommodate this trip") if run.vehicle.open_seating_capacity(pickup_time, appointment_time, ignore: self) < trip_size
+      vehicle_open_seating_capacity = run.vehicle.try(:open_seating_capacity, pickup_time, appointment_time, ignore: self)
+      no_enough_capacity = !vehicle_open_seating_capacity ||  vehicle_open_seating_capacity < trip_size
+      errors.add(:base, TranslationEngine.translate_text(:vehicle_has_open_seating_capacity_validation_error)) if no_enough_capacity
+    end
+  end
+
+  # Check if the run's vehicle has enough mobility accommodations at the time of this trip
+  def vehicle_has_mobility_device_capacity
+    if mobility_device_accommodations && run.try(:vehicle_id).present? && pickup_time.present? && appointment_time.present?
+      vehicle_mobility_capacity = run.vehicle.try(:open_mobility_device_capacity, pickup_time, appointment_time, ignore: self)
+      no_enough_capacity = !vehicle_mobility_capacity ||  vehicle_mobility_capacity < mobility_device_accommodations
+      errors.add(:base, TranslationEngine.translate_text(:vehicle_has_mobility_device_capacity_validation_error)) if no_enough_capacity
+    end
+  end
+
+  # Can only allow to set trip as complete until day of the trip
+  def completable_until_trip_appointment_time
+    if complete && Time.current < appointment_time.in_time_zone
+      errors.add(:base, TranslationEngine.translate_text(:completable_until_trip_appointment_time_validation_error))
+    end
+  end
+
+  def provider_availability
+    if pickup_time && provider && !provider.available?(pickup_time.wday, pickup_time.strftime('%H:%M'))
+      errors.add(:base, TranslationEngine.translate_text(:provider_not_available_for_trip))
+    end
+  end
+
+  def return_trip_later_than_outbound_trip
+    if is_linked?
+      if is_outbound? && appointment_time
+        errors.add(:base, TranslationEngine.translate_text(:outbound_trip_dropoff_time_no_later_than_return_trip_pickup_time)) if appointment_time > return_trip.pickup_time
+      elsif is_return? && pickup_time
+        errors.add(:base, TranslationEngine.translate_text(:return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time)) if pickup_time < outbound_trip.appointment_time
+      end
     end
   end
 

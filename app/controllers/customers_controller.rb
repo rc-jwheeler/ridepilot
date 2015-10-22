@@ -7,6 +7,11 @@ class CustomersController < ApplicationController
     render :json => customers.map { |customer| customer.as_autocomplete }
   end
 
+  def data_for_trip
+    @customer = Customer.for_provider(current_provider_id).where(id: params[:customer_id]).first
+    render :json => @customer ? @customer.trip_related_data : {}
+  end
+
   def found
     if params[:customer_id].blank?
       redirect_to search_customers_path( :term => params[:customer_name] )
@@ -88,7 +93,7 @@ class CustomersController < ApplicationController
     @customer = Customer.new customer_params
     @customer.provider = current_provider
     @customer.activated_date = Date.today
-    edit_addresses @customer
+    edit_addresses
 
     if params[:ignore_dups] != "1"
       #check for duplicates
@@ -134,6 +139,8 @@ first_name, first_name, first_name, first_name,
 
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
+        edit_donations
+        edit_eligibilities
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
@@ -170,7 +177,7 @@ first_name, first_name, first_name, first_name,
     authorize! :update, @customer if !@customer.authorized_for_provider(current_provider.id)
 
     @customer.assign_attributes customer_params
-    edit_addresses @customer
+    edit_addresses
 
     #save address changes
     if address_attributes_param && address_attributes_param[:id].present?
@@ -183,11 +190,11 @@ first_name, first_name, first_name, first_name,
       providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
     end
     @customer.authorized_providers = (providers << @customer.provider).uniq
-    
-    
-    
+
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
+        edit_donations
+        edit_eligibilities
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
       else
@@ -281,17 +288,44 @@ first_name, first_name, first_name, first_name,
   end
   
   def prep_edit
-    @mobilities = Mobility.all
-    @ethnicity_names = (current_provider.ethnicities.collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
+    @mobilities = Mobility.by_provider(current_provider)
+    @ethnicity_names = (Ethnicity.by_provider(current_provider).collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
     @funding_sources = FundingSource.by_provider(current_provider)
-    @service_levels = ServiceLevel.pluck(:name, :id)
+    @service_levels = ServiceLevel.by_provider(current_provider).pluck(:name, :id)
+
+    get_donations
   end
 
-  def edit_addresses(customer)
+  def edit_addresses
     if params[:addresses]
-      addresses = JSON.parse(params[:addresses])
-      customer.edit_addresses addresses, params[:mailing_address_index].to_i || 0
+      addresses = JSON.parse(params[:addresses], symbolize_names: true)
+      @customer.edit_addresses addresses, params[:mailing_address_index].to_i || 0
     end
+  end
+
+  def get_donations
+    if params[:donations]
+      @donations = JSON.parse(params[:donations], symbolize_names: true).map {|d_obj| 
+        if d_obj[:id]
+          Donation.where(id: d_obj[:id].to_i).first
+        else
+          Donation.parse donation_hash, nil, current_user
+        end
+      }
+    else
+      @donations = @customer.donations.order('date desc')
+    end
+  end
+
+  def edit_donations
+    if params[:donations]
+      donations = JSON.parse(params[:donations], symbolize_names: true)
+      @customer.edit_donations donations, current_user
+    end
+  end
+
+  def edit_eligibilities
+    @customer.edit_eligibilities params[:eligibilities]
   end
 
 end

@@ -77,9 +77,49 @@ th.fc-resourceName {
   background-color: yellow !important; 
 }
 
+.fc-day {
+  min-width: 60px;
+}
+
+.fc-state-highlight {
+  background-color: white !important;
+}
+
 /* overwrite .form-control that has 100% width */
 .form-control-inline {
   min-width: 0;
   width: auto;
   display: inline;
+}
+
+.hidden-lookup-value {
+  background-color: grey !important;
+  color: white !important;
+}
+
+table.dataTable tbody tr.selected {
+  background-color: #b0bed9 !important;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.ineligible-reason {
+  padding: 10px 0px;
+}
+
+.trip_table_result_column {
+  min-width: 120px;
+}
+
+.label-help {
+  font-size: small;
+}
+
+.pac-container {
+    /* put Google geocomplete list on top of Bootstrap modal */
+    z-index: 9999;
+}
+
+.address_search {
+  width: 100%;
 }

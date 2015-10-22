@@ -11,6 +11,17 @@
           = f.label :ignore_dups, translate_helper(:ignore_duplicates) 
         .col-sm-9
           = check_box_tag :ignore_dups 
+    - if edit_mode == :show
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :id, translate_helper(:customer_id_label) 
+        .col-sm-9
+          = @customer.id
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :token, translate_helper(:customer_token_label) 
+        .col-sm-9
+          = @customer.token
     .form-group.col-sm-12.firstname
       .col-sm-3
         = f.label :first_name, translate_helper(:first_name) 
@@ -26,7 +37,7 @@
         = f.label :last_name, translate_helper(:last_name) 
       .col-sm-9
         = f.text_field :last_name, class: 'form-control'
-    .form-group.col-sm-12.radio_buttons.optional.trip_proxy_is_round_trip
+    .form-group.col-sm-12
       .col-sm-3
         = f.label :gender, translate_helper(:gender) 
       .col-sm-9
@@ -72,16 +83,6 @@
         = f.label :mobility_notes, translate_helper(:mobility_notes) 
       .col-sm-9
         = f.text_field :mobility_notes, class: 'form-control'
-    .form-group.col-sm-12
-      .col-sm-3
-        = f.label :medicaid_eligible, translate_helper(:medicaid_eligible) 
-      .col-sm-9
-        = f.check_box :medicaid_eligible
-    .form-group.col-sm-12
-      .col-sm-3
-        = f.label :ada_eligible, translate_helper(:ada_eligible) 
-      .col-sm-9
-        = f.check_box :ada_eligible
     .form-group.col-sm-12
       .col-sm-3
         = f.label :default_service_level, translate_helper(:default_service_level) 

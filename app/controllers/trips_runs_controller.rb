@@ -3,7 +3,6 @@ class TripsRunsController < ApplicationController
 
   def index
     Date.beginning_of_week= :sunday
-
     filters_hash = runs_trips_params || {}
     update_sessions(filters_hash.except(:start, :end))
     
@@ -16,7 +15,7 @@ class TripsRunsController < ApplicationController
     
     @vehicles        = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
     @drivers         = Driver.active.for_provider current_provider_id
-    @run_trip_day    = Utility.new.parse_datetime(session[:run_trip_day])
+    @run_trip_day    = Utility.new.parse_date(session[:run_trip_day])
 
     @runs_array       = add_unscheduled_run(add_cab_run(@runs)).map{ |run|
       as_resource_json(run)
@@ -58,10 +57,15 @@ class TripsRunsController < ApplicationController
 
   def runs_trips_params
     raw_params = params[:run_trip_filters] || {}
-    if raw_params
+    
+    if params[:run_trip_filters]
       raw_params[:run_trip_day] = Date.today.in_time_zone.to_i if raw_params[:run_trip_day].blank?
-      raw_params[:start] = raw_params[:run_trip_day]
-      raw_params[:end] = raw_params[:run_trip_day]
+    else
+      if session[:run_trip_day]
+        raw_params[:run_trip_day] = Utility.new.parse_date(session[:run_trip_day]).try(:to_i) 
+      else
+        raw_params[:run_trip_day] = Date.today.in_time_zone.to_i
+      end
     end
 
     raw_params

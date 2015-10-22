@@ -13,6 +13,9 @@ class TripsController < ApplicationController
     @start_pickup_date = Time.at(session[:start].to_i).to_date
     @end_pickup_date = Time.at(session[:end].to_i).to_date
     @days_of_week = trip_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : trip_sessions[:days_of_week].split(',').map(&:to_i)
+    if can? :edit, Trip
+      @trip_results = TripResult.by_provider(current_provider).pluck(:name, :id)
+    end
 
     @trips_json = @trips.has_scheduled_time.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
     @day_resources = []
@@ -119,6 +122,43 @@ class TripsController < ApplicationController
     redirect_to :action=>:unscheduled
   end
 
+  def callback
+    @trip = Trip.find(params[:trip_id])
+    @prev_customer_informed = @trip.customer_informed ? true: false
+
+    if can? :edit, @trip
+      @trip.customer_informed = params[:trip][:customer_informed]
+      if !@trip.save
+        @message = @trip.errors.full_messages.join(';')
+      end
+    else
+      @message = TranslationEngine.translate_text(:operation_not_authorized)
+    end
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def change_result
+    @trip = Trip.find(params[:trip_id])
+    @prev_trip_result_id = @trip.trip_result_id
+
+    if can? :edit, @trip
+      if !@trip.update_attributes( trip_result_id: params[:trip][:trip_result_id] )
+        @message = @trip.errors.full_messages.join(';')
+      else
+        @trip_result_filters = trip_sessions[:trip_result_id]
+      end
+    else
+      @message = TranslationEngine.translate_text(:operation_not_authorized)
+    end
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def new
     @trip = Trip.new(:provider_id => current_provider_id)
 
@@ -156,6 +196,29 @@ class TripsController < ApplicationController
     end
   end
 
+  def clone
+    @trip = @trip.clone_for_future!
+    prep_view
+    
+    respond_to do |format|
+      format.html { render action: :new }
+      format.xml  { render :xml => @trip }
+      format.js   { @remote = true; render :json => {:form => render_to_string(:partial => 'form') }, :content_type => "text/json" }
+    end
+  end
+
+  def return
+    @trip = @trip.clone_for_return!
+    @outbound_trip_id = params[:trip_id]
+    prep_view
+    
+    respond_to do |format|
+      format.html { render action: :new }
+      format.xml  { render :xml => @trip }
+      format.js   { @remote = true; render :json => {:form => render_to_string(:partial => 'form') }, :content_type => "text/json" }
+    end
+  end
+
   def show
     @trip = Trip.find(params[:id])
     prep_view
@@ -169,24 +232,30 @@ class TripsController < ApplicationController
   end
 
   def create
-    if params[:trip][:customer_id] && customer = Customer.find_by_id(params[:trip][:customer_id])
-      #authorize! :read, customer
-      params[:trip][:provider_id] = customer.provider.id if customer.provider.present?
-    else
-      params[:trip][:customer_id] = ""
-    end    
+    params[:trip][:provider_id] = current_provider_id   
     handle_trip_params params[:trip]
     @trip = Trip.new(trip_params)
     authorize! :manage, @trip
-    
+
+    if @trip.is_return? && params[:trip][:outbound_trip_id].present?
+      @trip.outbound_trip = Trip.find_by_id(params[:trip][:outbound_trip_id])
+    end
+
     respond_to do |format|
       prep_view
       if @trip.is_all_valid?(current_provider_id) && @trip.save
+        @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
+        TripDistanceCalculationWorker.perform_async(@trip.id) #sidekiq needs to run
+        @ask_for_return_trip = true if @trip.is_outbound?
         format.html {
-          if params[:run_id].present?
-            redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
+          if @ask_for_return_trip
+            render action: :show
           else
-            redirect_to(trips_path, :notice => 'Trip was successfully created.') 
+            if params[:run_id].present?
+              redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
+            else
+              redirect_to(trips_path, :notice => 'Trip was successfully created.') 
+            end
           end
         }
         format.js { render :json => {:status => "success", :trip => render_to_string(:partial => 'runs/trip', :locals => {:trip => @trip})}, :content_type => "text/json" }
@@ -208,8 +277,12 @@ class TripsController < ApplicationController
     handle_trip_params params[:trip]
     authorize! :manage, @trip
 
+    @trip.assign_attributes(trip_params)
+    is_address_changed = @trip.pickup_address_id_changed? || @trip.dropoff_address_id_changed?
     respond_to do |format|
-      if @trip.is_all_valid?(current_provider_id) && @trip.update_attributes(trip_params)
+      if @trip.is_all_valid?(current_provider_id) && @trip.save
+        @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
+        TripDistanceCalculationWorker.perform_async(@trip.id) if is_address_changed
         format.html { redirect_to(trips_path, :notice => 'Trip was successfully updated.')  }
         format.js { 
           render :json => {:status => "success"}, :content_type => "text/json"
@@ -237,11 +310,12 @@ class TripsController < ApplicationController
   
   def trip_params
     params.require(:trip).permit(
+      :direction,
+      :linking_trip_id,
       :appointment_time,
       :attendant_count,
       :customer_id,
       :customer_informed,
-      :donation,
       :driver_id,
       :dropoff_address_id,
       :funding_source_id,
@@ -254,43 +328,46 @@ class TripsController < ApplicationController
       :pickup_address_id,
       :pickup_time,
       :provider_id, # We normally wouldn't accept this and would set it manually on the instance, but in this controller we're setting it in the params dynamically
-      :repeats_fridays,
+      :repeats_sundays,
       :repeats_mondays,
-      :repeats_thursdays,
       :repeats_tuesdays,
       :repeats_wednesdays,
+      :repeats_thursdays,
+      :repeats_fridays,
+      :repeats_saturdays,
       :repetition_customer_informed,
       :repetition_driver_id,
       :repetition_interval,
       :repetition_vehicle_id,
-      :round_trip,
       :run_id,
       :cab,
       :service_level_id,
       :trip_purpose_id,
       :trip_result_id,
+      :result_reason,
       :vehicle_id,
+      :mobility_device_accommodations,
       customer_attributes: [:id]
     )
   end
 
   def prep_view
     @customer           = @trip.customer
-    @mobilities         = Mobility.order(:name).all
+    @mobilities         = Mobility.by_provider(current_provider).order(:name)
     @funding_sources    = FundingSource.by_provider(current_provider)
-    @trip_results       = TripResult.pluck(:name, :id)
-    @trip_purposes      = TripPurpose.all
+    @trip_results       = TripResult.by_provider(current_provider).pluck(:name, :id)
+    @trip_purposes      = TripPurpose.by_provider(current_provider)
     @drivers            = Driver.active.for_provider @trip.provider_id
     @trips              = [] if @trips.nil?
     @vehicles           = add_cab(Vehicle.active.for_provider(@trip.provider_id))
     @repeating_vehicles = @vehicles 
-    @service_levels     = ServiceLevel.pluck(:name, :id)
+    @service_levels     = ServiceLevel.by_provider(current_provider).pluck(:name, :id)
 
     @trip.run_id = -1 if @trip.cab
 
     cab_run = Run.new :cab => true
     cab_run.id = -1
-    @runs = Run.for_provider(@trip.provider_id).incomplete_on(@trip.pickup_time.try(:to_date)) << cab_run
+    #@runs = Run.for_provider(@trip.provider_id).incomplete_on(@trip.pickup_time.try(:to_date)) << cab_run
   end
   
   def handle_trip_params(trip_params)

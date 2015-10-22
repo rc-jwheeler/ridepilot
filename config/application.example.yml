@@ -4,7 +4,7 @@
 #   integration
 #   qa
 #   production
-
+NEW_RELIC_LICENSE_KEY: 
 development:
   SYSTEM_ADMIN_EMAIL:
   SYSTEM_ADMIN_PASSWORD:
@@ -18,6 +18,10 @@ development:
   REDISCLOUD_URL:
   AWS_BUCKET:
   MAPREQUEST_API_KEY:
+  OPEN_TRIP_PLANNER_URL:
+  
+  # For Sidekiq. You can typically leave this as-is (https://goo.gl/kg5fiU)
+  REDIS_PROVIDER: REDISCLOUD_URL
 
 test:
   SYSTEM_ADMIN_EMAIL:
@@ -31,3 +35,7 @@ test:
   SMTP_MAIL_PASSWORD:
   REDISCLOUD_URL:
   MAPREQUEST_API_KEY:
+  OPEN_TRIP_PLANNER_URL:
+  
+  # For Sidekiq. You can typically leave this as-is (https://goo.gl/kg5fiU)
+  REDIS_PROVIDER: REDISCLOUD_URL

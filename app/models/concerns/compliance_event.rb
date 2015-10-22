@@ -13,4 +13,12 @@ module ComplianceEvent
   def complete?
     compliance_date.present?
   end
+  
+  def overdue?(as_of: Date.current)
+    if as_of.is_a? Range
+      as_of.include? due_date
+    else
+      as_of > due_date
+    end
+  end  
 end

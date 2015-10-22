@@ -6,6 +6,7 @@
   </title>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= split_stylesheet_link_tag "v1_theme", :media => "all" %>
+  <%= render 'shared/google_maps/google_map_api' %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
   <%= yield :head %>
@@ -53,10 +54,10 @@
         <% if show_dispatch?   %><li class="dispatch"><%= link_to translate_helper("application_dispatch_link_text"), dispatch_path %></li><% end %>
       </ul>
       <ul id="secondary-nav" class="selfclear">
-        <% if current_user && can?(:read, current_user) %>
-          <li class="admin"><%= link_to translate_helper("application_admin_link_text"), root_path %></li>
+        <% if can_access_admin_tab(current_user) %>
+          <li class="admin"><%= link_to translate_helper("application_admin_link_text"), admin_path %></li>
         <% end %>
-        <% if current_user && can?(:read, Provider) %>
+        <% if can_access_provider_settings_tab(current_user, current_provider) %>
           <li class="vehicles-drivers-users"><%= link_to translate_helper("current_provider_settings_link_text"), provider_path(current_user.current_provider) %></li>
         <% end %>
       </ul>
@@ -66,10 +67,10 @@
   <div id="main">
     <div id="messages" class="wrap selfclear">
       <% if notice %>
-        <p class="notice"><%= notice %></p>
+        <p class="alert alert-info"><%= notice %></p>
       <% end %>
       <% if alert %>
-        <p class="alert"><%= alert %></p>
+        <p class="alert alert-danger"><%= alert %></p>
       <% end %>
     </div>
     <%= content_for?(:menu_bar) ? yield(:menu_bar) : '' %>
@@ -78,6 +79,8 @@
 
   <%= render partial: 'layouts/footer' %>
   <%= yield :footer %>
+  
+  <%= render 'shared/application_alert_dialog' %>
 
   <% if current_user %>
     <%= javascript_tag do %>

@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150916180653) do
+ActiveRecord::Schema.define(version: 20151020210844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
   enable_extension "postgis_topology"
   enable_extension "fuzzystrmatch"
+  enable_extension "uuid-ossp"
 
   create_table "address_upload_flags", force: true do |t|
     t.boolean  "is_loading",          default: false
@@ -36,34 +37,48 @@ ActiveRecord::Schema.define(version: 20150916180653) do
     t.string   "city"
     t.string   "state"
     t.string   "zip"
-    t.boolean  "in_district",                                                               default: false
+    t.boolean  "in_district",                                                                   default: false
     t.integer  "provider_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",                                                              default: 0
+    t.integer  "lock_version",                                                                  default: 0
     t.string   "phone_number"
-    t.boolean  "inactive",                                                                  default: false
+    t.boolean  "inactive",                                                                      default: false
     t.string   "trip_purpose_old"
-    t.spatial  "the_geom",         limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.spatial  "the_geom",             limit: {:srid=>4326, :type=>"point", :geographic=>true}
     t.integer  "trip_purpose_id"
     t.text     "notes"
     t.datetime "deleted_at"
+    t.integer  "customer_id"
+    t.boolean  "is_driver_associated",                                                          default: false
   end
 
+  add_index "addresses", ["customer_id"], :name => "index_addresses_on_customer_id"
   add_index "addresses", ["deleted_at"], :name => "index_addresses_on_deleted_at"
   add_index "addresses", ["provider_id"], :name => "index_addresses_on_provider_id"
   add_index "addresses", ["the_geom"], :name => "index_addresses_on_the_geom", :spatial => true
   add_index "addresses", ["trip_purpose_id"], :name => "index_addresses_on_trip_purpose_id"
 
-  create_table "addresses_customers", force: true do |t|
+  create_table "addresses_customers_old", force: true do |t|
     t.integer  "customer_id"
     t.integer  "address_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "addresses_customers", ["address_id"], :name => "index_addresses_customers_on_address_id"
-  add_index "addresses_customers", ["customer_id"], :name => "index_addresses_customers_on_customer_id"
+  add_index "addresses_customers_old", ["address_id"], :name => "index_addresses_customers_old_on_address_id"
+  add_index "addresses_customers_old", ["customer_id"], :name => "index_addresses_customers_old_on_customer_id"
+
+  create_table "booking_users", force: true do |t|
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.string   "url"
+    t.uuid     "token",      default: "uuid_generate_v4()"
+  end
+
+  add_index "booking_users", ["user_id"], :name => "index_booking_users_on_user_id"
 
   create_table "custom_reports", force: true do |t|
     t.string   "name"
@@ -72,6 +87,18 @@ ActiveRecord::Schema.define(version: 20150916180653) do
     t.boolean  "redirect_to_results", default: false
     t.string   "title"
   end
+
+  create_table "customer_eligibilities", force: true do |t|
+    t.integer  "customer_id"
+    t.integer  "eligibility_id"
+    t.text     "ineligible_reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "eligible"
+  end
+
+  add_index "customer_eligibilities", ["customer_id"], :name => "index_customer_eligibilities_on_customer_id"
+  add_index "customer_eligibilities", ["eligibility_id"], :name => "index_customer_eligibilities_on_eligibility_id"
 
   create_table "customers", force: true do |t|
     t.string   "first_name"
@@ -106,6 +133,7 @@ ActiveRecord::Schema.define(version: 20150916180653) do
     t.string   "gender"
     t.datetime "deleted_at"
     t.text     "message"
+    t.string   "token"
   end
 
   add_index "customers", ["address_id"], :name => "index_customers_on_address_id"
@@ -178,6 +206,22 @@ ActiveRecord::Schema.define(version: 20150916180653) do
 
   add_index "documents", ["documentable_id", "documentable_type"], :name => "index_documents_on_documentable_id_and_documentable_type"
 
+  create_table "donations", force: true do |t|
+    t.datetime "date"
+    t.float    "amount"
+    t.text     "notes"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "customer_id"
+    t.integer  "user_id"
+    t.integer  "trip_id"
+  end
+
+  add_index "donations", ["customer_id"], :name => "index_donations_on_customer_id"
+  add_index "donations", ["trip_id"], :name => "index_donations_on_trip_id"
+  add_index "donations", ["user_id"], :name => "index_donations_on_user_id"
+
   create_table "driver_compliances", force: true do |t|
     t.integer  "driver_id"
     t.string   "event"
@@ -215,12 +259,29 @@ ActiveRecord::Schema.define(version: 20150916180653) do
     t.string   "email"
     t.integer  "address_id"
     t.datetime "deleted_at"
+    t.string   "phone_number"
   end
 
   add_index "drivers", ["address_id"], :name => "index_drivers_on_address_id"
   add_index "drivers", ["deleted_at"], :name => "index_drivers_on_deleted_at"
   add_index "drivers", ["provider_id"], :name => "index_drivers_on_provider_id"
   add_index "drivers", ["user_id"], :name => "index_drivers_on_user_id"
+
+  create_table "eligibilities", force: true do |t|
+    t.string   "code",        null: false
+    t.string   "description", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ethnicities", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  add_index "ethnicities", ["deleted_at"], :name => "index_ethnicities_on_deleted_at"
 
   create_table "field_configs", force: true do |t|
     t.integer  "provider_id",                 null: false
@@ -249,6 +310,16 @@ ActiveRecord::Schema.define(version: 20150916180653) do
 
   add_index "funding_sources", ["deleted_at"], :name => "index_funding_sources_on_deleted_at"
 
+  create_table "hidden_lookup_table_values", force: true do |t|
+    t.integer  "provider_id"
+    t.string   "table_name"
+    t.integer  "value_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "hidden_lookup_table_values", ["provider_id"], :name => "index_hidden_lookup_table_values_on_provider_id"
+
   create_table "locales", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -264,7 +335,6 @@ ActiveRecord::Schema.define(version: 20150916180653) do
     t.boolean  "add_value_allowed",    default: true
     t.boolean  "edit_value_allowed",   default: true
     t.boolean  "delete_value_allowed", default: true
-    t.boolean  "is_provider_specific", default: false
     t.string   "model_name"
   end
 
@@ -299,26 +369,17 @@ ActiveRecord::Schema.define(version: 20150916180653) do
   add_index "old_passwords", ["password_archivable_type", "password_archivable_id"], :name => "index_password_archivable"
 
   create_table "operating_hours", force: true do |t|
-    t.integer  "driver_id"
+    t.integer  "operatable_id"
     t.integer  "day_of_week"
     t.time     "start_time"
     t.time     "end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "operatable_type"
   end
 
-  add_index "operating_hours", ["driver_id"], :name => "index_operating_hours_on_driver_id"
-
-  create_table "provider_ethnicities", force: true do |t|
-    t.integer  "provider_id"
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
-  end
-
-  add_index "provider_ethnicities", ["deleted_at"], :name => "index_provider_ethnicities_on_deleted_at"
-  add_index "provider_ethnicities", ["provider_id"], :name => "index_provider_ethnicities_on_provider_id"
+  add_index "operating_hours", ["operatable_id", "operatable_type"], :name => "index_operating_hours_on_operatable_id_and_operatable_type"
+  add_index "operating_hours", ["operatable_id"], :name => "index_operating_hours_on_operatable_id"
 
   create_table "provider_reports", force: true do |t|
     t.integer  "provider_id"
@@ -355,6 +416,7 @@ ActiveRecord::Schema.define(version: 20150916180653) do
     t.spatial  "viewport_center",                                 limit: {:srid=>4326, :type=>"point", :geographic=>true}
     t.text     "fields_required_for_run_completion"
     t.datetime "deleted_at"
+    t.integer  "min_trip_time_gap_in_mins",                                                                                                        default: 30
   end
 
   add_index "providers", ["deleted_at"], :name => "index_providers_on_deleted_at"
@@ -444,12 +506,12 @@ ActiveRecord::Schema.define(version: 20150916180653) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",       default: 0
-    t.boolean  "round_trip"
     t.integer  "driver_id"
     t.integer  "vehicle_id"
     t.boolean  "cab",                default: false
     t.boolean  "customer_informed"
     t.integer  "trip_purpose_id"
+    t.string   "direction",          default: "outbound"
   end
 
   add_index "repeating_trips", ["customer_id"], :name => "index_repeating_trips_on_customer_id"
@@ -500,14 +562,16 @@ ActiveRecord::Schema.define(version: 20150916180653) do
   end
 
   create_table "reporting_output_fields", force: true do |t|
-    t.string   "name",              null: false
+    t.string   "name",                              null: false
     t.string   "title"
-    t.integer  "report_id",         null: false
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.integer  "report_id",                         null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.string   "formatter"
     t.integer  "numeric_precision"
     t.integer  "sort_order"
+    t.boolean  "group_by",          default: false
+    t.string   "alias_name"
   end
 
   add_index "reporting_output_fields", ["report_id"], :name => "index_reporting_output_fields_on_report_id"
@@ -627,6 +691,7 @@ ActiveRecord::Schema.define(version: 20150916180653) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.string   "description"
   end
 
   add_index "trip_results", ["deleted_at"], :name => "index_trip_results_on_deleted_at"
@@ -636,29 +701,28 @@ ActiveRecord::Schema.define(version: 20150916180653) do
     t.integer  "customer_id"
     t.datetime "pickup_time"
     t.datetime "appointment_time"
-    t.integer  "guest_count",                                 default: 0
-    t.integer  "attendant_count",                             default: 0
-    t.integer  "group_size",                                  default: 0
+    t.integer  "guest_count",                                             default: 0
+    t.integer  "attendant_count",                                         default: 0
+    t.integer  "group_size",                                              default: 0
     t.integer  "pickup_address_id"
     t.integer  "dropoff_address_id"
     t.integer  "mobility_id"
     t.integer  "funding_source_id"
     t.string   "trip_purpose_old"
-    t.string   "trip_result_old",                             default: ""
+    t.string   "trip_result_old",                                         default: ""
     t.text     "notes"
-    t.decimal  "donation",           precision: 10, scale: 2, default: 0.0
+    t.decimal  "donation_old",                   precision: 10, scale: 2, default: 0.0
     t.integer  "provider_id"
     t.datetime "called_back_at"
-    t.boolean  "customer_informed",                           default: false
+    t.boolean  "customer_informed",                                       default: false
     t.integer  "repeating_trip_id"
-    t.boolean  "cab",                                         default: false
-    t.boolean  "cab_notified",                                default: false
+    t.boolean  "cab",                                                     default: false
+    t.boolean  "cab_notified",                                            default: false
     t.text     "guests"
     t.integer  "called_back_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",                                default: 0
-    t.boolean  "round_trip"
+    t.integer  "lock_version",                                            default: 0
     t.boolean  "medicaid_eligible"
     t.integer  "mileage"
     t.string   "service_level_old"
@@ -666,6 +730,11 @@ ActiveRecord::Schema.define(version: 20150916180653) do
     t.integer  "trip_result_id"
     t.integer  "service_level_id"
     t.datetime "deleted_at"
+    t.string   "direction",                                               default: "outbound"
+    t.text     "result_reason"
+    t.integer  "linking_trip_id"
+    t.float    "drive_distance"
+    t.integer  "mobility_device_accommodations"
   end
 
   add_index "trips", ["called_back_by_id"], :name => "index_trips_on_called_back_by_id"
@@ -673,6 +742,7 @@ ActiveRecord::Schema.define(version: 20150916180653) do
   add_index "trips", ["deleted_at"], :name => "index_trips_on_deleted_at"
   add_index "trips", ["dropoff_address_id"], :name => "index_trips_on_dropoff_address_id"
   add_index "trips", ["funding_source_id"], :name => "index_trips_on_funding_source_id"
+  add_index "trips", ["linking_trip_id"], :name => "index_trips_on_linking_trip_id"
   add_index "trips", ["mobility_id"], :name => "index_trips_on_mobility_id"
   add_index "trips", ["pickup_address_id"], :name => "index_trips_on_pickup_address_id"
   add_index "trips", ["provider_id", "appointment_time"], :name => "index_trips_on_provider_id_and_appointment_time"

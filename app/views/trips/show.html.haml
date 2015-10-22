@@ -1,0 +1,10 @@
+- if @ask_for_return_trip && @trip
+  = render 'ask_for_return_trip_dialog'
+  :javascript
+    $('#askCreatingReturnTripDialog').modal('show');
+- else
+  = render 'form', edit_mode: :show 
+
+  :javascript
+    $(".trip_form :input").attr("disabled","disabled");
+

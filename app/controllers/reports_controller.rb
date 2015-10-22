@@ -117,6 +117,9 @@ class ReportsController < ApplicationController
     @query = Query.new(query_params)
     @start_date = @query.start_date
     @end_date = @query.end_date
+    if @end_date && @start_date && @end_date < @start_date
+      flash.now[:alert] = TranslationEngine.translate_text(:service_summary_end_date_earlier_than_start_date)
+    end
     @monthly = Monthly.where(:start_date => @start_date, :provider_id=>current_provider_id).first
     @monthly = Monthly.new(:start_date=>@start_date, :provider_id=>current_provider_id) if @monthly.nil?
     @provider = current_provider
@@ -130,13 +133,13 @@ class ReportsController < ApplicationController
         .includes(:customer, :pickup_address, :dropoff_address).completed
 
     by_purpose = {}
-    TripPurpose.all.each do |purpose|
+    TripPurpose.by_provider(current_provider).each do |purpose|
       by_purpose[purpose.name] = {'purpose' => purpose.name, 'in_district' => 0, 'out_of_district' => 0}
     end
     @total = {'in_district' => 0, 'out_of_district' => 0}
 
     counts_by_purpose.each do |row|
-      purpose = row.trip_purpose
+      purpose = row.trip_purpose.try(:name)
       next unless by_purpose.member?(purpose)
 
       if row.is_in_district?
@@ -149,7 +152,7 @@ class ReportsController < ApplicationController
     end
 
     @trips_by_purpose = []
-    TripPurpose.all.each do |purpose|
+    TripPurpose.by_provider(current_provider).all.each do |purpose|
       @trips_by_purpose << by_purpose[purpose.name]
     end
 
@@ -173,7 +176,7 @@ class ReportsController < ApplicationController
   def show_trips_for_verification
     query_params = params[:query] || {}
     @query = Query.new(query_params)
-    @trip_results = TripResult.pluck(:name, :id)
+    @trip_results = TripResult.by_provider(current_provider).pluck(:name, :id)
 
     unless @trips.present?
       @trips = Trip.for_provider(current_provider_id).for_date_range(@query.start_date,@query.end_date).
@@ -188,7 +191,7 @@ class ReportsController < ApplicationController
     if @trips.empty?
       redirect_to({:action => :show_trips_for_verification}, :notice => "Trips updated successfully" )
     else
-      @trip_results = TripResult.pluck(:name, :id)
+      @trip_results = TripResult.by_provider(current_provider).pluck(:name, :id)
       render :action => :show_trips_for_verification
     end
   end
@@ -217,18 +220,10 @@ class ReportsController < ApplicationController
     query_params = params[:query] || {}
     @query = Query.new(query_params)
 
-    @donations_by_customer = {}
-    @total = 0
-    for trip in Trip.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).where(["donation > 0"]).order(:pickup_time)
-      customer = trip.customer
-      if ! @donations_by_customer.member? customer
-        @donations_by_customer[customer] = trip.donation
-      else
-        @donations_by_customer[customer] += trip.donation
-      end
-      @total += trip.donation
-    end
-    @customers = @donations_by_customer.keys.sort_by {|customer| [customer.last_name, customer.first_name] }
+    donations = Donation.for_date_range(@query.start_date, @query.end_date)
+    @total = donations.sum(:amount)
+    @customers = Customer.where(id: donations.pluck(:customer_id).uniq)
+    @donations_by_customer = donations.group(:customer_id).sum(:amount)
   end
 
   def cab
@@ -356,6 +351,7 @@ class ReportsController < ApplicationController
     @date = @query.start_date
 
     @trips = Trip.for_provider(current_provider_id).for_date(@date).includes(:pickup_address,:dropoff_address,:customer,:mobility,{:run => :driver}).order(:pickup_time)
+    @trips_by_customer = @trips.group_by(&:customer)
   end
 
   def export_trips_in_range
@@ -376,7 +372,7 @@ class ReportsController < ApplicationController
     end
 
     attrs = {
-      filename:    "export_trips_in_range-#{@query.start_date.strftime('%b %d %Y').downcase.parameterize}-#{@query.before_end_date.strftime('%b %d %Y').downcase.parameterize}.csv",
+      filename:    "#{Time.current.strftime('%Y%m%d%H%M')}_export_trips_in_range-#{@query.start_date.strftime('%b %d %Y').downcase.parameterize}-#{@query.before_end_date.strftime('%b %d %Y').downcase.parameterize}.csv",
       type:        Mime::CSV,
       disposition: "attachment",
       streaming:   "true",
@@ -575,8 +571,8 @@ class ReportsController < ApplicationController
         },
       },
       rider_donations: {
-        rc: trip_queries[:in_range][:rc].sum(:donation),
-        stf: trip_queries[:in_range][:stf][:all].sum(:donation),
+        rc: trip_queries[:in_range][:rc].joins(:donation).sum("donations.amount"),
+        stf: trip_queries[:in_range][:stf][:all].joins(:donation).sum("donations.amount"),
       },
       trip_purposes: {trips: [], total_rides: {}, reimbursements_due: {}}, # We will loop over and add these later
       new_rider_ethinic_heritage: {ethnicities: []}, # We will loop over and add the rest of these later
@@ -636,7 +632,7 @@ class ReportsController < ApplicationController
     }
 
     non_other_ethnicities = []
-    @provider.ethnicities.each do |e|
+    Ethnicity.by_provider(@provider).each do |e|
       next if e.name == "Other"
       @report[:new_rider_ethinic_heritage][:ethnicities] << {
         name: e.name,

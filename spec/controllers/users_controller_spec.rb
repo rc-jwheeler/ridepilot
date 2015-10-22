@@ -180,34 +180,37 @@ RSpec.describe UsersController, type: :controller do
         sign_in @current_user
         @old_provider = @current_user.current_provider
         @new_provider = create(:provider)
+        request.env["HTTP_REFERER"] = "/"
       end
 
       it "updates the current user's current provider" do
         expect {
-          post :change_provider, {:provider_id => @new_provider.id, :come_from => "/"}
+          post :change_provider, {:provider_id => @new_provider.id}
         }.to change { @current_user.reload.current_provider_id }.from(@old_provider.id).to(@new_provider.id)
       end
 
-      it "redirects to the new provider page" do
+      it "redirects to the new provider page if coming from previous provider page" do
+        request.env["HTTP_REFERER"] = provider_url(@old_provider)
         post :change_provider, {:provider_id => @new_provider.id}
         expect(response).to redirect_to("/en/providers/#{@new_provider.id}")
+      end
+
+      it "redirects back to previous page if not coming from previous provider page" do
+        post :change_provider, {:provider_id => @new_provider.id}
+        expect(response).to redirect_to("/")
       end
     end
 
     context "while logged in, but not as a super admin" do
       before(:each) do
         @new_provider = create(:provider)
+        request.env["HTTP_REFERER"] = "/"
       end
 
       it "does not update the current user's current provider" do
         expect {
-          post :change_provider, {:provider_id => @new_provider.id, :come_from => "/"}
+          post :change_provider, {:provider_id => @new_provider.id}
         }.not_to change { @current_user.reload.current_provider_id }
-      end
-
-      it "redirects to the new provider page" do
-        post :change_provider, {:provider_id => @new_provider.id}
-        expect(response).to redirect_to("/en/providers/#{@new_provider.id}")
       end
     end
   end

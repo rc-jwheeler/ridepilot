@@ -24,6 +24,12 @@
             </div>
           </div>  
           <div class="form-group">
+              <%= f.label :phone_number, translate_helper("phone_number"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.text_field :phone_number, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>  
+          <div class="form-group">
             <%= f.label :email, translate_helper("driver_form_email"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
               <%= f.text_field :email, class: "form-control", disabled: @readonly %>
@@ -50,152 +56,9 @@
         </div><!-- END .panel-body -->
       </div><!-- END .panel -->
       
-      <div class="panel panel-primary">
-        <div class="panel-heading"><%= translate_helper("driver_address_heading") %></div>
-        <div class="panel-body form-horizontal">
-          <%= f.fields_for :address, @driver.address do |address_form| %>
-            <%= address_form.hidden_field :provider_id %>
-            <div class="form-group">
-                <%= address_form.label :name, translate_helper("address_name"), class: "col-md-2 control-label" %>
-              <div class="col-md-10">
-                <%= address_form.text_field :name, class: "form-control", disabled: @readonly %>
-              </div>
-            </div>  
-
-            <div class="form-group">
-                <%= address_form.label :building_name, translate_helper("building_name"), class: "col-md-2 control-label" %>
-              <div class="col-md-10">
-                <%= address_form.text_field :building_name, class: "form-control", disabled: @readonly %>
-              </div>
-            </div>  
-
-            <div class="form-group">
-                <%= address_form.label :address, translate_helper("address"), class: "col-md-2 control-label" %>
-              <div class="col-md-10">
-                <%= address_form.text_field :address, class: "form-control", disabled: @readonly %>
-              </div>
-            </div>  
-
-            <div class="form-group">
-                <%= address_form.label :city, translate_helper("city"), class: "col-md-2 control-label" %>
-              <div class="col-md-10">
-                <%= address_form.text_field :city, class: "form-control", disabled: @readonly %>
-              </div>
-            </div>  
-
-            <div class="form-group">
-                <%= address_form.label :state, translate_helper("state"), class: "col-md-2 control-label" %>
-              <div class="col-md-10">
-                <%= address_form.text_field :state, class: "form-control", disabled: @readonly, maxlength: 2 %>
-              </div>
-            </div>  
-
-            <div class="form-group">
-                <%= address_form.label :zip, translate_helper("zip"), class: "col-md-2 control-label" %>
-              <div class="col-md-10">
-                <%= address_form.text_field :zip, class: "form-control", disabled: @readonly %>
-              </div>
-            </div>  
-
-            <div class="form-group">
-                <%= address_form.label :notes, translate_helper("address_notes"), class: "col-md-2 control-label" %>
-              <div class="col-md-10">
-                <%= address_form.text_area :notes, rows: 3, class: "form-control", disabled: @readonly %>
-              </div>
-            </div>  
-
-            <div class="form-group">
-                <%= address_form.label :phone_number, translate_helper("phone_number"), class: "col-md-2 control-label" %>
-              <div class="col-md-10">
-                <%= address_form.text_field :phone_number, class: "form-control", disabled: @readonly %>
-              </div>
-            </div>  
-          <% end %>
-        </div><!-- END .panel-body -->
-      </div><!-- END .panel -->
+      <%= render 'address_panel', f: f %>
       
-      <div class="panel panel-primary">
-        <div class="panel-heading"><%= translate_helper("operating_hours_heading") %></div>
-        <div class="panel-body form-inline">
-          <table class="table table-condensed">
-            <tbody>
-              <% Date::DAYNAMES.each_with_index do |day_name, day_value| %>
-                <% hours = @hours[day_value] %>
-                <tr class="<%= (!hours.nil? and hours.errors.any?) ? "row_with_errors" : "" %>">
-                  <td class="col-md-2">
-                    <p class="form-control-static"><strong><%= day_name %></strong></p>
-                  </td>
-                  <% if @readonly %>
-                    <td class="col-md-10">
-                      <p class="form-control-static">
-                        <% if hours.nil? or hours.is_unavailable? %>
-                          <%= translate_helper("operating_hours_unavailable") %>
-                        <% elsif hours.is_24_hours? %>
-                          <%= translate_helper("operating_hours_24_hours") %>
-                        <% else %>
-                          <%= translate_helper("operating_hours_open") %>
-                          <%= hours.start_time.strftime("%l:%M%P") %>
-                          - <%= hours.end_time.strftime("%l:%M%P") %>
-                        <% end %>
-                      </p>
-                    </td>
-                  <% else %>
-                    <td class="col-md-5">
-                      <div class="col-sm-4">
-                        <%= label_tag "hours-#{day_value}-unavailable", class: "radio-inline" do %>
-                          <%= radio_button_tag "hours[#{day_value}]", 'unavailable', (hours.nil? or hours.is_unavailable?), id: "hours-#{day_value}-unavailable", class: "hours-#{day_value}", disabled: @readonly %>
-                          <%= translate_helper("operating_hours_unavailable") %>
-                        <% end %>
-                      </div>
-                      <div class="col-sm-4">
-                        <%= label_tag "hours-#{day_value}-open-24", class: "radio-inline" do %>
-                          <%= radio_button_tag "hours[#{day_value}]", 'open24', (hours.present? and hours.is_24_hours?), id: "hours-#{day_value}-open-24", class: "hours-#{day_value}", disabled: @readonly %>
-                          <%= translate_helper("operating_hours_24_hours") %>
-                        <% end %>
-                      </div>
-                      <div class="col-sm-4">
-                        <%= label_tag "hours-#{day_value}-open", class: "radio-inline" do %>
-                          <%= radio_button_tag "hours[#{day_value}]", 'open', (hours.present? and hours.is_regular_hours?), id: "hours-#{day_value}-open", class: "hours-#{day_value}", disabled: @readonly %>
-                          <%= translate_helper("operating_hours_open") %>&hellip;
-                        <% end %>
-                      </div>
-                    </td>
-                    <td class="col-md-5">
-                      <div class="col-sm-6">
-                        <div class="form-group">
-                          <%= label_tag "start-hour-#{day_value}", "From", style: "font-weight: normal" %>
-                          <select id="start-hour-<%= day_value %>" name="start_hour[<%= day_value %>]" class="form-control" <%= @readonly ? "readonly" : "" %>>
-                            <% @start_hours.each do |hour| %>
-                              <option value="<%= hour %>" <%= !hours.nil? and hour == hours.start_time.try(:to_s, :time_utc) ? "selected" : "" %>>
-                                <%= Time.zone.parse(hour).strftime("%l:%M%P") %>
-                              </option>
-                            <% end %>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-sm-6">
-                        <div class="form-group">
-                          <%= label_tag "end-hour-#{day_value}", "To", style: "font-weight: normal" %>
-                          <select id="end-hour-<%= day_value %>" name="end_hour[<%= day_value %>]" class="form-control" <%= @readonly ? "readonly" : "" %>>
-                            <% @end_hours.each do |hour| %>
-                              <option value="<%= hour %>" <%= !hours.nil? and hour == hours.end_time.try(:to_s, :time_utc) ? "selected" : "" %>>
-                                <%= Time.zone.parse(hour).strftime("%l:%M%P") %>
-                              </option>
-                            <% end %>
-                          </select>
-                        </div>
-                      </div>
-                      <% if hours.try(:errors).try(:any?) %>
-                        <p class="text-danger"><%= hours.errors.full_messages.to_sentence %></p>
-                      <% end %>
-                    </td>
-                  <% end %>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div><!-- END .panel-body -->
-      </div><!-- END .panel -->
+      <%= render 'shared/operating_hours'%>
     </div><!-- END .col-md-6 -->
 
     <div class="col-sm-12 col-md-6">

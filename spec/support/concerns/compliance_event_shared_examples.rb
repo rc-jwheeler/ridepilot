@@ -34,6 +34,29 @@ RSpec.shared_examples "a compliance event" do
     end
   end
 
+  describe "#overdue?" do
+    before do
+      @compliance = create @described_class_factory, due_date: Date.current
+    end
+
+    it "checks if the due_date is after Date.current, by default" do
+      expect(@compliance.overdue?).to be_falsey
+
+      Timecop.freeze(Date.current.tomorrow) do
+        expect(@compliance.overdue?).to be_truthy
+      end
+    end
+
+    it "can optionally accept another date to check against the due_date" do
+      expect(@compliance.overdue?(as_of: Date.current.yesterday)).to be_falsey
+      expect(@compliance.overdue?(as_of: Date.current.tomorrow)).to be_truthy
+    end
+
+    it "can optionally accept a range of dates to check against the due_date" do
+      expect(@compliance.overdue?(as_of: Date.current..Date.current.tomorrow)).to be_truthy
+    end
+  end
+
   describe ".incomplete" do
     it "finds compliance events that do not have a compliance date" do
       compliance_1 = create @described_class_factory, compliance_date: nil

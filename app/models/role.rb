@@ -3,7 +3,7 @@ class Role < ActiveRecord::Base
   
   belongs_to :user
   belongs_to :provider
-  validates_uniqueness_of :user_id, :scope => :provider_id
+  validates_uniqueness_of :user_id, :scope => :provider_id, conditions: -> { where(deleted_at: nil) }
 
   # constants for role display names
   SYSTEM_ADMIN_NAME = 'System Admin'

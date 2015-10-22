@@ -5,7 +5,9 @@ Rails.application.routes.draw do
 
     mount TranslationEngine::Engine => "/translation_engine"
 
-    root :to => "home#index"
+    root :to => "trips#index"
+
+    get "admin", :controller => :home, :action => :index
 
     devise_for :users
     
@@ -19,6 +21,7 @@ Rails.application.routes.draw do
       post "change_provider" => "users#change_provider"
       get "check_session" => "users#check_session"
       get "touch_session" => "users#touch_session"
+      get "restore_user" => "users#restore"
     end
 
     resource :application_settings, only: [:edit, :update] do
@@ -30,11 +33,12 @@ Rails.application.routes.draw do
     resources :customers do
       post :inactivate, :as => :inactivate
       post :activate, :as => :activate
-      
+
       collection do
         get :autocomplete
         get :found
         get :search
+        post :data_for_trip
       end
     end
 
@@ -44,7 +48,14 @@ Rails.application.routes.draw do
       post :reached
       post :send_to_cab
       post :turndown
+      patch :callback
+      patch :change_result
 
+      member do
+        get :clone
+        get :return
+      end
+      
       collection do
         get :reconcile_cab
         get :trips_requiring_callback
@@ -63,6 +74,8 @@ Rails.application.routes.draw do
         post :change_fields_required_for_run_completion
         post :save_region
         post :save_viewport
+        post :update_min_trip_time_gap
+        patch :save_operating_hours
       end
     end
     
@@ -94,6 +107,7 @@ Rails.application.routes.draw do
       collection do
         post :validate
         get :autocomplete
+        get :autocomplete_public
         get :search
         patch :upload
         get :check_loading_status
@@ -110,9 +124,7 @@ Rails.application.routes.draw do
       resources :driver_histories, except: [:index, :show]
       resources :driver_compliances, except: [:index, :show]
     end
-    resources :funding_sources, :except => [:destroy]
     resources :monthlies, :except => [:show, :destroy]
-    resources :provider_ethnicities
     resources :vehicles do
       resources :documents, except: [:index, :show]
       resources :vehicle_maintenance_events, :except => [:index, :show]
@@ -161,7 +173,20 @@ Rails.application.routes.draw do
         post :add_value
         put :update_value
         put :destroy_value
+        put :hide_value
+        put :show_value
       end
+    end
+  end
+
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      match "authenticate_customer", :controller => :customers, :action => :show, :via => [:get, :options]
+      match "authenticate_provider", :controller => :providers, :action => :show, :via => [:get, :options]
+      match "trip_purposes", :controller => :trip_purposes, :action => :index, :via => [:get, :options]
+      match "create_trip", :controller => :trips, :action => :create, :via => [:post, :options]
+      match "cancel_trip", :controller => :trips, :action => :destroy, :via => [:delete, :options]
+      match "trip_status", :controller => :trips, :action => :show, :via => [:get, :options]
     end
   end
 end

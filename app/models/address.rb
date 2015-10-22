@@ -3,6 +3,10 @@ class Address < ActiveRecord::Base
   
   belongs_to :provider
 
+  belongs_to :customer, inverse_of: :addresses
+
+  has_one :driver
+
   belongs_to :trip_purpose
   delegate :name, to: :trip_purpose, prefix: :trip_purpose, allow_nil: true
   
@@ -14,10 +18,11 @@ class Address < ActiveRecord::Base
   normalize_attribute :address, :with=> [:squish, :titleize]
   normalize_attribute :city, :with=> [:squish, :titleize]
 
-  validates :address, :length => { :minimum => 5 }
-  validates :city,    :length => { :minimum => 2 }
-  validates :state,   :length => { :is => 2 }
-  validates :zip,     :length => { :is => 5, :if => lambda { |a| a.zip.present? } }
+  #validates :address, :length => { :minimum => 5 }
+  #validates :city,    :length => { :minimum => 2 }
+  #validates :state,   :length => { :is => 2 }
+  #validates :zip,     :length => { :is => 5, :if => lambda { |a| a.zip.present? } }
+  validate :address_presented
   
   before_validation :compute_in_district
 
@@ -35,13 +40,9 @@ class Address < ActiveRecord::Base
   def replace_with!(address_id)
     return false unless address_id.present? && self.class.exists?(address_id)
     
-    self.trips_from.each do |trip|
-      trip.update_attribute :pickup_address_id, address_id
-    end
+    self.trips_from.update_all pickup_address_id: address_id
     
-    self.trips_to.each do |trip|
-      trip.update_attribute :dropoff_address_id, address_id
-    end
+    self.trips_to.update_all dropoff_address_id: address_id
     
     self.destroy
     self.class.find address_id
@@ -50,31 +51,24 @@ class Address < ActiveRecord::Base
   def compute_in_district
     if the_geom and in_district.nil?
       in_district = Region.count(:conditions => ["is_primary = 't' and st_contains(the_geom, ?)", the_geom]) > 0
+      true # avoid returning false while doing before_validation
     end 
   end
 
   def latitude
-    if the_geom
-      return the_geom.x
-    else
-      return nil
-    end
+    the_geom.y if the_geom
   end
 
   def longitude
-    if the_geom
-      return the_geom.y
-    else
-      return nil
-    end
+    the_geom.x if the_geom
   end
 
-  def latitude=(x)
-    the_geom.x = x
+  def latitude=(y)
+    the_geom.y = y if the_geom
   end
 
-  def longitude=(y)
-    the_geom.y = y
+  def longitude=(x)
+    the_geom.x = x if the_geom
   end
 
   def text
@@ -93,7 +87,11 @@ class Address < ActiveRecord::Base
   end
 
   def address_text
-    ("%s, %s, %s %s" % [address, city, state, zip]).strip
+    (
+      (address.blank? ? '' : address + ", " ) +
+      (city.blank? ?  '' : city + ", " ) +
+      ("%s %s" % [state, zip])
+    ).strip 
   end
 
   def json
@@ -186,6 +184,38 @@ class Address < ActiveRecord::Base
 
     Rails.logger.info summary_info
     summary_info
+  end
+
+  def self.parse_api_params(address_params)
+    address_data = GooglePlaceParser.new(address_params[:address]).parse || {}
+
+    existing_addr = Address.search_existing_address({
+      address: address_data[:address],
+      city: address_data[:city],
+      state: address_data[:state],
+      customer_id: address_params[:customer_id]
+      })
+
+    if !existing_addr
+      Address.new( address_data.merge({
+        customer_id: address_params[:customer_id],
+        trip_purpose_id: address_params[:trip_purpose_id],
+        provider_id: address_params[:provider_id],
+        name: address_params[:address_name],
+        notes: address_params[:note],
+        in_district: address_params[:in_district]
+        }) )
+    else
+      existing_addr
+    end
+  end
+
+  def self.search_existing_address(criteria)
+    where(criteria).first
+  end
+
+  def address_presented
+    errors.add(:base, TranslationEngine.translate_text(:geocode_address_required)) if !address_text.present?
   end
 
 end

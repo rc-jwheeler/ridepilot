@@ -23,8 +23,8 @@ SERVICE_LEVELS = ["Wheelchair", "Ambulatory"].freeze
 TRIP_VERIFICATION_DISPLAY_OPTIONS = ["All Trips", "Cab Trips", "Not Cab Trips"].freeze
 
 BUSINESS_HOURS = {
-  :start => 7,
-  :end => 18,
+  :start => 0,
+  :end => 24,
 }.freeze
 
 PER_PAGE = 30

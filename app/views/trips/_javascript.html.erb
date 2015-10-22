@@ -74,7 +74,7 @@
     // an id should be returned, and then the form should close.
     // if no id is returned, error messages are filled in. 
     $("body").on('ajax:success', '.address-search', function(evt, data, status, xhr){
-      if (data.id) {
+      if (data && data.hasOwnProperty('id')) {
         update_address_fields(data.prefix, data);      
 
         if (data.prefix == 'dropoff') {
@@ -86,18 +86,7 @@
         populate_address_form(data.prefix, data);
         $("." + data.prefix + "_address_details").show();
       } else {
-        //failed to create an address
-        for (var field in data) {
-          text_field = $('#' + data.prefix + "_" + field);
-          error_element = text_field.attr('data-error-element');
-          if (!error_element) {
-            error_element_id = data.prefix + "_" + field
-            text_field.after('<span class="error" id="' + error_element_id + '">' + data[field] + "</span>");
-            error_element = "#" + error_element_id;
-            text_field.attr('data-error-element', error_element);
-          }
-          $(error_element).innerHtml = data[field]
-        }
+        showAddressValidationErrors(this, data);
       }
     })
     
@@ -125,6 +114,7 @@
               $("#trip_" + prefix + "_address_id").val(field.attr("data-original-id"));
               if (parseInt(field.attr("data-original-id")) > 0)
                   $("." + prefix + "_address_details").show();
+              $(this).find('form')[0].reset();
           }
       });
     };
@@ -139,19 +129,19 @@
       autocompleted(selected.item, 'dropoff');
     });
     
-    $("body").on('change', '#trip_pickup_time', function() {
-      var date = ISODateFormatToDateObject( $(this).val() );
-      var date_formatted = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
-      $.getJSON("<%= for_date_runs_path %>", { date : date_formatted }, function(data){
-        selected = $("#trip_run_id").val();
-        $("#trip_run_id option").remove();
-        $("#trip_run_id").append( $("<option>") );
-        $.each( data, function(i, run){
-          var option = $("<option>").val(run.id).text(run.label);
-          $("#trip_run_id").append( option );
-        })
-        $("#trip_run_id").val(selected);
-      })
-    });
+    //$("body").on('change', '#trip_pickup_time', function() {
+      //var date = ISODateFormatToDateObject( $(this).val() );
+      //var date_formatted = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+      // $.getJSON("<%= for_date_runs_path %>", { date : date_formatted }, function(data){
+      //   selected = $("#trip_run_id").val();
+      //   $("#trip_run_id option").remove();
+      //   $("#trip_run_id").append( $("<option>") );
+      //   $.each( data, function(i, run){
+      //     var option = $("<option>").val(run.id).text(run.label);
+      //     $("#trip_run_id").append( option );
+      //   })
+      //   $("#trip_run_id").val(selected);
+      // })
+    //});
   });
 </script>

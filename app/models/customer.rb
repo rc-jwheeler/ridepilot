@@ -1,16 +1,21 @@
 class Customer < ActiveRecord::Base
   include RequiredFieldValidatorModule 
-  
+  before_validation :generate_uuid_token, on: :create
+
   acts_as_paranoid # soft delete
 
   has_and_belongs_to_many :authorized_providers, :class_name => 'Provider', :through => 'customers_providers'
-  has_and_belongs_to_many :addresses, :class_name => 'Address', :through => 'addresses_customers'
 
   belongs_to :provider
   belongs_to :address
+  has_many   :addresses, :dependent => :destroy, inverse_of: :customer
   belongs_to :mobility
   belongs_to :default_funding_source, :class_name=>'FundingSource'
-  has_many   :trips, :dependent => :destroy
+  has_many   :trips, :dependent => :destroy, inverse_of: :customer
+  has_many   :donations, :dependent => :destroy, inverse_of: :customer
+
+  has_many  :eligibilities, through: :customer_eligibilities
+  has_many  :customer_eligibilities
 
   belongs_to :service_level
   delegate :name, to: :service_level, prefix: :service_level, allow_nil: true
@@ -18,6 +23,8 @@ class Customer < ActiveRecord::Base
   validates_presence_of :first_name
   validates_associated :address
   #validate :address_required
+  # Token is auto-generated at database level via uuid extension
+  
   accepts_nested_attributes_for :address
 
   normalize_attribute :first_name, :with=> [:squish, :titleize]
@@ -58,6 +65,15 @@ class Customer < ActiveRecord::Base
   end
   
   def as_autocomplete
+    { 
+      :label                     => name, 
+      :id                        => id,
+      :group                     => group,
+      :message                   => message.try(:strip)
+    }
+  end
+
+  def trip_related_data
     if address.present?
       address_text = address.text.gsub(/\s+/, ' ')
       address_id = address.id
@@ -65,8 +81,9 @@ class Customer < ActiveRecord::Base
       address_data[:label] = address_text
     end
 
-    { :label                     => name, 
-      :id                        => id,
+    { :id                        => id,
+      :label                     => name, 
+      :medicaid_eligible         => is_medicaid_eligible?,
       :phone_number_1            => phone_number_1, 
       :phone_number_2            => phone_number_2,
       :mobility_notes            => mobility_notes,
@@ -74,11 +91,14 @@ class Customer < ActiveRecord::Base
       :address                   => address_text,
       :address_id                => address_id,
       :private_notes             => private_notes,
-      :group                     => group,
       :address_data              => address_data,
       :default_funding_source_id => default_funding_source_id,
       :default_service_level     => service_level_name
     }
+  end
+
+  def is_medicaid_eligible?
+    customer_eligibilities.includes(:eligibility).references(:eligibility).where(eligibilities: {code: 'nemt_eligible'}, eligible: true).first.present?
   end
   
   def replace_with!(other_customer_id)
@@ -98,7 +118,7 @@ class Customer < ActiveRecord::Base
   end
 
   def authorized_for_provider provider_id
-    Customer.for_provider(provider_id).where("id = ?", self.id).count > 0
+    !Customer.for_provider(provider_id).where("id = ?", self.id).empty?
   end
 
   def self.by_term( term, limit = nil )
@@ -213,24 +233,49 @@ class Customer < ActiveRecord::Base
 
   def edit_addresses(address_objects, mailing_address_index)
     # remove non-existing ones
-    prev_addr_ids = addresses.pluck(:id)
+    prev_addr_ids = self.addresses.pluck(:id)
     existing_addr_ids = address_objects.select {|r| r[:id] != nil}.map{|r| r[:id]}
     Address.where(id: prev_addr_ids-existing_addr_ids).delete_all
 
     # update addresses
-    new_addresses = []
     address_objects.each_with_index do |addr_hash, index|
       addr = if addr_hash[:id]
         Address.find addr_hash[:id]
       else
-        Address.create(addr_hash)
+        addresses.new(addr_hash.except(:label).merge(customer_id: self.try(:id)))
       end
 
       self.address = addr if index == mailing_address_index
-      new_addresses << addr
     end
+  end
 
-    self.addresses = new_addresses
+  def edit_donations(donation_objects, user)
+    # remove non-existing ones
+    prev_donation_ids = donations.pluck(:id)
+    existing_donation_ids = donation_objects.select {|r| r[:id] != nil}.map{|r| r[:id]}
+    Donation.where(id: prev_donation_ids-existing_donation_ids).delete_all
+
+    # update donations
+    donation_objects.select {|r| r[:id].blank? }.each do |donation_hash|
+      d = Donation.parse donation_hash, self, user
+      d.save
+    end
+  end
+
+  def edit_eligibilities(eligibility_params)
+    return if !eligibility_params
+
+    eligibility_params.each do |code, data|
+      item = customer_eligibilities.includes(:eligibility).where(eligibilities: {code: code}).first
+      item = CustomerEligibility.create(customer: self, eligibility: Eligibility.find_by_code(code)) if !item
+    
+      eligible = data["eligible"] == 'true' ? true : (data["eligible"] == 'false' ? false: nil)
+      if eligible != false
+        data["ineligible_reason"] = nil
+      end
+
+      item.update_attributes eligible: eligible, ineligible_reason: data["ineligible_reason"]
+    end
   end
 
   private 
@@ -239,6 +284,10 @@ class Customer < ActiveRecord::Base
     if addresses.empty?
       errors.add :addresses, TranslationEngine.translate_text(:must_have_one_address)
     end
+  end
+
+  def generate_uuid_token
+    self.token = SecureRandom.hex(5)
   end
 
 end

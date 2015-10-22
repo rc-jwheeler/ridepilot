@@ -11,7 +11,7 @@
 <%= form_for @address do |form| %>
   <% if @address.errors.any? %>
     <div id="error_explanation">
-      <h2>translate_helper("address_form_error_message", count: @address.errors.count)</h2>
+      <h2><%= translate_helper("address_form_error_message", count: @address.errors.count) %></h2>
       <ul>
       <% @address.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
@@ -19,10 +19,16 @@
       </ul>
     </div>
   <% end %>
+
+  <%= form.hidden_field :provider_id %>
   
   <fieldset>
     <ol class="section first">
-      <%= render 'form', :form => form, :editing_address => true %>
+      <%= render 'form_fields', :form => form, address: @address, prefix: 'address' %>
+      <li class="selfclear">
+        <%= form.label :inactive, translate_helper("inactive") %>
+        <%= form.check_box :inactive %>
+      </li>
     </ol>
   </fieldset>
   
@@ -39,7 +45,7 @@
         <ol class="section">
           <li>
           <%= label_tag translate_helper("address_search") %>
-          <%= autocomplete_field_tag 'address_term', '', autocomplete_addresses_path, :size => 30, :id_element => "#address_id" %>
+          <%= autocomplete_field_tag 'address_term', '', autocomplete_addresses_path(exclude:@address.try(:id)), :size => 30, :delay => 500, :id_element => "#address_id" %>
           <%= hidden_field_tag 'address_id' %>
           </li>
         </ol>

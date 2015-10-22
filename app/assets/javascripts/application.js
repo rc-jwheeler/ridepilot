@@ -26,6 +26,8 @@
 //= require constants
 //= require fullcalendar
 //= require moment
+//= require jquery.geocomplete
+//= require google_place_parser
 //= require_self
   
 function ISODateFormatToDateObject(str) {
@@ -108,12 +110,23 @@ function createPopover(node_id) {
 }
 
 // Displays an alert
-function show_alert(message) {
-    $('#messages').html('<div class="alert alert-danger fade in"><a class="close" data-dismiss="alert">x</a><div id="flash_notice">' + message + '</div></div>');
+function show_alert(message, type) {
+  if(!type)
+    type = 'danger';
+  $('#messages').html('<div class="alert alert-' + type + ' fade in"><a class="close" data-dismiss="alert">x</a><div id="flash_notice">' + message + '</div></div>');
 }
 
 function hide_alert () {
   $('#flash_notice').parents('.alert').hide();
+}
+
+function show_alert_dialog(message) {
+  $('#applicationAlertDialog .alert-message').text(message || '');
+  $('#applicationAlertDialog').modal('show');
+}
+
+function escapeQuotes( str ) {
+  return (str + '').replace(/\"/g,'&#34;').replace(/\'/g,'&#39;');
 }
 
 $(function() {
@@ -174,19 +187,6 @@ $(function() {
     $(e.currentTarget).closest('.datepicker-icon').find('.datepicker').datepicker('show');
   });
   
-  // when trip pickup time is changed, update appointment time and displayed week
-  $("body").on('change', '#trip_pickup_time', function() {
-    var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time').val());
-    var appointmentTimeDate = new Date(pickupTimeDate.getTime() + (1000 * 60 * 30));
-
-    $('#trip_appointment_time').attr( "value", appointmentTimeDate.format("ddd yyyy-mm-dd hh:MM tt"));
-    
-    if ( week_differs(appointmentTimeDate.getTime()) ) {
-      $("#calendar").weekCalendar("gotoWeek", appointmentTimeDate.getTime());
-      set_calendar_time(appointmentTimeDate.getTime());
-    }    
-  });
-  
   // needs to be -1 for field nulling
   $("#trip_vehicle_id option:contains(cab)").attr("value", "-1");
   
@@ -214,16 +214,6 @@ $(function() {
       });
       $("tr:odd").addClass("odd");
     }, "json");
-  });
-  
-  $('#new_trip #customer_name').bind('railsAutocomplete.select', function(event, data){ 
-    if ($("#trip_group").val() == "true") {
-      $("li.passengers").hide();
-      $("li.group_size").show();
-    } else {
-      $("li.passengers").show();
-      $("li.group_size").hide();
-    }
   });
   
   $('.new_trip #customer_name, .edit_trip #customer_name').bind('railsAutocomplete.select', function(event, data){ 
@@ -389,11 +379,11 @@ $(function() {
 
   $('[data-behavior=time-picker]').timepicker({
     ampm: true,
-    stepMinute: 15,
+    //stepMinute: 15,
     stepHour: 1,
-    hourMin: RidePilot.business_hours.start,
-    hourMax: RidePilot.business_hours.end,
-    hourGrid: 2,
+    //hourMin: RidePilot.business_hours.start,
+    //hourMax: RidePilot.business_hours.end,
+    hourGrid: 6,
     minuteGrid: 15,
     showOn: "button",
     timeFormat: 'hh:mm TT',
@@ -423,6 +413,31 @@ function hinted_field(f) {
           f.addClass("hint");
         }
       });
+    }
+  }
+}
+
+/*
+ Shared among several address related partials to display errors on address form
+ */
+function showAddressValidationErrors(form, data) {
+  //failed to create an address
+  $(form).find('.error').html('');
+  for (var field in data) {
+    if(field == 'base') {
+      if($(form).find('.base-error').length == 0) {
+        $(form).prepend('<span class="error base-error"></span>');
+      }
+      $(form).find('.base-error').html(data[field]);
+    } else {
+      text_field = $('#' + data.prefix + "_" + field);
+      error_element_id = data.prefix + "_" + field + '_error';
+      error_message = field + " " + data[field] + "; ";
+      if ($("#" + error_element_id).length === 0) {
+        text_field.after('<span class="error" id="' + error_element_id + '">' + error_message + "</span>");
+        text_field.attr('data-error-element', "#" + error_element_id);
+      }
+      $("#" + error_element_id).html(error_message);
     }
   }
 }

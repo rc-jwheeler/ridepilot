@@ -284,13 +284,13 @@ RSpec.describe VehicleMaintenanceCompliance, type: :model do
     end
   end
 
-  describe "#overdue?" do
+  describe "#overdue? override" do
     describe "with due_type" do
       describe "date" do
         before do
           @compliance = create :vehicle_maintenance_compliance, due_type: "date", due_date: Date.current
         end
-
+        
         it "checks if the due_date is after Date.current, by default" do
           expect(@compliance.overdue?).to be_falsey
 

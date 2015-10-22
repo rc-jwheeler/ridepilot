@@ -20,6 +20,8 @@ class DriversController < ApplicationController
 
   def update
     @driver.attributes = driver_params
+    process_address_geom
+    
     if !@driver.is_all_valid?(current_provider_id)
       prep_edit
       render action: :edit
@@ -39,6 +41,7 @@ class DriversController < ApplicationController
   end
 
   def create
+    process_address_geom
     @driver.provider = current_provider
     if !@driver.is_all_valid?(current_provider_id)
       prep_edit
@@ -87,6 +90,7 @@ class DriversController < ApplicationController
       :name, 
       :email, 
       :user_id,
+      :phone_number,
       :address_attributes => [
         :address,
         :building_name,
@@ -95,52 +99,22 @@ class DriversController < ApplicationController
         :provider_id,
         :state,
         :zip,
-        :notes,
-        :phone_number
+        :notes
       ],
     )
   end
   
   def create_or_update_hours!
-    params[:hours] ||= {}
-    hours = @driver.hours_hash
-    if !hours.empty? and hours.length < 7
-      hours.each_pair { |day, h| h.destroy }
-      hours = {}
-    end
-    if hours.empty?
-      (0..6).each do |d|
-        hours[d] = OperatingHours.new day_of_week: d, driver: @driver
-      end
-    end
-    errors = false
-    params[:hours].each_pair do |day, value|
-      begin
-        day = day.to_i
-        day_hours = hours[day]
-        if day_hours.nil?
-          day_hours = OperatingHours.new day_of_week: day, driver: @driver
-        end
-        case value
-        when 'unavailable'
-          day_hours.make_unavailable
-        when 'open24'
-          day_hours.make_24_hours
-        when 'open'
-          day_hours.start_time = params[:start_hour][day.to_s]
-          day_hours.end_time = params[:end_hour][day.to_s]
-        else
-          @driver.errors.add :operating_hours, 'must be "unavailable", "open24", or "open".'
-          raise ActiveRecord::RecordInvalid.new(@driver)
-        end
-        day_hours.save!
-      rescue ActiveRecord::RecordInvalid => e
-        Rails.logger.debug e.message
-        errors = true
-      end
-    end
-    if errors
-      raise ActiveRecord::RecordInvalid.new(@driver)
+    OperatingHoursProcessor.new(@driver, {
+      hours: params[:hours],
+      start_hour: params[:start_hour],
+      end_hour: params[:end_hour]
+      }).process!
+  end
+
+  def process_address_geom
+    if @driver && @driver.address && params[:lat].present? && params[:lon].present?
+      @driver.address.the_geom = RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f)
     end
   end
 end

@@ -8,18 +8,11 @@
 <% end %>
 <%= autocomplete_field_tag 'customer_name', @customer.try(:name), autocomplete_customers_path(active_only: true), 
     :size => 30, 
+    :delay => 500, 
     :update_elements => {
       :id                        => '#trip_customer_id,#trip_customer_attributes_id',
-      :phone_number_1            => '#trip_customer_attributes_phone_number_1', 
-      :phone_number_2            => '#alt_phone',
-      :mobility_notes            => '#mobility_notes',
-      :mobility_id               => '#trip_mobility_id',
-      :private_notes             => '#customer_private_notes',
-      :group                     => '#trip_group',
-      :address_id                => "#trip_pickup_address_id",
-      :address                   => "#pickup_search_address",
-      :default_funding_source_id => "#trip_funding_source_id",
-      :default_service_level     => "#trip_service_level"
+      :group                        => '#trip_group',
+      :message                   => "#customer_flag_message"
     },
     :class => "form-control",
     :style => @customer.try(:id).present? ? 'display: none' : '', :autocomplete => "off"
@@ -28,9 +21,57 @@
   <input type="button" class="btn" name="new_customer" value="<%= translate_helper("new") %>" id="new_customer" data-path="<%= new_customer_path %>">
 <%- end -%>
 <%= javascript_tag do %>
-  $('#change_trip_customer_link').click(function(event){
-    event.preventDefault();
-    $('#trip_customer_name_wrapper').hide();
-    $('#customer_name').show();
+  $(document).ready(function(){
+    $('#change_trip_customer_link').click(function(event){
+      event.preventDefault();
+      $('#trip_customer_name_wrapper').hide();
+      $('#customer_name').show();
+    });
+
+    function popupFlagMessage(message) {
+      if(message) {
+        $('#customerFlagMessageText').text(message);
+        $('#customerFlagMessageDialog').modal('show');
+      }
+    }
+
+    // after a customer item is selected
+    $('#customer_name').bind('railsAutocomplete.select', function(event, data){
+      popupFlagMessage(data.item.message);
+    });
+
+    function updateUponCustomerChange(customerData) {
+      $('#trip_customer_attributes_phone_number_1').val(customerData.phone_number_1); 
+      $('#alt_phone').val(customerData.phone_number_2);
+      $('#mobility_notes').val(customerData.mobility_notes);
+      $('#trip_mobility_id').val(customerData.mobility_id);
+      $('#customer_private_notes').val(customerData.private_notes);
+      $("#trip_pickup_address_id").val(customerData.address_id);
+      $("#pickup_search_address").val(customerData.address);
+      $("#trip_funding_source_id").val(customerData.default_funding_source_id);
+      $("#trip_service_level").val(customerData.default_service_level);
+      $('#trip_medicaid_eligible').attr('checked',customerData.medicaid_eligible);
+    }
+
+    $('.trip_form #customer_name').bind('railsAutocomplete.select', function(event, data){ 
+      if ($("#trip_group").val() == "true") {
+        $("li.passengers").hide();
+        $("li.group_size").show();
+      } else {
+        $("li.passengers").show();
+        $("li.group_size").hide();
+      }
+
+      var customerId = data.item.id;
+      $('#pickup_search_address').attr('data-autocomplete', "<%=autocomplete_addresses_path%>?customer_id=" + customerId);
+      $('#dropoff_search_address').attr('data-autocomplete', "<%=autocomplete_addresses_path%>?customer_id=" + customerId);
+      $('.address-search input[name=customer_id]').val(customerId);
+
+      $.post("<%= data_for_trip_customers_path %>", {
+          customer_id: customerId
+        }, function(customerData) {
+          updateUponCustomerChange(customerData);
+        });
+    });
   });
 <% end %>

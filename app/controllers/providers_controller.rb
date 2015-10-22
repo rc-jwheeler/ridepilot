@@ -20,6 +20,17 @@ class ProvidersController < ApplicationController
       memo[values.first.to_s] = values.last.to_s
       memo
     end
+
+    @hours = @provider.hours_hash
+
+    @start_hours = OperatingHours.available_start_times
+    @end_hours = OperatingHours.available_end_times
+  end
+
+  def save_operating_hours
+    create_or_update_hours!
+
+    redirect_to @provider
   end
 
   # POST /providers/:id/save_region
@@ -101,6 +112,11 @@ class ProvidersController < ApplicationController
     @provider.update_attributes reimbursement_params
     redirect_to provider_path(@provider)
   end
+
+  def update_min_trip_time_gap
+    @provider.update_attributes min_trip_time_gap_in_mins: params[:min_trip_time_gap_in_mins].to_i
+    redirect_to provider_path(@provider)
+  end
   
   def change_fields_required_for_run_completion
     @provider.update_attribute :fields_required_for_run_completion, params[:fields_required_for_run_completion]
@@ -115,5 +131,13 @@ class ProvidersController < ApplicationController
 
   def reimbursement_params
     params.permit(*Provider::REIMBURSEMENT_ATTRIBUTES)
+  end
+
+  def create_or_update_hours!
+    OperatingHoursProcessor.new(@provider, {
+      hours: params[:hours],
+      start_hour: params[:start_hour],
+      end_hour: params[:end_hour]
+      }).process!
   end
 end

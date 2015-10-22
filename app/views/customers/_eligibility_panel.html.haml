@@ -5,3 +5,17 @@
     %h3.panel-title
       = translate_helper(:customer_eligibility_panel)
   .panel-body{style: 'padding: 5px;'}
+    - Eligibility.all.each do |eligibility|
+      = render 'eligibility_item', item: eligibility
+
+:javascript
+  $('document').ready(function() {
+    $('.customer-eligibility').change(function() {
+      var ineligibleReasonDiv = $(this).parents('.form-group').find('.ineligible-reason');
+      if ($(this).val() == 'false') {
+        ineligibleReasonDiv.show();
+      } else {
+        ineligibleReasonDiv.hide();
+      }
+    });
+  });

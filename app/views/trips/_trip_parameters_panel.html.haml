@@ -3,6 +3,17 @@
     %h3.panel-title
       = translate_helper(:trip_parameters)
   .panel-body{style: 'padding: 5px;'}
+    - if edit_mode == :show && @trip.is_linked?
+      .form-group.col-sm-12
+        .col-sm-3
+          = label_tag :linked_trip, @trip.is_return? ?  translate_helper("outbound_trip_label") : translate_helper("return_trip_label")
+        .col-sm-9
+          - if @trip.is_return?
+            %a{href: trip_path(@trip.outbound_trip) }
+              = @trip.outbound_trip.id
+          - else
+            %a{href: trip_path(@trip.return_trip) }
+              = @trip.return_trip.id
     .form-group.col-sm-12
       .col-sm-3
         = f.label :pickup_time, translate_helper("pickup_time")
@@ -15,22 +26,20 @@
       .col-sm-9
         = f.text_field :appointment_time, :value => @trip.appointment_time.try(:to_s, :form), class: 'datetime-picker form-control', readonly: true
 
-    - unless add_new_trip_via_run_page?
-      .form-group.col-sm-12
-        .col-sm-3
-          = f.label :round_trip, translate_helper("round_trip")
-        .col-sm-9
-          = f.check_box :round_trip
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :direction, translate_helper("trip_direction")
+      .col-sm-9
+        = @trip.is_return? ? translate_helper("return_trip") : translate_helper("outbound_trip")
 
+    - unless add_new_trip_via_run_page?
       .form-group.col-sm-12
         .col-sm-3
           = f.label :pickup_address_label, translate_helper("pickup_address")
         .col-sm-9
-          = autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:address_text), autocomplete_addresses_path, :size => 30, :id_element => "#trip_pickup_address_id", :class => "nearly-full form-control", "data-original-value" => @trip.pickup_address.try(:text), "data-original-id" => @trip.pickup_address.try(:id)  
-          - if edit_mode != :show
-            = f.hidden_field :pickup_address_id
-            - display_style = @trip.pickup_address.try(:id).present? ? 'inline' : 'none'
-            %a.pickup_address_details.details{href:"javascript:edit_pickup_address();", style:"display: #{display_style}"}
+          = autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:address_text), autocomplete_addresses_path(customer_id: @trip.try(:customer_id)), :size => 30, :id_element => "#trip_pickup_address_id", :delay => 500, :class => "nearly-full form-control", "data-original-value" => @trip.pickup_address.try(:text), "data-original-id" => @trip.pickup_address.try(:id) 
+        - if edit_mode != :show
+          = f.hidden_field :pickup_address_id
 
     .form-group.col-sm-12
       = f.fields_for :customer do |c|
@@ -52,11 +61,9 @@
         .col-sm-3
           = f.label :dropoff_address_label, translate_helper("dropoff_address") 
         .col-sm-9
-          = autocomplete_field_tag "dropoff_search_address", @trip.dropoff_address.try(:address_text), autocomplete_addresses_path, :size                => 30, :update_elements => { :id => '#trip_dropoff_address_id', :default_trip_purpose => '#trip_trip_purpose'},:class => "nearly-full form-control", "data-original-value" => @trip.dropoff_address.try(:text), "data-original-id" => @trip.dropoff_address.try(:id) 
-          - if edit_mode != :show
-            = f.hidden_field :dropoff_address_id     
-            - display_style = @trip.dropoff_address.try(:id).present? ? "inline" : "none"
-            %a.dropoff_address_details.details{href:"javascript:edit_dropoff_address();", style:"display: #{display_style}"}
+          = autocomplete_field_tag "dropoff_search_address", @trip.dropoff_address.try(:address_text), autocomplete_addresses_path(customer_id: @trip.try(:customer_id)), :size => 30, :delay => 500, :update_elements => { :id => '#trip_dropoff_address_id', :default_trip_purpose => '#trip_trip_purpose'},:class => "nearly-full form-control", "data-original-value" => @trip.dropoff_address.try(:text), "data-original-id" => @trip.dropoff_address.try(:id) 
+        - if edit_mode != :show
+          = f.hidden_field :dropoff_address_id
 
       .form-group.col-sm-12
         .col-sm-3
@@ -120,3 +127,15 @@
           = f.label :notes, translate_helper("trip_notes")
         .col-sm-9
           = f.text_area :notes, class: 'form-control'
+
+:javascript
+  // when trip pickup time is changed, update appointment time and displayed week
+  $("body").on('change', '#trip_pickup_time', function() {
+    var minDiff = 1000 * 60 * #{current_provider.try(:min_trip_time_gap_in_mins)};
+    var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time').val());
+    var appointmentTimeDate      = ISODateFormatToDateObject( $('#trip_appointment_time').val());
+    if(!appointmentTimeDate || (appointmentTimeDate.getTime() - pickupTimeDate.getTime()) < minDiff ) {
+      var newAppointmentTimeDate = new Date(pickupTimeDate.getTime() + minDiff);
+      $('#trip_appointment_time').val( newAppointmentTimeDate.format("ddd yyyy-mm-dd hh:MM tt"));
+    }
+  });

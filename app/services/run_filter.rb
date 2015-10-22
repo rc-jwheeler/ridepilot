@@ -21,8 +21,8 @@ class RunFilter
 
   def filter_by_pickup_time!
     utility = Utility.new
-    t_start = utility.parse_datetime(@filters[:start]) 
-    t_end = utility.parse_datetime(@filters[:end]) 
+    t_start = utility.parse_date(@filters[:start]) 
+    t_end = utility.parse_date(@filters[:end]) 
 
     if !t_start && !t_end
       time    = Time.now

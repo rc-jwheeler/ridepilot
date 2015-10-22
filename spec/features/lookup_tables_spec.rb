@@ -5,6 +5,7 @@ RSpec.describe "Lookup Tables" do
     before :each do 
       @admin = create(:super_admin)
       visit new_user_session_path
+      visit admin_path
       fill_in 'Email', :with => @admin.email
       fill_in 'Password', :with => @admin.password
       click_button 'Log In'

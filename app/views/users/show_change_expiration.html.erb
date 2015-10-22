@@ -5,7 +5,7 @@
 <% if current_user.errors.any? %>
   <div id="error_explanation">
     <h2>
-      <h2>translate_helper("user_form_error_message", count: current_user.errors.count)</h2>
+      <h2><%= translate_helper("user_form_error_message", count: current_user.errors.count) %></h2>
     </h2>
     <ul>
       <% current_user.errors.full_messages.each do |msg| %>
@@ -42,11 +42,11 @@
           buttonImageOnly: true,
           constrainInput: false,
           dateFormat: 'D yy-mm-dd',
-          hourGrid: 2,
+          hourGrid: 6,
           minuteGrid: 15,
           showOn: "both",
           stepHour: 1,
-          stepMinute: 15,
+          //stepMinute: 15,
           timeFormat: 'hh:mm tt',
     });
   });
