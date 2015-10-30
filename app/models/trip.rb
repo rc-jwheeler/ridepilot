@@ -292,7 +292,7 @@ class Trip < ActiveRecord::Base
     if trip_result
       code = trip_result.code
       name = trip_result.name
-      message = trip_result.description
+      message = trip_result.full_description
     elsif run
       code = :scheduled
       name = 'Scheduled'
