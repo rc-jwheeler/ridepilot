@@ -51,7 +51,7 @@ class API::V1::TripsController < API::ApiController
   def destroy
 
     if @trip.cancel!
-      render json: {}
+      render json: @trip.as_profile_json
     else
       error(:unprocessable_entity, @trip.errors.full_messages.join(';'))
     end
