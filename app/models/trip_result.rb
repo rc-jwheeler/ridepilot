@@ -8,7 +8,7 @@ class TripResult < ActiveRecord::Base
     where.not(id: hidden_ids)
   end
 
-  def description
-    super || name
+  def full_description
+    description || name
   end
 end
