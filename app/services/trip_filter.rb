@@ -36,8 +36,8 @@ class TripFilter
     end
     
     @trips = @trips.
-      where("pickup_time >= '#{t_start.beginning_of_day.strftime "%Y-%m-%d %H:%M:%S"}'").
-      where("pickup_time <= '#{t_end.end_of_day.strftime "%Y-%m-%d %H:%M:%S"}'").order(:pickup_time)
+      where("pickup_time >= '#{t_start.beginning_of_day.utc.strftime "%Y-%m-%d %H:%M:%S"}'").
+      where("pickup_time <= '#{t_end.end_of_day.utc.strftime "%Y-%m-%d %H:%M:%S"}'").order(:pickup_time)
     
     @filters[:start] = t_start.to_i
     @filters[:end] = t_end.to_i
