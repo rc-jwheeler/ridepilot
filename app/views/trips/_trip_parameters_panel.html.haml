@@ -121,6 +121,12 @@
                 = f.text_field :attendant_count, class: 'form-control'
                 &nbsp;
                 = translate_helper("attendants")
+      - if edit_mode == :show
+        .form-group.col-sm-12
+          .col-sm-3
+            = f.label :drive_distance, translate_helper("drive_distance")
+          .col-sm-9
+            = @trip.drive_distance ? pluralize(@trip.drive_distance.round(3), 'mile') : ''
 
       .form-group.col-sm-12
         .col-sm-3

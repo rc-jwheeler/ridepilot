@@ -223,7 +223,7 @@ class TripsController < ApplicationController
     @trip = Trip.find(params[:id])
     prep_view
 
-    authorize! :show, @trip if !@trip.customer.authorized_for_provider(current_provider.id)
+    authorize! :show, @trip unless @trip.customer && @trip.customer.authorized_for_provider(current_provider.id)
     
     respond_to do |format|
       format.html 

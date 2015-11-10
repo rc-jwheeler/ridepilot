@@ -819,6 +819,7 @@ en:
   #trips
   trip: 'Trip'
   trip_direction: 'Direction'
+  drive_distance: 'Drive Distance'
   return_trip: 'Return'
   outbound_trip: 'Outbound'
   return_trip_label: 'Return Trip'
