@@ -90,6 +90,7 @@ class Trip < ActiveRecord::Base
   validate :provider_availability
   validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validate :return_trip_later_than_outbound_trip
+  validate :dropff_time_and_pickup_time_gap
 
   accepts_nested_attributes_for :customer
 
@@ -243,14 +244,16 @@ class Trip < ActiveRecord::Base
     cloned_trip
   end
 
-  def clone_for_return!
+  def clone_for_return!(pickup_time_str, appointment_time_str)
     return_trip = self.dup
     return_trip.direction = :return
     return_trip.pickup_address = self.dropoff_address
     return_trip.dropoff_address = self.pickup_address
-    return_time_gap = self.provider.try(:min_trip_time_gap_in_mins) || 30
-    return_trip.pickup_time = self.appointment_time + return_time_gap.minutes
-    return_trip.appointment_time = return_trip.pickup_time + return_time_gap.minutes
+    return_trip.pickup_time = nil
+    return_trip.pickup_time = Time.zone.parse(pickup_time_str, self.pickup_time.beginning_of_day) if pickup_time_str
+    return_trip.appointment_time = nil
+    # assume same-day trip
+    return_trip.appointment_time = Time.zone.parse(appointment_time_str, self.pickup_time.beginning_of_day) if appointment_time_str
     return_trip.outbound_trip = self
 
     return_trip
@@ -373,6 +376,11 @@ class Trip < ActiveRecord::Base
         errors.add(:base, TranslationEngine.translate_text(:return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time)) if pickup_time < outbound_trip.appointment_time
       end
     end
+  end
+
+  def dropff_time_and_pickup_time_gap
+    time_gap_in_mins = (appointment_time - pickup_time) / 60 if appointment_time && pickup_time
+    errors.add(:base, TranslationEngine.translate_text(:violate_provider_min_time_gap)) if provider && time_gap_in_mins && (time_gap_in_mins < provider.min_trip_time_gap_in_mins)
   end
 
   def compute_run    

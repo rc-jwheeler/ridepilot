@@ -488,6 +488,7 @@ en:
   vehicle_has_mobility_device_capacity_validation_error: "There's not enough mobility device capacity on this run to accommodate this trip"
   outbound_trip_dropoff_time_no_later_than_return_trip_pickup_time: "Dropoff time should be no later than return trip's pickup time"
   return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time: "Pickup time should be no earlier than outbound trip's appointment time"
+  violate_provider_min_time_gap: 'The gap between drop off time and pick up time violates the minimum gap setting by the provider'
   #monthlies
   monthlies_start_date: "Month"
   funding_source: "Funding Source"

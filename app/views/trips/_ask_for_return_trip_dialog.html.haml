@@ -1,12 +1,25 @@
-#askCreatingReturnTripDialog.modal.fade.col-sm-12{:role => "dialog", "aria-hidden" => 'true', :tabindex => "-1"}
-  .modal-dialog
-    .modal-content
-      .modal-header
-        .pull-right
-          = link_to translate_helper(:yes), return_trip_path(@trip), class: "btn action-button"
-          = link_to translate_helper(:no), trips_path, class: "btn action-button"
-        .modal-title{:style => "text-align:left;"}
-          %strong
-            = translate_helper(:site_title)
-      .modal-body{:style => "text-align:left;"}
-        = translate_helper(:ask_for_creating_return_trip_message)
+#askCreatingReturnTripDialog.modal.fade.col-sm-12{:role => "dialog", "aria-hidden" => 'true', :tabindex => "-1", data: {"backdrop": "static", "keyboard": false }}
+  = form_for :trip, url: return_trip_path(@trip), :method => :get do |f|
+    .modal-dialog
+      .modal-content
+        .modal-header
+          .pull-right
+            = f.submit translate_helper(:yes), id: 'getReturnTrip', class: 'btn action-button', role: 'button'
+            = link_to translate_helper(:no), trips_path, class: "btn action-button"
+          .modal-title{:style => "text-align:left;"}
+            %strong
+              = translate_helper(:site_title)
+        .modal-body.row{:style => "text-align:left; margin: 0px;"}
+          = translate_helper(:ask_for_creating_return_trip_message)
+          .col-sm-12{style: 'padding: 5px;'}
+            = f.label :pickup_time, translate_helper("pickup_time")
+            = f.text_field :pickup_time, value: '', class: 'time-picker form-control', readonly: true
+          .col-sm-12{style: 'padding: 5px;'}
+            = f.label :appointment_time, translate_helper("appointment_time")
+            = f.text_field :appointment_time, value: '', class: 'time-picker form-control', readonly: true
+
+  = render "shared/date_time_picker_javascript"
+  :javascript
+    $(document).ready(function() {
+      makeTimePickers();
+    });

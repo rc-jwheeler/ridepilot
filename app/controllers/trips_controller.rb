@@ -167,7 +167,7 @@ class TripsController < ApplicationController
       t = run.scheduled_start_time || (d.at_midnight + 12.hours)
       @trip.run_id = run.id
       @trip.pickup_time = Time.zone.local(d.year, d.month, d.day, t.hour, t.min, 0)
-      @trip.appointment_time = @trip.pickup_time + 30.minutes
+      @trip.appointment_time = @trip.pickup_time + (current_provider.min_trip_time_gap_in_mins).minutes
     end
 
     if params[:customer_id] && customer = Customer.find_by_id(params[:customer_id])
@@ -208,7 +208,7 @@ class TripsController < ApplicationController
   end
 
   def return
-    @trip = @trip.clone_for_return!
+    @trip = @trip.clone_for_return!(params[:trip][:pickup_time], params[:trip][:appointment_time])
     @outbound_trip_id = params[:trip_id]
     prep_view
     
