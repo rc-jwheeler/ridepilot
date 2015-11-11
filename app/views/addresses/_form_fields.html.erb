@@ -1,4 +1,5 @@
 <% defined?(prefix) ? prefix : prefix = "address"%>
+<% defined?(edit_mode) ? edit_mode : edit_mode = :new %>
 <%= form.hidden_field :address, class: 'address_text' %>
 <%= form.hidden_field :city, class: 'address_city' %>
 <%= form.hidden_field :state, class: 'address_state' %>
@@ -18,7 +19,11 @@
 
 <li class="selfclear full_address">
   <%= label_tag "#{prefix}_full_address", translate_helper("full_address_name") %>
-  <%= text_field_tag "#{prefix}_full_address", address.try(:address_text), class: 'address_search'  %>
+  <% if edit_mode == :edit %>
+    <%= address.try(:address_text) %>
+  <% else %>
+    <%= text_field_tag "#{prefix}_full_address", address.try(:address_text), class: 'address_search' %>
+  <% end  %>
 </li>
 
 <li class="selfclear">

@@ -16,13 +16,28 @@
     form.find('#' + field + '_notes').val(address.notes);
   }
 
-  function insertAddressRow(addressData, addressText) {
-    $('#customerCommonAddressTable').append("<tr data-address='" + escapeQuotes(JSON.stringify(addressData)) + "'>" +
+  function updateAddressRow(addressData, addressText) {
+    var encodedAddressData = escapeQuotes(JSON.stringify(addressData));
+
+    var table = $('#customerCommonAddressTable');
+    var matchRow = table.find("tr[data-address-text='" + addressText+ "']");
+    if(matchRow.length > 0) {
+      var addressId = matchRow.attr('data-address-id');
+      if(addressId && parseInt(addressId) != addressData.id){
+        show_alert("<%= translate_helper(:same_address_exists_for_customer) %>");
+      } else {
+        matchRow.data('address', addressData);
+        matchRow.find('td.address_name').replaceWith("<td class='address_name'>" + addressData.name + '&nbsp;<a class="viewAddress" href="#">(Edit details)</a></td>');
+      }
+    } else {
+      table.append("<tr data-address-id='" + (addressData.id == null ? "" : addressData.id) + 
+        "' data-address-text='" + addressText + "' data-address='" + encodedAddressData + "'>" +
         '<td><button class="deleteCustomerAddress btn-danger" name="button" type="button">Delete</button></td>' +
-        "<td>" + addressData.name + '&nbsp;<a class="viewAddress" href="#">(View details)</a></td>' +
-        "<td>" + addressText + "</td>" +
+        "<td class='address_name'>" + addressData.name + '&nbsp;<a class="viewAddress" href="#">(Edit details)</a></td>' +
+        "<td class='address_text'>" + addressText + "</td>" +
         '<td><input name="mailing" type="radio" value=false></td>' +
         "</tr>");
+    }
   }
 
   $(document).ready(function() {
@@ -35,7 +50,7 @@
         $( $(this)[0].parentNode ).dialog( "close" );
 
         //insert a new address row
-        insertAddressRow(data.attributes, data.address_text);
+        updateAddressRow(data.attributes, data.address_text);
         
       } else {
         showAddressValidationErrors(this, data);
@@ -51,7 +66,7 @@
           width: 600,
           modal: true,
           buttons: {
-              "Add Address": function() {
+              "Save": function() {
                   form = $( this )[0].children[0];
                   $(form).trigger('submit'); 
               },

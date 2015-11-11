@@ -24,7 +24,7 @@
   
   <fieldset>
     <ol class="section first">
-      <%= render 'form_fields', :form => form, address: @address, prefix: 'address' %>
+      <%= render 'form_fields', :form => form, address: @address, prefix: 'address', edit_mode: :edit %>
       <li class="selfclear">
         <%= form.label :inactive, translate_helper("inactive") %>
         <%= form.check_box :inactive %>

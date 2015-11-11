@@ -1,3 +1,4 @@
+- defined?(edit_mode) ? edit_mode : edit_mode = :edit 
 .address-form#customer-address-form
   = render 'addresses/validate_form', :prefix=>'customer', address: Address.new
 
@@ -5,13 +6,18 @@
 
 :javascript 
   $(document).ready(function() {
+    if(#{edit_mode == :show}) {
+      $(".address-form input").attr("disabled","disabled");
+      $('.ui-dialog button').hide();
+    }
+
     $('#addCustomerCommonAddress').click(function(e) {
       e.preventDefault();
       var form = $("#customer-address-form");
       form.dialog( "open" );  
-      $(".address-form :input").removeAttr("disabled");
-      $('.ui-dialog button').show();
+      $(".address-form input").removeAttr("disabled");
       form.find('form')[0].reset();
+        form.find('input[type=hidden][name!=prefix]').val('');
       form.find('.error').html('');
     });
 
@@ -24,9 +30,15 @@
     $('#customerCommonAddressTable').on('click', '.viewAddress', function(e) {
       e.preventDefault();
 
-      $("#customer-address-form").dialog( "open" );
-      $(".address-form :input").attr("disabled","disabled");
-      $('.ui-dialog button').hide();
+      var form = $("#customer-address-form");
+      form.dialog( "open" ); 
+
+      if(#{edit_mode == :edit}) {
+        form.find('form')[0].reset();
+        form.find('input[type=hidden][name!=prefix]').val('');
+        form.find('.error').html('');
+        $(".address-form input.address_search").attr("disabled","disabled");
+      }
       populate_address_form( 'customer', $(this).parents('tr').data('address'));
     });
   });

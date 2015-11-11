@@ -6,12 +6,8 @@
       update_address_fields(field, address);
       $( "#" + field + "-address-form" ).dialog( "close" );
       $("." + field + "_address_details").show();
-    } else if (address.label == "New Address") {
-      populate_address_form(field, {});
-      open_form_for_creating(field);
     } else {
-      //found a geocode, fill in fields, open the dialog for saving
-      populate_address_form(field, address);
+      populate_address_form(field, {});
       open_form_for_creating(field);
     }
   }
@@ -21,6 +17,7 @@
     form.find('#address_id').val(address.id);
     form.find('#' + field + '_name').val(address.name);
     form.find('#' + field + '_building_name').val(address.building_name);
+    form.find('#' + field + '_full_address').val(address.label);
     form.find('#' + field + '_address').val(address.address);
     form.find('#' + field + '_city').val(address.city);
     form.find('#' + field + '_state').val(address.state);
@@ -32,15 +29,20 @@
   }
   
   function open_form_for_creating(field) {
-    $("." + field + "_address_details").hide();
     form = $("#" + field + "-address-form");
+    form.find('input.address_search').removeAttr('disabled');
     form.parent().find('button:first span').text('Add Address');
     form.dialog( "open" );    
   }
   
   function open_form_for_editing(field) {
-    $("." + field + "_address_details").hide();
     form = $("#" + field + "-address-form");
+    var addressId = parseInt($("#trip_" + field + "_address_id").val());
+    if(!isNaN(addressId)) {
+      form.find('input.address_search').attr('disabled', 'disabled');
+    } else {
+      form.find('input.address_search').removeAttr('disabled');
+    }
     form.parent().find('button:first span').text('Save Address');
     form.dialog( "open" );    
   }
@@ -106,15 +108,6 @@
               Cancel: function() {
                 $( this ).dialog( "close" );
               }
-          },
-          close: function() {
-              var prefix = $(this).attr("id").replace(/\-address\-form/, "");
-              var field  = $( "#" + prefix + "_search_address" );
-              field.val( field.attr("data-original-value") );
-              $("#trip_" + prefix + "_address_id").val(field.attr("data-original-id"));
-              if (parseInt(field.attr("data-original-id")) > 0)
-                  $("." + prefix + "_address_details").show();
-              $(this).find('form')[0].reset();
           }
       });
     };

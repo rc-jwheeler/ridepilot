@@ -1,6 +1,6 @@
 <%- if @customer.try(:id).present? -%>
   <div id="trip_customer_name_wrapper">
-    <strong id="trip_customer_name_string"><%= link_to @customer.name, @customer %></strong>
+    <strong id="trip_customer_name_string"><%= link_to @customer.name, @customer, :target => "_blank" %></strong>
     <%- if edit_mode != :show %>
       &nbsp;&nbsp;&nbsp;&nbsp;(<a href="#" id="change_trip_customer_link"><%= translate_helper("change_customer") %></a>)
     <% end %>
@@ -17,8 +17,8 @@
     :class => "form-control",
     :style => @customer.try(:id).present? ? 'display: none' : '', :autocomplete => "off"
 %>
-<%- if @customer.try(:id).blank? -%>
-  <input type="button" class="btn" name="new_customer" value="<%= translate_helper("new") %>" id="new_customer" data-path="<%= new_customer_path %>">
+<%- if edit_mode != :show -%>
+  <%= link_to translate_helper("new"), new_customer_path, :target => "_blank", id: 'new_customer', class: 'btn action-button', style: (@customer.try(:id).present? ? 'display: none;' : '') %>
 <%- end -%>
 <%= javascript_tag do %>
   $(document).ready(function(){
@@ -26,6 +26,7 @@
       event.preventDefault();
       $('#trip_customer_name_wrapper').hide();
       $('#customer_name').show();
+      $('#new_customer').show();
     });
 
     function popupFlagMessage(message) {
@@ -34,11 +35,6 @@
         $('#customerFlagMessageDialog').modal('show');
       }
     }
-
-    // after a customer item is selected
-    $('#customer_name').bind('railsAutocomplete.select', function(event, data){
-      popupFlagMessage(data.item.message);
-    });
 
     function updateUponCustomerChange(customerData) {
       $('#trip_customer_attributes_phone_number_1').val(customerData.phone_number_1); 
@@ -54,6 +50,8 @@
     }
 
     $('.trip_form #customer_name').bind('railsAutocomplete.select', function(event, data){ 
+      popupFlagMessage(data.item.message);
+
       if ($("#trip_group").val() == "true") {
         $("li.passengers").hide();
         $("li.group_size").show();
