@@ -27,6 +27,7 @@
         show_alert("<%= translate_helper(:same_address_exists_for_customer) %>");
       } else {
         matchRow.data('address', addressData);
+        matchRow.attr('data-address', encodedAddressData);
         matchRow.find('td.address_name').replaceWith("<td class='address_name'>" + addressData.name + '&nbsp;<a class="viewAddress" href="#">(Edit details)</a></td>');
       }
     } else {

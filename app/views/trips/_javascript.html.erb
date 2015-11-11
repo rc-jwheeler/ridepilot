@@ -31,7 +31,7 @@
   function open_form_for_creating(field) {
     form = $("#" + field + "-address-form");
     form.find('input.address_search').removeAttr('disabled');
-    form.parent().find('button:first span').text('Add Address');
+    form.parent().find('button:first').text('Add Address');
     form.dialog( "open" );    
   }
   
@@ -43,7 +43,7 @@
     } else {
       form.find('input.address_search').removeAttr('disabled');
     }
-    form.parent().find('button:first span').text('Save Address');
+    form.parent().find('button:first').text('Save Address');
     form.dialog( "open" );    
   }
   
