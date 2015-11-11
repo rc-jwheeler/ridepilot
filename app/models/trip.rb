@@ -240,6 +240,7 @@ class Trip < ActiveRecord::Base
     cloned_trip.run = nil
     cloned_trip.cab = false
     cloned_trip.repeating_trip = nil
+    cloned_trip.drive_distance = nil
 
     cloned_trip
   end
@@ -255,6 +256,7 @@ class Trip < ActiveRecord::Base
     # assume same-day trip
     return_trip.appointment_time = Time.zone.parse(appointment_time_str, self.pickup_time.beginning_of_day) if appointment_time_str
     return_trip.outbound_trip = self
+    cloned_trip.drive_distance = nil
 
     return_trip
   end
