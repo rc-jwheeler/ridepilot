@@ -4,5 +4,10 @@ class Eligibility < ActiveRecord::Base
 
   has_many :customers, through: :customer_eligibilities
   has_many :customer_eligibilities
+
+  def self.by_provider(provider)
+    hidden_ids = HiddenLookupTableValue.hidden_ids self.table_name, provider.try(:id)
+    where.not(id: hidden_ids)
+  end
 end
 

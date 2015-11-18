@@ -11,6 +11,36 @@
           .modal-title{:style => "text-align:left;"}
             %strong
               = translate_helper(:site_title)
-        .modal-body{:style => "text-align:left;"}
-          = f.label :value, translate_helper("value")
-          = text_field_tag :value, nil, class: 'form-control'
+        .modal-body.row{:style => "text-align:left;"}
+          .col-sm-12.lookup_table_value
+            = f.label "lookup_table[value]", translate_helper("add_lookup_table_value")
+            = text_field_tag "lookup_table[value]", nil, class: 'form-control'
+          .col-sm-12.lookup_table_code{style: 'display: none;'}
+            = f.label "lookup_table[code]", translate_helper("add_lookup_table_code")
+            = text_field_tag "lookup_table[code]", nil, class: 'form-control'
+          .col-sm-12.lookup_table_description{style: 'display: none;'}
+            = f.label "lookup_table[description]", translate_helper("add_lookup_table_description")
+            = text_area_tag "lookup_table[description]", nil, class: 'form-control'
+:javascript
+  $(document).ready(function() {
+    $('#addLookupTableValueDialog').on('show.bs.modal', function (e) {
+
+      var form = $(this).find('form');
+      var currentTable = $('#lookupTableList option:selected');
+
+      if(!currentTable.data('code-column')) {
+        form.find('.lookup_table_code').hide();
+      } else {
+        form.find('.lookup_table_code').show();
+      }
+
+      if(!currentTable.data('description-column')) {
+        form.find('.lookup_table_description').hide();
+      } else {
+        form.find('.lookup_table_description').show();
+      }
+
+      
+    });
+  });
+
