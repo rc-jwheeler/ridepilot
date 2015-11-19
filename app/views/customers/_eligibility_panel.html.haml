@@ -5,7 +5,7 @@
     %h3.panel-title
       = translate_helper(:customer_eligibility_panel)
   .panel-body{style: 'padding: 5px;'}
-    - Eligibility.all.each do |eligibility|
+    - Eligibility.by_provider(current_provider).each do |eligibility|
       = render 'eligibility_item', item: eligibility
 
 :javascript

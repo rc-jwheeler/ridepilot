@@ -11,9 +11,16 @@
           .modal-title{:style => "text-align:left;"}
             %strong
               = translate_helper(:site_title)
-        .modal-body{:style => "text-align:left;"}
-          = f.label :value, translate_helper(:value)
-          = text_field_tag :value, nil, class: 'form-control'
+        .modal-body.row{:style => "text-align:left;"}
+          .col-sm-12.lookup_table_value
+            = f.label "lookup_table[value]", translate_helper("add_lookup_table_value")
+            = text_field_tag "lookup_table[value]", nil, class: 'form-control'
+          .col-sm-12.lookup_table_code{style: 'display: none;'}
+            = f.label "lookup_table[code]", translate_helper("add_lookup_table_code")
+            = text_field_tag "lookup_table[code]", nil, class: 'form-control'
+          .col-sm-12.lookup_table_description{style: 'display: none;'}
+            = f.label "lookup_table[description]", translate_helper("add_lookup_table_description")
+            = text_area_tag "lookup_table[description]", nil, class: 'form-control'
 
 :javascript
   $(document).ready(function() {
@@ -23,7 +30,38 @@
       var currentValue = $('#lookupTable').DataTable().row($('#lookupTable .selected')).data();
       var newUrl = baseUrl + "?model_id=" + $('#lookupTable .selected').data('model-id');
       form.prop('action', newUrl);
-      form.find('input[name=value]').val(currentValue);
+      var value = '';
+      if(currentValue.length > 0) {
+        value = currentValue[0];
+      }
+      form.find('input[name=lookup_table\\[value\\]]').val(value);
+
+      var currentTable = $('#lookupTableList option:selected');
+
+      if(!currentTable.data('code-column')) {
+        form.find('.lookup_table_code').hide();
+      } else {
+        var code = '';
+        if(currentValue.length > 1) {
+          code = currentValue[1];
+        }
+        form.find('input[name=lookup_table\\[code\\]]').val(code);
+        form.find('.lookup_table_code').show();
+      }
+
+      if(!currentTable.data('description-column')) {
+        form.find('.lookup_table_description').hide();
+      } else {
+        var desc = '';
+        if(currentValue.length > 2) {
+          desc = currentValue[2];
+        } else if (currentValue.length > 1){
+          desc = currentValue[1];
+        }
+        form.find('textarea[name=lookup_table\\[description\\]]').val(desc);
+
+        form.find('.lookup_table_description').show();
+      }
     });
   });
       

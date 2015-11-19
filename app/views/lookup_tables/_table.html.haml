@@ -1,3 +1,5 @@
+- is_code_column_configured = table.code_column_name.present?
+- is_description_column_configured = table.description_column_name.present?
 .col-sm-12{style: 'padding: 10px 0px;'}
   - if current_user.super_admin?
     - if table.add_value_allowed
@@ -8,10 +10,17 @@
       = render partial: 'delete_value_button', locals: {table: table}
   = render partial: 'hide_value_button', locals: {table: table}
   = render partial: 'show_value_button', locals: {table: table}
+
 %table.table.table-condensed.table-striped.table-bordered.table-hover#lookupTable
   %thead
     %th
       = table.value_column_name.titleize
+    - if is_code_column_configured
+      %th
+        = table.code_column_name.titleize
+    - if is_description_column_configured
+      %th
+        = table.description_column_name.titleize
   %tbody
     - hidden_ids = HiddenLookupTableValue.hidden_ids table.name, current_provider_id
     - table.values.each do |item|
@@ -19,6 +28,12 @@
       %tr{data: {"model-id": item.id}, class: row_class}
         %td
           = item[table.value_column_name]
+        - if is_code_column_configured
+          %td
+            = item[table.code_column_name]
+        - if is_description_column_configured
+          %td
+            = item[table.description_column_name]
 
 :javascript
   $(document).ready(function(){

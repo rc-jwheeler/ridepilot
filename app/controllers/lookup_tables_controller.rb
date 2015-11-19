@@ -12,12 +12,12 @@ class LookupTablesController < ApplicationController
   end
 
   def add_value
-    @item = @lookup_table.add_value(params[:value])
+    @item = @lookup_table.add_value(params[:lookup_table])
     redirect_to_show_page
   end
 
   def update_value
-    @item = @lookup_table.update_value(params[:model_id], params[:value])
+    @item = @lookup_table.update_value(params[:model_id], params[:lookup_table])
     redirect_to_show_page
   end
 

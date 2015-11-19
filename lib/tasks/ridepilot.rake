@@ -1,7 +1,7 @@
 namespace :ridepilot do
 
   #------------- Incremental Seeding ------------------
-  desc 'Seed default lookup tables and configurations'
+  desc 'Seed default lookup table configurations and each associated table data'
   task :seed_lookup_tables => :environment do
     puts 'trip purposes...'
     seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_trip_purposes.rb')
@@ -126,6 +126,13 @@ namespace :ridepilot do
     Customer.where(token: nil).each do |customer|    
       customer.update_attribute(:token, SecureRandom.hex(5))   
     end    
+  end
+
+  desc 'Seed lookup tables configurations'
+  task :seed_lookup_table_configurations => :environment do
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_lookup_table_configurations.rb')
+    load(seed_file) if File.exist?(seed_file)
+    puts 'Finished seeding lookup table configurations'
   end
   #------------- End of Incremental Seeding --------------
 end

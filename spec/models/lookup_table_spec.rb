@@ -50,7 +50,7 @@ RSpec.describe LookupTable, type: :model do
     context "add value" do
       it "adds value with add_value_allowed permission" do
         table = create(:lookup_table)
-        new_item = table.add_value('Sample Purpose')
+        new_item = table.add_value({value:'Sample Purpose'})
         expect(TripPurpose.first).to eq(TripPurpose.find_by_name('Sample Purpose'))
       end
       it "cannot add value without add_value_allowed permission" do
@@ -64,7 +64,7 @@ RSpec.describe LookupTable, type: :model do
       it "edits value with edit_value_allowed permission" do 
         table = create(:lookup_table)
         purpose = create(:trip_purpose, name: 'Sample Purpose')
-        table.update_value(purpose.id, 'New Purpose')
+        table.update_value(purpose.id, {value: 'New Purpose'})
         expect(TripPurpose.first).to eq(TripPurpose.find_by_name('New Purpose'))
       end
       it "cannot edit value without edit_value_allowed permission" do 

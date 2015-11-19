@@ -4,10 +4,10 @@
 %select.form-control.lookup-table-list#lookupTableList{onChange:"window.location.href=this.value"}
   - tables.each do |table|
     - if table.id == table_id
-      %option{value: "#{lookup_table_path(table)}", selected: true}
+      %option{value: "#{lookup_table_path(table)}", "data-code-column": "#{table.code_column_name}", "data-description-column": "#{table.description_column_name}", selected: true}
         = table.caption
     - else
-      %option{value: "#{lookup_table_path(table)}"}
+      %option{value: "#{lookup_table_path(table)}", "data-code-column": "#{table.code_column_name}", "data-description-column": "#{table.description_column_name}"}
         = table.caption
 
 

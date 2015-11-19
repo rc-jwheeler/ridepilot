@@ -8,6 +8,8 @@
     name: 'trip_results',
     caption: 'Trip Result',
     value_column_name: 'name',
+    code_column_name: 'code',
+    description_column_name: 'description',
     add_value_allowed: false,
     delete_value_allowed: false
   },
@@ -30,6 +32,12 @@
     name: 'ethnicities',
     caption: 'Ethnicity',
     value_column_name: 'name'
+  },
+  {
+    name: 'eligibilities',
+    caption: 'Eligibility',
+    value_column_name: 'code',
+    description_column_name: 'description'
   }
 ].each do | config_data|
   config = LookupTable.find_by(name: config_data[:name])
