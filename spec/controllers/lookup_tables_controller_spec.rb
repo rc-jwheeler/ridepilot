@@ -40,7 +40,7 @@ RSpec.describe LookupTablesController, type: :controller do
   describe "POST #add_value" do 
     before do 
       @table = create(:lookup_table)
-      post :add_value, id: @table, value: 'New Purpose'
+      post :add_value, id: @table, lookup_table: {value: 'New Purpose'}
     end
     it "assigns the added value to @item" do 
       expect(assigns(:item)).to eq(@table.find_by_value('New Purpose'))
