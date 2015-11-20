@@ -194,20 +194,57 @@ class Trip < ActiveRecord::Base
   end
 
   def as_calendar_json
-    {
+    return if appointment_time < pickup_time
+    # if trip spans multiple day, should spit into several objects by each day
+    common_data = {
       id: id,
-      start: pickup_time.iso8601,
-      end: appointment_time.iso8601,
-      title: customer_name + "\n" + pickup_address.try(:address_text).to_s,
-      resource: pickup_time.to_date.to_s(:js)
+      pickup_time: pickup_time.iso8601,
+      appointment_time: appointment_time.iso8601,
+      title: customer_name + "\n" + pickup_address.try(:address_text).to_s
     }
+
+    if pickup_time.to_date == appointment_time.to_date
+      common_data.merge({
+        start: pickup_time.iso8601,
+        "end": appointment_time.iso8601,
+        resource: pickup_time.to_date.to_s(:js)
+      })
+    else
+      start_time, end_time = pickup_time, appointment_time
+      events = []
+      while end_time.to_date != start_time.to_date
+        new_event_data = common_data.dup
+        events << new_event_data.merge({
+          start: start_time.iso8601,
+          "end": start_time.end_of_day.iso8601,
+          resource: start_time.to_date.to_s(:js)
+        })
+
+        start_time = start_time.beginning_of_day + 1.day
+      end
+
+      if start_time <= appointment_time
+        events << common_data.dup.merge({
+          start: start_time.iso8601,
+          "end": appointment_time.iso8601,
+          resource: start_time.to_date.to_s(:js)
+        })
+      end
+    end
   end
   
   def as_run_event_json
+    return if appointment_time < pickup_time
+    # run calendar requires start and end should be within one day
+    end_time = appointment_time.to_date == pickup_time.to_date ? 
+      appointment_time : pickup_time.end_of_day
+
     {
       id: id,
+      pickup_time: pickup_time.iso8601,
+      appointment_time: appointment_time.iso8601,
       start: pickup_time.iso8601,
-      end: appointment_time.iso8601,
+      "end": end_time.iso8601,
       title: customer_name + "\n" + pickup_address.try(:address_text).to_s,
       resource: adjusted_run_id
     }
