@@ -19,6 +19,9 @@
 %>
 <%- if edit_mode != :show -%>
   <%= link_to translate_helper("new"), new_customer_path, :target => "_blank", id: 'new_customer', class: 'btn action-button', style: (@customer.try(:id).present? ? 'display: none;' : '') %>
+  <button type='button' id='view_customer' class='btn action-button' style="<%= (@customer.try(:id).present? ? '' : 'display: none;') %>">
+    <%= translate_helper("view_customer_profile") %>
+  </button>
 <%- end -%>
 <%= javascript_tag do %>
   $(document).ready(function(){
@@ -50,6 +53,7 @@
     }
 
     $('.trip_form #customer_name').bind('railsAutocomplete.select', function(event, data){ 
+      $('#view_customer').show();
       popupFlagMessage(data.item.message);
 
       if ($("#trip_group").val() == "true") {
@@ -70,6 +74,15 @@
         }, function(customerData) {
           updateUponCustomerChange(customerData);
         });
+    });
+
+    $('#view_customer').click(function(e) {
+      e.preventDefault();
+      var customerId = $('#trip_customer_id').val();
+      if(customerId && customerId.length > 0) {
+        var win = window.open("<%= customers_url %>" + '/' + customerId, '_blank');
+        win.focus();
+      }
     });
   });
 <% end %>

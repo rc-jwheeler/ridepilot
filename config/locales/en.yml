@@ -863,6 +863,7 @@ en:
   clone_trip: "Clone"
   edit_run_link_text: "Edit Run"
   cab_trip: "Cab Trip"
+  view_customer_profile: 'Profile'
   view_customer_record_link_text: "Click to view customer record"
   days_of_week: "Days of Week"
   editing_trip: "Editing Trip"
