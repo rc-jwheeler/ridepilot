@@ -35,8 +35,8 @@ class RunFilter
     end
     
     @runs = @runs.
-      where("date >= '#{t_start.beginning_of_day.utc.strftime "%Y-%m-%d %H:%M:%S"}'").
-      where("date <= '#{t_end.end_of_day.utc.strftime "%Y-%m-%d %H:%M:%S"}'").order(:date)
+      where("date >= '#{t_start.strftime "%Y-%m-%d"}'").
+      where("date <= '#{t_end.strftime "%Y-%m-%d"}'").order(:date)
     
     @filters[:start] = t_start.to_i
     @filters[:end] = t_end.to_i
