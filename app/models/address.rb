@@ -86,6 +86,10 @@ class Address < ActiveRecord::Base
 
   end
 
+  def one_line_text
+    text.gsub(/\s+/, ' ')
+  end
+
   def address_text
     (
       (address.blank? ? '' : address + ", " ) +
