@@ -1,1 +1,1 @@
-Ridepilot::Application.config.version = '1.3.2'
+Ridepilot::Application.config.version = '1.3.3'
