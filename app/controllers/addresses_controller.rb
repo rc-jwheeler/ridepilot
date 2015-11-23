@@ -85,7 +85,6 @@ class AddressesController < ApplicationController
       attrs = address.attributes
       attrs[:label] = address.text.gsub(/\s+/, ' ')
       attrs[:prefix] = prefix
-      attrs.merge!('phone_number' => address.phone_number, 'trip_purpose' => address.trip_purpose ) if prefix == "dropoff"
       render :json => attrs.to_json
     else
       errors = address.errors.messages

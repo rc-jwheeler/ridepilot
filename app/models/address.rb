@@ -113,6 +113,7 @@ class Address < ActiveRecord::Base
       :lat => latitude,
       :lon => longitude,
       :default_trip_purpose => trip_purpose_name,
+      :trip_purpose_id => trip_purpose.try(:id),
       :notes => notes
     }
   end
