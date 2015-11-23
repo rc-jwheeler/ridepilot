@@ -68,7 +68,9 @@ class Trip < ActiveRecord::Base
   delegate :code, :name, to: :trip_result, prefix: :trip_result, allow_nil: true
   delegate :name, to: :service_level, prefix: :service_level, allow_nil: true
 
-  before_validation :compute_run
+  # Trip is now manually assigned to a run via trips_runs controller
+  # we dont need to compute or create a run when a new trip is created or updated
+  #before_validation :compute_run
   
   serialize :guests
 
