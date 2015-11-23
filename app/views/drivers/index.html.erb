@@ -28,7 +28,7 @@
       <tbody>
         <% if @drivers.empty? %>
           <tr>
-            <td colspan="4"><%= translate_helper("drivers_empty") %></td>
+            <td colspan="5"><%= translate_helper("drivers_empty") %></td>
           </tr>
         <% end %>
         <%= render partial: 'driver', collection: @drivers %>
