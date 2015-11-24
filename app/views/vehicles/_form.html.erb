@@ -160,19 +160,12 @@
             <tbody>
               <% if @readonly and @vehicle.documents.empty? %>
                 <tr>
-                  <td colspan="2"><%= translate_helper("vehicle_documents_empty") %></td>
+                  <td colspan="4"><%= translate_helper("vehicle_documents_empty") %></td>
                 </tr>
               <% end %>
               <%= render partial: 'documents/document', collection: @vehicle.documents.default_order %>
             </tbody>
           </table>
-          <% unless @readonly %>
-            <div class="panel-footer">
-              <div class="clearfix">
-                <%= link_to translate_helper("vehicle_documents_add_link_title"), new_vehicle_document_path(@vehicle), class: "btn action-button pull-right", remote: true %>
-              </div>
-            </div>
-          <% end %>
         </div><!-- END .panel -->
 
         <div class="panel panel-primary">
