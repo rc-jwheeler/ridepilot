@@ -6,7 +6,7 @@
   </td>
   <td>
     <p class="form-control-static">
-      <%= link_to_unless @readonly, document.description, polymorphic_path([document.documentable, document], action: :edit), remote: true %>
+      <%= link_to_if @readonly, document.description, document.document.url, target: :blank %>
     </p>
   </td>
   <td>
@@ -16,7 +16,7 @@
   </td>
   <td>
     <% if @readonly %>
-      <%= link_to translate_helper("document_download"), document.document.url, class: "btn action-button btn-sm pull-right" %>
+      <%= link_to translate_helper("edit"), polymorphic_path([document.documentable, document], action: :edit), class: "btn action-button btn-sm pull-right" %>
     <% else %>
       <%= link_to "X", polymorphic_path([document.documentable, document]), remote: true, method: :delete, data: { confirm: translate_helper("document_delete_confirm") }, class: "btn btn-danger btn-sm pull-right" %>
     <% end %>

@@ -27,7 +27,7 @@ RSpec.describe "VehicleDocuments" do
       end
       
       it "shows a direct link to the uploaded file" do
-        expect(page).to have_link "Download", href: @document.document.url
+        expect(page).to have_link @document.description, href: @document.document.url
       end
     end
 
