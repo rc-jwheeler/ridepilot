@@ -7,6 +7,7 @@
   <div class="col-sm-12 col-md-6">
     <% if can? :manage, @driver %>
       <div class="pull-right">
+        <%= link_to translate_helper("driver_documents_add_link_title"), new_driver_document_path(@driver), class: "btn action-button" %>
         <%= link_to translate_helper("delete_driver_button"), @driver, method: :delete, data: { confirm: translate_helper("delete_driver_confirm") }, class: "btn action-button" %>
         <%= link_to translate_helper("edit_driver_button"), edit_driver_path(@driver), class: "btn action-button" %>
       </div>

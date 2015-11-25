@@ -54,7 +54,7 @@ RSpec.describe "Lookup Tables" do
 
         it "adds a new value to data source" do 
           within '#addLookupTableValueDialog' do 
-            fill_in 'value', with: 'New Purpose'
+            fill_in 'lookup_table[value]', with: 'New Purpose'
             click_button 'OK'
           end
           

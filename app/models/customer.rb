@@ -239,10 +239,11 @@ class Customer < ActiveRecord::Base
 
     # update addresses
     address_objects.each_with_index do |addr_hash, index|
-      addr = if addr_hash[:id]
-        Address.find addr_hash[:id]
+      if addr_hash[:id]
+        addr = Address.find_by_id(addr_hash[:id])
+        addr.update_attributes addr_hash.except(:label)
       else
-        addresses.new(addr_hash.except(:label).merge(customer_id: self.try(:id)))
+        addr = addresses.new(addr_hash.except(:label).merge(customer_id: self.try(:id)))
       end
 
       self.address = addr if index == mailing_address_index

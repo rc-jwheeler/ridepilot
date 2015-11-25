@@ -17,7 +17,7 @@ class TripsController < ApplicationController
       @trip_results = TripResult.by_provider(current_provider).pluck(:name, :id)
     end
 
-    @trips_json = @trips.has_scheduled_time.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance
+    @trips_json = @trips.has_scheduled_time.map(&:as_calendar_json).flatten.to_json # TODO: sql refactor to improve performance
     @day_resources = []
 
     if @start_pickup_date > @end_pickup_date
@@ -167,7 +167,7 @@ class TripsController < ApplicationController
       t = run.scheduled_start_time || (d.at_midnight + 12.hours)
       @trip.run_id = run.id
       @trip.pickup_time = Time.zone.local(d.year, d.month, d.day, t.hour, t.min, 0)
-      @trip.appointment_time = @trip.pickup_time + 30.minutes
+      @trip.appointment_time = @trip.pickup_time + (current_provider.min_trip_time_gap_in_mins).minutes
     end
 
     if params[:customer_id] && customer = Customer.find_by_id(params[:customer_id])
@@ -208,7 +208,7 @@ class TripsController < ApplicationController
   end
 
   def return
-    @trip = @trip.clone_for_return!
+    @trip = @trip.clone_for_return!(params[:trip][:pickup_time], params[:trip][:appointment_time])
     @outbound_trip_id = params[:trip_id]
     prep_view
     
@@ -223,7 +223,7 @@ class TripsController < ApplicationController
     @trip = Trip.find(params[:id])
     prep_view
 
-    authorize! :show, @trip if !@trip.customer.authorized_for_provider(current_provider.id)
+    authorize! :show, @trip unless @trip.customer && @trip.customer.authorized_for_provider(current_provider.id)
     
     respond_to do |format|
       format.html 

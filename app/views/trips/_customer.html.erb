@@ -1,6 +1,6 @@
 <%- if @customer.try(:id).present? -%>
   <div id="trip_customer_name_wrapper">
-    <strong id="trip_customer_name_string"><%= link_to @customer.name, @customer %></strong>
+    <strong id="trip_customer_name_string"><%= link_to @customer.name, @customer, :target => "_blank" %></strong>
     <%- if edit_mode != :show %>
       &nbsp;&nbsp;&nbsp;&nbsp;(<a href="#" id="change_trip_customer_link"><%= translate_helper("change_customer") %></a>)
     <% end %>
@@ -17,8 +17,11 @@
     :class => "form-control",
     :style => @customer.try(:id).present? ? 'display: none' : '', :autocomplete => "off"
 %>
-<%- if @customer.try(:id).blank? -%>
-  <input type="button" class="btn" name="new_customer" value="<%= translate_helper("new") %>" id="new_customer" data-path="<%= new_customer_path %>">
+<%- if edit_mode != :show -%>
+  <%= link_to translate_helper("new"), new_customer_path, :target => "_blank", id: 'new_customer', class: 'btn action-button', style: (@customer.try(:id).present? ? 'display: none;' : '') %>
+  <button type='button' id='view_customer' class='btn action-button' style="<%= (@customer.try(:id).present? ? '' : 'display: none;') %>">
+    <%= translate_helper("view_customer_profile") %>
+  </button>
 <%- end -%>
 <%= javascript_tag do %>
   $(document).ready(function(){
@@ -26,6 +29,7 @@
       event.preventDefault();
       $('#trip_customer_name_wrapper').hide();
       $('#customer_name').show();
+      $('#new_customer').show();
     });
 
     function popupFlagMessage(message) {
@@ -35,11 +39,6 @@
       }
     }
 
-    // after a customer item is selected
-    $('#customer_name').bind('railsAutocomplete.select', function(event, data){
-      popupFlagMessage(data.item.message);
-    });
-
     function updateUponCustomerChange(customerData) {
       $('#trip_customer_attributes_phone_number_1').val(customerData.phone_number_1); 
       $('#alt_phone').val(customerData.phone_number_2);
@@ -47,6 +46,7 @@
       $('#trip_mobility_id').val(customerData.mobility_id);
       $('#customer_private_notes').val(customerData.private_notes);
       $("#trip_pickup_address_id").val(customerData.address_id);
+      populate_address_form('pickup', customerData.address_data);
       $("#pickup_search_address").val(customerData.address);
       $("#trip_funding_source_id").val(customerData.default_funding_source_id);
       $("#trip_service_level").val(customerData.default_service_level);
@@ -54,6 +54,9 @@
     }
 
     $('.trip_form #customer_name').bind('railsAutocomplete.select', function(event, data){ 
+      $('#view_customer').show();
+      popupFlagMessage(data.item.message);
+
       if ($("#trip_group").val() == "true") {
         $("li.passengers").hide();
         $("li.group_size").show();
@@ -72,6 +75,15 @@
         }, function(customerData) {
           updateUponCustomerChange(customerData);
         });
+    });
+
+    $('#view_customer').click(function(e) {
+      e.preventDefault();
+      var customerId = $('#trip_customer_id').val();
+      if(customerId && customerId.length > 0) {
+        var win = window.open("<%= customers_url %>" + '/' + customerId, '_blank');
+        win.focus();
+      }
     });
   });
 <% end %>

@@ -68,7 +68,9 @@ class Trip < ActiveRecord::Base
   delegate :code, :name, to: :trip_result, prefix: :trip_result, allow_nil: true
   delegate :name, to: :service_level, prefix: :service_level, allow_nil: true
 
-  before_validation :compute_run
+  # Trip is now manually assigned to a run via trips_runs controller
+  # we dont need to compute or create a run when a new trip is created or updated
+  #before_validation :compute_run
   
   serialize :guests
 
@@ -90,6 +92,7 @@ class Trip < ActiveRecord::Base
   validate :provider_availability
   validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validate :return_trip_later_than_outbound_trip
+  validate :dropff_time_and_pickup_time_gap
 
   accepts_nested_attributes_for :customer
 
@@ -193,20 +196,57 @@ class Trip < ActiveRecord::Base
   end
 
   def as_calendar_json
-    {
+    return if appointment_time < pickup_time
+    # if trip spans multiple day, should spit into several objects by each day
+    common_data = {
       id: id,
-      start: pickup_time.iso8601,
-      end: appointment_time.iso8601,
-      title: customer_name + "\n" + pickup_address.try(:address_text).to_s,
-      resource: pickup_time.to_date.to_s(:js)
+      pickup_time: pickup_time.iso8601,
+      appointment_time: appointment_time.iso8601,
+      title: customer_name + "\n" + pickup_address.try(:address_text).to_s
     }
+
+    if pickup_time.to_date == appointment_time.to_date
+      common_data.merge({
+        start: pickup_time.iso8601,
+        "end": appointment_time.iso8601,
+        resource: pickup_time.to_date.to_s(:js)
+      })
+    else
+      start_time, end_time = pickup_time, appointment_time
+      events = []
+      while end_time.to_date != start_time.to_date
+        new_event_data = common_data.dup
+        events << new_event_data.merge({
+          start: start_time.iso8601,
+          "end": start_time.end_of_day.iso8601,
+          resource: start_time.to_date.to_s(:js)
+        })
+
+        start_time = start_time.beginning_of_day + 1.day
+      end
+
+      if start_time <= appointment_time
+        events << common_data.dup.merge({
+          start: start_time.iso8601,
+          "end": appointment_time.iso8601,
+          resource: start_time.to_date.to_s(:js)
+        })
+      end
+    end
   end
   
   def as_run_event_json
+    return if appointment_time < pickup_time
+    # run calendar requires start and end should be within one day
+    end_time = appointment_time.to_date == pickup_time.to_date ? 
+      appointment_time : pickup_time.end_of_day
+
     {
       id: id,
+      pickup_time: pickup_time.iso8601,
+      appointment_time: appointment_time.iso8601,
       start: pickup_time.iso8601,
-      end: appointment_time.iso8601,
+      "end": end_time.iso8601,
       title: customer_name + "\n" + pickup_address.try(:address_text).to_s,
       resource: adjusted_run_id
     }
@@ -239,19 +279,23 @@ class Trip < ActiveRecord::Base
     cloned_trip.run = nil
     cloned_trip.cab = false
     cloned_trip.repeating_trip = nil
+    cloned_trip.drive_distance = nil
 
     cloned_trip
   end
 
-  def clone_for_return!
+  def clone_for_return!(pickup_time_str, appointment_time_str)
     return_trip = self.dup
     return_trip.direction = :return
     return_trip.pickup_address = self.dropoff_address
     return_trip.dropoff_address = self.pickup_address
-    return_time_gap = self.provider.try(:min_trip_time_gap_in_mins) || 30
-    return_trip.pickup_time = self.appointment_time + return_time_gap.minutes
-    return_trip.appointment_time = return_trip.pickup_time + return_time_gap.minutes
+    return_trip.pickup_time = nil
+    return_trip.pickup_time = Time.zone.parse(pickup_time_str, self.pickup_time.beginning_of_day) if pickup_time_str
+    return_trip.appointment_time = nil
+    # assume same-day trip
+    return_trip.appointment_time = Time.zone.parse(appointment_time_str, self.pickup_time.beginning_of_day) if appointment_time_str
     return_trip.outbound_trip = self
+    return_trip.drive_distance = nil
 
     return_trip
   end
@@ -373,6 +417,11 @@ class Trip < ActiveRecord::Base
         errors.add(:base, TranslationEngine.translate_text(:return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time)) if pickup_time < outbound_trip.appointment_time
       end
     end
+  end
+
+  def dropff_time_and_pickup_time_gap
+    time_gap_in_mins = (appointment_time - pickup_time) / 60 if appointment_time && pickup_time
+    errors.add(:base, TranslationEngine.translate_text(:violate_provider_min_time_gap)) if provider && time_gap_in_mins && (time_gap_in_mins < provider.min_trip_time_gap_in_mins)
   end
 
   def compute_run    

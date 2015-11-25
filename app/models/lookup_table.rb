@@ -1,4 +1,7 @@
 class LookupTable < ActiveRecord::Base  
+  # Each lookup table can have three columns associated: value, code, description
+  # e.g., TripResult has all three, but mostly only has one column, which is used as 'value' to identify each record
+  # Eligibility is a special case, because its value column is named as code, so value_column_name should be 'code'
   validates_presence_of :name, :caption, :value_column_name
   validates_uniqueness_of :name
 
@@ -14,13 +17,41 @@ class LookupTable < ActiveRecord::Base
     model.find_by("#{value_column_name}": value)
   end
 
-  def add_value(value)
-    model.create("#{value_column_name}": value) rescue nil if add_value_allowed
+  def add_value(data)
+    if add_value_allowed
+      data_config = {
+        "#{value_column_name}": data[:value]
+      }
+      
+      data_config["#{code_column_name}"] = data[:code] if code_column_name.present?
+      data_config["#{description_column_name}"] = data[:description] if description_column_name.present?
+
+      item = model.new(data_config) 
+      item.save
+
+      item
+    else
+      nil
+    end
   end
 
-  def update_value(model_id, new_value)
+  def update_value(model_id, new_data)
     item = model.find_by_id(model_id)
-    item.update("#{value_column_name}": new_value) if item && edit_value_allowed
+    if item && edit_value_allowed
+      data_config = {
+        "#{value_column_name}": new_data[:value]
+      }
+      
+      data_config["#{code_column_name}"] = new_data[:code] if code_column_name.present?
+      data_config["#{description_column_name}"] = new_data[:description] if description_column_name.present?
+
+      item.assign_attributes(data_config)
+
+      item.save
+
+      item
+    end
+
     item
   end
 

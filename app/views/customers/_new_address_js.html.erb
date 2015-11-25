@@ -12,17 +12,36 @@
     form.find('#' + field + '_zip').val(address.zip);
     form.find('#' + field + '_lat').val(address.lat);
     form.find('#' + field + '_lon').val(address.lon);
-    form.find('#' + field + '_in_district').val(address.in_district);
+    form.find('#' + field + '_phone_number').val(address.phone_number);
+    form.find('#' + field + '_trip_purpose_id').val(address.trip_purpose_id);
+    var in_district = [true, false].indexOf(address.in_district) >= 0 ? address.in_district.toString() : '';
+    form.find('#' + field + '_in_district').val(in_district);
     form.find('#' + field + '_notes').val(address.notes);
   }
 
-  function insertAddressRow(addressData, addressText) {
-    $('#customerCommonAddressTable').append("<tr data-address='" + escapeQuotes(JSON.stringify(addressData)) + "'>" +
+  function updateAddressRow(addressData, addressText) {
+    var encodedAddressData = escapeQuotes(JSON.stringify(addressData));
+
+    var table = $('#customerCommonAddressTable');
+    var matchRow = table.find("tr[data-address-text='" + addressText+ "']");
+    if(matchRow.length > 0) {
+      var addressId = matchRow.attr('data-address-id');
+      if(addressId && parseInt(addressId) != addressData.id){
+        show_alert("<%= translate_helper(:same_address_exists_for_customer) %>");
+      } else {
+        matchRow.data('address', addressData);
+        matchRow.attr('data-address', encodedAddressData);
+        matchRow.find('td.address_name').replaceWith("<td class='address_name'>" + addressData.name + '&nbsp;<a class="viewAddress" href="#">(Edit details)</a></td>');
+      }
+    } else {
+      table.append("<tr data-address-id='" + (addressData.id == null ? "" : addressData.id) + 
+        "' data-address-text='" + addressText + "' data-address='" + encodedAddressData + "'>" +
         '<td><button class="deleteCustomerAddress btn-danger" name="button" type="button">Delete</button></td>' +
-        "<td>" + addressData.name + '&nbsp;<a class="viewAddress" href="#">(View details)</a></td>' +
-        "<td>" + addressText + "</td>" +
+        "<td class='address_name'>" + addressData.name + '&nbsp;<a class="viewAddress" href="#">(Edit details)</a></td>' +
+        "<td class='address_text'>" + addressText + "</td>" +
         '<td><input name="mailing" type="radio" value=false></td>' +
         "</tr>");
+    }
   }
 
   $(document).ready(function() {
@@ -35,7 +54,7 @@
         $( $(this)[0].parentNode ).dialog( "close" );
 
         //insert a new address row
-        insertAddressRow(data.attributes, data.address_text);
+        updateAddressRow(data.attributes, data.address_text);
         
       } else {
         showAddressValidationErrors(this, data);
@@ -51,7 +70,7 @@
           width: 600,
           modal: true,
           buttons: {
-              "Add Address": function() {
+              "Save": function() {
                   form = $( this )[0].children[0];
                   $(form).trigger('submit'); 
               },

@@ -1,5 +1,4 @@
-<% remote ||= false %>
-<%= form_for [@parent, @document], html: { multipart: true }, remote: remote do |f| %>
+<%= form_for [@parent, @document], html: { multipart: true } do |f| %>
   <% if @document.errors.any? %>
     <div class="panel panel-danger">
       <div class="panel-heading"><%= translate_helper("document_form_error", count: @document.errors.count) %></div>

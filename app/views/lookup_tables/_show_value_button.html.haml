@@ -25,6 +25,6 @@
       var currentValue = $('#lookupTable').DataTable().row($('#lookupTable .selected')).data();
       var newUrl = baseUrl + "?model_id=" + $('#lookupTable .selected').data('model-id');
       form.prop('action', newUrl);
-      form.find('.modal-body').html(confirm_show_value_message.replace('%{value}', currentValue));
+      form.find('.modal-body').html(confirm_show_value_message.replace('%{value}', "<b>" + (currentValue.length > 0 ? currentValue[0] : 'selected item') + "</b>"));
     });
   });

@@ -226,8 +226,8 @@ RSpec.describe TripsController, type: :controller do
         {
           :run_id => create(:run, :provider => @current_user.current_provider).id,
           :customer_id => create(:customer, :provider => @current_user.current_provider).id,
-          :pickup_time => "2015-02-25 08:49",
-          :appointment_time => "2015-02-25 08:50",
+          :pickup_time => "2015-02-25 09:00",
+          :appointment_time => "2015-02-25 09:30",
           :guest_count => 1,
           :attendant_count => 1,
           :group_size => 1,
@@ -373,7 +373,8 @@ RSpec.describe TripsController, type: :controller do
     
     it "updates the trip_result of the requested trip to \"COMP\"" do
       create(:trip_result, code:"COMP", name: 'Complete')
-      trip = create(:trip, :appointment_time => Time.current, :provider => @current_user.current_provider)
+      appointment_time = Time.current
+      trip = create(:trip, :pickup_time => (appointment_time - 30.minutes), :appointment_time => appointment_time, :provider => @current_user.current_provider)
       expect {
         post :confirm, {:trip_id => trip.to_param}
       }.to change{ trip.reload.trip_result.try(:code) }.to("COMP")
@@ -442,7 +443,8 @@ RSpec.describe TripsController, type: :controller do
     
     it "marks the trip as a cab trip and sets the trip_result \"COMP\"" do
       comp_result = create(:trip_result, code:"COMP", name: 'Complete')
-      trip = create(:trip, :appointment_time => Time.current, :provider => @current_user.current_provider)
+      current_time = Time.current
+      trip = create(:trip, :pickup_time => (current_time - 30.minutes), :appointment_time => current_time, :provider => @current_user.current_provider)
       expect {
         post :send_to_cab, {:trip_id => trip.to_param}
       }.to change{[
@@ -495,9 +497,10 @@ RSpec.describe TripsController, type: :controller do
       comp_result = create(:trip_result, code:"COMP", name: 'Complete')
       ns_result = create(:trip_result, code: 'NS', name:"No-show")
 
+      current_time = Time.current
       trip_1 = create(:cab_trip, :provider => @current_user.current_provider, :trip_result => ns_result)
-      trip_2 = create(:cab_trip, :provider => @current_user.current_provider, :trip_result => comp_result, :appointment_time => Time.current)
-      trip_3 = create(:trip, :provider => @current_user.current_provider, :trip_result => comp_result, :appointment_time => Time.current)
+      trip_2 = create(:cab_trip, :provider => @current_user.current_provider, :trip_result => comp_result, :pickup_time => (current_time - 30.minutes), :appointment_time => current_time)
+      trip_3 = create(:trip, :provider => @current_user.current_provider, :trip_result => comp_result, :pickup_time => (current_time - 30.minutes), :appointment_time => current_time)
       trip_4 = create(:cab_trip, :provider => @current_user.current_provider, :trip_result => td_result)
       get :reconcile_cab, {}
       expect(assigns(:trips)).to include(trip_1)

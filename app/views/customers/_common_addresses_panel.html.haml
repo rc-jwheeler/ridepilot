@@ -19,15 +19,15 @@
             = translate_helper(:is_mailing_address)
       %tbody
         - @customer.addresses.each do |address|
-          %tr{data: {address: address.attributes.merge({label: address.address_text}).to_json}}
+          %tr{data: {"address-id": address.id.to_s, "address-text": address.address_text, address: address.attributes.merge({label: address.address_text}).to_json}}
             - if is_editing
               %td
                 = button_tag :type => 'button', class: 'deleteCustomerAddress btn-danger' do 
                   = translate_helper(:delete)
-            %td
+            %td.address_name
               = address.name
-              = link_to " (" + translate_helper(:view_address_details) + ")", '#', class: 'viewAddress'
-            %td
+              = link_to " (" + (is_editing ? 'Edit Details' : 'View Details') + ")", '#', class: 'viewAddress'
+            %td.address_text
               = address.address_text
             %td
               = radio_button_tag(:mailing, address.id, address == @customer.address)

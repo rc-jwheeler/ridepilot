@@ -47,6 +47,7 @@ en:
   must_have_one_address: 'Must have at least one address'
   create_provider_address_text: 'Create Address'
   geocode_address_required: 'A geocoded address is required, please type and select an address in the Address field'
+  same_address_exists_for_customer: 'Same address was created for the customer. Please click Edit Details to edit it if needed.'
   #cab trips
   cab: 'Cab'
   pickup_date: "Pickup Date"
@@ -137,10 +138,16 @@ en:
   edit_value: "Edit Value"
   hide_value: 'Hide Value'
   show_value: 'Show Value'
-  value: "Value"
+  value: 'Value'
+  add_lookup_table_value: "Value"
+  add_lookup_table_code: "Code"
+  add_lookup_table_description: "Description"
   key: "Key"
   confirm_hide_lookup_value_message: 'Are you sure to change %{value} to be invisible?'
   confirm_show_lookup_value_message: 'Are you sure to change %{value} to be visible?'
+  lookup_table_error_message:
+    one: "%{count} error prohibited this lookup table from being saved:"
+    other: "%{count} errors prohibited this lookup table from being saved:"
   #Shared
   site_title: "Ridepilot"
   new_trip: "New Trip"
@@ -488,6 +495,7 @@ en:
   vehicle_has_mobility_device_capacity_validation_error: "There's not enough mobility device capacity on this run to accommodate this trip"
   outbound_trip_dropoff_time_no_later_than_return_trip_pickup_time: "Dropoff time should be no later than return trip's pickup time"
   return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time: "Pickup time should be no earlier than outbound trip's appointment time"
+  violate_provider_min_time_gap: 'The gap between drop off time and pick up time violates the minimum gap setting by the provider'
   #monthlies
   monthlies_start_date: "Month"
   funding_source: "Funding Source"
@@ -819,6 +827,7 @@ en:
   #trips
   trip: 'Trip'
   trip_direction: 'Direction'
+  drive_distance: 'Drive Distance'
   return_trip: 'Return'
   outbound_trip: 'Outbound'
   return_trip_label: 'Return Trip'
@@ -857,6 +866,7 @@ en:
   clone_trip: "Clone"
   edit_run_link_text: "Edit Run"
   cab_trip: "Cab Trip"
+  view_customer_profile: 'Profile'
   view_customer_record_link_text: "Click to view customer record"
   days_of_week: "Days of Week"
   editing_trip: "Editing Trip"

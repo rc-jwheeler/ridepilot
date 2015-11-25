@@ -40,14 +40,10 @@ RSpec.describe LookupTablesController, type: :controller do
   describe "POST #add_value" do 
     before do 
       @table = create(:lookup_table)
-      post :add_value, id: @table, value: 'New Purpose'
+      post :add_value, id: @table, lookup_table: {value: 'New Purpose'}
     end
     it "assigns the added value to @item" do 
       expect(assigns(:item)).to eq(@table.find_by_value('New Purpose'))
-    end
-
-    it "redirects to @table" do 
-      expect(response).to redirect_to(@table)
     end
   end
 
@@ -60,10 +56,6 @@ RSpec.describe LookupTablesController, type: :controller do
     it "assigns the updated value to @item" do 
       expect(assigns(:item)).to eq(@table.find_by_value('New Purpose'))
     end
-
-    it "redirects to @table" do 
-      expect(response).to redirect_to(@table)
-    end
   end
 
   describe "PUT #destroy_value" do 
@@ -71,10 +63,6 @@ RSpec.describe LookupTablesController, type: :controller do
       @table = create(:lookup_table)
       existing_purpose = create(:trip_purpose, name: 'Sample Purpose')
       put :destroy_value, id: @table, value: existing_purpose.name
-    end
-
-    it "redirects to @table" do 
-      expect(response).to redirect_to(@table)
     end
   end
 end

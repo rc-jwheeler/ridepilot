@@ -54,8 +54,9 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
 
     # default scope is pickup time ascending, so reverse
-    if !@customer.authorized_for_provider(current_provider.id)
+    if !@customer.authorized_for_provider(current_provider_id)
       authorize! :show, @customer 
+      raise CanCan::AccessDenied.new("Not authorized!", :show, @customer)
     else
       @read_only_customer = false
       @read_only_customer = true if @customer.provider_id != current_provider.id
@@ -85,7 +86,10 @@ class CustomersController < ApplicationController
 
   def edit
     @customer = Customer.find(params[:id])
-    authorize! :edit, @customer if !@customer.authorized_for_provider(current_provider.id)
+    if !@customer.authorized_for_provider(current_provider.id)
+      authorize! :edit, @customer 
+      raise CanCan::AccessDenied.new("Not authorized!", :edit, @customer)
+    end
     prep_edit
   end
 

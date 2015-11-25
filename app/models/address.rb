@@ -86,6 +86,10 @@ class Address < ActiveRecord::Base
 
   end
 
+  def one_line_text
+    text.gsub(/\s+/, ' ')
+  end
+
   def address_text
     (
       (address.blank? ? '' : address + ", " ) +
@@ -109,6 +113,7 @@ class Address < ActiveRecord::Base
       :lat => latitude,
       :lon => longitude,
       :default_trip_purpose => trip_purpose_name,
+      :trip_purpose_id => trip_purpose.try(:id),
       :notes => notes
     }
   end

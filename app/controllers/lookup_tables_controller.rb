@@ -1,6 +1,6 @@
 class LookupTablesController < ApplicationController
   load_and_authorize_resource
-  before_action :set_lookup_tables, only: [:index, :show]
+  before_action :set_lookup_tables
   before_action :set_lookup_table, except: [:index]
 
   def index
@@ -12,30 +12,30 @@ class LookupTablesController < ApplicationController
   end
 
   def add_value
-    @item = @lookup_table.add_value(params[:value])
-    redirect_to_show_page
+    @item = @lookup_table.add_value(params[:lookup_table])
+    render :show
   end
 
   def update_value
-    @item = @lookup_table.update_value(params[:model_id], params[:value])
-    redirect_to_show_page
+    @item = @lookup_table.update_value(params[:model_id], params[:lookup_table])
+    render :show
   end
 
   def destroy_value
     @item = @lookup_table.destroy_value(params[:model_id])
-    redirect_to_show_page
+    render :show
   end
 
   def hide_value
     @lookup_table.hide_value(params[:model_id], current_provider_id)
     @item = @lookup_table.get_value params[:model_id]
-    redirect_to_show_page
+    render :show
   end
 
   def show_value
     @lookup_table.show_value(params[:model_id], current_provider_id)
     @item = @lookup_table.get_value params[:model_id]
-    redirect_to_show_page
+    render :show
   end
 
   private

@@ -397,7 +397,6 @@ GEM
     redis-store (1.1.6)
       redis (>= 2.2)
     ref (2.0.0)
-    remotipart (1.2.1)
     request_store (1.2.0)
     responders (1.1.2)
       railties (>= 3.2, < 4.2)
@@ -536,7 +535,6 @@ DEPENDENCIES
   rails-settings-cached (~> 0.4.1)
   rails_12factor
   redis-rails (~> 4.0.0)
-  remotipart (~> 1.2)
   reporting!
   rgeo
   rspec-rails (~> 3.2)
