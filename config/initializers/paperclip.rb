@@ -3,7 +3,7 @@ Paperclip::Attachment.default_options[:hash_secret] = Rails.application.secrets.
 if Rails.env.test?
   Paperclip::Attachment.default_options[:storage] = :filesystem
   Paperclip::Attachment.default_options[:path]    = ":rails_root/tmp/test_files/:class/:attachment/:id/:style/:filename"
-elsif !ENV['AWS_ACCESS_KEY'].empty?
+elsif ENV['AWS_REGION'] && ENV['AWS_KEY_ID'] && ENV['AWS_ACCESS_KEY']
   Paperclip::Attachment.default_options[:storage] = :fog
   Paperclip::Attachment.default_options[:fog_credentials] = {
     provider: 'AWS',
