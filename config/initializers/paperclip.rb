@@ -1,13 +1,9 @@
 Paperclip::Attachment.default_options[:hash_secret] = Rails.application.secrets.secret_key_base
 
-if Rails.env.development?
-  Paperclip::Attachment.default_options[:storage] = :filesystem
-  Paperclip::Attachment.default_options[:url]     = "/system/:class/:attachment/:id_partition/:style/:hash.:extension"
-  Paperclip::Attachment.default_options[:path]    = ":rails_root/public:url"
-elsif Rails.env.test?
+if Rails.env.test?
   Paperclip::Attachment.default_options[:storage] = :filesystem
   Paperclip::Attachment.default_options[:path]    = ":rails_root/tmp/test_files/:class/:attachment/:id/:style/:filename"
-else
+elsif ENV['AWS_REGION'] && ENV['AWS_KEY_ID'] && ENV['AWS_ACCESS_KEY']
   Paperclip::Attachment.default_options[:storage] = :fog
   Paperclip::Attachment.default_options[:fog_credentials] = {
     provider: 'AWS',
@@ -22,4 +18,8 @@ else
     'Expires'       => 10.years.from_now.httpdate
   }
   Paperclip::Attachment.default_options[:path]    = "system/:class/:attachment/:id_partition/:style/:hash.:extension"
+else
+  Paperclip::Attachment.default_options[:storage] = :filesystem
+  Paperclip::Attachment.default_options[:url]     = "/system/:class/:attachment/:id_partition/:style/:hash.:extension"
+  Paperclip::Attachment.default_options[:path]    = ":rails_root/public:url"
 end
