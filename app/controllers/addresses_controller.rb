@@ -189,12 +189,18 @@ class AddressesController < ApplicationController
           error_msgs << TranslationEngine.translate_text(:address_file_being_uploading)
         else
           begin
+            if S3_BUCKET
             # Make an object in your bucket for your upload
-            s3_file = S3_BUCKET.object("/provider_addresses/" + address_file.original_filename)
-            # Upload the file
-            s3_file.put(body: address_file, acl: 'public-read')
+              s3_file = S3_BUCKET.object("/provider_addresses/" + address_file.original_filename)
+              # Upload the file
+              s3_file.put(body: address_file, acl: 'public-read')
 
-            AddressUploadWorker.perform_async(s3_file.public_url, current_provider.id) #sidekiq needs to run
+              file_url = s3_file.public_url
+            else
+              file_url = address_file.path
+            end
+
+            AddressUploadWorker.perform_async(file_url, current_provider.id) #sidekiq needs to run
           rescue Exception => ex
             current_provider.address_upload_flag.uploaded!
             error_msgs << ex.message
