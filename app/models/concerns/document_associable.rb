@@ -63,8 +63,12 @@ module DocumentAssociable
     # raise an error if it's not detectable.
     if self.respond_to? :event
       event
+    elsif self.respond_to? :description
+      description
+    elsif self.respond_to? :services_performed
+      services_performed
     else
-      raise "Unsupported associable object: can't call `name`"
+      raise "Unsupported associable object: can't call `associable_name`"
     end
   end
 
@@ -77,8 +81,12 @@ module DocumentAssociable
       event_date
     elsif self.respond_to? :due_date
       due_date
+    elsif self.respond_to? :service_date
+      service_date
+    elsif self.respond_to? :expiration_date
+      expiration_date
     else
-      raise "Unsupported associable object: can't call `date`"
+      raise "Unsupported associable object: can't call `associable_date`"
     end
   end
 end

@@ -26,7 +26,10 @@ class LookupTable < ActiveRecord::Base
       data_config["#{code_column_name}"] = data[:code] if code_column_name.present?
       data_config["#{description_column_name}"] = data[:description] if description_column_name.present?
 
-      model.create(data_config) rescue nil 
+      item = model.new(data_config) 
+      item.save
+
+      item
     else
       nil
     end
@@ -35,9 +38,18 @@ class LookupTable < ActiveRecord::Base
   def update_value(model_id, new_data)
     item = model.find_by_id(model_id)
     if item && edit_value_allowed
-      item.update("#{value_column_name}": new_data[:value]) rescue nil
-      item.update("#{code_column_name}": new_data[:code]) rescue nil if code_column_name.present?
-      item.update("#{description_column_name}": new_data[:description]) rescue nil if description_column_name.present?
+      data_config = {
+        "#{value_column_name}": new_data[:value]
+      }
+      
+      data_config["#{code_column_name}"] = new_data[:code] if code_column_name.present?
+      data_config["#{description_column_name}"] = new_data[:description] if description_column_name.present?
+
+      item.assign_attributes(data_config)
+
+      item.save
+
+      item
     end
 
     item

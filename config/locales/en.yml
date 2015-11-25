@@ -145,6 +145,9 @@ en:
   key: "Key"
   confirm_hide_lookup_value_message: 'Are you sure to change %{value} to be invisible?'
   confirm_show_lookup_value_message: 'Are you sure to change %{value} to be visible?'
+  lookup_table_error_message:
+    one: "%{count} error prohibited this lookup table from being saved:"
+    other: "%{count} errors prohibited this lookup table from being saved:"
   #Shared
   site_title: "Ridepilot"
   new_trip: "New Trip"
@@ -863,6 +866,7 @@ en:
   clone_trip: "Clone"
   edit_run_link_text: "Edit Run"
   cab_trip: "Cab Trip"
+  view_customer_profile: 'Profile'
   view_customer_record_link_text: "Click to view customer record"
   days_of_week: "Days of Week"
   editing_trip: "Editing Trip"

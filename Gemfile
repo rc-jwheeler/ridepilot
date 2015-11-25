@@ -18,7 +18,6 @@ gem 'therubyracer',  platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
-gem 'remotipart', '~> 1.2'
 
 gem 'translation_engine', github: 'camsys/translation_engine'
 #gem 'translation_engine', path: '~/code/translation_engine'

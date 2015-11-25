@@ -68,7 +68,6 @@ class AddressesController < ApplicationController
       address_params[param] = params[prefix][param]
     end
 
-    address_params[:customer_id] = params[:customer_id] if params[:customer_id].present?
     address_params[:provider_id] = current_provider_id
     address_params[:the_geom]    = the_geom
 
@@ -77,6 +76,7 @@ class AddressesController < ApplicationController
       authorize! :edit, address
       address.attributes = address_params
     else
+      address_params[:customer_id] = params[:customer_id] if params[:customer_id].present?
       authorize! :new, Address
       address = Address.new(address_params)
     end
@@ -85,7 +85,6 @@ class AddressesController < ApplicationController
       attrs = address.attributes
       attrs[:label] = address.text.gsub(/\s+/, ' ')
       attrs[:prefix] = prefix
-      attrs.merge!('phone_number' => address.phone_number, 'trip_purpose' => address.trip_purpose ) if prefix == "dropoff"
       render :json => attrs.to_json
     else
       errors = address.errors.messages

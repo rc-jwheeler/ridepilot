@@ -12,7 +12,10 @@
     form.find('#' + field + '_zip').val(address.zip);
     form.find('#' + field + '_lat').val(address.lat);
     form.find('#' + field + '_lon').val(address.lon);
-    form.find('#' + field + '_in_district').val(address.in_district);
+    form.find('#' + field + '_phone_number').val(address.phone_number);
+    form.find('#' + field + '_trip_purpose_id').val(address.trip_purpose_id);
+    var in_district = [true, false].indexOf(address.in_district) >= 0 ? address.in_district.toString() : '';
+    form.find('#' + field + '_in_district').val(in_district);
     form.find('#' + field + '_notes').val(address.notes);
   }
 

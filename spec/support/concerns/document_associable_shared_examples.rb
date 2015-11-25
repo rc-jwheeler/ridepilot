@@ -58,6 +58,28 @@ RSpec.shared_examples "an associable for a document" do
         @example.save
       }.not_to change(DocumentAssociation, :count)
     end
+    
+    # These are used in views to provide a common interface. They will throw
+    # an error if the concern is not configured for the particular instance
+    describe "common interface methods" do
+      it "can access it's object type via associable_owner" do
+        expect {
+          @example.associable_owner
+        }.not_to raise_error
+      end
+    
+      it "can access it's name attribute via associable_name" do
+        expect {
+          @example.associable_name
+        }.not_to raise_error
+      end
+    
+      it "can access it's date attribute via associable_date" do
+        expect {
+          @example.associable_date
+        }.not_to raise_error
+      end
+    end
   end
 end
 
