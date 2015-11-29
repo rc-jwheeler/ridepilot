@@ -189,7 +189,7 @@ class AddressesController < ApplicationController
           error_msgs << TranslationEngine.translate_text(:address_file_being_uploading)
         else
           begin
-            if S3_BUCKET
+            if defined?(S3_BUCKET) && S3_BUCKET
             # Make an object in your bucket for your upload
               s3_file = S3_BUCKET.object("/provider_addresses/" + address_file.original_filename)
               # Upload the file
