@@ -241,9 +241,9 @@ class Customer < ActiveRecord::Base
     address_objects.each_with_index do |addr_hash, index|
       if addr_hash[:id]
         addr = Address.find_by_id(addr_hash[:id])
-        addr.update_attributes addr_hash.except(:label)
+        addr.update_attributes addr_hash.except(:label, :lat, :lon)
       else
-        addr = addresses.new(addr_hash.except(:label).merge(customer_id: self.try(:id)))
+        addr = addresses.new(addr_hash.except(:label, :lat, :lon).merge(customer_id: self.try(:id)))
       end
 
       self.address = addr if index == mailing_address_index
