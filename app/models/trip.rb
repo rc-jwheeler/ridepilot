@@ -421,7 +421,7 @@ class Trip < ActiveRecord::Base
 
   def dropff_time_and_pickup_time_gap
     time_gap_in_mins = (appointment_time - pickup_time) / 60 if appointment_time && pickup_time
-    errors.add(:base, TranslationEngine.translate_text(:violate_provider_min_time_gap)) if provider && time_gap_in_mins && (time_gap_in_mins < provider.min_trip_time_gap_in_mins)
+    errors.add(:base, TranslationEngine.translate_text(:violate_provider_min_time_gap, provider_name: provider.try(:name), min_gap: provider.min_trip_time_gap_in_mins)) if provider && time_gap_in_mins && (time_gap_in_mins < provider.min_trip_time_gap_in_mins)
   end
 
   def compute_run    
