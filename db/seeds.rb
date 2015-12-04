@@ -33,17 +33,20 @@ ActiveRecord::Base.transaction do
     )
   end
 
+  puts "Seeding translations"
+  Rake::Task["ridepilot:load_locales"].invoke
+
   puts "Creating lookup tables..."
   Rake::Task["ridepilot:seed_lookup_tables"].invoke
 
-  puts "Seeding translations"
-  Rake::Task["ridepilot:load_locales"].invoke
+  puts "Seeding eligibilities"
+  Rake::Task["ridepilot:seed_eligibilities"].invoke
 
   puts "Seeding custom reports"
   Rake::Task["ridepilot:seed_custom_reports"].invoke
 
-  puts "Seeding eligibilities"
-  Rake::Task["ridepilot:seed_eligibilities"].invoke
+  puts "Seeding supporting reporting filter types"
+  Rake::Task["ridepilot:seed_reporting_filter_types"].invoke
 
   puts "Done seeding"
 
