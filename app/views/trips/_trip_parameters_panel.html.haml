@@ -38,17 +38,15 @@
       .col-sm-9
         = @trip.is_return? ? translate_helper("return_trip") : translate_helper("outbound_trip")
 
-    - unless add_new_trip_via_run_page?
-      .form-group.col-sm-12
-        .col-sm-3
-          = f.label :pickup_address_label, translate_helper("pickup_address")
-        .col-sm-9
-          = autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:one_line_text), autocomplete_addresses_path(customer_id: @trip.try(:customer_id)), :size => 30, :id_element => "#trip_pickup_address_id", :delay => 500, :class => "nearly-full form-control", "data-original-value" => @trip.pickup_address.try(:text), "data-original-id" => @trip.pickup_address.try(:id) 
-          - if edit_mode != :show
-            = f.hidden_field :pickup_address_id
-            %a{href:"javascript:edit_pickup_address();", class:"pickup_address_details details", style: "display: inline;"}
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :pickup_address_label, translate_helper("pickup_address")
+      .col-sm-9
+        = autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:one_line_text), autocomplete_addresses_path(customer_id: @trip.try(:customer_id)), :size => 30, :id_element => "#trip_pickup_address_id", :delay => 500, :class => "nearly-full form-control", "data-original-value" => @trip.pickup_address.try(:text), "data-original-id" => @trip.pickup_address.try(:id) 
+        - if edit_mode != :show
+          = f.hidden_field :pickup_address_id
+          %a{href:"javascript:edit_pickup_address();", class:"pickup_address_details details", style: "display: inline;"}
        
-
     .form-group.col-sm-12
       = f.fields_for :customer do |c|
         .col-sm-3
@@ -59,89 +57,83 @@
       - if @trip.customer.try(:id).blank?
         %input#trip_customer_attributes_id{type:"hidden", name:"trip[customer_attributes][id]"}
 
-    - if add_new_trip_via_run_page?
-
-      %div{style="height: 200px"}
-        /<!-- just a spacer to keep the columns in line -->
-        &nbsp;
-    - else
-      .form-group.col-sm-12
-        .col-sm-3
-          = f.label :dropoff_address_label, translate_helper("dropoff_address") 
-        .col-sm-9
-          = autocomplete_field_tag "dropoff_search_address", @trip.dropoff_address.try(:one_line_text), autocomplete_addresses_path(customer_id: @trip.try(:customer_id)), :size => 30, :delay => 500, :update_elements => { :id => '#trip_dropoff_address_id', :default_trip_purpose => '#trip_trip_purpose'},:class => "nearly-full form-control", "data-original-value" => @trip.dropoff_address.try(:text), "data-original-id" => @trip.dropoff_address.try(:id) 
-          - if edit_mode != :show
-            = f.hidden_field :dropoff_address_id
-            %a{href:"javascript:edit_dropoff_address();", class:"dropoff_address_details details", style: "display: inline;"}
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :dropoff_address_label, translate_helper("dropoff_address") 
+      .col-sm-9
+        = autocomplete_field_tag "dropoff_search_address", @trip.dropoff_address.try(:one_line_text), autocomplete_addresses_path(customer_id: @trip.try(:customer_id)), :size => 30, :delay => 500, :update_elements => { :id => '#trip_dropoff_address_id', :default_trip_purpose => '#trip_trip_purpose'},:class => "nearly-full form-control", "data-original-value" => @trip.dropoff_address.try(:text), "data-original-id" => @trip.dropoff_address.try(:id) 
+        - if edit_mode != :show
+          = f.hidden_field :dropoff_address_id
+          %a{href:"javascript:edit_dropoff_address();", class:"dropoff_address_details details", style: "display: inline;"}
        
-      .form-group.col-sm-12
-        .col-sm-3
-          %label{for:"dropoff_phone"}
-            = translate_helper("dropoff_phone")
-        .col-sm-9
-          %input.full.form-control#dropoff_phone{type:"text", size:"30", name:"dropoff_phone", value:"#{@trip.dropoff_address.try(:phone_number)}", readonly:"readonly"}
+    .form-group.col-sm-12
+      .col-sm-3
+        %label{for:"dropoff_phone"}
+          = translate_helper("dropoff_phone")
+      .col-sm-9
+        %input.full.form-control#dropoff_phone{type:"text", size:"30", name:"dropoff_phone", value:"#{@trip.dropoff_address.try(:phone_number)}", readonly:"readonly"}
 
-      .form-group.col-sm-12
-        .col-sm-3
-          = f.label :trip_purpose, translate_helper("trip_purpose")
-        .col-sm-9
-          = f.select :trip_purpose_id, @trip_purposes.map { |tp| [tp.name, tp.id] }, {:include_blank => true}, {class: 'form-control'}
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :trip_purpose, translate_helper("trip_purpose")
+      .col-sm-9
+        = f.select :trip_purpose_id, @trip_purposes.map { |tp| [tp.name, tp.id] }, {:include_blank => true}, {class: 'form-control'}
 
-      
-      - if @customer.try(:id).present?
-        .form-group.col-sm-12.passengers.group_size
-          - if @customer.group
-            .col-sm-3
-              = f.label :group_size, translate_helper("group_size")
-            .col-sm-9  
-              = f.text_field :group_size, class: 'form-control col-sm-6 col-md-3'
-          - else 
-            .col-sm-3
-              = f.label :guest_count, translate_helper("passengers")
-            .col-sm-9{style: 'padding: 0px;'}
-              .col-sm-6.col-md-3
-                %span.nobreak
-                  = f.text_field :guest_count, class: 'form-control'
-                  &nbsp;
-                  =translate_helper("guests") 
-                  &nbsp;
-              .col-sm-6.col-md-3
-                %span.nobreak
-                  = f.text_field :attendant_count, class: 'form-control'
-                  &nbsp;
-                  = translate_helper("attendants")
-      - else
-        .form-group.col-sm-12.passengers.group_size
-          = hidden_field_tag "trip_group"
+    
+    - if @customer.try(:id).present?
+      .form-group.col-sm-12.passengers.group_size
+        - if @customer.group
           .col-sm-3
             = f.label :group_size, translate_helper("group_size")
-          .col-sm-9
-            = f.text_field :group_size, class: 'form-control'
-        .form-group.col-sm-12.passengers
+          .col-sm-9  
+            = f.text_field :group_size, class: 'form-control col-sm-6 col-md-3'
+        - else 
           .col-sm-3
             = f.label :guest_count, translate_helper("passengers")
           .col-sm-9{style: 'padding: 0px;'}
             .col-sm-6.col-md-3
               %span.nobreak
                 = f.text_field :guest_count, class: 'form-control'
-                &nbsp;Guests&nbsp;
+                &nbsp;
+                =translate_helper("guests") 
+                &nbsp;
             .col-sm-6.col-md-3
               %span.nobreak
                 = f.text_field :attendant_count, class: 'form-control'
                 &nbsp;
                 = translate_helper("attendants")
-      - if edit_mode == :show
-        .form-group.col-sm-12
-          .col-sm-3
-            = f.label :drive_distance, translate_helper("drive_distance")
-          .col-sm-9
-            = @trip.drive_distance ? pluralize(@trip.drive_distance.round(3), 'mile') : ''
-
+    - else
+      .form-group.col-sm-12.passengers.group_size
+        = hidden_field_tag "trip_group"
+        .col-sm-3
+          = f.label :group_size, translate_helper("group_size")
+        .col-sm-9
+          = f.text_field :group_size, class: 'form-control'
+      .form-group.col-sm-12.passengers
+        .col-sm-3
+          = f.label :guest_count, translate_helper("passengers")
+        .col-sm-9{style: 'padding: 0px;'}
+          .col-sm-6.col-md-3
+            %span.nobreak
+              = f.text_field :guest_count, class: 'form-control'
+              &nbsp;Guests&nbsp;
+          .col-sm-6.col-md-3
+            %span.nobreak
+              = f.text_field :attendant_count, class: 'form-control'
+              &nbsp;
+              = translate_helper("attendants")
+    - if edit_mode == :show
       .form-group.col-sm-12
         .col-sm-3
-          = f.label :notes, translate_helper("trip_notes")
+          = f.label :drive_distance, translate_helper("drive_distance")
         .col-sm-9
-          = f.text_area :notes, class: 'form-control'
+          = @trip.drive_distance ? pluralize(@trip.drive_distance.round(3), 'mile') : ''
+
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :notes, translate_helper("trip_notes")
+      .col-sm-9
+        = f.text_area :notes, class: 'form-control'
 
 :javascript
   // when trip pickup time is changed, update appointment time and displayed week

@@ -17,7 +17,6 @@ RSpec.describe ProvidersController, type: :controller do
       :region_se_corner => "",
       :viewport_center => "",
       :viewport_zoom => "",
-      :allow_trip_entry_from_runs_page => false,
       :oaa3b_per_ride_reimbursement_rate => "9.99",
       :ride_connection_per_ride_reimbursement_rate => "9.99",
       :trimet_per_ride_reimbursement_rate => "9.99",
@@ -155,19 +154,6 @@ RSpec.describe ProvidersController, type: :controller do
 
     it "redirects to the provider" do
       post :change_scheduling, {:id => @current_user.current_provider.id, :scheduling => true}
-      expect(response).to redirect_to(@current_user.current_provider)
-    end
-  end
-
-  describe "POST #change_allow_trip_entry_from_runs_page" do
-    it "updates the allow_trip_entry_from_runs_page flag on the requested provider" do
-      expect {
-        post :change_allow_trip_entry_from_runs_page, {:id => @current_user.current_provider.id, :allow_trip_entry_from_runs_page => false}
-      }.to change{ @current_user.current_provider.reload.allow_trip_entry_from_runs_page }.from(nil).to(false)
-    end
-
-    it "redirects to the provider" do
-      post :change_allow_trip_entry_from_runs_page, {:id => @current_user.current_provider.id, :allow_trip_entry_from_runs_page => true}
       expect(response).to redirect_to(@current_user.current_provider)
     end
   end

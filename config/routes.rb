@@ -70,7 +70,6 @@ Rails.application.routes.draw do
         post :change_dispatch
         post :change_reimbursement_rates
         post :change_scheduling
-        post :change_allow_trip_entry_from_runs_page
         post :change_fields_required_for_run_completion
         post :save_region
         post :save_viewport
