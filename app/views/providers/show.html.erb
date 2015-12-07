@@ -151,20 +151,6 @@
 
 <hr />
 
-<h2 class="section-header"><%= translate_helper("add_trips_from_run_pages") %></h2>
-<% if can? :edit, @provider %>
-  <%= form_tag change_allow_trip_entry_from_runs_page_provider_path(@provider) do %>
-    <fieldset>
-      <ol class="section fourth">
-        <li>
-          <%= label_tag translate_helper("enabled") %>
-          <%= select_tag "allow_trip_entry_from_runs_page", options_for_select( [["No", false], ["Yes", true]], @provider.allow_trip_entry_from_runs_page? ), { :onchange => "form.submit();" } %>
-        </li>
-      </ol>
-    </fieldset>
-  <% end %>
-<% end %>
-
 <h2 class="section-header"><%= translate_helper("min_trip_time_gap_in_mins_text") %></h2>
 <% if can? :edit, @provider %>
   <%= form_tag update_min_trip_time_gap_provider_path(@provider) do %>

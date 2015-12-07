@@ -43,10 +43,6 @@ RSpec.describe ProvidersController, type: :routing do
       expect(:post => "/providers/1/change_scheduling").to route_to("providers#change_scheduling", :id => "1")
     end
 
-    it "routes to #change_allow_trip_entry_from_runs_page" do
-      expect(:post => "/providers/1/change_allow_trip_entry_from_runs_page").to route_to("providers#change_allow_trip_entry_from_runs_page", :id => "1")
-    end
-
     it "routes to #change_fields_required_for_run_completion" do
       expect(:post => "/providers/1/change_fields_required_for_run_completion").to route_to("providers#change_fields_required_for_run_completion", :id => "1")
     end

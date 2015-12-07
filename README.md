@@ -36,20 +36,7 @@ Set up development environment
 
     - Copy `config/database.yml.example.pg` to `config/database.yml` and update the values for specific environment (at least __development__ and __test__).
 
-    - `rake db:create`
-
-    - To enable PostGIS, connect to your database with psql or pgAdmin, run:
-  ```sql
-  -- Enable PostGIS (includes raster)
-  CREATE EXTENSION postgis;
-  -- Enable Topology
-  CREATE EXTENSION postgis_topology;
-  -- fuzzy matching needed for Tiger
-  CREATE EXTENSION fuzzystrmatch;
-  ```
-   - `rake translation_engine:install`
-   - `rake db:migrate`
-   - `rake db:seed`
+    - `rake db:setup`
 
 4. Testing
     - set up test database if not yet

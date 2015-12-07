@@ -18,7 +18,6 @@
   <%= f.hidden_field :customer_id %>
   <%= f.hidden_field :direction %>
   <%= hidden_field_tag "trip[outbound_trip_id]", @trip.outbound_trip.try(:id) %>
-  <%= hidden_field_tag :run_id, add_new_trip_via_run_page? ? params[:run_id] : "" %>
 
   <div class="col-sm-12 col-md-6">
     <%= render 'customer_panel', f: f, edit_mode: edit_mode %>
@@ -37,14 +36,12 @@
 
 <% if edit_mode != :show %>
   <%= render 'customer_message_dialog' %>
-  <% unless add_new_trip_via_run_page? %>
-    <div class="address-form" id="pickup-address-form">
-      <%= render :partial=>'addresses/new_form', :locals=>{:prefix=>'pickup', :address => @trip.pickup_address || @trip.build_pickup_address(customer: @trip.customer) } %>
-    </div>
-    <div class="address-form" id="dropoff-address-form">
-      <%= render :partial=>'addresses/new_form', :locals=>{:prefix=>'dropoff', :address => @trip.dropoff_address || @trip.build_dropoff_address(customer: @trip.customer) } %>
-    </div>
-  <% end %>
+  <div class="address-form" id="pickup-address-form">
+    <%= render :partial=>'addresses/new_form', :locals=>{:prefix=>'pickup', :address => @trip.pickup_address || @trip.build_pickup_address(customer: @trip.customer) } %>
+  </div>
+  <div class="address-form" id="dropoff-address-form">
+    <%= render :partial=>'addresses/new_form', :locals=>{:prefix=>'dropoff', :address => @trip.dropoff_address || @trip.build_dropoff_address(customer: @trip.customer) } %>
+  </div>
 <% end %>
 
 <%= render 'shared/hide_invisible_form_fields_js', model_name: "trip", table_name: 'trips', provider_id:  current_provider.try(:id) %>
