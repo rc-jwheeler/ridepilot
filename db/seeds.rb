@@ -45,8 +45,8 @@ ActiveRecord::Base.transaction do
   puts "Seeding custom reports"
   Rake::Task["ridepilot:seed_custom_reports"].invoke
 
-  puts "Seeding supporting reporting filter types"
-  Rake::Task["ridepilot:seed_reporting_filter_types"].invoke
+  #puts "Seeding supporting reporting filter types"
+  #Rake::Task["ridepilot:seed_reporting_filter_types"].invoke
 
   puts "Done seeding"
 
