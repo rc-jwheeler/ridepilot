@@ -51,6 +51,9 @@ module Reporting
             title: output_field.title
           }
         end
+
+        # make sure primary_key is selected (.find_each requires)
+        total_results = total_results.select(@report.primary_key) if !@report.output_fields.pluck(:name).index(@report.primary_key)
       end
 
       if q_param[:s].present?
