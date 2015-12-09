@@ -56,7 +56,8 @@
       var mapping_errors = [];
       var markers = [];
       $.when(
-        <% (ordered_addresses = ordered_pickup_and_dropoff_addresses(trips)).each_with_index do |address, index| %>
+        <% (ordered_addresses = ordered_pickup_and_dropoff_addresses(trips)).each_with_index do |address, index|  next if !address 
+          %>
           $.Deferred(function(deferred) {
             geocoder.geocode({address: "<%= j address.address_text %>"}, function(results, status) {
               if (status == google.maps.GeocoderStatus.OK) {
