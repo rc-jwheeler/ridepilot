@@ -1,5 +1,6 @@
 class DevicePool < ActiveRecord::Base
   acts_as_paranoid # soft delete
+  has_paper_trail
   
   belongs_to  :provider
   has_many    :device_pool_drivers, :dependent => :destroy

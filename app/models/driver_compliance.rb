@@ -2,6 +2,8 @@ class DriverCompliance < ActiveRecord::Base
   include DocumentAssociable
   include ComplianceEvent
   include RecurringComplianceEvent
+
+  has_paper_trail
   
   belongs_to :driver, inverse_of: :driver_compliances
   belongs_to :recurring_driver_compliance, inverse_of: :driver_compliances

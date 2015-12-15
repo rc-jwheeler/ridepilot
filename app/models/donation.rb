@@ -1,4 +1,6 @@
 class Donation < ActiveRecord::Base
+  has_paper_trail
+  
   belongs_to :customer, inverse_of: :donations
   belongs_to :user
   belongs_to :trip

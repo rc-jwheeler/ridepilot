@@ -1,4 +1,6 @@
 class Eligibility < ActiveRecord::Base
+  has_paper_trail
+  
   validates :code, presence: true, uniqueness: true
   validates :description, presence: true
 

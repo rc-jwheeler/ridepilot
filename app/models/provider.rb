@@ -1,5 +1,6 @@
 class Provider < ActiveRecord::Base
   include Operatable
+  has_paper_trail
   
   acts_as_paranoid # soft delete
   

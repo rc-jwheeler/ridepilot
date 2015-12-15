@@ -1,5 +1,6 @@
 class Ethnicity < ActiveRecord::Base
   acts_as_paranoid # soft delete
+  has_paper_trail
 
   validates :name, :length => { :minimum => 2 }
 

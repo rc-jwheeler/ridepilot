@@ -2,6 +2,7 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   include DocumentAssociable
   include ComplianceEvent
   include RecurringComplianceEvent
+  has_paper_trail
 
   DUE_TYPES = [:date, :mileage, :both].freeze
   

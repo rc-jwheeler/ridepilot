@@ -1,5 +1,6 @@
 class DriverHistory < ActiveRecord::Base
   include DocumentAssociable
+  has_paper_trail
   
   belongs_to :driver, inverse_of: :driver_histories
 
