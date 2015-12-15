@@ -1,5 +1,6 @@
 class VehicleWarranty < ActiveRecord::Base
   include DocumentAssociable
+  has_paper_trail
 
   belongs_to :vehicle, inverse_of: :vehicle_warranties
   
