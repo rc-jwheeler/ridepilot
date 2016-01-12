@@ -5,9 +5,7 @@
 
 :javascript
   $(document).ready(function() { 
-
-    $('#calendar').fullCalendar({
-      currentDate: new Date(#{currentDate}),
+    var options = {
       header: false,
       defaultView: 'resourceDay',
       slotMinutes: 60,
@@ -17,5 +15,11 @@
       eventClick: function ( event, jsEvent, view )  {
         window.location.href = "#{base_path}/" + event.id;
       }
-    });
+    };
+
+    if(#{currentDate.present?}) {
+      options.currentDate = moment("#{currentDate.strftime('%Y-%m-%d') rescue nil}", "YYYY-MM-DD").toDate();
+    }
+
+    $('#calendar').fullCalendar(options);
   });
