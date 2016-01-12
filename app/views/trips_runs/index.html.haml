@@ -7,7 +7,7 @@
 .col-md-3{style: 'padding: 0px 15px 0px 0px;'}
   = render :partial => 'filters'
 .col-md-9{style: 'padding: 0px;'}
-  = render 'trips/calendar', base_path: trips_path, resources: @runs_json, events: @trips_json,  currentDate: @run_trip_day.to_i * 1000
+  = render 'trips/calendar', base_path: trips_path, resources: @runs_json, events: @trips_json,  currentDate: @run_trip_day
   .col-sm-12{style: 'padding: 0px 0px 10px 0px;'}
     .pull-left
       %button.btn.action-button#scheduleButton{style: 'display: none;'}
