@@ -48,10 +48,10 @@ class Trip < ActiveRecord::Base
 
   belongs_to :called_back_by, class_name: "User"
   belongs_to :customer, inverse_of: :trips
-  belongs_to :dropoff_address, class_name: "Address"
+  belongs_to :dropoff_address,  -> { with_deleted }, class_name: "Address"
   belongs_to :funding_source
   belongs_to :mobility
-  belongs_to :pickup_address, class_name: "Address"
+  belongs_to :pickup_address,  -> { with_deleted }, class_name: "Address"
   belongs_to :provider
   belongs_to :run
   belongs_to :service_level
