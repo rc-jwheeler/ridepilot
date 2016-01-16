@@ -1,4 +1,6 @@
 class LookupTable < ActiveRecord::Base  
+  has_paper_trail
+  
   # Each lookup table can have three columns associated: value, code, description
   # e.g., TripResult has all three, but mostly only has one column, which is used as 'value' to identify each record
   # Eligibility is a special case, because its value column is named as code, so value_column_name should be 'code'

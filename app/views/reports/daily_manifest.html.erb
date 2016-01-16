@@ -48,40 +48,42 @@
 
   <br class="manifest-break">
   
-  <div id="manifest-map-<%= driver.id %>" class="manifest-map center-block"></div>
-  
-  <%= javascript_tag do %>
-    $(document).ready(function() {      
-      var geocoder = new google.maps.Geocoder();
-      var mapping_errors = [];
-      var markers = [];
-      $.when(
-        <% (ordered_addresses = ordered_pickup_and_dropoff_addresses(trips)).each_with_index do |address, index|  next if !address 
-          %>
-          $.Deferred(function(deferred) {
-            geocoder.geocode({address: "<%= j address.address_text %>"}, function(results, status) {
-              if (status == google.maps.GeocoderStatus.OK) {
-                var result = results[0];
-                var marker = "label:<%= index + 1 %>|" + result.geometry.location.toUrlValue();
-                markers.push(encodeURI(marker));
-              } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
-                mapping_errors.push("No results found.");
-              } else {
-                mapping_errors.push("Unable to locate address: " + status);
-              }
-              deferred.resolve();
-            });
-          }).promise()<%= "," unless index + 1 == ordered_addresses.size %>
-        <% end %>
-      ).done(function() {
-        if (markers.length > 0) {
-          $("#manifest-map-<%= driver.id %>").append(
-            $("<img>").prop("src", "https://maps.googleapis.com/maps/api/staticmap?size=600x600&markers=" + markers.join("&markers="))
-          );
-        }
-        if (mapping_errors.length > 0) console.log(mapping_errors);
-      });
-    });    
+  <% if driver.present? && driver.id %>
+    <div id="manifest-map-<%= driver.id %>" class="manifest-map center-block"></div>
+    
+    <%= javascript_tag do %>
+      $(document).ready(function() {      
+        var geocoder = new google.maps.Geocoder();
+        var mapping_errors = [];
+        var markers = [];
+        $.when(
+          <% (ordered_addresses = ordered_pickup_and_dropoff_addresses(trips)).each_with_index do |address, index|  next if !address 
+            %>
+            $.Deferred(function(deferred) {
+              geocoder.geocode({address: "<%= j address.address_text %>"}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                  var result = results[0];
+                  var marker = "label:<%= index + 1 %>|" + result.geometry.location.toUrlValue();
+                  markers.push(encodeURI(marker));
+                } else if (status == google.maps.GeocoderStatus.ZERO_RESULTS) {
+                  mapping_errors.push("No results found.");
+                } else {
+                  mapping_errors.push("Unable to locate address: " + status);
+                }
+                deferred.resolve();
+              });
+            }).promise()<%= "," unless index + 1 == ordered_addresses.size %>
+          <% end %>
+        ).done(function() {
+          if (markers.length > 0) {
+            $("#manifest-map-<%= driver.id %>").append(
+              $("<img>").prop("src", "https://maps.googleapis.com/maps/api/staticmap?size=600x600&markers=" + markers.join("&markers="))
+            );
+          }
+          if (mapping_errors.length > 0) console.log(mapping_errors);
+        });
+      });    
+    <% end %>
   <% end %>
 
   <% if i != @trips.size %>

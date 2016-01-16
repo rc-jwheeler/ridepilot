@@ -1,5 +1,6 @@
 class TripResult < ActiveRecord::Base
   acts_as_paranoid # soft delete
+  has_paper_trail
   
   validates_presence_of :name, :code
 

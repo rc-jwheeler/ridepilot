@@ -1,4 +1,6 @@
 class HiddenLookupTableValue < ActiveRecord::Base
+  has_paper_trail
+  
   belongs_to :provider
 
   validates :provider, presence: true

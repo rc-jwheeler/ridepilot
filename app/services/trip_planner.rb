@@ -82,7 +82,7 @@ class TripPlanner
     url = build_url
     Rails.logger.info url
    
-    t = Time.now
+    t = Time.current
     begin
       resp = Net::HTTP.get_response(URI.parse(url))
       Rails.logger.info(resp[:ai])

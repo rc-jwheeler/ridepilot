@@ -8,9 +8,9 @@ class Driver < ActiveRecord::Base
 
   before_save :mark_address_as_driver_associated
   
-  belongs_to :address
-  belongs_to :provider
-  belongs_to :user
+  belongs_to :address, -> { with_deleted }
+  belongs_to :provider, -> { with_deleted }
+  belongs_to :user, -> { with_deleted }
   
   has_one :device_pool_driver, dependent: :destroy
   has_one :device_pool, through: :device_pool_driver

@@ -1,7 +1,9 @@
 class Donation < ActiveRecord::Base
-  belongs_to :customer, inverse_of: :donations
-  belongs_to :user
-  belongs_to :trip
+  has_paper_trail
+  
+  belongs_to :customer, -> { with_deleted }, inverse_of: :donations
+  belongs_to :user, -> { with_deleted }
+  belongs_to :trip, -> { with_deleted }
 
   validates :date, presence: true
   validates :amount, presence: true, numericality: { greater_than_or_equal_to: 0 }

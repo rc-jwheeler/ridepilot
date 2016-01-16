@@ -46,10 +46,10 @@ class CabTripsController < ApplicationController
   
   def set_date_params
     if params[:end].present? && params[:start].present?
-      @week_start = Time.at params[:start].to_i
-      @week_end   = Time.at params[:end].to_i
+      @week_start = Time.zone.at params[:start].to_i
+      @week_end   = Time.zone.at params[:end].to_i
     else
-      time     = Time.now
+      time     = Time.current
       @week_start = time.beginning_of_week
       @week_end   = @week_start + 6.days
     end

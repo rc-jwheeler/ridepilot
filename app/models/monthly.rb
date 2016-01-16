@@ -1,7 +1,7 @@
 class Monthly < ActiveRecord::Base
   
-  belongs_to :provider
-  belongs_to :funding_source
+  belongs_to :provider, -> { with_deleted }
+  belongs_to :funding_source, -> { with_deleted }
 
   validates_presence_of :provider
   validates_presence_of :funding_source

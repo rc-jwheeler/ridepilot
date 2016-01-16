@@ -7,7 +7,7 @@ module RecurringComplianceEventScheduler
   FUTURE_START_RULES = [:immediately, :on_schedule, :time_span].freeze
 
   included do
-    belongs_to :provider
+    belongs_to :provider, -> { with_deleted }
   
     after_update :update_children
 

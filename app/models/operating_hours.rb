@@ -1,4 +1,6 @@
 class OperatingHours < ActiveRecord::Base
+  has_paper_trail
+  
   belongs_to :operatable, polymorphic: true
 
   validates_presence_of :day_of_week, :operatable
