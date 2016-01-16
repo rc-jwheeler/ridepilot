@@ -1,6 +1,6 @@
 class BookingUser < ActiveRecord::Base
 
-  belongs_to :user
+  belongs_to :user, -> { with_deleted }
   validates :user, presence: true
 
   # Token is auto-generated at database level via uuid extension

@@ -64,9 +64,9 @@ class Run < ActiveRecord::Base
     :paid, 
   ].freeze
   
-  belongs_to :provider
-  belongs_to :driver
-  belongs_to :vehicle, inverse_of: :runs
+  belongs_to :provider, -> { with_deleted }
+  belongs_to :driver, -> { with_deleted }
+  belongs_to :vehicle, -> { with_deleted }, inverse_of: :runs
 
   has_many :trips, -> { order(:pickup_time) }, :dependent => :nullify
 

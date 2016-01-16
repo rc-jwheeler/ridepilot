@@ -1,13 +1,13 @@
 class Address < ActiveRecord::Base
   acts_as_paranoid # soft delete
   
-  belongs_to :provider
+  belongs_to :provider, -> { with_deleted }
 
-  belongs_to :customer, inverse_of: :addresses
+  belongs_to :customer, -> { with_deleted }, inverse_of: :addresses
 
   has_one :driver
 
-  belongs_to :trip_purpose
+  belongs_to :trip_purpose, -> { with_deleted }
   delegate :name, to: :trip_purpose, prefix: :trip_purpose, allow_nil: true
   
   has_many :trips_from, :class_name => "Trip", :foreign_key => :pickup_address_id
@@ -136,7 +136,6 @@ class Address < ActiveRecord::Base
       provider.address_upload_flag.uploading!
 
       open(filename) do |f|
-        #Poi.delete_all # delete existing ones
         CSV.new(f, {:col_sep => ",", :headers => true}).each do |row|
           # address_type_name = row[9] # TODO: whether to add POI_TYPE into Ridepilot
           address_name = row[2]

@@ -6,9 +6,9 @@ class RepeatingRun < ActiveRecord::Base
 
   has_paper_trail
 
-  belongs_to :vehicle
-  belongs_to :driver
-  belongs_to :provider
+  belongs_to :vehicle, -> { with_deleted }
+  belongs_to :driver, -> { with_deleted }
+  belongs_to :provider, -> { with_deleted }
 
   def instantiate!
     now = Date.today + 1.day

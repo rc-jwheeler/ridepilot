@@ -1,5 +1,5 @@
 class ProviderReport < ActiveRecord::Base
-  belongs_to :provider
+  belongs_to :provider, -> { with_deleted }
   belongs_to :custom_report
 
   validates :provider, presence: true

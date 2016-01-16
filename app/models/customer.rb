@@ -6,18 +6,18 @@ class Customer < ActiveRecord::Base
 
   has_and_belongs_to_many :authorized_providers, :class_name => 'Provider', :through => 'customers_providers'
 
-  belongs_to :provider
+  belongs_to :provider, -> { with_deleted }
   belongs_to :address
   has_many   :addresses, :dependent => :destroy, inverse_of: :customer
-  belongs_to :mobility
-  belongs_to :default_funding_source, :class_name=>'FundingSource'
+  belongs_to :mobility, -> { with_deleted }
+  belongs_to :default_funding_source, -> { with_deleted }, :class_name=>'FundingSource'
   has_many   :trips, :dependent => :destroy, inverse_of: :customer
   has_many   :donations, :dependent => :destroy, inverse_of: :customer
 
   has_many  :eligibilities, through: :customer_eligibilities
   has_many  :customer_eligibilities
 
-  belongs_to :service_level
+  belongs_to :service_level, -> { with_deleted }
   delegate :name, to: :service_level, prefix: :service_level, allow_nil: true
 
   validates_presence_of :first_name
@@ -235,7 +235,7 @@ class Customer < ActiveRecord::Base
     # remove non-existing ones
     prev_addr_ids = self.addresses.pluck(:id)
     existing_addr_ids = address_objects.select {|r| r[:id] != nil}.map{|r| r[:id]}
-    Address.where(id: prev_addr_ids-existing_addr_ids).delete_all
+    Address.where(id: prev_addr_ids-existing_addr_ids).update_all(deleted_at: Time.current)
 
     # update addresses
     address_objects.each_with_index do |addr_hash, index|

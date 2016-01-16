@@ -7,8 +7,8 @@ class Vehicle < ActiveRecord::Base
 
   has_paper_trail
 
-  belongs_to :default_driver, :class_name => "Driver"
-  belongs_to :provider
+  belongs_to :default_driver, -> { with_deleted }, :class_name => "Driver"
+  belongs_to :provider, -> { with_deleted }
   
   has_one :device_pool_driver, :dependent => :destroy
   has_one :device_pool, :through => :device_pool_driver

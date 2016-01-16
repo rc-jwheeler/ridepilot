@@ -6,15 +6,15 @@ class RepeatingTrip < ActiveRecord::Base
 
   has_paper_trail
 
-  belongs_to :customer
-  belongs_to :driver
-  belongs_to :dropoff_address, class_name: "Address"
-  belongs_to :funding_source
-  belongs_to :mobility
-  belongs_to :pickup_address, class_name: "Address"
-  belongs_to :provider
-  belongs_to :vehicle
-  belongs_to :trip_purpose
+  belongs_to :customer, -> { with_deleted }
+  belongs_to :driver, -> { with_deleted }
+  belongs_to :dropoff_address, -> { with_deleted }, class_name: "Address"
+  belongs_to :funding_source, -> { with_deleted }
+  belongs_to :mobility, -> { with_deleted }
+  belongs_to :pickup_address, -> { with_deleted }, class_name: "Address"
+  belongs_to :provider, -> { with_deleted }
+  belongs_to :vehicle, -> { with_deleted }
+  belongs_to :trip_purpose, -> { with_deleted }
   
   def instantiate!
     now = Date.today + 1.day
