@@ -17,8 +17,8 @@ class RunsController < ApplicationController
     
     @drivers = Driver.where(:provider_id=>current_provider_id)
     @vehicles = Vehicle.where(:provider_id=>current_provider_id)
-    @start_pickup_date = Time.at(session[:start].to_i).to_date
-    @end_pickup_date = Time.at(session[:end].to_i).to_date
+    @start_pickup_date = Time.zone.at(session[:start].to_i).to_date
+    @end_pickup_date = Time.zone.at(session[:end].to_i).to_date
     @days_of_week = run_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : run_sessions[:days_of_week].split(',').map(&:to_i)
 
     @runs_json = @runs.has_scheduled_time.map(&:as_calendar_json).to_json # TODO: sql refactor to improve performance

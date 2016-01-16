@@ -123,7 +123,7 @@ class Address < ActiveRecord::Base
     require 'open-uri'
     alert_msgs = []
     Rails.logger.info "Loading common address from file '#{filename}'"
-    Rails.logger.info "Starting at: #{Time.now}"
+    Rails.logger.info "Starting at: #{Time.current}"
 
     count_good = 0
     count_bad = 0

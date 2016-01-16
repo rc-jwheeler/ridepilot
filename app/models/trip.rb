@@ -258,7 +258,7 @@ class Trip < ActiveRecord::Base
     if self.donation
       self.donation.update_attributes(user: user, amount: amount)
     elsif self.id && self.customer
-      self.donation = Donation.create(date: Time.now.in_time_zone, user: user, customer: self.customer, trip: self, amount: amount)
+      self.donation = Donation.create(date: Time.current, user: user, customer: self.customer, trip: self, amount: amount)
       self.save
     end
   end

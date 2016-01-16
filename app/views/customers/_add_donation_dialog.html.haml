@@ -15,7 +15,7 @@
             .col-sm-3
               = f.label :date, translate_helper("donation_date")
             .col-sm-9  
-              = f.text_field :date, :value => format_time_for_listing_day(Time.now.in_time_zone), class: 'date-picker form-control', readonly: true
+              = f.text_field :date, :value => format_time_for_listing_day(Time.current), class: 'date-picker form-control', readonly: true
           .form-group.col-sm-12
             .col-sm-3
               = f.label :amount, translate_helper(:donation_amount) 

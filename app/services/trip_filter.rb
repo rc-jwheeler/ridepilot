@@ -26,7 +26,7 @@ class TripFilter
     t_end = utility.parse_date(@filters[:end])
 
     if !t_start && !t_end
-      time    = Time.now
+      time    = Time.current
       t_start = time.beginning_of_week.to_date.in_time_zone
       t_end   = t_start + 6.days
     elsif !t_end

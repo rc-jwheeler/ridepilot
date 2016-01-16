@@ -10,8 +10,8 @@ class TripsController < ApplicationController
     
     @vehicles        = add_cab(Vehicle.where(:provider_id => current_provider_id))
     @drivers         = Driver.for_provider current_provider_id
-    @start_pickup_date = Time.at(session[:start].to_i).to_date
-    @end_pickup_date = Time.at(session[:end].to_i).to_date
+    @start_pickup_date = Time.zone.at(session[:start].to_i).to_date
+    @end_pickup_date = Time.zone.at(session[:end].to_i).to_date
     @days_of_week = trip_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : trip_sessions[:days_of_week].split(',').map(&:to_i)
     if can? :edit, Trip
       @trip_results = TripResult.by_provider(current_provider).pluck(:name, :id)
@@ -96,7 +96,7 @@ class TripsController < ApplicationController
     #approved or turned down
     @trip = Trip.find(params[:trip_id])
     if can? :edit, @trip
-      @trip.called_back_at = Time.now
+      @trip.called_back_at = Time.current
       @trip.called_back_by = current_user
       @trip.customer_informed = true
       @trip.save
@@ -381,7 +381,7 @@ class TripsController < ApplicationController
 
     if trip_params[:customer_informed] and not @trip.customer_informed
       trip_params[:called_back_by] = current_user
-      trip_params[:called_back_at] = DateTime.now.to_s
+      trip_params[:called_back_at] = DateTime.current.to_s
     end
   end
 
