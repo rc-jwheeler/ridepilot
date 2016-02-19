@@ -91,7 +91,7 @@ class Run < ActiveRecord::Base
   # validate                  :driver_availability
   
   scope :after,                  -> (date) { where('runs.date > ?', date) }
-  scope :after_today,            -> { where('runs.date = ?', Date.today) }
+  scope :after_today,            -> { where('runs.date > ?', Date.today) }
   scope :for_date,               -> (date) { where('runs.date = ?', date) }
   scope :for_date_range,         -> (start_date, end_date) { where("runs.date >= ? and runs.date < ?", start_date, end_date) }
   scope :for_paid_driver,        -> { where(paid: true) }
