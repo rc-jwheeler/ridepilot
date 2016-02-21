@@ -60,7 +60,7 @@ class Trip < ActiveRecord::Base
   belongs_to :mobility, -> { with_deleted }
   belongs_to :pickup_address, -> { with_deleted }, class_name: "Address"
   belongs_to :provider, -> { with_deleted }
-  belongs_to :run, -> { with_deleted }
+  belongs_to :run
   belongs_to :service_level, -> { with_deleted }
   belongs_to :trip_purpose, -> { with_deleted }
   belongs_to :trip_result, -> { with_deleted }
