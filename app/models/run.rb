@@ -27,10 +27,17 @@ class Run < ActiveRecord::Base
     },
     destroy_future_occurrences_with: -> (run) {
       # Be sure not delete occurrences that have already been completed.
-      if run.date < Date.today
-        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after_today.incomplete.destroy_all
+      runs = if run.date < Date.today
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after_today.incomplete
       else 
-        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after(run.date).incomplete.destroy_all
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after(run.date).incomplete
+      end
+
+      schedule = run.repeating_run.schedule
+      Run.transaction do
+        runs.find_each do |r|
+          r.destroy unless schedule.occurs_on?(r.date)
+        end
       end
     },
     unlink_past_occurrences_with: -> (run) {

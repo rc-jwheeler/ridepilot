@@ -28,10 +28,17 @@ class Trip < ActiveRecord::Base
     },
     destroy_future_occurrences_with: -> (trip) {
       # Be sure not delete occurrences that have already happened.
-      if trip.pickup_time < Time.zone.now
-        Trip.repeating_based_on(trip.repeating_trip).after_today.not_called_back.destroy_all
+      trips = if trip.pickup_time < Time.zone.now
+        Trip.repeating_based_on(trip.repeating_trip).after_today.not_called_back
       else 
-        Trip.repeating_based_on(trip.repeating_trip).after(trip.pickup_time).not_called_back.destroy_all
+        Trip.repeating_based_on(trip.repeating_trip).after(trip.pickup_time).not_called_back
+      end
+
+      schedule = trip.repeating_trip.schedule
+      Trip.transaction do
+        trips.find_each do |t|
+          t.destroy unless schedule.occurs_on?(t.pickup_time)
+        end
       end
     },
     unlink_past_occurrences_with: -> (trip) {
