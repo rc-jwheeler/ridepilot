@@ -458,11 +458,6 @@ RSpec.shared_examples "a recurring ride coordinator" do
           Timecop.return
         end
 
-        it "should remove all future coordinators after the coordinator and delete the scheduler record" do 
-          expect(described_class.after_today.where(@occurrence_scheduler_association_id => @scheduler_id).count).to eq 0
-          expect(@occurrence_scheduler_class.find_by_id(@scheduler_id)).to be_nil
-        end
-
         it "should retain child coordinators on or before Sun, 13 Sep 2015" do
           expect(
             described_class.today_and_prior.where(
