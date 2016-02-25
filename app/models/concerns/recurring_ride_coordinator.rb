@@ -164,7 +164,7 @@ module RecurringRideCoordinator
   end
 
   def instantiate_recurring_ride_coordinators
-    send(self.class.occurrence_scheduler_association).instantiate! if !send(self.class.occurrence_scheduler_association_id).nil? && !via_recurring_ride_coordinator_scheduler
+    send(self.class.occurrence_scheduler_association).instantiate! if !send(self.class.occurrence_scheduler_association).nil? && !via_recurring_ride_coordinator_scheduler
   end
 
   def destroy_future_recurring_ride_coordinators
