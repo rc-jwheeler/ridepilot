@@ -135,14 +135,14 @@
       .col-sm-9
         = f.text_area :notes, class: 'form-control'
 
-:javascript
-  // when trip pickup time is changed, update appointment time and displayed week
-  $("body").on('change', '#trip_pickup_time', function() {
-    var minDiff = 1000 * 60 * #{current_provider.try(:min_trip_time_gap_in_mins)};
-    var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time').val());
-    var appointmentTimeDate      = ISODateFormatToDateObject( $('#trip_appointment_time').val());
-    if(!appointmentTimeDate || (appointmentTimeDate.getTime() - pickupTimeDate.getTime()) < minDiff ) {
-      var newAppointmentTimeDate = new Date(pickupTimeDate.getTime() + minDiff);
-      $('#trip_appointment_time').val( newAppointmentTimeDate.format("ddd yyyy-mm-dd hh:MM tt"));
-    }
-  });
+/ :javascript
+/   // when trip pickup time is changed, update appointment time and displayed week
+/   $("body").on('change', '#trip_pickup_time', function() {
+/     var minDiff = 1000 * 60 * #{current_provider.try(:min_trip_time_gap_in_mins)};
+/     var pickupTimeDate      = ISODateFormatToDateObject( $('#trip_pickup_time').val());
+/     var appointmentTimeDate      = ISODateFormatToDateObject( $('#trip_appointment_time').val());
+/     if(!appointmentTimeDate || (appointmentTimeDate.getTime() - pickupTimeDate.getTime()) < minDiff ) {
+/       var newAppointmentTimeDate = new Date(pickupTimeDate.getTime() + minDiff);
+/       $('#trip_appointment_time').val( newAppointmentTimeDate.format("ddd yyyy-mm-dd hh:MM tt"));
+/     }
+/   });
