@@ -9,6 +9,6 @@
 
 :javascript
   $(document).ready(function() {
-    $("#customer_authorized_provider_ids_#{@customer.provider.try(:id)}").prop('checked', 'checked').prop('disabled', 'disabled');
+    $("#customer_authorized_provider_ids_#{@customer.provider.try(:id)}").prop('checked', 'checked').prop('disabled', 'disabled').next('label').css('font-weight', 'bold');
   });
   
