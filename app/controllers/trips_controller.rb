@@ -270,7 +270,6 @@ class TripsController < ApplicationController
   def update
     if params[:trip][:customer_id] && customer = Customer.find_by_id(params[:trip][:customer_id])
       authorize! :read, customer
-      params[:trip][:provider_id] = customer.provider.id if customer.provider.present?
     else
       params[:trip][:customer_id] = @trip.customer_id
     end    

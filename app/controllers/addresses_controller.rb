@@ -21,9 +21,18 @@ class AddressesController < ApplicationController
       city_state_zip = ''
     end
 
-    addresses = Address.accessible_by(current_ability)
-      .where(is_driver_associated: false)
-      .where(["((LOWER(address) like '%' || ? || '%' ) and  (city || ', ' || state || ' ' || zip like ? || '%')) or LOWER(building_name) like '%' || ? || '%' or LOWER(name) like '%' || ? || '%' ", address, city_state_zip, term, term]).where(:provider_id => current_provider_id, :inactive => false)
+    arel_table = Address.arel_table
+    base_arel = arel_table[:provider_id].eq(current_provider_id)
+    if params[:customer_id].present? 
+      customer = Customer.find_by_id(params[:customer_id])
+
+      # shared customer's addresses
+      base_arel = base_arel.or(arel_table[:id].in(customer.addresses.pluck(:id))) if customer && customer.provider_id != current_provider_id
+    end
+
+    addresses = Address.where(base_arel.to_sql)
+      .where(is_driver_associated: false, inactive: false)
+      .where(["((LOWER(address) like '%' || ? || '%' ) and  (city || ', ' || state || ' ' || zip like ? || '%')) or LOWER(building_name) like '%' || ? || '%' or LOWER(name) like '%' || ? || '%' ", address, city_state_zip, term, term])
     if params[:customer_id].present?
       addresses = addresses.where("customer_id is NULL or customer_id = ?", params[:customer_id]) 
     else
