@@ -86,7 +86,7 @@ class RunsController < ApplicationController
   end
 
   def update
-    authorize! :manage, current_provider
+    authorize! :manage, @run
     
     # Massage trip_attributes. We're not using a nested form so that we can use
     # the partial for AJAX requests, and as a result we need to reset the keys
