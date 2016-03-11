@@ -1,5 +1,6 @@
 # This is added to run scheduler on heroku
 # Heroku_scheduler requires a rake task
+# This is also called by WHenever gem to schedule
 namespace :scheduler do
 
   task run: :environment do
