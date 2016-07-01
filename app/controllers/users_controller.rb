@@ -84,6 +84,21 @@ class UsersController < ApplicationController
     end
   end
 
+  def show_change_email
+    @user = current_user
+  end
+
+  def change_email
+    if current_user.update_email(change_email_params)
+      sign_in(current_user, :bypass => true)
+      flash.now[:notice] = "Email changed"
+      redirect_to root_path
+    else
+      flash.now[:alert] = "Error updating email"
+      render :action=>:show_change_email
+    end
+  end
+
   def show_change_expiration
     @user = User.find(params[:id])
     authorize! :manage, @user
@@ -157,5 +172,9 @@ class UsersController < ApplicationController
   
   def change_password_params
     params.require(:user).permit(:current_password, :password, :password_confirmation)
+  end
+
+  def change_email_params
+    params.require(:user).permit(:email)
   end
 end
