@@ -148,7 +148,7 @@ class AddressesController < ApplicationController
   end
 
   def update
-    new_addr_params = address_params.exclude(:provider_id) # don't want to overwrite provider
+    new_addr_params = address_params.except(:provider_id) # don't want to overwrite provider
     the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f) : nil
     new_addr_params[:the_geom] = the_geom if the_geom
     
