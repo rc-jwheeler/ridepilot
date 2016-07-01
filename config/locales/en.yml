@@ -718,6 +718,8 @@ en:
   trip_funding_sources: "Trip Funding Sources"
   daily_manifest_title: "Manifest"
   daily_manifest_heading: "Transportation Manifest"
+  driver_manifest_title: "Driver Manifest"
+  driver_manifest_heading: "Driver Manifest"
   unspecified_driver: "Unspecified driver"
   cab_trips: "Cab Trips"
   daily_trips_title: "Daily Trips"
