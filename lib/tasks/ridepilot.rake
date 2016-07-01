@@ -134,5 +134,12 @@ namespace :ridepilot do
     load(seed_file) if File.exist?(seed_file)
     puts 'Finished seeding lookup table configurations'
   end
+
+  desc 'Add driver manifest report'
+  task :add_driver_manifest_report => :environment do
+    report = CustomReport.where(name: "driver_manifest").first_or_create 
+    report.update(redirect_to_results: false, title: "Driver Manifest")
+    puts 'Driver manifest report added'
+  end
   #------------- End of Incremental Seeding --------------
 end

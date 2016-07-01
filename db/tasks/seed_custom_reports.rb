@@ -41,6 +41,10 @@ end
     title: 'Daily Manifest'
   },
   {
+    name: 'driver_manifest',
+    title: 'Driver Manifest'
+  },
+  {
     name: 'daily_manifest_with_cab',
     title: 'Daily Manifest with Cab Summary'
   },
