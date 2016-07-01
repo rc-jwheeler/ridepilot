@@ -32,7 +32,8 @@ class Vehicle < ActiveRecord::Base
   validates :seating_capacity, numericality: { only_integer: true, greater_than: 0 }
   validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :ownership, inclusion: { in: OWNERSHIPS.map(&:to_s), allow_blank: true }
-
+  validates :initial_mileage, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  
   scope :active,        -> { where(active: true) }
   scope :for_provider,  -> (provider_id) { where(provider_id: provider_id) }
   scope :reportable,    -> { where(reportable: true) }
@@ -43,7 +44,15 @@ class Vehicle < ActiveRecord::Base
   end
 
   def last_odometer_reading
-    runs.where().not(end_odometer: nil).last.try(:end_odometer).to_i
+    associated_runs = runs.where().not(end_odometer: nil)
+    # if no existing run has logged odometer, then use initial mileage
+    last_odometer = if associated_runs.empty?
+      initial_mileage
+    else
+      associated_runs.last.try(:end_odometer)
+    end
+
+    last_odometer.to_i
   end
 
   def compliant?(as_of: Date.current)
