@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151118225032) do
+ActiveRecord::Schema.define(version: 20160701151558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,11 @@ ActiveRecord::Schema.define(version: 20151118225032) do
   end
 
   add_index "booking_users", ["user_id"], :name => "index_booking_users_on_user_id"
+
+  create_table "boolean_lookup", force: true do |t|
+    t.string "name", limit: 16
+    t.string "note", limit: 16
+  end
 
   create_table "custom_reports", force: true do |t|
     t.string   "name"
@@ -782,6 +787,11 @@ ActiveRecord::Schema.define(version: 20151118225032) do
   add_index "users", ["password_changed_at"], :name => "index_users_on_password_changed_at"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
+  create_table "vehicle_maintenance_compliance_due_types", force: true do |t|
+    t.string "name", limit: 16
+    t.string "note", limit: 16
+  end
+
   create_table "vehicle_maintenance_compliances", force: true do |t|
     t.integer  "vehicle_id"
     t.string   "event"
@@ -850,6 +860,7 @@ ActiveRecord::Schema.define(version: 20151118225032) do
     t.text     "accessibility_equipment"
     t.datetime "deleted_at"
     t.integer  "mobility_device_accommodations"
+    t.integer  "initial_mileage",                default: 0
   end
 
   add_index "vehicles", ["default_driver_id"], :name => "index_vehicles_on_default_driver_id"

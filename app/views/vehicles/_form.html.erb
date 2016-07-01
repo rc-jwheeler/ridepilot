@@ -72,6 +72,14 @@
             </div>
           </div>  
           <div class="form-group">
+            <%= label_tag nil, translate_helper("vehicle_form_initial_mileage"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <p class="form-control-static">
+                <%= f.number_field :initial_mileage, min: 0, class: "form-control", disabled: @readonly %> 
+              </p>
+            </div>
+          </div>
+          <div class="form-group">
             <%= label_tag nil, translate_helper("vehicle_form_last_odometer_reading"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
               <p class="form-control-static">
