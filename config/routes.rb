@@ -16,6 +16,8 @@ Rails.application.routes.draw do
       post "create_user" => "users#create_user"
       get "show_change_password" => "users#show_change_password"
       patch "change_password"  => "users#change_password"
+      get "show_change_email" => "users#show_change_email"
+      patch "change_email"  => "users#change_email"
       get "show_change_expiration" => "users#show_change_expiration"
       patch "change_expiration"  => "users#change_expiration"
       post "change_provider" => "users#change_provider"

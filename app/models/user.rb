@@ -54,6 +54,16 @@ class User < ActiveRecord::Base
       false
     end
   end
+
+  def update_email(params)
+    unless params[:email].blank?
+      self.email = params[:email]
+      self.save
+    else
+      self.errors.add('email', :blank)
+      false
+    end
+  end
   
   # super admin (aka system admin) is regardless of providers
   def super_admin?
