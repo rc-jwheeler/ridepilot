@@ -95,7 +95,7 @@ class Trip < ActiveRecord::Base
   validate :driver_is_valid_for_vehicle
   validate :vehicle_has_open_seating_capacity
   validate :vehicle_has_mobility_device_capacity
-  validate :completable_until_trip_appointment_time
+  validate :completable_until_trip_appointment_day
   validate :provider_availability
   validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validate :return_trip_later_than_outbound_trip
@@ -404,9 +404,9 @@ class Trip < ActiveRecord::Base
   end
 
   # Can only allow to set trip as complete until day of the trip
-  def completable_until_trip_appointment_time
-    if complete && Time.current < appointment_time.in_time_zone
-      errors.add(:base, TranslationEngine.translate_text(:completable_until_trip_appointment_time_validation_error))
+  def completable_until_trip_appointment_day
+    if complete && Time.current < appointment_time.in_time_zone.beginning_of_day
+      errors.add(:base, TranslationEngine.translate_text(:completable_until_trip_appointment_day_validation_error))
     end
   end
 
