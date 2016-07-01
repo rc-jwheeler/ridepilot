@@ -111,14 +111,14 @@ class AddressesController < ApplicationController
     for param in ['name', 'building_name', 'address', 'city', 'state', 'zip', 'phone_number', 'in_district', 'trip_purpose_id', 'notes']
       address_params[param] = params[prefix][param]
     end
-
-    address_params[:provider_id] = current_provider_id
+    
     address_params[:the_geom]    = the_geom if the_geom
 
     if params[:address_id].present?
       address = Address.find(params[:address_id])
       address.attributes = address_params
     else
+      address_params[:provider_id] = current_provider_id
       address = Address.new(address_params)
     end
 
@@ -148,7 +148,7 @@ class AddressesController < ApplicationController
   end
 
   def update
-    new_addr_params = address_params
+    new_addr_params = address_params.exclude(:provider_id) # don't want to overwrite provider
     the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f) : nil
     new_addr_params[:the_geom] = the_geom if the_geom
     
