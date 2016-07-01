@@ -16,7 +16,7 @@ module ReportsHelper
   end
   
   def later_trips_for_customer(customer, trip)
-    return [] unless @trips_by_customer.any?
+    return [] unless @trips_by_customer && @trips_by_customer.any?
     @trips_by_customer[customer].select{ |ot| ot.pickup_time > trip.pickup_time }
   end
   
