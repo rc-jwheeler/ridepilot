@@ -175,6 +175,7 @@ en:
   operation_failed: "The operation has failed, please try again"
   confirm_delete_message: "Are you sure you want to delete %{value}?"
   operation_not_authorized: 'You are not authorized to execute the operation.'
+  hide_calendar: 'Hide Calendar'
   #device pool
   remove_device_pool_driver: "Remove"
   device_pool_form_error_message:

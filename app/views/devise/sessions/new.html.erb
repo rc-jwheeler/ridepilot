@@ -24,3 +24,12 @@
 <% end %>
 
 <%= render "devise/shared/links" %>
+
+<script type="text/javascript">
+  $(function() {
+    // clean up local storage for calendar view hidden status
+    localStorage.removeItem('trip_calendar_hidden');
+    localStorage.removeItem('run_calendar_hidden');
+    localStorage.removeItem('trip_run_calendar_hidden');
+  });
+</script>
