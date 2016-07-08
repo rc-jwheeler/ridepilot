@@ -1,0 +1,26 @@
+:css
+  table {
+    border: none;
+  }
+
+  table th {
+    background: white;
+    color: black;
+    border-top: 2px black solid;
+    border-bottom: 2px black solid;
+  }
+
+  tr.odd {
+    background: white;
+  }
+= render 'reports/driver_manifest/run_header', run: run
+.row
+  %table
+    %thead{style: 'border: 2px solid black;'}
+      %th{style: 'border-left: 2px black solid;'} P/D 
+      %th Client/Address
+      %th Pickup Time
+      %th{style: 'border-right: 2px black solid;'} Appt Time
+    %tbody
+      - run.trips.each do |trip|
+        = render 'reports/driver_manifest/trip', trip: trip
