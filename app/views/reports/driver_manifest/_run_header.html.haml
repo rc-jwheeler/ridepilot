@@ -1,0 +1,30 @@
+.row
+  .col-sm-5
+    %p= run.driver.try(:name) || translate_helper("no_driver")
+    %p= "Vehicle ##{run.vehicle.try(:name)}"
+    %p= "Run: #{run.try(:name)}"
+    %p= "Scheduled Run Time: #{format_time_for_listing(run.scheduled_start_time)} - #{format_time_for_listing(run.scheduled_end_time)}"
+  .col-sm-7{style: 'border: 1px solid black;'}
+    %table
+      %tbody
+        %tr
+          %td
+            Run Start Time:
+          %td{style: 'border-bottom: 1px solid black;'}
+          %td
+            Run End Time:
+          %td{style: 'border-bottom: 1px solid black;'}
+        %tr
+          %td
+            Pullout Mileage:
+          %td{style: 'border-bottom: 1px solid black;'}
+          %td
+            Pullout Hour/Minute:
+          %td{style: 'border-bottom: 1px solid black;'}
+        %tr
+          %td
+            Pullin Mileage:
+          %td{style: 'border-bottom: 1px solid black;'}
+          %td
+            Pullin Hour/Minute:
+          %td{style: 'border-bottom: 1px solid black;'}

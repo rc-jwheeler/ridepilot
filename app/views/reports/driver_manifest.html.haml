@@ -1,19 +1,20 @@
 = content_for :title, translate_helper("driver_manifest_title") + " #{@date.strftime('%v')}" 
 = render 'custom_report_header'
-.row
-  .col-xs-6{style: 'font-size: 18px; font-weight: bold; padding-left: 0px;'}
-    .col-sm-12
-      = "Date: #{@date.strftime('%A')}"
-    .col-sm-12
-      = format_date(@date)
-  .col-xs-6
-    %img.pull-right{src: "/uta_logo.png", height:40, width:151}
-.row
-  %h1{style: 'text-align: center;'}
-    %u
-      = translate_helper("driver_manifest_heading")
-      
-- @runs.each do |run|
-  = render 'driver_manifest_run', run: run
+.col-sm-12.col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2
+  .row
+    .col-xs-6{style: 'font-size: 18px; font-weight: bold; padding-left: 0px;'}
+      .col-sm-12
+        = "Date: #{@date.strftime('%A')}"
+      .col-sm-12
+        = format_date(@date)
+    .col-xs-6
+      %img.pull-right{src: "/uta_logo.png", height:40, width:151}
+  .row
+    %h1{style: 'text-align: center;'}
+      %u
+        = translate_helper("driver_manifest_heading")
+  %br      
+  - @runs.each do |run|
+    = render 'reports/driver_manifest/run', run: run
 
        
