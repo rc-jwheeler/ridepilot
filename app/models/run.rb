@@ -104,6 +104,7 @@ class Run < ActiveRecord::Base
   scope :for_paid_driver,        -> { where(paid: true) }
   scope :for_provider,           -> (provider_id) { where(provider_id: provider_id) }
   scope :for_vehicle,            -> (vehicle_id) { where(vehicle_id: vehicle_id) }
+  scope :for_driver,             -> (driver_id) { where(driver_id: driver_id) }
   scope :for_volunteer_driver,   -> { where(paid: false) }
   scope :has_scheduled_time,     -> { where.not(scheduled_start_time: nil).where.not(scheduled_end_time: nil) }
   scope :incomplete,             -> { where(complete: false) }

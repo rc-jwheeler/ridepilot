@@ -12,5 +12,8 @@
   %h1{style: 'text-align: center;'}
     %u
       = translate_helper("driver_manifest_heading")
+      
+- @runs.each do |run|
+  = render 'driver_manifest_run', run: run
 
        
