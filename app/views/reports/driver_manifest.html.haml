@@ -1,13 +1,27 @@
+:css
+  @media print {
+    table td, table th{
+      border: none;
+    }
+  }
+  
+  p {
+    line-height: normal;
+  }
+
+  table td, table th {
+    padding: 4px;
+  }
 = content_for :title, translate_helper("driver_manifest_title") + " #{@date.strftime('%v')}" 
 = render 'custom_report_header'
 .col-sm-12.col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2
   .row
     .col-xs-6{style: 'font-size: 18px; font-weight: bold; padding-left: 0px;'}
-      .col-sm-12
+      .col-sm-12{style: 'padding-left: 0px;'}
         = "Date: #{@date.strftime('%A')}"
-      .col-sm-12
+      .col-sm-12{style: 'padding-left: 0px;'}
         = format_date(@date)
-    .col-xs-6
+    .col-xs-6{style: 'padding-right: 0px;'}
       %img.pull-right{src: "/uta_logo.png", height:40, width:151}
   .row
     %h1{style: 'text-align: center;'}

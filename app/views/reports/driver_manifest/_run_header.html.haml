@@ -1,30 +1,33 @@
 .row
-  .col-sm-5
-    %p= run.driver.try(:name) || translate_helper("no_driver")
-    %p= "Vehicle ##{run.vehicle.try(:name)}"
+  .pull-left{style: 'padding-left: 0px;font-size: 16px;font-weight: bold;'}
+    %p= run.driver.try(:name) || "(#{translate_helper("no_driver")})"
+    %p
+      = "Vehicle #"
+      %u
+        =run.vehicle.try(:name)
     %p= "Run: #{run.try(:name)}"
     %p= "Scheduled Run Time: #{format_time_for_listing(run.scheduled_start_time)} - #{format_time_for_listing(run.scheduled_end_time)}"
-  .col-sm-7{style: 'border: 1px solid black;'}
-    %table
+  .pull-right{style: 'border: 1px solid black; padding: 0px; width: 470px;'}
+    %table{style: 'font-size: 14px;'}
       %tbody
         %tr
-          %td
+          %td{style: 'width: 120px;'}
             Run Start Time:
-          %td{style: 'border-bottom: 1px solid black;'}
-          %td
+          %td{style: 'border-bottom: 1px solid black; width: 100px;'}
+          %td{style: 'width: 150px;'}
             Run End Time:
-          %td{style: 'border-bottom: 1px solid black;'}
+          %td{style: 'border-bottom: 1px solid black; width: 100px;'}
         %tr
-          %td
+          %td{style: 'width: 120px;'}
             Pullout Mileage:
-          %td{style: 'border-bottom: 1px solid black;'}
-          %td
+          %td{style: 'border-bottom: 1px solid black; width: 100px;'}
+          %td{style: 'width: 150px;'}
             Pullout Hour/Minute:
-          %td{style: 'border-bottom: 1px solid black;'}
+          %td{style: 'border-bottom: 1px solid black; width: 100px;'}
         %tr
-          %td
+          %td{style: 'width: 120px;'}
             Pullin Mileage:
-          %td{style: 'border-bottom: 1px solid black;'}
-          %td
+          %td{style: 'border-bottom: 1px solid black; width: 100px;'}
+          %td{style: 'width: 150px;'}
             Pullin Hour/Minute:
-          %td{style: 'border-bottom: 1px solid black;'}
+          %td{style: 'border-bottom: 1px solid black; width: 100px;'}

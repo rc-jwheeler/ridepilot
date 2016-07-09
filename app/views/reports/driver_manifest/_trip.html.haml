@@ -2,8 +2,8 @@
 - dropoff_addr = trip.dropoff_address
 - customer = trip.customer
 
-%tr
-  %td Pickup
+%tr{style: 'font-weight: bold; font-size: 15px;'}
+  %td{style: 'font-size: 24px;'} Pick Up
   %td 
     - if customer
       %p= trip.customer.try(:name) 
@@ -15,10 +15,10 @@
   %td= format_time_for_listing(trip.appointment_time)
 
 %tr
-  %td Trip Notes:
+  %td= (trip.notes.blank? ? "" : "Trip Notes:")
   %td= trip.notes
-  %td Time Arrive (         )
-  %td Time Depart (         )
+  %td Time Arrive (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+  %td Time Depart (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
 
 - if trip.mobility
   %tr
@@ -41,25 +41,25 @@
 
 %tr
   %td{style: 'border-bottom: 1px solid black;'} Total Passengers
-  %td{style: 'border-bottom: 1px solid black;'}= trip.group_size
+  %td= trip.group_size
   %td Donation $
   %td{style: 'border: 1px solid black;'} 
 
 %tr
   %td Mobility Devices 
-  %td= trip.mobility_device_accommodations
+  %td= trip.mobility_device_accommodations || 0
   %td
   %td
 
 - if trip.mobility
   %tr
-    %td Mobility Notes
-    %td= trip.mobility.notes
+    %td= (trip.mobility && !trip.mobility.notes.blank? ? "Mobility Notes:" : "")
+    %td= (trip.mobility ? trip.mobility.notes : "")
     %td
     %td
 
-%tr
-  %td Drop Off
+%tr{style: 'font-weight: bold; font-size: 15px; padding-top: 10px;'}
+  %td{style: 'font-size: 24px;'} Drop Off
   %td 
     - if customer
       %p= trip.customer.try(:name) 
@@ -71,10 +71,10 @@
   %td
 
 %tr
-  %td Trip Notes:
+  %td= (trip.notes.blank? ? "" : "Trip Notes:")
   %td= trip.notes
-  %td Time Arrive (         )
-  %td Time Depart (         )
+  %td Time Arrive (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+  %td Time Depart (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
 
 - if (later_customer_trips = later_trips_for_customer(customer, trip)).any?
   %tr
