@@ -17,8 +17,10 @@
       form.dialog( "open" );  
       $(".address-form input").removeAttr("disabled");
       form.find('form')[0].reset();
-        form.find('input[type=hidden][name!=prefix]').val('');
+      form.find('input[type=hidden][name!=prefix]').val('');
       form.find('.error').html('');
+      form.find('.full_address').show();
+      form.find('.non_geocoding_address').hide();
     });
 
     $('#customerCommonAddressTable').on('click', '.deleteCustomerAddress', function(e) {
@@ -38,7 +40,17 @@
         form.find('input[type=hidden][name!=prefix]').val('');
         form.find('.error').html('');
         $(".address-form input.address_search").attr("disabled","disabled");
+        $(".address-form input.address_use_geocoder").attr("disabled","disabled");
+        $(".address-form .non_geocoding_address input").attr("disabled","disabled");
       }
-      populate_address_form( 'customer', $(this).parents('tr').data('address'));
+      address_obj = $(this).parents('tr').data('address');
+      populate_address_form( 'customer', address_obj);
+
+      if(address_obj && address_obj.the_geom) {
+        $('.address_use_geocoder').prop('checked',true);
+      } else {
+        $('.address_use_geocoder').prop('checked',false);
+      }
+      $('.address_use_geocoder').change();
     });
   });

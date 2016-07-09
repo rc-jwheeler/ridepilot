@@ -3,43 +3,18 @@
   <div class="panel-heading"><%= translate_helper("driver_address_heading") %></div>
   <div class="panel-body form-horizontal">
     <%= f.fields_for :address, @driver.address do |address_form| %>
-      <%= address_form.hidden_field :provider_id %>
-      <%= address_form.hidden_field :address, class: 'address_text' %>
-      <%= address_form.hidden_field :city, class: 'address_city' %>
-      <%= address_form.hidden_field :state, class: 'address_state' %>
-      <%= address_form.hidden_field :zip, class: 'address_zip' %>
-      <%= hidden_field_tag :lat, @driver.address.latitude, class: 'address_lat' %>
-      <%= hidden_field_tag :lon, @driver.address.longitude, class: 'address_lon' %>
-
-      <div class="form-group">
-          <%= address_form.label :name, translate_helper("address_name"), class: "col-md-2 control-label" %>
-        <div class="col-md-10">
-          <%= address_form.text_field :name, class: "form-control", disabled: @readonly %>
-        </div>
-      </div> 
-
-      <div class="form-group">
-          <%= address_form.label :building_name, translate_helper("building_name"), class: "col-md-2 control-label" %>
-        <div class="col-md-10">
-          <%= address_form.text_field :building_name, class: "form-control", disabled: @readonly %>
-        </div>
-      </div>  
-
-      <div class="form-group">
-          <%= label_tag "#{prefix}_full_address", translate_helper("full_address_name"), class: "col-md-2 control-label" %>
-        <div class="col-md-10">
-          <%= text_field_tag "#{prefix}_full_address", @driver.address.try(:address_text), class: 'form-control address_search', disabled: @readonly %>
-        </div>
-      </div>  
-
-      <div class="form-group">
-          <%= address_form.label :notes, translate_helper("address_notes"), class: "col-md-2 control-label" %>
-        <div class="col-md-10">
-          <%= address_form.text_area :notes, rows: 3, class: "form-control", disabled: @readonly %>
-        </div>
-      </div>  
+      <%= render 'addresses/non_geocoding_form_fields', address_form: address_form, readonly: @readonly%>
     <% end %>
   </div><!-- END .panel-body -->
 </div><!-- END .panel -->
 
 <%= render 'addresses/google_place_autocomplete_js'%>
+
+<script type="text/javascript">
+  $(function() {
+    // Force uppercase text for OFT inputs
+    $('[data-convert="uppercase"]').keyup(function(evt) {
+      this.value = this.value.toUpperCase();
+    });
+  });
+</script>

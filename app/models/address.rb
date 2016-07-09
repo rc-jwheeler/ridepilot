@@ -18,11 +18,11 @@ class Address < ActiveRecord::Base
   normalize_attribute :address, :with=> [:squish, :titleize]
   normalize_attribute :city, :with=> [:squish, :titleize]
 
-  #validates :address, :length => { :minimum => 5 }
-  #validates :city,    :length => { :minimum => 2 }
-  #validates :state,   :length => { :is => 2 }
-  #validates :zip,     :length => { :is => 5, :if => lambda { |a| a.zip.present? } }
-  validate :address_presented
+  validates :address, :length => { :minimum => 5, :unless => :geocoded? }
+  validates :city,    :length => { :minimum => 2, :unless => :geocoded? }
+  validates :state,   :length => { :is => 2, :unless => :geocoded? }
+  validates :zip,     :length => { :is => 5, :if => lambda { |a| a.zip.present? } }
+  validate :address_presented # must be put below above validations (address/city/state/zip)
   
   before_validation :compute_in_district
 
@@ -69,6 +69,10 @@ class Address < ActiveRecord::Base
 
   def longitude=(x)
     the_geom.x = x if the_geom
+  end
+
+  def geocoded?
+    !the_geom.nil?
   end
 
   def text
@@ -219,7 +223,7 @@ class Address < ActiveRecord::Base
   end
 
   def address_presented
-    errors.add(:base, TranslationEngine.translate_text(:geocode_address_required)) if !address_text.present?
+    errors.add(:base, TranslationEngine.translate_text(:address_required)) if !address_text.present?
   end
 
 end

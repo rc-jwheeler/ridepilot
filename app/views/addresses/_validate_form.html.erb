@@ -3,7 +3,7 @@
   <%= hidden_field_tag 'prefix', prefix %>
   <fieldset>
   <ol class="section">
-    <%= render 'addresses/form_fields', form: form, address: address, prefix: prefix %>
+    <%= render 'addresses/geocoding_or_not_form_fields', form: form, address: address, prefix: prefix %>
   </ol>
   </fieldset>
 <% end %>

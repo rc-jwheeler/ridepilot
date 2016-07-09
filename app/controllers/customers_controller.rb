@@ -296,6 +296,7 @@ first_name, first_name, first_name, first_name,
     @ethnicity_names = (Ethnicity.by_provider(current_provider).collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
     @funding_sources = FundingSource.by_provider(current_provider)
     @service_levels = ServiceLevel.by_provider(current_provider).pluck(:name, :id)
+    @customer.address ||= @customer.build_address provider: current_provider
 
     get_donations
   end
