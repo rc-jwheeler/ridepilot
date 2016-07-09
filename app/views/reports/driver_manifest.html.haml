@@ -18,7 +18,7 @@
   .row
     .col-xs-6{style: 'font-size: 18px; font-weight: bold; padding-left: 0px;'}
       .col-sm-12{style: 'padding-left: 0px;'}
-        = "Date: #{@date.strftime('%A')}"
+        = "#{translate_helper('driver_manifest_date')}: #{@date.strftime('%A')}"
       .col-sm-12{style: 'padding-left: 0px;'}
         = format_date(@date)
     .col-xs-6{style: 'padding-right: 0px;'}
