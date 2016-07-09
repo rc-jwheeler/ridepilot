@@ -20,10 +20,11 @@
   %td Time Arrive (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
   %td Time Depart (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
 
-- if trip.mobility
+- mobility = trip.mobility || customer.try(:mobility)
+- if mobility
   %tr
     %td Customer
-    %td= trip.mobility.name + "  1"
+    %td= mobility.name + "  1"
     %td
     %td
 
@@ -51,10 +52,10 @@
   %td
   %td
 
-- if trip.mobility
+- if customer && customer.mobility_notes.present?
   %tr
-    %td= (trip.mobility && !trip.mobility.notes.blank? ? "Mobility Notes:" : "")
-    %td= (trip.mobility ? trip.mobility.notes : "")
+    %td Mobility Notes
+    %td= customer.mobility_notes
     %td
     %td
 
