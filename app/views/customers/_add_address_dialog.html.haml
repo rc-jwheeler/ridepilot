@@ -41,16 +41,15 @@
         form.find('.error').html('');
         $(".address-form input.address_search").attr("disabled","disabled");
         $(".address-form input.address_use_geocoder").attr("disabled","disabled");
-        $(".address-form .non_geocoding_address input").attr("disabled","disabled");
+        $(".address-form .non_geocoding_address input").attr("readonly","readonly");
       }
       address_obj = $(this).parents('tr').data('address');
-      populate_address_form( 'customer', address_obj);
-
       if(address_obj && address_obj.the_geom) {
         $('.address_use_geocoder').prop('checked',true);
       } else {
         $('.address_use_geocoder').prop('checked',false);
       }
       $('.address_use_geocoder').change();
+      populate_address_form( 'customer', address_obj);
     });
   });
