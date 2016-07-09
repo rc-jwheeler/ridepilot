@@ -17,10 +17,10 @@
 .row
   %table{style: 'font-size: 14px;'}
     %thead{style: 'border: 2px solid black; font-size: 18px;'}
-      %th{style: 'border-left: 2px black solid;'} P/D 
-      %th Client/Address
-      %th Pickup Time
-      %th{style: 'border-right: 2px black solid;'} Appt Time
+      %th{style: 'border-left: 2px black solid;'}= translate_helper("driver_manifest_p_d") 
+      %th= translate_helper("driver_manifest_client_address") 
+      %th= translate_helper("driver_manifest_pickup_time") 
+      %th{style: 'border-right: 2px black solid;'}= translate_helper("driver_manifest_appt_time") 
     %tbody
       - run.trips.each do |trip|
         = render 'reports/driver_manifest/trip', trip: trip
