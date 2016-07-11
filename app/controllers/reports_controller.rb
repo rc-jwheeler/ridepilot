@@ -312,7 +312,7 @@ class ReportsController < ApplicationController
 
     @runs = Run.for_provider(current_provider_id).for_date(@date).joins(:trips)
       .includes(trips: [:pickup_address, :dropoff_address, :customer, :mobility])
-      .order(:scheduled_start_time, "trips.pickup_time")
+      .order(:scheduled_start_time).distinct
     if @query.driver_id != -2 # All
       @runs = runs.for_driver(@query.driver_id)
     end
