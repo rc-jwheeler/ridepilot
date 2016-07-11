@@ -46,7 +46,7 @@
 
 %tr
   %td{style: 'border-bottom: 1px solid black;'}= translate_helper("driver_manifest_total_passengers") 
-  %td= trip.group_size
+  %td= trip.trip_size
   %td= translate_helper("driver_manifest_donation_$") 
   %td{style: 'border: 1px solid black;'} 
 
@@ -95,6 +95,10 @@
           = format_time_for_listing(later_trip.pickup_time)
           " with" 
           = later_trip.run ? (later_trip.run.driver.try(:name) ||  translate_helper("no_driver") ) : "Cab" 
+
+%tr
+  %td{colspan:"4"}
+    %hr{style:"margin-top: 5px; margin-bottom: 5px;"}
 
 
 
