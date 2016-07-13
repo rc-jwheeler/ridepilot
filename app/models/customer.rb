@@ -74,7 +74,8 @@ class Customer < ActiveRecord::Base
   end
 
   def trip_related_data
-    if address.present?
+    # only return geocoded address
+    if address.present? && address.the_geom.present?
       address_text = address.text.gsub(/\s+/, ' ')
       address_id = address.id
       address_data = address.attributes

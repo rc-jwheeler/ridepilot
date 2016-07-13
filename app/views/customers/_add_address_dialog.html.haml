@@ -40,16 +40,16 @@
         form.find('input[type=hidden][name!=prefix]').val('');
         form.find('.error').html('');
         $(".address-form input.address_search").attr("disabled","disabled");
-        $(".address-form input.address_use_geocoder").attr("disabled","disabled");
+        $(".address-form input.address_non_street_mailing_address").attr("disabled","disabled");
         $(".address-form .non_geocoding_address input").attr("readonly","readonly");
       }
       address_obj = $(this).parents('tr').data('address');
       if(address_obj && address_obj.the_geom) {
-        $('.address_use_geocoder').prop('checked',true);
+        $('.address_non_street_mailing_address').prop('checked',false);
       } else {
-        $('.address_use_geocoder').prop('checked',false);
+        $('.address_non_street_mailing_address').prop('checked',true);
       }
-      $('.address_use_geocoder').change();
+      $('.address_non_street_mailing_address').change();
       populate_address_form( 'customer', address_obj);
     });
   });

@@ -6,7 +6,7 @@
   %td{style: 'font-size: 24px;'}= translate_helper("driver_manifest_pickup") 
   %td 
     - if customer
-      %p= trip.customer.try(:name) 
+      %p{style:'font-size: 18px;'}= trip.customer.try(:name) 
     - if pickup_addr
       %p= pickup_addr.text
       - if pickup_addr.notes
@@ -46,7 +46,7 @@
 
 %tr
   %td{style: 'border-bottom: 1px solid black;'}= translate_helper("driver_manifest_total_passengers") 
-  %td= trip.passenger_size
+  %td= trip.trip_size
   %td= translate_helper("driver_manifest_donation_$") 
   %td{style: 'border: 1px solid black;'} 
 
@@ -63,11 +63,11 @@
     %td
     %td
 
-%tr{style: 'font-weight: bold; font-size: 15px; padding-top: 10px;'}
-  %td{style: 'font-size: 24px;'}= translate_helper("driver_manifest_dropoff") 
+%tr{style: 'font-weight: bold; font-size: 15px;'}
+  %td{style: 'font-size: 24px; padding-top: 15px;'}= translate_helper("driver_manifest_dropoff") 
   %td 
     - if customer
-      %p= trip.customer.try(:name) 
+      %p{style:'font-size: 18px; padding-top: 15px;'}= trip.customer.try(:name) 
     - if dropoff_addr
       %p= dropoff_addr.text
       - if dropoff_addr.notes
@@ -96,9 +96,9 @@
           " with" 
           = later_trip.run ? (later_trip.run.driver.try(:name) ||  translate_helper("no_driver") ) : "Cab" 
 
-%tr
-  %td{colspan:"4"}
-    %hr{style:"margin-top: 5px; margin-bottom: 5px;"}
+- unless is_first_trip
+  %tr
+    %td{colspan:"4", style: "border-top: 3px solid darkgray;"}
 
 
 

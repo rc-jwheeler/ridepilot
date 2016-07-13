@@ -14,8 +14,8 @@
 </li>
 
 <li class="selfclear">
-  <%= label_tag "#{prefix}_use_geocoder", translate_helper("use_geocoder") %>
-  <%= check_box_tag "#{prefix}_user_geocoder", 'yes', true, class: 'address_use_geocoder' %>
+  <%= label_tag "#{prefix}_non_street_mailing_address", translate_helper("non_street_mailing_address") %>
+  <%= check_box_tag "#{prefix}_non_street_mailing_address", 'yes', false, class: 'address_non_street_mailing_address' %>
 </li>
 
 <li class="selfclear full_address">
@@ -78,8 +78,8 @@
       this.value = this.value.toUpperCase();
     });
     
-    $('.address_use_geocoder').change(function() {
-      if($(this).prop('checked')) {
+    $('.address_non_street_mailing_address').change(function() {
+      if(!$(this).prop('checked')) {
         $('.non_geocoding_address').hide();
         $('.full_address').show();
 
