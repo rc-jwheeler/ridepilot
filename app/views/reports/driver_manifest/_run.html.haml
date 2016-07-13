@@ -22,5 +22,6 @@
       %th= translate_helper("driver_manifest_pickup_time") 
       %th{style: 'border-right: 2px black solid;'}= translate_helper("driver_manifest_appt_time") 
     %tbody
+      - trip_count = run.trips.order(:pickup_time).count
       - run.trips.order(:pickup_time).each_with_index do |trip, index|
-        = render 'reports/driver_manifest/trip', trip: trip, is_first_trip: (index == 0)
+        = render 'reports/driver_manifest/trip', trip: trip, is_last_trip: (index == trip_count - 1)
