@@ -96,7 +96,7 @@
           " with" 
           = later_trip.run ? (later_trip.run.driver.try(:name) ||  translate_helper("no_driver") ) : "Cab" 
 
-- unless is_first_trip
+- unless is_last_trip
   %tr
     %td{colspan:"4", style: "border-top: 3px solid darkgray;"}
 
