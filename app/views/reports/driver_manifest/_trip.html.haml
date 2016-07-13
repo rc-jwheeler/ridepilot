@@ -17,10 +17,10 @@
 %tr
   %td= (trip.notes.blank? ? "" : translate_helper("driver_manifest_trip_notes") )
   %td= trip.notes
-  %td
+  %td{style: 'min-width: 150px;'}
     = translate_helper("driver_manifest_time_arrive")   
     &nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
-  %td  
+  %td{style: 'min-width: 150px;'}  
     = translate_helper("driver_manifest_time_depart") 
     &nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
 
@@ -78,10 +78,10 @@
 %tr
   %td= (trip.notes.blank? ? "" : translate_helper("driver_manifest_trip_notes") )
   %td= trip.notes
-  %td
+  %td{style: 'min-width: 150px;'}
     = translate_helper("driver_manifest_time_arrive")   
     &nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
-  %td  
+  %td{style: 'min-width: 150px;'}  
     = translate_helper("driver_manifest_time_depart") 
     &nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
 
