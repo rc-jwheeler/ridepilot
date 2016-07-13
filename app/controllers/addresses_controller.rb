@@ -39,6 +39,10 @@ class AddressesController < ApplicationController
       addresses = addresses.where("customer_id is NULL") #only provider common addresses if customer is not given
     end
 
+    if params[:geocoding_only] == 'true'
+      addresses = addresses.where.not(the_geom: nil)
+    end
+
     if params[:exclude].present?
       addresses = addresses.where.not(id: params[:exclude].split(','))
     end

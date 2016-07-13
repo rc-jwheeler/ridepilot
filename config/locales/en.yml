@@ -31,7 +31,7 @@ en:
   city: "City"
   state: "State"
   zip: "Zip Code"
-  use_geocoder: 'User Geocoder?'
+  non_street_mailing_address: 'Non-street Mailing Address (P.O. Box)'
   city_state_zip: "City/State/Zip"
   phone_number: "Phone Number"
   in_district: "In UTA District"

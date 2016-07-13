@@ -178,14 +178,6 @@ class Trip < ActiveRecord::Base
     end
   end
 
-  def passenger_size
-    if customer.try(:group)
-      group_size && (group_size > 0) ? (group_size - 1) : 0
-    else 
-      guest_count + attendant_count
-    end
-  end
-
   def trip_count
     trip_size
   end

@@ -66,8 +66,8 @@
       }
 
       var customerId = data.item.id;
-      $('#pickup_search_address').attr('data-autocomplete', "<%=autocomplete_addresses_path%>?customer_id=" + customerId);
-      $('#dropoff_search_address').attr('data-autocomplete', "<%=autocomplete_addresses_path%>?customer_id=" + customerId);
+      $('#pickup_search_address').attr('data-autocomplete', "<%=autocomplete_addresses_path%>?geocoding_only=true&customer_id=" + customerId);
+      $('#dropoff_search_address').attr('data-autocomplete', "<%=autocomplete_addresses_path%>?geocoding_only=true&customer_id=" + customerId);
       $('.address-search input[name=customer_id]').val(customerId);
 
       $.post("<%= data_for_trip_customers_path %>", {
