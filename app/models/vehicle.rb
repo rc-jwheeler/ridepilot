@@ -32,7 +32,7 @@ class Vehicle < ActiveRecord::Base
   validates :seating_capacity, numericality: { only_integer: true, greater_than: 0 }
   validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :ownership, inclusion: { in: OWNERSHIPS.map(&:to_s), allow_blank: true }
-  validates :initial_mileage, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :initial_mileage, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 10000000 }
   
   scope :active,        -> { where(active: true) }
   scope :for_provider,  -> (provider_id) { where(provider_id: provider_id) }
