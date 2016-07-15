@@ -312,10 +312,14 @@ class ReportsController < ApplicationController
 
     @runs = Run.for_provider(current_provider_id).for_date(@date).joins(:trips)
       .includes(trips: [:pickup_address, :dropoff_address, :customer, :mobility])
-      .order(:scheduled_start_time).distinct
+    run_ids = @runs.pluck(:id).uniq
+    
+    @runs = @runs.order(:scheduled_start_time).distinct
     if @query.driver_id != -2 # All
       @runs = runs.for_driver(@query.driver_id)
     end
+
+    @trips_by_customer = Trip.where("cab = TRUE or run_id in (?)", run_ids).for_provider(current_provider_id).for_date(@date).group_by(&:customer)
   end
 
   def daily_manifest
