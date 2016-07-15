@@ -69,12 +69,6 @@
     <tr>
       <td class="<%= role.name.downcase %>">
         <%= role.user.email %>
-        <% if role.user == current_user %>
-          <span class="separator">|</span> <%= link_to translate_helper("change_password"), show_change_password_path, :class=>'change-password' %>
-        <% end %>
-        <% if can?(:manage, role.user) %>
-          <span class="separator">|</span> <%= link_to translate_helper("change_email"), show_change_email_path, :class=>'change-email' %>
-        <% end %>
       </td>
       <td><%= role.name %></td>
       <td><%= role.user.last_sign_in_at %></td>
