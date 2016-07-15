@@ -87,14 +87,15 @@
 
 - if (later_customer_trips = later_trips_for_customer(customer, trip)).any?
   %tr
-    %td
+    %td{colspan: 4}
       - later_customer_trips.each do |later_trip| 
         %p
           = translate_helper("later_trips")  
-          " at" 
+          = " at"
           = format_time_for_listing(later_trip.pickup_time)
-          " with" 
-          = later_trip.run ? (later_trip.run.driver.try(:name) ||  translate_helper("no_driver") ) : "Cab" 
+          = " (" 
+          = later_trip.run ? ("Run # " + later_trip.run.try(:name)) : "Cab" 
+          = ")"
 
 - unless is_last_trip
   %tr
