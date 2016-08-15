@@ -5,11 +5,10 @@
 %tr{style: 'font-weight: bold; font-size: 14pt;'}
   %td{style: 'font-size: 12pt;'}= translate_helper("driver_manifest_pickup") 
   %td 
-    - if customer
-      %p= trip.customer.try(:name) 
+    %p= trip.customer.try(:name)
     - if pickup_addr
-      %p= "&nbsp;&nbsp;&nbsp;&nbsp;#{pickup_addr.name}"
-      %p= "#{pickup_addr.address}&nbsp;&nbsp;&nbsp;&nbsp;#{pickup_addr.city}"
+      %p{style: 'padding-left:5em;'}= "#{pickup_addr.name}"
+      %p= simple_format "#{pickup_addr.address}&nbsp;&nbsp;&nbsp;&nbsp;#{pickup_addr.city}"
       - if pickup_addr.notes
         %p= pickup_addr.notes
   %td= format_time_for_listing(trip.pickup_time)
@@ -67,13 +66,28 @@
     %td
     %td
 
+- if (later_customer_trips = later_trips_for_customer(customer, trip)).any?
+  %tr
+    %td{colspan: 4}
+      - later_customer_trips.each do |later_trip| 
+        %p
+          = translate_helper("later_trips")  
+          = " at"
+          = format_time_for_listing(later_trip.pickup_time)
+          = " (" 
+          = later_trip.run ? ("Run # " + later_trip.run.try(:name)) : "Cab" 
+          = ")"
+
+%tr
+  %td{colspan:"4", style: "border-bottom: 2px solid darkgray;"}
+
 %tr{style: 'font-weight: bold; font-size: 14pt;'}
   %td{style: 'padding-top: 12pxt;'}= translate_helper("driver_manifest_dropoff") 
   %td 
-    - if customer
-      %p{style:'padding-top: 15px;'}= trip.customer.try(:name) 
+    %p{style:'padding-top: 15px;'}= trip.customer.try(:name) 
     - if dropoff_addr
-      %p= dropoff_addr.text
+      %p{style: 'padding-left:5em;'}= "#{dropoff_addr.name}"
+      %p= simple_format "#{dropoff_addr.address}&nbsp;&nbsp;&nbsp;&nbsp;#{dropoff_addr.city}"
       - if dropoff_addr.notes
         %p= dropoff_addr.notes
   %td
@@ -89,21 +103,9 @@
     = translate_helper("driver_manifest_time_depart") 
     &nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
 
-- if (later_customer_trips = later_trips_for_customer(customer, trip)).any?
-  %tr
-    %td{colspan: 4}
-      - later_customer_trips.each do |later_trip| 
-        %p
-          = translate_helper("later_trips")  
-          = " at"
-          = format_time_for_listing(later_trip.pickup_time)
-          = " (" 
-          = later_trip.run ? ("Run # " + later_trip.run.try(:name)) : "Cab" 
-          = ")"
-
 - unless is_last_trip
   %tr
-    %td{colspan:"4", style: "border-top: 3px solid darkgray;"}
+    %td{colspan:"4", style: "border-bottom: 3px solid black;"}
 
 
 
