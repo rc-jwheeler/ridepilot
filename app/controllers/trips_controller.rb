@@ -172,7 +172,7 @@ class TripsController < ApplicationController
 
     if params[:customer_id] && customer = Customer.find_by_id(params[:customer_id])
       @trip.customer_id = customer.id
-      @trip.pickup_address_id = customer.address_id
+      @trip.pickup_address_id = customer.address_id if customer.address.try(:the_geom).present?
       @trip.mobility_id = customer.mobility_id 
       @trip.funding_source_id = customer.default_funding_source_id
       @trip.service_level = customer.service_level
