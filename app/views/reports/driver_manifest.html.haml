@@ -28,7 +28,7 @@
       %u
         = translate_helper("driver_manifest_heading")
   %br      
-  - @runs.each do |run|
-    = render 'reports/driver_manifest/run', run: run
+  - @runs.each_with_index do |run, index|
+    = render 'reports/driver_manifest/run', run: run, is_first_run: (index == 0)
 
        
