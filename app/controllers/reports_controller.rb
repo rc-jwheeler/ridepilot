@@ -316,7 +316,7 @@ class ReportsController < ApplicationController
     
     @runs = @runs.order(:scheduled_start_time).distinct
     if @query.driver_id != -2 # All
-      @runs = runs.for_driver(@query.driver_id)
+      @runs = @runs.for_driver(@query.driver_id)
     end
 
     @trips_by_customer = Trip.where("cab = TRUE or run_id in (?)", run_ids).for_provider(current_provider_id).for_date(@date.in_time_zone).group_by(&:customer)
