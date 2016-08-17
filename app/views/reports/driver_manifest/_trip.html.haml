@@ -7,7 +7,7 @@
   %td 
     %p= trip.customer.try(:name)
     - if pickup_addr
-      %p{style: 'padding-left:5em;'}= "#{pickup_addr.name}"
+      %p= "#{pickup_addr.name}"
       %p= simple_format "#{pickup_addr.address}&nbsp;&nbsp;&nbsp;&nbsp;#{pickup_addr.city}"
       - if pickup_addr.notes
         %p= pickup_addr.notes
@@ -86,7 +86,7 @@
   %td 
     %p{style:'padding-top: 15px;'}= trip.customer.try(:name) 
     - if dropoff_addr
-      %p{style: 'padding-left:5em;'}= "#{dropoff_addr.name}"
+      %p= "#{dropoff_addr.name}"
       %p= simple_format "#{dropoff_addr.address}&nbsp;&nbsp;&nbsp;&nbsp;#{dropoff_addr.city}"
       - if dropoff_addr.notes
         %p= dropoff_addr.notes
