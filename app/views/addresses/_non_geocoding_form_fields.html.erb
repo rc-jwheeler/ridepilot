@@ -3,7 +3,7 @@
 <div class="form-group">
     <%= address_form.label :name, translate_helper("address_name"), class: "col-md-2 control-label" %>
   <div class="col-md-10">
-    <%= address_form.text_field :name, class: "form-control", disabled: readonly %>
+    <%= address_form.text_field :name, class: "form-control", disabled: readonly, maxlength: 30 %>
   </div>
 </div> 
 
