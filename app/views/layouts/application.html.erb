@@ -22,7 +22,6 @@
         <% if current_user %>
           <a href="#"><%= current_user.email %></a> 
           <span class="separator">|</span> <%= link_to translate_helper("change_password"), show_change_password_path, :class=>'change-password' %>
-          <span class="separator">|</span> <%= link_to translate_helper("change_email"), show_change_email_path, :class=>'change-email' %>
           <span class="separator">|</span>
           <%= link_to translate_helper("log_out_link_text"), destroy_user_session_path, method: :delete %>
           <span class="separator">|</span>

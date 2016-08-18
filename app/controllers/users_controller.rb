@@ -85,14 +85,21 @@ class UsersController < ApplicationController
   end
 
   def show_change_email
-    @user = current_user
+    @user = User.find_by_id(params[:id])
+    authorize! :manage, @user
   end
 
   def change_email
-    if current_user.update_email(change_email_params)
-      sign_in(current_user, :bypass => true)
+    @user = User.find(params[:id])
+    authorize! :manage, @user
+
+    if @user.update_email(change_email_params)
+      if @user == current_user
+        sign_in(current_user, :bypass => true)
+      end
+
       flash.now[:notice] = "Email changed"
-      redirect_to root_path
+      redirect_to current_provider
     else
       flash.now[:alert] = "Error updating email"
       render :action=>:show_change_email
