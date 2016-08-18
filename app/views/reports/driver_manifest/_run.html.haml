@@ -19,8 +19,8 @@
     %thead{style: 'border: 2px solid black;'}
       %th{style: 'border-left: 2px black solid;'}= translate_helper("driver_manifest_p_d") 
       %th= translate_helper("driver_manifest_client_address") 
-      %th= translate_helper("driver_manifest_pickup_time") 
-      %th{style: 'border-right: 2px black solid;'}= translate_helper("driver_manifest_appt_time") 
+      %th{style: 'text-align: right;'}= translate_helper("driver_manifest_pickup_time") 
+      %th{style: 'border-right: 2px black solid; text-align: right;'}= translate_helper("driver_manifest_appt_time") 
     %tbody
       - trip_count = run.trips.order(:pickup_time).count
       - run.trips.order(:pickup_time).each_with_index do |trip, index|
