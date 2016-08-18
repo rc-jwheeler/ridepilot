@@ -2,25 +2,25 @@
   <h1><%= translate_helper("change_email_heading") %></h1>
 </div>
 
-<% if current_user.errors.any? %>
+<% if @user.errors.any? %>
   <div id="error_explanation">
     <h2>
-      <h2><%= translate_helper("user_form_error_message", count: current_user.errors.count) %></h2>
+      <h2><%= translate_helper("user_form_error_message", count: @user.errors.count) %></h2>
     </h2>
     <ul>
-      <% current_user.errors.full_messages.each do |msg| %>
+      <% @user.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>
       <% end %>
     </ul>
   </div>
 <% end %>
 
-<%= form_for current_user, :url => change_email_path do |f| %>
+<%= form_for @user, :url => change_email_path(id: @user.try(:id)) do |f| %>
 <fieldset>
   <ol class="section first">
     <li>
       <%= f.label :current_email, translate_helper("current_email") %>
-      <%= current_user.email %>
+      <%= @user.email %>
     </li>  
     <li>
       <%= f.label :email, translate_helper("new_email") %>

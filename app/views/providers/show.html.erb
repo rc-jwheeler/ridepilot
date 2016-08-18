@@ -69,6 +69,9 @@
     <tr>
       <td class="<%= role.name.downcase %>">
         <%= role.user.email %>
+        <% if can? :manage, role.user %>
+          <span class="separator">|</span> <%= link_to translate_helper("change_email"), show_change_email_path(id: role.user.try(:id)), :class=>'change-email' %>
+        <% end %>
       </td>
       <td><%= role.name %></td>
       <td><%= role.user.last_sign_in_at %></td>
