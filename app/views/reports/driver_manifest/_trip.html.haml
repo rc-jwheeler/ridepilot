@@ -4,16 +4,17 @@
 
 %tr{style: 'font-weight: bold; font-size: 12pt;'}
   %td= translate_helper("driver_manifest_pickup") 
-  %td 
+  %td{style: 'width: 420px;'} 
     %p{style: 'white-space: nowrap;'}= trip.customer.try(:name)
     - if pickup_addr
       %p{style: 'white-space: nowrap;'}= "#{pickup_addr.name}"
-      .col-sm-12{style: 'padding: 0px;'}
+      %p.col-sm-12{style: 'padding: 0px;'}
         %span.pull-left{style:'max-width: 250px;'} 
           = pickup_addr.address
         %span.pull-right
           = pickup_addr.city
       - if pickup_addr.notes
+        %br
         %p= pickup_addr.notes
   %td{style: 'text-align: right;'}= format_time_for_listing(trip.pickup_time)
   %td{style: 'text-align: right;'}= format_time_for_listing(trip.appointment_time)
@@ -87,16 +88,17 @@
 
 %tr{style: 'font-weight: bold; font-size: 12pt;'}
   %td{style: 'padding-top: 12px;'}= translate_helper("driver_manifest_dropoff") 
-  %td 
+  %td{style: 'width: 420px;'} 
     %p{style:'padding-top: 15px; white-space: nowrap;'}= trip.customer.try(:name) 
     - if dropoff_addr
       %p{style: 'white-space: nowrap;'}= "#{dropoff_addr.name}"
-      .col-sm-12{style: 'padding: 0px;'}
+      %p.col-sm-12{style: 'padding: 0px;'}
         %span.pull-left{style:'max-width: 250px;'} 
           = dropoff_addr.address
         %span.pull-right
           = dropoff_addr.city
       - if dropoff_addr.notes
+        %br
         %p= dropoff_addr.notes
   %td
   %td{style: 'text-align: right;'}= format_time_for_listing(trip.appointment_time)
