@@ -6,6 +6,10 @@
     table td, table th{
       border: none;
     }
+
+    .page-break {
+      page-break-before: always;
+    }
   }
   
   p {
@@ -15,23 +19,26 @@
   table td, table th {
     padding: 4px;
   }
+
 = content_for :title, translate_helper("driver_manifest_title") + " #{@date.strftime('%v')}" 
 = render 'custom_report_header'
-.col-sm-12.col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2
-  .row
-    .col-xs-6{style: 'font-size: 18px; font-weight: bold; padding-left: 0px;'}
-      .col-sm-12{style: 'padding-left: 0px;'}
-        = "#{translate_helper('driver_manifest_date')}: #{@date.strftime('%A')}"
-      .col-sm-12{style: 'padding-left: 0px;'}
-        = format_date(@date)
-    .col-xs-6{style: 'padding-right: 0px;'}
-      %img.pull-right{src: "/uta_logo.png", height:40, width:151}
-  .row
-    %h1{style: 'text-align: center;'}
-      %u
-        = translate_helper("driver_manifest_heading")
-  %br      
-  - @runs.each_with_index do |run, index|
-    = render 'reports/driver_manifest/run', run: run, is_first_run: (index == 0)
+
+- @runs.group_by(&:driver_name).sort().each do |driver_name, run_group|   
+  .col-sm-12.col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2.page-break
+    .row
+      .col-xs-6{style: 'font-size: 18px; font-weight: bold; padding-left: 0px;'}
+        .col-sm-12{style: 'padding-left: 0px;'}
+          = "#{translate_helper('driver_manifest_date')}: #{@date.strftime('%A')}"
+        .col-sm-12{style: 'padding-left: 0px;'}
+          = format_date(@date)
+      .col-xs-6{style: 'padding-right: 0px;'}
+        %img.pull-right{src: "/uta_logo.png", height:40, width:151}
+    .row
+      %h1{style: 'text-align: center;'}
+        %u
+          = translate_helper("driver_manifest_heading")
+    %br  
+    - run_group.each_with_index do |run, index|
+      = render 'reports/driver_manifest/run', run: run, is_first_run: (index == 0)
 
        

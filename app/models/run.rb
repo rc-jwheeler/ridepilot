@@ -113,6 +113,8 @@ class Run < ActiveRecord::Base
   scope :prior_to,               -> (date) { where('runs.date < ?', date) }
   scope :today_and_prior,        -> { where('runs.date <= ?', Date.today) }
 
+  delegate :name, to: :driver, prefix: :driver, allow_nil: true
+
   CAB_RUN_ID = -1 # id for cab runs 
   UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)
   
