@@ -23,7 +23,10 @@
 = content_for :title, translate_helper("driver_manifest_title") + " #{@date.strftime('%v')}" 
 = render 'custom_report_header'
 
-- @runs.group_by(&:driver_name).sort().each do |driver_name, run_group|   
+- runs_by_driver = @runs.group_by(&:driver_name)
+- driver_names = runs_by_driver.keys.sort_by(&:to_s)
+- driver_names.each do |driver_name|
+  - run_group =  runs_by_driver[driver_name]
   .col-sm-12.col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2.page-break
     .row
       .col-xs-6{style: 'font-size: 18px; font-weight: bold; padding-left: 0px;'}
