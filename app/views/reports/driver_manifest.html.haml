@@ -26,7 +26,8 @@
 .col-sm-12.col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2
   - prev_driver_id = nil
   - @runs.each_with_index do |run, index|
-    - is_first_run = run.driver_id != prev_driver_id
+    - is_first_run = (index == 0 || run.driver_id != prev_driver_id)
+    - prev_driver_id = run.driver_id
     - if is_first_run
       .page-break{style: (index == 0 ? "page-break-before: auto;" : "")}
         .row
