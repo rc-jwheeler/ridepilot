@@ -2,14 +2,19 @@
 - dropoff_addr = trip.dropoff_address
 - customer = trip.customer
 
-%tr{style: 'font-weight: bold; font-size: 14pt;'}
-  %td{style: 'font-size: 12pt;'}= translate_helper("driver_manifest_pickup") 
-  %td 
+%tr{style: 'font-weight: bold; font-size: 12pt;'}
+  %td= translate_helper("driver_manifest_pickup") 
+  %td{style: 'width: 420px;'} 
     %p{style: 'white-space: nowrap;'}= trip.customer.try(:name)
     - if pickup_addr
       %p{style: 'white-space: nowrap;'}= "#{pickup_addr.name}"
-      %p{style: 'white-space: nowrap;'}= simple_format "#{pickup_addr.address}&nbsp;&nbsp;&nbsp;&nbsp;#{pickup_addr.city}"
+      %p.col-sm-12{style: 'padding: 0px;'}
+        %span.pull-left{style:'max-width: 250px;'} 
+          = pickup_addr.address
+        %span.pull-right
+          = pickup_addr.city
       - if pickup_addr.notes
+        %br
         %p= pickup_addr.notes
   %td{style: 'text-align: right;'}= format_time_for_listing(trip.pickup_time)
   %td{style: 'text-align: right;'}= format_time_for_listing(trip.appointment_time)
@@ -49,8 +54,8 @@
 %tr
   %td{style: 'border-bottom: 1px solid black;'}= translate_helper("driver_manifest_total_passengers") 
   %td= trip.trip_size
-  %td{style: 'text-align: right;'}= translate_helper("driver_manifest_donation_$") 
-  %td{style: 'border: 1px solid black;'} 
+  %td{style: 'text-align: right; padding-bottom: 0px; vertical-align: bottom !important;'}= translate_helper("driver_manifest_donation_$") 
+  %td{style: 'border-bottom: 1px solid black;'} 
 
 - if trip.mobility_device_accommodations && trip.mobility_device_accommodations > 0
   %tr
@@ -81,17 +86,22 @@
 %tr
   %td{colspan:"4", style: "border-bottom: 2px solid darkgray;"}
 
-%tr{style: 'font-weight: bold; font-size: 14pt;'}
-  %td{style: 'padding-top: 12pxt;'}= translate_helper("driver_manifest_dropoff") 
-  %td 
+%tr{style: 'font-weight: bold; font-size: 12pt;'}
+  %td{style: 'padding-top: 12px;'}= translate_helper("driver_manifest_dropoff") 
+  %td{style: 'width: 420px;'} 
     %p{style:'padding-top: 15px; white-space: nowrap;'}= trip.customer.try(:name) 
     - if dropoff_addr
       %p{style: 'white-space: nowrap;'}= "#{dropoff_addr.name}"
-      %p{style: 'white-space: nowrap;'}= simple_format "#{dropoff_addr.address}&nbsp;&nbsp;&nbsp;&nbsp;#{dropoff_addr.city}"
+      %p.col-sm-12{style: 'padding: 0px;'}
+        %span.pull-left{style:'max-width: 250px;'} 
+          = dropoff_addr.address
+        %span.pull-right
+          = dropoff_addr.city
       - if dropoff_addr.notes
+        %br
         %p= dropoff_addr.notes
   %td
-  %td
+  %td{style: 'text-align: right;'}= format_time_for_listing(trip.appointment_time)
 
 %tr
   %td= (trip.notes.blank? ? "" : translate_helper("driver_manifest_trip_notes") )
