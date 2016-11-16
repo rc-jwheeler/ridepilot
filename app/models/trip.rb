@@ -41,6 +41,16 @@ class Trip < ActiveRecord::Base
         end
       end
     },
+    destroy_all_future_occurrences_with: -> (trip) {
+      # Be sure not delete occurrences that have already happened.
+      trips = if trip.pickup_time < Time.zone.now
+        Trip.repeating_based_on(trip.repeating_trip).after_today.not_called_back
+      else 
+        Trip.repeating_based_on(trip.repeating_trip).after(trip.pickup_time).not_called_back
+      end
+
+      trips.destroy_all
+    },
     unlink_past_occurrences_with: -> (trip) {
       if trip.pickup_time < Time.zone.now
         Trip.repeating_based_on(trip.repeating_trip).today_and_prior.update_all "repeating_trip_id = NULL"

@@ -40,6 +40,16 @@ class Run < ActiveRecord::Base
         end
       end
     },
+    destroy_all_future_occurrences_with: -> (run) {
+      # Be sure not delete occurrences that have already been completed.
+      runs = if run.date < Date.today
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after_today.incomplete
+      else 
+        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after(run.date).incomplete
+      end
+
+      runs.destroy_all
+    },
     unlink_past_occurrences_with: -> (run) {
       if run.date < Date.today
         Run.where().not(id: run.id).repeating_based_on(run.repeating_run).today_and_prior.update_all "repeating_run_id = NULL"

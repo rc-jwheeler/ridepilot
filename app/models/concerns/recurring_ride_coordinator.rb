@@ -37,6 +37,7 @@ module RecurringRideCoordinator
     attr_reader :occurrence_scheduler_class
     attr_reader :occurrence_attribute_block
     attr_reader :occurrence_destroy_future_recurring_ride_coordinators_block
+    attr_reader :occurrence_destroy_all_future_recurring_ride_coordinators_block
     attr_reader :occurrence_unlink_past_recurring_ride_coordinators_block
 
     private
@@ -58,11 +59,12 @@ module RecurringRideCoordinator
     #     class_name: (optional) A string representing the class name of the 
     #       associated scheduler if it can't be inferred from the association 
     #       argument
-    def schedules_occurrences_with(association, with_attributes:, destroy_future_occurrences_with:, unlink_past_occurrences_with:, class_name: nil)
+    def schedules_occurrences_with(association, with_attributes:, destroy_future_occurrences_with:, destroy_all_future_occurrences_with:, unlink_past_occurrences_with:, class_name: nil)
       @occurrence_scheduler_association = association
       @occurrence_scheduler_association_id = "#{association}_id"
       @occurrence_attribute_block = with_attributes
       @occurrence_destroy_future_recurring_ride_coordinators_block = destroy_future_occurrences_with
+      @occurrence_destroy_all_future_recurring_ride_coordinators_block = destroy_all_future_occurrences_with
       @occurrence_unlink_past_recurring_ride_coordinators_block = unlink_past_occurrences_with
       @occurrence_scheduler_class = if class_name.present?
         if class_name.is_a? Class
@@ -155,7 +157,7 @@ module RecurringRideCoordinator
         end
       end
     elsif !is_recurring_ride_coordinator? && send(self.class.occurrence_scheduler_association).present?
-      destroy_future_recurring_ride_coordinators
+      destroy_all_future_recurring_ride_coordinators
       unlink_past_recurring_ride_coordinators
       rt = send(self.class.occurrence_scheduler_association)
       self.send("#{self.class.occurrence_scheduler_association_id}=", nil)
@@ -169,6 +171,10 @@ module RecurringRideCoordinator
 
   def destroy_future_recurring_ride_coordinators
     self.class.occurrence_destroy_future_recurring_ride_coordinators_block.call self
+  end
+
+  def destroy_all_future_recurring_ride_coordinators
+    self.class.occurrence_destroy_all_future_recurring_ride_coordinators_block.call self
   end
 
   def unlink_past_recurring_ride_coordinators
