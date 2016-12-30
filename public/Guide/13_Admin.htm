@@ -15,12 +15,12 @@
 <div class="WordSection3">
 <div style=
 "border:none;border-bottom:solid windowtext 1.0pt;padding:0in 0in 1.0pt 0in">
-<h1><a name="_Toc433701880">Admin</a></h1>
+<h1><a name="_Toc470698544">Admin</a></h1>
 </div>
 <p class="MsoNormal">System Administrators and Provider
 Administrators can configure many of the settings for the
 application via the <em>Admin</em> tab.</p>
-<h2><a name="_Toc433701881">Application Settings</a></h2>
+<h2><a name="_Toc470698545">Application Settings</a></h2>
 <div style=
 'border:solid #4F81BD 1.0pt;padding:3.0pt 3.0pt 3.0pt 3.0pt; background:#FDFFE5'>
 <p class="MsoBlockText">System Administrators only</p>
@@ -52,13 +52,14 @@ should be prompted to reset their password.</p>
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 Click <span class="ButtonChar">Save</span> to update the
 application settings.</p>
-<h2><a name="_Toc433701882">Providers</a></h2>
+<h2><a name="_Toc470698546">Providers</a></h2>
 <div style=
 'border:solid #4F81BD 1.0pt;padding:3.0pt 3.0pt 3.0pt 3.0pt; background:#FDFFE5'>
 <p class="MsoBlockText">System Administrators only</p>
 </div>
-<p class="MsoNormal">System Administrators can create new
-Providers:</p>
+<p class="MsoNormal">System Administrators can create new Providers
+and specify a number of settings that will be specific to each
+Provider:</p>
 <p class="MsoListNumber">1.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 Click <span class="HyperlinkTextChar">Providers</span>.</p>
@@ -98,20 +99,80 @@ completed for a Run to be deemed to have been completed.</p>
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 Click <span class="ButtonChar">Save</span> to create the new
 Provider.</p>
-<h2><a name="_Toc433701883">Recurring Driver Compliance
+<h2><a name="_Toc470698547">Recurring Driver Compliance
 Events</a></h2>
 <div style=
 'border:solid #4F81BD 1.0pt;padding:3.0pt 3.0pt 3.0pt 3.0pt; background:#FDFFE5'>
 <p class="MsoBlockText">System and Provider Administrators only</p>
 </div>
 <p class="MsoNormal">Each Driver may be required to comply with
-certain events. For example, they attend annual safety courses.
-While these can be set on an individual basis via the
-<em>Drivers</em> tab, recurring events that apply to all of the
-Provider’s Drivers can be defined under the <span class=
-"HyperlinkTextChar">Recurring Driver Compliance Events</span>
-<em>Admin</em> functionality.</p>
-<h3><a name="node49" id="node49"></a>Display Recurring Driver
+certain events on a recurring basis. As an example, they may be
+required to attend annual safety courses. While these can be set on
+an individual basis via the <em>Drivers</em> tab, recurring events
+that apply to all of the Provider’s Drivers can be defined in the
+Admin tab by clicking <span class="HyperlinkTextChar">Recurring
+Driver Compliance Events</span>.</p>
+<h3><a name="node12" id="node12"></a>Components of a Recurring
+Driver Compliance Event</h3>
+<p class="MsoNormal">Before describing how to create a recurring
+compliance event for Drivers, it is useful to offer a brief
+overview of the different components used to define such
+events:</p>
+<p class="MsoNormal"><b><u>Event Details</u>:</b> Give the event a
+name, and enter optional notes about the event.</p>
+<p class="MsoNormal"><b><u>Scheduling</u>:</b> Specify how the
+recurring event will be scheduled.</p>
+<p class="MsoListBullet" style='margin-left:.25in'><span style=
+'font-family:Symbol'>·<span style=
+'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+Together, the <b>Frequency</b> and <b>Schedule</b> fields let you
+determine how often the event will occur, in years, months, weeks,
+or days.</p>
+<p class="MsoListBullet" style='margin-left:.25in'><span style=
+'font-family:Symbol'>·<span style=
+'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+The <b>First Due Date</b> field allows you to determine when the
+recurring event begins and starts recurring. For example, if you
+set Frequency: 6, Schedule: months, and First Due Date: 2017-01-01,
+the event will occur on the 1<sup>st</sup> of January and the
+1<sup>st</sup> of July, starting on January 1<sup>st</sup>,
+2017.</p>
+<p class="MsoNormal">Note that when you save your recurring event,
+a preview of the next 6 recurrences of the event will appear at the
+bottom of the Scheduling panel.</p>
+<p class="MsoNormal"><b><u>Scheduling Options</u>:</b> Check “Use
+Compliance based scheduling” to schedule the next recurring event
+based on when a driver has completed the last event. For example,
+if the frequency of an event was set to six months, then the next
+recurring event for the driver will be scheduled for six months
+from the prior completion. If this field is not checked, in
+contrast, events will be scheduled regularly according to the
+schedule defined in the Scheduling tab, regardless of whether or
+when the driver completes previously scheduled events.</p>
+<p class="MsoNormal"><b><u>New Driver Scheduling</u>:</b> Specify
+the timing for assigning this recurring event to new drivers. There
+are several ways of doing this, selectable using the <b>Future
+Start Rule</b> field.</p>
+<p class="MsoListBullet" style='margin-left:.25in'><span style=
+'font-family:Symbol'>·<span style=
+'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+If you select <b>Immediately</b>, a new driver will be assigned
+this event as soon as possible.</p>
+<p class="MsoListBullet" style='margin-left:.25in'><span style=
+'font-family:Symbol'>·<span style=
+'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+If you select <b>On Schedule</b>, events will be assigned to a new
+driver in accordance with the normal schedule defined in the
+Scheduling panel. For example, if the event occurs annually in
+August and a driver starts in October 2017, the next assigned event
+for that driver would occur in August 2018.</p>
+<p class="MsoListBullet" style='margin-left:.25in'><span style=
+'font-family:Symbol'>·<span style=
+'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+Finally, if you select <b>After a Time</b>, you can postpone the
+first event to some number of days, weeks, months, or years after
+the new driver’s start date.</p>
+<h3><a name="node13" id="node13"></a>Display Recurring Driver
 Compliance Event</h3>
 <p class="MsoNormal">To display an existing recurring Driver
 compliance event:</p>
@@ -122,12 +183,12 @@ Events</span>.</p>
 <p class="MsoListNumber">2.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 A table is displayed listing all of the current defined Driver
-compliance events. Click the hyperlink in the Event Name column for
-the appropriate event.</p>
+compliance events.</p>
 <p class="MsoListNumber">3.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-The details of the Driver compliance event is displayed.</p>
-<h3><a name="node50" id="node50"></a>New Recurring Driver
+Click the hyperlink in the Event Name column to view the details of
+that recurring event.</p>
+<h3><a name="node14" id="node14"></a>New Recurring Driver
 Compliance Event</h3>
 <p class="MsoNormal">To create a new recurring Driver compliance
 event:</p>
@@ -160,13 +221,13 @@ width="636" style=
 </td>
 <td width="588" valign="top" style=
 'width:441.0pt;border:solid #943634 1.0pt; border-left:none;background:#F2F2F2;padding:5.75pt 5.75pt 5.75pt 5.75pt'>
-<p class="Help"><i>Please refer to the notice at the top of the
-page regarding when the event will be created for each
-Driver.</i></p>
+<p class="Help"><i>Please refer to the earlier discussion on the
+components of a recurring event for more information on when the
+event will be created for each Driver.</i></p>
 </td>
 </tr>
 </table>
-<h3><a name="node51" id="node51"></a>Edit Recurring Driver
+<h3><a name="node15" id="node15"></a>Edit Recurring Driver
 Compliance Event</h3>
 <p class="MsoNormal">To edit an existing recurring Driver
 compliance event:</p>
@@ -191,17 +252,21 @@ width="636" style=
 <td width="48" valign="top" style=
 'width:.5in;border:solid #943634 1.0pt; border-right:none;background:#F2F2F2;padding:5.75pt 5.75pt 5.75pt 5.75pt'>
 <p class="Help"><i><img border="0" width="29" height="29" src=
-"guide_files/image012.png" alt="image"></i></p>
+"guide_files/image033.png" alt="image"></i></p>
 </td>
 <td width="588" valign="top" style=
 'width:441.0pt;border:solid #943634 1.0pt; border-left:none;background:#F2F2F2;padding:5.75pt 5.75pt 5.75pt 5.75pt'>
-<p class="Help"><i>Please refer to the notice at the top of the
-page regarding when the event will be created for each Driver, and
-when event information is editable.</i></p>
+<p class="Help"><i>Note that RidePilot does not allow users to edit
+fields that will affect the timing of future recurring event
+schedules—for example, you cannot edit Frequency, First Due Date,
+Future Start Rule, etc. If you need to change the scheduling rules
+for a recurring compliance event, you should delete the current
+version of the recurring event and then recreate a new version with
+the updated scheduling rules.</i></p>
 </td>
 </tr>
 </table>
-<h3><a name="node52" id="node52"></a>Delete Recurring Driver
+<h3><a name="node16" id="node16"></a>Delete Recurring Driver
 Compliance Event</h3>
 <p class="MsoNormal">To delete an existing recurring Driver
 compliance event:</p>
@@ -217,23 +282,85 @@ A dialog is displayed asking for the deletion to be confirmed, and
 whether incomplete Driver events should be deleted. Click
 <span class="ButtonChar">Confirm</span> to confirm the
 deletion.</p>
-<h2><a name="_Toc433701884">Recurring Vehicle Maintenance
+<h2><a name="_Toc470698548">Recurring Vehicle Maintenance
 Compliance Events</a></h2>
 <div style=
 'border:solid #4F81BD 1.0pt;padding:3.0pt 3.0pt 3.0pt 3.0pt; background:#FDFFE5'>
 <p class="MsoBlockText">System and Provider Administrators only</p>
 </div>
-<p class="MsoNormal">Each Vehicle may be required to comply with
-certain events. For example, the Vehicle passes an annual
-inspection. While these can be set on an individual basis via the
-<em>Vehicles</em> tab, recurring events that apply to all of the
-Provider’s Vehicles can be defined under the <span class=
-"HyperlinkTextChar">Recurring Vehicle Maintenance Compliance
-Events</span> <em>Admin</em> functionality.</p>
-<h3><a name="node53" id="node53"></a>Display Recurring Vehicle
+<p class="MsoNormal">Each Vehicle may be required to meet certain
+compliance events. For example, a Vehicle may be required to pass a
+safety inspection on an annual basis. While these can be set on an
+individual basis via the <em>Vehicles</em> tab, recurring events
+that apply to all of a Provider’s Vehicles can be defined in the
+Admin tab by clicking <span class="HyperlinkTextChar">Recurring
+Vehicle Maintenance Compliance Events</span> link.</p>
+<h3><a name="node17" id="node17"></a>Components of a Recurring
+Vehicle Maintenance Compliance Event</h3>
+<p class="MsoNormal">Before describing how to create a recurring
+compliance event for Vehicles, it is useful to offer a brief
+overview of the different components used to define such
+events:</p>
+<p class="MsoNormal"><b><u>Event Details</u>:</b> Give the event a
+name, and enter optional notes about the event.</p>
+<p class="MsoNormal"><b><u>Scheduling</u>:</b> Configure how the
+recurring event will be scheduled. You may schedule events based on
+date or mileage by selecting either option in the <b>Schedule Based
+On</b> field.</p>
+<p class="MsoListBullet" style='margin-left:.25in'><span style=
+'font-family:Symbol'>·<span style=
+'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+When you opt to schedule <b>By Date</b>, the <b>Frequency</b> and
+<b>Schedule</b> fields let you determine how often the event will
+occur, in years, months, weeks, or days. The <b>First Due Date</b>
+field allows you to determine when the recurring event begins and
+starts recurring. For example, if you set Frequency: 6, Schedule:
+months, and First Due Date: 2017-01-01, the event will occur on the
+1<sup>st</sup> of January and the 1<sup>st</sup> of July, starting
+on January 1<sup>st</sup>, 2017.</p>
+<p class="MsoListBullet" style='margin-left:.25in'><span style=
+'font-family:Symbol'>·<span style=
+'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+If you choose to schedule events <b>By Mileage</b>, simply enter
+the number of miles between event occurrences into the <b>Mileage
+Frequency</b> field.</p>
+<p class="MsoNormal" style='margin-left:.25in'>When you save your
+recurring event, a preview of the next 6 events will appear at the
+bottom of the Scheduling panel.</p>
+<p class="MsoNormal"><b><u>Scheduling Options</u>:</b> Check “Use
+Compliance based scheduling” to schedule events only when the
+vehicle has completed the last event. If this field is not checked,
+events will be scheduled regularly according to the schedule
+defined in the Scheduling tab, regardless of whether or not the
+vehicle completes the events.</p>
+<p class="MsoNormal"><b><u>New Vehicle Scheduling</u>:</b>
+Configure how this recurring event is assigned to a new vehicle.
+There are several ways of doing this, selectable using the
+<b>Future Start Rule</b> field.</p>
+<p class="MsoListBullet" style='margin-left:.25in'><span style=
+'font-family:Symbol'>·<span style=
+'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+If you select <b>Immediately</b>, a new vehicle will be assigned
+this event as soon as possible.</p>
+<p class="MsoListBullet" style='margin-left:.25in'><span style=
+'font-family:Symbol'>·<span style=
+'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+If you select <b>On Schedule</b>, events will be assigned to the
+vehicle in accordance with the normal schedule defined in the
+Scheduling panel. For example, if the event occurs annually in
+August and the vehicle entered service in October 2017, the next
+assigned event would occur in August 2018.</p>
+<p class="MsoListBullet" style='margin-left:.25in'><span style=
+'font-family:Symbol'>·<span style=
+'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+Finally, if you select <b>After a Time</b>, you can postpone the
+first event to some number of days, weeks, months, or years after
+the new vehicle entered service. Note that you cannot select After
+a Time if you are using mileage-based scheduling.</p>
+<h3><a name="node18" id="node18"></a>Display Recurring Vehicle
 Maintenance Compliance Event</h3>
-<p class="MsoNormal">To display an existing recurring Driver
-compliance event:</p>
+<p class="MsoNormal">To display an existing recurring Vehicle
+maintenance compliance event:</p>
 <p class="MsoListNumber">1.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 Click <span class="HyperlinkTextChar">Recurring Vehicle Maintenance
@@ -241,16 +368,15 @@ Compliance Events</span>.</p>
 <p class="MsoListNumber">2.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 A table is displayed listing all of the current defined Vehicle
-maintenance compliance events. Click the hyperlink in the Event
-Name column for the appropriate event.</p>
+maintenance compliance events.</p>
 <p class="MsoListNumber">3.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-The details of the Vehicle maintenance compliance event is
-displayed.</p>
-<h3><a name="node54" id="node54"></a>New Recurring Vehicle
+Click the hyperlink in the Event Name column to view the details of
+that recurring event.</p>
+<h3><a name="node19" id="node19"></a>New Recurring Vehicle
 Maintenance Compliance Event</h3>
-<p class="MsoNormal">To create a new recurring Driver compliance
-event:</p>
+<p class="MsoNormal">To create a new recurring Vehicle maintenance
+compliance event:</p>
 <p class="MsoListNumber">1.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 Click <span class="HyperlinkTextChar">Recurring Vehicle Maintenance
@@ -281,13 +407,13 @@ width="636" style=
 </td>
 <td width="588" valign="top" style=
 'width:441.0pt;border:solid #943634 1.0pt; border-left:none;background:#F2F2F2;padding:5.75pt 5.75pt 5.75pt 5.75pt'>
-<p class="Help"><i>Please refer to the notice at the top of the
-page regarding when the event will be created for each
-Vehicle.</i></p>
+<p class="Help"><i>Please refer to the earlier discussion on the
+components of a recurring event for more information on when the
+event will be created for each Vehicle.</i></p>
 </td>
 </tr>
 </table>
-<h3><a name="node55" id="node55"></a>Edit Recurring Vehicle
+<h3><a name="node20" id="node20"></a>Edit Recurring Vehicle
 Maintenance Compliance Event</h3>
 <p class="MsoNormal">To edit an existing recurring Vehicle
 maintenance compliance event:</p>
@@ -317,13 +443,17 @@ width="636" style=
 </td>
 <td width="588" valign="top" style=
 'width:441.0pt;border:solid #943634 1.0pt; border-left:none;background:#F2F2F2;padding:5.75pt 5.75pt 5.75pt 5.75pt'>
-<p class="Help"><i>Please refer to the notice at the top of the
-page regarding when the event will be created for each Vehicle, and
-when event information is editable.</i></p>
+<p class="Help"><i>Note that RidePilot does not allow users to edit
+fields that will affect the timing of future recurring event
+schedules—for example, you cannot edit the fields Schedule Based
+On, &nbsp;Frequency, etc. If you need to change the scheduling
+rules for a recurring compliance event, you should instead delete
+the current version of the recurring event and then recreate a new
+version with the updated scheduling rules.</i></p>
 </td>
 </tr>
 </table>
-<h3><a name="node56" id="node56"></a>Delete Recurring Vehicle
+<h3><a name="node21" id="node21"></a>Delete Recurring Vehicle
 Maintenance Compliance Event</h3>
 <p class="MsoNormal">To delete an existing recurring Vehicle
 maintenance compliance event:</p>
@@ -340,12 +470,15 @@ A dialog is displayed asking for the deletion to be confirmed, and
 whether incomplete Vehicle maintenance events should be deleted.
 Click <span class="ButtonChar">Confirm</span> to confirm the
 deletion.</p>
-<h2><a name="_Toc433701885">Lookup Tables</a></h2>
+<h2><a name="_Toc470698549">Lookup Tables</a></h2>
 <p class="MsoNormal">RidePilot uses a number of lookup tables,
 stored in the database, for populating the various lists used
 within the application. System Administrators can maintain the
-values within these lookup tables.</p>
-<h3><a name="node57" id="node57"></a>Add new Lookup values</h3>
+values within these lookup tables via the <span class=
+"HyperlinkTextChar">Lookup Tables</span> link in the <span class=
+"LabelChar">Admin</span> tab, which opens a Lookup Table
+screen.</p>
+<h3><a name="node22" id="node22"></a>Add new Lookup values</h3>
 <div style=
 'border:solid #4F81BD 1.0pt;padding:3.0pt 3.0pt 3.0pt 3.0pt; background:#FDFFE5'>
 <p class="MsoBlockText">System Administrators only</p>
@@ -353,7 +486,10 @@ values within these lookup tables.</p>
 <p class="MsoNormal">To add a new value to a lookup table:</p>
 <p class="MsoListNumber">1.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-Select the Lookup Table from the dropdown list.</p>
+Select the Lookup Table that you want to modify from the dropdown
+list. Once you have made your selection, the rest of the page will
+be updated to show current entries associated with the selected
+Lookup Table.</p>
 <p class="MsoListNumber">2.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 Click <span class="ButtonChar">Add</span>.</p>
@@ -361,7 +497,7 @@ Click <span class="ButtonChar">Add</span>.</p>
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 Enter the new value in the dialog, and click <span class=
 "ButtonChar">OK</span>.</p>
-<h3><a name="node58" id="node58"></a>Edit existing Lookup
+<h3><a name="node23" id="node23"></a>Edit existing Lookup
 values</h3>
 <div style=
 'border:solid #4F81BD 1.0pt;padding:3.0pt 3.0pt 3.0pt 3.0pt; background:#FDFFE5'>
@@ -374,7 +510,8 @@ value:</p>
 Select the Lookup Table from the dropdown list.</p>
 <p class="MsoListNumber">2.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-Select the appropriate value from the displayed table.</p>
+Select the appropriate value from the table that displays all of
+the current entries for the Lookup Table.</p>
 <p class="MsoListNumber">3.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 Click <span class="ButtonChar">Edit</span>.</p>
@@ -382,7 +519,7 @@ Click <span class="ButtonChar">Edit</span>.</p>
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 Edit the value in the dialog, and click <span class=
 "ButtonChar">OK</span>.</p>
-<h3><a name="node59" id="node59"></a>Delete existing Lookup
+<h3><a name="node24" id="node24"></a>Delete existing Lookup
 values</h3>
 <div style=
 'border:solid #4F81BD 1.0pt;padding:3.0pt 3.0pt 3.0pt 3.0pt; background:#FDFFE5'>
@@ -409,7 +546,7 @@ width="636" style=
 <td width="48" valign="top" style=
 'width:.5in;border:solid #943634 1.0pt; border-right:none;background:#F2F2F2;padding:5.75pt 5.75pt 5.75pt 5.75pt'>
 <p class="Help"><i><img border="0" width="29" height="29" src=
-"guide_files/image012.png" alt="image"></i></p>
+"guide_files/image033.png" alt="image"></i></p>
 </td>
 <td width="588" valign="top" style=
 'width:441.0pt;border:solid #943634 1.0pt; border-left:none;background:#F2F2F2;padding:5.75pt 5.75pt 5.75pt 5.75pt'>
@@ -419,7 +556,7 @@ RidePilot database directly.</i></p>
 </td>
 </tr>
 </table>
-<h3><a name="node60" id="node60"></a>Show/Hide Lookup Table
+<h3><a name="node25" id="node25"></a>Show/Hide Lookup Table
 values</h3>
 <div style=
 'border:solid #4F81BD 1.0pt;padding:3.0pt 3.0pt 3.0pt 3.0pt; background:#FDFFE5'>
@@ -442,7 +579,7 @@ visibility of the value.</p>
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 Either way, a dialog is displayed asking you to confirm the change.
 Click <span class="ButtonChar">OK</span> to confirm.</p>
-<h2><a name="_Toc433701886">Translations</a></h2>
+<h2><a name="_Toc470698550">Translations</a></h2>
 <div style=
 'border:solid #4F81BD 1.0pt;padding:3.0pt 3.0pt 3.0pt 3.0pt; background:#FDFFE5'>
 <p class="MsoBlockText">System Administrators only</p>
@@ -472,7 +609,7 @@ cellpadding="0" width="384" style=
 <tr>
 <td width="192" valign="top" style=
 'width:2.0in;border:none;border-bottom:solid #D9D9D9 1.0pt; padding:0in 5.4pt 0in 5.4pt'>
-<p class="TableText" style='margin-left:0in'>accommodations</p>
+<p class="TableText" style='margin-left:0in'>Accommodations</p>
 </td>
 <td width="192" style=
 'width:2.0in;border:none;border-bottom:solid #D9D9D9 1.0pt; padding:0in 5.4pt 0in 5.4pt'>
@@ -520,7 +657,7 @@ cellpadding="0" width="384" style=
 </tr>
 </table>
 </div>
-<h3><a name="node61" id="node61"></a>Translation Key Locations</h3>
+<h3><a name="node26" id="node26"></a>Translation Key Locations</h3>
 <p class="MsoNormal">To display the location of the keys in the
 user interface:</p>
 <p class="MsoListNumber">1.<span style=
@@ -535,14 +672,14 @@ the words and phrases.</p>
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 To revert back, click the hyperlink for the required translation
 language.</p>
-<h3><a name="node62" id="node62"></a>Edit Translations</h3>
-<p class="MsoNormal">To edit the translations:</p>
+<h3><a name="node27" id="node27"></a>Edit Translations</h3>
+<p class="MsoNormal">To edit a translation:</p>
 <p class="MsoListNumber">1.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-Determine for the panel title translation key. The translation keys
-can be displayed by clicking <span class="LabelChar">Tags</span> in
-the bottom-right of the page. Once determined, revert to the
-appropriate language.</p>
+Determine the translation key that you will need to access the
+translation. The translation keys can be displayed by clicking
+<span class="LabelChar">Tags</span> in the bottom-right of the
+page. Once determined, revert to the appropriate language.</p>
 <p class="MsoListNumber">2.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 Display the <span class="ButtonChar">Admin</span> tab and click
@@ -553,19 +690,17 @@ Translations page.</p>
 Use the Search box to find the appropriate translation key.</p>
 <p class="MsoListNumber">4.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span style='font-size:11.0pt;color:black'>Click</span>
-<span class="ButtonChar">Add</span> <span style=
-'font-size:11.0pt;color:black'>or the hyperlink in the appropriate
+<span style='color:black'>Click the hyperlink in the appropriate
 column.</span></p>
 <p class="MsoListNumber">5.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span style='font-size:11.0pt;color:black'>A page is displayed
-allowing you to enter/edit the translation for the key.</span></p>
+<span style='color:black'>A page is displayed allowing you to
+enter/edit the translation for the key.</span></p>
 <p class="MsoListNumber">6.<span style=
 'font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span style='font-size:11.0pt;color:black'>Click</span>
-<span class="ButtonChar">Save</span> <span style=
-'font-size:11.0pt;color:black'>to save the translation.</span></p>
+<span style='color:black'>Click</span> <span class=
+"ButtonChar">Save</span> <span style='color:black'>to save the
+translation.</span></p>
 <table class="TCMSHelp" border="1" cellspacing="0" cellpadding="0"
 width="636" style=
 'width:477.0pt;margin-left:1.25pt;border-collapse:collapse;border:none'>
@@ -573,7 +708,7 @@ width="636" style=
 <td width="48" valign="top" style=
 'width:.5in;border:solid #943634 1.0pt; border-right:none;background:#F2F2F2;padding:5.75pt 5.75pt 5.75pt 5.75pt'>
 <p class="Help"><i><img border="0" width="29" height="29" src=
-"guide_files/image033.png" alt="image"></i></p>
+"guide_files/image010.png" alt="image"></i></p>
 </td>
 <td width="588" valign="top" style=
 'width:441.0pt;border:solid #943634 1.0pt; border-left:none;background:#F2F2F2;padding:5.75pt 5.75pt 5.75pt 5.75pt'>
