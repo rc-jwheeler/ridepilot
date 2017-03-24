@@ -83,12 +83,12 @@ RSpec.describe User, type: :model do
       expect(user.valid?).to be_truthy
     end
 
-    it "must have at least one number and at least one non-alphanumeric character" do
+    it "must have at least one number and at least one capital letter" do
       user = build :user, password: "password"
       expect(user.valid?).to be_falsey
       expect(user.errors.keys).to include :password
 
-      user.password = user.password_confirmation = "password 1"
+      user.password = user.password_confirmation = "Password 1"
       expect(user.valid?).to be_truthy
     end
 
@@ -97,16 +97,16 @@ RSpec.describe User, type: :model do
       expect(user.valid?).to be_falsey
       expect(user.errors.keys).to include :password
 
-      user.password = user.password_confirmation = "passwd 1"
+      user.password = user.password_confirmation = "Passwd 1"
       expect(user.valid?).to be_truthy
     end
 
     it "must be at most 20 characters in length" do
-      user = build :user, password: "this is too long by 13 characters"
+      user = build :user, password: "This is too long by 13 characters"
       expect(user.valid?).to be_falsey
       expect(user.errors.keys).to include :password
 
-      user.password = user.password_confirmation = "20 characters passes"
+      user.password = user.password_confirmation = "20 Characters passes"
       expect(user.valid?).to be_truthy
     end
   end
@@ -142,13 +142,13 @@ RSpec.describe User, type: :model do
   end
 
   it "can update a users password with a valid set of params" do
-    user = create :user, password: "password 1"
-    params = {current_password: "password 1", password_confirmation: "new password 1"}
+    user = create :user, password: "Password 1"
+    params = {current_password: "Password 1", password_confirmation: "new Password 1"}
     expect(user.update_password(params)).to be_falsey
     expect(user.errors.keys).to include :password
 
     expect {
-      expect(user.update_password(params.merge({password: "new password 1"}))).to be_truthy
+      expect(user.update_password(params.merge({password: "new Password 1"}))).to be_truthy
     }.to change { user.reload.encrypted_password }
   end
 

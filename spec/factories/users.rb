@@ -3,7 +3,7 @@ require 'faker'
 FactoryGirl.define do
   factory :user do
     email { Faker::Internet.email }
-    password 'password#1'
+    password 'Password#1'
     password_confirmation {|u| u.password}
     association :current_provider, factory: :provider
     

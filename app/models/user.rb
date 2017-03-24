@@ -18,8 +18,8 @@ class User < ActiveRecord::Base
   # Let Devise handle the password length requirement
   validates :password, confirmation: true, format: {
     if: :password_required?,
-    with: /\A(?=.*[0-9])(?=.*[\W])(?=.*[a-zA-Z])(.*)\z/,
-    message: "must have at least one number and at least one non-alphanumeric character"
+    with: /\A(?=.*[0-9])(?=.*[A-Z])(.*)\z/,
+    message: "must have at least one number and at least one capital letter"
   }
   
   before_validation do
@@ -41,8 +41,8 @@ class User < ActiveRecord::Base
     m = (indices - [n]).sample
     # At least one number
     result[n] = '23456789'.chars.to_a.sample
-    # At least one special character
-    result[m] = '@#$%^&*()'.chars.to_a.sample
+    # At least one capital character
+    result[m] = ('A'..'Z').to_a.sample
     return result
   end
 
