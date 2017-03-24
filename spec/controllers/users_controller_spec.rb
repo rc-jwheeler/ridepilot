@@ -104,8 +104,8 @@ RSpec.describe UsersController, type: :controller do
     context "with valid params" do
       let(:new_attributes) {{
         :current_password => attributes_for(:user)[:password],
-        :password => "new password 12345",
-        :password_confirmation => "new password 12345"
+        :password => "new Password 12345",
+        :password_confirmation => "new Password 12345"
       }}
 
       it "updates the requested user's password" do
