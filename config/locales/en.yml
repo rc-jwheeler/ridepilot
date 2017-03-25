@@ -115,6 +115,7 @@ en:
   first_name: "First Name"
   middle_initial: "Middle Initial"
   last_name: "Last Name:"
+  username: "Username"
   alternate_phone_number: "Alternate Phone"
   inactivation_reason: "Inactivation Reason"
   editing_customer: "Editing Customer: %{customer_name}"
@@ -545,6 +546,8 @@ en:
   delete_role_confirm: "Are you sure?"
   create_user_link_text: "Create User"
   restore_user_link_text: 'Restore User'
+  user_details_heading: "Details"
+  user_address_heading: "Address"
   user_was_deleted: 'This user was deleted. You can find the option below to restore it.'
   user_was_restored: 'User has been successfully restored.'
   switch_providers_to_create_user: "<p>You are currently logged in to %{current_provider}.  To create a user for %{provider} , please switch providers by using the dropdown menu at the top of this page.</p>"

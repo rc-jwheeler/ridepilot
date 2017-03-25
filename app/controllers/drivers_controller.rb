@@ -100,7 +100,7 @@ class DriversController < ApplicationController
         :state,
         :zip,
         :notes
-      ],
+      ]
     )
   end
   

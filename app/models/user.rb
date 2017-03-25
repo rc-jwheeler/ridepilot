@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
   belongs_to :current_provider, class_name: "Provider", foreign_key: :current_provider_id
   has_one    :driver
   has_one    :device_pool_driver, through: :driver
+  belongs_to :address, -> { with_deleted }
+  accepts_nested_attributes_for :address, update_only: true
   
   # Include default devise modules. Others available are:
   # :rememberable, :token_authenticatable, :confirmable, :lockable
@@ -13,7 +15,8 @@ class User < ActiveRecord::Base
     :timeoutable, :password_expirable, :password_archivable, :account_expireable
 
   # Let Devise handle the email format requirement
-  validates :email, uniqueness: { conditions: -> { where(deleted_at: nil) } }
+  validates :username, :email, uniqueness: { conditions: -> { where(deleted_at: nil) } }
+  validates_presence_of :first_name, :last_name, :username, :email
   
   # Let Devise handle the password length requirement
   validates :password, confirmation: true, format: {
@@ -23,8 +26,11 @@ class User < ActiveRecord::Base
   }
   
   before_validation do
+    self.username = self.username.downcase if self.username.present?
     self.email = self.email.downcase if self.email.present?
   end
+
+  before_save :mark_address_as_user_associated
   
   def self.drivers(provider)
     Driver.where(:provider_id => provider.id).map(&:user)
@@ -76,5 +82,11 @@ class User < ActiveRecord::Base
   
   def editor?
     super_admin? || roles.where(:provider_id => current_provider.id).first.try(:editor?)
+  end
+
+  private
+
+  def mark_address_as_user_associated
+    self.address.is_user_associated = true if self.address
   end
 end

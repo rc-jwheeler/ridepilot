@@ -7,7 +7,7 @@ class Role < ActiveRecord::Base
 
   # constants for role display names
   SYSTEM_ADMIN_NAME = 'System Admin'
-  ADMIN_NAME = 'Admin'
+  ADMIN_NAME = 'Provider Admin'
   EDITOR_NAME = 'Editor'
   USER_NAME = 'User'
   # constants for role levels

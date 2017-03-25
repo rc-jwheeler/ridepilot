@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
     mount TranslationEngine::Engine => "/translation_engine"
 
-    root :to => "trips#index"
+    root :to => "trips_runs#index"
 
     get "admin", :controller => :home, :action => :index
 

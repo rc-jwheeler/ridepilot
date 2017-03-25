@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160701151558) do
+ActiveRecord::Schema.define(version: 20170325194119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 20160701151558) do
     t.datetime "deleted_at"
     t.integer  "customer_id"
     t.boolean  "is_driver_associated",                                                          default: false
+    t.boolean  "is_user_associated"
   end
 
   add_index "addresses", ["customer_id"], :name => "index_addresses_on_customer_id"
@@ -779,8 +780,14 @@ ActiveRecord::Schema.define(version: 20160701151558) do
     t.datetime "expires_at"
     t.string   "inactivation_reason"
     t.datetime "deleted_at"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "username"
+    t.string   "phone_number"
+    t.integer  "address_id"
   end
 
+  add_index "users", ["address_id"], :name => "index_users_on_address_id"
   add_index "users", ["current_provider_id"], :name => "index_users_on_current_provider_id"
   add_index "users", ["deleted_at"], :name => "index_users_on_deleted_at"
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

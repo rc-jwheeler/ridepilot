@@ -31,7 +31,9 @@ class AddressesController < ApplicationController
     end
 
     addresses = Address.where(base_arel.to_sql)
-      .where(is_driver_associated: false, inactive: false)
+      .where('is_driver_associated is NULL or is_driver_associated != ?', true)
+      .where('is_user_associated is NULL or is_user_associated != ?', true)
+      .where('inactive is NULL or inactive != ?', true)
       .where(["((LOWER(address) like '%' || ? || '%' ) and  (city || ', ' || state || ' ' || zip like ? || '%')) or LOWER(building_name) like '%' || ? || '%' or LOWER(name) like '%' || ? || '%' ", address, city_state_zip, term, term])
     if params[:customer_id].present?
       addresses = addresses.where("customer_id is NULL or customer_id = ?", params[:customer_id]) 

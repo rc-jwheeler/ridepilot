@@ -170,7 +170,16 @@ class UsersController < ApplicationController
   private
   
   def create_user_params
-    params.require(:user).permit(:email)
+    params.require(:user).permit(:email, :first_name, :last_name, :username, :phone_number, :address_attributes => [
+        :address,
+        :building_name,
+        :city,
+        :name,
+        :provider_id,
+        :state,
+        :zip,
+        :notes
+      ])
   end
   
   def change_expiration_params
