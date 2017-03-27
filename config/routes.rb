@@ -26,6 +26,8 @@ Rails.application.routes.draw do
       get "restore_user" => "users#restore"
     end
 
+    resources :users, only: [:show, :edit, :update]
+
     resource :application_settings, only: [:edit, :update] do
       collection do
         get :index

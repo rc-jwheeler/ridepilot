@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
     :timeoutable, :password_expirable, :password_archivable, :account_expireable
 
   # Let Devise handle the email format requirement
-  validates :username, :email, uniqueness: { conditions: -> { where(deleted_at: nil) } }
+  validates :username, :email, uniqueness: { :case_sensitive => false, conditions: -> { where(deleted_at: nil) } }
   validates_presence_of :first_name, :last_name, :username, :email
   
   # Let Devise handle the password length requirement
@@ -82,6 +82,14 @@ class User < ActiveRecord::Base
   
   def editor?
     super_admin? || roles.where(:provider_id => current_provider.id).first.try(:editor?)
+  end
+
+  def name
+    "#{first_name} #{last_name}"
+  end
+
+  def display_name
+    name.blank? ? email : name
   end
 
   private

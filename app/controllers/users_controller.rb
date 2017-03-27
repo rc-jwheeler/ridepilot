@@ -1,6 +1,8 @@
 require 'new_user_mailer'
 
 class UsersController < ApplicationController
+  before_action :set_user, only: [:show, :edit, :update]
+
   def new_user
     authorize! :edit, current_user.current_provider
     @user = User.new
@@ -24,7 +26,7 @@ class UsersController < ApplicationController
       User.transaction do
         begin
           if not @user
-            @user = User.new(create_user_params)
+            @user = User.new(user_params)
             @user.password = User.generate_password
             raw, enc = Devise.token_generator.generate(User, :reset_password_token)
             @user.reset_password_token = enc
@@ -66,6 +68,34 @@ class UsersController < ApplicationController
       flash.now[:alert] = TranslationEngine.translate_text(:user_was_deleted)
       @errors = {}
       render :action => :new_user
+    end
+  end
+
+  def show
+    authorize! :read, @user
+  end
+
+  def edit
+    authorize! :edit, @user
+  end
+
+  def update
+    new_attrs = user_params
+    is_address_blank = check_blank_address
+    if is_address_blank
+      prev_address = @user.address
+      @user.address_id = nil
+      new_attrs.except!(:address_attributes)
+    end
+
+    if @user.update_attributes(new_attrs)
+      prev_address.destroy if is_address_blank && prev_address.present?
+      flash.now[:notice] = "User updated."
+      redirect_to user_path(@user)
+    else
+      flash.now[:notice] = "Unable to update user."
+
+      render :edit
     end
   end
   
@@ -169,7 +199,7 @@ class UsersController < ApplicationController
 
   private
   
-  def create_user_params
+  def user_params
     params.require(:user).permit(:email, :first_name, :last_name, :username, :phone_number, :address_attributes => [
         :address,
         :building_name,
@@ -180,6 +210,10 @@ class UsersController < ApplicationController
         :zip,
         :notes
       ])
+  end
+
+  def set_user
+    @user = User.find_by_id(params[:id])
   end
   
   def change_expiration_params
@@ -192,5 +226,18 @@ class UsersController < ApplicationController
 
   def change_email_params
     params.require(:user).permit(:email)
+  end
+
+  def check_blank_address
+    address_params = user_params[:address_attributes]
+    is_blank = true
+    address_params.keys.each do |key|
+      unless address_params[key].blank?
+        is_blank = false
+        break
+      end
+    end if address_params
+
+    is_blank
   end
 end

@@ -50,11 +50,12 @@
 
 <h2 class="section-header">Users</h2>
 
-<% if @provider.roles.size == 0 %>
+<% if @provider.roles.empty? %>
   <p><%= translate_helper("no_users_yet") %></p>
 <% else %>
   <table>
     <tr>
+      <th><%= translate_helper("name") %></th>
       <th><%= translate_helper("email") %></th>
       <th><%= translate_helper("role") %></th>
       <th><%= translate_helper("last_login") %></th>
@@ -65,8 +66,9 @@
       <% end %>
     </tr>
 
-    <% for role in @provider.roles %>
+    <% for role in @provider.roles.joins(:user).reorder("lower(users.last_name)") %>
     <tr>
+      <td> <%= role.user.name %> </td>
       <td class="<%= role.name.downcase %>">
         <%= role.user.email %>
         <% if can? :manage, role.user %>

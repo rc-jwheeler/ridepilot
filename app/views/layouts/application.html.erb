@@ -20,7 +20,7 @@
       <%= translate_helper("header_content") %>
       <div id="login-area">
         <% if current_user %>
-          <a href="#"><%= current_user.email %></a> 
+          <a href=<%= user_path(current_user)%>><%= current_user.display_name %></a> 
           <span class="separator">|</span> <%= link_to translate_helper("change_password"), show_change_password_path, :class=>'change-password' %>
           <span class="separator">|</span>
           <%= link_to translate_helper("log_out_link_text"), destroy_user_session_path, method: :delete %>

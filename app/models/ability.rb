@@ -67,6 +67,7 @@ class Ability
       can :load,   Address
     else
       can :read, User, :roles => {:provider_id => provider.id}
+      can :edit, user
     end
 
     if role.editor?

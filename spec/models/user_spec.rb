@@ -172,6 +172,29 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe ".name" do
+    it "combins first_name and last_name" do 
+      user = build :user, first_name: "Test", last_name: "User"
+      expect(user.name).to eql "Test User"
+    end
+  end
+
+  describe ".display_name" do
+    context "when name is not provided" do 
+      it "uses Email" do 
+        user = build :user, first_name: nil, last_name: nil, email: "test@example.com"
+        expect(user.display_name).to eql "test@example.com"
+      end
+    end
+
+    context "when name presents" do 
+      it "uses name" do 
+        user = build :user, first_name: "Test", last_name: "User"
+        expect(user.display_name).to eql "Test User"
+      end
+    end
+  end
+
   it "can find users that are drivers for a given provider" do
     driver_1 = create :driver
     driver_2 = create :driver
