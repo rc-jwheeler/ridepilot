@@ -6,23 +6,23 @@ class TripsRunsController < ApplicationController
     filters_hash = runs_trips_params || {}
     update_sessions(filters_hash.except(:start, :end))
     
-    @runs = Run.for_provider(current_provider_id).includes(:driver, :vehicle)
+    @runs = Run.for_provider(current_provider_id).order(:name, :date, :actual_start_time)
+    @runs = @runs.where(id: filters_hash[:run_id]) unless filters_hash[:run_id].blank?
     filter_runs
 
-    @trips = Trip.has_scheduled_time.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]})
-    .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
+    @trips = Trip.has_scheduled_time.for_provider(current_provider_id).includes(:customer, :pickup_address, :run)
+    .references(:customer, :pickup_address, :run).order(:pickup_time)
     # Exclude trips with following result codes from trips-runs page
     exclude_trip_result_ids = TripResult.where(code: ['UNMET', 'TD', 'CANC']).pluck :id
     @trips = @trips.where("trip_result_id is NULL or trip_result_id not in (?)", exclude_trip_result_ids)
+    @trips = @trips.where("runs.id": filters_hash[:run_id]) unless filters_hash[:run_id].blank?
     filter_trips
     
-    @vehicles        = add_cab(Vehicle.accessible_by(current_ability).where(:provider_id => current_provider_id))
-    @drivers         = Driver.active.for_provider current_provider_id
     @run_trip_day    = Utility.new.parse_date(session[:run_trip_day])
 
     @runs_array       = add_unscheduled_run(add_cab_run(@runs)).map{ |run|
       as_resource_json(run)
-    }.sort{|a,b| b[:id] <=> a[:id]}
+    }
 
     @runs_for_dropdown = @runs_array.collect {|r| [r[:label], r[:id]]}
 
@@ -84,8 +84,7 @@ class TripsRunsController < ApplicationController
     {
       start: session[:run_trip_day],
       end: session[:run_trip_day], 
-      driver_id: session[:driver_id], 
-      vehicle_id: session[:vehicle_id],
+      run_id: session[:run_id], 
       run_result_id: session[:run_result_id]
     }
   end
@@ -93,26 +92,19 @@ class TripsRunsController < ApplicationController
   def trip_sessions
     {
       start: session[:run_trip_day],
-      end: session[:run_trip_day], 
-      driver_id: session[:driver_id], 
-      vehicle_id: session[:vehicle_id],
+      end: session[:run_trip_day],  
+      run_id: session[:run_id], 
       trip_result_id: session[:trip_result_id], 
       status_id: session[:status_id]
     }
   end
 
-  def add_cab(vehicles)
-    cab_vehicle = Vehicle.new :name => TranslationEngine.translate_text(:cab)
-    cab_vehicle.id = -1
-    [cab_vehicle] + vehicles 
-  end
-
   def add_cab_run(runs)
-    [Run.fake_cab_run] + runs 
+    runs + [Run.fake_cab_run]
   end
 
   def add_unscheduled_run(runs)
-    [Run.fake_unscheduled_run] + runs 
+    runs + [Run.fake_unscheduled_run]
   end
 
   def as_resource_json(run)
@@ -128,5 +120,9 @@ class TripsRunsController < ApplicationController
       isDate: false,
       name: name
     }
+  end
+
+  # Ajax to update Run filter given a new date
+  def runs_by_date
   end
 end

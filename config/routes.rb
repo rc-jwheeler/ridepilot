@@ -144,6 +144,7 @@ Rails.application.routes.draw do
     resources :trips_runs, only: [:index] do 
       collection do 
         post :schedule
+        get :runs_by_date
       end
     end
     

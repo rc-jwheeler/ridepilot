@@ -4,9 +4,9 @@
   %h1= translate_helper("trips_runs") + ": " + format_time_as_title_for_listing_day(@run_trip_day)
   .clearfix
 
-.col-md-3{style: 'padding: 0px 15px 0px 0px;'}
+.col-md-2{style: 'padding: 0px 15px 0px 0px;'}
   = render :partial => 'filters'
-.col-md-9{style: 'padding: 0px;'}
+.col-md-10{style: 'padding: 0px;'}
   .checkbox.pull-right
     %label
       %input#hide_trip_run_calendar{type: 'checkbox'}
