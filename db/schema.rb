@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170327183900) do
+ActiveRecord::Schema.define(version: 20170327190825) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -426,6 +426,8 @@ ActiveRecord::Schema.define(version: 20170327183900) do
     t.datetime "deleted_at"
     t.integer  "min_trip_time_gap_in_mins",                                                                                                        default: 30
     t.boolean  "customer_nonsharable",                                                                                                             default: false
+    t.datetime "inactivated_date"
+    t.string   "inactivated_reason"
   end
 
   add_index "providers", ["deleted_at"], :name => "index_providers_on_deleted_at"

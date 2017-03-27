@@ -78,7 +78,7 @@ class API::V1::TripsController < API::ApiController
   end
 
   def authenticate_provider
-    @provider = Provider.find_by_id(params[:provider_id])
+    @provider = Provider.active.find_by_id(params[:provider_id])
 
     if !@provider
       error(:not_found, TranslationEngine.translate_text(:provider_not_exist))

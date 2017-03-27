@@ -53,6 +53,9 @@ class Provider < ActiveRecord::Base
   
   after_initialize :init
 
+  scope :active, -> { where("inactivated_date is NULL") }
+  scope :customer_sharable, -> { where("customer_nonsharable is NULL or customer_nonsharable != ?", true) }
+
   def init
     self.scheduling = true if new_record?
   end
@@ -67,5 +70,9 @@ class Provider < ActiveRecord::Base
 
   def min_trip_time_gap_in_mins
     super || 30
+  end
+
+  def active?
+    !inactivated_date
   end
 end
