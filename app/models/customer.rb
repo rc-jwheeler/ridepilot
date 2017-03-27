@@ -4,7 +4,7 @@ class Customer < ActiveRecord::Base
 
   acts_as_paranoid # soft delete
 
-  has_and_belongs_to_many :authorized_providers, :class_name => 'Provider', :through => 'customers_providers'
+  has_and_belongs_to_many :authorized_providers, -> { where("customer_nonsharable is NULL or customer_nonsharable != ?", true) }, :class_name => 'Provider', :through => 'customers_providers'
 
   belongs_to :provider, -> { with_deleted }
   belongs_to :address
