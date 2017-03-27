@@ -109,7 +109,6 @@ class Trip < ActiveRecord::Base
   validate :provider_availability
   validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validate :return_trip_later_than_outbound_trip
-  validate :dropff_time_and_pickup_time_gap
 
   accepts_nested_attributes_for :customer
 
@@ -434,11 +433,6 @@ class Trip < ActiveRecord::Base
         errors.add(:base, TranslationEngine.translate_text(:return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time)) if pickup_time < outbound_trip.appointment_time
       end
     end
-  end
-
-  def dropff_time_and_pickup_time_gap
-    time_gap_in_mins = (appointment_time - pickup_time) / 60 if appointment_time && pickup_time
-    errors.add(:base, TranslationEngine.translate_text(:violate_provider_min_time_gap, provider_name: provider.try(:name), min_gap: provider.min_trip_time_gap_in_mins)) if provider && time_gap_in_mins && (time_gap_in_mins < provider.min_trip_time_gap_in_mins)
   end
 
   def compute_run    

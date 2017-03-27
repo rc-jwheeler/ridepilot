@@ -77,7 +77,6 @@ Rails.application.routes.draw do
         post :change_fields_required_for_run_completion
         post :save_region
         post :save_viewport
-        post :update_min_trip_time_gap
         patch :save_operating_hours
       end
     end

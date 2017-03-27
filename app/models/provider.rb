@@ -68,8 +68,10 @@ class Provider < ActiveRecord::Base
     errors.add(:fields_required_for_run_completion, "contains invalid attribute values") if fields_required_for_run_completion.is_a?(Array) && (fields_required_for_run_completion.map(&:to_s) - Run::FIELDS_FOR_COMPLETION.map(&:to_s)).any?
   end
 
+  # Phase II J.2
+  # TODO: To be eliminated
   def min_trip_time_gap_in_mins
-    super || 30
+    30
   end
 
   def active?

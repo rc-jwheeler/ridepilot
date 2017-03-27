@@ -107,11 +107,6 @@ class ProvidersController < ApplicationController
     @provider.update_attributes reimbursement_params
     redirect_to provider_path(@provider)
   end
-
-  def update_min_trip_time_gap
-    @provider.update_attributes min_trip_time_gap_in_mins: params[:min_trip_time_gap_in_mins].to_i
-    redirect_to provider_path(@provider)
-  end
   
   def change_fields_required_for_run_completion
     @provider.update_attribute :fields_required_for_run_completion, params[:fields_required_for_run_completion]
