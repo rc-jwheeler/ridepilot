@@ -141,5 +141,12 @@ namespace :ridepilot do
     report.update(redirect_to_results: false, title: "Driver Manifest")
     puts 'Driver manifest report added'
   end
+
+  desc 'Update trip results'
+  task :update_trip_results => :environment do
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_trip_results.rb')
+    load(seed_file) if File.exist?(seed_file)
+    puts 'Finished seeding trip results'
+  end
   #------------- End of Incremental Seeding --------------
 end
