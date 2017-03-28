@@ -8,7 +8,7 @@ class TripsRunsController < ApplicationController
 
     # by default, select all trip results
     unless session[:trip_result_id].present?
-      session[:trip_result_id] = [-1] + TripResult.pluck(:id).uniq
+      session[:trip_result_id] = [TripResult::UNSCHEDULED_ID, TripResult::SHOW_ALL_ID] + TripResult.pluck(:id).uniq
     end
     
     @runs = Run.for_provider(current_provider_id).order(:name, :date, :actual_start_time)

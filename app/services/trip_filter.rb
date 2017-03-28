@@ -83,8 +83,17 @@ class TripFilter
   end
 
   def filter_by_result!
-    if @filters[:trip_result_id].present?  
-      @trips = @trips.where(trip_result_id: @filters[:trip_result_id]) 
+    if @filters[:trip_result_id].present?
+      trip_result_ids = @filters[:trip_result_id].dup
+
+      # Replace the hard-coded ID for unscheduled trips with `nil`
+      if trip_result_ids.include?(TripResult::UNSCHEDULED_ID)
+        trip_result_ids[trip_result_ids.index(TripResult::UNSCHEDULED_ID)] = nil
+      elsif trip_result_ids.include?(TripResult::UNSCHEDULED_ID.to_s)
+        trip_result_ids[trip_result_ids.index(TripResult::UNSCHEDULED_ID.to_s)] = nil
+      end
+
+      @trips = @trips.where(trip_result_id: trip_result_ids) 
     end
   end
 

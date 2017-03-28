@@ -19,11 +19,7 @@
       .col-sm-12{style: 'padding: 5px;'}
         = f.label :status_id, translate_helper(:status)
         = f.select :status_id, options_for_select( [[translate_helper(:scheduled), 1], [translate_helper(:unscheduled), 2]], session[:status_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }
-      .col-sm-12{style: 'padding: 5px;'}
-        = f.label :trip_result_id, translate_helper(:trip_result)
-        = f.collection_check_boxes :trip_result_id, [[-1, 'Select All']] + TripResult.by_provider(current_provider).order(:name).pluck(:id, :name), :first, :last, { checked: session[:trip_result_id] }, {class: 'trip-result-filter', style: 'vertical-align: initial;'} do |b|
-          .col-sm-12
-            = b.check_box + " " + b.text
+      = render 'trips/trip_result_filter', f: f
 
 = render "shared/date_time_picker_javascript"
 :javascript
@@ -35,10 +31,6 @@
       $('#trip_filter_form select').val('');
 
       $('#trip_filter_form select').submit();
-    });
-
-    $('.trip-result-filter[value=-1]').change(function() {
-      $('.trip-result-filter[value!=-1]').prop('checked', $(this).is(':checked'));
     });
   });
       

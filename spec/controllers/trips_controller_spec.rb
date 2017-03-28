@@ -30,9 +30,10 @@ RSpec.describe TripsController, type: :controller do
         expect(response.content_type).to eq("application/json")
       end
 
-      it "assigns trips for the current week as @trips" do
-        trip_1 = create(:trip, :provider => @current_user.current_provider, :pickup_time => Time.now.in_time_zone)
-        trip_2 = create(:trip, :provider => @current_user.current_provider, :pickup_time => 1.week.from_now.in_time_zone)
+      it "assigns trips for the current day as @trips" do
+        current_day = Time.now.in_time_zone
+        trip_1 = create(:trip, :provider => @current_user.current_provider, :pickup_time => current_day)
+        trip_2 = create(:trip, :provider => @current_user.current_provider, :pickup_time => current_day + 1.day)
         get :index, {:format => "json"}
         expect(assigns(:trips)).to include(trip_1)
         expect(assigns(:trips)).to_not include(trip_2)
