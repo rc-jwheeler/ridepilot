@@ -131,7 +131,7 @@ RSpec.describe TripFilter do
     end
 
     it "should return cancelled trips when trip result filter is Cancelled" do 
-      expect(TripFilter.new(Trip.all, {trip_result_id: @cancel_trip_result.id}).filter!).to eq([@cancelled_trip])
+      expect(TripFilter.new(Trip.all, {trip_result_id: [@cancel_trip_result.id]}).filter!).to eq([@cancelled_trip])
     end
 
     it "should return all trips when trip result filter is not specified" do 
