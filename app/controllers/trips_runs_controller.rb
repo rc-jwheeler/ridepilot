@@ -5,6 +5,11 @@ class TripsRunsController < ApplicationController
     Date.beginning_of_week= :sunday
     filters_hash = runs_trips_params || {}
     update_sessions(filters_hash.except(:start, :end))
+
+    # by default, select all trip results
+    unless session[:trip_result_id].present?
+      session[:trip_result_id] = [-1] + TripResult.pluck(:id).uniq
+    end
     
     @runs = Run.for_provider(current_provider_id).order(:name, :date, :actual_start_time)
     @runs = @runs.where(id: filters_hash[:run_id]) unless filters_hash[:run_id].blank?
@@ -15,7 +20,6 @@ class TripsRunsController < ApplicationController
     # Exclude trips with following result codes from trips-runs page
     exclude_trip_result_ids = TripResult.where(code: ['UNMET', 'TD', 'CANC']).pluck :id
     @trips = @trips.where("trip_result_id is NULL or trip_result_id not in (?)", exclude_trip_result_ids)
-    @trips = @trips.where("runs.id": filters_hash[:run_id]) unless filters_hash[:run_id].blank?
     filter_trips
     
     @run_trip_day    = Utility.new.parse_date(session[:run_trip_day])

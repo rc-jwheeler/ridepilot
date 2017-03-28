@@ -21,8 +21,9 @@
         = f.select :run_result_id, options_for_select( [[translate_helper(:complete), 1], [translate_helper(:incomplete), 2]], session[:run_result_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }
       .col-sm-12{style: 'padding: 5px;'}
         = f.label :trip_result_id, translate_helper(:trip_result)
-        = f.select :trip_result_id, options_from_collection_for_select( TripResult.by_provider(current_provider).where.not(code: ['UNMET', 'TD', 'CANC']), :id, :name, session[:trip_result_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }
-
+        = f.collection_check_boxes :trip_result_id, [[-1, 'Select All']] + TripResult.by_provider(current_provider).order(:name).pluck(:id, :name), :first, :last, { checked: session[:trip_result_id] }, {class: 'trip-result-filter', style: 'vertical-align: initial;'} do |b|
+          .col-sm-12
+            = b.check_box + " " + b.text
 = render "shared/date_time_picker_javascript"
 :javascript
   $(document).ready(function(){
@@ -39,6 +40,10 @@
       $.ajax({
         url: "#{runs_by_date_trips_runs_path(format: :js)}?run_trip_day=" + $(this).val()
       });
+    });
+
+    $('.trip-result-filter[value=-1]').change(function() {
+      $('.trip-result-filter[value!=-1]').prop('checked', $(this).is(':checked'));
     });
   });
       

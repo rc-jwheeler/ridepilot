@@ -12,6 +12,7 @@ class TripFilter
     filter_by_days_of_week!
     filter_by_vehicle!
     filter_by_driver!
+    filter_by_run!
     filter_by_status!
     filter_by_result!
 
@@ -62,6 +63,12 @@ class TripFilter
   def filter_by_driver!
     if @filters[:driver_id].present?  
       @trips = @trips.includes(run: :driver).references(run: :driver).where("runs.driver_id": @filters[:driver_id]) 
+    end
+  end
+
+  def filter_by_run!
+    unless @filters[:run_id].blank?  
+      @trips = @trips.includes(:run).references(:run).where("runs.id": @filters[:run_id]) 
     end
   end
 
