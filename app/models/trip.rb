@@ -300,7 +300,7 @@ class Trip < ActiveRecord::Base
     cloned_trip
   end
 
-  def clone_for_return!(pickup_time_str, appointment_time_str)
+  def clone_for_return!(pickup_time_str = nil, appointment_time_str = nil)
     return_trip = self.dup
     return_trip.direction = :return
     return_trip.pickup_address = self.dropoff_address
@@ -312,6 +312,7 @@ class Trip < ActiveRecord::Base
     return_trip.appointment_time = Time.zone.parse(appointment_time_str, self.pickup_time.beginning_of_day) if appointment_time_str
     return_trip.outbound_trip = self
     return_trip.drive_distance = nil
+    return_trip.trip_result = nil
 
     return_trip
   end

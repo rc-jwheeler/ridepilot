@@ -212,7 +212,12 @@ class TripsController < ApplicationController
   end
 
   def return
-    @trip = @trip.clone_for_return!(params[:trip][:pickup_time], params[:trip][:appointment_time])
+    if params[:trip].present?
+      @trip = @trip.clone_for_return!(params[:trip][:pickup_time], params[:trip][:appointment_time])
+    else
+      @trip = @trip.clone_for_return!
+    end
+    
     @outbound_trip_id = params[:trip_id]
     prep_view
     

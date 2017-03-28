@@ -906,6 +906,7 @@ en:
   back_to_view_trips: "Back to View Trips"
   edit_trip_link_text: "Edit Trip"
   clone_trip: "Clone"
+  create_return_trip: "Create Return"
   edit_run_link_text: "Edit Run"
   cab_trip: "Cab Trip"
   view_customer_profile: 'Profile'
