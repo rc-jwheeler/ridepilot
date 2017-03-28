@@ -91,7 +91,7 @@ class Run < ActiveRecord::Base
   
   before_validation :fix_dates, :set_complete
   
-  validates                 :name, presence: true
+  validates                 :name, presence: true, uniqueness: { scope: :date, message: "should be unique per day" }
   #validates                 :driver, presence: true
   validates                 :provider, presence: true
   validates                 :vehicle, presence: true
@@ -104,13 +104,15 @@ class Run < ActiveRecord::Base
   validates_numericality_of :end_odometer, allow_nil: true
   validates_numericality_of :end_odometer, greater_than: -> (run){ run.start_odometer }, less_than: -> (run){ run.start_odometer + 500 }, if: -> (run){ run.start_odometer.present? }, allow_nil: true
   validates_numericality_of :unpaid_driver_break_time, allow_nil: true
-  # TODO discuss when to enable this:
-  # validate                  :driver_availability
+
+  validate                  :driver_availability
+  validate                  :vehicle_availability
   
   scope :after,                  -> (date) { where('runs.date > ?', date) }
   scope :after_today,            -> { where('runs.date > ?', Date.today) }
   scope :for_date,               -> (date) { where('runs.date = ?', date) }
   scope :for_date_range,         -> (start_date, end_date) { where("runs.date >= ? and runs.date < ?", start_date, end_date) }
+  scope :overlapped,             -> (run) { where("runs.date = ?", run.date).where.not("runs.scheduled_end_time <= ? or runs.scheduled_start_time >= ?", run.scheduled_start_time, run.scheduled_end_time) }
   scope :for_paid_driver,        -> { where(paid: true) }
   scope :for_provider,           -> (provider_id) { where(provider_id: provider_id) }
   scope :for_vehicle,            -> (vehicle_id) { where(vehicle_id: vehicle_id) }
@@ -206,8 +208,17 @@ class Run < ActiveRecord::Base
   end
 
   def driver_availability
-    if date && scheduled_start_time && driver && !driver.available?(date.wday, scheduled_start_time.strftime('%H:%M'))
-      errors.add(:driver_id, TranslationEngine.translate_text(:unavailable_at_run_time))
+    #if date && scheduled_start_time && driver && !driver.available?(date.wday, scheduled_start_time.strftime('%H:%M'))
+      #errors.add(:driver_id, TranslationEngine.translate_text(:unavailable_at_run_time))
+    #end
+    if self.driver && Run.overlapped(self).pluck(:driver_id).include?(self.driver.id)
+      errors.add(:driver_id, TranslationEngine.translate_text(:assigned_to_other_overlapping_run))
+    end
+  end
+
+  def vehicle_availability
+    if self.vehicle && Run.overlapped(self).pluck(:vehicle_id).include?(self.vehicle.id)
+      errors.add(:vehicle_id, TranslationEngine.translate_text(:assigned_to_other_overlapping_run))
     end
   end
   
