@@ -4,6 +4,11 @@ class TripsController < ApplicationController
   def index
     Date.beginning_of_week= :sunday
 
+    # by default, select all trip results
+    unless session[:trip_result_id].present?
+      session[:trip_result_id] = [-1] + TripResult.pluck(:id).uniq
+    end
+
     @trips = Trip.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]})
     .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
     filter_trips
