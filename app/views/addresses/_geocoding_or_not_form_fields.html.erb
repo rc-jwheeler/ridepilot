@@ -73,9 +73,9 @@
 
 <script type="text/javascript">
   $(function() {
-    // Force uppercase text for OFT inputs
+    // Force uppercase text
     $('[data-convert="uppercase"]').keyup(function(evt) {
-      this.value = this.value.toUpperCase();
+      convert_uppercase(this);
     });
     
     $('.address_non_street_mailing_address').change(function() {

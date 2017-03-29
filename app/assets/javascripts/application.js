@@ -441,6 +441,18 @@ function showAddressValidationErrors(form, data) {
   }
 }
 
+// Use this function to convert input text to be uppercase without losing original focus position
+function convert_uppercase(input) {
+  // store current positions in variables
+  var start = input.selectionStart,
+      end = input.selectionEnd;
+
+  input.value = input.value.toUpperCase();
+
+  // restore from variables...
+  input.setSelectionRange(start, end);
+}
+
 /*
  * show loading mask
  */
