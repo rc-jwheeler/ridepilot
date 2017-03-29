@@ -52,13 +52,7 @@
             <div class="col-md-10">
               <%= f.text_field :vin, class: "form-control", disabled: @readonly %>
             </div>
-          </div>  
-          <div class="form-group">
-            <%= f.label :default_driver_id, translate_helper("vehicle_form_driver_label"), class: "col-md-2 control-label" %>
-            <div class="col-md-10">
-              <%= f.collection_select :default_driver_id, Driver.active.for_provider(current_user.current_provider_id), :id, :name, {include_blank: true}, { class: "form-control", disabled: @readonly } %>
-            </div>
-          </div>  
+          </div>   
           <div class="form-group">
             <%= f.label :active, translate_helper("vehicle_form_active_label"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
