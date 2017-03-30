@@ -19,8 +19,15 @@ class DriversController < ApplicationController
   end
 
   def update
-    @driver.attributes = driver_params
-    process_address_geom
+    new_attrs = driver_params
+    is_alt_address_blank = check_blank_alt_address
+    if is_alt_address_blank
+      prev_alt_address = @driver.alt_address
+      @driver.alt_address_id = nil
+      new_attrs.except!(:alt_address_attributes)
+    end
+
+    @driver.attributes = new_attrs
     
     if !@driver.is_all_valid?(current_provider_id)
       prep_edit
@@ -29,6 +36,7 @@ class DriversController < ApplicationController
       begin      
         Driver.transaction do
           @driver.save!
+          prev_alt_address.destroy if is_alt_address_blank && prev_alt_address.present?
           create_or_update_hours!
         end
         redirect_to @driver, notice: 'Driver was successfully updated.'
@@ -41,7 +49,15 @@ class DriversController < ApplicationController
   end
 
   def create
-    process_address_geom
+    new_attrs = driver_params
+    is_alt_address_blank = check_blank_alt_address
+    if is_alt_address_blank
+      new_attrs.except!(:alt_address_attributes)
+    end
+
+    @driver.attributes = new_attrs
+    @driver.alt_address = nil if is_alt_address_blank
+
     @driver.provider = current_provider
     if !@driver.is_all_valid?(current_provider_id)
       prep_edit
@@ -80,7 +96,8 @@ class DriversController < ApplicationController
     @start_hours = OperatingHours.available_start_times
     @end_hours = OperatingHours.available_end_times
     
-    @driver.address ||= @driver.build_address provider: @driver.provider
+    @driver.address ||= @driver.build_address provider: @driver.provider, is_driver_associated: true
+    @driver.alt_address ||= @driver.build_alt_address provider: @driver.provider, is_driver_associated: true
   end
   
   def driver_params
@@ -92,6 +109,16 @@ class DriversController < ApplicationController
       :user_id,
       :phone_number,
       :address_attributes => [
+        :address,
+        :building_name,
+        :city,
+        :name,
+        :provider_id,
+        :state,
+        :zip,
+        :notes
+      ],
+      :alt_address_attributes => [
         :address,
         :building_name,
         :city,
@@ -112,9 +139,17 @@ class DriversController < ApplicationController
       }).process!
   end
 
-  def process_address_geom
-    if @driver && @driver.address && params[:lat].present? && params[:lon].present?
-      @driver.address.the_geom = RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f)
-    end
+  def check_blank_alt_address
+    alt_address_params = driver_params[:alt_address_attributes]
+    is_blank = true
+    alt_address_params.keys.each do |key|
+      next if key.to_s == 'provider_id'
+      unless alt_address_params[key].blank?
+        is_blank = false
+        break
+      end
+    end if alt_address_params
+
+    is_blank
   end
 end

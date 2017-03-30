@@ -70,7 +70,7 @@
       <div class="panel panel-primary">
         <div class="panel-heading"><%= translate_helper("user_address_heading") %></div>
         <div class="panel-body form-horizontal">
-          <% @user.address ||= @user.build_address provider: @current_provider %>
+          <% @user.address ||= @user.build_address provider: @current_provider, is_user_associated: true %>
           <%= f.fields_for :address, @user.address do |address_form| %>
             <%= render 'addresses/non_geocoding_form_fields', address_form: address_form, readonly: false%>
           <% end %>

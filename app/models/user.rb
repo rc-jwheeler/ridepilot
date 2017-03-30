@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
 
   # Let Devise handle the email format requirement
   validates :username, :email, uniqueness: { :case_sensitive => false, conditions: -> { where(deleted_at: nil) } }
-  validates_presence_of :first_name, :last_name, :username, :email
+  validates_presence_of :first_name, :last_name, :username
   
   # Let Devise handle the password length requirement
   validates :password, confirmation: true, format: {

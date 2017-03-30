@@ -9,6 +9,7 @@ class Driver < ActiveRecord::Base
   before_save :mark_address_as_driver_associated
   
   belongs_to :address, -> { with_deleted }
+  belongs_to :alt_address, -> { with_deleted }, class_name: 'Address', foreign_key: 'alt_address_id'
   belongs_to :provider, -> { with_deleted }
   belongs_to :user, -> { with_deleted }
   
@@ -24,6 +25,7 @@ class Driver < ActiveRecord::Base
   has_many :driver_compliances, dependent: :delete_all, inverse_of: :driver
 
   accepts_nested_attributes_for :address, update_only: true
+  accepts_nested_attributes_for :alt_address, update_only: true
 
   validates :address, associated: true, presence: true
   validates :email, format: { with: Devise.email_regexp, allow_blank: true }
@@ -50,5 +52,6 @@ class Driver < ActiveRecord::Base
 
   def mark_address_as_driver_associated
     self.address.is_driver_associated = true if self.address
+    self.alt_address.is_driver_associated = true if self.alt_address
   end
 end

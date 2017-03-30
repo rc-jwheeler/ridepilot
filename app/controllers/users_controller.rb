@@ -25,8 +25,15 @@ class UsersController < ApplicationController
       record_valid = false
       User.transaction do
         begin
+          new_attrs = user_params
+          is_address_blank = check_blank_address
+          if is_address_blank
+            new_attrs.except!(:address_attributes)
+          end
+
           if not @user
-            @user = User.new(user_params)
+            @user = User.new(new_attrs)
+            @user.address = nil if is_address_blank
             @user.password = User.generate_password
             raw, enc = Devise.token_generator.generate(User, :reset_password_token)
             @user.reset_password_token = enc
@@ -232,6 +239,7 @@ class UsersController < ApplicationController
     address_params = user_params[:address_attributes]
     is_blank = true
     address_params.keys.each do |key|
+      next if key.to_s == 'provider_id'
       unless address_params[key].blank?
         is_blank = false
         break
