@@ -17,11 +17,16 @@ class Customer < ActiveRecord::Base
   has_many  :eligibilities, through: :customer_eligibilities
   has_many  :customer_eligibilities
 
+  # profile photo
+  has_one  :photo, class_name: 'Image', as: :imageable, dependent: :destroy, inverse_of: :imageable
+  accepts_nested_attributes_for :photo
+
   belongs_to :service_level, -> { with_deleted }
   delegate :name, to: :service_level, prefix: :service_level, allow_nil: true
 
   validates_presence_of :first_name
   validates_associated :address
+  validates_associated :photo
   #validate :address_required
   # Token is auto-generated at database level via uuid extension
   

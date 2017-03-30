@@ -18,6 +18,20 @@
         <div class="panel-heading"><%= translate_helper("driver_form_details_heading") %></div>
         <div class="panel-body form-horizontal">
           <div class="form-group">
+            <%= f.label :photo, translate_helper("driver_form_photo"), class: "col-md-2 control-label" %>
+            
+            <div class="col-md-10">
+              <% if @driver.photo.present? && !@driver.photo.new_record? %>
+                <%= image_tag @driver.photo.image.url(:thumb) %>
+              <% end %>
+              <% unless @readonly%>
+              <%= f.fields_for :photo do |image_upload| %> 
+                <%= image_upload.file_field :image, class: "form-control"  %>
+              <% end %>
+              <% end %>
+            </div>
+          </div>  
+          <div class="form-group">
             <%= f.label :name, translate_helper("driver_form_name"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
               <%= f.text_field :name, class: "form-control", disabled: @readonly %>

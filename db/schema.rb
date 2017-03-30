@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170330145943) do
+ActiveRecord::Schema.define(version: 20170330174557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -327,6 +327,17 @@ ActiveRecord::Schema.define(version: 20170330145943) do
   end
 
   add_index "hidden_lookup_table_values", ["provider_id"], :name => "index_hidden_lookup_table_values_on_provider_id"
+
+  create_table "images", force: true do |t|
+    t.integer  "imageable_id"
+    t.string   "imageable_type"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
+  add_index "images", ["imageable_id", "imageable_type"], :name => "index_images_on_imageable_id_and_imageable_type"
 
   create_table "locales", force: true do |t|
     t.string   "name"

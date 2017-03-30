@@ -18,7 +18,11 @@ class Driver < ActiveRecord::Base
 
   has_many :documents, as: :documentable, dependent: :destroy, inverse_of: :documentable
   has_many :driver_histories, dependent: :destroy, inverse_of: :driver
-  
+
+  # profile photo
+  has_one  :photo, class_name: 'Image', as: :imageable, dependent: :destroy, inverse_of: :imageable
+  accepts_nested_attributes_for :photo
+
   # We must specify :delete_all in order to avoid the before_destroy hook. See
   # the RecurringComplianceEvent concern for more details. 
   # TODO Look into using `#mark_for_destruction` and `#marked_for_destruction?`
@@ -34,6 +38,7 @@ class Driver < ActiveRecord::Base
   validates :user, presence: true
   validates :user_id, uniqueness: { allow_nil: true, conditions: -> { where(deleted_at: nil) } }
   validates :phone_number, presence: true
+  validates_associated :photo
 
   scope :users,         -> { where("drivers.user_id IS NOT NULL") }
   scope :active,        -> { where(active: true) }

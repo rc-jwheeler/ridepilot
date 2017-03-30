@@ -98,6 +98,7 @@ class DriversController < ApplicationController
     
     @driver.address ||= @driver.build_address provider: @driver.provider, is_driver_associated: true
     @driver.alt_address ||= @driver.build_alt_address provider: @driver.provider, is_driver_associated: true
+    @driver.build_photo unless @driver.photo.present?
   end
   
   def driver_params
@@ -108,6 +109,7 @@ class DriversController < ApplicationController
       :email, 
       :user_id,
       :phone_number,
+      photo_attributes: [:image],
       :address_attributes => [
         :address,
         :building_name,

@@ -115,6 +115,8 @@ en:
   first_name: "First Name"
   middle_initial: "Middle Initial"
   last_name: "Last Name:"
+  customer_form_photo: 'Photo'
+  driver_form_photo: 'Photo'
   username: "Username"
   alternate_phone_number: "Alternate Phone"
   inactivation_reason: "Inactivation Reason"

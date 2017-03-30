@@ -249,6 +249,7 @@ first_name, first_name, first_name, first_name,
       :authorized_provider_ids,
       :is_elderly,
       :message,
+      photo_attributes: [:image],
       :address_attributes => [
         :address,
         :building_name,
@@ -297,6 +298,7 @@ first_name, first_name, first_name, first_name,
     @funding_sources = FundingSource.by_provider(current_provider)
     @service_levels = ServiceLevel.by_provider(current_provider).pluck(:name, :id)
     @customer.address ||= @customer.build_address provider: current_provider
+    @customer.build_photo unless @customer.photo.present?
 
     get_donations
   end
