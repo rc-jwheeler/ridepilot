@@ -19,6 +19,11 @@
       .col-sm-12{style: 'padding: 5px;'}
         = f.label :status_id, translate_helper(:status)
         = f.select :status_id, options_for_select( [[translate_helper(:scheduled), 1], [translate_helper(:unscheduled), 2]], session[:status_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }
+      .col-sm-12{style: 'padding: 5px;'}
+        = f.label :customer_id, translate_helper(:customer)
+        - customer_name = Customer.find_by_id(session[:customer_id]).name unless session[:customer_id].blank?
+        = autocomplete_field_tag 'customer_name', customer_name, autocomplete_customers_path(active_only: true), :delay => 200, :id_element => "#customer_id", :class => 'form-control', :placeholder => 'type first or last name (2 chars min.)'
+        = hidden_field_tag 'trip_filters[customer_id]', session[:customer_id], id: 'customer_id'
       = render 'trips/trip_result_filter', f: f
 
 = render "shared/date_time_picker_javascript"
@@ -31,6 +36,15 @@
       $('#trip_filter_form select').val('');
 
       $('#trip_filter_form select').submit();
+    });
+
+    $('#customer_name').change(function() {
+      if($(this).val().trim().length < 1) {
+        $('#customer_id').val('');
+      }
+    });
+    $( "#customer_name" ).on( "autocompleteresponse", function( event, ui ) { 
+      $('#customer_id').val('');
     });
   });
       

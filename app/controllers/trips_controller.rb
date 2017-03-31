@@ -419,8 +419,7 @@ class TripsController < ApplicationController
     {
       start: session[:start],
       end: session[:end], 
-      driver_id: session[:driver_id], 
-      vehicle_id: session[:vehicle_id],
+      customer_id: session[:customer_id], 
       trip_result_id: session[:trip_result_id], 
       status_id: session[:status_id],
       days_of_week: session[:days_of_week]

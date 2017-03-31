@@ -41,6 +41,7 @@ class Customer < ActiveRecord::Base
   scope :by_letter,    -> (letter) { where("lower(last_name) LIKE ?", "#{letter.downcase}%") }
   scope :for_provider, -> (provider_id) { where("provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?)", provider_id, provider_id) }
   scope :individual,   -> { where(:group => false) }
+  scope :active,       -> { where(inactivated_date: nil) }
 
   has_paper_trail
 
