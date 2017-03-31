@@ -123,6 +123,7 @@ class DriversController < ApplicationController
       :email, 
       :user_id,
       :phone_number,
+      :alt_phone_number,
       photo_attributes: [:image],
       :address_attributes => [
         :address,

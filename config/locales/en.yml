@@ -34,6 +34,7 @@ en:
   non_street_mailing_address: 'Non-street Mailing Address (P.O. Box)'
   city_state_zip: "City/State/Zip"
   phone_number: "Phone Number"
+  alt_phone_number: "Alternative Phone Number"
   in_district: "In UTA District"
   unspecified: "Unspecified"
   "yes": "Yes" # yes, no: needs to put as string, otherwise won't be loaded as will be parsed as {false=>"No"}

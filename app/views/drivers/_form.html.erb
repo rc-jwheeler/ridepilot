@@ -44,6 +44,12 @@
             </div>
           </div>  
           <div class="form-group">
+              <%= f.label :alt_phone_number, translate_helper("alt_phone_number"), class: "col-md-2 control-label" %>
+            <div class="col-md-10">
+              <%= f.text_field :alt_phone_number, class: "form-control", disabled: @readonly %>
+            </div>
+          </div>  
+          <div class="form-group">
             <%= f.label :email, translate_helper("driver_form_email"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
               <%= f.text_field :email, class: "form-control", disabled: @readonly %>
