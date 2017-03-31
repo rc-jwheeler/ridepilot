@@ -1,5 +1,5 @@
 class DriversController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:delete_photo]
 
   def index
     @drivers = @drivers.default_order.for_provider(current_provider.id)
@@ -26,6 +26,8 @@ class DriversController < ApplicationController
       @driver.alt_address_id = nil
       new_attrs.except!(:alt_address_attributes)
     end
+
+    new_attrs.except!(:photo_attributes) if new_attrs[:photo_attributes].blank?
 
     @driver.attributes = new_attrs
     
@@ -82,6 +84,16 @@ class DriversController < ApplicationController
     redirect_to drivers_path, notice: 'Driver was successfully deleted.'
   end
 
+  def delete_photo
+    @driver = Driver.find(params[:id])
+
+    authorize! :update, @driver
+
+    @driver.photo.try(:destroy!)
+
+    redirect_to @driver, :notice => "Photo has been deleted."
+  end
+
   private
   
   def prep_edit(readonly: false)
@@ -96,9 +108,11 @@ class DriversController < ApplicationController
     @start_hours = OperatingHours.available_start_times
     @end_hours = OperatingHours.available_end_times
     
-    @driver.address ||= @driver.build_address provider: @driver.provider, is_driver_associated: true
-    @driver.alt_address ||= @driver.build_alt_address provider: @driver.provider, is_driver_associated: true
-    @driver.build_photo unless @driver.photo.present?
+    unless readonly
+      @driver.address ||= @driver.build_address provider: @driver.provider, is_driver_associated: true
+      @driver.alt_address ||= @driver.build_alt_address provider: @driver.provider, is_driver_associated: true
+      @driver.build_photo unless @driver.photo.present?
+    end
   end
   
   def driver_params

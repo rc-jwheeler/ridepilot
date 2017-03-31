@@ -166,6 +166,8 @@ en:
   cancel: "Cancel"
   back: "Back"
   inactivate: "Inactivate"
+  delete_photo: "Delete Photo"
+  delete_photo_confirm: "Are you sure to delete the photo?"
   activate: "Activate"
   submit: "Submit"
   previous: "Previous"

@@ -44,6 +44,10 @@ Rails.application.routes.draw do
         get :search
         post :data_for_trip
       end
+
+      member do
+        get :delete_photo 
+      end
     end
 
     resources :trips do
@@ -122,6 +126,10 @@ Rails.application.routes.draw do
     end
     
     resources :drivers do
+      member do 
+        get :delete_photo
+      end
+
       resources :documents, except: [:index, :show]
       resources :driver_histories, except: [:index, :show]
       resources :driver_compliances, except: [:index, :show]

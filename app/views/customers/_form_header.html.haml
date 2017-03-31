@@ -22,6 +22,7 @@
             = link_to(translate_helper("merge"), @customer, :id => 'customer_merge', :class=>'btn action-button btn-danger')
           - else
             = link_to(translate_helper("delete"), @customer, data: {:confirm => translate_helper("delete_customer_confirm")}, :method => :delete, :id => 'customer_delete', :class=>'btn action-button btn-danger') 
+        = link_to translate_helper("delete_photo"), delete_photo_customer_path(@customer), data: {:confirm => translate_helper("delete_photo_confirm")}, :class=>'btn action-button btn-danger' if !@customer.new_record? && can?(:edit, @customer) && @customer.photo.present?
         = link_to translate_helper("edit"), edit_customer_path(@customer), :class=>'btn action-button' if !@customer.new_record? && can?(:edit, @customer)
         = link_to translate_helper(:back), customers_path, class: "btn btn-default"
     %h1

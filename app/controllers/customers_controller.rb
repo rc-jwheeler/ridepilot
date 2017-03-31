@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  load_and_authorize_resource :except=>[:autocomplete, :found, :edit, :show, :update]
+  load_and_authorize_resource :except=>[:autocomplete, :found, :edit, :show, :update, :delete_photo]
 
   def autocomplete
     customers = Customer.for_provider(current_provider_id).by_term( params['term'].downcase, 10 ).accessible_by(current_ability)
@@ -62,7 +62,7 @@ class CustomersController < ApplicationController
       @read_only_customer = true if @customer.provider_id != current_provider.id
     end
 
-    prep_edit
+    prep_edit(true)
 
     @trips    = @customer.trips.reorder('pickup_time desc').paginate :page => params[:page], :per_page => PER_PAGE
 
@@ -180,7 +180,10 @@ first_name, first_name, first_name, first_name,
 
     authorize! :update, @customer if !@customer.authorized_for_provider(current_provider.id)
 
-    @customer.assign_attributes customer_params
+    customer_attrs = customer_params
+    customer_attrs.except!(:photo_attributes) if customer_attrs[:photo_attributes].blank?
+
+    @customer.assign_attributes customer_attrs
     edit_addresses
 
     #save address changes
@@ -220,6 +223,16 @@ first_name, first_name, first_name, first_name,
       @customer.destroy
       redirect_to customers_url, :notice => "#{@customer.name} was successfully deleted."
     end
+  end
+
+  def delete_photo
+    @customer = Customer.find(params[:id])
+
+    authorize! :update, @customer if !@customer.authorized_for_provider(current_provider.id)
+
+    @customer.photo.try(:destroy!)
+
+    redirect_to @customer, :notice => "Photo has been deleted."
   end
   
   private
@@ -292,13 +305,16 @@ first_name, first_name, first_name, first_name,
     end || {}
   end
   
-  def prep_edit
+  def prep_edit(readonly = false)
     @mobilities = Mobility.by_provider(current_provider)
     @ethnicity_names = (Ethnicity.by_provider(current_provider).collect(&:name) + [@customer.ethnicity]).compact.sort.uniq
     @funding_sources = FundingSource.by_provider(current_provider)
     @service_levels = ServiceLevel.by_provider(current_provider).pluck(:name, :id)
-    @customer.address ||= @customer.build_address provider: current_provider
-    @customer.build_photo unless @customer.photo.present?
+    
+    unless readonly
+      @customer.address ||= @customer.build_address provider: current_provider
+      @customer.build_photo unless @customer.photo.present?
+    end
 
     get_donations
   end
