@@ -5,10 +5,10 @@ namespace :scheduler do
 
   task run: :environment do
     # Schedule repeating trips
-    RepeatingTrip.generate!
+    RepeatingTrip.active.generate!
 
     # Schedule repeating runs
-    RepeatingRun.generate!
+    RepeatingRun.active.generate!
 
     # Update run status
     Run.update_prior_run_complete_status!

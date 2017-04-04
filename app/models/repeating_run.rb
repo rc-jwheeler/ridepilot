@@ -9,6 +9,8 @@ class RepeatingRun < ActiveRecord::Base
   belongs_to :vehicle, -> { with_deleted }
   belongs_to :driver, -> { with_deleted }
   belongs_to :provider, -> { with_deleted }
+  
+  scope :active, -> { where("(start_date is NULL or start_date <= ?) AND (end_date is NULL or end_date >= ?)", Date.today, Date.today) }
 
   def instantiate!
     return unless active? 
