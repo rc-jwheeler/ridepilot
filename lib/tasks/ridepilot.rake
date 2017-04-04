@@ -1,6 +1,5 @@
 namespace :ridepilot do
 
-  #------------- Incremental Seeding ------------------
   desc 'Seed default lookup table configurations and each associated table data'
   task :seed_lookup_tables => :environment do
     puts 'trip purposes...'
@@ -148,5 +147,25 @@ namespace :ridepilot do
     load(seed_file) if File.exist?(seed_file)
     puts 'Finished seeding trip results'
   end
-  #------------- End of Incremental Seeding --------------
+  
+   desc 'Update translation labels'
+  task :update_translations => :environment do
+    new_trans = {
+      application_cabs_link_text: 'Cabs',
+      application_admin_link_text: "System Admin",
+      current_provider_settings_link_text: "Provider Settings",
+      application_trips_runs_link_text: 'Dispatch'
+    }
+
+    en_locale = Locale.find_by_name 'en'
+    if en_locale.present?
+      new_trans.each do |k, v|
+        key = TranslationKey.find_by_name k 
+        if key.present?
+          t = Translation.where(locale: en_locale, translation_key: key).first
+          t.update(value: v) if v.present?
+        end
+      end 
+    end
+  end
 end
