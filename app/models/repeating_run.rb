@@ -11,6 +11,8 @@ class RepeatingRun < ActiveRecord::Base
   belongs_to :provider, -> { with_deleted }
 
   def instantiate!
+    return unless active? 
+
     now = Date.today + 1.day
     later = now.advance(days: 19)
     RepeatingRun.transaction do
@@ -26,5 +28,14 @@ class RepeatingRun < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def active?
+    active = true
+
+    today = Date.today
+    active = false if (start_date && today < start_date) || (end_date && today > end_date)
+
+    active
   end
 end

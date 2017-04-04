@@ -17,6 +17,8 @@ class RepeatingTrip < ActiveRecord::Base
   belongs_to :trip_purpose, -> { with_deleted }
   
   def instantiate!
+    return unless active? 
+
     now = Date.today + 1.day
     later = now.advance(days: 20)
     RepeatingTrip.transaction do
@@ -35,5 +37,14 @@ class RepeatingTrip < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def active?
+    active = true
+
+    today = Date.today
+    active = false if (start_date && today < start_date) || (end_date && today > end_date)
+
+    active
   end
 end

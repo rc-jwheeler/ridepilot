@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170331174215) do
+ActiveRecord::Schema.define(version: 20170404183016) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -507,6 +507,8 @@ ActiveRecord::Schema.define(version: 20170331174215) do
     t.integer  "lock_version",         default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "start_date"
+    t.date     "end_date"
   end
 
   add_index "repeating_runs", ["driver_id"], :name => "index_repeating_runs_on_driver_id"
@@ -519,9 +521,9 @@ ActiveRecord::Schema.define(version: 20170331174215) do
     t.integer  "customer_id"
     t.datetime "pickup_time"
     t.datetime "appointment_time"
-    t.integer  "guest_count",        default: 0
-    t.integer  "attendant_count",    default: 0
-    t.integer  "group_size",         default: 0
+    t.integer  "guest_count",                    default: 0
+    t.integer  "attendant_count",                default: 0
+    t.integer  "group_size",                     default: 0
     t.integer  "pickup_address_id"
     t.integer  "dropoff_address_id"
     t.integer  "mobility_id"
@@ -530,13 +532,18 @@ ActiveRecord::Schema.define(version: 20170331174215) do
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",       default: 0
+    t.integer  "lock_version",                   default: 0
     t.integer  "driver_id"
     t.integer  "vehicle_id"
-    t.boolean  "cab",                default: false
+    t.boolean  "cab",                            default: false
     t.boolean  "customer_informed"
     t.integer  "trip_purpose_id"
-    t.string   "direction",          default: "outbound"
+    t.string   "direction",                      default: "outbound"
+    t.integer  "service_level_id"
+    t.boolean  "medicaid_eligible"
+    t.integer  "mobility_device_accommodations"
+    t.date     "start_date"
+    t.date     "end_date"
   end
 
   add_index "repeating_trips", ["customer_id"], :name => "index_repeating_trips_on_customer_id"
@@ -546,6 +553,7 @@ ActiveRecord::Schema.define(version: 20170331174215) do
   add_index "repeating_trips", ["mobility_id"], :name => "index_repeating_trips_on_mobility_id"
   add_index "repeating_trips", ["pickup_address_id"], :name => "index_repeating_trips_on_pickup_address_id"
   add_index "repeating_trips", ["provider_id"], :name => "index_repeating_trips_on_provider_id"
+  add_index "repeating_trips", ["service_level_id"], :name => "index_repeating_trips_on_service_level_id"
   add_index "repeating_trips", ["trip_purpose_id"], :name => "index_repeating_trips_on_trip_purpose_id"
   add_index "repeating_trips", ["vehicle_id"], :name => "index_repeating_trips_on_vehicle_id"
 
