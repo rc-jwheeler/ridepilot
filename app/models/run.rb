@@ -119,7 +119,7 @@ class Run < ActiveRecord::Base
   scope :for_driver,             -> (driver_id) { where(driver_id: driver_id) }
   scope :for_volunteer_driver,   -> { where(paid: false) }
   scope :has_scheduled_time,     -> { where.not(scheduled_start_time: nil).where.not(scheduled_end_time: nil) }
-  scope :incomplete,             -> { where(complete: false) }
+  scope :incomplete,             -> { where('complete is NULL or complete = ?', false) }
   scope :incomplete_on,          -> (date) { incomplete.for_date(date) }
   scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
   scope :prior_to,               -> (date) { where('runs.date < ?', date) }
@@ -168,6 +168,17 @@ class Run < ActiveRecord::Base
     Run.new name: TranslationEngine.translate_text(:unscheduled), id: Run::UNSCHEDULED_RUN_ID
   end
 
+  def self.update_prior_run_complete_status!
+    Run.today_and_prior.incomplete.each do |r|
+      completed = r.check_complete_status
+      r.update(complete: true) if completed
+    end
+  end
+
+  def check_complete_status
+    actual_end_time.present? && actual_end_time < Time.zone.now && trips.incomplete.empty? && check_provider_fields_required_for_run_completion
+  end
+
   private
 
   # A run is considered complete if:
@@ -176,7 +187,7 @@ class Run < ActiveRecord::Base
   #  None of its trips are still considered pending
   #  Any fields that the run provider has listed as required are valued
   def set_complete
-    self.complete = actual_end_time.present? && actual_end_time < Time.zone.now && trips.incomplete.empty? && check_provider_fields_required_for_run_completion
+    self.complete = self.check_complete_status
     true
   end
 

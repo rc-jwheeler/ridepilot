@@ -10,6 +10,9 @@ namespace :scheduler do
     # Schedule repeating runs
     RepeatingRun.generate!
 
+    # Update run status
+    Run.update_prior_run_complete_status!
+
     # Schedule recurring driver compliance events 5 years out
     RecurringDriverCompliance.generate! date_range_length: 5.years
 
