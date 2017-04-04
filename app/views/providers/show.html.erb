@@ -153,6 +153,22 @@
 
 <hr />
 
+<h2 class="section-header"><%=translate_helper("advance_day_scheduling")%></h2>
+<% if can? :edit, @provider %>
+  <%= form_tag change_advance_day_scheduling_provider_path(@provider) do %>
+    <fieldset>
+      <ol class="section fourth">
+        <li>
+          <%= label_tag translate_helper("days_in_advance") %>
+          <%= select_tag "advance_day_scheduling", options_for_select( [[7, 7], [14, 14], [21, 21]], @provider.advance_day_scheduling || Provider::DEFAULT_ADVANCE_DAY_SCHEDULING ), { :onchange => "form.submit();" } %>
+        </li>
+      </ol>
+    </fieldset>
+  <% end %>
+<% end %>
+
+<hr />
+
 <h2 class="section-header"><%= translate_helper("provider_form_fields_required_for_run_completion") %></h2>
 <% if can? :edit, @provider %>
   <%= form_tag change_fields_required_for_run_completion_provider_path(@provider) do %>

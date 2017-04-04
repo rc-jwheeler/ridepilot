@@ -103,6 +103,12 @@ class ProvidersController < ApplicationController
     redirect_to provider_path(@provider)
   end
 
+  def change_advance_day_scheduling
+    @provider.update_attribute :advance_day_scheduling, params[:advance_day_scheduling]
+    
+    redirect_to provider_path(@provider)
+  end
+
   def change_reimbursement_rates
     @provider.update_attributes reimbursement_params
     redirect_to provider_path(@provider)

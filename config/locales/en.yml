@@ -1089,6 +1089,8 @@ en:
   unscheduled: 'Unscheduled'
   schedule: 'Schedule'
   unschedule: 'Unschedule'
+  advance_day_scheduling: 'Advance Day Scheduling'
+  days_in_advance: 'Days to schedule in advance'
   from_date: 'From Date'
   to_date: 'To Date'
   from_date_cannot_later_than_to_date: "From Date can not be later than To Date"
