@@ -82,8 +82,4 @@ class Provider < ActiveRecord::Base
   def active?
     !inactivated_date
   end
-
-  def days_for_scheduling_in_advance
-    advance_day_scheduling.present? ? advance_day_scheduling : DEFAULT_ADVANCE_DAY_SCHEDULING
-  end
 end

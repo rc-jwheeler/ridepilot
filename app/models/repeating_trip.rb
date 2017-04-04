@@ -22,7 +22,7 @@ class RepeatingTrip < ActiveRecord::Base
     return unless active? 
 
     now = Date.today + 1.day
-    later = now.advance(days: days_for_scheduling_in_advance - 1)
+    later = now.advance(days: (provider.try(:advance_day_scheduling) || Provider::DEFAULT_ADVANCE_DAY_SCHEDULING) - 1)
     RepeatingTrip.transaction do
       for date in schedule.occurrences_between(now, later)
         this_trip_pickup_time = Time.zone.local(date.year, date.month, date.day, pickup_time.hour, pickup_time.min, pickup_time.sec)

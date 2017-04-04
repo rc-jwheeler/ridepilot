@@ -16,7 +16,7 @@ class RepeatingRun < ActiveRecord::Base
     return unless active? 
 
     now = Date.today + 1.day
-    later = now.advance(days: days_for_scheduling_in_advance - 1)
+    later = now.advance(days: (provider.try(:advance_day_scheduling) || Provider::DEFAULT_ADVANCE_DAY_SCHEDULING) - 1)
     RepeatingRun.transaction do
       for date in schedule.occurrences_between(now, later)
         unless Run.repeating_based_on(self).for_date(date).exists?
