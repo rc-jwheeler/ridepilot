@@ -33,6 +33,9 @@ class Provider < ActiveRecord::Base
     :stf_taxi_per_mile_ambulatory_reimbursement_rate,
     :stf_taxi_per_mile_wheelchair_reimbursement_rate
   ]
+
+  # default value of advance_day_scheduling
+  DEFAULT_ADVANCE_DAY_SCHEDULING = 21
   
   validates :name, :length => { :minimum => 2 }
   validates_numericality_of :oaa3b_per_ride_reimbursement_rate,               :greater_than => 0, :allow_blank => true
@@ -50,6 +53,8 @@ class Provider < ActiveRecord::Base
     content_type: {:content_type => /\Aimage/},
     file_name: {:matches => [/png\Z/, /gif\Z/, /jpe?g\Z/], allow_blank: true}
   validate                  :fields_required_for_run_completion_includes_allowed_values
+  # How many days in advance to create subscription trips/runs
+  validates_numericality_of :advance_day_scheduling, :greater_than => 0, :allow_blank => true 
   
   after_initialize :init
 
@@ -76,5 +81,9 @@ class Provider < ActiveRecord::Base
 
   def active?
     !inactivated_date
+  end
+
+  def days_for_scheduling_in_advance
+    advance_day_scheduling.present? ? advance_day_scheduling : DEFAULT_ADVANCE_DAY_SCHEDULING
   end
 end
