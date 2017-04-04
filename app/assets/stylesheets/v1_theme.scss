@@ -73,7 +73,7 @@ input[type="checkbox"] { vertical-align: bottom; }
 .ie7 input[type="checkbox"] { vertical-align: baseline; }
 .ie6 input { vertical-align: text-bottom; }
 /* hand cursor on clickable input elements */
-label, input[type=button], input[type=submit], button { cursor: pointer; }
+//label, input[type=button], input[type=submit], button { cursor: pointer; }
 /* webkit browsers add a 2px margin outside the chrome of form elements */  
 button, input, select, textarea { margin: 0; }
 /* colors for form validity */
