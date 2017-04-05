@@ -24,4 +24,14 @@
       .col-sm-9
         %textarea.form-control#mobility_notes{rname:"mobility_notes", readonly:"readonly"}
           = @customer.try :mobility_notes
-      
+    .customer-eligibilities
+      - if @customer.customer_eligibilities.specified.any?
+        %h4.col-sm-12= translate_helper('customer_eligibilities')
+        - yes_label = translate_helper('yes')
+        - no_label = translate_helper('no')
+        - @customer.customer_eligibilities.specified.includes(:eligibility).references(:eligibility).each do |elig|
+          .form-group.col-sm-12
+            .col-sm-3
+              = elig.eligibility.description
+            .col-sm-9
+              = elig.eligible ? yes_label : no_label

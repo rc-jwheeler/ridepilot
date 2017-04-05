@@ -13,6 +13,10 @@
   }
   
   function populate_address_form(field, address) {
+    if(!address) {
+      return;
+    }
+    
     form = $("#" + field + "-address-form");
     form.find('#address_id').val(address.id);
     form.find('#' + field + '_name').val(address.name);

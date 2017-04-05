@@ -100,7 +100,8 @@ class Customer < ActiveRecord::Base
       :private_notes             => private_notes,
       :address_data              => address_data,
       :default_funding_source_id => default_funding_source_id,
-      :default_service_level     => service_level_name
+      :default_service_level     => service_level_name,
+      :customer_eligibilities    => customer_eligibilities.specified.as_json
     }
   end
 

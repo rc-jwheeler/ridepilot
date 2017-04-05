@@ -51,6 +51,27 @@
       $("#trip_funding_source_id").val(customerData.default_funding_source_id);
       $("#trip_service_level").val(customerData.default_service_level);
       $('#trip_medicaid_eligible').attr('checked',customerData.medicaid_eligible);
+
+      var elig_data = customerData.customer_eligibilities;
+      if(elig_data && elig_data.length > 0) {
+        $('.customer-eligibilities').html('');
+        $('.customer-eligibilities').append("<h4 class='col-sm-12'><%= translate_helper('customer_eligibilities') %></h4>");
+        
+        var yes_label = "<%= translate_helper('yes') %>";
+        var no_label = "<%= translate_helper('no') %>";
+        for(var i=0; i<elig_data.length; i++) {
+          var elig = elig_data[i];
+          var new_elig_tags = '<div class="form-group col-sm-12">' +
+            '<label class="col-sm-3">' +
+              elig.description +
+            '</label>' +
+            '<div class="col-sm-9">' +
+              (elig.eligible ? yes_label : no_label) +
+            '</div>' +
+          '</div>';
+          $('.customer-eligibilities').append(new_elig_tags);
+        }
+      }
     }
 
     $('.trip_form #customer_name').bind('railsAutocomplete.select', function(event, data){ 
