@@ -4,6 +4,9 @@ class TripResult < ActiveRecord::Base
 
   SHOW_ALL_ID = -2
   UNSCHEDULED_ID = -1
+
+  CANCEL_CODES = ['CANC', 'LTCANC', 'SDCANC'] # Cancelled, Late Cancel, Same Day Cancel
+  NON_DISPATCHABLE_CODES = CANCEL_CODES + ['UNMET', 'TD']
   
   validates_presence_of :name, :code
 
@@ -14,5 +17,13 @@ class TripResult < ActiveRecord::Base
 
   def full_description
     description || name
+  end
+
+  def self.is_cancel_code?(code)
+    CANCEL_CODES.include? code
+  end
+
+  def self.non_dispatchable_result_ids
+    @non_dispatchable_result_ids ||= where(code: NON_DISPATCHABLE_CODES).pluck(:id)
   end
 end

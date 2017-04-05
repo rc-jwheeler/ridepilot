@@ -153,6 +153,17 @@ class TripsController < ApplicationController
         @message = @trip.errors.full_messages.join(';')
       else
         @trip_result_filters = trip_sessions[:trip_result_id]
+
+        if @trip.scheduled? && TripResult.is_cancel_code?(@trip.trip_result.try(:code))
+          if @trip.run.present?
+            @trip.run = nil
+            @trip.save
+          elsif @trip.cab 
+            @trip.cab = false
+            @trip.save
+          end
+          @clear_trip_status = true
+        end
       end
     else
       @message = TranslationEngine.translate_text(:operation_not_authorized)

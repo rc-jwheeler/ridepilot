@@ -4,6 +4,8 @@ TRIP_RESULT_CODES = {
   "NS"    => "No-show",     # the customer did not show up for the trip
   "MT"    => "Missed Trip", # the customer missed the trip
   "CANC"  => "Cancelled",   # the trip was cancelled by the customer
+  "LTCANC"  => "Late Cancel",   # the trip was cancelled by the customer (late)
+  "SDCANC"  => "Same Day Cancel",   # the trip was cancelled by the customer (same day)
   "TD"    => "Turned Down", # the provider told the customer that it could not provide the trip
   "UNMET" => "Unmet Need"   # a trip that was outside of the service parameters (too early, too late, too far, etc).
 }

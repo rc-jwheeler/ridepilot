@@ -394,6 +394,10 @@ class Trip < ActiveRecord::Base
     Trip.prior_to_today.scheduled.standby.update_all(trip_result: unmet) if unmet.present?
   end
 
+  def scheduled?
+    run.present? || cab
+  end
+
   private
   
   def driver_is_valid_for_vehicle

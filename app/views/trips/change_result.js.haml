@@ -4,3 +4,5 @@
 - elsif !@trip_result_filters.blank? && !@trip_result_filters.include?("#{@trip.trip_result_id || TripResult::UNSCHEDULED_ID}")
   $('#tripsTable tr[data-trip-id="#{@trip.id}"]').remove();
   $('#calendar').data('fullCalendar').removeEvents(#{@trip.id});
+- elsif @clear_trip_status
+  $('#tripsTable tr[data-trip-id="#{@trip.id}"] td.trip-status').text('');

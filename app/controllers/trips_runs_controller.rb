@@ -18,7 +18,7 @@ class TripsRunsController < ApplicationController
     @trips = Trip.has_scheduled_time.for_provider(current_provider_id).includes(:customer, :pickup_address, :run)
     .references(:customer, :pickup_address, :run).order(:pickup_time)
     # Exclude trips with following result codes from trips-runs page
-    exclude_trip_result_ids = TripResult.where(code: ['UNMET', 'TD', 'CANC']).pluck :id
+    exclude_trip_result_ids = TripResult.non_dispatchable_result_ids
     @trips = @trips.where("trip_result_id is NULL or trip_result_id not in (?)", exclude_trip_result_ids)
     filter_trips
     

@@ -49,9 +49,11 @@
       <%= format_time_for_listing trip.appointment_time %>
     <% end %>
   </td>
-  <td>
+  <td class="trip-status">
     <% if trip.run.present? %>
       <%= link_to trip.run_text, run_path(trip.run.id) %>
+    <% elsif trip.cab %>
+      <%= translate_helper("cab") %>
     <% end %>
   </td>
   <td>
