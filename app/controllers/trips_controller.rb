@@ -18,7 +18,7 @@ class TripsController < ApplicationController
     @end_pickup_date = Time.zone.at(session[:end].to_i).to_date
     @days_of_week = trip_sessions[:days_of_week].blank? ? [0,1,2,3,4,5,6] : trip_sessions[:days_of_week].split(',').map(&:to_i)
     if can? :edit, Trip
-      @trip_results = TripResult.by_provider(current_provider).pluck(:name, :id)
+      @trip_results = TripResult.by_provider(current_provider).order(:name).pluck(:name, :id)
     end
 
     @trips_json = @trips.has_scheduled_time.map(&:as_calendar_json).flatten.to_json # TODO: sql refactor to improve performance
@@ -374,13 +374,13 @@ class TripsController < ApplicationController
     @customer           = @trip.customer
     @mobilities         = Mobility.by_provider(current_provider).order(:name)
     @funding_sources    = FundingSource.by_provider(current_provider)
-    @trip_results       = TripResult.by_provider(current_provider).pluck(:name, :id)
-    @trip_purposes      = TripPurpose.by_provider(current_provider)
+    @trip_results       = TripResult.by_provider(current_provider).order(:name).pluck(:name, :id)
+    @trip_purposes      = TripPurpose.by_provider(current_provider).order(:name)
     @drivers            = Driver.active.for_provider @trip.provider_id
     @trips              = [] if @trips.nil?
     @vehicles           = add_cab(Vehicle.active.for_provider(@trip.provider_id))
     @repeating_vehicles = @vehicles 
-    @service_levels     = ServiceLevel.by_provider(current_provider).pluck(:name, :id)
+    @service_levels     = ServiceLevel.by_provider(current_provider).order(:name).pluck(:name, :id)
 
     @trip.run_id = -1 if @trip.cab
 
