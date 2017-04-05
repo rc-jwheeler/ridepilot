@@ -27,6 +27,11 @@ namespace :ridepilot do
     load(seed_file) if File.exist?(seed_file)
     puts 'Finished seeding ethnicities'
 
+    puts 'customer address codes...'
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_customer_address_codes.rb')
+    load(seed_file) if File.exist?(seed_file)
+    puts 'Finished customer address codes'
+
     puts 'lookup table configurations...'
     seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_lookup_table_configurations.rb')
     load(seed_file) if File.exist?(seed_file)
