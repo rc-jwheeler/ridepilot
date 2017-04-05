@@ -114,6 +114,8 @@ class Trip < ActiveRecord::Base
 
   scope :after,              -> (pickup_time) { where('trips.pickup_time > ?', pickup_time.utc) }
   scope :after_today,        -> { where('CAST(trips.pickup_time AS date) > ?', Date.today.in_time_zone.utc) }
+  scope :today_and_prior,    -> { where('CAST(trips.pickup_time AS date) <= ?', Date.today.in_time_zone.utc) }
+  scope :prior_to_today,    -> { where('CAST(trips.pickup_time AS date) < ?', Date.today.in_time_zone.utc) }
   scope :by_funding_source,  -> (name) { includes(:funding_source).references(:funding_source).where("funding_sources.name = ?", name) }
   scope :by_result,          -> (code) { includes(:trip_result).references(:trip_result).where("trip_results.code = ?", code) }
   scope :by_service_level,   -> (level) { includes(:service_level).references(:service_level).where("service_levels.name = ?", level) }
@@ -133,9 +135,10 @@ class Trip < ActiveRecord::Base
   scope :not_called_back,    -> { where('called_back_at IS NULL') }
   scope :not_for_cab,        -> { where(cab: false) }
   scope :prior_to,           -> (pickup_time) { where('trips.pickup_time < ?', pickup_time.to_datetime.in_time_zone.utc) }
-  scope :scheduled,          -> { includes(:trip_result).references(:trip_result).where("trips.trip_result_id is NULL or trip_results.code = 'COMP'") }
-  scope :today_and_prior,    -> { where('CAST(trips.pickup_time AS date) <= ?', Date.today.in_time_zone.utc) }
+  scope :empty_or_completed, -> { includes(:trip_result).references(:trip_result).where("trips.trip_result_id is NULL or trip_results.code = 'COMP'") }
   scope :turned_down,        -> { Trip.by_result('TD') }
+  scope :standby,            -> { Trip.by_result('STNBY') }
+  scope :scheduled,          -> { where("cab = ? or run_id is not NULL", true) }
 
   def date
     pickup_time.to_date
@@ -385,6 +388,12 @@ class Trip < ActiveRecord::Base
     end
   end
 
+  # Move past scheduled trips in Standby queue to Unmet Need
+  def self.move_prior_standby_to_unmet!
+    unmet = TripResult.find_by_code('UNMET')
+    Trip.prior_to_today.scheduled.standby.update_all(trip_result: unmet) if unmet.present?
+  end
+
   private
   
   def driver_is_valid_for_vehicle
@@ -501,7 +510,7 @@ class Trip < ActiveRecord::Base
 
       # Now, can we push the start of the second run later?
       first_trip = next_run.trips.first
-      if first_trip.scheduled_start_time > appointment_time
+      if first_trip.pickup_time > appointment_time
         # Yes, we can
         next_run.update_attributes! scheduled_start_time: appointment_time
         previous_run.update_attributes! scheduled_end_time: appointment_time
@@ -510,7 +519,7 @@ class Trip < ActiveRecord::Base
         # No, the second run is fixed. Can we push the end of the first run 
         # earlier?
         last_trip = previous_run.trips.last
-        if last_trip.scheduled_end_time <= pickup_time
+        if last_trip.appointment_time <= pickup_time
           # Yes, we can
           previous_run.update_attributes! scheduled_end_time: pickup_time
           next_run.update_attributes! scheduled_start_time: appointment_time

@@ -169,7 +169,7 @@ class Run < ActiveRecord::Base
   end
 
   def self.update_prior_run_complete_status!
-    Run.today_and_prior.incomplete.each do |r|
+    Run.prior_to(Date.today).incomplete.each do |r|
       completed = r.check_complete_status
       r.update(complete: true) if completed
     end

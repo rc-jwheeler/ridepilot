@@ -331,7 +331,7 @@ class ReportsController < ApplicationController
 
     cab = Driver.new(:name=>'Cab') #dummy driver for cab trips
 
-    trips = Trip.scheduled.for_provider(current_provider_id).for_date(@date.try(:in_time_zone)).includes(:pickup_address, :dropoff_address, :customer, :mobility, {run: :driver}).order(:pickup_time)
+    trips = Trip.empty_or_completed.for_provider(current_provider_id).for_date(@date.try(:in_time_zone)).includes(:pickup_address, :dropoff_address, :customer, :mobility, {run: :driver}).order(:pickup_time)
     if @query.driver_id == -2 # All
       # No additional filtering
     elsif @query.driver_id == -1 # Cab
@@ -685,7 +685,7 @@ class ReportsController < ApplicationController
     @query = Query.new(query_params)
     @date = @query.start_date
 
-    trips = Trip.scheduled.for_provider(current_provider_id).for_date(@date.try(:in_time_zone)).includes(:pickup_address,:dropoff_address,:customer,:mobility,{:run => :driver}).order(:pickup_time)
+    trips = Trip.empty_or_completed.for_provider(current_provider_id).for_date(@date.try(:in_time_zone)).includes(:pickup_address,:dropoff_address,:customer,:mobility,{:run => :driver}).order(:pickup_time)
     @cab_trips = Trip.for_cab.scheduled.for_provider(current_provider_id).for_date(@date.try(:in_time_zone)).includes(:pickup_address,:dropoff_address,:customer,:mobility,{:run => :driver}).order(:pickup_time)
 
     if @query.driver_id == -2 # All
