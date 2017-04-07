@@ -6,8 +6,8 @@ class User < ActiveRecord::Base
   belongs_to :current_provider, class_name: "Provider", foreign_key: :current_provider_id
   has_one    :driver
   has_one    :device_pool_driver, through: :driver
-  belongs_to :address, -> { with_deleted }
-  accepts_nested_attributes_for :address, update_only: true
+  belongs_to :user_address, -> { with_deleted }, class_name: 'UserAddress', foreign_key: 'address_id'
+  accepts_nested_attributes_for :user_address, update_only: true
   
   # Include default devise modules. Others available are:
   # :rememberable, :token_authenticatable, :confirmable, :lockable
@@ -29,8 +29,6 @@ class User < ActiveRecord::Base
     self.username = self.username.downcase if self.username.present?
     self.email = self.email.downcase if self.email.present?
   end
-
-  before_save :mark_address_as_user_associated
   
   def self.drivers(provider)
     Driver.where(:provider_id => provider.id).map(&:user)
@@ -94,7 +92,4 @@ class User < ActiveRecord::Base
 
   private
 
-  def mark_address_as_user_associated
-    self.address.is_user_associated = true if self.address
-  end
 end

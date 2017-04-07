@@ -12,13 +12,13 @@ class UsersController < ApplicationController
   def create_user
     authorize! :edit, current_user.current_provider
     
-    @user = User.only_deleted.find_by_email(params[:user][:email])
+    @user = User.only_deleted.find_by_email(params[:user][:username])
     @is_user_deleted = @user.try(:deleted_at).present?
 
     if !@is_user_deleted
       #this user might already be a member of the site, but not of this
       #provider, in which case we ought to just set up the role
-      @user = User.find_by_email(params[:user][:email])
+      @user = User.find_by_email(params[:user][:username])
       @role = Role.new
       new_password = nil
       new_user = false
@@ -28,12 +28,12 @@ class UsersController < ApplicationController
           new_attrs = user_params
           is_address_blank = check_blank_address
           if is_address_blank
-            new_attrs.except!(:address_attributes)
+            new_attrs.except!(:user_address_attributes)
           end
 
           if not @user
             @user = User.new(new_attrs)
-            @user.address = nil if is_address_blank
+            @user.user_address = nil if is_address_blank
             @user.password = User.generate_password
             raw, enc = Devise.token_generator.generate(User, :reset_password_token)
             @user.reset_password_token = enc
@@ -90,9 +90,9 @@ class UsersController < ApplicationController
     new_attrs = user_params
     is_address_blank = check_blank_address
     if is_address_blank
-      prev_address = @user.address
+      prev_address = @user.user_address
       @user.address_id = nil
-      new_attrs.except!(:address_attributes)
+      new_attrs.except!(:user_address_attributes)
     end
 
     if @user.update_attributes(new_attrs)
@@ -207,7 +207,7 @@ class UsersController < ApplicationController
   private
   
   def user_params
-    params.require(:user).permit(:email, :first_name, :last_name, :username, :phone_number, :address_attributes => [
+    params.require(:user).permit(:email, :first_name, :last_name, :username, :phone_number, :user_address_attributes => [
         :address,
         :building_name,
         :city,
@@ -236,7 +236,7 @@ class UsersController < ApplicationController
   end
 
   def check_blank_address
-    address_params = user_params[:address_attributes]
+    address_params = user_params[:user_address_attributes]
     is_blank = true
     address_params.keys.each do |key|
       next if key.to_s == 'provider_id'
