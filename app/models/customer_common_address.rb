@@ -1,5 +1,5 @@
 class CustomerCommonAddress < Address 
 
-  validates :customer, presence: true
+  #validates :customer, presence: true
 
 end

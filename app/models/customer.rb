@@ -7,8 +7,8 @@ class Customer < ActiveRecord::Base
   has_and_belongs_to_many :authorized_providers, -> { where("inactivated_date is NULL and (customer_nonsharable is NULL or customer_nonsharable != ?)", true) }, :class_name => 'Provider', :through => 'customers_providers'
 
   belongs_to :provider, -> { with_deleted }
-  belongs_to :address
-  has_many   :addresses, :dependent => :destroy, inverse_of: :customer
+  belongs_to :address, :class_name => 'CustomerCommonAddress'
+  has_many   :addresses, :dependent => :destroy, :class_name => 'CustomerCommonAddress', inverse_of: :customer
   belongs_to :mobility, -> { with_deleted }
   belongs_to :default_funding_source, -> { with_deleted }, :class_name=>'FundingSource'
   has_many   :trips, :dependent => :destroy, inverse_of: :customer

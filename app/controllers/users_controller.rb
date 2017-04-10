@@ -12,13 +12,12 @@ class UsersController < ApplicationController
   def create_user
     authorize! :edit, current_user.current_provider
     
-    @user = User.only_deleted.find_by_email(params[:user][:username])
+    @user = User.only_deleted.find_by_username(params[:user][:username])
     @is_user_deleted = @user.try(:deleted_at).present?
-
     if !@is_user_deleted
       #this user might already be a member of the site, but not of this
       #provider, in which case we ought to just set up the role
-      @user = User.find_by_email(params[:user][:username])
+      @user = User.find_by_username(params[:user][:username])
       @role = Role.new
       new_password = nil
       new_user = false

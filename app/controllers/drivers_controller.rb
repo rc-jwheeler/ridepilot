@@ -108,9 +108,10 @@ class DriversController < ApplicationController
     @start_hours = OperatingHours.available_start_times
     @end_hours = OperatingHours.available_end_times
     
+    @driver.address ||= @driver.build_address
+    @driver.alt_address ||= @driver.build_alt_address 
+    
     unless readonly
-      @driver.driver_address ||= @driver.build_driver_address
-      @driver.alt_address ||= @driver.build_alt_address 
       @driver.build_photo unless @driver.photo.present?
     end
   end
@@ -125,7 +126,7 @@ class DriversController < ApplicationController
       :phone_number,
       :alt_phone_number,
       photo_attributes: [:image],
-      :driver_address_attributes => [
+      :address_attributes => [
         :address,
         :building_name,
         :city,

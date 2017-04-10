@@ -6,7 +6,7 @@ class Driver < ActiveRecord::Base
 
   has_paper_trail
   
-  belongs_to :driver_address, -> { with_deleted }, class_name: 'DriverAddress', foreign_key: 'address_id'
+  belongs_to :address, -> { with_deleted }, class_name: 'DriverAddress', foreign_key: 'address_id'
   belongs_to :alt_address, -> { with_deleted }, class_name: 'DriverAddress', foreign_key: 'alt_address_id'
   belongs_to :provider, -> { with_deleted }
   belongs_to :user, -> { with_deleted }
@@ -26,10 +26,10 @@ class Driver < ActiveRecord::Base
   # TODO Look into using `#mark_for_destruction` and `#marked_for_destruction?`
   has_many :driver_compliances, dependent: :delete_all, inverse_of: :driver
 
-  accepts_nested_attributes_for :driver_address, update_only: true
+  accepts_nested_attributes_for :address, update_only: true
   accepts_nested_attributes_for :alt_address, update_only: true
 
-  validates :driver_address, associated: true, presence: true
+  validates :address, associated: true, presence: true
   validates :email, format: { with: Devise.email_regexp, allow_blank: true }
   validates :name, uniqueness: { scope: :provider_id, conditions: -> { where(deleted_at: nil) } }, length: { minimum: 2 }
   validates :provider, presence: true

@@ -134,7 +134,7 @@ $(function() {
   $("tr:odd").addClass("odd");
   
   // delete a customer from the show page
-  $("body.customers.show .profile-actions .delete, body.addresses.edit .profile-actions .delete, #customer_merge").click( function(event){
+  $("body.customers.show .profile-actions .delete, body.provider-common-addresses.edit .profile-actions .delete, #customer_merge").click( function(event){
     event.preventDefault();
 
     var link = $(this);

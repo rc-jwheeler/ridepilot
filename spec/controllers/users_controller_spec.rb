@@ -56,16 +56,17 @@ RSpec.describe UsersController, type: :controller do
       context "updating an existing user" do
         before(:each) do
           @new_user = create(:user)
+          @new_attrs = attributes_for(:user, email: @new_user.email, username: @new_user.username)
         end
         
         it "does not create a new User" do
           expect {
-            post :create_user, {:user => {:email => @new_user.email}, :role => {:level => 50}}
+            post :create_user, {:user => @new_attrs, :role => {:level => 50}}
           }.to_not change(User, :count)
         end
 
         it "assigns the user to a new role for the current provider" do
-          post :create_user, {:user => {:email => @new_user.email}, :role => {:level => 50}}
+          post :create_user, {:user => @new_attrs, :role => {:level => 50}}
           expect(assigns(:role)).to be_a(Role)
           expect(assigns(:role)).to be_persisted
           expect(assigns(:role).user).to eq(@new_user)
@@ -74,7 +75,7 @@ RSpec.describe UsersController, type: :controller do
         end
 
         it "redirects to the current provider" do
-          post :create_user, {:user => {:email => @new_user.email}, :role => {:level => 50}}
+          post :create_user, {:user => @new_attrs, :role => {:level => 50}}
           expect(response).to redirect_to(@current_user.current_provider)
         end
       end
