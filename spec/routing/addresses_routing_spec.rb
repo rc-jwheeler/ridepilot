@@ -32,7 +32,7 @@ RSpec.describe AddressesController, type: :routing do
     end
 
     it "routes to #trippable_autocomplete" do
-      expect(:get => "/addresses/trippable_autocomplete").to route_to("addresses#trippable_autocomplete")
+      expect(:get => "/trip_address_autocomplete").to route_to("addresses#trippable_autocomplete")
     end
 
   end

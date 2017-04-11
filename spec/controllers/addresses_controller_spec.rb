@@ -20,7 +20,8 @@ RSpec.describe AddressesController, type: :controller do
     
     let(:autocomplete_terms) {
       {
-        :term => "foooo"
+        :term => "foooo",
+        :format => "json"
       }
     }
 
@@ -31,21 +32,16 @@ RSpec.describe AddressesController, type: :controller do
     end
 
     it "include matching address info in the json response" do
-      address = create(:address, :provider => @current_user.current_provider, :name => "foooo")
+      address = create(:provider_common_address, 
+        :provider => @current_user.current_provider, 
+        :name => "foooo",
+        :the_geom => RGeo::Geographic.spherical_factory(srid: 4326).point(100, 30)
+        )
       post :trippable_autocomplete, autocomplete_terms
       json = JSON.parse(response.body)
       expect(json).to be_a(Array)
       expect(json.first["id"]).to be_a(Integer)
       expect(json.first["id"]).to eq(address.id)
-    end
-
-    # MapRequest API now requires a key, current call without key causes HTTP error, so skip for now
-    it "include a new address in the json response if no other matches are found" do
-      post :trippable_autocomplete, autocomplete_terms
-      json = JSON.parse(response.body)
-      expect(json).to be_a(Array)
-      expect(json.first["id"]).to be_a(Integer)
-      expect(json.first["id"]).to eq(0)
     end
   end
 end

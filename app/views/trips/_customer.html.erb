@@ -46,8 +46,7 @@
       $('#trip_mobility_id').val(customerData.mobility_id);
       $('#customer_private_notes').val(customerData.private_notes);
       $("#trip_pickup_address_id").val(customerData.address_id);
-      populate_address_form('pickup', customerData.address_data);
-      $("#pickup_search_address").val(customerData.address);
+      $("#pickup_address").val(customerData.address);
       $("#trip_funding_source_id").val(customerData.default_funding_source_id);
       $("#trip_service_level").val(customerData.default_service_level);
       $('#trip_medicaid_eligible').attr('checked',customerData.medicaid_eligible);
@@ -87,8 +86,6 @@
       }
 
       var customerId = data.item.id;
-      $('#pickup_search_address').attr('data-autocomplete', "<%=trip_address_autocomplete_path%>?customer_id=" + customerId);
-      $('#dropoff_search_address').attr('data-autocomplete', "<%=trip_address_autocomplete_path%>?customer_id=" + customerId);
       $('.address-search input[name=customer_id]').val(customerId);
 
       $.post("<%= data_for_trip_customers_path %>", {
