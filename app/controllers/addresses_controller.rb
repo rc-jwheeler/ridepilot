@@ -23,44 +23,33 @@ class AddressesController < ApplicationController
     end
 
     arel_table = Address.arel_table
-    base_arel = arel_table[:provider_id].eq(current_provider_id)
+
     if params[:customer_id].present? 
       customer = Customer.find_by_id(params[:customer_id])
-
-      # shared customer's addresses
-      base_arel = base_arel.or(arel_table[:id].in(customer.addresses.pluck(:id))) if customer && customer.provider_id != current_provider_id
+      base_arel = (arel_table[:customer_id].in(customer.id).and(arel_table[:type].eq('CustomerCommonAddress')))
+      if customer
+        base_arel = base_arel.or(arel_table[:provider_id].in(customer.authorized_provider_ids).and(arel_table[:type].eq('ProviderCommonAddress')))
+      end
+    else
+      base_arel = arel_table[:provider_id].eq(current_provider_id).and(arel_table[:type].eq('ProviderCommonAddress'))
     end
 
     addresses = Address.where(base_arel.to_sql)
-      .where('is_driver_associated is NULL or is_driver_associated != ?', true)
-      .where('is_user_associated is NULL or is_user_associated != ?', true)
       .where('inactive is NULL or inactive != ?', true)
+      .where.not(the_geom: nil)
       .where(["((LOWER(address) like '%' || ? || '%' ) and  (city || ', ' || state || ' ' || zip like ? || '%')) or LOWER(building_name) like '%' || ? || '%' or LOWER(name) like '%' || ? || '%' ", address, city_state_zip, term, term])
-    if params[:customer_id].present?
-      addresses = addresses.where("customer_id is NULL or customer_id = ?", params[:customer_id]) 
-    else
-      addresses = addresses.where("customer_id is NULL") #only provider common addresses if customer is not given
-    end
-
-    if params[:geocoding_only] == 'true'
-      addresses = addresses.where.not(the_geom: nil)
-    end
 
     if params[:exclude].present?
       addresses = addresses.where.not(id: params[:exclude].split(','))
     end
 
     if addresses.size > 0
-
       #there are some existing addresses
       address_json = addresses.map { |address| address.json }
+    end
 
-      address_json << Address::NewAddressOption unless request.env["HTTP_REFERER"].try(:match, /addresses\/[0-9]+\/edit/)
-
-      render :json => address_json
-    else
-      #no existing addresses
-      return render :json => [Address::NewAddressOption]
+    respond_to do |format|
+      format.json { render json: address_json || [] }
     end
   end
 

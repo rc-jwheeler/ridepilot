@@ -122,10 +122,10 @@ Rails.application.routes.draw do
     resources :addresses, :only => [] do
       collection do
         post :validate_customer_specific
-        get :trippable_autocomplete
         get :autocomplete_public
       end
     end
+    get "trip_address_autocomplete" => "addresses#trippable_autocomplete"
     
     resources :device_pools, :except => [:index, :show] do
       resources :device_pool_drivers, :only => [:create, :destroy]

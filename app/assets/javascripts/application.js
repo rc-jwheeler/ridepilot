@@ -17,6 +17,7 @@
 //= require jquery-ui
 //= require bootstrap-sprockets
 //= require autocomplete-rails
+//= require twitter/typeahead
 //= require jquery.weekcalendar
 //= require jquery-ui-timepicker-addon
 //= require dateFormat
@@ -25,8 +26,10 @@
 //= require constants
 //= require fullcalendar
 //= require moment
+//= require handlebars
 //= require jquery.geocomplete
 //= require google_place_parser
+//= require typeahead-addresspicker
 //= require_self
   
 function ISODateFormatToDateObject(str) {
@@ -451,6 +454,69 @@ function convert_uppercase(input) {
 
   // restore from variables...
   input.setSelectionRange(start, end);
+}
+
+// initialize a place picker to query 1-click place datatable and google places
+function init_place_picker(dom_selector, query_bounds, query_restrictions) {
+  var saved_places = new Bloodhound({
+    datumTokenizer: function(d) {
+     return  Bloodhound.tokenizers.whitespace(d.value);
+    },
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    remote: {
+      url: '/trip_address_autocomplete.json?',
+      rateLimitWait: 600,
+      replace: function(url, query) {
+        url = url + '&term=' + query;
+        return url;
+      }
+    },
+    limit: 10
+  });
+
+  saved_places.initialize();
+
+  var autocomplete_service_config = {};
+  if (query_bounds) {
+    autocomplete_service_config.bounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(query_bounds.min_lat,query_bounds.min_lon),
+      new google.maps.LatLng(query_bounds.max_lat,query_bounds.max_lon));
+  }
+  if (query_restrictions) {
+    autocomplete_service_config.componentRestrictions = query_restrictions;
+  } else {
+    autocomplete_service_config.types = ['geocode'];
+    autocomplete_service_config.componentRestrictions = { country: 'us' };
+  }
+  var google_place_picker = new AddressPicker({
+    autocompleteService: autocomplete_service_config
+  });
+
+  $(dom_selector).typeahead({
+    highlight: true
+  },
+    {
+      name: 'saved_places',
+      displayKey: "label",
+      source: saved_places.ttAdapter(),
+      templates: {
+        header: '<h4>Saved Addresses</h4>',
+        suggestion: Handlebars.compile([
+          '<a>{{label}}</a>'
+        ].join(''))
+      }
+    },
+    {
+      name: 'google_places',
+      displayKey: "description",
+      source: google_place_picker.ttAdapter(),
+      templates: {
+        header: '<h4>Google Suggestions</h4>',
+        suggestion: Handlebars.compile([
+          '<a>{{description}}</a>'
+        ].join(''))
+      }
+    });
 }
 
 /*

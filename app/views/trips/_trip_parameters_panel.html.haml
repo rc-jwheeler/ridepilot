@@ -38,14 +38,12 @@
       .col-sm-9
         = @trip.is_return? ? translate_helper("return_trip") : translate_helper("outbound_trip")
 
-    .form-group.col-sm-12
+    .form-group.col-sm-12.place-picker-div
       .col-sm-3
         = f.label :pickup_address_label, translate_helper("pickup_address")
       .col-sm-9
-        = autocomplete_field_tag "pickup_search_address", @trip.pickup_address.try(:one_line_text), trippable_autocomplete_addresses_path(customer_id: @trip.try(:customer_id), geocoding_only: true), :size => 30, :id_element => "#trip_pickup_address_id", :delay => 500, :class => "nearly-full form-control", "data-original-value" => @trip.pickup_address.try(:text), "data-original-id" => @trip.pickup_address.try(:id) 
-        - if edit_mode != :show
-          = f.hidden_field :pickup_address_id
-          %a{href:"javascript:edit_pickup_address();", class:"pickup_address_details details", style: "display: inline;"}
+        = text_field_tag "pickup_search_address", @trip.pickup_address.try(:one_line_text), class: "nearly-full form-control trip-address-picker"
+        
        
     .form-group.col-sm-12
       = f.fields_for :customer do |c|
@@ -57,14 +55,11 @@
       - if @trip.customer.try(:id).blank?
         %input#trip_customer_attributes_id{type:"hidden", name:"trip[customer_attributes][id]"}
 
-    .form-group.col-sm-12
+    .form-group.col-sm-12.place-picker-div
       .col-sm-3
         = f.label :dropoff_address_label, translate_helper("dropoff_address") 
       .col-sm-9
-        = autocomplete_field_tag "dropoff_search_address", @trip.dropoff_address.try(:one_line_text), trippable_autocomplete_addresses_path(customer_id: @trip.try(:customer_id), geocoding_only: true), :size => 30, :delay => 500, :update_elements => { :id => '#trip_dropoff_address_id', :default_trip_purpose => '#trip_trip_purpose'},:class => "nearly-full form-control", "data-original-value" => @trip.dropoff_address.try(:text), "data-original-id" => @trip.dropoff_address.try(:id) 
-        - if edit_mode != :show
-          = f.hidden_field :dropoff_address_id
-          %a{href:"javascript:edit_dropoff_address();", class:"dropoff_address_details details", style: "display: inline;"}
+        = text_field_tag "dropoff_search_address", @trip.dropoff_address.try(:one_line_text), class: "nearly-full form-control trip-address-picker"
        
     .form-group.col-sm-12
       .col-sm-3
@@ -134,3 +129,13 @@
         = f.label :notes, translate_helper("trip_notes")
       .col-sm-9
         = f.text_area :notes, class: 'form-control'
+
+:javascript
+  $(function() {
+    // initialize place picker
+    var geocoder_bounds = #{Utility.new.get_provider_bounds(current_provider).try(:to_json) || {}};
+    init_place_picker(
+      ".trip-address-picker", 
+      geocoder_bounds
+    );
+  });

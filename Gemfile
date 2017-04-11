@@ -70,6 +70,9 @@ gem 'aws-sdk', '~> 2.1.8'
 gem 'paper_trail', '~> 4.0.0.rc'
 
 gem 'rails-jquery-autocomplete', '~> 1.0.0'
+# needed for trip address picker
+gem 'twitter-typeahead-rails', github: 'camsys/twitter-typeahead-rails'
+gem 'handlebars_assets'
 
 # RADAR Not updated since 2011, used by RecurringTrip model
 # TODO could recurring_select gem replace this?
