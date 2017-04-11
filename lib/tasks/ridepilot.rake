@@ -173,4 +173,11 @@ namespace :ridepilot do
       end 
     end
   end
+
+  desc 'Migrate addresses to specific sub categories'
+  task :categorize_addresses => :environment do
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'categorize_addresses.rb')
+    load(seed_file) if File.exist?(seed_file)
+    puts 'Finished'
+  end
 end

@@ -110,17 +110,22 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :addresses, :only => [:create, :edit, :update, :destroy] do
+    resources :provider_common_addresses, :only => [:create, :edit, :update, :destroy] do
       collection do
-        post :validate
-        get :autocomplete
-        get :autocomplete_public
         get :search
         patch :upload
-        get :check_loading_status
+        get :autocomplete
       end
     end
-    get "check_address_loading_status" => "addresses#check_loading_status"
+    get "check_address_loading_status" => "provider_common_addresses#check_loading_status"
+
+    resources :addresses, :only => [] do
+      collection do
+        post :validate_customer_specific
+        get :autocomplete_public
+      end
+    end
+    get "trip_address_autocomplete" => "addresses#trippable_autocomplete"
     
     resources :device_pools, :except => [:index, :show] do
       resources :device_pool_drivers, :only => [:create, :destroy]

@@ -25,7 +25,7 @@
         %textarea.form-control#mobility_notes{rname:"mobility_notes", readonly:"readonly"}
           = @customer.try :mobility_notes
     .customer-eligibilities
-      - if @customer.customer_eligibilities.specified.any?
+      - if @customer && @customer.customer_eligibilities.specified.any?
         %h4.col-sm-12= translate_helper('customer_eligibilities')
         - yes_label = translate_helper('yes')
         - no_label = translate_helper('no')

@@ -17,6 +17,7 @@
 //= require jquery-ui
 //= require bootstrap-sprockets
 //= require autocomplete-rails
+//= require twitter/typeahead
 //= require jquery.weekcalendar
 //= require jquery-ui-timepicker-addon
 //= require dateFormat
@@ -25,8 +26,11 @@
 //= require constants
 //= require fullcalendar
 //= require moment
+//= require handlebars
 //= require jquery.geocomplete
 //= require google_place_parser
+//= require typeahead-addresspicker
+//= require trip_place_picker
 //= require_self
   
 function ISODateFormatToDateObject(str) {
@@ -134,7 +138,7 @@ $(function() {
   $("tr:odd").addClass("odd");
   
   // delete a customer from the show page
-  $("body.customers.show .profile-actions .delete, body.addresses.edit .profile-actions .delete, #customer_merge").click( function(event){
+  $("body.customers.show .profile-actions .delete, body.provider-common-addresses.edit .profile-actions .delete, #customer_merge").click( function(event){
     event.preventDefault();
 
     var link = $(this);

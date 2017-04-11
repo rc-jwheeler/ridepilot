@@ -123,3 +123,7 @@ table.dataTable tbody tr.selected {
 .address_search {
   width: 100%;
 }
+
+.place-picker-div .twitter-typeahead, .place-picker-div .tt-dropdown-menu {
+  width: 100% !important;
+}

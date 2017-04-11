@@ -6,7 +6,7 @@
 
 <h2 class="section-header"><%= translate_helper("show_provider_address_heading") %></h2>
 
-<%= form_tag search_addresses_path, :method => :get, :remote => true, :id => "search_addresses" do %>
+<%= form_tag search_provider_common_addresses_path, :method => :get, :remote => true, :id => "search_addresses" do %>
   <%= hidden_field_tag :provider_id, @provider.id %>
   <fieldset>
     <ol class="section fourth">

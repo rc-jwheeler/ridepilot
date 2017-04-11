@@ -5,11 +5,9 @@ class Driver < ActiveRecord::Base
   acts_as_paranoid # soft delete
 
   has_paper_trail
-
-  before_save :mark_address_as_driver_associated
   
-  belongs_to :address, -> { with_deleted }
-  belongs_to :alt_address, -> { with_deleted }, class_name: 'Address', foreign_key: 'alt_address_id'
+  belongs_to :address, -> { with_deleted }, class_name: 'DriverAddress', foreign_key: 'address_id'
+  belongs_to :alt_address, -> { with_deleted }, class_name: 'DriverAddress', foreign_key: 'alt_address_id'
   belongs_to :provider, -> { with_deleted }
   belongs_to :user, -> { with_deleted }
   
@@ -55,8 +53,4 @@ class Driver < ActiveRecord::Base
 
   private
 
-  def mark_address_as_driver_associated
-    self.address.is_driver_associated = true if self.address
-    self.alt_address.is_driver_associated = true if self.alt_address
-  end
 end

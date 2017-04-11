@@ -256,6 +256,7 @@ en:
   operating_hours_open: "Open"
   driver_form_details_heading: "Details"
   driver_address_heading: "Address"
+  driver_alt_address_heading: "Alternative Address"
 
   # Driver histories
   driver_histories_heading: "History Events"

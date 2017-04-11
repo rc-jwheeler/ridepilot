@@ -1,4 +1,4 @@
- <%= form_for address, url: validate_addresses_path, as: prefix, :method=>:post, html: { :class=>'address-validate', :remote=>true, 'data-id-element' => "#trip_#{prefix}_address_id", 'data-label-element' => "##{prefix}_search_address" } do |form| %> 
+ <%= form_for address, url: validate_customer_specific_addresses_path, as: prefix, :method=>:post, html: { :class=>'address-validate', :remote=>true, 'data-id-element' => "#trip_#{prefix}_address_id", 'data-label-element' => "##{prefix}_search_address" } do |form| %> 
   <%= hidden_field_tag 'address_id', address.id %>
   <%= hidden_field_tag 'prefix', prefix %>
   <fieldset>

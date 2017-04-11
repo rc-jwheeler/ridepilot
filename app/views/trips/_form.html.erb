@@ -34,14 +34,4 @@
   
 <% end %>
 
-<% if edit_mode != :show %>
-  <%= render 'customer_message_dialog' %>
-  <div class="address-form" id="pickup-address-form">
-    <%= render :partial=>'addresses/new_form', :locals=>{:prefix=>'pickup', :address => @trip.pickup_address || @trip.build_pickup_address(customer: @trip.customer) } %>
-  </div>
-  <div class="address-form" id="dropoff-address-form">
-    <%= render :partial=>'addresses/new_form', :locals=>{:prefix=>'dropoff', :address => @trip.dropoff_address || @trip.build_dropoff_address(customer: @trip.customer) } %>
-  </div>
-<% end %>
-
 <%= render 'shared/hide_invisible_form_fields_js', model_name: "trip", table_name: 'trips', provider_id:  current_provider.try(:id) %>

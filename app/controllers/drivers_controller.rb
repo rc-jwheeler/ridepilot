@@ -108,9 +108,10 @@ class DriversController < ApplicationController
     @start_hours = OperatingHours.available_start_times
     @end_hours = OperatingHours.available_end_times
     
+    @driver.address ||= @driver.build_address
+    @driver.alt_address ||= @driver.build_alt_address 
+    
     unless readonly
-      @driver.address ||= @driver.build_address provider: @driver.provider, is_driver_associated: true
-      @driver.alt_address ||= @driver.build_alt_address provider: @driver.provider, is_driver_associated: true
       @driver.build_photo unless @driver.photo.present?
     end
   end
