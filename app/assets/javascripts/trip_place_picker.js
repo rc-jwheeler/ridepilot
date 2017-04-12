@@ -9,7 +9,7 @@ function init_place_picker(dom_selector, query_bounds, query_restrictions) {
       url: '/trip_address_autocomplete.json?',
       rateLimitWait: 600,
       replace: function(url, query) {
-        url = url + '&customer_id=' + $("#trip_customer_id").val() + '&term=' + query;
+        url = url + '&customer_id=' + $("input.trip-customer-id").val() + '&term=' + query;
         return url;
       }
     },
