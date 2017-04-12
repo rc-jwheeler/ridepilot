@@ -17,8 +17,8 @@ class API::V1::TripsController < API::ApiController
         trip_purpose_id: @trip_purpose.id
         })
 
-    from_address = Address.parse_api_params(from_address_params)
-    to_address = Address.parse_api_params(to_address_params)
+    from_address = TempAddress.parse_api_params(from_address_params)
+    to_address = TempAddress.parse_api_params(to_address_params)
     @trip = Trip.new(
       customer: @customer, 
       mobility: @customer.mobility,
