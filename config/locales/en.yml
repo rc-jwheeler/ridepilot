@@ -903,6 +903,7 @@ en:
   repetition: "Repetitions"
   repetition_vehicle: "Vehicle"
   repetition_driver: "Driver"
+  repetition_comments: "Comments"
   mark_as_called_back: "Mark as Called Back:"
   group_size: "Group Size"
   passengers: "Passengers"

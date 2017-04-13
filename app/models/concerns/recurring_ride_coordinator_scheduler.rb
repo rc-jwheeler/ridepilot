@@ -4,7 +4,7 @@ module RecurringRideCoordinatorScheduler
   extend ActiveSupport::Concern
   include ScheduleAttributes
 
-  NON_RIDE_COORDINATOR_ATTRIBUTES = %w(id recurrence schedule_yaml created_at updated_at lock_version start_date end_date)
+  NON_RIDE_COORDINATOR_ATTRIBUTES = %w(id recurrence schedule_yaml created_at updated_at lock_version start_date end_date comments)
 
   included do
   end

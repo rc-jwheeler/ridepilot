@@ -96,7 +96,8 @@ class RepeatingRunsController < ApplicationController
       :repeats_saturdays,
       :repetition_driver_id,
       :repetition_interval,
-      :repetition_vehicle_id
+      :repetition_vehicle_id,
+      :comments
     )
   end
 

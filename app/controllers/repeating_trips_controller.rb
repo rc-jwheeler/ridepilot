@@ -123,6 +123,7 @@ class RepeatingTripsController < ApplicationController
       :vehicle_id,
       :customer_informed,
       :mobility_device_accommodations,
+      :comments,
       customer_attributes: [:id]
     )
   end

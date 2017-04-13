@@ -59,6 +59,8 @@ class RepeatingTrip < ActiveRecord::Base
 
   belongs_to :driver, -> { with_deleted } 
   belongs_to :vehicle, -> { with_deleted }
+
+  validates :comments, :length => { :maximum => 30 } 
  
   scope :active, -> { where("(start_date is NULL or start_date <= ?) AND (end_date is NULL or end_date >= ?)", Date.today, Date.today) }
   

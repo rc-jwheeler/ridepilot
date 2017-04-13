@@ -35,3 +35,9 @@
   .col-sm-6.col-md-3
     = f.text_field :repetition_interval, :size => 2, class: 'col-sm-6 col-md-3 form-control'
     = translate_helper(:weeks)
+.form-group.col-sm-12
+  .col-sm-3
+    %label
+      = translate_helper(:repetition_comments)
+  .col-sm-9
+    = f.text_area :comments, class: 'form-control', maxlength: 30

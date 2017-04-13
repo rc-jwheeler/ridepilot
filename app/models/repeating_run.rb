@@ -9,6 +9,8 @@ class RepeatingRun < ActiveRecord::Base
 
   has_paper_trail
 
+  validates :comments, :length => { :maximum => 30 } 
+  
   scope :active, -> { where("(start_date is NULL or start_date <= ?) AND (end_date is NULL or end_date >= ?)", Date.today, Date.today) }
 
   schedules_occurrences_with with_attributes: -> (run) {
