@@ -52,6 +52,7 @@ class Ability
     can action,  Driver, :provider_id => provider.id
     can action,  Monthly, :provider_id => provider.id
     can action,  RepeatingTrip, :provider_id => provider.id
+    can action,  RepeatingRun, :provider_id => provider.id
     can action,  Run, :provider_id => provider.id if provider.scheduling?
     can action,  Trip, :provider_id => provider.id if provider.scheduling?
     can action,  Vehicle, :provider_id => provider.id

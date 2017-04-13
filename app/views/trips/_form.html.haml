@@ -1,0 +1,40 @@
+:ruby
+  @is_repeating_trip = @trip.is_a? RepeatingTrip
+
+= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips'
+- edit_mode = :edit if !defined? edit_mode
+= form_for @trip, :html => (@remote ? {"data-remote" => true, class: 'trip_form'} : {class: 'trip_form'} ) do |f| 
+  - if @is_repeating_trip
+    = render 'repeating_trips/form_header', edit_mode: edit_mode, f: f 
+  - else  
+    = render 'trips/form_header', edit_mode: edit_mode, f: f 
+
+  - if @trip.errors.any? 
+    #error_explanation
+      %h2= translate_helper("trip_form_error_message", count: @trip.errors.count)
+
+      %ul
+        - @trip.errors.full_messages.each do |msg| 
+          %li= msg 
+
+  -# the customer id needs to be passed in this action
+  = f.hidden_field :customer_id, class: 'trip-customer-id'  
+  - unless @is_repeating_trip
+    = f.hidden_field :direction 
+    = hidden_field_tag "trip[outbound_trip_id]", @trip.outbound_trip.try(:id) 
+
+  .col-sm-12.col-md-6
+    = render 'trips/customer_panel', f: f, edit_mode: edit_mode 
+    = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode 
+    = render 'trips/eligibility_accommodation_panel', f: f, edit_mode: edit_mode 
+  
+  .col-sm-12.col-md-6
+    = render 'repeating_trips/repetition_panel', f: f if @is_repeating_trip
+    = render 'trips/other_panel', f: f 
+    - if !@is_repeating_trip && edit_mode != :new
+      = render 'trips/assignment_panel', f: f
+
+- if @is_repeating_trip
+  = render 'shared/hide_invisible_form_fields_js', model_name: "repeatingtrip", table_name: 'repeating_trips', provider_id:  current_provider.try(:id) 
+- else
+  = render 'shared/hide_invisible_form_fields_js', model_name: "trip", table_name: 'trips', provider_id:  current_provider.try(:id) 

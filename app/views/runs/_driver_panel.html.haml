@@ -8,11 +8,12 @@
         = f.label :driver, translate_helper("driver")
       .col-sm-9
         = f.collection_select :driver_id, @drivers, :id, :name, {include_blank: true}, {class: 'form-control'}
-    .form-group.col-sm-12
-      .col-sm-3
-        = f.label :unpaid_driver_break_time, translate_helper("unpaid_break_time")
-      .col-sm-9
-        = f.text_field :unpaid_driver_break_time, class: 'form-control'
+    - unless @is_repeating_run
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :unpaid_driver_break_time, translate_helper("unpaid_break_time")
+        .col-sm-9
+          = f.text_field :unpaid_driver_break_time, class: 'form-control'
     .form-group.col-sm-12
       .col-sm-3
         = f.label :paid, translate_helper("paid")

@@ -263,7 +263,6 @@ class TripsController < ApplicationController
     end
 
     respond_to do |format|
-      prep_view
       if @trip.is_all_valid?(current_provider_id) && @trip.save
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
         TripDistanceCalculationWorker.perform_async(@trip.id) #sidekiq needs to run
@@ -279,10 +278,9 @@ class TripsController < ApplicationController
             end
           end
         }
-        format.js { render :json => {:status => "success", :trip => render_to_string(:partial => 'runs/trip', :locals => {:trip => @trip})}, :content_type => "text/json" }
       else
+        prep_view
         format.html { render :action => "new" }
-        format.js   { @remote = true; render :json => {:status => "error", :form => render_to_string(:partial => 'form')}, :content_type => "text/json" }
       end
     end
 
@@ -349,17 +347,6 @@ class TripsController < ApplicationController
       :pickup_address_id,
       :pickup_time,
       :provider_id, # We normally wouldn't accept this and would set it manually on the instance, but in this controller we're setting it in the params dynamically
-      :repeats_sundays,
-      :repeats_mondays,
-      :repeats_tuesdays,
-      :repeats_wednesdays,
-      :repeats_thursdays,
-      :repeats_fridays,
-      :repeats_saturdays,
-      :repetition_customer_informed,
-      :repetition_driver_id,
-      :repetition_interval,
-      :repetition_vehicle_id,
       :run_id,
       :cab,
       :service_level_id,

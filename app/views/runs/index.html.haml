@@ -2,6 +2,8 @@
 .clearfix.row#page-header{style: 'padding: 0px;'}
   - if can? :create, Run
     = link_to translate_helper("new_run_link_text"), new_run_path, :class=>'btn action-button pull-right'
+  - if can? :index, RepeatingRun
+    = link_to translate_helper("repeating_runs"), repeating_runs_path, :class=>'btn action-button pull-right'
   %h1= translate_helper("runs")+ ": " + format_time_as_title_for_listing_day(@start_pickup_date) + " - " + format_time_as_title_for_listing_day(@end_pickup_date)
   .clearfix
 

@@ -7,7 +7,10 @@
       %label.col-sm-3
         = translate_helper("customer")
       .col-sm-9{style: 'white-space: nowrap;'}
-        = render "customer", :f => f, :trip => @trip, edit_mode: edit_mode
+        - if @is_repeating_trip
+          = render "repeating_trips/customer", :f => f, :trip => @trip, edit_mode: edit_mode
+        - else
+          = render "trips/customer", :f => f, :trip => @trip, edit_mode: edit_mode
     .form-group.col-sm-12
       %label.col-sm-3{for:"customer_private_notes"}
         = translate_helper("customer_private_notes")

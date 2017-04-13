@@ -1,0 +1,22 @@
+.panel.panel-primary#trip_repetition_panel
+  .panel-heading
+    %h3.panel-title
+      = translate_helper(:repetition)
+  .panel-body{style: 'padding: 5px;'}
+    = render 'repeating_trips/repetition_fields', f: f
+    
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :vehicle_id, translate_helper("vehicle")
+      .col-sm-9
+        = f.collection_select :vehicle_id, @repeating_vehicles, :id, :name, { :include_blank => true }, { class: 'form-control' }
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :driver_id, translate_helper("driver")
+      .col-sm-9
+        = f.collection_select :driver_id, @drivers, :id, :name, { :include_blank => true }, { class: 'form-control' }
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :customer_informed, translate_helper("mark_as_called_back")
+      .col-sm-9
+        = f.check_box :customer_informed

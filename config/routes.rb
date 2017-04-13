@@ -71,6 +71,9 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :repeating_trips 
+    resources :repeating_runs 
+
     resources :providers, :except => [:edit, :update, :destroy] do
       post :change_role
       post :delete_role
