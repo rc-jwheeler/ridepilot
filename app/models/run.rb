@@ -1,61 +1,8 @@
 class Run < ActiveRecord::Base
   include RequiredFieldValidatorModule
-  include RecurringRideCoordinator
+  include RunCore
 
   acts_as_paranoid # soft delete
-  
-  schedules_occurrences_with with_attributes: -> (run) {
-      attrs = {}
-      RepeatingRun.ride_coordinator_attributes.each {|attr| attrs[attr] = run.send(attr) }
-      attrs['driver_id'] = run.repetition_driver_id
-      attrs['vehicle_id'] = run.repetition_vehicle_id
-      attrs['schedule_attributes'] = {
-        repeat:        1,
-        interval_unit: "week",
-        start_date:    run.date.to_s,
-        interval:      run.repetition_interval, 
-        monday:        run.repeats_mondays    ? 1 : 0,
-        tuesday:       run.repeats_tuesdays   ? 1 : 0,
-        wednesday:     run.repeats_wednesdays ? 1 : 0,
-        thursday:      run.repeats_thursdays  ? 1 : 0,
-        friday:        run.repeats_fridays    ? 1 : 0,
-        saturday:      run.repeats_saturdays  ? 1 : 0,
-        sunday:        run.repeats_sundays    ? 1 : 0
-      }
-      attrs
-    },
-    destroy_future_occurrences_with: -> (run) {
-      # Be sure not delete occurrences that have already been completed.
-      runs = if run.date < Date.today
-        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after_today.incomplete
-      else 
-        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after(run.date).incomplete
-      end
-
-      schedule = run.repeating_run.schedule
-      Run.transaction do
-        runs.find_each do |r|
-          r.destroy unless schedule.occurs_on?(r.date)
-        end
-      end
-    },
-    destroy_all_future_occurrences_with: -> (run) {
-      # Be sure not delete occurrences that have already been completed.
-      runs = if run.date < Date.today
-        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after_today.incomplete
-      else 
-        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).after(run.date).incomplete
-      end
-
-      runs.destroy_all
-    },
-    unlink_past_occurrences_with: -> (run) {
-      if run.date < Date.today
-        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).today_and_prior.update_all "repeating_run_id = NULL"
-      else 
-        Run.where().not(id: run.id).repeating_based_on(run.repeating_run).prior_to(run.date).update_all "repeating_run_id = NULL"
-      end
-    }
   
   has_paper_trail
   
@@ -79,10 +26,6 @@ class Run < ActiveRecord::Base
     :unpaid_driver_break_time, 
     :paid, 
   ].freeze
-  
-  belongs_to :provider, -> { with_deleted }
-  belongs_to :driver, -> { with_deleted }
-  belongs_to :vehicle, -> { with_deleted }, inverse_of: :runs
 
   has_many :trips, -> { order(:pickup_time) }, :dependent => :nullify
 
@@ -90,15 +33,8 @@ class Run < ActiveRecord::Base
   
   before_validation :fix_dates, :set_complete
   
-  validates                 :name, presence: true, uniqueness: { scope: :date, message: "should be unique per day" }
-  #validates                 :driver, presence: true
-  validates                 :provider, presence: true
-  validates                 :vehicle, presence: true
-  validates_date            :date
   validates_datetime        :actual_start_time, allow_blank: true
   validates_datetime        :actual_end_time, after: :actual_start_time, allow_blank: true
-  validates_datetime        :scheduled_start_time, allow_blank: true
-  validates_datetime        :scheduled_end_time, after: :scheduled_start_time, allow_blank: true
   validates_numericality_of :start_odometer, allow_nil: true
   validates_numericality_of :end_odometer, allow_nil: true
   validates_numericality_of :end_odometer, greater_than: -> (run){ run.start_odometer }, less_than: -> (run){ run.start_odometer + 500 }, if: -> (run){ run.start_odometer.present? }, allow_nil: true
@@ -107,48 +43,13 @@ class Run < ActiveRecord::Base
   validate                  :driver_availability
   validate                  :vehicle_availability
   
-  scope :after,                  -> (date) { where('runs.date > ?', date) }
-  scope :after_today,            -> { where('runs.date > ?', Date.today) }
-  scope :for_date,               -> (date) { where('runs.date = ?', date) }
-  scope :for_date_range,         -> (start_date, end_date) { where("runs.date >= ? and runs.date < ?", start_date, end_date) }
-  scope :overlapped,             -> (run) { where("runs.date = ?", run.date).where.not("runs.scheduled_end_time <= ? or runs.scheduled_start_time >= ?", run.scheduled_start_time, run.scheduled_end_time) }
-  scope :for_paid_driver,        -> { where(paid: true) }
-  scope :for_provider,           -> (provider_id) { where(provider_id: provider_id) }
-  scope :for_vehicle,            -> (vehicle_id) { where(vehicle_id: vehicle_id) }
-  scope :for_driver,             -> (driver_id) { where(driver_id: driver_id) }
-  scope :for_volunteer_driver,   -> { where(paid: false) }
-  scope :has_scheduled_time,     -> { where.not(scheduled_start_time: nil).where.not(scheduled_end_time: nil) }
   scope :incomplete,             -> { where('complete is NULL or complete = ?', false) }
   scope :incomplete_on,          -> (date) { incomplete.for_date(date) }
   scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
-  scope :prior_to,               -> (date) { where('runs.date < ?', date) }
-  scope :today_and_prior,        -> { where('runs.date <= ?', Date.today) }
   scope :repeating_based_on,     ->(scheduler) { where(repeating_run_id: scheduler.try(:id)) }
-
-  delegate :name, to: :driver, prefix: :driver, allow_nil: true
 
   CAB_RUN_ID = -1 # id for cab runs 
   UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)
-  
-  def cab=(value)
-    @cab = value
-  end
-
-  def vehicle_name
-    vehicle.name if vehicle.present?
-  end
-  
-  def label
-    if @cab
-      "Cab"
-    else
-      !name.blank? ? name: "#{vehicle_name}: #{driver.try :name} #{scheduled_start_time.try :strftime, "%I:%M%P"}".gsub( /m$/, "" )
-    end
-  end
-  
-  def as_json(options)
-    { :id => id, :label => label }
-  end
 
   def as_calendar_json
     {

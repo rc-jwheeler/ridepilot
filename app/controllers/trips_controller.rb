@@ -263,7 +263,6 @@ class TripsController < ApplicationController
     end
 
     respond_to do |format|
-      prep_view
       if @trip.is_all_valid?(current_provider_id) && @trip.save
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
         TripDistanceCalculationWorker.perform_async(@trip.id) #sidekiq needs to run
@@ -281,6 +280,7 @@ class TripsController < ApplicationController
         }
         format.js { render :json => {:status => "success", :trip => render_to_string(:partial => 'runs/trip', :locals => {:trip => @trip})}, :content_type => "text/json" }
       else
+        prep_view
         format.html { render :action => "new" }
         format.js   { @remote = true; render :json => {:status => "error", :form => render_to_string(:partial => 'form')}, :content_type => "text/json" }
       end

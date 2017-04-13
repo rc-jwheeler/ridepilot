@@ -145,8 +145,6 @@ class RunsController < ApplicationController
   end
   
   def run_params
-    params[:run][:repetition_driver_id] = params[:run][:driver_id]
-    params[:run][:repetition_vehicle_id] = params[:run][:vehicle_id]
     params.require(:run).permit(
       :name, 
       :date, 
@@ -173,41 +171,7 @@ class RunsController < ApplicationController
       :repetition_vehicle_id,
       :trips_attributes => [
         :id,
-        :appointment_time,
-        :attendant_count,
-        :customer_id,
-        :customer_informed,
-        :donation,
-        :driver_id,
-        :dropoff_address_id,
-        :funding_source_id,
-        :group_size,
-        :guest_count,
-        :medicaid_eligible,
-        :mileage,
-        :mobility_id,
-        :notes,
-        :pickup_address_id,
-        :pickup_time,
-        :repeats_sundays,
-        :repeats_mondays,
-        :repeats_tuesdays,
-        :repeats_wednesdays,
-        :repeats_thursdays,
-        :repeats_fridays,
-        :repeats_saturdays,
-        :repetition_customer_informed,
-        :repetition_driver_id,
-        :repetition_interval,
-        :repetition_vehicle_id,
-        :run_id,
-        :service_level_id,
-        :trip_purpose_id,
-        :trip_result_id,
-        :result_reason,
-        :vehicle_id,
-        :mobility_device_accommodations,
-        customer_attributes: [:id]
+        :trip_result_id
       ]
     )
   end

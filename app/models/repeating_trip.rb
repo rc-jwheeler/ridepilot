@@ -57,7 +57,6 @@ class RepeatingTrip < ActiveRecord::Base
       end
     }
 
-
   belongs_to :driver, -> { with_deleted } 
   belongs_to :vehicle, -> { with_deleted }
  

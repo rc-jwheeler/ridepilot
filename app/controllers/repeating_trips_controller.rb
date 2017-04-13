@@ -46,12 +46,12 @@ class RepeatingTripsController < ApplicationController
     authorize! :manage, @trip
 
     respond_to do |format|
-      prep_view
       if @trip.is_all_valid?(current_provider_id) && @trip.save
         format.html {
           redirect_to @trip, :notice => 'Subscription trip template was successfully created.'
         }
       else
+        prep_view
         format.html { render :action => "new" }
       end
     end
@@ -120,8 +120,6 @@ class RepeatingTripsController < ApplicationController
       :repetition_interval,
       :service_level_id,
       :trip_purpose_id,
-      :trip_result_id,
-      :result_reason,
       :vehicle_id,
       :customer_informed,
       :mobility_device_accommodations,
