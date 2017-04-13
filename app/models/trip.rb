@@ -45,6 +45,7 @@ class Trip < ActiveRecord::Base
   scope :turned_down,        -> { Trip.by_result('TD') }
   scope :standby,            -> { Trip.by_result('STNBY') }
   scope :scheduled,          -> { where("cab = ? or run_id is not NULL", true) }
+  scope :repeating_based_on, ->(scheduler) { where(repeating_trip_id: scheduler.try(:id)) }
   
 
   def complete

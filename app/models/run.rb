@@ -4,8 +4,7 @@ class Run < ActiveRecord::Base
 
   acts_as_paranoid # soft delete
   
-  schedules_occurrences_with :repeating_run, 
-    with_attributes: -> (run) {
+  schedules_occurrences_with with_attributes: -> (run) {
       attrs = {}
       RepeatingRun.ride_coordinator_attributes.each {|attr| attrs[attr] = run.send(attr) }
       attrs['driver_id'] = run.repetition_driver_id
@@ -124,6 +123,7 @@ class Run < ActiveRecord::Base
   scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
   scope :prior_to,               -> (date) { where('runs.date < ?', date) }
   scope :today_and_prior,        -> { where('runs.date <= ?', Date.today) }
+  scope :repeating_based_on,     ->(scheduler) { where(repeating_run_id: scheduler.try(:id)) }
 
   delegate :name, to: :driver, prefix: :driver, allow_nil: true
 

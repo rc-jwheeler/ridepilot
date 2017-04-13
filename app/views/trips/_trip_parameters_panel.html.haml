@@ -45,8 +45,8 @@
       .col-sm-9
         = text_field_tag "pickup_address", @trip.pickup_address.try(:one_line_text) || params[:pickup_address], class: "nearly-full form-control trip-address-picker"
         - if edit_mode != :show
-          = f.hidden_field :pickup_address_id
-          = hidden_field_tag 'trip_pickup_google_address', params[:trip_pickup_google_address]
+          = f.hidden_field :pickup_address_id, class: 'trip_pickup_address_id'
+          = hidden_field_tag 'trip_pickup_google_address', params[:trip_pickup_google_address], class: 'trip_pickup_google_address'
         
     .form-group.col-sm-12
       = f.fields_for :customer do |c|
@@ -64,8 +64,8 @@
       .col-sm-9
         = text_field_tag "dropoff_address", @trip.dropoff_address.try(:one_line_text) || params[:dropoff_address], class: "nearly-full form-control trip-address-picker"
         - if edit_mode != :show
-          = f.hidden_field :dropoff_address_id
-          = hidden_field_tag 'trip_dropoff_google_address', params[:trip_dropoff_google_address]
+          = f.hidden_field :dropoff_address_id, class: 'trip_dropoff_address_id'
+          = hidden_field_tag 'trip_dropoff_google_address', params[:trip_dropoff_google_address], class: 'trip_dropoff_google_address'
        
     .form-group.col-sm-12
       .col-sm-3

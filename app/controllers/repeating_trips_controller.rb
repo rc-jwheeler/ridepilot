@@ -82,7 +82,7 @@ class RepeatingTripsController < ApplicationController
     @trip.destroy
 
     respond_to do |format|
-      format.html { redirect_to(trips_url) }
+      format.html { redirect_to(repeating_trips_url) }
       format.xml  { head :ok }
       format.js   { render :json => {:status => "success"}, :content_type => "text/json" }
     end
@@ -123,6 +123,7 @@ class RepeatingTripsController < ApplicationController
       :trip_result_id,
       :result_reason,
       :vehicle_id,
+      :customer_informed,
       :mobility_device_accommodations,
       customer_attributes: [:id]
     )

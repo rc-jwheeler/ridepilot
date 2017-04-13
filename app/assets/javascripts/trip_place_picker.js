@@ -67,13 +67,13 @@ function process_google_address(addr, type) {
     placeId: addr.place_id
   }, function(place, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
-      $('#trip_' + type + '_google_address').val(JSON.stringify(googlePlaceParser(place)));
+      $('input.trip_' + type + '_google_address').val(JSON.stringify(googlePlaceParser(place)));
     } else {
       return google_place_service.getDetails({
         reference: addr.reference
       }, function(new_place, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-          $('#trip_' + type + '_google_address').val(JSON.stringify(googlePlaceParser(new_place)));
+          $('input.trip_' + type + '_google_address').val(JSON.stringify(googlePlaceParser(new_place)));
         } else {
           return console.log("No match found for: " + addr.name);
         }
@@ -84,26 +84,26 @@ function process_google_address(addr, type) {
 
 $(function() {
   $('#pickup_address').on('keyup', function() {
-    $('#trip_pickup_address_id').val('');
-    $('#trip_pickup_google_address').val('');
+    $('input.trip_pickup_address_id').val('');
+    $('input.trip_pickup_google_address').val('');
   });
   $('#pickup_address').on('typeahead:selected', function(e, addr, data) {
     if(data == 'saved_places') {
-      $('#trip_pickup_address_id').val(addr.id);
+      $('input.trip_pickup_address_id').val(addr.id);
     } else if (data == 'google_places') {
       process_google_address(addr, 'pickup');
     }
   });
 
   $('#dropoff_address').on('keyup', function() {
-    $('#trip_dropoff_address_id').val('');
-    $('#trip_dropoff_google_address').val('');
+    $('input.trip_dropoff_address_id').val('');
+    $('input.trip_dropoff_google_address').val('');
   });
   $('#dropoff_address').on('typeahead:selected', function(e, addr, data) {
-    $('#trip_dropoff_address_id').val('');
-    $('#trip_dropoff_google_address').val('');
+    $('input.trip_dropoff_address_id').val('');
+    $('input.trip_dropoff_google_address').val('');
     if(data == 'saved_places') {
-      $('#trip_dropoff_address_id').val(addr.id);
+      $('input.trip_dropoff_address_id').val(addr.id);
     } else if (data == 'google_places') {
       process_google_address(addr, 'dropoff');
     }

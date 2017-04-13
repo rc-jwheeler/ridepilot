@@ -159,6 +159,11 @@ en:
   #Shared
   site_title: "Ridepilot"
   new_trip: "New Trip"
+  new_repeating_trip: "New Subscription Trip"
+  repeating_trips: "View Subscription Trips"
+  repeating_trip: "Subscription Trip"
+  repeating_trips_heading: "Subscription Trips"
+  new_repeating_trip_text: "Create New Subscription Trip"
   date: "Date"
   add: "Add"
   edit: "Edit"

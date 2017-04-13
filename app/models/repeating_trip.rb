@@ -9,13 +9,8 @@ class RepeatingTrip < ActiveRecord::Base
 
   has_paper_trail
 
-  schedules_occurrences_with :repeating_trip,
-    with_attributes: -> (trip) {
-      attrs = {}
-      RepeatingTrip.ride_coordinator_attributes.each {|attr| attrs[attr] = trip.send(attr) }
-      attrs['driver_id'] = trip.repetition_driver_id
-      attrs['vehicle_id'] = trip.repetition_vehicle_id
-      attrs['schedule_attributes'] = {
+  schedules_occurrences_with with_attributes: -> (trip) {
+      {
         repeat:        1,
         interval_unit: "week", 
         start_date:    trip.pickup_time.to_date.to_s,
@@ -28,7 +23,6 @@ class RepeatingTrip < ActiveRecord::Base
         saturday:      trip.repeats_saturdays  ? 1 : 0,
         sunday:        trip.repeats_sundays    ? 1 : 0
       }
-      attrs
     },
     destroy_future_occurrences_with: -> (trip) {
       # Be sure not delete occurrences that have already happened.
@@ -83,7 +77,6 @@ class RepeatingTrip < ActiveRecord::Base
           attributes["repeating_trip_id"] = id
           attributes["pickup_time"] = this_trip_pickup_time
           attributes["appointment_time"] = this_trip_pickup_time + (appointment_time - pickup_time)
-          attributes["via_recurring_ride_coordinator_scheduler"] = true
           trip = Trip.new attributes
           # debugger unless trip.valid?
           trip.save!

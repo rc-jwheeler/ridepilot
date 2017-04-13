@@ -41,7 +41,7 @@ module TripCore
     scope :by_trip_purpose,    -> (name) { includes(:trip_purpose).references(:trip_purpose).where("trip_purposes.name = ?", name) }
     scope :during,             -> (pickup_time, appointment_time) { where('NOT ((trips.pickup_time < ? AND trips.appointment_time < ?) OR (trips.pickup_time > ? AND trips.appointment_time > ?))', pickup_time.utc, appointment_time.utc, pickup_time.utc, appointment_time.utc) }
     scope :for_date,           -> (date) { where('trips.pickup_time >= ? AND trips.pickup_time < ?', date.to_datetime.in_time_zone.utc, date.to_datetime.in_time_zone.utc + 1.day) }
-    scope :for_date_range,     -> (start_date, end_date) { where('trips.pickup_time >= ? AND trips.pickup_time < ?', start_date.to_datetime.in_time_zone.utc, end_date.to_datetime.in_time_zone.utc) }
+    scope :for_date_range,     -> (from_date, to_date) { where('trips.pickup_time >= ? AND trips.pickup_time < ?', from_date.to_datetime.in_time_zone.utc, to_date.to_datetime.in_time_zone.utc) }
     scope :for_provider,       -> (provider_id) { where(provider_id: provider_id) }
     scope :has_scheduled_time, -> { where.not(pickup_time: nil).where.not(appointment_time: nil) }
     scope :individual,         -> { joins(:customer).where(customers: {group: false}) }

@@ -7,14 +7,14 @@
     
     .form-group.col-sm-12
       .col-sm-3
-        = f.label :repetition_vehicle_id, translate_helper("vehicle")
+        = f.label :vehicle_id, translate_helper("vehicle")
       .col-sm-9
-        = f.collection_select :repetition_vehicle_id, @repeating_vehicles, :id, :name, { :include_blank => true }, { class: 'form-control' }
+        = f.collection_select :vehicle_id, @repeating_vehicles, :id, :name, { :include_blank => true }, { class: 'form-control' }
     .form-group.col-sm-12
       .col-sm-3
-        = f.label :repetition_driver_id, translate_helper("driver")
+        = f.label :driver_id, translate_helper("driver")
       .col-sm-9
-        = f.collection_select :repetition_driver_id, @drivers, :id, :name, { :include_blank => true }, { class: 'form-control' }
+        = f.collection_select :driver_id, @drivers, :id, :name, { :include_blank => true }, { class: 'form-control' }
     .form-group.col-sm-12
       .col-sm-3
         = f.label :customer_informed, translate_helper("mark_as_called_back")
