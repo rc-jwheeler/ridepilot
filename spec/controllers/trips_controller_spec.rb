@@ -154,31 +154,6 @@ RSpec.describe TripsController, type: :controller do
           end
         end
       end
-      
-      context "when responding to a :js request" do
-        it "responds with JSON" do
-          post :create, {:trip => valid_attributes, :format => "js"}
-          expect(response.content_type).to eq("text/json")
-        end
-
-        it "includes a successful status in the JS response" do
-          post :create, {:trip => valid_attributes, :format => "js"}
-          json = JSON.parse(response.body)
-          expect(json["status"]).to be_a(String)
-          expect(json["status"]).to eq("success")
-        end
-
-        context "with rendered views" do
-          render_views
-          
-          it "responds with the runs/trip partial in the JS response" do
-            post :create, {:trip => valid_attributes, :format => "js"}
-            json = JSON.parse(response.body)
-            expect(json["trip"]).to be_a(String)
-            expect(json["trip"]).to include(edit_trip_path(Trip.last))
-          end
-        end
-      end
     end
 
     context "with invalid params" do
@@ -191,31 +166,6 @@ RSpec.describe TripsController, type: :controller do
         it "re-renders the 'new' template" do
           post :create, {:trip => invalid_attributes}
           expect(response).to render_template("new")
-        end
-      end
-      
-      context "when responding to a :js request" do
-        it "responds with JSON" do
-          post :create, {:trip => invalid_attributes, :format => "js"}
-          expect(response.content_type).to eq("text/json")
-        end
-        
-        it "includes a error status in the JS response" do
-          post :create, {:trip => invalid_attributes, :format => "js"}
-          json = JSON.parse(response.body)
-          expect(json["status"]).to be_a(String)
-          expect(json["status"]).to eq("error")
-        end
-
-        context "with rendered views" do
-          render_views
-          
-          skip "responds with the 'new' form partial in the JS response" do
-            post :create, {:trip => invalid_attributes, :format => "js"}
-            json = JSON.parse(response.body)
-            expect(json["form"]).to be_a(String)
-            expect(json["form"]).to include("action=\"#{trips_path}\"")
-          end
         end
       end
     end

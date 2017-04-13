@@ -1,16 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Trip do
-  it_behaves_like "a recurring ride coordinator" do
-    before do
-      # These options reflect the concern setup method:
-      # schedules_occurrences_with :repeating_trip
-      @occurrence_scheduler_association = :repeating_trip
-      
-      # To help us know what attribute to check occurrence dates against
-      @occurrence_date_attribute = :pickup_time
-    end
-  end
   
   it "requires pickup_time to be a valid date" do
     trip = build :trip, pickup_time: "13/13/13", appointment_time: "12/12/12"
@@ -44,60 +34,6 @@ RSpec.describe Trip do
     trip.appointment_time = time
     expect(trip.appointment_time).not_to eq Time.zone.parse(time)
     expect(trip.appointment_time).to eq Time.zone.parse("#{time}m")
-  end
-
-  describe "#repetition_customer_informed=" do
-    before do
-      @trip = build :trip
-    end
-
-    it "sets the @repetition_customer_informed instance variable" do
-      expect(@trip.instance_variable_get("@repetition_customer_informed")).to be_nil
-      @trip.repetition_customer_informed = true
-      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq true
-    end
-
-    it "converts '1' and truthy values to true" do
-      @trip.repetition_customer_informed = "1"
-      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq true
-
-      @trip.repetition_customer_informed = true
-      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq true
-    end
-  
-    it "converts other values to false" do
-      @trip.repetition_customer_informed = "0"
-      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq false
-
-      @trip.repetition_customer_informed = "false"
-      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq false
-
-      @trip.repetition_customer_informed = false
-      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq false
-    end
-  end
-
-  describe "#repetition_customer_informed" do
-    before do
-      @trip = build :trip
-    end
-
-    it "returns the @repetition_customer_informed instance variable if it's present" do
-      @trip.instance_variable_set "@repetition_customer_informed", true
-      expect(@trip.repetition_customer_informed).to eq true
-    end
-  
-    it "returns the scheduler's customer_informed if @repetition_customer_informed is nil and the scheduler is present" do
-      @trip.repeating_trip = create :repeating_trip, customer_informed: true
-      expect(@trip.repetition_customer_informed).to eq true
-    end
-
-    # TODO make repeating_trip including-class agnostic
-    it "sets the @repetition_customer_informed instance variable if it is nil and the repeating_trip is present" do
-      @trip.repeating_trip = create :repeating_trip, customer_informed: true
-      expect(@trip.repetition_customer_informed).to eq true
-      expect(@trip.instance_variable_get("@repetition_customer_informed")).to eq true
-    end
   end
 
   describe "mileage" do

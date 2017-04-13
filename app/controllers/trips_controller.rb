@@ -278,11 +278,9 @@ class TripsController < ApplicationController
             end
           end
         }
-        format.js { render :json => {:status => "success", :trip => render_to_string(:partial => 'runs/trip', :locals => {:trip => @trip})}, :content_type => "text/json" }
       else
         prep_view
         format.html { render :action => "new" }
-        format.js   { @remote = true; render :json => {:status => "error", :form => render_to_string(:partial => 'form')}, :content_type => "text/json" }
       end
     end
 
