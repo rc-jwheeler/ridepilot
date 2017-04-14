@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170413205331) do
+ActiveRecord::Schema.define(version: 20170414170128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -554,6 +554,7 @@ ActiveRecord::Schema.define(version: 20170413205331) do
     t.date     "start_date"
     t.date     "end_date"
     t.string   "comments"
+    t.integer  "repeating_run_id"
   end
 
   add_index "repeating_trips", ["customer_id"], :name => "index_repeating_trips_on_customer_id"
@@ -563,6 +564,7 @@ ActiveRecord::Schema.define(version: 20170413205331) do
   add_index "repeating_trips", ["mobility_id"], :name => "index_repeating_trips_on_mobility_id"
   add_index "repeating_trips", ["pickup_address_id"], :name => "index_repeating_trips_on_pickup_address_id"
   add_index "repeating_trips", ["provider_id"], :name => "index_repeating_trips_on_provider_id"
+  add_index "repeating_trips", ["repeating_run_id"], :name => "index_repeating_trips_on_repeating_run_id"
   add_index "repeating_trips", ["service_level_id"], :name => "index_repeating_trips_on_service_level_id"
   add_index "repeating_trips", ["trip_purpose_id"], :name => "index_repeating_trips_on_trip_purpose_id"
   add_index "repeating_trips", ["vehicle_id"], :name => "index_repeating_trips_on_vehicle_id"

@@ -4,11 +4,13 @@
 namespace :scheduler do
 
   task run: :environment do
+    # Schedule repeating runs 
+    #    Important: Execute this before creating repeating trips so can 
+    #    assign a trip instance to an existing repeating run instance 
+    RepeatingRun.active.generate!
+
     # Schedule repeating trips
     RepeatingTrip.active.generate!
-
-    # Schedule repeating runs
-    RepeatingRun.active.generate!
 
     # Update run status
     Run.update_prior_run_complete_status!

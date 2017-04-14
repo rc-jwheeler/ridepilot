@@ -12,6 +12,8 @@ class RepeatingRun < ActiveRecord::Base
   validates :comments, :length => { :maximum => 30 } 
   
   scope :active, -> { where("(start_date is NULL or start_date <= ?) AND (end_date is NULL or end_date >= ?)", Date.today, Date.today) }
+  # a query to find repeating_runs that can be used to assign repeating_trips
+  scope :during, -> (from_time, to_time) { where("NOT (scheduled_start_time::time <= ?) OR NOT(scheduled_end_time::time <= ?)", to_time.utc.to_s(:time), from_time.utc.to_s(:time)) }
 
   schedules_occurrences_with with_attributes: -> (run) {
       {
