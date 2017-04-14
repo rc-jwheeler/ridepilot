@@ -8,7 +8,7 @@ RSpec.shared_examples "a recurring ride coordinator scheduler" do
 
   describe ".ride_coordinator_attributes" do
     it "knows which of its attributes are trip attributes" do
-      expect(described_class.ride_coordinator_attributes).not_to include "id", "recurrence", "schedule_yaml", "created_at", "updated_at", "lock_version"
+      expect(described_class.ride_coordinator_attributes).not_to include "id", "recurrence", "schedule_yaml", "created_at", "updated_at", "lock_version", "start_date", "end_date", "comments"
     end
   end
   

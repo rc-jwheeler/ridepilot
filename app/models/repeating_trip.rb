@@ -74,7 +74,8 @@ class RepeatingTrip < ActiveRecord::Base
         this_trip_pickup_time = Time.zone.local(date.year, date.month, date.day, pickup_time.hour, pickup_time.min, pickup_time.sec)
       
         unless Trip.repeating_based_on(self).for_date(date).exists?
-          attributes = self.attributes.select{ |k, v| RepeatingTrip.ride_coordinator_attributes.include? k.to_s }
+          # repeating_run_id is not part of trip attributes
+          attributes = self.attributes.select{ |k, v| (RepeatingTrip.ride_coordinator_attributes - ['repeating_run_id']).include? k.to_s }
           attributes["repeating_trip_id"] = id
           attributes["pickup_time"] = this_trip_pickup_time
           attributes["appointment_time"] = this_trip_pickup_time + (appointment_time - pickup_time)
