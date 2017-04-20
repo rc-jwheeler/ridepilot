@@ -1,0 +1,14 @@
+#customerTripSummaryDialog.modal.fade.col-sm-12{:role => "dialog", "aria-hidden" => 'true', :tabindex => "-1", data: {"backdrop": "static", "keyboard": false }}
+  = form_for :trip, url: customer_trip_summary_trips_path(format: :js), :method => :get, :remote => true do |f|
+    = hidden_field_tag :customer_id, nil
+    .modal-dialog
+      .modal-content
+        .modal-header
+          .pull-right
+            %button{type: 'button', class: 'btn action-button', data: {dismiss: 'modal'}}
+              = translate_helper(:ok)
+          .modal-title{:style => "text-align:left; font-weight: bold; font-size: large;"}
+            = translate_helper(:customer_trip_summary_for)
+        .modal-body.row{:style => "text-align:left; margin: 0px;"}
+          .col-sm-12#customerTripSummaryTable{style: 'padding: 5px;'}
+            

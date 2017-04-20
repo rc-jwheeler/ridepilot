@@ -44,6 +44,7 @@ class TripsController < ApplicationController
 
   # list trips for a specific customer within given date range
   def customer_trip_summary
+    @customer = Customer.find_by_id params[:customer_id]
     @trips = Trip.where(customer_id: params[:customer_id])
     unless params[:start_date].blank? && params[:end_date].blank?
       trip_filter = TripFilter.new(@trips, {

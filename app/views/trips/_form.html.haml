@@ -34,6 +34,9 @@
     - if !@is_repeating_trip && edit_mode != :new
       = render 'trips/assignment_panel', f: f
 
+- if edit_mode != :show
+  = render 'trips/customer_trip_summary_dialog'
+
 - if @is_repeating_trip
   = render 'shared/hide_invisible_form_fields_js', model_name: "repeatingtrip", table_name: 'repeating_trips', provider_id:  current_provider.try(:id) 
 - else
