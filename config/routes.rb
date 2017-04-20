@@ -68,6 +68,7 @@ Rails.application.routes.draw do
         get :reconcile_cab
         get :trips_requiring_callback
         get :unscheduled
+        get :customer_trip_summary
       end
     end
 

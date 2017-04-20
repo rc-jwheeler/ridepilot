@@ -42,6 +42,28 @@ class TripsController < ApplicationController
     end
   end
 
+  # list trips for a specific customer within given date range
+  def customer_trip_summary
+    @trips = Trip.where(customer_id: params[:customer_id])
+    unless params[:start_date].blank? && params[:end_date].blank?
+      trip_filter = TripFilter.new(@trips, {
+        start: params[:start_date],
+        end: params[:end_date]
+        })
+      @trips = trip_filter.filter!
+    else
+      # getting future trips by default
+      @trips = @trips.after(DateTime.now)
+    end
+
+    @trips = @trips.order(pickup_time: :asc).limit(6)
+
+    respond_to do |format|
+      format.js 
+      format.json { render :json => @trips }
+    end
+  end
+
   def trips_requiring_callback
     #The trip coordinator has made decisions on whether to confirm or
     #turn down trips.  Now they want to call back the customer to tell

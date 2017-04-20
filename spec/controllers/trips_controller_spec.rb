@@ -55,6 +55,98 @@ RSpec.describe TripsController, type: :controller do
     end
   end
 
+  describe "GET #customer_trip_summary" do
+    it "returns empty when no customer_id is given" do 
+      get :customer_trip_summary, {:format => "json"}
+      expect(assigns(:trips)).to be_empty
+    end
+
+    context "when customer_id is given" do
+      before do
+        # Time.now is now 
+        Timecop.freeze(Date.today)
+
+        pickup_time = DateTime.now.beginning_of_day
+        appointment_time = pickup_time + 1.hour
+
+        @customer_id = Customer.first.try(:id)
+
+        # today trip
+        @today_trip = create(:trip, customer_id: @customer_id, pickup_time: pickup_time, appointment_time: appointment_time)
+
+        # past trips
+        (1..7).each do |i|
+          create(:trip, customer_id: @customer_id, pickup_time: pickup_time - i.day, appointment_time: appointment_time - i.day)
+        end
+
+        # future trips
+        (1..7).each do |i|
+          create(:trip, customer_id: @customer_id, pickup_time: pickup_time + i.day, appointment_time: appointment_time + i.day)
+        end
+        
+      end
+
+      after do
+        Timecop.return
+      end
+
+      context "when date range params are given" do
+        context "start date is given but not end date" do 
+          before do 
+            get :customer_trip_summary, {:format => "json", :customer_id => @customer_id, :start_date => Date.tomorrow} 
+          end
+
+          it "returns correct trips" do
+            expect(assigns(:trips).minimum(:pickup_time)).to be >= Date.tomorrow
+          end
+
+          it "returns at most 6 trips" do 
+            expect(assigns(:trips).count).to be <= 6
+          end
+        end
+        context "end date is given but not start date" do 
+          before do 
+            get :customer_trip_summary, {:format => "json", :customer_id => @customer_id, :end_date => Date.today} 
+          end
+
+          it "returns correct trips" do
+            expect(assigns(:trips).maximum(:pickup_time)).to be < Date.tomorrow
+          end
+
+          it "returns at most 6 trips" do 
+            expect(assigns(:trips).count).to be <= 6
+          end
+        end
+        context "both start and end dates are given" do 
+          before do 
+            get :customer_trip_summary, {:format => "json", :customer_id => @customer_id, :start_date => Date.today, :end_date => Date.today} 
+          end
+
+          it "returns correct trips" do
+            expect(assigns(:trips)).to match([@today_trip])
+          end
+
+          it "returns at most 6 trips" do 
+            expect(assigns(:trips).count).to be <= 6
+          end
+        end
+      end
+
+      context "when date range params are not given" do
+        before do 
+          get :customer_trip_summary, {:format => "json", :customer_id => @customer_id}
+        end
+
+        it "returns future trips" do 
+          expect(assigns(:trips).minimum(:pickup_time)).to be > Date.today
+        end
+        it "returns at most 6 trips" do 
+          expect(assigns(:trips).count).to be 6
+        end
+      end
+    end
+  end  
+
   describe "GET #new" do
     it "assigns a new trip as @trip" do
       get :new, {}

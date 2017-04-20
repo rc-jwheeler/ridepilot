@@ -90,6 +90,7 @@ $(function() {
   $('#pickup_address').on('typeahead:selected', function(e, addr, data) {
     if(data == 'saved_places') {
       $('input.trip_pickup_address_id').val(addr.id);
+      // TODO: insert saved place's notes to Trip Notes field if applicable
     } else if (data == 'google_places') {
       process_google_address(addr, 'pickup');
     }

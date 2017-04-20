@@ -24,8 +24,16 @@ class TripFilter
 
   def filter_by_pickup_time!
     utility = Utility.new
-    t_start = utility.parse_date(@filters[:start]) 
-    t_end = utility.parse_date(@filters[:end])
+    unless @filters[:start].is_a?(Date) ||  @filters[:start].is_a?(DateTime)
+      t_start = utility.parse_date(@filters[:start]) 
+    else
+      t_start = @filters[:start].to_datetime
+    end
+    unless @filters[:end].is_a?(Date) ||  @filters[:end].is_a?(DateTime)
+      t_end = utility.parse_date(@filters[:end]) 
+    else
+      t_end = @filters[:end].to_datetime
+    end
 
     if !t_start && !t_end
       time    = Time.current
