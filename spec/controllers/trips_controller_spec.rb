@@ -62,6 +62,7 @@ RSpec.describe TripsController, type: :controller do
     end
 
     context "when customer_id is given" do
+      let(:customer_id) { create(:customer, :provider => @current_user.current_provider).id }
       before do
         # Time.now is now 
         Timecop.freeze(Date.today)
@@ -69,19 +70,17 @@ RSpec.describe TripsController, type: :controller do
         pickup_time = DateTime.now.beginning_of_day
         appointment_time = pickup_time + 1.hour
 
-        @customer_id = Customer.first.try(:id)
-
         # today trip
-        @today_trip = create(:trip, customer_id: @customer_id, pickup_time: pickup_time, appointment_time: appointment_time)
+        @today_trip = create(:trip, customer_id: customer_id, pickup_time: pickup_time, appointment_time: appointment_time)
 
         # past trips
         (1..7).each do |i|
-          create(:trip, customer_id: @customer_id, pickup_time: pickup_time - i.day, appointment_time: appointment_time - i.day)
+          create(:trip, customer_id: customer_id, pickup_time: pickup_time - i.day, appointment_time: appointment_time - i.day)
         end
 
         # future trips
         (1..7).each do |i|
-          create(:trip, customer_id: @customer_id, pickup_time: pickup_time + i.day, appointment_time: appointment_time + i.day)
+          create(:trip, customer_id: customer_id, pickup_time: pickup_time + i.day, appointment_time: appointment_time + i.day)
         end
         
       end
@@ -93,7 +92,7 @@ RSpec.describe TripsController, type: :controller do
       context "when date range params are given" do
         context "start date is given but not end date" do 
           before do 
-            get :customer_trip_summary, {:format => "json", :customer_id => @customer_id, :start_date => Date.tomorrow} 
+            get :customer_trip_summary, {:format => "json", :customer_id => customer_id, :start_date => Date.tomorrow} 
           end
 
           it "returns correct trips" do
@@ -106,7 +105,7 @@ RSpec.describe TripsController, type: :controller do
         end
         context "end date is given but not start date" do 
           before do 
-            get :customer_trip_summary, {:format => "json", :customer_id => @customer_id, :end_date => Date.today} 
+            get :customer_trip_summary, {:format => "json", :customer_id => customer_id, :end_date => Date.today} 
           end
 
           it "returns correct trips" do
@@ -119,7 +118,7 @@ RSpec.describe TripsController, type: :controller do
         end
         context "both start and end dates are given" do 
           before do 
-            get :customer_trip_summary, {:format => "json", :customer_id => @customer_id, :start_date => Date.today, :end_date => Date.today} 
+            get :customer_trip_summary, {:format => "json", :customer_id => customer_id, :start_date => Date.today, :end_date => Date.today} 
           end
 
           it "returns correct trips" do
@@ -134,7 +133,7 @@ RSpec.describe TripsController, type: :controller do
 
       context "when date range params are not given" do
         before do 
-          get :customer_trip_summary, {:format => "json", :customer_id => @customer_id}
+          get :customer_trip_summary, {:format => "json", :customer_id => customer_id}
         end
 
         it "returns future trips" do 
