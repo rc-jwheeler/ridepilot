@@ -28,6 +28,7 @@ class Run < ActiveRecord::Base
   ].freeze
 
   has_many :trips, -> { order(:pickup_time) }, :dependent => :nullify
+  belongs_to :repeating_run
 
   accepts_nested_attributes_for :trips
   

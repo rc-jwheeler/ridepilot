@@ -72,7 +72,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :repeating_trips 
+    resources :repeating_trips do 
+      member do 
+        get :clone
+      end
+    end
     resources :repeating_runs 
 
     resources :providers, :except => [:edit, :update, :destroy] do

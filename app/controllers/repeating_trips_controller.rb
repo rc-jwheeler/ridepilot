@@ -88,6 +88,15 @@ class RepeatingTripsController < ApplicationController
     end
   end
 
+  def clone
+    @trip = @trip.clone_for_future!
+    prep_view
+    
+    respond_to do |format|
+      format.html { render action: :new }
+    end
+  end
+
   private
 
   def set_trip

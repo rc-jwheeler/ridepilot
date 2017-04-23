@@ -96,7 +96,14 @@ class RepeatingTrip < ActiveRecord::Base
     active
   end
 
-  def name
+  def clone_for_future!
+    cloned_trip = self.dup
     
+    cloned_trip.pickup_time = nil
+    cloned_trip.appointment_time = nil
+    cloned_trip.customer_informed = false
+    cloned_trip.cab = false
+
+    cloned_trip
   end
 end

@@ -114,4 +114,8 @@
       $(this).find('form').submit();
     });
 
+    $('body').on('dblclick', '#customerTripSummaryTable td', function() {
+      console.log('row double clicked');
+    });
+
   });

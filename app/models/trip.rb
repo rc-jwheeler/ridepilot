@@ -13,6 +13,7 @@ class Trip < ActiveRecord::Base
   belongs_to :trip_result, -> { with_deleted }
   has_one    :return_trip, class_name: "Trip", foreign_key: :linking_trip_id
   belongs_to :outbound_trip, class_name: 'Trip', foreign_key: :linking_trip_id
+  belongs_to :repeating_trip
   has_one    :donation
 
 
@@ -165,7 +166,6 @@ class Trip < ActiveRecord::Base
     cloned_trip.repeating_trip = nil
     cloned_trip.drive_distance = nil
     cloned_trip.outbound_trip = nil
-    cloned_trip.repeating_trip = nil
     cloned_trip.direction = :outbound
 
     cloned_trip
