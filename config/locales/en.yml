@@ -177,6 +177,7 @@ en:
   confirm: "Are you sure?"
   ok: "OK"
   cancel: "Cancel"
+  close_button_label: "Close"
   back: "Back"
   inactivate: "Inactivate"
   delete_photo: "Delete Photo"
@@ -188,6 +189,7 @@ en:
   this_week: "This Week"
   update: "Update"
   search: "Search"
+  search_button_label: "Search"
   date_order_parameter: "year,month,day"
   new_trip_link_text: "New Trip"
   month: "Month"
@@ -634,6 +636,7 @@ en:
   provider_not_available_for_trip: 'Provider is not available for the trip.'
   customer_trip_summary_for: "Trips for "
   view_customer_trip_summary: "Trip Summary"
+  customer_trip_summary_instructions: "Clone a new trip from each trip below by double clicking. Only up to 6 trips are listed."
   #reports
   service_performed: "Service Performed"
   odometer_reading: "Odometer Reading"

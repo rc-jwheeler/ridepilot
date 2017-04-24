@@ -46,12 +46,18 @@ class TripsController < ApplicationController
   def customer_trip_summary
     @customer = Customer.find_by_id params[:customer_id]
     @trips = Trip.where(customer_id: params[:customer_id])
+    
     unless params[:start_date].blank? && params[:end_date].blank?
-      trip_filter = TripFilter.new(@trips, {
-        start: params[:start_date],
-        end: params[:end_date]
-        })
-      @trips = trip_filter.filter!
+      utility = Utility.new
+      if !params[:start_date].blank?
+        t_start = utility.parse_date params[:start_date]
+        @trips = @trips.where("pickup_time >= '#{t_start.beginning_of_day.utc.strftime "%Y-%m-%d %H:%M:%S"}'")
+      end
+
+      if !params[:end_date].blank?
+        t_end = utility.parse_date params[:end_date] 
+        @trips = @trips.where("pickup_time <= '#{t_end.end_of_day.utc.strftime "%Y-%m-%d %H:%M:%S"}'")
+      end
     else
       # getting future trips by default
       @trips = @trips.after(DateTime.now)

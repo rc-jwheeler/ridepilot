@@ -34,7 +34,7 @@ class TripFilter
     else
       t_end = @filters[:end].to_datetime
     end
-
+    
     if !t_start && !t_end
       time    = Time.current
       t_start = time.to_date.in_time_zone
