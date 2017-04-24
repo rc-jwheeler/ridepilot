@@ -189,6 +189,14 @@ class Trip < ActiveRecord::Base
     return_trip
   end
 
+  def clone_for_repeating_trip!
+    daily_trip_clone = self.clone_for_future!
+    repeating_trip = RepeatingTrip.new 
+    repeating_trip.attributes = daily_trip_clone.attributes.select{ |k, v| repeating_trip.attributes.keys.include? k.to_s }
+
+    repeating_trip
+  end
+
   def is_linked?
     (is_return? && outbound_trip) || (is_outbound? && return_trip)
   end

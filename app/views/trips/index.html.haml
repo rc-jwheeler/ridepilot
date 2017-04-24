@@ -2,6 +2,8 @@
 .clearfix.row#page-header{style: 'padding: 0px;'}
   - if can? :create, Trip
     = link_to translate_helper("new_trip_link_text"), new_trip_path, :class=>'btn action-button pull-right'
+  - if can? :create, RepeatingTrip
+    = link_to translate_helper("new_repeating_trip_text"), new_repeating_trip_path, :class=>'btn action-button pull-right'
   - if can? :index, RepeatingTrip
     = link_to translate_helper("repeating_trips"), repeating_trips_path, :class=>'btn action-button pull-right'
   %h1= translate_helper("trips")+ ": " + format_time_as_title_for_listing_day(@start_pickup_date) + " - " + format_time_as_title_for_listing_day(@end_pickup_date)

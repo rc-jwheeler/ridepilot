@@ -36,6 +36,23 @@
 
 - if edit_mode != :show
   = render 'trips/customer_trip_summary_dialog'
+  - if @is_repeating_trip
+    :javascript 
+      $(function() {
+        $('body').on('dblclick', '#customerTripSummaryTable td', function() {
+          var trip_id = $(this).parents('tr').data('trip-id');
+          window.location.href = "#{clone_from_daily_trip_repeating_trips_path}?trip_id=" + trip_id;
+        });
+      });
+  - else
+    :javascript 
+      $(function() {
+        $('body').on('dblclick', '#customerTripSummaryTable td', function() {
+          var trip_id = $(this).parents('tr').data('trip-id');
+          window.location.href = "#{clone_trip_path('xxx')}".replace('xxx', trip_id);
+        });
+      });
+    
 
 - if @is_repeating_trip
   = render 'shared/hide_invisible_form_fields_js', model_name: "repeatingtrip", table_name: 'repeating_trips', provider_id:  current_provider.try(:id) 

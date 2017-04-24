@@ -11,7 +11,7 @@
       %p= translate_helper('no_trips')
     - else
       - trips.each do |trip|
-        %tr
+        %tr{data: {trip_id: trip.id}}
           %td
             = format_time_for_listing_day trip.pickup_time
           %td

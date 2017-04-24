@@ -1,5 +1,5 @@
 class RepeatingTripsController < ApplicationController
-  before_action :set_trip, except: [:index, :new, :create]
+  before_action :set_trip, except: [:index, :new, :create, :clone_from_daily_run]
   authorize_resource :except=>[:show]
 
   def index
@@ -88,8 +88,25 @@ class RepeatingTripsController < ApplicationController
     end
   end
 
+  # use another repeating trip as template
   def clone
     @trip = @trip.clone_for_future!
+    prep_view
+    
+    respond_to do |format|
+      format.html { render action: :new }
+    end
+  end
+
+  # use daily trip as template
+  def clone_from_daily_trip
+    daily_trip = Trip.find_by_id(params[:trip_id])
+    if daily_trip.present?
+      @trip = daily_trip.clone_for_repeating_trip!
+    else
+      @trip = RepeatingTrip.new(:provider_id => current_provider_id)
+    end
+
     prep_view
     
     respond_to do |format|
