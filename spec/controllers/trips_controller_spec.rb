@@ -67,7 +67,7 @@ RSpec.describe TripsController, type: :controller do
         # Time.now is now 
         Timecop.freeze(Date.today)
 
-        pickup_time = DateTime.now.beginning_of_day
+        pickup_time = DateTime.current.beginning_of_day
         appointment_time = pickup_time + 1.hour
 
         # today trip

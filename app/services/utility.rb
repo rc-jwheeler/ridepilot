@@ -4,7 +4,11 @@ class Utility
 
     # this is to parse calendar params
     # will be deprecated after new calendar gets in
-    if time_param.to_i.to_s == time_param.to_s
+    if time_param.is_a?(Date) 
+      time = time_param
+    elsif time_param.is_a?(DateTime)
+      time = time_param.to_date
+    elsif time_param.to_i.to_s == time_param.to_s
       time = Time.zone.at(time_param.to_i)
     else
       time = Date.strptime(time_param, '%d-%b-%Y %a') rescue nil
