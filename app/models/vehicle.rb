@@ -27,8 +27,8 @@ class Vehicle < ActiveRecord::Base
   validates :provider, presence: true
   validates :name, presence: true, uniqueness: { scope: :provider, message: "should be unique" }
   validates :license_plate, uniqueness: { scope: :provider, message: "should be unique" }, allow_nil: true, allow_blank: true
-  validates :vin, uniqueness: { scope: :provider, message: "should be unique" }, length: {is: 17, allow_nil: true, allow_blank: true},
-    format: {with: /\A[^ioq]*\z/i, allow_nil: true}
+  validates :vin, uniqueness: { scope: :provider, message: "should be unique" }, length: {is: 17},
+    format: {with: /\A[^ioq]*\z/i}, allow_nil: true, allow_blank: true
   validates_date :registration_expiration_date, allow_blank: true
   validates :seating_capacity, numericality: { only_integer: true, greater_than: 0 }
   validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
