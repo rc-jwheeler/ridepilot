@@ -13,7 +13,7 @@ class TripsController < ApplicationController
     filter_trips
     
     @vehicles        = Vehicle.where(:provider_id => current_provider_id)
-    if current_provider.cab_enabled?
+    if current_provider.try(:cab_enabled?)
       @vehicles = add_cab(@vehicles)
     end
     @drivers         = Driver.for_provider current_provider_id
@@ -400,7 +400,7 @@ class TripsController < ApplicationController
     @drivers            = Driver.active.for_provider @trip.provider_id
     @trips              = [] if @trips.nil?
     @vehicles           = Vehicle.active.for_provider(@trip.provider_id)
-    @vehicles           = add_cab(@vehicles) if current_provider.cab_enabled?
+    @vehicles           = add_cab(@vehicles) if current_provider.try(:cab_enabled?)
     @repeating_vehicles = @vehicles 
     @service_levels     = ServiceLevel.by_provider(current_provider).order(:name).pluck(:name, :id)
 

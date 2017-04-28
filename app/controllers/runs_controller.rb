@@ -124,7 +124,7 @@ class RunsController < ApplicationController
   def for_date
     date = Date.parse params[:date]
     @runs = @runs.for_provider(current_provider_id).incomplete_on date
-    if current_provider.cab_enabled?
+    if current_provider.try(:cab_enabled?)
       cab_run = Run.new :cab => true
       cab_run.id = -1
       @runs = @runs + [cab_run] 

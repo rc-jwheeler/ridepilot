@@ -40,6 +40,7 @@ en:
   "yes": "Yes" # yes, no: needs to put as string, otherwise won't be loaded as will be parsed as {false=>"No"}
   "no": "No"
   default_trip_purpose: "Default Trip Purpose:"
+  default: "Default"
   address_form_error_message:
     one: "%{count} error prohibited this address from being saved:"
     other: "%{count} errors prohibited this address from being saved:"

@@ -37,7 +37,7 @@ class Provider < ActiveRecord::Base
   # default value of advance_day_scheduling
   DEFAULT_ADVANCE_DAY_SCHEDULING = 21
   
-  validates :name, :length => { :minimum => 2 }
+  validates :name, :uniqueness => true, :length => { :minimum => 2 }
   validates_numericality_of :oaa3b_per_ride_reimbursement_rate,               :greater_than => 0, :allow_blank => true
   validates_numericality_of :ride_connection_per_ride_reimbursement_rate,     :greater_than => 0, :allow_blank => true
   validates_numericality_of :trimet_per_ride_reimbursement_rate,              :greater_than => 0, :allow_blank => true

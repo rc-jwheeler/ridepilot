@@ -130,16 +130,16 @@ RSpec.describe ProvidersController, type: :controller do
     end
   end
 
-  describe "POST #change_dispatch" do
-    it "updates the dispatch flag on the requested provider" do
-      initial_dispatch_value = @current_user.current_provider.dispatch
+  describe "POST #change_cab_enabled" do
+    it "updates the cab_enabled flag on the requested provider" do
+      initial_cab_enabled_value = @current_user.current_provider.cab_enabled
       expect {
-        post :change_dispatch, {:id => @current_user.current_provider.id, :dispatch => false}
-      }.to change{ @current_user.current_provider.reload.dispatch }.from(initial_dispatch_value).to(false)
+        post :change_cab_enabled, {:id => @current_user.current_provider.id, :cab_enabled => false}
+      }.to change{ @current_user.current_provider.reload.cab_enabled }.from(initial_cab_enabled_value).to(false)
     end
 
     it "redirects to the provider" do
-      post :change_dispatch, {:id => @current_user.current_provider.id, :dispatch => true}
+      post :change_cab_enabled, {:id => @current_user.current_provider.id, :cab_enabled => true}
       expect(response).to redirect_to(@current_user.current_provider)
     end
   end

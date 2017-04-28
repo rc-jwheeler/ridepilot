@@ -31,8 +31,8 @@ RSpec.describe ProvidersController, type: :routing do
       expect(:delete => "/providers/1").to_not route_to("providers#destroy", :id => "1")
     end
 
-    it "routes to #change_dispatch" do
-      expect(:post => "/providers/1/change_dispatch").to route_to("providers#change_dispatch", :id => "1")
+    it "routes to #change_cab_enabled" do
+      expect(:post => "/providers/1/change_cab_enabled").to route_to("providers#change_cab_enabled", :id => "1")
     end
 
     it "routes to #change_reimbursement_rates" do

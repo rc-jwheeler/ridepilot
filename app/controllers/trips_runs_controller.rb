@@ -25,7 +25,7 @@ class TripsRunsController < ApplicationController
     @run_trip_day    = Utility.new.parse_date(session[:run_trip_day])
 
     base_runs = @runs
-    base_runs = add_cab_run(base_runs) if current_provider.cab_enabled?
+    base_runs = add_cab_run(base_runs) if current_provider.try(:cab_enabled?)
     @runs_array       = add_unscheduled_run(base_runs).map{ |run|
       as_resource_json(run)
     }
