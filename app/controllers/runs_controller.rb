@@ -124,9 +124,11 @@ class RunsController < ApplicationController
   def for_date
     date = Date.parse params[:date]
     @runs = @runs.for_provider(current_provider_id).incomplete_on date
-    cab_run = Run.new :cab => true
-    cab_run.id = -1
-    @runs = @runs + [cab_run] 
+    if current_provider.cab_enabled?
+      cab_run = Run.new :cab => true
+      cab_run.id = -1
+      @runs = @runs + [cab_run] 
+    end
     render :json =>  @runs.to_json 
   end
   

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170414170128) do
+ActiveRecord::Schema.define(version: 20170428154133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -450,6 +450,7 @@ ActiveRecord::Schema.define(version: 20170414170128) do
     t.datetime "inactivated_date"
     t.string   "inactivated_reason"
     t.integer  "advance_day_scheduling"
+    t.boolean  "cab_enabled"
   end
 
   add_index "providers", ["deleted_at"], :name => "index_providers_on_deleted_at"
@@ -564,7 +565,6 @@ ActiveRecord::Schema.define(version: 20170414170128) do
   add_index "repeating_trips", ["mobility_id"], :name => "index_repeating_trips_on_mobility_id"
   add_index "repeating_trips", ["pickup_address_id"], :name => "index_repeating_trips_on_pickup_address_id"
   add_index "repeating_trips", ["provider_id"], :name => "index_repeating_trips_on_provider_id"
-  add_index "repeating_trips", ["repeating_run_id"], :name => "index_repeating_trips_on_repeating_run_id"
   add_index "repeating_trips", ["service_level_id"], :name => "index_repeating_trips_on_service_level_id"
   add_index "repeating_trips", ["trip_purpose_id"], :name => "index_repeating_trips_on_trip_purpose_id"
   add_index "repeating_trips", ["vehicle_id"], :name => "index_repeating_trips_on_vehicle_id"

@@ -12,7 +12,10 @@ class TripsController < ApplicationController
     .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
     filter_trips
     
-    @vehicles        = add_cab(Vehicle.where(:provider_id => current_provider_id))
+    @vehicles        = Vehicle.where(:provider_id => current_provider_id)
+    if current_provider.cab_enabled?
+      @vehicles = add_cab(@vehicles)
+    end
     @drivers         = Driver.for_provider current_provider_id
     @start_pickup_date = Time.zone.at(session[:start].to_i).to_date
     @end_pickup_date = Time.zone.at(session[:end].to_i).to_date
@@ -396,14 +399,15 @@ class TripsController < ApplicationController
     @trip_purposes      = TripPurpose.by_provider(current_provider).order(:name)
     @drivers            = Driver.active.for_provider @trip.provider_id
     @trips              = [] if @trips.nil?
-    @vehicles           = add_cab(Vehicle.active.for_provider(@trip.provider_id))
+    @vehicles           = Vehicle.active.for_provider(@trip.provider_id)
+    @vehicles           = add_cab(@vehicles) if current_provider.cab_enabled?
     @repeating_vehicles = @vehicles 
     @service_levels     = ServiceLevel.by_provider(current_provider).order(:name).pluck(:name, :id)
 
     @trip.run_id = -1 if @trip.cab
 
-    cab_run = Run.new :cab => true
-    cab_run.id = -1
+    #cab_run = Run.new :cab => true
+    #cab_run.id = -1
     #@runs = Run.for_provider(@trip.provider_id).incomplete_on(@trip.pickup_time.try(:to_date)) << cab_run
   end
   

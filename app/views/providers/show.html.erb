@@ -121,14 +121,14 @@
 
 <hr />
 
-<h2 class="section-header"><%=translate_helper("dispatch")%></h2>
+<h2 class="section-header"><%=translate_helper("cab")%></h2>
 <% if can? :edit, @provider %>
-  <%= form_tag change_dispatch_provider_path(@provider) do %>
+  <%= form_tag change_cab_enabled_provider_path(@provider) do %>
     <fieldset>
       <ol class="section fourth">
         <li>
           <%= label_tag translate_helper("enabled") %>
-          <%= select_tag "dispatch", options_for_select( [["No", false], ["Yes", true]], @provider.dispatch? ), { :onchange => "form.submit();" } %>
+          <%= select_tag "cab", options_for_select( [["No", false], ["Yes", true]], @provider.cab_enabled? ), { :onchange => "form.submit();" } %>
         </li>
       </ol>
     </fieldset>

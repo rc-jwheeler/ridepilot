@@ -160,7 +160,11 @@ class RepeatingTripsController < ApplicationController
     @funding_sources    = FundingSource.by_provider(current_provider)
     @trip_purposes      = TripPurpose.by_provider(current_provider).order(:name)
     @drivers            = Driver.active.for_provider @trip.provider_id
-    @vehicles           = add_cab(Vehicle.active.for_provider(@trip.provider_id))
+    if current_provider.cab_enabled?
+      @vehicles           = add_cab(Vehicle.active.for_provider(@trip.provider_id))
+    else
+      @vehicles           = Vehicle.active.for_provider(@trip.provider_id)
+    end
     @repeating_vehicles = @vehicles 
     @service_levels     = ServiceLevel.by_provider(current_provider).order(:name).pluck(:name, :id)
   end

@@ -92,8 +92,8 @@ class ProvidersController < ApplicationController
     redirect_to provider_path(params[:provider_id])
   end
   
-  def change_dispatch
-    @provider.update_attribute :dispatch, params[:dispatch]
+  def change_cab_enabled
+    @provider.update_attribute :cab_enabled, params[:cab_enabled]
     
     redirect_to provider_path(@provider)
   end

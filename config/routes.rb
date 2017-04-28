@@ -83,7 +83,7 @@ Rails.application.routes.draw do
       post :change_role
       post :delete_role
       member do
-        post :change_dispatch
+        post :change_cab_enabled
         post :change_reimbursement_rates
         post :change_scheduling
         post :change_advance_day_scheduling
