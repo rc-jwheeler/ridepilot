@@ -12,11 +12,6 @@
   <%= form.text_field :name, maxlength: 30 %>
 </li>
 
-<li class="selfclear">
-  <%= form.label :building_name, translate_helper("building_name") %>
-  <%= form.text_field :building_name %>
-</li>
-
 <li class="selfclear full_address">
   <%= label_tag "#{prefix}_full_address", translate_helper("full_address_name") %>
   <% if edit_mode == :edit %>

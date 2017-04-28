@@ -8,13 +8,6 @@
 </div> 
 
 <div class="form-group">
-    <%= address_form.label :building_name, translate_helper("building_name"), class: "col-md-2 control-label" %>
-  <div class="col-md-10">
-    <%= address_form.text_field :building_name, class: "form-control", disabled: readonly %>
-  </div>
-</div>  
-
-<div class="form-group">
     <%= label_tag :address, translate_helper("address"), class: "col-md-2 control-label" %>
   <div class="col-md-10">
     <%= address_form.text_field :address, class: 'form-control', disabled: readonly %>
