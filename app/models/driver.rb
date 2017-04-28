@@ -36,6 +36,7 @@ class Driver < ActiveRecord::Base
   validates :user, presence: true
   validates :user_id, uniqueness: { allow_nil: true, conditions: -> { where(deleted_at: nil) } }
   validates :phone_number, presence: true
+  validate  :valid_phone_number
   validates_associated :photo
 
   scope :users,         -> { where("drivers.user_id IS NOT NULL") }
@@ -52,5 +53,16 @@ class Driver < ActiveRecord::Base
   end
 
   private
+
+  def valid_phone_number
+    util = Utility.new
+    if phone_number.present?
+      errors.add(:phone_number, 'is invalid') unless util.phone_number_valid?(phone_number) 
+    end
+
+    if alt_phone_number.present?
+      errors.add(:alt_phone_number, 'is invalid') unless util.phone_number_valid?(alt_phone_number) 
+    end
+  end
 
 end

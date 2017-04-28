@@ -37,4 +37,11 @@ class Utility
       max_lon: max_lon
     } if min_lat && max_lat && min_lon && max_lon
   end
+
+  def phone_number_valid?(phone_number)
+    us_phony = Phony['1'] # US phone validation
+
+    norm_number = us_phony.normalize(phone_number.to_s)
+    us_phony.plausible? norm_number
+  end
 end

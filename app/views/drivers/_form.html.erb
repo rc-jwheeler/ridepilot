@@ -40,13 +40,25 @@
           <div class="form-group">
               <%= f.label :phone_number, translate_helper("phone_number"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
-              <%= f.text_field :phone_number, class: "form-control", disabled: @readonly %>
+              <% if @readonly %>
+                <p class="form-control">
+                  <%= number_to_phone(@driver.phone_number, area_code: true)%>
+                </p>
+              <% else %>
+                <%= f.text_field :phone_number, class: "form-control" %>
+              <% end %>
             </div>
           </div>  
           <div class="form-group">
               <%= f.label :alt_phone_number, translate_helper("alt_phone_number"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
-              <%= f.text_field :alt_phone_number, class: "form-control", disabled: @readonly %>
+              <% if @readonly %>
+                <p class="form-control">
+                  <%= number_to_phone(@driver.alt_phone_number, area_code: true)%>
+                </p>
+              <% else %>
+                <%= f.text_field :alt_phone_number, class: "form-control" %>
+              <% end %>
             </div>
           </div>  
           <div class="form-group">

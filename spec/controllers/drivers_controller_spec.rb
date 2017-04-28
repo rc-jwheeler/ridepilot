@@ -9,7 +9,7 @@ RSpec.describe DriversController, type: :controller do
   let(:valid_attributes) {
     attributes_for(:driver, 
       name: 'test drivers',
-      phone_number: '(123)456789', 
+      phone_number: '(801)4567890', 
       user_id: create(:user, :current_provider => @current_user.current_provider).id,
       address_attributes: attributes_for(:address)
       )

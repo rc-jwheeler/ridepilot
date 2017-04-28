@@ -122,6 +122,9 @@ gem 'bootstrap-kaminari-views'
 # momentjs for datetime parsing
 gem 'momentjs-rails'
 
+# phone number validation and display
+gem 'phony_rails'
+
 # twitter typeahed
 #gem 'twitter-typeahead-rails'
 

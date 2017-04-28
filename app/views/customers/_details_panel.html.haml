@@ -55,12 +55,18 @@
       .col-sm-3
         = f.label :phone_number_1, translate_helper(:phone_number) 
       .col-sm-9
-        = f.text_field :phone_number_1, class: 'form-control'
+        - if edit_mode == :show
+          = number_to_phone(@customer.phone_number_1, area_code: true)
+        - else
+          = f.text_field :phone_number_1, class: 'form-control'
     .form-group.col-sm-12
       .col-sm-3
         = f.label :phone_number_2, translate_helper(:alternate_phone_number) 
       .col-sm-9
-        = f.text_field :phone_number_2, class: 'form-control'
+        - if edit_mode == :show
+          = number_to_phone(@customer.phone_number_2, area_code: true)
+        - else
+          = f.text_field :phone_number_2, class: 'form-control'
     .form-group.col-sm-12
       .col-sm-3
         = f.label :email, translate_helper(:email) 

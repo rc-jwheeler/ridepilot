@@ -97,8 +97,8 @@ RSpec.describe CustomersController, type: :controller do
           :first_name => "MyString",
           :midle_initial => "MyString",
           :last_name => "MyString",
-          :phone_number_1 => "MyString",
-          :phone_number_2 => "MyString",
+          :phone_number_1 => "(801)4567890",
+          :phone_number_2 => "(801)4567891",
           :address_attributes => {
             :name => "Name",
             :building_name => "Building",

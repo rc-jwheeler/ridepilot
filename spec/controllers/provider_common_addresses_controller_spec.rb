@@ -135,7 +135,7 @@ RSpec.describe ProviderCommonAddressesController, type: :controller do
           :zip => "12345",
           :in_district => false,
           :the_geom => "",
-          :phone_number => "555-5555",
+          :phone_number => "(801)4567890",
           :inactive => false,
           :trip_purpose => create(:trip_purpose, name: "Purpose") ,
         }

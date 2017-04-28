@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
   # Let Devise handle the email format requirement
   validates :username, :email, uniqueness: { :case_sensitive => false, conditions: -> { where(deleted_at: nil) } }
   validates_presence_of :first_name, :last_name, :username
+  validate :valid_phone_number
   
   # Let Devise handle the password length requirement
   validates :password, confirmation: true, format: {
@@ -91,5 +92,12 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def valid_phone_number
+    util = Utility.new
+    if phone_number.present?
+      errors.add(:phone_number, 'is invalid') unless util.phone_number_valid?(phone_number) 
+    end
+  end
 
 end

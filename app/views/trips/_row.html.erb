@@ -10,11 +10,11 @@
   </td>
   <td>
     <% if trip.customer.try(:phone_number_1)%>
-      <%= trip.customer.try(:phone_number_1)%>
+      <%= number_to_phone(trip.customer.try(:phone_number_1), area_code: true)%>
     <% end%>
     <% if trip.customer.try(:phone_number_2)%>
       <br>
-      <%= trip.customer.try(:phone_number_2)%>
+      <%= number_to_phone(trip.customer.try(:phone_number_2), area_code: true)%>
     <% end %>
   </td>
   <td>

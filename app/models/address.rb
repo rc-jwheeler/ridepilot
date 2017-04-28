@@ -23,6 +23,7 @@ class Address < ActiveRecord::Base
   validates :state,   :length => { :is => 2, :unless => :geocoded? }
   validates :zip,     :length => { :is => 5, :if => lambda { |a| a.zip.present? } }
   validate :address_presented # must be put below above validations (address/city/state/zip)
+  validate :valid_phone_number
   
   before_validation :compute_in_district
 
@@ -124,6 +125,15 @@ class Address < ActiveRecord::Base
 
   def address_presented
     errors.add(:base, TranslationEngine.translate_text(:address_required)) if !address_text.present?
+  end
+
+  private
+
+  def valid_phone_number
+    util = Utility.new
+    if phone_number.present?
+      errors.add(:phone_number, 'is invalid') unless util.phone_number_valid?(phone_number) 
+    end
   end
 
 end

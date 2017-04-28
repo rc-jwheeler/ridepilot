@@ -27,6 +27,7 @@ class Customer < ActiveRecord::Base
   validates_presence_of :first_name
   validates_associated :address
   validates_associated :photo
+  validate :valid_phone_number
   #validate :address_required
   # Token is auto-generated at database level via uuid extension
   
@@ -297,6 +298,17 @@ class Customer < ActiveRecord::Base
 
   def generate_uuid_token
     self.token = SecureRandom.hex(5)
+  end
+
+  def valid_phone_number
+    util = Utility.new
+    if phone_number_1.present?
+      errors.add(:phone_number_1, 'is invalid') unless util.phone_number_valid?(phone_number_1) 
+    end
+
+    if phone_number_2.present?
+      errors.add(:phone_number_2, 'is invalid') unless util.phone_number_valid?(phone_number_2) 
+    end
   end
 
 end

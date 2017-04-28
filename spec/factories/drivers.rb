@@ -6,6 +6,6 @@ FactoryGirl.define do
     provider
     user
     association :address, factory: :driver_address
-    phone_number { Faker::PhoneNumber.phone_number }
+    phone_number '(801)4567890'
   end
 end

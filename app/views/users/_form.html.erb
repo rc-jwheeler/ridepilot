@@ -60,7 +60,11 @@
           <div class="form-group">
             <%= f.label :phone_number, translate_helper("phone_number"), class: "col-md-2 control-label" %>
             <div class="col-md-10">
-              <%= f.text_field :phone_number, class: "form-control" %>
+              <% if edit_mode != :show %>
+                <%= f.text_field :phone_number, class: "form-control" %>
+              <% else %>
+                <%= number_to_phone(@user.phone_number, area_code: true)%>
+              <% end %>
             </div>
           </div>   
         </div>

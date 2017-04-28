@@ -8,7 +8,7 @@
       <td><%= address.address %></td>
       <td><%= address.city %></td>
       <td><%= address.state %></td>
-      <td><%= address.phone_number %></td>
+      <td><%= number_to_phone(address.phone_number, area_code: true) %></td>
       <td><%= address.in_district? ? "In District" : "Out of District" %></td>
       <td><%= address.notes %></td>
       <% if can? :edit, Address %>
