@@ -180,4 +180,16 @@ namespace :ridepilot do
     load(seed_file) if File.exist?(seed_file)
     puts 'Finished'
   end
+
+  desc 'Migrate existing users to have username as login'
+  task :migrate_usernames => :environment do
+    User.transaction do 
+      User.unscoped.each do |user|
+        next if user.username.present?
+        
+        user.update(username: user.email)
+        user.save
+      end
+    end
+  end
 end
