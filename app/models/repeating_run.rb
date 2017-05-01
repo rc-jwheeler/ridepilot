@@ -11,7 +11,7 @@ class RepeatingRun < ActiveRecord::Base
 
   validates :comments, :length => { :maximum => 30 } 
   
-  scope :active, -> { where("(start_date is NULL or start_date <= ?) AND (end_date is NULL or end_date >= ?)", Date.today, Date.today) }
+  scope :active, -> { where("end_date is NULL or end_date >= ?", Date.today, Date.today) }
   # a query to find repeating_runs that can be used to assign repeating_trips
   scope :during, -> (from_time, to_time) { where("NOT (scheduled_start_time::time <= ?) OR NOT(scheduled_end_time::time <= ?)", to_time.utc.to_s(:time), from_time.utc.to_s(:time)) }
 
@@ -70,6 +70,8 @@ class RepeatingRun < ActiveRecord::Base
     later = now.advance(days: (provider.try(:advance_day_scheduling) || Provider::DEFAULT_ADVANCE_DAY_SCHEDULING) - 1)
     RepeatingRun.transaction do
       for date in schedule.occurrences_between(now, later)
+        date = date.to_date
+        next if (start_date.present? && date < start_date) || (end_date.present? && date > end_date)
         unless Run.repeating_based_on(self).for_date(date).exists?
           attributes = self.attributes.select{ |k, v| RepeatingRun.ride_coordinator_attributes.include? k.to_s }
           attributes["date"] = date
@@ -86,7 +88,7 @@ class RepeatingRun < ActiveRecord::Base
     active = true
 
     today = Date.today
-    active = false if (start_date && today < start_date) || (end_date && today > end_date)
+    active = false if end_date && today > end_date
 
     active
   end

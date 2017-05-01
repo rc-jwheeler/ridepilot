@@ -36,6 +36,12 @@
       - if edit_mode != :new 
         = render 'runs/trip_list', f: f, edit_mode: edit_mode 
 
+- if edit_mode != :show
+  :javascript
+    $(document).ready(function(){
+      makeDatePickers();
+    });
+
 - if @is_repeating_run
   = render 'shared/hide_invisible_form_fields_js', model_name: "repeatingrun", table_name: 'repeating_runs', provider_id:  current_provider.try(:id) 
 - else

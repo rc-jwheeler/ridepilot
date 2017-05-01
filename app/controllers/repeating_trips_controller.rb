@@ -125,7 +125,6 @@ class RepeatingTripsController < ApplicationController
       :appointment_time,
       :attendant_count,
       :customer_id,
-      :driver_id,
       :dropoff_address_id,
       :funding_source_id,
       :group_size,
@@ -146,10 +145,11 @@ class RepeatingTripsController < ApplicationController
       :repetition_interval,
       :service_level_id,
       :trip_purpose_id,
-      :vehicle_id,
       :customer_informed,
       :mobility_device_accommodations,
       :comments,
+      :start_date,
+      :end_date,
       customer_attributes: [:id]
     )
   end

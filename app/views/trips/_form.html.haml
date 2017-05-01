@@ -52,7 +52,11 @@
           window.location.href = "#{clone_trip_path('xxx')}".replace('xxx', trip_id);
         });
       });
-    
+
+  :javascript
+    $(document).ready(function(){
+      makeDatePickers();
+    });    
 
 - if @is_repeating_trip
   = render 'shared/hide_invisible_form_fields_js', model_name: "repeatingtrip", table_name: 'repeating_trips', provider_id:  current_provider.try(:id) 

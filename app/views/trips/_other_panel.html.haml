@@ -3,15 +3,15 @@
     %h3.panel-title
       = translate_helper(:other)
   .panel-body{style: 'padding: 5px;'}
-    - unless @is_repeating_trip
-      .form-group.col-sm-12
-        .col-sm-3
-          = f.label :customer_informed, translate_helper("trip_called_back")
-        .col-sm-9
-          = f.check_box :customer_informed
-          - if @trip.customer_informed
-            = "on #{@trip.called_back_at}" if @trip.called_back_at.present?
-            = "by #{@trip.called_back_by.email}" if @trip.called_back_by.present?
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :customer_informed, translate_helper("trip_called_back")
+      .col-sm-9
+        = f.check_box :customer_informed
+        - if !@is_repeating_trip &&@trip.customer_informed
+          = "on #{@trip.called_back_at}" if @trip.called_back_at.present?
+          = "by #{@trip.called_back_by.email}" if @trip.called_back_by.present?
+    - unless @is_repeating_trip  
       .form-group.col-sm-12
         .col-sm-3
           = f.label :trip_result, translate_helper("trip_result")

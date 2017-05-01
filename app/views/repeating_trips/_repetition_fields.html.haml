@@ -1,5 +1,15 @@
 .form-group.col-sm-12
   .col-sm-3
+    = f.label :start_date, translate_helper("start_date") 
+  .col-sm-9
+    = f.text_field :start_date, :size => 10, :value => format_time_for_listing_day(f.object.start_date), class: 'date-picker form-control', readonly: true
+.form-group.col-sm-12
+  .col-sm-3
+    = f.label :end_date, translate_helper("end_date") 
+  .col-sm-9
+    = f.text_field :end_date, :size => 10, :value => format_time_for_listing_day(f.object.end_date), class: 'date-picker form-control', readonly: true
+.form-group.col-sm-12
+  .col-sm-3
     %label
       = translate_helper(:days_of_week)
   .col-sm-9

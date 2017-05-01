@@ -62,15 +62,17 @@ class RepeatingTrip < ActiveRecord::Base
 
   validates :comments, :length => { :maximum => 30 } 
  
-  scope :active, -> { where("(start_date is NULL or start_date <= ?) AND (end_date is NULL or end_date >= ?)", Date.today, Date.today) }
+  scope :active, -> { where("end_date is NULL or end_date >= ?", Date.today) }
   
   def instantiate!
-    return unless active? 
+    return unless active?
 
     now = Date.today + 1.day
     later = now.advance(days: (provider.try(:advance_day_scheduling) || Provider::DEFAULT_ADVANCE_DAY_SCHEDULING) - 1)
     RepeatingTrip.transaction do
       for date in schedule.occurrences_between(now, later)
+        date = date.to_date
+        next if (start_date.present? && date < start_date) || (end_date.present? && date > end_date)
         this_trip_pickup_time = Time.zone.local(date.year, date.month, date.day, pickup_time.hour, pickup_time.min, pickup_time.sec)
       
         unless Trip.repeating_based_on(self).for_date(date).exists?
@@ -91,7 +93,7 @@ class RepeatingTrip < ActiveRecord::Base
     active = true
 
     today = Date.today
-    active = false if (start_date && today < start_date) || (end_date && today > end_date)
+    active = false if end_date && today > end_date
 
     active
   end
