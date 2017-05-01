@@ -8,11 +8,9 @@ module RunCore
     belongs_to :driver, -> { with_deleted }
     belongs_to :vehicle, -> { with_deleted }
 
-    validates                 :name, presence: true, uniqueness: { scope: :date, message: "should be unique per day" }
     #validates                 :driver, presence: true
     validates                 :provider, presence: true
     validates                 :vehicle, presence: true
-    validates_date            :date
     validates_datetime        :scheduled_start_time, allow_blank: true
     validates_datetime        :scheduled_end_time, after: :scheduled_start_time, allow_blank: true
 

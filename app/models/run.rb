@@ -33,7 +33,9 @@ class Run < ActiveRecord::Base
   accepts_nested_attributes_for :trips
   
   before_validation :fix_dates, :set_complete
-  
+
+  validates                 :name, presence: true, uniqueness: { scope: :date, message: "should be unique per day" }
+  validates_date            :date
   validates_datetime        :actual_start_time, allow_blank: true
   validates_datetime        :actual_end_time, after: :actual_start_time, allow_blank: true
   validates_numericality_of :start_odometer, allow_nil: true

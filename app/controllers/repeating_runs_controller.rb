@@ -81,11 +81,11 @@ class RepeatingRunsController < ApplicationController
   def run_params
     params.require(:repeating_run).permit(
       :name, 
-      :date, 
       :scheduled_start_time, 
       :scheduled_end_time, 
       :vehicle_id, 
       :driver_id, 
+      :unpaid_driver_break_time,
       :paid, 
       :repeats_sundays,
       :repeats_mondays,
@@ -97,6 +97,8 @@ class RepeatingRunsController < ApplicationController
       :repetition_driver_id,
       :repetition_interval,
       :repetition_vehicle_id,
+      :start_date,
+      :end_date,
       :comments
     )
   end

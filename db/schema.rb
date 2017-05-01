@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170428154133) do
+ActiveRecord::Schema.define(version: 20170501213640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -513,12 +513,13 @@ ActiveRecord::Schema.define(version: 20170428154133) do
     t.integer  "driver_id"
     t.boolean  "paid"
     t.integer  "provider_id"
-    t.integer  "lock_version",         default: 0
+    t.integer  "lock_version",             default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "start_date"
     t.date     "end_date"
     t.string   "comments"
+    t.integer  "unpaid_driver_break_time"
   end
 
   add_index "repeating_runs", ["driver_id"], :name => "index_repeating_runs_on_driver_id"

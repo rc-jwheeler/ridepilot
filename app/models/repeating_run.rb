@@ -19,7 +19,7 @@ class RepeatingRun < ActiveRecord::Base
       {
         repeat:        1,
         interval_unit: "week",
-        start_date:    run.date.to_s,
+        start_date:    Date.today.to_s,
         interval:      run.repetition_interval, 
         monday:        run.repeats_mondays    ? 1 : 0,
         tuesday:       run.repeats_tuesdays   ? 1 : 0,
