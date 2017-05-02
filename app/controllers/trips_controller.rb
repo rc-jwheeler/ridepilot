@@ -306,7 +306,7 @@ class TripsController < ApplicationController
             if params[:run_id].present?
               redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
             else
-              redirect_to(trips_path, :notice => 'Trip was successfully created.') 
+              redirect_to(@trip, :notice => 'Trip was successfully created.') 
             end
           end
         }
@@ -330,11 +330,14 @@ class TripsController < ApplicationController
 
     @trip.assign_attributes(trip_params)
     is_address_changed = @trip.pickup_address_id_changed? || @trip.dropoff_address_id_changed?
+    is_run_disrupted = @trip.run_disrupted_by_trip_changes?
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
+        @trip.unschedule_trip if is_run_disrupted
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
-        TripDistanceCalculationWorker.perform_async(@trip.id) if is_address_changed
-        format.html { redirect_to(trips_path, :notice => 'Trip was successfully updated.')  }
+        TripDistanceCalculationWorker.perform_async(@trip.id) if is_address_changed 
+
+        format.html { redirect_to(@trip, :notice => 'Trip was successfully updated.')  }
         format.js { 
           render :json => {:status => "success"}, :content_type => "text/json"
         }
@@ -479,6 +482,5 @@ class TripsController < ApplicationController
       new_temp_addr.the_geom = RGeo::Geographic.spherical_factory(srid: 4326).point(addr_params['lon'].to_f, addr_params['lat'].to_f)
       @trip.dropoff_address = new_temp_addr
     end
-        
   end
 end

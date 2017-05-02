@@ -47,7 +47,24 @@ class Trip < ActiveRecord::Base
   scope :standby,            -> { Trip.by_result('STNBY') }
   scope :scheduled,          -> { where("cab = ? or run_id is not NULL", true) }
   scope :repeating_based_on, ->(scheduler) { where(repeating_trip_id: scheduler.try(:id)) }
-  
+
+  # List of attributes of which the change would affect the run
+  ATTRIBUTES_CAN_DISRUPT_RUN = [
+    'customer_id', 
+    'pickup_time',
+    'appointment_time',
+    'pickup_address_id',
+    'dropoff_address_id',
+    'mobility_id',
+    'guest_count',
+    'attendant_count',
+    'group_size',
+    'mobility_device_accommodations'
+  ]
+
+  def self.attributes_can_disrupt_run 
+    ATTRIBUTES_CAN_DISRUPT_RUN
+  end
 
   def complete
     trip_result.try(:code) == 'COMP'
@@ -273,6 +290,34 @@ class Trip < ActiveRecord::Base
 
   def scheduled?
     run.present? || cab
+  end
+
+  # check if any attribute change would disrupt a run
+  def run_disrupted_by_trip_changes?
+    disruption_attrs_changed = self.changes.keys & Trip.attributes_can_disrupt_run
+
+    if disruption_attrs_changed.any?
+      actual_changes = disruption_attrs_changed
+      # filter out the case when you changed a nil to 0, in this case, we don't think it's a change
+      disruption_attrs_changed.each do |attr_key|
+        prev_val = self.try("#{attr_key}_was")
+        val = self.try(attr_key)
+        next unless (prev_val.blank? || prev_val == 0) && (val.blank? || val == 0)
+        actual_changes = actual_changes - [attr_key] 
+      end
+    end
+
+    actual_changes.any?
+  end
+
+  def unschedule_trip
+    if self.run.present?
+      self.run = nil
+      self.save(validate: false)
+    elsif provider && provider.cab_enabled? && self.cab 
+      self.cab = false
+      self.save(validate: false)
+    end
   end
 
   private
