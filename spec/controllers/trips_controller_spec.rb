@@ -237,13 +237,6 @@ RSpec.describe TripsController, type: :controller do
             expect(response).to redirect_to(edit_run_path(run))
           end
         end
-
-        context "when run_id param is not present" do
-          it "redirects to the trips list" do
-            post :create, {:trip => valid_attributes.merge(:direction => :return)}
-            expect(response).to redirect_to(trips_url)
-          end
-        end
       end
     end
 
@@ -307,7 +300,7 @@ RSpec.describe TripsController, type: :controller do
         it "redirects to the trips list" do
           trip = create(:trip, :provider => @current_user.current_provider)
           put :update, {:id => trip.to_param, :trip => valid_attributes}
-          expect(response).to redirect_to(trips_url)
+          expect(response).to redirect_to(trip_url(trip))
         end
       end
 
