@@ -20,45 +20,52 @@
           = label_tag :trip_provider, translate_helper("trip_provider")
         .col-sm-9
           = @trip.provider.try(:name)
-        -# - unless @is_repeating_run
-        -# .form-group.col-sm-12
-        -#   .col-sm-3
-        -#     = f.label :date, translate_helper("date")
-        -#   .col-sm-9
-        -#     = f.text_field :date,
-        -#       :size => 10,
-        -#       :value => format_time_for_listing_day(@run.scheduled_start_time),
-        -#       class: 'date-picker form-control',
-        -#       readonly: true
-        -# .form-group.col-sm-12
-        -#   .col-sm-3
-        -#     = f.label :scheduled_start_time, translate_helper("scheduled_start_time")
-        -#   .col-sm-9
-        -#     = f.text_field :scheduled_start_time,
-        -#       :size => 8,
-        -#       :value => @run.scheduled_start_time.try(:to_s, :time_only),
-        -#       class: 'time-picker form-control',
-        -#       readonly: true
-        -# .form-group.col-sm-12
-        -#   .col-sm-3
-        -#     = f.label :scheduled_end_time, translate_helper("scheduled_end_time")
-        -#   .col-sm-9
-        -#     = f.text_field :scheduled_end_time,
-        -#       :size => 8,
-        -#       :value => @run.scheduled_end_time.try(:to_s, :time_only),
-        -#       class: 'time-picker form-control',
-        -#       readonly: true
+    -# - unless @is_repeating_run
+
+    -# PICKUP AND APPOINTMENT TIME DATE AND TIME PICKERS
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :date, translate_helper("date")
+      .col-sm-9
+        = f.text_field :date,
+          :size => 10,
+          :value => format_time_for_listing_day(@trip.pickup_time),
+          class: 'date-picker form-control',
+          readonly: true
     .form-group.col-sm-12
       .col-sm-3
         = f.label :pickup_time, translate_helper("pickup_time")
       .col-sm-9
-        = f.text_field :pickup_time, :value => @trip.pickup_time.try(:to_s, :form), class: 'datetime-picker form-control', readonly: true
-
+        = f.text_field :pickup_time,
+          :size => 8,
+          :value => @trip.pickup_time.try(:to_s, :time_only),
+          class: 'time-picker form-control',
+          readonly: true
+    -# .form-group.col-sm-12
+    -#   .col-sm-3
+    -#     = f.label :appointment_date, translate_helper("appointment_date")
+    -#   .col-sm-9
+    -#     = f.text_field :appointment_date,
+    -#       :size => 10,
+    -#       :value => format_time_for_listing_day(@trip.appointment_time),
+    -#       class: 'date-picker form-control',
+    -#       readonly: true
     .form-group.col-sm-12
       .col-sm-3
         = f.label :appointment_time, translate_helper("appointment_time")
       .col-sm-9
-        = f.text_field :appointment_time, :value => @trip.appointment_time.try(:to_s, :form), class: 'datetime-picker form-control', readonly: true
+        = f.text_field :appointment_time,
+          :size => 8,
+          :value => @trip.appointment_time.try(:to_s, :time_only),
+          class: 'time-picker form-control',
+          readonly: true
+    - if edit_mode != :show  # JavaScript for generating date and time pickers
+      = render "shared/date_time_picker_javascript"
+      :javascript
+        $(document).ready(function() {
+          makeDatePickers();
+          makeTimePickers();
+        });
 
     - unless @is_repeating_trip
       .form-group.col-sm-12
@@ -166,6 +173,7 @@
         = f.label :notes, translate_helper("trip_notes")
       .col-sm-9
         = f.text_area :notes, class: 'form-control'
+
 
 :javascript
   $(function() {
