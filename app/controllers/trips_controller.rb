@@ -436,12 +436,12 @@ class TripsController < ApplicationController
   # Set both pickup_time and appointment_time to the same date
   def set_datetimes(trip_params)
     d = trip_params[:date].to_s.empty? ? Date.today : Date.parse(trip_params[:date])
-    pickup_t = Time.parse(trip_params[:pickup_time])
-    appt_t = Time.parse(trip_params[:appointment_time])
-    pickup_datetime = d.to_datetime + pickup_t.seconds_since_midnight.seconds
-    appt_datetime = d.to_datetime + appt_t.seconds_since_midnight.seconds
-    trip_params[:pickup_time] = pickup_datetime
-    trip_params[:appointment_time] = appt_datetime
+    pu_t = Time.parse(trip_params[:pickup_time])
+    apt_t = Time.parse(trip_params[:appointment_time])
+    pickup_time = Time.zone.local(d.year, d.month, d.day, pu_t.hour, pu_t.min, 0)
+    appointment_time = Time.zone.local(d.year, d.month, d.day, apt_t.hour, apt_t.min, 0)
+    trip_params[:pickup_time] = pickup_time
+    trip_params[:appointment_time] = appointment_time
   end
 
   def filter_trips
