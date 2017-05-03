@@ -109,6 +109,12 @@ class ProvidersController < ApplicationController
     redirect_to provider_path(@provider)
   end
 
+  def change_eligible_age
+    @provider.update_attribute :eligible_age, params[:eligible_age]
+    
+    redirect_to provider_path(@provider)
+  end
+
   def change_reimbursement_rates
     @provider.update_attributes reimbursement_params
     redirect_to provider_path(@provider)

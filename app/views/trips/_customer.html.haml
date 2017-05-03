@@ -44,27 +44,36 @@
       $("#pickup_address").val(customerData.address);
       $('#' + prefix+ 'trip_funding_source_id').val(customerData.default_funding_source_id);
       $('#' + prefix+ 'trip_service_level').val(customerData.default_service_level);
-      $('#' + prefix+ 'trip_medicaid_eligible').attr('checked',customerData.medicaid_eligible);
+      $('#' + prefix+ 'trip_medicaid_eligible').attr('checked',customerData.medicaid_eligible);      
 
       var elig_data = customerData.customer_eligibilities;
-      if(elig_data && elig_data.length > 0) {
-        $('.customer-eligibilities').html('');
-        $('.customer-eligibilities').append("<h4 class='col-sm-12'>#{translate_helper('customer_eligibilities')}</h4>");
-        
-        var yes_label = "#{translate_helper('yes')}";
-        var no_label = "#{translate_helper('no')}";
-        for(var i=0; i<elig_data.length; i++) {
-          var elig = elig_data[i];
-          var new_elig_tags = '<div class="form-group col-sm-12">' +
-            '<label class="col-sm-3">' +
-              elig.description +
-            '</label>' +
-            '<div class="col-sm-9">' +
-              (elig.eligible ? yes_label : no_label) +
-            '</div>' +
-          '</div>';
-          $('.customer-eligibilities').append(new_elig_tags);
-        }
+      $('.customer-eligibilities').html('');
+      $('.customer-eligibilities').append("<h4 class='col-sm-12'>#{translate_helper('customer_eligibilities')}</h4>");
+  
+      var yes_label = "#{translate_helper('yes')}";
+      var no_label = "#{translate_helper('no')}";
+
+      var age_elig_tags = '<div class="form-group col-sm-12">' +
+        '<label class="col-sm-3">' +
+          "#{translate_helper('age_eligible')}" +
+        '</label>' +
+        '<div class="col-sm-9">' +
+          (customerData.age_eligible ? yes_label : no_label) +
+        '</div>' +
+      '</div>';
+      $('.customer-eligibilities').append(age_elig_tags);
+
+      for(var i=0; i<elig_data.length; i++) {
+        var elig = elig_data[i];
+        var new_elig_tags = '<div class="form-group col-sm-12">' +
+          '<label class="col-sm-3">' +
+            elig.description +
+          '</label>' +
+          '<div class="col-sm-9">' +
+            (elig.eligible ? yes_label : no_label) +
+          '</div>' +
+        '</div>';
+        $('.customer-eligibilities').append(new_elig_tags);
       }
     }
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170501213640) do
+ActiveRecord::Schema.define(version: 20170503192537) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -451,6 +451,7 @@ ActiveRecord::Schema.define(version: 20170501213640) do
     t.string   "inactivated_reason"
     t.integer  "advance_day_scheduling"
     t.boolean  "cab_enabled"
+    t.integer  "eligible_age"
   end
 
   add_index "providers", ["deleted_at"], :name => "index_providers_on_deleted_at"

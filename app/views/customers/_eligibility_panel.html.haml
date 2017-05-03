@@ -5,6 +5,11 @@
     %h3.panel-title
       = translate_helper(:customer_eligibility_panel)
   .panel-body{style: 'padding: 5px;'}
+    .form-group.col-sm-12
+      .col-sm-7.control-label
+        = translate_helper(:age_eligible)
+      .col-sm-5
+        = @customer.age_eligible? ? translate_helper(:eligible) : translate_helper(:not_eligible)
     - Eligibility.by_provider(current_provider).each do |eligibility|
       = render 'eligibility_item', item: eligibility
 

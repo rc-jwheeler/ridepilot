@@ -92,6 +92,7 @@ class Customer < ActiveRecord::Base
     { :id                        => id,
       :label                     => name, 
       :medicaid_eligible         => is_medicaid_eligible?,
+      :age_eligible              => age_eligible?,
       :phone_number_1            => phone_number_1, 
       :phone_number_2            => phone_number_2,
       :mobility_notes            => mobility_notes,
@@ -286,6 +287,10 @@ class Customer < ActiveRecord::Base
 
       item.update_attributes eligible: eligible, ineligible_reason: data["ineligible_reason"]
     end
+  end
+
+  def age_eligible?
+    provider.try(:check_age_eligible, age_in_years)
   end
 
   private 
