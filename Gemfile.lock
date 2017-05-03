@@ -574,5 +574,8 @@ DEPENDENCIES
   whenever (~> 0.9.4)
   will_paginate (~> 3.0.7)
 
+RUBY VERSION
+   ruby 2.2.1p85
+
 BUNDLED WITH
-   1.10.6
+   1.14.6
