@@ -51,7 +51,6 @@ module RunCore
     { :id => id, :label => label }
   end
   
-  
   module ClassMethods
   end 
 end

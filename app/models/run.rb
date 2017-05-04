@@ -42,7 +42,7 @@ class Run < ActiveRecord::Base
   validates_numericality_of :end_odometer, allow_nil: true
   validates_numericality_of :end_odometer, greater_than: -> (run){ run.start_odometer }, less_than: -> (run){ run.start_odometer + 500 }, if: -> (run){ run.start_odometer.present? }, allow_nil: true
   validates_numericality_of :unpaid_driver_break_time, allow_nil: true
-
+  validate                  :within_advance_day_scheduling
   validate                  :driver_availability
   validate                  :vehicle_availability
   
@@ -139,5 +139,12 @@ class Run < ActiveRecord::Base
   
   def check_provider_fields_required_for_run_completion
     provider.present? && provider.fields_required_for_run_completion.select{ |attr| self[attr].blank? }.empty?
+  end
+
+  def within_advance_day_scheduling
+    advance_day_scheduling = provider.get_advance_day_scheduling
+    if date && provider.present? && (date - Date.current).to_i > advance_day_scheduling
+      errors.add(:date, TranslationEngine.translate_text(:beyond_advance_day_scheduling) % {advance_day_scheduling: advance_day_scheduling})
+    end
   end
 end

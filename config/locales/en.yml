@@ -1114,6 +1114,7 @@ en:
   unscheduled: 'Unscheduled'
   schedule: 'Schedule'
   unschedule: 'Unschedule'
+  beyond_advance_day_scheduling: "should be within %{advance_day_scheduling} (Advance Day Scheduling) days from today"
   advance_day_scheduling: 'Advance Day Scheduling'
   days_in_advance: 'Days to schedule in advance'
   from_date: 'From Date'
