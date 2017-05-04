@@ -270,6 +270,38 @@ RSpec.describe Trip do
     end
   end
 
+  describe "return trips" do
+    let(:trip) { create :trip }
+    let(:return_trip) { trip.clone_for_return! }
+
+    it "clone_for_return preserves most trip attributes" do
+      non_preserved_attrs = [
+        "id", "created_at", "updated_at", "donation_old",
+        "pickup_time", "appointment_time", "direction",
+        "pickup_address_id", "dropoff_address_id", "linking_trip_id"
+      ]
+      trip_attrs = trip.attributes.except(*non_preserved_attrs)
+      return_trip_attrs = return_trip.attributes.except(*non_preserved_attrs)
+      expect(trip_attrs).to eq(return_trip_attrs)
+    end
+
+    it "addresses are reversed in return trip" do
+      expect(trip.pickup_address).to eq(return_trip.dropoff_address)
+      expect(trip.dropoff_address).to eq(return_trip.pickup_address)
+    end
+
+    it "pickup and appointment times are nil on return trip" do
+      expect(trip.pickup_time).not_to be nil
+      expect(trip.appointment_time).not_to be nil
+      expect(return_trip.pickup_time).to be nil
+      expect(return_trip.appointment_time).to be nil
+    end
+
+    it "date is preserved on return trip" do
+      expect(trip.date).to eq(return_trip.date)
+    end
+  end
+
   # TODO complete these backfilled examples
   describe "incomplete examples" do
 
@@ -321,4 +353,5 @@ RSpec.describe Trip do
       it "returns a hash"
     end
   end
+
 end
