@@ -22,18 +22,18 @@
             .radio.col-sm-12
               %input{type: 'radio', name: 'customer_trip_summary_options', value: 'past_trips', checked: 'checked'}
               .past_trips
-                Show last
+                = translate_helper('show_last_label')
                 = number_field_tag :past_trips, 10, class: 'trip-summary-count', min: 1
-                trips
+                = translate_helper('trips_label')
             .radio.col-sm-12
               %input{type: 'radio', name: 'customer_trip_summary_options', value: 'future_trips'}
               .future_trips
-                Show future
+                = translate_helper('show_future_label')
                 = number_field_tag :future_trips, 10, class: 'trip-summary-count', min: 1, disabled: 'disabled'
-                trips
+                = translate_helper('trips_label')
             .radio.col-sm-12{style: 'padding-top: 10px;'}
               %input{type: 'radio', name: 'customer_trip_summary_options', value: 'date_range'}
-              Date range
+                = translate_helper('date_range_filter')
             .col-sm-12.date_range
               .col-sm-6{style: 'padding: 0px;'}
                 = text_field_tag :start_date, format_time_for_listing_day(Date.today), class: 'date-picker form-control', readonly: true
