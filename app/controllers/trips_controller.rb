@@ -50,23 +50,27 @@ class TripsController < ApplicationController
     @customer = Customer.find_by_id params[:customer_id]
     @trips = Trip.where(customer_id: params[:customer_id])
     
-    unless params[:start_date].blank? && params[:end_date].blank?
-      utility = Utility.new
-      if !params[:start_date].blank?
-        t_start = utility.parse_date params[:start_date]
-        @trips = @trips.where("pickup_time >= '#{t_start.beginning_of_day.utc.strftime "%Y-%m-%d %H:%M:%S"}'")
-      end
+    if params[:past_trips].present?
+      @trips = @trips.order(pickup_time: :desc).prior_to(DateTime.now).limit(params[:past_trips])
+    elsif params[:future_trips].present?
+      @trips = @trips.order(pickup_time: :asc).after(DateTime.now).limit(params[:future_trips])
+    else 
+      unless params[:start_date].blank? && params[:end_date].blank?
+        utility = Utility.new
+        if !params[:start_date].blank?
+          t_start = utility.parse_date params[:start_date]
+          @trips = @trips.where("pickup_time >= '#{t_start.beginning_of_day.utc.strftime "%Y-%m-%d %H:%M:%S"}'")
+        end
 
-      if !params[:end_date].blank?
-        t_end = utility.parse_date params[:end_date] 
-        @trips = @trips.where("pickup_time <= '#{t_end.end_of_day.utc.strftime "%Y-%m-%d %H:%M:%S"}'")
+        if !params[:end_date].blank?
+          t_end = utility.parse_date params[:end_date] 
+          @trips = @trips.where("pickup_time <= '#{t_end.end_of_day.utc.strftime "%Y-%m-%d %H:%M:%S"}'")
+        end
+      else
+        # last 10 trips by default
+        @trips = @trips.order(pickup_time: :desc).prior_to(DateTime.now).limit(10)
       end
-    else
-      # getting future trips by default
-      @trips = @trips.after(DateTime.now)
     end
-
-    @trips = @trips.order(pickup_time: :asc).limit(6)
 
     respond_to do |format|
       format.js 

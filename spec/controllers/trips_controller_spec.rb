@@ -89,6 +89,45 @@ RSpec.describe TripsController, type: :controller do
         Timecop.return
       end
 
+      context "when by default" do
+        before do 
+          get :customer_trip_summary, {:format => "json", :customer_id => customer_id}
+        end
+
+        it "returns past trips" do 
+          expect(assigns(:trips).minimum(:pickup_time)).to be <= DateTime.current
+        end
+        it "returns at most 10 trips" do 
+          expect(assigns(:trips).count).to be < 10
+        end
+      end
+
+      context "when show past 5 trips" do
+        before do 
+          get :customer_trip_summary, {:format => "json", :customer_id => customer_id, :past_trips => 5}
+        end
+
+        it "returns past trips" do 
+          expect(assigns(:trips).minimum(:pickup_time)).to be <= DateTime.current
+        end
+        it "returns at most 5 trips" do 
+          expect(assigns(:trips).count).to be <= 5
+        end
+      end
+
+      context "when show future 5 trips" do
+        before do 
+          get :customer_trip_summary, {:format => "json", :customer_id => customer_id, :future_trips => 5}
+        end
+
+        it "returns past trips" do 
+          expect(assigns(:trips).minimum(:pickup_time)).to be >= DateTime.current
+        end
+        it "returns at most 5 trips" do 
+          expect(assigns(:trips).count).to be <= 5
+        end
+      end
+
       context "when date range params are given" do
         context "start date is given but not end date" do 
           before do 
@@ -97,10 +136,6 @@ RSpec.describe TripsController, type: :controller do
 
           it "returns correct trips" do
             expect(assigns(:trips).minimum(:pickup_time)).to be >= Date.tomorrow
-          end
-
-          it "returns at most 6 trips" do 
-            expect(assigns(:trips).count).to be <= 6
           end
         end
         context "end date is given but not start date" do 
@@ -112,9 +147,6 @@ RSpec.describe TripsController, type: :controller do
             expect(assigns(:trips).maximum(:pickup_time)).to be < Date.tomorrow
           end
 
-          it "returns at most 6 trips" do 
-            expect(assigns(:trips).count).to be <= 6
-          end
         end
         context "both start and end dates are given" do 
           before do 
@@ -124,23 +156,6 @@ RSpec.describe TripsController, type: :controller do
           it "returns correct trips" do
             expect(assigns(:trips)).to match([@today_trip])
           end
-
-          it "returns at most 6 trips" do 
-            expect(assigns(:trips).count).to be <= 6
-          end
-        end
-      end
-
-      context "when date range params are not given" do
-        before do 
-          get :customer_trip_summary, {:format => "json", :customer_id => customer_id}
-        end
-
-        it "returns future trips" do 
-          expect(assigns(:trips).minimum(:pickup_time)).to be > Date.today
-        end
-        it "returns at most 6 trips" do 
-          expect(assigns(:trips).count).to be 6
         end
       end
     end
