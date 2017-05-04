@@ -364,6 +364,7 @@ class TripsController < ApplicationController
 
   def trip_params
     params.require(:trip).permit(
+      :date, # virtual attribute used in setting pickup and appointment times
       :direction,
       :linking_trip_id,
       :appointment_time,
@@ -428,20 +429,6 @@ class TripsController < ApplicationController
       trip_params[:called_back_at] = DateTime.current.to_s
     end
 
-    # Set pickup and appointment time to the same date
-    set_datetimes(trip_params)
-
-  end
-
-  # Set both pickup_time and appointment_time to the same date
-  def set_datetimes(trip_params)
-    d = trip_params[:date].to_s.empty? ? Date.today : Date.parse(trip_params[:date])
-    pu_t = Time.parse(trip_params[:pickup_time])
-    apt_t = Time.parse(trip_params[:appointment_time])
-    pickup_time = Time.zone.local(d.year, d.month, d.day, pu_t.hour, pu_t.min, 0)
-    appointment_time = Time.zone.local(d.year, d.month, d.day, apt_t.hour, apt_t.min, 0)
-    trip_params[:pickup_time] = pickup_time
-    trip_params[:appointment_time] = appointment_time
   end
 
   def filter_trips

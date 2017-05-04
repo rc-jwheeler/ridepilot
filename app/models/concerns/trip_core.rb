@@ -49,14 +49,21 @@ module TripCore
     scope :prior_to,           -> (pickup_time) { where('pickup_time < ?', pickup_time.to_datetime.in_time_zone.utc) }
   end
 
+  # Special date attr_reader sends back pickup/appointment time date, or instance var if present
   def date
-    pickup_time.to_date
+    @date || pickup_time.to_date || appointment_time.to_date
+  end
+
+  # Special date attr_writer sets @date instance variable. Accepts a Date object or a date string
+  # This date is used in setting pickup and appointment time attributes
+  def date=(date)
+    @date = date.is_a?(String) ? Date.parse(date) : date
   end
 
   def trip_size
     if customer.try(:group)
       group_size
-    else 
+    else
       guest_count + attendant_count + 1
     end
   end
@@ -79,7 +86,7 @@ module TripCore
       self.save
     end
   end
-  
+
   module ClassMethods
-  end 
+  end
 end
