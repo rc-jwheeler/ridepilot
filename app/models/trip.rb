@@ -89,12 +89,14 @@ class Trip < ActiveRecord::Base
 
   # When setting pickup_time, set with @date attribute if present
   def pickup_time=(datetime)
-    write_attribute :pickup_time, format_datetime(datetime, date)
+    write_attribute :pickup_time,
+      time_on_date(format_datetime(datetime), date)
   end
 
   # When setting appointment_time, set with @date attribute if present
   def appointment_time=(datetime)
-    write_attribute :appointment_time, format_datetime(datetime, date)
+    write_attribute :appointment_time,
+      time_on_date(format_datetime(datetime), date)
   end
 
   def run_text
@@ -500,11 +502,10 @@ class Trip < ActiveRecord::Base
   # Formats a variety of inputs as a Time object, and catches errors.
   # If a time string (e.g. "10:00 AM") is sent along with a date param, will
   # create the time at the given date. Defaults to today.
-  def format_datetime(datetime, date=Date.today)
+  def format_datetime(datetime)
     if datetime.is_a?(String)
       begin
-        time = Time.zone.parse(datetime.gsub(/\b(a|p)\b/i, '\1m').upcase)
-        Time.zone.local(date.year, date.month, date.day, time.hour, time.min, 0)
+        Time.zone.parse(datetime.gsub(/\b(a|p)\b/i, '\1m').upcase)
       rescue
         nil
       end
@@ -512,4 +513,5 @@ class Trip < ActiveRecord::Base
       datetime
     end
   end
+
 end

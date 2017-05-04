@@ -51,13 +51,27 @@ module TripCore
 
   # Special date attr_reader sends back pickup/appointment time date, or instance var if present
   def date
-    @date || pickup_time.to_date || appointment_time.to_date
+    return @date if @date
+    return pickup_time.to_date if pickup_time
+    return appointment_time.to_date if appointment_time
+    return nil
   end
 
   # Special date attr_writer sets @date instance variable. Accepts a Date object or a date string
   # This date is used in setting pickup and appointment time attributes
   def date=(date)
     @date = date.is_a?(String) ? Date.parse(date) : date
+    # Refresh pickup and appointment time with new date
+    self.pickup_time = pickup_time #unless pickup_time.to_date == @date
+    self.appointment_time = appointment_time #unless appointment_time.to_date == @date
+  end
+
+  # Takes a time and a date object, and returns a time object on the passed Date
+  def time_on_date(t, d)
+    return nil unless t
+    return t unless d
+    t = t.to_time
+    Time.new(d.year, d.month, d.day, t.hour, t.min, 0)
   end
 
   def trip_size
