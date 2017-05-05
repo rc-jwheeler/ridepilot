@@ -302,6 +302,7 @@ class Trip < ActiveRecord::Base
   # check if any attribute change would disrupt a run
   def run_disrupted_by_trip_changes?
     disruption_attrs_changed = self.changes.keys & Trip.attributes_can_disrupt_run
+    actual_changes = []
 
     if disruption_attrs_changed.any?
       actual_changes = disruption_attrs_changed
