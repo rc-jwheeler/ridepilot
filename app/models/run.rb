@@ -103,10 +103,8 @@ class Run < ActiveRecord::Base
   end
 
   # Returns the total hours of a collection of runs
-  def self.total_run_length(opts={})
-    opts[:actual] = true unless opts.has_key?(:actual)
+  def self.total_run_length(opts={actual: true})
     query_str = opts[:actual] ? 'actual_end_time - actual_start_time' : 'scheduled_end_time - scheduled_start_time'
-    unit_divisor =
     return sum(query_str).to_time.seconds_since_midnight / 3600.0
   end
 
