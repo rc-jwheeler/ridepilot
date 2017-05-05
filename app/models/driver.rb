@@ -53,6 +53,11 @@ class Driver < ActiveRecord::Base
     driver_compliances.overdue(as_of: as_of).empty?
   end
 
+  # Sums the actual run time hours of all completed runs for this driver
+  def run_hours
+    runs.complete.total_actual_hours
+  end
+
   private
 
   def valid_phone_number

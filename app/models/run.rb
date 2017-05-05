@@ -98,7 +98,7 @@ class Run < ActiveRecord::Base
 
     overlapped_runs
   end
-  
+
   # Returns the total hours of a collection of runs
   def self.total_run_length(opts={})
     opts[:actual] = true unless opts.has_key?(:actual)
@@ -107,29 +107,22 @@ class Run < ActiveRecord::Base
     return sum(query_str).to_time.seconds_since_midnight / 3600.0
   end
 
+  # Returns sum of actual run hours across a collection
   def self.total_actual_hours
     total_hours(actual: true)
   end
 
+  # Returns sum of scheduled run hours across a collection
   def self.total_scheduled_hours
     total_hours(actual: false)
   end
 
-  # Returns actual or scheduled run length, in desired unit
-  def length(unit=:seconds)
-    seconds = complete ? actual_end_time - actual_start_time : scheduled_end_time - scheduled_start_time
-    case unit
-    when :seconds
-      return seconds
-    when :minutes
-      return seconds / 60.0
-    when :hours
-      return seconds / 3600.0
-    else
-      return seconds
-    end
->>>>>>> Begin building total_run_length method
+  # Returns the total hours of a collection of runs
+  def self.total_hours(opts={actual: true})
+    query_str = opts[:actual] ? 'actual_end_time - actual_start_time' : 'scheduled_end_time - scheduled_start_time'
+    return sum(query_str).to_time.seconds_since_midnight / 3600.0
   end
+
 
   private
 

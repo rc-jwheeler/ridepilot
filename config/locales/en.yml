@@ -274,6 +274,7 @@ en:
   driver_form_details_heading: "Details"
   driver_address_heading: "Address"
   driver_alt_address_heading: "Alternative Address"
+  driver_completed_run_hours: "Completed Run Hours"
 
   # Driver histories
   driver_histories_heading: "History Events"
@@ -453,7 +454,7 @@ en:
   document_form_file_name_currently: "Current file:"
   document_form_submit: "Save"
   document_download: "Download"
-  
+
   # Document Associations
   document_associations_documents_heading: "Associated Documents"
   document_associations_document_date_heading: "Uploaded At"
@@ -763,7 +764,7 @@ en:
   donation_amount: 'Amount'
   donation_notes: 'Notes'
   add_donation: 'Add'
-  add_donation_dialog_title: 'Add Donation' 
+  add_donation_dialog_title: 'Add Donation'
   total: "Total"
   reports_heading: "Reports"
   service_summary_link_text: "Service Summary"
@@ -1072,7 +1073,7 @@ en:
   vehicle_maintenance_events_empty: "There are no maintenance events"
   vehicle_maintenance_event_add_link_title: "Add Maintenance Event"
   vehicle_maintenance_event_delete_confirm: "Are you sure?"
-  
+
   # Vehicle Maintenance Compliances
   vehicle_maintenance_compliances_heading: "Compliance Events"
   vehicle_maintenance_compliances_add_link_title: "Add compliance event"
@@ -1184,9 +1185,3 @@ en:
   locales:
     en: "English"
     tags: "Tags"
-
-
-
-
-
-
