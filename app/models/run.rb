@@ -156,8 +156,8 @@ class Run < ActiveRecord::Base
   end
 
   def within_advance_day_scheduling
-    advance_day_scheduling = provider.get_advance_day_scheduling
-    if date && provider.present? && (date - Date.current).to_i > advance_day_scheduling
+    advance_day_scheduling = provider.try(:get_advance_day_scheduling)
+    if date && advance_day_scheduling.present? && (date - Date.current).to_i > advance_day_scheduling
       errors.add(:date, TranslationEngine.translate_text(:beyond_advance_day_scheduling) % {advance_day_scheduling: advance_day_scheduling})
     end
   end

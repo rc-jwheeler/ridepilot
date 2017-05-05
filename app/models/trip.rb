@@ -34,6 +34,7 @@ class Trip < ActiveRecord::Base
   validate :completable_until_trip_appointment_day
   validate :provider_availability
   validate :return_trip_later_than_outbound_trip
+  validate :within_advance_day_scheduling
 
   scope :by_result,          -> (code) { includes(:trip_result).references(:trip_result).where("trip_results.code = ?", code) }
   scope :called_back,        -> { where('called_back_at IS NOT NULL') }
@@ -511,6 +512,13 @@ class Trip < ActiveRecord::Base
       end
     else
       datetime
+    end
+  end
+
+  def within_advance_day_scheduling
+    advance_day_scheduling = provider.try(:get_advance_day_scheduling)
+    if date && advance_day_scheduling.present? && (date - Date.current).to_i > advance_day_scheduling
+      errors.add(:date, TranslationEngine.translate_text(:beyond_advance_day_scheduling) % {advance_day_scheduling: advance_day_scheduling})
     end
   end
 
