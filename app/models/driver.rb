@@ -55,7 +55,7 @@ class Driver < ActiveRecord::Base
 
   # Sums the actual run time hours of all completed runs for this driver
   def run_hours
-    runs.complete.total_actual_hours
+    runs.this_week.complete.total_actual_hours
   end
 
   private

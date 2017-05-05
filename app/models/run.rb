@@ -59,6 +59,9 @@ class Run < ActiveRecord::Base
   scope :incomplete_on,          -> (date) { incomplete.for_date(date) }
   scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
   scope :repeating_based_on,     ->(scheduler) { where(repeating_run_id: scheduler.try(:id)) }
+  scope :this_week,              -> {
+    where(actual_end_time: DateTime.now.in_time_zone.beginning_of_week..DateTime.now.in_time_zone.end_of_week)
+  }
 
   CAB_RUN_ID = -1 # id for cab runs
   UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)

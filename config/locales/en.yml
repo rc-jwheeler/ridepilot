@@ -274,7 +274,7 @@ en:
   driver_form_details_heading: "Details"
   driver_address_heading: "Address"
   driver_alt_address_heading: "Alternative Address"
-  driver_completed_run_hours: "Completed Run Hours"
+  driver_completed_run_hours: "Completed Run Hours This Week"
 
   # Driver histories
   driver_histories_heading: "History Events"
