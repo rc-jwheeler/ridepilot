@@ -3,10 +3,10 @@ class Trip < ActiveRecord::Base
   include TripCore
 
   acts_as_paranoid # soft delete
-  
+
   has_paper_trail
-  
-  attr_accessor :driver_id, :vehicle_id
+
+  attr_accessor :driver_id, :vehicle_id   #,:date #Custom date setter and getter in trip_core.rb
 
   belongs_to :called_back_by, -> { with_deleted }, class_name: "User"
   belongs_to :run
@@ -23,8 +23,9 @@ class Trip < ActiveRecord::Base
   # Trip is now manually assigned to a run via trips_runs controller
   # we dont need to compute or create a run when a new trip is created or updated
   #before_validation :compute_run
-  
+
   #serialize :guests
+
 
   validates :mileage, numericality: {greater_than: 0, allow_blank: true}
   validate :driver_is_valid_for_vehicle
@@ -50,7 +51,7 @@ class Trip < ActiveRecord::Base
 
   # List of attributes of which the change would affect the run
   ATTRIBUTES_CAN_DISRUPT_RUN = [
-    'customer_id', 
+    'customer_id',
     'pickup_time',
     'appointment_time',
     'pickup_address_id',
@@ -62,7 +63,7 @@ class Trip < ActiveRecord::Base
     'mobility_device_accommodations'
   ]
 
-  def self.attributes_can_disrupt_run 
+  def self.attributes_can_disrupt_run
     ATTRIBUTES_CAN_DISRUPT_RUN
   end
 
@@ -85,13 +86,17 @@ class Trip < ActiveRecord::Base
   def driver_id
     @driver_id || run.try(:driver_id)
   end
-  
+
+  # When setting pickup_time, set with @date attribute if present
   def pickup_time=(datetime)
-    write_attribute :pickup_time, format_datetime(datetime)
+    write_attribute :pickup_time,
+      time_on_date(format_datetime(datetime), date)
   end
-  
+
+  # When setting appointment_time, set with @date attribute if present
   def appointment_time=(datetime)
-    write_attribute :appointment_time, format_datetime(datetime)
+    write_attribute :appointment_time,
+      time_on_date(format_datetime(datetime), date)
   end
 
   def run_text
@@ -147,11 +152,11 @@ class Trip < ActiveRecord::Base
       end
     end
   end
-  
+
   def as_run_event_json
     return if appointment_time < pickup_time
     # run calendar requires start and end should be within one day
-    end_time = appointment_time.to_date == pickup_time.to_date ? 
+    end_time = appointment_time.to_date == pickup_time.to_date ?
       appointment_time : pickup_time.end_of_day
 
     {
@@ -168,10 +173,10 @@ class Trip < ActiveRecord::Base
   def is_no_show_or_turn_down?
     trip_result && ['NS', 'TD'].index(trip_result.code)
   end
-    
+
   def clone_for_future!
     cloned_trip = self.dup
-    
+
     cloned_trip.pickup_time = nil
     cloned_trip.appointment_time = nil
     cloned_trip.trip_result = nil
@@ -189,26 +194,27 @@ class Trip < ActiveRecord::Base
   end
 
   def clone_for_return!(pickup_time_str = nil, appointment_time_str = nil)
+
     return_trip = self.dup
     return_trip.direction = :return
     return_trip.pickup_address = self.dropoff_address
     return_trip.dropoff_address = self.pickup_address
-    return_trip.pickup_time = nil
-    return_trip.pickup_time = Time.zone.parse(pickup_time_str, self.pickup_time.beginning_of_day) if pickup_time_str
-    return_trip.appointment_time = nil
-    # assume same-day trip
-    return_trip.appointment_time = Time.zone.parse(appointment_time_str, self.pickup_time.beginning_of_day) if appointment_time_str
+
+    # Set date to outbound trip date, and assume pickup and appt time will be on that date
+    return_trip.date = self.date
+    return_trip.pickup_time = pickup_time_str
+    return_trip.appointment_time = appointment_time_str
+
     return_trip.outbound_trip = self
     return_trip.repeating_trip = nil
     return_trip.drive_distance = nil
     return_trip.trip_result = nil
-
     return_trip
   end
 
   def clone_for_repeating_trip!
     daily_trip_clone = self.clone_for_future!
-    repeating_trip = RepeatingTrip.new 
+    repeating_trip = RepeatingTrip.new
     repeating_trip.attributes = daily_trip_clone.attributes.select{ |k, v| repeating_trip.attributes.keys.include? k.to_s }
 
     repeating_trip
@@ -259,7 +265,7 @@ class Trip < ActiveRecord::Base
       code = :scheduled_to_cab
       name = 'Scheduled to Cab'
       message = TranslationEngine.translate_text(:trip_has_been_scheduled_to_cab)
-    else  
+    else
       code = :requested
       name = 'Requested'
       message = TranslationEngine.translate_text(:trip_has_been_requested)
@@ -303,7 +309,7 @@ class Trip < ActiveRecord::Base
         prev_val = self.try("#{attr_key}_was")
         val = self.try(attr_key)
         next unless (prev_val.blank? || prev_val == 0) && (val.blank? || val == 0)
-        actual_changes = actual_changes - [attr_key] 
+        actual_changes = actual_changes - [attr_key]
       end
     end
 
@@ -314,16 +320,16 @@ class Trip < ActiveRecord::Base
     if self.run.present?
       self.run = nil
       self.save(validate: false)
-    elsif provider && provider.cab_enabled? && self.cab 
+    elsif provider && provider.cab_enabled? && self.cab
       self.cab = false
       self.save(validate: false)
     end
   end
 
   private
-  
+
   def driver_is_valid_for_vehicle
-    # This will error if a run was found or extended for this vehicle and time, 
+    # This will error if a run was found or extended for this vehicle and time,
     # but the driver for the run is not the driver selected for the trip
     if self.run.try(:driver_id).present? && self.driver_id.present? && self.run.driver_id.to_i != self.driver_id.to_i
       errors.add(:driver_id, TranslationEngine.translate_text(:driver_is_valid_for_vehicle_validation_error))
@@ -371,20 +377,20 @@ class Trip < ActiveRecord::Base
     end
   end
 
-  def compute_run    
+  def compute_run
     return true if run_id || cab || vehicle_id.blank? || provider_id.blank?
 
-    if !pickup_time or !appointment_time 
+    if !pickup_time or !appointment_time
       return true # we'll error out in validation
     end
 
     Trip.transaction do
-      # When the trip is saved, we need to find or create a run for it. This 
-      # will depend on the driver and vehicle.  
+      # When the trip is saved, we need to find or create a run for it. This
+      # will depend on the driver and vehicle.
       self.run = Run.where("scheduled_start_time <= ? and scheduled_end_time >= ? and vehicle_id=? and provider_id=?", pickup_time, appointment_time, vehicle_id, provider_id).first
 
       if run.nil?
-        # Find the next/previous runs for this vehicle and, if necessary, split 
+        # Find the next/previous runs for this vehicle and, if necessary, split
         # or change times on them
 
         previous_run = Run.where("scheduled_start_time <= ? and vehicle_id=? and provider_id=? ", appointment_time, vehicle_id, provider_id).order("scheduled_start_time").last
@@ -442,7 +448,7 @@ class Trip < ActiveRecord::Base
         previous_run.update_attributes! scheduled_end_time: appointment_time
         self.run = previous_run
       else
-        # No, the second run is fixed. Can we push the end of the first run 
+        # No, the second run is fixed. Can we push the end of the first run
         # earlier?
         last_trip = previous_run.trips.last
         if last_trip.appointment_time <= pickup_time
@@ -493,15 +499,19 @@ class Trip < ActiveRecord::Base
     })
   end
 
+  # Formats a variety of inputs as a Time object, and catches errors.
+  # If a time string (e.g. "10:00 AM") is sent along with a date param, will
+  # create the time at the given date. Defaults to today.
   def format_datetime(datetime)
     if datetime.is_a?(String)
       begin
         Time.zone.parse(datetime.gsub(/\b(a|p)\b/i, '\1m').upcase)
-      rescue 
+      rescue
         nil
       end
     else
       datetime
     end
   end
+
 end

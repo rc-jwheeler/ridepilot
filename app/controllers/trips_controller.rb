@@ -11,7 +11,7 @@ class TripsController < ApplicationController
     @trips = Trip.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]})
     .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
     filter_trips
-    
+
     @vehicles        = Vehicle.where(:provider_id => current_provider_id)
     if current_provider.try(:cab_enabled?)
       @vehicles = add_cab(@vehicles)
@@ -32,14 +32,14 @@ class TripsController < ApplicationController
     else
       flash.now[:alert] = nil
       @day_resources = (@start_pickup_date..@end_pickup_date).select{|d| @days_of_week.index(d.wday)}.map{|d| {
-        id:   d.to_s(:js), 
+        id:   d.to_s(:js),
         name: d.strftime("%a, %b %d,%Y"),
         isDate: true
         } }.to_json
     end
 
     respond_to do |format|
-      format.html 
+      format.html
       format.xml  { render :xml => @trips }
       format.json { render :json => @trips }
     end
@@ -49,7 +49,7 @@ class TripsController < ApplicationController
   def customer_trip_summary
     @customer = Customer.find_by_id params[:customer_id]
     @trips = Trip.where(customer_id: params[:customer_id])
-    
+
     if params[:past_trips].present?
       @trips = @trips.order(pickup_time: :desc).prior_to(DateTime.now).limit(params[:past_trips])
     elsif params[:future_trips].present?
@@ -73,7 +73,7 @@ class TripsController < ApplicationController
     end
 
     respond_to do |format|
-      format.js 
+      format.js
       format.json { render :json => @trips }
     end
   end
@@ -174,7 +174,7 @@ class TripsController < ApplicationController
     else
       @message = TranslationEngine.translate_text(:operation_not_authorized)
     end
-    
+
     respond_to do |format|
       format.js
     end
@@ -194,7 +194,7 @@ class TripsController < ApplicationController
           if @trip.run.present?
             @trip.run = nil
             @trip.save
-          elsif @trip.cab 
+          elsif @trip.cab
             @trip.cab = false
             @trip.save
           end
@@ -204,7 +204,7 @@ class TripsController < ApplicationController
     else
       @message = TranslationEngine.translate_text(:operation_not_authorized)
     end
-    
+
     respond_to do |format|
       format.js
     end
@@ -224,13 +224,13 @@ class TripsController < ApplicationController
     if params[:customer_id] && customer = Customer.find_by_id(params[:customer_id])
       @trip.customer_id = customer.id
       @trip.pickup_address_id = customer.address_id if customer.address.try(:the_geom).present?
-      @trip.mobility_id = customer.mobility_id 
+      @trip.mobility_id = customer.mobility_id
       @trip.funding_source_id = customer.default_funding_source_id
       @trip.service_level = customer.service_level
     end
 
     prep_view
-    
+
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @trip }
@@ -240,9 +240,9 @@ class TripsController < ApplicationController
 
   def edit
     prep_view
-    
+
     respond_to do |format|
-      format.html 
+      format.html
       format.js  { @remote = true; render :json => {:form => render_to_string(:partial => 'form')}, :content_type => "text/json" }
     end
   end
@@ -250,7 +250,7 @@ class TripsController < ApplicationController
   def clone
     @trip = @trip.clone_for_future!
     prep_view
-    
+
     respond_to do |format|
       format.html { render action: :new }
       format.xml  { render :xml => @trip }
@@ -264,10 +264,10 @@ class TripsController < ApplicationController
     else
       @trip = @trip.clone_for_return!
     end
-    
+
     @outbound_trip_id = params[:trip_id]
     prep_view
-    
+
     respond_to do |format|
       format.html { render action: :new }
       format.xml  { render :xml => @trip }
@@ -280,15 +280,15 @@ class TripsController < ApplicationController
     prep_view
 
     authorize! :show, @trip unless @trip.customer && @trip.customer.authorized_for_provider(current_provider.id)
-    
+
     respond_to do |format|
-      format.html 
+      format.html
       format.js  { @remote = true; render :json => {:form => render_to_string(:partial => 'form')}, :content_type => "text/json" }
     end
   end
 
   def create
-    params[:trip][:provider_id] = current_provider_id   
+    params[:trip][:provider_id] = current_provider_id
     handle_trip_params params[:trip]
     @trip = Trip.new(trip_params)
     process_google_address
@@ -308,9 +308,9 @@ class TripsController < ApplicationController
             render action: :show
           else
             if params[:run_id].present?
-              redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')       
+              redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')
             else
-              redirect_to(@trip, :notice => 'Trip was successfully created.') 
+              redirect_to(@trip, :notice => 'Trip was successfully created.')
             end
           end
         }
@@ -327,7 +327,7 @@ class TripsController < ApplicationController
       authorize! :read, customer
     else
       params[:trip][:customer_id] = @trip.customer_id
-    end    
+    end
     handle_trip_params params[:trip]
     process_google_address
     authorize! :manage, @trip
@@ -339,10 +339,10 @@ class TripsController < ApplicationController
       if @trip.is_all_valid?(current_provider_id) && @trip.save
         @trip.unschedule_trip if is_run_disrupted
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
-        TripDistanceCalculationWorker.perform_async(@trip.id) if is_address_changed 
+        TripDistanceCalculationWorker.perform_async(@trip.id) if is_address_changed
 
         format.html { redirect_to(@trip, :notice => 'Trip was successfully updated.')  }
-        format.js { 
+        format.js {
           render :json => {:status => "success"}, :content_type => "text/json"
         }
       else
@@ -365,9 +365,10 @@ class TripsController < ApplicationController
   end
 
   private
-  
+
   def trip_params
     params.require(:trip).permit(
+      :date, # virtual attribute used in setting pickup and appointment times
       :direction,
       :linking_trip_id,
       :appointment_time,
@@ -408,7 +409,7 @@ class TripsController < ApplicationController
     @trips              = [] if @trips.nil?
     @vehicles           = Vehicle.active.for_provider(@trip.provider_id)
     @vehicles           = add_cab(@vehicles) if current_provider.try(:cab_enabled?)
-    @repeating_vehicles = @vehicles 
+    @repeating_vehicles = @vehicles
     @service_levels     = ServiceLevel.by_provider(current_provider).order(:name).pluck(:name, :id)
 
     @trip.run_id = -1 if @trip.cab
@@ -417,9 +418,9 @@ class TripsController < ApplicationController
     #cab_run.id = -1
     #@runs = Run.for_provider(@trip.provider_id).incomplete_on(@trip.pickup_time.try(:to_date)) << cab_run
   end
-  
+
   def handle_trip_params(trip_params)
-    if trip_params[:run_id] == '-1' 
+    if trip_params[:run_id] == '-1'
       #cab trip
       trip_params[:run_id] = nil
       trip_params[:cab] = true
@@ -431,11 +432,12 @@ class TripsController < ApplicationController
       trip_params[:called_back_by] = current_user
       trip_params[:called_back_at] = DateTime.current.to_s
     end
+
   end
 
   def filter_trips
     filters_hash = params[:trip_filters] || {}
-    
+
     update_sessions(filters_hash)
 
     trip_filter = TripFilter.new(@trips, trip_sessions)
@@ -458,9 +460,9 @@ class TripsController < ApplicationController
   def trip_sessions
     {
       start: session[:start],
-      end: session[:end], 
-      customer_id: session[:customer_id], 
-      trip_result_id: session[:trip_result_id], 
+      end: session[:end],
+      customer_id: session[:customer_id],
+      trip_result_id: session[:trip_result_id],
       status_id: session[:status_id],
       days_of_week: session[:days_of_week]
     }
@@ -469,7 +471,7 @@ class TripsController < ApplicationController
   def add_cab(vehicles)
     cab_vehicle = Vehicle.new :name => "Cab"
     cab_vehicle.id = -1
-    [cab_vehicle] + vehicles 
+    [cab_vehicle] + vehicles
   end
 
   def process_google_address
