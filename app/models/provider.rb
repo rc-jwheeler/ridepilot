@@ -92,4 +92,8 @@ class Provider < ActiveRecord::Base
       false
     end
   end
+
+  def get_advance_day_scheduling
+    advance_day_scheduling || DEFAULT_ADVANCE_DAY_SCHEDULING
+  end
 end

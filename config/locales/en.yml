@@ -824,6 +824,10 @@ en:
   line_number_label: "Line #"
   out_of_district: "Out of District"
   trips: "Trips"
+  show_last_label: "Show last"
+  show_future_label: "Show future"
+  trips_label: "Trips"
+  date_range_filter: "Date range"
   total_trips: "Total Trips"
   total_miles_driven: "Total Miles Driven"
   turndowns: "Turndowns"
@@ -1114,6 +1118,7 @@ en:
   unscheduled: 'Unscheduled'
   schedule: 'Schedule'
   unschedule: 'Unschedule'
+  beyond_advance_day_scheduling: "should be within %{advance_day_scheduling} (Advance Day Scheduling) days from today"
   advance_day_scheduling: 'Advance Day Scheduling'
   days_in_advance: 'Days to schedule in advance'
   from_date: 'From Date'

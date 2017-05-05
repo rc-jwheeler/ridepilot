@@ -159,7 +159,7 @@
       <ol class="section fourth">
         <li>
           <%= label_tag translate_helper("days_in_advance") %>
-          <%= select_tag "advance_day_scheduling", options_for_select( [[7, 7], [14, 14], [21, 21]], @provider.advance_day_scheduling || Provider::DEFAULT_ADVANCE_DAY_SCHEDULING ), { :onchange => "form.submit();" } %>
+          <%= select_tag "advance_day_scheduling", options_for_select( [[7, 7], [14, 14], [21, 21]], @provider.get_advance_day_scheduling), { :onchange => "form.submit();" } %>
         </li>
       </ol>
     </fieldset>
