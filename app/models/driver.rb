@@ -5,24 +5,25 @@ class Driver < ActiveRecord::Base
   acts_as_paranoid # soft delete
 
   has_paper_trail
-  
+
   belongs_to :address, -> { with_deleted }, class_name: 'DriverAddress', foreign_key: 'address_id'
   belongs_to :alt_address, -> { with_deleted }, class_name: 'DriverAddress', foreign_key: 'alt_address_id'
   belongs_to :provider, -> { with_deleted }
   belongs_to :user, -> { with_deleted }
-  
+
   has_one :device_pool_driver, dependent: :destroy
   has_one :device_pool, through: :device_pool_driver
 
   has_many :documents, as: :documentable, dependent: :destroy, inverse_of: :documentable
   has_many :driver_histories, dependent: :destroy, inverse_of: :driver
+  has_many :runs, inverse_of: :driver
 
   # profile photo
   has_one  :photo, class_name: 'Image', as: :imageable, dependent: :destroy, inverse_of: :imageable
   accepts_nested_attributes_for :photo
 
   # We must specify :delete_all in order to avoid the before_destroy hook. See
-  # the RecurringComplianceEvent concern for more details. 
+  # the RecurringComplianceEvent concern for more details.
   # TODO Look into using `#mark_for_destruction` and `#marked_for_destruction?`
   has_many :driver_compliances, dependent: :delete_all, inverse_of: :driver
 
@@ -43,13 +44,18 @@ class Driver < ActiveRecord::Base
   scope :active,        -> { where(active: true) }
   scope :for_provider,  -> (provider_id) { where(provider_id: provider_id) }
   scope :default_order, -> { order(:name) }
-  
+
   def self.unassigned(provider)
     users.for_provider(provider).reject { |driver| driver.device_pool.present? }
   end
-  
+
   def compliant?(as_of: Date.current)
     driver_compliances.overdue(as_of: as_of).empty?
+  end
+
+  # Sums the actual run time hours of all completed runs for this driver
+  def run_hours
+    runs.this_week.complete.total_actual_hours
   end
 
   private
@@ -57,11 +63,11 @@ class Driver < ActiveRecord::Base
   def valid_phone_number
     util = Utility.new
     if phone_number.present?
-      errors.add(:phone_number, 'is invalid') unless util.phone_number_valid?(phone_number) 
+      errors.add(:phone_number, 'is invalid') unless util.phone_number_valid?(phone_number)
     end
 
     if alt_phone_number.present?
-      errors.add(:alt_phone_number, 'is invalid') unless util.phone_number_valid?(alt_phone_number) 
+      errors.add(:alt_phone_number, 'is invalid') unless util.phone_number_valid?(alt_phone_number)
     end
   end
 

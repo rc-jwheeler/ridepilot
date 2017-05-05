@@ -68,61 +68,61 @@ RSpec.describe Driver, type: :model do
     expect(unassigned).not_to include driver_1
     expect(unassigned).to include driver_2
   end
-  
+
   it "can generate a hash of the driver's operating hours" do
     driver = create :driver
     hours = create :operating_hours, operatable: driver, day_of_week: 0, start_time: "01:00", end_time: "02:00"
     expect(driver.hours_hash[0]).to eql hours
   end
-  
+
   describe "available?" do
     before do
       @driver = create :driver
       @day_of_week = 0
       @time_of_day = "15:30"
     end
-    
+
     it "returns true if no operating hours are defined" do
       expect(@driver.available?).to be_truthy
     end
-    
+
     it "returns false if operating hours are defined, but not for that day" do
       create :operating_hours, operatable: @driver, day_of_week: @day_of_week + 1
       expect(@driver.available?(@day_of_week, @time_of_day)).to be_falsey
     end
-    
+
     it "returns true if the driver is available 24 hours" do
       create :operating_hours, operatable: @driver, day_of_week: @day_of_week, start_time: "00:00", end_time: "00:00"
       expect(@driver.available?(@day_of_week, @time_of_day)).to be_truthy
     end
-    
+
     it "returns false if the driver is not available that day" do
       create :operating_hours, operatable: @driver, day_of_week: @day_of_week, start_time: nil, end_time: nil
       expect(@driver.available?(@day_of_week, @time_of_day)).to be_falsey
     end
-    
+
     it "can check against regular hours" do
       hours = create :operating_hours, operatable: @driver, day_of_week: @day_of_week, start_time: "12:00", end_time: "16:00"
       expect(@driver.available?(@day_of_week, @time_of_day)).to be_truthy
-      
+
       hours.update_attributes end_time: "15:00"
       expect(@driver.available?(@day_of_week, @time_of_day)).to be_falsey
     end
-    
+
     it "can check against irregular hours" do
       hours = create :operating_hours, operatable: @driver, day_of_week: @day_of_week, start_time: "12:00", end_time: "00:30"
       expect(@driver.available?(@day_of_week, @time_of_day)).to be_truthy
-      
+
       hours.update_attributes start_time: "16:00"
       expect(@driver.available?(@day_of_week, @time_of_day)).to be_falsey
     end
   end
-  
+
   describe "driver_histories" do
     before do
       @driver = create :driver
     end
-    
+
     it "destroys driver histories when the driver is destroyed" do
       3.times { create :driver_history, driver: @driver }
       expect {
@@ -130,12 +130,12 @@ RSpec.describe Driver, type: :model do
       }.to change(DriverHistory, :count).by(-3)
     end
   end
-  
+
   describe "driver_compliances" do
     before do
       @driver = create :driver
     end
-    
+
     it "destroys driver compliances when the driver is destroyed" do
       3.times { create :driver_compliance, driver: @driver }
       expect {
@@ -143,7 +143,7 @@ RSpec.describe Driver, type: :model do
       }.to change(DriverCompliance, :count).by(-3)
     end
   end
-  
+
   describe "compliant?" do
     before do
       @driver = create :driver
@@ -162,13 +162,13 @@ RSpec.describe Driver, type: :model do
       create :driver_compliance, driver: @driver, due_date: Date.current.tomorrow
       expect(@driver.compliant?).to be_truthy
     end
-    
+
     it "returns false when a driver has over due compliance entries" do
       create :driver_compliance, driver: @driver, due_date: Date.current.yesterday
       expect(@driver.compliant?).to be_falsey
     end
   end
-  
+
   describe "documents" do
     before do
       @driver = create :driver
@@ -180,5 +180,19 @@ RSpec.describe Driver, type: :model do
         @driver.destroy
       }.to change(Document, :count).by(-3)
     end
+  end
+
+  it 'returns total completed run hours for the week' do
+    driver = create(:driver)
+    complete_run_yesterday = create(:run, :completed, :yesterday, driver: driver)
+    complete_run_two_days_ago = create(:run, :completed, :two_days_ago, driver: driver)
+    complete_run_last_week = create(:run, :completed, :last_week, driver: driver)
+    complete_run_tomorrow = create(:run, :completed, :tomorrow, driver: driver)
+    incomplete_run_today = create(:run, :scheduled, driver: driver)
+    incomplete_run_next_week = create(:run, :scheduled, :next_week, driver: driver)
+
+    expect(driver.run_hours).to be > 0
+    # Only the completed runs this week should add to the hours
+    expect(driver.run_hours).to eq(complete_run_yesterday.hours + complete_run_two_days_ago.hours)
   end
 end

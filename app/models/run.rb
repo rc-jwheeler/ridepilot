@@ -3,9 +3,9 @@ class Run < ActiveRecord::Base
   include RunCore
 
   acts_as_paranoid # soft delete
-  
+
   has_paper_trail
-  
+
   # Ignores:
   #   Already required:
   #     date
@@ -20,18 +20,18 @@ class Run < ActiveRecord::Base
   #     updated_at
   #     lock_version
   FIELDS_FOR_COMPLETION = [
-    :name, 
-    :start_odometer, 
-    :end_odometer, 
-    :unpaid_driver_break_time, 
-    :paid, 
+    :name,
+    :start_odometer,
+    :end_odometer,
+    :unpaid_driver_break_time,
+    :paid,
   ].freeze
 
   has_many :trips, -> { order(:pickup_time) }, :dependent => :nullify
   belongs_to :repeating_run
 
   accepts_nested_attributes_for :trips
-  
+
   before_validation :fix_dates, :set_complete
 
   validates                 :name, presence: true, uniqueness: { scope: :date, message: "should be unique per day" }
@@ -45,7 +45,7 @@ class Run < ActiveRecord::Base
   validate                  :within_advance_day_scheduling
   validate                  :driver_availability
   validate                  :vehicle_availability
-  
+
   scope :after,                  -> (date) { where('runs.date > ?', date) }
   scope :after_today,            -> { where('runs.date > ?', Date.today) }
   scope :prior_to,               -> (date) { where('runs.date < ?', date) }
@@ -53,12 +53,17 @@ class Run < ActiveRecord::Base
   scope :for_date,               -> (date) { where('runs.date = ?', date) }
   scope :for_date_range,         -> (start_date, end_date) { where("runs.date >= ? and runs.date < ?", start_date, end_date) }
   scope :overlapped,             -> (run) { where("date = ?", run.date).where.not("scheduled_end_time <= ? or scheduled_start_time >= ?", run.scheduled_start_time, run.scheduled_end_time) }
+
+  scope :complete,               -> { where(complete: true) }
   scope :incomplete,             -> { where('complete is NULL or complete = ?', false) }
   scope :incomplete_on,          -> (date) { incomplete.for_date(date) }
   scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
   scope :repeating_based_on,     ->(scheduler) { where(repeating_run_id: scheduler.try(:id)) }
+  scope :this_week,              -> {
+    where(actual_end_time: DateTime.now.in_time_zone.beginning_of_week..DateTime.now.in_time_zone.end_of_week)
+  }
 
-  CAB_RUN_ID = -1 # id for cab runs 
+  CAB_RUN_ID = -1 # id for cab runs
   UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)
 
   def as_calendar_json
@@ -97,6 +102,29 @@ class Run < ActiveRecord::Base
     overlapped_runs
   end
 
+  # Returns sum of actual run hours across a collection
+  def self.total_actual_hours
+    total_hours(actual: true)
+  end
+
+  # Returns sum of scheduled run hours across a collection
+  def self.total_scheduled_hours
+    total_hours(actual: false)
+  end
+
+  # Returns the total hours of a collection of runs
+  def self.total_hours(opts={actual: true})
+    query_str = opts[:actual] ? 'actual_end_time - actual_start_time' : 'scheduled_end_time - scheduled_start_time'
+    return sum(query_str).to_time.seconds_since_midnight / 3600.0
+  end
+
+  # Returns length in hours for an individual run. Use actual if complete, scheduled if not.
+  def hours
+    seconds = complete ? actual_end_time - actual_start_time : scheduled_end_time - scheduled_start_time
+    seconds / 3600.0
+  end
+
+
   private
 
   # A run is considered complete if:
@@ -113,18 +141,18 @@ class Run < ActiveRecord::Base
     d = self.date
     unless d.nil?
       unless scheduled_start_time.nil?
-        s = scheduled_start_time 
-        self.scheduled_start_time = Time.zone.local(d.year, d.month, d.day, s.hour, s.min, 0) 
+        s = scheduled_start_time
+        self.scheduled_start_time = Time.zone.local(d.year, d.month, d.day, s.hour, s.min, 0)
         scheduled_start_time_will_change!
       end
       unless scheduled_end_time.nil?
         s = scheduled_end_time
-        self.scheduled_end_time = Time.zone.local(d.year, d.month, d.day, s.hour, s.min, 0) 
+        self.scheduled_end_time = Time.zone.local(d.year, d.month, d.day, s.hour, s.min, 0)
         scheduled_end_time_will_change!
       end
       unless actual_start_time.nil?
         a = actual_start_time
-        self.actual_start_time = Time.zone.local(d.year, d.month, d.day, a.hour, a.min, 0) 
+        self.actual_start_time = Time.zone.local(d.year, d.month, d.day, a.hour, a.min, 0)
         actual_start_time_will_change!
       end
       unless actual_end_time.nil?
@@ -150,7 +178,7 @@ class Run < ActiveRecord::Base
       errors.add(:vehicle_id, TranslationEngine.translate_text(:assigned_to_other_overlapping_run))
     end
   end
-  
+
   def check_provider_fields_required_for_run_completion
     provider.present? && provider.fields_required_for_run_completion.select{ |attr| self[attr].blank? }.empty?
   end
