@@ -126,6 +126,12 @@ class Run < ActiveRecord::Base
     return sum(query_str).to_time.seconds_since_midnight / 3600.0
   end
 
+  # Returns length in hours for an individual run. Use actual if complete, scheduled if not.
+  def hours
+    seconds = complete ? actual_end_time - actual_start_time : scheduled_end_time - scheduled_start_time
+    seconds / 3600.0
+  end
+
 
   private
 
