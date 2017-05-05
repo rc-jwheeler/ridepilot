@@ -22,16 +22,16 @@
           = @trip.provider.try(:name)
 
     -# PICKUP AND APPOINTMENT TIME DATE AND TIME PICKERS
-    -# - unless @is_repeating_trip
-    .form-group.col-sm-12
-      .col-sm-3
-        = f.label :date, translate_helper("date")
-      .col-sm-9
-        = f.text_field :date,
-          :size => 10,
-          value: format_time_for_listing_day(@trip.date),
-          class: 'date-picker form-control',
-          readonly: true
+    - unless @is_repeating_trip
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :date, translate_helper("date")
+        .col-sm-9
+          = f.text_field :date,
+            :size => 10,
+            value: format_time_for_listing_day(@trip.date),
+            class: 'date-picker form-control',
+            readonly: true
     .form-group.col-sm-12
       .col-sm-3
         = f.label :pickup_time, translate_helper("pickup_time")
