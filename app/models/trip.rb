@@ -387,7 +387,7 @@ class Trip < ActiveRecord::Base
     Trip.transaction do
       # When the trip is saved, we need to find or create a run for it. This
       # will depend on the driver and vehicle.
-      self.run = Run.where("pickup_time <= ? and scheduled_end_time >= ? and vehicle_id=? and provider_id=?", pickup_time, appointment_time, vehicle_id, provider_id).first
+      self.run = Run.where("scheduled_start_time <= ? and scheduled_end_time >= ? and vehicle_id=? and provider_id=?", pickup_time, appointment_time, vehicle_id, provider_id).first
 
       if run.nil?
         # Find the next/previous runs for this vehicle and, if necessary, split
