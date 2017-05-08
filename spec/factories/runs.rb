@@ -8,29 +8,13 @@ FactoryGirl.define do
 
     trait :scheduled do
       scheduled_start_time "10:00 AM"
-      scheduled_end_time "12:00 PM"
+      scheduled_end_time "12:30 PM"
     end
 
     trait :completed do
       scheduled
       actual_start_time "10:00 AM"
-      actual_end_time "12:30 PM"
-    end
-
-    trait :monday do
-      date { Date.today.beginning_of_week }
-    end
-
-    trait :tuesday do
-      date { Date.today.beginning_of_week + 1.day }
-    end
-
-    trait :wednesday do
-      date { Date.today.beginning_of_week + 2.days }
-    end
-
-    trait :thursday do
-      date { Date.today.beginning_of_week + 3.days }
+      actual_end_time "1:00 PM"
     end
 
     trait :last_week do

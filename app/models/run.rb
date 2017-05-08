@@ -60,7 +60,7 @@ class Run < ActiveRecord::Base
   scope :with_odometer_readings, -> { where("start_odometer IS NOT NULL and end_odometer IS NOT NULL") }
   scope :repeating_based_on,     ->(scheduler) { where(repeating_run_id: scheduler.try(:id)) }
   scope :this_week,              -> {
-    where(actual_end_time: DateTime.now.in_time_zone.beginning_of_week..DateTime.now.in_time_zone.end_of_week)
+    where(date: DateTime.now.in_time_zone.beginning_of_week.to_date..DateTime.now.in_time_zone.end_of_week.to_date)
   }
 
   CAB_RUN_ID = -1 # id for cab runs
