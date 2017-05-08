@@ -31,8 +31,9 @@
 //= require google_place_parser
 //= require typeahead-addresspicker
 //= require trip_place_picker
+//= require trip_result_reason
 //= require_self
-  
+
 function ISODateFormatToDateObject(str) {
   if(str === null) return null;
 
@@ -46,7 +47,7 @@ function ISODateFormatToDateObject(str) {
 
   var _date = new Date();
   _date.setFullYear( Number(dateParts[0]), (Number(dateParts[1])-1), Number(dateParts[2]) );
-  
+
   _date.setHours(Number( amPm.slice(0,1) == "P" && timeHours != 12 ? timeHours + 12 : timeHours), Number(timeSubParts[1]), 0, 0);
 
   return _date;
@@ -61,7 +62,7 @@ var MS_in_a_day    = 86400000;
 var MS_in_an_hour  = 3600000;
 var MS_in_a_week   = 604800000;
 
-// does time fall within the current week ? 
+// does time fall within the current week ?
 function week_differs (time) {
   var current_start = $("#calendar").data("start-time");
   return !(current_start <= time && time < current_start + MS_in_a_week);
@@ -70,12 +71,12 @@ function week_differs (time) {
 // finds start of monday for week of given time, sets calendar start_time
 function set_calendar_time(time) {
   var date       = new Date(time);
-  var start_time = time - (date.getDay() - 1) * MS_in_a_day - 
-    date.getHours() * MS_in_an_hour - 
-    date.getMinutes() * MS_in_a_minute - 
-    date.getSeconds() * 1000 - 
+  var start_time = time - (date.getDay() - 1) * MS_in_a_day -
+    date.getHours() * MS_in_an_hour -
+    date.getMinutes() * MS_in_a_minute -
+    date.getSeconds() * 1000 -
     date.getMilliseconds() ;
-  
+
   $("#calendar").data("start-time", start_time);
 }
 
@@ -136,13 +137,13 @@ $(function() {
   createPopover(".label-help");
 
   $("tr:odd").addClass("odd");
-  
+
   // delete a customer from the show page
   $("body.customers.show .profile-actions .delete, body.provider-common-addresses.edit .profile-actions .delete, #customer_merge").click( function(event){
     event.preventDefault();
 
     var link = $(this);
-    
+
     if ( $("#confirm-destroy").length > 0 ) {
       $( "#confirm-destroy" ).dialog({
         resizable: false,
@@ -184,24 +185,24 @@ $(function() {
 		dateFormat: 'yy-mm-dd',
     showButtonPanel: true
   }).css('z-index', 999);
-  
+
   // Support for bootstrap style input groups for datepickers
   $('body').on('click', '.datepicker-icon .btn', function(e) {
     $(e.currentTarget).closest('.datepicker-icon').find('.datepicker').datepicker('show');
   });
-  
+
   // needs to be -1 for field nulling
   $("#trip_vehicle_id option:contains(cab)").attr("value", "-1");
-  
+
   $("body").on('change', "#trip_run_id", function(){
     $("#trip_vehicle_id").val("");
     $("#trip_driver_id").val("");
   });
-  
+
   $("body").on("change", "#trip_vehicle_id, #trip_driver_id", function(){
     $("#trip_run_id").val("");
   });
-  
+
   $("body").on("change", "#vehicle_filter #vehicle_id", function(){
     var form = $(this).parents("form");
     $.get(form.attr("action"), form.serialize() + "&" + window.location.search.replace(/^\?/,""), function(data) {
@@ -218,16 +219,16 @@ $(function() {
       $("tr:odd").addClass("odd");
     }, "json");
   });
-  
-  $('.new_trip #customer_name, .edit_trip #customer_name').bind('railsAutocomplete.select', function(event, data){ 
+
+  $('.new_trip #customer_name, .edit_trip #customer_name').bind('railsAutocomplete.select', function(event, data){
     if (parseInt(data.address_id) > 0)
       autocompleted(data.address_data, 'pickup');
   });
-  
+
   $("body").on("click", "#new_customer[data-path]", function(e) {
     window.location = $(this).attr("data-path") + "?customer_name=" + $("#customer_name").val();
   });
-    
+
   function push_index_state(range) {
      if (supports_history_api()) history.pushState({index: range}, "List Runs", window.location.pathname + "?" + $.param(range));
   }
@@ -235,13 +236,13 @@ $(function() {
   function load_index_runs(range, push_state) {
     var new_start = new Date(parseInt(range.start) * 1000);
     var new_end   = new Date(parseInt(range.end) * 1000);
-     
+
     $.get(window.location.href, range, function(data) {
       $("#runs tr, #cab_trips tr").not(".head").remove();
       $("#runs, #cab_trips").append(data.rows.join(""));
       $(".wc-nav").attr("data-start-time", new_start.getTime());
       $("#start_date").html((new_start.getMonth()+1) + "-" + new_start.getDate() + "-" + new_start.getFullYear());
-      $("#end_date").html((new_end.getMonth()+1) + "-" + new_end.getDate() + "-" + new_end.getFullYear());  
+      $("#end_date").html((new_end.getMonth()+1) + "-" + new_end.getDate() + "-" + new_end.getFullYear());
       if (push_state) push_index_state(range);
     }, "json");
   }
@@ -250,7 +251,7 @@ $(function() {
     if (event.state) {
       if (event.state.index) {
         load_index_runs(event.state.index, false);
-      } 
+      }
     } else {
       var new_start = parseInt($(".wc-nav").attr("data-current-week-start"))/1000;
       var new_end = new Date(new_start * 1000);
@@ -261,12 +262,12 @@ $(function() {
       }
     }
   };
- 
+
   $("body.runs .wc-nav button, body.cab-trips .wc-nav button").click(function(e){
     var current_start, new_start, new_end;
     var target    = $(this);
     var week_nav  = target.parent(".wc-nav");
-    
+
     if (target.hasClass("wc-today")){
       current_start = new Date(parseInt(week_nav.attr("data-current-week-start")));
       new_start     = new Date(current_start.getTime());
@@ -276,38 +277,38 @@ $(function() {
       current_start = new Date(parseInt(week_nav.attr("data-start-time")));
       new_start     = new Date(current_start.getTime());
       new_end       = new Date(current_start.getTime());
-      
+
       if (target.hasClass("wc-prev")) {
-        new_start.setDate(new_start.getDate() - 7); 
+        new_start.setDate(new_start.getDate() - 7);
         new_end.setDate(new_end.getDate() - 1);
       } else {
-        new_start.setDate(new_start.getDate() + 7); 
+        new_start.setDate(new_start.getDate() + 7);
         new_end.setDate(new_end.getDate() + 13);
       }
     }
     var range = {start: new_start.getTime()/1000, end: new_end.getTime()/1000};
     load_index_runs(range,true);
-    
+
   });
-  
+
   $("#search_addresses").bind('ajax:complete', function(event, data, xhr, status){
     var form    = $(this);
     var table   = $("#address_results");
     var results = $(data.responseText);
-    
+
     table.find("tr").not("tr:first-child").remove();
-    
+
     if (results[0] && results[0].nodeName.toUpperCase() == "TR")
       table.append(results);
     else
       table.append("<tr><td>There was an error searching</td></tr>");
   });
-  
+
   $("body").on('ajax:complete', ".delete.device_pool_driver", function(event, data, xhr, status){
     $(this).parents("tr").eq(0).hide("slow").remove();
-        
+
     var json = eval('(' + data.responseText + ')');
-    
+
     if (json.device_pool_driver) {
       if (json.device_pool_driver.name.substring(0,8) == "Driver: ") {
         var option = $("<option>").val(json.device_pool_driver.driver_id).text(json.device_pool_driver.name.substring(8));
@@ -319,64 +320,64 @@ $(function() {
       }
     }
   });
-  
+
   $("a.add_driver_to_pool").bind("click", function(click){
     var link   = $(this);
     var select = link.prev("select");
-    
+
     $.post( link.attr("href"),
-      { device_pool_driver : { driver_id : select.val() } }, 
+      { device_pool_driver : { driver_id : select.val() } },
       function(data) {
         if (data.row) {
           var table = link.parents("td").eq(0).find("table");
           table.find("tr.empty").hide();
           table.append(data.row);
           $("select.new_device_pool_driver option[value=" + select.val() + "]").remove();
-          
-          link.parent("p").hide().prev("p").show();          
+
+          link.parent("p").hide().prev("p").show();
         } else {
           alert("Could not add the selected driver to the device pool. Please try again.");
         }
       }, "json"
     );
-    
+
     click.preventDefault();
   });
-  
+
   $("a.add_vehicle_to_pool").bind("click", function(click){
     var link   = $(this);
     var select = link.prev("select");
-    
+
     $.post( link.attr("href"),
-      { device_pool_driver : { vehicle_id : select.val() } }, 
+      { device_pool_driver : { vehicle_id : select.val() } },
       function(data) {
         if (data.row) {
           var table = link.parents("td").eq(0).find("table");
           table.find("tr.empty").hide();
           table.append(data.row);
           $("select.new_device_pool_vehicle option[value=" + select.val() + "]").remove();
-          
-          link.parent("p").hide().prev("p").show();          
+
+          link.parent("p").hide().prev("p").show();
         } else {
           alert("Could not add the selected vehicle to the device pool. Please try again.");
         }
       }, "json"
     );
-    
+
     click.preventDefault();
   });
-  
+
   $("body").on("click", "a.add_device_pool_driver", function(click){
     var link = $(this);
     link.parent("p").hide().next("p").show();
-    
+
     click.preventDefault();
   });
 
   $("body").on("click", "a.add_device_pool_vehicle", function(click){
     var link = $(this);
     link.parent("p").hide().next("p").show();
-    
+
     click.preventDefault();
   });
 
