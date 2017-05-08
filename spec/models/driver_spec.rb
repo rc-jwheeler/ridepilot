@@ -183,32 +183,42 @@ RSpec.describe Driver, type: :model do
     end
   end
 
-  it 'returns total completed run hours for the week' do
+  describe "driver hours" do
 
-    puts "RUNNING DRIVER SPEC", Date.today.in_time_zone, DateTime.now.in_time_zone
-    driver = create(:driver)
-    puts "DRIVER RUN HOURS", driver.run_hours, "DRIVER: ", driver.inspect
-    complete_run_yesterday = create(:run, :completed, :yesterday, driver: driver, scheduled_end_time: "12:31 PM")
-    complete_run_two_days_ago = create(:run, :completed, :two_days_ago, driver: driver, scheduled_end_time: "12:32 PM")
-    complete_run_last_week = create(:run, :completed, :last_week, driver: driver, scheduled_end_time: "12:33 PM")
-    complete_run_tomorrow = create(:run, :completed, :tomorrow, driver: driver, scheduled_end_time: "12:34 PM")
-    incomplete_run_today = create(:run, :scheduled, driver: driver, scheduled_end_time: "12:35 PM")
-    incomplete_run_next_week = create(:run, :scheduled, :next_week, driver: driver, scheduled_end_time: "12:36 PM")
+    # Set time to a Wednesday to avoid spec weirdness with the beginning of the week.
+    before do
+      Timecop.freeze(Time.parse("2017-05-10 16:00").in_time_zone)
+    end
 
-    puts "DRIVER RUN HOURS", driver.run_hours, "DRIVER: ", driver.inspect
-    puts "RUNS THIS WEEK", Run.this_week.count
-    expect(driver.run_hours).to be
+    after do
+      Timecop.return
+    end
 
-    # Only the completed runs this week should add to the hours
-    expect(driver.run_hours).to eq(
-      case Date.today.in_time_zone.wday
-      when 1
-        0
-      when 2
-        complete_run_yesterday.hours
-      else
-        complete_run_yesterday.hours + complete_run_two_days_ago.hours
-      end
-    )
+    it 'returns total completed run hours for the week' do
+
+      driver = create(:driver)
+      complete_run_yesterday = create(:run, :completed, :yesterday, driver: driver)
+      complete_run_two_days_ago = create(:run, :completed, :two_days_ago, driver: driver)
+      complete_run_last_week = create(:run, :completed, :last_week, driver: driver)
+      complete_run_tomorrow = create(:run, :completed, :tomorrow, driver: driver)
+      incomplete_run_today = create(:run, :scheduled, driver: driver)
+      incomplete_run_next_week = create(:run, :scheduled, :next_week, driver: driver)
+
+      expect(driver.run_hours).to be
+
+      # Only the completed runs this week should add to the hours
+      expect(driver.run_hours).to eq(
+        case Date.today.in_time_zone.wday
+        when 1
+          0
+        when 2
+          complete_run_yesterday.hours_scheduled
+        else
+          complete_run_yesterday.hours_scheduled + complete_run_two_days_ago.hours_scheduled
+        end
+      )
+    end
+
   end
+
 end
