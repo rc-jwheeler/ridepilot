@@ -1,10 +1,11 @@
 - prefix = "vehicle_garage_address_attributes"
-- address = @vehicle.garage_address || @vehicle.build_garage_address
+- address = @vehicle.garage_address || @vehicle.build_garage_address(provider_id: current_provider_id)
 .panel.panel-primary
   .panel-heading
     = translate_helper("vehicle_form_garage_label") 
   .panel-body.form-horizontal
     = f.fields_for :garage_address, address do |address_form|
+      = address_form.hidden_field :provider_id
       = address_form.hidden_field :address, class: 'address_text'
       = address_form.hidden_field :city, class: 'address_city'
       = address_form.hidden_field :state, class: 'address_state'

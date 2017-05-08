@@ -34,6 +34,11 @@ class Address < ActiveRecord::Base
   scope :for_provider,    -> (provider) { where(:provider_id => provider.id) }
   scope :search_for_term, -> (term) { where("LOWER(name) LIKE '%' || :term || '%' OR LOWER(building_name) LIKE '%' || :term || '%' OR LOWER(address) LIKE '%' || :term || '%'",{:term => term}) }
 
+  # compute RGeo geom 
+  def self.compute_geom(lat, lon)
+    RGeo::Geographic.spherical_factory(srid: 4326).point(lon.to_f, lat.to_f) if lat.present? && lon.present?
+  end
+
   def trips
     trips_from + trips_to
   end

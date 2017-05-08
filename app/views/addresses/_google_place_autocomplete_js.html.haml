@@ -10,6 +10,15 @@
       $(form).find('.address_lon').val(address.lon);
     }
 
+    function resetAddressDetails(form) {
+      $(form).find('.address_text').val('');
+      $(form).find('.address_city').val('');
+      $(form).find('.address_state').val('');
+      $(form).find('.address_zip').val('');
+      $(form).find('.address_lat').val('');
+      $(form).find('.address_lon').val('');
+    }
+
     var autocompleteOptions = {
       types: ['geocode'],
       componentRestrictions: { country: 'us' }
@@ -21,6 +30,11 @@
         new google.maps.LatLng(bounds.min_lat, bounds.min_lon),
         new google.maps.LatLng(bounds.max_lat, bounds.max_lon));
     }
+
+    // reset values when there is a change
+    $(".address_search").change(function() {
+      resetAddressDetails($(this).parents('form'));
+    });
 
     $(".address_search").geocomplete(autocompleteOptions)
       .bind("geocode:result", function(event, result){
