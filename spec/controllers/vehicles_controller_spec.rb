@@ -90,7 +90,7 @@ RSpec.describe VehiclesController, type: :controller do
     context "with valid params" do
       let(:new_attributes) {
         {
-          :garaged_location => "Garaged Location"
+          :model => "VM"
         }
       }
 
@@ -98,7 +98,7 @@ RSpec.describe VehiclesController, type: :controller do
         vehicle = create(:vehicle, :provider => @current_user.current_provider)
         expect {
           put :update, {:id => vehicle.to_param, :vehicle => new_attributes}
-        }.to change { vehicle.reload.garaged_location }.from(nil).to("Garaged Location")
+        }.to change { vehicle.reload.model }.from(nil).to("VM")
       end
 
       it "assigns the requested vehicle as @vehicle" do
