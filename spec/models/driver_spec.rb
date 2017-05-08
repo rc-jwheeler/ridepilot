@@ -204,8 +204,6 @@ RSpec.describe Driver, type: :model do
       incomplete_run_today = create(:run, :scheduled, driver: driver)
       incomplete_run_next_week = create(:run, :scheduled, :next_week, driver: driver)
 
-      expect(driver.run_hours).to be
-
       # Only the completed runs this week should add to the hours
       expect(driver.run_hours).to eq(
         case Date.today.in_time_zone.wday
