@@ -17,6 +17,22 @@ FactoryGirl.define do
       actual_end_time "12:30 PM"
     end
 
+    trait :monday do
+      date { Date.today.beginning_of_week }
+    end
+
+    trait :tuesday do
+      date { Date.today.beginning_of_week + 1.day }
+    end
+
+    trait :wednesday do
+      date { Date.today.beginning_of_week + 2.days }
+    end
+
+    trait :thursday do
+      date { Date.today.beginning_of_week + 3.days }
+    end
+
     trait :last_week do
       date { Date.today - 1.week }
     end
