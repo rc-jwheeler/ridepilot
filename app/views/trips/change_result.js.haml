@@ -1,4 +1,3 @@
--puts "CHANGE RESULT JS", @message, @trip.inspect
 - if !@message.blank?
   show_alert_dialog("#{@message}");
   $('#tripsTable tr[data-trip-id="#{@trip.id}"] .change-trip-result select').val(#{@prev_trip_result_id || false} || '');
@@ -7,8 +6,3 @@
   $('#calendar').data('fullCalendar').removeEvents(#{@trip.id});
 - elsif @clear_trip_status
   $('#tripsTable tr[data-trip-id="#{@trip.id}"] td.trip-status').text('');
-- else
-  var newResultCode = parseInt($('#tripsTable tr[data-trip-id="#{@trip.id}"] .change-trip-result select').val());
-  var cancelCodes = #{TripResult.cancel_codes.pluck(:id)};
-  var isCancelCode = cancelCodes.includes(newResultCode);
-  show_alert_dialog("ENTER A CANCELLATION COMMENT");

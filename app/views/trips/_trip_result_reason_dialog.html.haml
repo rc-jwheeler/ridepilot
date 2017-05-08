@@ -1,0 +1,20 @@
+#tripResultReasonDialog.modal.fade.col-sm-12{ role: "dialog",
+    "aria-hidden" => 'true',
+    tabindex: "-1",
+    data: {"backdrop": "true", "keyboard": "true" }}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %h5.modal-title{:style => "text-align:left;"}
+          %strong
+            = translate_helper(:site_title)
+          = translate_helper(:ask_for_trip_result_reason_message)
+        %button
+      .modal-body.row{:style => "text-align:left; margin: 0px;"}
+        .col-sm-3{style: 'padding: 5px;'}
+          %label.result-reason-label= translate_helper("result_reason")
+        .col-sm-9{style: 'padding: 5px;'}
+          %textarea.result-reason-text{ style: 'width: 100%; height: 60px;'}
+      .modal-footer
+        .submit-result-reason.btn.btn-primary{ data: {dismiss: 'modal'} } Submit
+        .dismiss-result-reason.btn.btn-danger{ data: {dismiss: 'modal'} } No Thanks

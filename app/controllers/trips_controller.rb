@@ -54,7 +54,7 @@ class TripsController < ApplicationController
       @trips = @trips.order(pickup_time: :desc).prior_to(DateTime.now).limit(params[:past_trips])
     elsif params[:future_trips].present?
       @trips = @trips.order(pickup_time: :asc).after(DateTime.now).limit(params[:future_trips])
-    else 
+    else
       unless params[:start_date].blank? && params[:end_date].blank?
         utility = Utility.new
         if !params[:start_date].blank?
@@ -63,7 +63,7 @@ class TripsController < ApplicationController
         end
 
         if !params[:end_date].blank?
-          t_end = utility.parse_date params[:end_date] 
+          t_end = utility.parse_date params[:end_date]
           @trips = @trips.where("pickup_time <= '#{t_end.end_of_day.utc.strftime "%Y-%m-%d %H:%M:%S"}'")
         end
       else
@@ -181,11 +181,12 @@ class TripsController < ApplicationController
   end
 
   def change_result
+    puts "CHANGING RESULT IN CONTROLLER"
     @trip = Trip.find(params[:trip_id])
     @prev_trip_result_id = @trip.trip_result_id
 
     if can? :edit, @trip
-      if !@trip.update_attributes( trip_result_id: params[:trip][:trip_result_id] )
+      if !@trip.update_attributes(change_result_params)
         @message = @trip.errors.full_messages.join(';')
       else
         @trip_result_filters = trip_sessions[:trip_result_id]
@@ -417,6 +418,11 @@ class TripsController < ApplicationController
     #cab_run = Run.new :cab => true
     #cab_run.id = -1
     #@runs = Run.for_provider(@trip.provider_id).incomplete_on(@trip.pickup_time.try(:to_date)) << cab_run
+  end
+
+  # Strong params for changing trip result and result_reason
+  def change_result_params
+    params.require(:trip).permit(:trip_result_id, :result_reason)
   end
 
   def handle_trip_params(trip_params)

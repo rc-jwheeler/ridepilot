@@ -21,6 +21,8 @@
 
   = render 'list'
 
+= render 'trip_result_reason_dialog'
+
 :javascript
   $(function() {
     // hide/unhide calendar
@@ -42,5 +44,40 @@
 
     manage_calendar_hidden_status();
     $('#hide_trip_calendar').prop('checked', (localStorage.getItem('trip_calendar_hidden') == 'true'));
-  });
 
+    // Show trip result reason modal dialog on result change to a cancellation code
+    $('.trip_table_result_column select').change(function() {
+      console.log("TRIP RESULT CHANGED");
+      var parentForm = $(this).closest('form');
+      var resultReasonInput = parentForm.find('input#trip_result_reason');
+      var newResultCode = parseInt($(this).val());
+      var cancelCodes = #{TripResult.cancel_codes.pluck(:id)};
+      var isCancelCode = cancelCodes.includes(newResultCode);
+      var reasonDialog = $('#tripResultReasonDialog');
+      var reasonDialogTextInput = reasonDialog.find('.result-reason-text');
+      if(isCancelCode) {
+        // If changed to a cancellation code, show a modal to allow optional
+        // entry of a result comment. On closing of modal, copy the comment
+        // into the form and submit.
+        console.log("CANCEL CODE");
+        reasonDialog.modal('show');
+        reasonDialogTextInput.val(resultReasonInput.val()); // Update modal input to existing value of reason result
+        reasonDialog.find('.submit-result-reason').click(function() {
+          var resultReasonText = reasonDialogTextInput.val();
+          resultReasonInput.val(resultReasonText);
+          parentForm.submit();
+        });
+        reasonDialog.find('.dismiss-result-reason').click(function() {
+          console.log("RESULT REASON DISMISS CLICKED");
+          parentForm.submit();
+        });
+      } else {
+        // If not a cancellation code, make sure the result reason field is
+        // empty and submit the form.
+        console.log("NOT A CANCEL CODE");
+        resultReasonInput.val("");
+        parentForm.submit();
+      }
+    });
+
+  });
