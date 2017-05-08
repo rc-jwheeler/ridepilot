@@ -1,4 +1,4 @@
-<script>
+:javascript
   $(document).ready(function() {
 
     function fillInAddressDetails(form, address) {
@@ -15,7 +15,7 @@
       componentRestrictions: { country: 'us' }
     };
 
-    var bounds = <%= (Utility.new.get_provider_bounds(current_provider) || {}).to_json.to_s.html_safe %>;
+    var bounds = #{(Utility.new.get_provider_bounds(current_provider) || {}).to_json.to_s.html_safe};
     if(bounds.hasOwnProperty('min_lat')) {
       autocompleteOptions.bounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(bounds.min_lat, bounds.min_lon),
@@ -27,4 +27,3 @@
         fillInAddressDetails($(this).parents('form'), googlePlaceParser(result));
       });
   });
-</script>

@@ -1044,6 +1044,7 @@ en:
   vehicle_form_license_plate_label: "License Plate"
   vehicle_form_vin_label: "VIN"
   vehicle_form_location_label: "Garaged Location"
+  vehicle_form_garage_label: "Garage"
   vehicle_form_active_label: "Active"
   vehicle_form_driver_label: "Driver"
   vehicle_form_insurance_coverage_details_label: "Insurance Coverage"

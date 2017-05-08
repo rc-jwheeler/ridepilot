@@ -41,7 +41,31 @@ class VehiclesController < ApplicationController
   private
   
   def vehicle_params
-    params.require(:vehicle).permit(:name, :year, :make, :model, :license_plate, :vin, :garaged_location, :active, :default_driver_id, :reportable, :insurance_coverage_details, :ownership, :responsible_party, :registration_expiration_date, :seating_capacity, :mobility_device_accommodations, :accessibility_equipment, :initial_mileage)
+    params.require(:vehicle).permit(
+      :name, 
+      :year, 
+      :make, 
+      :model, 
+      :license_plate, 
+      :vin, 
+      :active, 
+      :default_driver_id, 
+      :reportable, 
+      :insurance_coverage_details, 
+      :ownership, 
+      :responsible_party, 
+      :registration_expiration_date, 
+      :seating_capacity, 
+      :mobility_device_accommodations, 
+      :accessibility_equipment, 
+      :initial_mileage,
+      :garage_address_attributes => [
+        :address,
+        :city,
+        :state,
+        :zip,
+        :phone_number
+      ],)
   end
   
 end

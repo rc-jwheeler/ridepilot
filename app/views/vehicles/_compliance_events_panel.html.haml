@@ -1,0 +1,21 @@
+.panel.panel-primary
+  .panel-heading= translate_helper("vehicle_maintenance_compliances_heading")
+  %table#vehicle_maintenance_compliances-table.table.table-striped.table-condensed
+    %thead
+      %tr
+        %th.col-sm-3= translate_helper("vehicle_maintenance_compliance_form_due_string")
+        %th= translate_helper("vehicle_maintenance_compliance_form_event")
+        %th.col-sm-3= translate_helper("vehicle_maintenance_compliance_form_compliance_date")
+        %th.col-sm-3= translate_helper("vehicle_maintenance_compliance_form_compliance_mileage")
+        - unless @readonly
+          %th.col-sm-1
+    %tbody
+      - if @readonly and @vehicle.vehicle_maintenance_compliances.empty?
+        %tr
+          %td{:colspan => "4"}= translate_helper("vehicle_maintenance_compliances_empty")
+      = render partial: 'vehicle_maintenance_compliances/vehicle_maintenance_compliance', collection: @vehicle.vehicle_maintenance_compliances.default_order
+  - unless @readonly
+    .panel-footer
+      .clearfix
+        = link_to translate_helper("vehicle_maintenance_compliances_add_link_title"), new_vehicle_vehicle_maintenance_compliance_path(@vehicle), class: "btn action-button pull-right", remote: true
+/ END .panel

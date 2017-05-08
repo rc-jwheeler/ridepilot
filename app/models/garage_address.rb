@@ -1,0 +1,2 @@
+class GarageAddress < Address 
+end
