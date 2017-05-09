@@ -663,7 +663,7 @@ en:
   trip_run_label: "Run: "
   trip_result_label: "Result: "
   trip_result: 'Trip Result'
-  trip_result_reason: 'Reason'
+  trip_result_reason: 'Trip Result Comment'
   pending: "Pending"
   later_trips: "Later ride today"
   age_and_ethnicity_report_heading: "Reports: Unduplicated Age &amp; Ethnicity"
@@ -1000,6 +1000,8 @@ en:
   user_expires_at: "Inactivation Date"
   user_inactivation_reason: "Reasons"
   change_expiration_submit: "Update"
+  ask_for_trip_result_reason_message: "Would you like to enter a trip cancellation comment?"
+  trip_result_modal_dismiss: "No thanks"
 
   # Vehicle Maintenance Events
   vehicle_maintenance_event_form_error:

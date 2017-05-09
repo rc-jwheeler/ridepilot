@@ -171,8 +171,14 @@ class Trip < ActiveRecord::Base
     }
   end
 
+  # DEPRECATED
   def is_no_show_or_turn_down?
     trip_result && ['NS', 'TD'].index(trip_result.code)
+  end
+
+  # Is the trip result one of several "cancel-type" codes?
+  def result_is_cancel_code?
+    trip_result && trip_result.cancelled?
   end
 
   def clone_for_future!
@@ -302,6 +308,7 @@ class Trip < ActiveRecord::Base
   # check if any attribute change would disrupt a run
   def run_disrupted_by_trip_changes?
     disruption_attrs_changed = self.changes.keys & Trip.attributes_can_disrupt_run
+    actual_changes = []
 
     if disruption_attrs_changed.any?
       actual_changes = disruption_attrs_changed

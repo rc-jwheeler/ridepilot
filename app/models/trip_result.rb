@@ -5,10 +5,12 @@ class TripResult < ActiveRecord::Base
   SHOW_ALL_ID = -2
   UNSCHEDULED_ID = -1
 
-  CANCEL_CODES = ['CANC', 'LTCANC', 'SDCANC'] # Cancelled, Late Cancel, Same Day Cancel
+  # Cancelled, Late Cancel, Same Day Cancel, Missed Trip, No Show
+  CANCEL_CODES = ['CANC', 'LTCANC', 'SDCANC', 'MT', 'NS']
   NON_DISPATCHABLE_CODES = CANCEL_CODES + ['UNMET', 'TD']
-  
+
   validates_presence_of :name, :code
+  scope :cancel_codes, -> { where(code: CANCEL_CODES) }
 
   def self.by_provider(provider)
     hidden_ids = HiddenLookupTableValue.hidden_ids self.table_name, provider.try(:id)
@@ -21,6 +23,10 @@ class TripResult < ActiveRecord::Base
 
   def self.is_cancel_code?(code)
     CANCEL_CODES.include? code
+  end
+
+  def cancelled?
+    self.class.is_cancel_code?(code)
   end
 
   def self.non_dispatchable_result_ids
