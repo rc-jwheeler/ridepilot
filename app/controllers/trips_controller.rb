@@ -323,6 +323,31 @@ class TripsController < ApplicationController
 
   end
 
+  # Check if trip is potentially double booked. Returns an array of possible double booked trips
+  def check_double_booked
+    params = check_double_booked_params
+    unless params[:customer_id].blank? || params[:date].blank?
+      @customer = Customer.find(params[:customer_id])
+      double_booked_trips = @customer.trips.on_day(Date.parse(params[:date])).where.not(id: params[:id])
+      double_booked_trips_json = double_booked_trips.map do |trip|
+        {
+          id: trip.id,
+          date: trip.date,
+          pickup_time: trip.pickup_time.try(:to_s, :time_only),
+          appointment_time: trip.appointment_time.try(:to_s, :time_only)
+        }
+      end
+    else
+      double_booked_trips_json = []
+    end 
+      
+    respond_to do |format|
+      format.js {
+        render json: { trips: double_booked_trips_json }
+      }
+    end
+  end
+
   def update
     if params[:trip][:customer_id] && customer = Customer.find_by_id(params[:trip][:customer_id])
       authorize! :read, customer
@@ -472,6 +497,10 @@ class TripsController < ApplicationController
       status_id: session[:status_id],
       days_of_week: session[:days_of_week]
     }
+  end
+  
+  def check_double_booked_params
+    params.require(:trip).permit(:id, :customer_id, :date)
   end
 
   def add_cab(vehicles)
