@@ -41,7 +41,10 @@
       $('#' + prefix+ 'trip_mobility_id').val(customerData.mobility_id);
       $('#customer_private_notes').val(customerData.private_notes);
       $('#' + prefix+ 'trip_pickup_address_id').val(customerData.address_id);
-      $("#pickup_address").val(customerData.address);
+      //$("#pickup_address").val(customerData.address);
+      $('#pickup_address').typeahead('val', customerData.address);
+      var pickup_addr_notes = customerData.address_data ? customerData.address_data.notes : "";
+      $("#pickup_address_notes").val(pickup_addr_notes);
       $('#' + prefix+ 'trip_funding_source_id').val(customerData.default_funding_source_id);
       $('#' + prefix+ 'trip_service_level').val(customerData.default_service_level);
       $('#' + prefix+ 'trip_medicaid_eligible').attr('checked',customerData.medicaid_eligible);      

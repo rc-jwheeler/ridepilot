@@ -83,28 +83,33 @@ function process_google_address(addr, type) {
 }
 
 $(function() {
-  $('#pickup_address').on('keyup', function() {
+  $('#pickup_address').on('input', function() {
     $('input.trip_pickup_address_id').val('');
     $('input.trip_pickup_google_address').val('');
+    $('#pickup_address_notes').val('');
   });
+  
   $('#pickup_address').on('typeahead:selected', function(e, addr, data) {
     if(data == 'saved_places') {
       $('input.trip_pickup_address_id').val(addr.id);
+      $('#pickup_address_notes').val(addr.notes);
       // TODO: insert saved place's notes to Trip Notes field if applicable
     } else if (data == 'google_places') {
       process_google_address(addr, 'pickup');
     }
   });
 
-  $('#dropoff_address').on('keyup', function() {
+  $('#dropoff_address').on('input', function() {
     $('input.trip_dropoff_address_id').val('');
     $('input.trip_dropoff_google_address').val('');
+    $('#dropoff_address_notes').val('');
   });
   $('#dropoff_address').on('typeahead:selected', function(e, addr, data) {
     $('input.trip_dropoff_address_id').val('');
     $('input.trip_dropoff_google_address').val('');
     if(data == 'saved_places') {
       $('input.trip_dropoff_address_id').val(addr.id);
+      $('#dropoff_address_notes').val(addr.notes);
     } else if (data == 'google_places') {
       process_google_address(addr, 'dropoff');
     }
