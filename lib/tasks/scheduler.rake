@@ -16,7 +16,7 @@ namespace :scheduler do
     Run.update_prior_run_complete_status!
 
     # Standby -> Unmet Need
-    Trip.move_prior_standby_to_unmet!
+    #Trip.move_prior_standby_to_unmet!
     
     # Schedule recurring driver compliance events 5 years out
     RecurringDriverCompliance.generate! date_range_length: 5.years

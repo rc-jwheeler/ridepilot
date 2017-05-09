@@ -82,8 +82,8 @@ class RepeatingTrip < ActiveRecord::Base
           attributes["pickup_time"] = this_trip_pickup_time
           attributes["appointment_time"] = this_trip_pickup_time + (appointment_time - pickup_time)
           trip = Trip.new attributes
-          # debugger unless trip.valid?
-          trip.save!
+          # no validation to allow creating individual instances despite some conflicts with other daily trips
+          trip.save(validate: false)
         end
       end
     end

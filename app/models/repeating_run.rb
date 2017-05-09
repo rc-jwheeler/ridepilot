@@ -11,7 +11,7 @@ class RepeatingRun < ActiveRecord::Base
 
   validates :comments, :length => { :maximum => 30 } 
   
-  scope :active, -> { where("end_date is NULL or end_date >= ?", Date.today, Date.today) }
+  scope :active, -> { where("end_date is NULL or end_date >= ?", Date.today) }
   # a query to find repeating_runs that can be used to assign repeating_trips
   scope :during, -> (from_time, to_time) { where("NOT (scheduled_start_time::time <= ?) OR NOT(scheduled_end_time::time <= ?)", to_time.utc.to_s(:time), from_time.utc.to_s(:time)) }
 
@@ -77,8 +77,8 @@ class RepeatingRun < ActiveRecord::Base
           attributes["date"] = date
           attributes["repeating_run_id"] = id
           run = Run.new attributes
-          # debugger unless run.valid?
-          run.save!
+          # no validation to allow creating individual instances despite some conflicts with other daily runs
+          run.save(validate: false)
         end
       end
     end
