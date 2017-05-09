@@ -6,7 +6,6 @@ function TripResultHelper(modalSelector, cancelCodes) {
   this.modal = $(modalSelector);
   this.cancelCodes = cancelCodes;
   this.tripForm = null;
-  console.log("ResultReasonModal Initialized!", this);
 }
 
 TripResultHelper.prototype = {

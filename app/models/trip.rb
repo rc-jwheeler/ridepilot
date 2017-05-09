@@ -171,8 +171,14 @@ class Trip < ActiveRecord::Base
     }
   end
 
+  # DEPRECATED
   def is_no_show_or_turn_down?
     trip_result && ['NS', 'TD'].index(trip_result.code)
+  end
+
+  # Is the trip result one of several "cancel-type" codes?
+  def result_is_cancel_code?
+    trip_result && trip_result.cancelled?
   end
 
   def clone_for_future!

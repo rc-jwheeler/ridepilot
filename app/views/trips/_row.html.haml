@@ -50,16 +50,6 @@
     - if can? :edit, trip
       = form_for trip, url: trip_change_result_path(trip), remote: true, method: :patch, html: { class: 'change-trip-result' }  do |f|
         = f.select :trip_result_id, @trip_results,  { :include_blank => true }, {class: 'form-control'} #, :onchange => "$(this).parents('form').submit()"}
-        = f.text_field :result_reason
-        -# = render 'trip_result_change_dialog'
+        = f.text_field :result_reason, hidden: true
     - else
       = display_trip_result(trip.trip_result)
-
--# :javascript
--#   $(function() {
--#
--#   });
--# - else
--#   var newResultCode = parseInt($('#tripsTable tr[data-trip-id="#{@trip.id}"] .change-trip-result select').val());
--#   var cancelCodes = #{TripResult.cancel_codes.pluck(:id)};
--#   var isCancelCode = cancelCodes.includes(newResultCode);
