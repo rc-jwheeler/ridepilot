@@ -36,10 +36,10 @@ DoubleBookedTripsHelper.prototype = {
     trips.forEach(function(trip) {
       dbh.table.append(dbh.tableRowHtml);
       var row = dbh.table.find('.double-booked-trip-row').last();
-      row.find('.trip-id').text(trip.id);
-      row.find('.trip-date').text(trip.date);
       row.find('.trip-pickup-time').text(trip.pickup_time);
+      row.find('.trip-pickup-address').text(trip.pickup_address);      
       row.find('.trip-appointment-time').text(trip.appointment_time);
+      row.find('.trip-dropoff-address').text(trip.dropoff_address);
     });
   },
   

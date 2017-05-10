@@ -328,13 +328,14 @@ class TripsController < ApplicationController
     params = check_double_booked_params
     unless params[:customer_id].blank? || params[:date].blank?
       @customer = Customer.find(params[:customer_id])
-      double_booked_trips = @customer.trips.on_day(Date.parse(params[:date])).where.not(id: params[:id])
+      double_booked_trips = @customer.trips.on_day(Date.parse(params[:date]))
+        .where.not(id: params[:id]).order(:pickup_time, :appointment_time)
       double_booked_trips_json = double_booked_trips.map do |trip|
         {
-          id: trip.id,
-          date: trip.date,
           pickup_time: trip.pickup_time.try(:to_s, :time_only),
-          appointment_time: trip.appointment_time.try(:to_s, :time_only)
+          pickup_address: trip.pickup_address.try(:address_text),
+          appointment_time: trip.appointment_time.try(:to_s, :time_only),
+          dropoff_address: trip.dropoff_address.try(:address_text)
         }
       end
     else

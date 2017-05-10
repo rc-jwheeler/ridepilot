@@ -5,6 +5,11 @@
   .modal-dialog
     .modal-content
       .modal-header
+        .pull-right
+          .submit-double-book-modal.btn.btn-primary{ data: {dismiss: 'modal'} }
+            =translate_helper(:double_booked_modal_submit)
+          .dismiss-double-book-modal.btn.btn-danger{ data: {dismiss: 'modal'} }
+            =translate_helper(:double_booked_modal_dismiss)
         %h5.modal-title{:style => "text-align:left;"}
           %strong
             = translate_helper(:site_title)
@@ -13,13 +18,7 @@
           %label.result-reason-label=translate_helper(:ask_about_trip_double_booked_message)
           %table#double-booked-trips-table
             %tr.header-row
-              %th="ID"
-              %th=translate_helper(:date)
               %th=translate_helper(:pickup_time)
+              %th=translate_helper(:pickup_address)
               %th=translate_helper(:appointment_time)
-      .modal-footer
-        .pull-right
-          .submit-double-book-modal.btn.btn-primary{ data: {dismiss: 'modal'} }
-            =translate_helper(:double_booked_modal_submit)
-          .dismiss-double-book-modal.btn.btn-danger{ data: {dismiss: 'modal'} }
-            =translate_helper(:double_booked_modal_dismiss)
+              %th=translate_helper(:dropoff_address)
