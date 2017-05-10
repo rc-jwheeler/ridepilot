@@ -595,4 +595,32 @@ RSpec.describe TripsController, type: :controller do
     end
   end
   
+  describe "POST #check_double_booked" do
+    
+    it "returns a list of possible double-booked trips" do
+      trip_1 = create(:trip)
+      trip_2 = create(:trip, customer: trip_1.customer)
+      trip_3 = create(:trip, customer: trip_1.customer)
+      check_double_booked_params = {
+        trip: {
+          id: trip_1.id,
+          customer_id: trip_1.customer_id,
+          date: trip_1.date.to_s
+        },
+        format: :js
+      }
+      
+      post :check_double_booked, check_double_booked_params
+      trips = JSON.parse(response.body)["trips"]
+      expect(trips.count).to eq(2)
+      expect(trips.map{|t| t["id"]}.sort).to eq([trip_2.id, trip_3.id].sort)
+      expect(trips[0]["pickup_time"]).to be
+      expect(trips[0]["pickup_address"]).to be
+      expect(trips[0]["appointment_time"]).to be
+      expect(trips[0]["dropoff_address"]).to be
+      
+    end
+    
+  end
+  
 end

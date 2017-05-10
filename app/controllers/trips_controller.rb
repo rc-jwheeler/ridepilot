@@ -332,6 +332,7 @@ class TripsController < ApplicationController
         .where.not(id: params[:id]).order(:pickup_time, :appointment_time)
       double_booked_trips_json = double_booked_trips.map do |trip|
         {
+          id: trip.id,
           pickup_time: trip.pickup_time.try(:to_s, :time_only),
           pickup_address: trip.pickup_address.try(:address_text),
           appointment_time: trip.appointment_time.try(:to_s, :time_only),
