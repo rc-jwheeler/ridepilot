@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170508160816) do
+ActiveRecord::Schema.define(version: 20170510145034) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -908,6 +908,7 @@ ActiveRecord::Schema.define(version: 20170508160816) do
     t.integer  "mobility_device_accommodations"
     t.integer  "initial_mileage",                default: 0
     t.integer  "garage_address_id"
+    t.string   "garage_phone_number"
   end
 
   add_index "vehicles", ["default_driver_id"], :name => "index_vehicles_on_default_driver_id"

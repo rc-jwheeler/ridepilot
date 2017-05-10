@@ -36,6 +36,7 @@ class Vehicle < ActiveRecord::Base
   validates :mobility_device_accommodations, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :ownership, inclusion: { in: OWNERSHIPS.map(&:to_s), allow_blank: true }
   validates :initial_mileage, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 10000000 }
+  validate  :valid_phone_number
   
   scope :active,        -> { where(active: true) }
   scope :for_provider,  -> (provider_id) { where(provider_id: provider_id) }
@@ -72,5 +73,14 @@ class Vehicle < ActiveRecord::Base
 
   def open_mobility_device_capacity(start_time, end_time, ignore: nil)
     mobility_device_accommodations - (trips.incomplete.during(start_time, end_time) - Array(ignore)).collect(&:mobility_device_accommodations).flatten.compact.sum if mobility_device_accommodations
+  end
+
+  private
+
+  def valid_phone_number
+    util = Utility.new
+    if garage_phone_number.present?
+      errors.add(:garage_phone_number, 'is invalid') unless util.phone_number_valid?(garage_phone_number) 
+    end
   end
 end

@@ -59,7 +59,7 @@ class VehiclesController < ApplicationController
     if is_garage_address_blank
       @vehicle.garage_address = nil
     elsif @vehicle.garage_address.present?
-      @vehicle.garage_address.compute_geom(params[:lat], params[:lon])
+      @vehicle.garage_address.the_geom = Address.compute_geom(params[:lat], params[:lon])
     end
 
     @vehicle.provider = current_provider
@@ -95,13 +95,13 @@ class VehiclesController < ApplicationController
       :mobility_device_accommodations, 
       :accessibility_equipment, 
       :initial_mileage,
+      :garage_phone_number,
       :garage_address_attributes => [
         :provider_id,
         :address,
         :city,
         :state,
-        :zip,
-        :phone_number
+        :zip
       ])
   end
 

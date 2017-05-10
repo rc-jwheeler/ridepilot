@@ -16,8 +16,8 @@
         = label_tag "#{prefix}_full_address", translate_helper("full_address_name"), class: "col-md-2 control-label"
         .col-md-10
           = text_field_tag "#{prefix}_full_address", address.try(:address_text), disabled: @readonly, class: "address_search form-control"
-      .form-group
-        = address_form.label :phone_number, translate_helper("phone_number"), class: "col-md-2 control-label"
-        .col-md-10
-          = address_form.text_field :phone_number, disabled: @readonly, class: "form-control"
       = render 'addresses/google_place_autocomplete_js'
+    .form-group
+      = f.label :garage_phone_number, translate_helper("phone_number"), class: "col-md-2 control-label"
+      .col-md-10
+        = f.text_field :garage_phone_number, disabled: @readonly, class: "form-control"
