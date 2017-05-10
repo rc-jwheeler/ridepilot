@@ -61,37 +61,6 @@ RSpec.describe RepeatingTrip do
       expect(@trip.trip_size).to eq 4
     end
   end
-
-  describe ".during" do
-    before do
-      @start_time = Time.zone.parse("14:30")
-      @end_time   = Time.zone.parse("15:30")
-      
-      @starts_and_ends_before_start        = create :repeating_trip, pickup_time: @start_time - 15.minutes, appointment_time: @start_time
-      @starts_before_start_ends_before_end = create :repeating_trip, pickup_time: @start_time - 15.minutes, appointment_time: @end_time
-      @starts_after_start_ends_after_end   = create :repeating_trip, pickup_time: @start_time,              appointment_time: @end_time + 15.minutes
-      @starts_after_start_ends_before_end  = create :repeating_trip, pickup_time: @start_time,              appointment_time: @end_time
-      @starts_and_ends_after_end           = create :repeating_trip, pickup_time: @end_time,                appointment_time: @end_time + 15.minutes
-      @starts_before_start_ends_after_end  = create :repeating_trip, pickup_time: @start_time - 15.minutes, appointment_time: @end_time + 15.minutes
-      
-      @during = RepeatingTrip.during(@start_time, @end_time)
-    end
-    
-    it "returns trips that are occurring in the same time frame" do
-      expect(@during).to include @starts_before_start_ends_before_end, 
-                                 @starts_after_start_ends_after_end, 
-                                 @starts_after_start_ends_before_end, 
-                                 @starts_before_start_ends_after_end
-    end
-
-    it "ignores trips that start and end before the time frame" do
-      expect(@during).not_to include @starts_and_ends_before_start
-    end
-    
-    it "ignores trips that start and end after the time frame" do
-      expect(@during).not_to include @starts_and_ends_after_end
-    end
-  end
   
   describe ".by_funding_source" do
     before do
