@@ -39,10 +39,10 @@ class Trip < ActiveRecord::Base
   scope :after,              -> (pickup_time) { where('pickup_time > ?', pickup_time.utc) }
   scope :after_today,        -> { where('CAST(pickup_time AS date) > ?', Date.today.in_time_zone.utc) }
   scope :today_and_prior,    -> { where('CAST(pickup_time AS date) <= ?', Date.today.in_time_zone.utc) }
-  scope :prior_to_today,    -> { where('CAST(pickup_time AS date) < ?', Date.today.in_time_zone.utc) }
+  scope :prior_to_today,     -> { where('CAST(pickup_time AS date) < ?', Date.today.in_time_zone.utc) }
   scope :during,             -> (pickup_time, appointment_time) { where('NOT ((pickup_time < ? AND appointment_time < ?) OR (pickup_time > ? AND appointment_time > ?))', pickup_time.utc, appointment_time.utc, pickup_time.utc, appointment_time.utc) }
-  scope :for_date,           -> (date) { where('pickup_time >= ? AND pickup_time < ?', date.to_datetime.in_time_zone.utc, date.to_datetime.in_time_zone.utc + 1.day) }
-  scope :for_date_range,     -> (from_date, to_date) { where('pickup_time >= ? AND pickup_time < ?', from_date.to_datetime.in_time_zone.utc, to_date.to_datetime.in_time_zone.utc) } 
+  scope :for_date,           ->(date) { where(pickup_time: date.beginning_of_day..date.end_of_day) }
+  scope :for_date_range,     -> (from_date, to_date) { where(pickup_time: from_date.beginning_of_day..to_date.end_of_day) } 
   scope :prior_to,           -> (pickup_time) { where('pickup_time < ?', pickup_time.to_datetime.in_time_zone.utc) } 
   scope :has_scheduled_time, -> { where.not(pickup_time: nil).where.not(appointment_time: nil) }
   scope :by_result,          -> (code) { includes(:trip_result).references(:trip_result).where("trip_results.code = ?", code) }
@@ -58,7 +58,6 @@ class Trip < ActiveRecord::Base
   scope :standby,            -> { joins(:trip_result).where(trip_results: {code: 'STNBY'}) }
   scope :scheduled,          -> { where("cab = ? or run_id is not NULL", true) }
   scope :repeating_based_on, ->(scheduler) { where(repeating_trip_id: scheduler.try(:id)) }
-  scope :on_day,             ->(date) { where(pickup_time: date.beginning_of_day..date.end_of_day) }
 
   # List of attributes of which the change would affect the run
   ATTRIBUTES_CAN_DISRUPT_RUN = [
