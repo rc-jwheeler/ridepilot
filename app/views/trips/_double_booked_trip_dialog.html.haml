@@ -10,7 +10,7 @@
             = translate_helper(:site_title)
       .modal-body.row{:style => "text-align:left; margin: 0px;"}
         .col-sm-12{style: 'padding: 5px;'}
-          %label.result-reason-label= "The trip may be double with the following trips. Do you wish to continue?"#translate_helper(:ask_for_trip_result_reason_message)
+          %label.result-reason-label=translate_helper(:ask_about_trip_double_booked_message)
           %table#double-booked-trips-table
             %tr.header-row
               %th="ID"
@@ -20,6 +20,6 @@
       .modal-footer
         .pull-right
           .submit-double-book-modal.btn.btn-primary{ data: {dismiss: 'modal'} }
-            ="Continue" #translate_helper(:double_booked_modal_submit)
+            =translate_helper(:double_booked_modal_submit)
           .dismiss-double-book-modal.btn.btn-danger{ data: {dismiss: 'modal'} }
-            ="Back" #translate_helper(:double_booked_modal_dismiss)
+            =translate_helper(:double_booked_modal_dismiss)

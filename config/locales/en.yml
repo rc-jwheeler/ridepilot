@@ -974,6 +974,12 @@ en:
   linking_to: 'Link to'
   trip_form_mobility_device_accommodations_label: 'Mobility Device Count'
   eligibility_and_accommodation: 'Eligibility and Accommodation'
+  
+  # Double booked trips
+  ask_about_trip_double_booked_message: 'This trip may be double booked with the following trips. Would you like to continue?'
+  double_booked_modal_submit: 'Continue'
+  double_booked_modal_dismiss: 'Back'
+  
   #trips table
   pickup_date_column: 'Pickup Date'
   customer_column: 'Customer'
