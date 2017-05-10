@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     get "admin", :controller => :home, :action => :index
 
     devise_for :users
-    
+
     devise_scope :user do
       get "new_user" => "users#new_user"
       post "create_user" => "users#create_user"
@@ -46,7 +46,7 @@ Rails.application.routes.draw do
       end
 
       member do
-        get :delete_photo 
+        get :delete_photo
       end
     end
 
@@ -63,21 +63,22 @@ Rails.application.routes.draw do
         get :clone
         get :return
       end
-      
+
       collection do
         get :reconcile_cab
         get :trips_requiring_callback
         get :unscheduled
         get :customer_trip_summary
+        post :check_double_booked
       end
     end
 
-    resources :repeating_trips do 
-      collection do 
+    resources :repeating_trips do
+      collection do
         get :clone_from_daily_trip
       end
     end
-    resources :repeating_runs 
+    resources :repeating_runs
 
     resources :providers, :except => [:edit, :update, :destroy] do
       post :change_role
@@ -94,7 +95,7 @@ Rails.application.routes.draw do
         patch :save_operating_hours
       end
     end
-    
+
     resources :recurring_driver_compliances do
       collection do
         get :schedule_preview
@@ -135,13 +136,13 @@ Rails.application.routes.draw do
       end
     end
     get "trip_address_autocomplete" => "addresses#trippable_autocomplete"
-    
+
     resources :device_pools, :except => [:index, :show] do
       resources :device_pool_drivers, :only => [:create, :destroy]
     end
-    
+
     resources :drivers do
-      member do 
+      member do
         get :delete_photo
       end
 
@@ -164,13 +165,13 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :trips_runs, only: [:index] do 
-      collection do 
+    resources :trips_runs, only: [:index] do
+      collection do
         post :schedule
         get :runs_by_date
       end
     end
-    
+
     resources :cab_trips, :only => [:index] do
       collection do
         get :edit_multiple
@@ -182,7 +183,7 @@ Rails.application.routes.draw do
       match "device_pool_drivers/" => "v1/device_pool_drivers#index", :as => "v1_device_pool_drivers"
       match "v1/device_pool_drivers/:id" => "v1/device_pool_drivers#update", :as => "v1_device_pool_driver"
     end
-    
+
     get "dispatch", :controller => :dispatch, :action => :index
     #get "reports", :controller=>:reports, :action=>:index
     get "custom_reports/:id", :controller=>:reports, :action=>:show, as: :custom_report
@@ -190,11 +191,11 @@ Rails.application.routes.draw do
     get "reports/:action/:id", :controller=>:reports
     # reporting engine
     mount Reporting::Engine, at: "/reporting"
-    
+
 
     get "test_exception_notification" => "application#test_exception_notification"
 
-    resources :lookup_tables, :only => [:index, :show] do 
+    resources :lookup_tables, :only => [:index, :show] do
       member do
         post :add_value
         put :update_value

@@ -58,6 +58,7 @@ class Trip < ActiveRecord::Base
   scope :standby,            -> { joins(:trip_result).where(trip_results: {code: 'STNBY'}) }
   scope :scheduled,          -> { where("cab = ? or run_id is not NULL", true) }
   scope :repeating_based_on, ->(scheduler) { where(repeating_trip_id: scheduler.try(:id)) }
+  scope :on_day,             ->(date) { where(pickup_time: date.beginning_of_day..date.end_of_day) }
 
   # List of attributes of which the change would affect the run
   ATTRIBUTES_CAN_DISRUPT_RUN = [

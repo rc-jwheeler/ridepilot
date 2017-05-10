@@ -32,6 +32,7 @@
 //= require typeahead-addresspicker
 //= require trip_place_picker
 //= require trip_result_reason
+//= require double_booked_trips
 //= require_self
 
 function ISODateFormatToDateObject(str) {
