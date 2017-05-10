@@ -18,7 +18,6 @@ module TripCore
     delegate :name, to: :customer, prefix: :customer, allow_nil: true
     delegate :name, to: :trip_purpose, prefix: :trip_purpose, allow_nil: true
 
-    validates :appointment_time, presence: true
     validates :attendant_count, numericality: {greater_than_or_equal_to: 0}
     validates :customer, associated: true, presence: true
     validates :dropoff_address, associated: true, presence: true
@@ -32,46 +31,12 @@ module TripCore
 
     accepts_nested_attributes_for :customer
 
-    scope :after,              -> (pickup_time) { where('pickup_time > ?', pickup_time.utc) }
-    scope :after_today,        -> { where('CAST(pickup_time AS date) > ?', Date.today.in_time_zone.utc) }
-    scope :today_and_prior,    -> { where('CAST(pickup_time AS date) <= ?', Date.today.in_time_zone.utc) }
-    scope :prior_to_today,    -> { where('CAST(pickup_time AS date) < ?', Date.today.in_time_zone.utc) }
     scope :by_funding_source,  -> (name) { includes(:funding_source).references(:funding_source).where("funding_sources.name = ?", name) }
     scope :by_service_level,   -> (level) { includes(:service_level).references(:service_level).where("service_levels.name = ?", level) }
     scope :by_trip_purpose,    -> (name) { includes(:trip_purpose).references(:trip_purpose).where("trip_purposes.name = ?", name) }
-    scope :during,             -> (pickup_time, appointment_time) { where('NOT ((pickup_time < ? AND appointment_time < ?) OR (pickup_time > ? AND appointment_time > ?))', pickup_time.utc, appointment_time.utc, pickup_time.utc, appointment_time.utc) }
-    scope :for_date,           -> (date) { where('pickup_time >= ? AND pickup_time < ?', date.to_datetime.in_time_zone.utc, date.to_datetime.in_time_zone.utc + 1.day) }
-    scope :for_date_range,     -> (from_date, to_date) { where('pickup_time >= ? AND pickup_time < ?', from_date.to_datetime.in_time_zone.utc, to_date.to_datetime.in_time_zone.utc) }
     scope :for_provider,       -> (provider_id) { where(provider_id: provider_id) }
-    scope :has_scheduled_time, -> { where.not(pickup_time: nil).where.not(appointment_time: nil) }
     scope :individual,         -> { joins(:customer).where(customers: {group: false}) }
     scope :not_called_back,    -> { where('called_back_at IS NULL') }
-    scope :prior_to,           -> (pickup_time) { where('pickup_time < ?', pickup_time.to_datetime.in_time_zone.utc) }
-  end
-
-  # Special date attr_reader sends back pickup/appointment time date, or instance var if present
-  def date
-    return @date if @date
-    return pickup_time.to_date if pickup_time
-    return appointment_time.to_date if appointment_time
-    return nil
-  end
-
-  # Special date attr_writer sets @date instance variable. Accepts a Date object or a date string
-  # This date is used in setting pickup and appointment time attributes
-  def date=(date)
-    @date = date.is_a?(String) ? Date.parse(date) : date
-    # Refresh pickup and appointment time with new date
-    self.pickup_time = pickup_time #unless pickup_time.to_date == @date
-    self.appointment_time = appointment_time #unless appointment_time.to_date == @date
-  end
-
-  # Takes a time and a date object, and returns a time object on the passed Date
-  def time_on_date(t, d)
-    return nil unless t
-    return t unless d
-    t = t.to_time
-    Time.new(d.year, d.month, d.day, t.hour, t.min, 0)
   end
 
   def trip_size
@@ -88,17 +53,6 @@ module TripCore
 
   def is_in_district?
     pickup_address.try(:in_district) && dropoff_address.try(:in_district)
-  end
-
-  def update_donation(user, amount)
-    return unless user && amount
-
-    if self.donation
-      self.donation.update_attributes(user: user, amount: amount)
-    elsif self.id && self.customer
-      self.donation = Donation.create(date: Time.current, user: user, customer: self.customer, trip: self, amount: amount)
-      self.save
-    end
   end
 
   module ClassMethods

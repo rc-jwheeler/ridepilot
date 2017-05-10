@@ -36,6 +36,15 @@ class Trip < ActiveRecord::Base
   validate :return_trip_later_than_outbound_trip
   validate :within_advance_day_scheduling
 
+  scope :after,              -> (pickup_time) { where('pickup_time > ?', pickup_time.utc) }
+  scope :after_today,        -> { where('CAST(pickup_time AS date) > ?', Date.today.in_time_zone.utc) }
+  scope :today_and_prior,    -> { where('CAST(pickup_time AS date) <= ?', Date.today.in_time_zone.utc) }
+  scope :prior_to_today,    -> { where('CAST(pickup_time AS date) < ?', Date.today.in_time_zone.utc) }
+  scope :during,             -> (pickup_time, appointment_time) { where('NOT ((pickup_time < ? AND appointment_time < ?) OR (pickup_time > ? AND appointment_time > ?))', pickup_time.utc, appointment_time.utc, pickup_time.utc, appointment_time.utc) }
+  scope :for_date,           -> (date) { where('pickup_time >= ? AND pickup_time < ?', date.to_datetime.in_time_zone.utc, date.to_datetime.in_time_zone.utc + 1.day) }
+  scope :for_date_range,     -> (from_date, to_date) { where('pickup_time >= ? AND pickup_time < ?', from_date.to_datetime.in_time_zone.utc, to_date.to_datetime.in_time_zone.utc) } 
+  scope :prior_to,           -> (pickup_time) { where('pickup_time < ?', pickup_time.to_datetime.in_time_zone.utc) } 
+  scope :has_scheduled_time, -> { where.not(pickup_time: nil).where.not(appointment_time: nil) }
   scope :by_result,          -> (code) { includes(:trip_result).references(:trip_result).where("trip_results.code = ?", code) }
   scope :called_back,        -> { where('called_back_at IS NOT NULL') }
   scope :completed,          -> { joins(:trip_result).where(trip_results: {code: 'COMP'}) }
@@ -66,6 +75,31 @@ class Trip < ActiveRecord::Base
 
   def self.attributes_can_disrupt_run
     ATTRIBUTES_CAN_DISRUPT_RUN
+  end
+
+  # Special date attr_reader sends back pickup/appointment time date, or instance var if present
+  def date
+    return @date if @date
+    return pickup_time.to_date if pickup_time
+    return appointment_time.to_date if appointment_time
+    return nil
+  end
+
+  # Special date attr_writer sets @date instance variable. Accepts a Date object or a date string
+  # This date is used in setting pickup and appointment time attributes
+  def date=(date)
+    @date = date.is_a?(String) ? Date.parse(date) : date
+    # Refresh pickup and appointment time with new date
+    self.pickup_time = pickup_time #unless pickup_time.to_date == @date
+    self.appointment_time = appointment_time #unless appointment_time.to_date == @date
+  end
+
+  # Takes a time and a date object, and returns a time object on the passed Date
+  def time_on_date(t, d)
+    return nil unless t
+    return t unless d
+    t = t.to_time
+    Time.new(d.year, d.month, d.day, t.hour, t.min, 0)
   end
 
   def complete
@@ -331,6 +365,17 @@ class Trip < ActiveRecord::Base
     elsif provider && provider.cab_enabled? && self.cab
       self.cab = false
       self.save(validate: false)
+    end
+  end
+
+  def update_donation(user, amount)
+    return unless user && amount
+
+    if self.donation
+      self.donation.update_attributes(user: user, amount: amount)
+    elsif self.id && self.customer
+      self.donation = Donation.create(date: Time.current, user: user, customer: self.customer, trip: self, amount: amount)
+      self.save
     end
   end
 
