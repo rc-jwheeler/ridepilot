@@ -1,48 +1,49 @@
 // JS for modal handling trip cancellation reason inputs
-
 // takes a jQuery selector identifying the trip result reason modal div,
-// and an array of codes (id #s) to consider "Cancellations"
-function TripResultHelper(modalSelector, cancelCodes) {
+// and an array of codes (id #s) to consider asking for reason
+function TripResultHelper(modalSelector, reasonNeededCodes) {
   this.modal = $(modalSelector);
-  this.cancelCodes = cancelCodes;
-  this.tripForm = null;
+  this.modalInput = this.modal.find('.result-reason-text');
+  this.reasonNeededCodes = reasonNeededCodes;
 }
 
 TripResultHelper.prototype = {
-  // Sets up the helper to deal with a change on a particular trip
-  processChange: function(element) {
-    this.tripForm = {
-      form: element.closest('form'),
-      input: element.closest('form').find('input#trip_result_reason'),
-      resultCode: parseInt(element.val())
-    }
+
+  // returns true/false if integer corresponds to a cancellation code
+  isReasonNeeded: function(code) {
+    return this.reasonNeededCodes.includes(parseInt(code));
   },
 
-  isCancelCodeSelected: function() {
-    return this.cancelCodes.includes(this.tripForm.resultCode);
-  },
-
-  showResultReasonModal: function() {
-    this.prepareModal();
+  // Shows the modal
+  showModal: function() {
     this.modal.modal('show');
   },
 
-  prepareModal: function() {
-    var modalInput = this.modal.find('.result-reason-text');
-    var trh = this;
+  // Prepares the modal. Takes a resultReason (string), isCancel (boolean),
+  // and a hash of callback keys and functions.
+  prepareModal: function(resultReason, isCancel, callbacks) {
+    
+    // Show and hide appropriate divs for result code
+    if(isCancel) {
+      this.modal.find('.cancel-code').removeClass('hidden');
+      this.modal.find('.non-cancel-code').addClass('hidden');
+    } else {
+      this.modal.find('.non-cancel-code').removeClass('hidden');
+      this.modal.find('.cancel-code').addClass('hidden');
+    }
 
     // Update modal input to existing value of reason result
-    modalInput.val(this.tripForm.input.val());
+    this.modalInput.val(resultReason);
 
-    // On modal submit, update form text input based on modal input
-    this.modal.find('.submit-result-reason').click(function() {
-      trh.tripForm.input.val(modalInput.val());
-      trh.tripForm.form.submit();
-    });
-
-    // On modal dismiss, discard the modal text input
-    this.modal.find('.dismiss-result-reason').click(function() {
-      trh.tripForm.form.submit();
+    // Set up modal response buttons with the callback functions
+    var modal = this.modal;
+    modal.find('.btn').addClass('hidden');
+    $.each(callbacks, function(label, callback) {
+      modal.find('.' + label + '-result-reason.btn')
+      .removeClass('hidden')
+      .click(function() {
+        callback();
+      });
     });
 
   }
