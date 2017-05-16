@@ -309,6 +309,10 @@ class TripsController < ApplicationController
           if @ask_for_return_trip
             render action: :show
           else
+            if @trip.is_return?
+              TrackerActionLog.create_return_trip(@trip.outbound_trip, current_user)
+            end
+
             if params[:run_id].present?
               redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')
             else

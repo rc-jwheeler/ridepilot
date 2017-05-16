@@ -1,6 +1,7 @@
 class Trip < ActiveRecord::Base
   include RequiredFieldValidatorModule
   include TripCore
+  include PublicActivity::Common
 
   acts_as_paranoid # soft delete
 

@@ -161,6 +161,11 @@ en:
   lookup_table_error_message:
     one: "%{count} error prohibited this lookup table from being saved:"
     other: "%{count} errors prohibited this lookup table from being saved:"
+  # Tracker Action Log
+  action_log: 'Action Log'
+  log_date_time: 'Datetime'
+  log_user: 'User'
+  log_message: 'Message'
   #Shared
   site_title: "Ridepilot"
   new_trip: "New Trip"
