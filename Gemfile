@@ -125,6 +125,9 @@ gem 'momentjs-rails'
 # phone number validation and display
 gem 'phony_rails'
 
+# logging activities for Tracker Action Log
+gem 'public_activity' 
+
 # twitter typeahed
 #gem 'twitter-typeahead-rails'
 
