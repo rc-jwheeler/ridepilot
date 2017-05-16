@@ -190,9 +190,10 @@ class TripsController < ApplicationController
       if !@trip.update_attributes(change_result_params)
         @message = @trip.errors.full_messages.join(';')
       else
-        @trip_result_filters = trip_sessions[:trip_result_id]
+        TrackerActionLog.cancel_or_turn_down_trip(@trip, current_user) if @trip.is_cancelled_or_turned_down?
 
-        if @trip.scheduled? && TripResult.is_cancel_code?(@trip.trip_result.try(:code))
+        @trip_result_filters = trip_sessions[:trip_result_id]
+        if @trip.scheduled? && @trip.is_cancelled_or_turned_down?
           if @trip.run.present?
             @trip.run = nil
             @trip.save
@@ -367,12 +368,14 @@ class TripsController < ApplicationController
 
     @trip.assign_attributes(trip_params)
     is_address_changed = @trip.pickup_address_id_changed? || @trip.dropoff_address_id_changed?
+    is_trip_result_changed = @trip.trip_result_id_changed?
     is_run_disrupted = @trip.run_disrupted_by_trip_changes?
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
         @trip.unschedule_trip if is_run_disrupted
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
         TripDistanceCalculationWorker.perform_async(@trip.id) if is_address_changed
+        TrackerActionLog.cancel_or_turn_down_trip(@trip, current_user) if is_trip_result_changed && @trip.is_cancelled_or_turned_down? 
 
         format.html { redirect_to(@trip, :notice => 'Trip was successfully updated.')  }
         format.js {

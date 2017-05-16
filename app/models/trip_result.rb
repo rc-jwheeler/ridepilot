@@ -30,6 +30,10 @@ class TripResult < ActiveRecord::Base
     CANCEL_CODES.include? code
   end
 
+  def turned_down?
+    code == 'TD'
+  end
+
   def cancelled?
     self.class.is_cancel_code?(code)
   end
