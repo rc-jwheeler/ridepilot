@@ -8,6 +8,11 @@ module TrackerActionLogHelper
       if return_trip.present?
         "Return trip (#{link_to return_trip.id, return_trip}) created.".html_safe
       end
+    when "trip.return_created"
+      outbound_trip = log.trackable.try(:outbound_trip)
+      if outbound_trip.present?
+        "Return trip created for outbound trip (#{link_to outbound_trip.id, outbound_trip})".html_safe
+      end
     end
   end
 end

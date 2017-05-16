@@ -310,7 +310,7 @@ class TripsController < ApplicationController
             render action: :show
           else
             if @trip.is_return?
-              TrackerActionLog.create_return_trip(@trip.outbound_trip, current_user)
+              TrackerActionLog.create_return_trip(@trip, current_user)
             end
 
             if params[:run_id].present?
