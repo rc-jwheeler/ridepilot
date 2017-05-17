@@ -37,7 +37,13 @@
       = label_tag nil, translate_helper("vehicle_form_initial_mileage"), class: "col-md-2 control-label"
       .col-md-10
         %p.form-control-static
-          = f.number_field :initial_mileage, min: 0, class: "form-control", disabled: @readonly
+          - if @vehicle.new_record?
+            = f.number_field :initial_mileage, min: 0, class: "form-control"
+          - else
+            = number_with_delimiter @vehicle.initial_mileage
+            mi.
+            - if @readonly && can?(:edit, @vehicle)
+              = link_to translate_helper("edit"), edit_initial_mileage_vehicle_path(@vehicle), class: "btn action-button"
     .form-group
       = label_tag nil, translate_helper("vehicle_form_last_odometer_reading"), class: "col-md-2 control-label"
       .col-md-10

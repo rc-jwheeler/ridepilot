@@ -156,6 +156,11 @@ Rails.application.routes.draw do
       resources :vehicle_maintenance_events, :except => [:index, :show]
       resources :vehicle_maintenance_compliances, :except => [:index, :show]
       resources :vehicle_warranties, :except => [:index, :show]
+
+      member do 
+        get  :edit_initial_mileage
+        post :update_initial_mileage
+      end
     end
 
     resources :runs do
