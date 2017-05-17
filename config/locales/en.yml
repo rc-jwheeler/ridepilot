@@ -550,6 +550,7 @@ en:
   provider_form_logo: "Logo"
   provider_form_dispatch: "Dispatch enabled"
   provider_form_scheduling: "Scheduling"
+  provider_form_run_tracking: "Run Tracking"
   provider_form_trip_entry_from_runs: "Allow trip entry from runs page"
   provider_form_fields_required_for_run_completion: "Fields required for a run to be considered valued"
   provider_form_submit: "Submit"
@@ -902,6 +903,12 @@ en:
   new_run_submit: "Submit"
   runs: 'Runs'
   new_run: 'New Run'
+  run_tracking: "Tracking"
+  run_tracking_senior: "Senior"
+  run_tracking_disabled: "Disabled"
+  run_tracking_low_income: "Low Income"
+  number_of_one_way_trips: "Number of One Way Trips"
+  number_of_passengers_served: "Number of Passengers Served"
   #shared
   generic_error_message:
       one: "%{count} error prohibited this record from being saved:"
@@ -983,6 +990,10 @@ en:
   linking_to: 'Link to'
   trip_form_mobility_device_accommodations_label: 'Mobility Device Count'
   eligibility_and_accommodation: 'Eligibility and Accommodation'
+  number_of_passengers_tracking: "Number of Passengers Tracking"
+  number_of_senior_passengers_tracking_label: "Senior"
+  number_of_disabled_passengers_tracking_label: "Disabled"
+  number_of_low_income_passengers_tracking_label: "Low Income"
   
   # Double booked trips
   double_booked_modal_title: 'Warning: Potential Duplication of Trips'

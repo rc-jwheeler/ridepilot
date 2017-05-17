@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170517160112) do
+ActiveRecord::Schema.define(version: 20170517191545) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -469,6 +469,7 @@ ActiveRecord::Schema.define(version: 20170517160112) do
     t.integer  "advance_day_scheduling"
     t.boolean  "cab_enabled"
     t.integer  "eligible_age"
+    t.boolean  "run_tracking"
   end
 
   add_index "providers", ["deleted_at"], :name => "index_providers_on_deleted_at"
@@ -765,28 +766,28 @@ ActiveRecord::Schema.define(version: 20170517160112) do
     t.integer  "customer_id"
     t.datetime "pickup_time"
     t.datetime "appointment_time"
-    t.integer  "guest_count",                                             default: 0
-    t.integer  "attendant_count",                                         default: 0
-    t.integer  "group_size",                                              default: 0
+    t.integer  "guest_count",                                                     default: 0
+    t.integer  "attendant_count",                                                 default: 0
+    t.integer  "group_size",                                                      default: 0
     t.integer  "pickup_address_id"
     t.integer  "dropoff_address_id"
     t.integer  "mobility_id"
     t.integer  "funding_source_id"
     t.string   "trip_purpose_old"
-    t.string   "trip_result_old",                                         default: ""
+    t.string   "trip_result_old",                                                 default: ""
     t.text     "notes"
-    t.decimal  "donation_old",                   precision: 10, scale: 2, default: 0.0
+    t.decimal  "donation_old",                           precision: 10, scale: 2, default: 0.0
     t.integer  "provider_id"
     t.datetime "called_back_at"
-    t.boolean  "customer_informed",                                       default: false
+    t.boolean  "customer_informed",                                               default: false
     t.integer  "repeating_trip_id"
-    t.boolean  "cab",                                                     default: false
-    t.boolean  "cab_notified",                                            default: false
+    t.boolean  "cab",                                                             default: false
+    t.boolean  "cab_notified",                                                    default: false
     t.text     "guests"
     t.integer  "called_back_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",                                            default: 0
+    t.integer  "lock_version",                                                    default: 0
     t.boolean  "medicaid_eligible"
     t.integer  "mileage"
     t.string   "service_level_old"
@@ -794,11 +795,14 @@ ActiveRecord::Schema.define(version: 20170517160112) do
     t.integer  "trip_result_id"
     t.integer  "service_level_id"
     t.datetime "deleted_at"
-    t.string   "direction",                                               default: "outbound"
+    t.string   "direction",                                                       default: "outbound"
     t.text     "result_reason"
     t.integer  "linking_trip_id"
     t.float    "drive_distance"
     t.integer  "mobility_device_accommodations"
+    t.integer  "number_of_senior_passengers_served"
+    t.integer  "number_of_disabled_passengers_served"
+    t.integer  "number_of_low_income_passengers_served"
   end
 
   add_index "trips", ["called_back_by_id"], :name => "index_trips_on_called_back_by_id"

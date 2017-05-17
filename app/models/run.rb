@@ -125,6 +125,18 @@ class Run < ActiveRecord::Base
     seconds / 3600.0
   end
 
+  # sum up number_of_passengers in each tracking type from completed trips
+  def number_of_passengers_served(tracking_type)
+    field_name = get_trip_trakcing_field_name(tracking_type)
+    trips.completed.sum(field_name)
+  end
+
+  # count one way trips in each tracking type
+  def number_of_one_way_trips(tracking_type)
+    field_name = get_trip_trakcing_field_name(tracking_type)
+    trips.where("#{field_name} > 0").count
+  end
+  
 
   private
 
@@ -188,6 +200,12 @@ class Run < ActiveRecord::Base
     advance_day_scheduling = provider.try(:get_advance_day_scheduling)
     if date && advance_day_scheduling.present? && (date - Date.current).to_i > advance_day_scheduling
       errors.add(:date, TranslationEngine.translate_text(:beyond_advance_day_scheduling) % {advance_day_scheduling: advance_day_scheduling})
+    end
+  end
+
+  def get_trip_trakcing_field_name(tracking_type)
+    if ['senior', 'disabled', 'low_income'].include?(tracking_type.to_s)
+      "number_of_#{tracking_type}_passengers_served"
     end
   end
 end

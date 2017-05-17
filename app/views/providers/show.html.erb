@@ -141,7 +141,7 @@
 
 <hr />
 
-<h2 class="section-header"><%=translate_helper("scheduling")%></h2>
+<h2 class="section-header"><%=translate_helper("provider_form_scheduling")%></h2>
 <% if can? :edit, @provider %>
   <%= form_tag change_scheduling_provider_path(@provider) do %>
     <fieldset>
@@ -149,6 +149,22 @@
         <li>
           <%= label_tag translate_helper("enabled") %>
           <%= select_tag "scheduling", options_for_select( [["No", false], ["Yes", true]], @provider.scheduling? ), { :onchange => "form.submit();" } %>
+        </li>
+      </ol>
+    </fieldset>
+  <% end %>
+<% end %>
+
+<hr />
+
+<h2 class="section-header"><%=translate_helper("provider_form_run_tracking")%></h2>
+<% if can? :edit, @provider %>
+  <%= form_tag change_run_tracking_provider_path(@provider) do %>
+    <fieldset>
+      <ol class="section fourth">
+        <li>
+          <%= label_tag translate_helper("enabled") %>
+          <%= select_tag "run_tracking", options_for_select( [["No", false], ["Yes", true]], @provider.run_tracking? ), { :onchange => "form.submit();" } %>
         </li>
       </ol>
     </fieldset>

@@ -87,6 +87,7 @@ Rails.application.routes.draw do
         post :change_cab_enabled
         post :change_reimbursement_rates
         post :change_scheduling
+        post :change_run_tracking
         post :change_advance_day_scheduling
         post :change_eligible_age
         post :change_fields_required_for_run_completion

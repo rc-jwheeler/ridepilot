@@ -26,6 +26,8 @@
 
   .col-sm-12.col-md-6
     = render 'runs/date_time_panel', f: f, edit_mode: edit_mode
+    - if current_provider.run_tracking? && edit_mode == :show
+      = render 'runs/tracking_panel'
   .col-sm-12.col-md-6
     = render 'repeating_runs/repetition_panel', f: f if @is_repeating_run
     = render 'runs/vehicle_panel', f: f 
