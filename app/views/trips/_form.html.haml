@@ -28,6 +28,7 @@
   .col-sm-12.col-md-6
     = render 'trips/customer_panel', f: f, edit_mode: edit_mode
     = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
+    = render 'trips/tracking_panel', f: f, edit_mode: edit_mode unless @is_repeating_trip
     = render 'trips/eligibility_accommodation_panel', f: f, edit_mode: edit_mode
 
   .col-sm-12.col-md-6
