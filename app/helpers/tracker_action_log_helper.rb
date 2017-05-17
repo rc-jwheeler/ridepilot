@@ -27,6 +27,18 @@ module TrackerActionLogHelper
         reason = params[:reason].blank? ? 'Not provided.' : params[:reason]
         "Trip was Turned Down. <br>Reason: #{reason}".html_safe
       end
+    when "vehicle.initial_mileage_changed"
+      vehicle = log.trackable
+      if vehicle.present?
+        params = log.parameters || {}
+        mileage = params[:mileage]
+        reason = params[:reason].blank? ? 'Not provided.' : params[:reason]
+        if mileage.blank?
+          "Initial mileage was removed. <br>Reason: #{reason}".html_safe
+        else
+          "Initial mileage was changed to #{mileage}. <br>Reason: #{reason}".html_safe
+        end
+      end
     end
   end
 end

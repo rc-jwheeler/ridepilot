@@ -19,12 +19,18 @@
         = render 'maintenance_events_panel', f: f
         = render 'compliance_events_panel', f: f
         = render 'warranties_panel', f: f
+        - if @readonly
+          - logs = TrackerActionLog.for(@vehicle).order(created_at: :desc)
+          = render 'shared/action_log_panel', logs: logs if logs.any?
     - else
       .col-md-6
         = render 'details_panel', f: f
       .col-md-6
         = render 'garage_panel', f: f
         = render 'additional_info_panel', f: f
+        - if @readonly
+          - logs = TrackerActionLog.for(@vehicle).order(created_at: :desc)
+          = render 'shared/action_log_panel', logs: logs if logs.any?
 
   - unless @readonly 
     .row.form-actions

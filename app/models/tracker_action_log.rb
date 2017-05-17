@@ -14,7 +14,19 @@ class TrackerActionLog < PublicActivity::Activity
   def self.cancel_or_turn_down_trip(trip, user)
     if trip && trip.is_cancelled_or_turned_down?
       action = trip.trip_result.turned_down? ? :trip_turned_down : :trip_cancelled
-      trip.create_activity action, owner: user, params: {trip_result: trip.trip_result.try(:name), reason: trip.result_reason}
+      trip.create_activity action, owner: user, params: {
+        trip_result: trip.trip_result.try(:name), 
+        reason: trip.result_reason
+      }
+    end
+  end
+
+  def self.change_vehicle_initial_mileage(vehicle, user)
+    if vehicle 
+      vehicle.create_activity :initial_mileage_changed, owner: user, params: {
+        mileage: vehicle.initial_mileage, 
+        reason: vehicle.initial_mileage_change_reason
+      }
     end
   end
 end

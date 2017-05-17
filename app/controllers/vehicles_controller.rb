@@ -1,5 +1,5 @@
 class VehiclesController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:change_initial_mileage]
 
   def index
     @vehicles = @vehicles.default_order.for_provider(current_provider.id)
@@ -75,8 +75,33 @@ class VehiclesController < ApplicationController
     redirect_to vehicles_path, notice: 'Vehicle was successfully deleted.'
   end
 
+  def edit_initial_mileage
+    @vehicle = Vehicle.find_by_id(params[:id])
+    authorize! :edit, @vehicle
+  end
+
+  def update_initial_mileage
+    @vehicle = Vehicle.find_by_id(params[:id])
+    authorize! :edit, @vehicle
+
+    @vehicle.assign_attributes change_initial_mileage_params
+
+    respond_to do |format|
+      format.html {
+        if @vehicle.initial_mileage_change_reason.blank?
+          flash.now[:error] = "Please provide a reason."
+          render action: :edit_initial_mileage
+        else
+          @vehicle.save(validate: false)
+          TrackerActionLog.change_vehicle_initial_mileage @vehicle, current_user
+          redirect_to @vehicle, notice: "Initial mileage has been updated."
+        end
+      }
+    end
+  end
+
   private
-  
+
   def vehicle_params
     params.require(:vehicle).permit(
       :name, 
@@ -105,7 +130,11 @@ class VehiclesController < ApplicationController
       ])
   end
 
-   def check_blank_garage_address
+  def change_initial_mileage_params
+    params.require(:vehicle).permit(:initial_mileage, :initial_mileage_change_reason)
+  end
+
+  def check_blank_garage_address
     address_params = vehicle_params[:garage_address_attributes]
     is_blank = true
     address_params.keys.each do |key|

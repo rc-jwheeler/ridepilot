@@ -1099,6 +1099,8 @@ en:
   vehicle_maintenance_events_empty: "There are no maintenance events"
   vehicle_maintenance_event_add_link_title: "Add Maintenance Event"
   vehicle_maintenance_event_delete_confirm: "Are you sure?"
+  edit_vehicle_initial_mileage_heading: "Change initial mileage"
+  vehicle_form_initial_mileage_change_reason: "Reason"
 
   # Vehicle Maintenance Compliances
   vehicle_maintenance_compliances_heading: "Compliance Events"
