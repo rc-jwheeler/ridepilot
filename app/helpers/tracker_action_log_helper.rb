@@ -43,6 +43,22 @@ module TrackerActionLogHelper
 
         msg.html_safe
       end
+    when "repeating_run.subscription_created"
+      run = log.trackable
+      if run.present?
+        "Subscription run was created."
+      end
+    when "repeating_run.subscription_updated"
+      run = log.trackable
+      params = log.parameters || {}
+      if run.present? && !params.blank?
+        msg = "Subscription run had following updates:"
+        params.each do |k, v|
+          msg += "<div class='row'><div class='col-sm-4'><b>#{k}:</b></div><div class='col-sm-8'>#{v}</div></div>"
+        end
+
+        msg.html_safe
+      end
     when "vehicle.initial_mileage_changed"
       vehicle = log.trackable
       if vehicle.present?

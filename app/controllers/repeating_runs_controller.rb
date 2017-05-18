@@ -40,6 +40,7 @@ class RepeatingRunsController < ApplicationController
     respond_to do |format|
       if @run.is_all_valid?(current_provider_id) && @run.save
         format.html {
+          TrackerActionLog.create_subscription_run(@run, current_user)
           redirect_to @run, :notice => 'Subscription run template was successfully created.'
         }
       else
@@ -54,8 +55,11 @@ class RepeatingRunsController < ApplicationController
     authorize! :manage, @run
 
     @run.assign_attributes(run_params)
+    changes = @run.changes
+    prev_schedule = @run.schedule.to_s
     respond_to do |format|
       if @run.is_all_valid?(current_provider_id) && @run.save
+        TrackerActionLog.update_subscription_run(@run, current_user, changes, @run.schedule.to_s != prev_schedule)
         format.html { redirect_to(@run, :notice => 'Run was successfully updated.')  }
       else
         prep_view
