@@ -71,6 +71,40 @@ class TrackerActionLog < PublicActivity::Activity
     end
   end
 
+  def self.create_subscription_run(run, user)
+    if run 
+      run.create_activity :subscription_created, owner: user
+    end
+  end
+
+  def self.update_subscription_run(run, user, changes, is_schedule_changed)
+    if run
+      params = {}
+      changes.each do |k, change|
+        case k
+        when 'scheduled_start_time'
+          params["Scheduled Start Time"] = run.scheduled_start_time.strftime('%I:%M%P') if !compare_time_only(change[0], change[1])
+        when 'scheduled_end_time'
+          params["Scheduled End Time"] = run.scheduled_end_time.strftime('%I:%M%P') if !compare_time_only(change[0], change[1])
+        when 'vehicle_id'
+          params["Vehicle"] = run.vehicle.name if run.vehicle
+        when 'driver_id'
+          params["Driver"] = run.driver.name if run.driver
+        when 'start_date'
+          params["Start Date"] = run.start_date.try(:strftime, "%B %d, %Y")
+        when 'end_date'
+          params["End Date"] = run.end_date.try(:strftime, "%B %d, %Y")
+        end
+      end
+
+      if is_schedule_changed
+        params["Schedule"] = run.schedule.to_s
+      end
+
+      run.create_activity :subscription_updated, owner: user, params: params unless params.blank?
+    end
+  end
+
   def self.change_vehicle_initial_mileage(vehicle, user)
     if vehicle 
       vehicle.create_activity :initial_mileage_changed, owner: user, params: {

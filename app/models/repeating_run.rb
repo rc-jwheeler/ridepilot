@@ -6,6 +6,7 @@ class RepeatingRun < ActiveRecord::Base
   include RequiredFieldValidatorModule
   include RecurringRideCoordinator
   include RecurringRideCoordinatorScheduler
+  include PublicActivity::Common
 
   has_paper_trail
 
