@@ -3,6 +3,7 @@ require 'active_support/concern'
 module RecurringRideCoordinatorScheduler
   extend ActiveSupport::Concern
   include ScheduleAttributes
+  include ScheduleHelpers # Handles identifying schedule conflicts
 
   NON_RIDE_COORDINATOR_ATTRIBUTES = %w(id recurrence schedule_yaml created_at updated_at lock_version start_date end_date comments)
 

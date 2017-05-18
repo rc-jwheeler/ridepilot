@@ -10,7 +10,9 @@ class RepeatingRun < ActiveRecord::Base
 
   has_paper_trail
 
-  validates :comments, :length => { :maximum => 30 } 
+  validates :comments, :length => { :maximum => 30 }
+  validate :daily_name_uniqueness
+  validate :repeating_name_uniqueness
   
   scope :active, -> { where("end_date is NULL or end_date >= ?", Date.today) }
   # a query to find repeating_runs that can be used to assign repeating_trips
@@ -20,7 +22,7 @@ class RepeatingRun < ActiveRecord::Base
       {
         repeat:        1,
         interval_unit: "week",
-        start_date:    Date.today.to_s,
+        start_date:    (run.start_date.try(:to_date) || Date.today).to_s,
         interval:      run.repetition_interval, 
         monday:        run.repeats_mondays    ? 1 : 0,
         tuesday:       run.repeats_tuesdays   ? 1 : 0,
@@ -93,4 +95,30 @@ class RepeatingRun < ActiveRecord::Base
 
     active
   end
+  
+  private
+  
+  # determines if any daily runs overlap with this run and have the same name and provider
+  def daily_name_uniqueness
+    daily_overlaps = provider.runs # same provider
+      .where(name: name) # same name
+      .where.not(repeating_run_id: [id].compact) # not a child of this repeating run; remove nil from the list of ids to exclude
+      .select {|r| schedule.occurs_on?(r.date)} # date collides with schedule
+    unless daily_overlaps.empty?
+      errors.add(:name,  "should be unique by day and by provider among daily runs")
+    end
+  end
+
+  # Determines if the schedule of this repeating run conflicts with the schedule
+  # of any other repeating run with the same provider and name
+  def repeating_name_uniqueness
+    repeating_overlaps = provider.repeating_runs # same provider
+      .where(name: name) # same name
+      .where.not(id: id) # not the same record
+      .select { |rr| schedule_conflicts_with?(rr) } # checks for overlap between recurrence rules
+    unless repeating_overlaps.empty?
+      errors.add(:name,  "should be unique by day and by provider among repeating runs")
+    end
+  end
+  
 end
