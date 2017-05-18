@@ -10,7 +10,7 @@
         .col-sm-3
           = f.label :date, translate_helper("date") 
         .col-sm-9
-          = f.text_field :date, :size => 10, :value => format_time_for_listing_day(@run.scheduled_start_time), class: 'date-picker form-control', readonly: true
+          = f.text_field :date, :size => 10, :value => format_time_for_listing_day(@run.date), class: 'date-picker form-control', readonly: true
     .form-group.col-sm-12
       .col-sm-3
         = f.label :scheduled_start_time, translate_helper("scheduled_start_time")

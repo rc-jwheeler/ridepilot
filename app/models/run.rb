@@ -34,7 +34,9 @@ class Run < ActiveRecord::Base
 
   before_validation :fix_dates, :set_complete
 
-  validates                 :name, presence: true, uniqueness: { scope: :date, message: "should be unique per day" }
+  validates                 :name, presence: true #, uniqueness: { scope: [:provider, :date], message: "should be unique by day and by provider" }
+  validate                  :daily_name_uniqueness
+  validate                  :repeating_name_uniqueness
   validates_date            :date
   validates_datetime        :actual_start_time, allow_blank: true
   validates_datetime        :actual_end_time, after: :actual_start_time, allow_blank: true
@@ -136,7 +138,6 @@ class Run < ActiveRecord::Base
     field_name = get_trip_trakcing_field_name(tracking_type)
     trips.where("#{field_name} > 0").count
   end
-  
 
   private
 
@@ -175,6 +176,27 @@ class Run < ActiveRecord::Base
       end
     end
     true
+  end
+  
+  # determines if any daily runs overlap with this run and have the same name and provider
+  def daily_name_uniqueness
+    daily_overlaps = provider.runs.where(name: name, date: date).where.not(id: id)
+    unless daily_overlaps.empty?
+      errors.add(:name,  "should be unique by day and by provider among daily runs")
+    end
+  end
+  
+  # determines if any repeating runs overlap with this run and have the same name and provider
+  # skip this validation if the date is within the advance day scheduling window for the provider
+  def repeating_name_uniqueness
+    return true if date < (Date.today + provider.advance_day_scheduling.days)
+    repeating_overlaps = provider.repeating_runs
+      .where(name: name)
+      .where.not(id: repeating_run_id)
+      .select { |rr| rr.schedule.occurs_on?(date) }
+    unless repeating_overlaps.empty?
+      errors.add(:name,  "should be unique by day and by provider among repeating runs")
+    end
   end
 
   def driver_availability
