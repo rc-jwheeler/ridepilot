@@ -1,6 +1,6 @@
 .form-group.col-sm-12
   .col-sm-7.control-label{id: "#{item.code}_label", for: "eligibility_#{item.code}"}
-    = item.description
+    %b= item.description
   .col-sm-5
     - customer_eligibility = @customer.customer_eligibilities.where(eligibility_id: item.id).first
     - is_ineligible = customer_eligibility.try(:eligible) == false
