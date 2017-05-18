@@ -48,6 +48,7 @@ class RepeatingTripsController < ApplicationController
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
         format.html {
+          TrackerActionLog.create_subscription_trip(@trip, current_user)
           redirect_to @trip, :notice => 'Subscription trip template was successfully created.'
         }
       else

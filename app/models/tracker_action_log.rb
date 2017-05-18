@@ -21,6 +21,12 @@ class TrackerActionLog < PublicActivity::Activity
     end
   end
 
+  def self.create_subscription_trip(trip, user)
+    if trip 
+      trip.create_activity :subscription_created, owner: user
+    end
+  end
+
   def self.change_vehicle_initial_mileage(vehicle, user)
     if vehicle 
       vehicle.create_activity :initial_mileage_changed, owner: user, params: {

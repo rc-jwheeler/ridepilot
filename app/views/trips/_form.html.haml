@@ -36,7 +36,7 @@
     = render 'trips/other_panel', f: f
     - if !@is_repeating_trip && edit_mode != :new
       = render 'trips/assignment_panel', f: f
-    - if !@is_repeating_trip && edit_mode == :show
+    - if edit_mode == :show
       - logs = TrackerActionLog.for(@trip).order(created_at: :desc)
       = render 'shared/action_log_panel', logs: logs if logs.any?
 
