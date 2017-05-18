@@ -27,6 +27,22 @@ module TrackerActionLogHelper
         reason = params[:reason].blank? ? 'Not provided.' : params[:reason]
         "Trip was Turned Down. <br>Reason: #{reason}".html_safe
       end
+    when "repeating_trip.subscription_created"
+      trip = log.trackable
+      if trip.present?
+        "Subscription trip was created."
+      end
+    when "repeating_trip.subscription_updated"
+      trip = log.trackable
+      params = log.parameters || {}
+      if trip.present? && !params.blank?
+        msg = "Subscription trip had following updates:"
+        params.each do |k, v|
+          msg += "<div class='row'><div class='col-sm-4'><b>#{k}:</b></div><div class='col-sm-8'>#{v}</div></div>"
+        end
+
+        msg.html_safe
+      end
     when "vehicle.initial_mileage_changed"
       vehicle = log.trackable
       if vehicle.present?

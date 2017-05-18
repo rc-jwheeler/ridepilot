@@ -6,6 +6,7 @@ class RepeatingTrip < ActiveRecord::Base
   include RecurringRideCoordinatorScheduler
   include RecurringRideCoordinator
   include TripCore
+  include PublicActivity::Common
 
   has_paper_trail
 
