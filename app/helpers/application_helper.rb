@@ -41,7 +41,7 @@ module ApplicationHelper
   end
 
   def format_simple_full_datetime(time)
-    I18n.l time, format: :long if time
+    time.strftime "%B %d, %Y %I:%M %p" if time
   end
   
   def format_time_for_listing(time)

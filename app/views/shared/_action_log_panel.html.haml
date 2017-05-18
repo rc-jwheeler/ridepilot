@@ -15,4 +15,4 @@
             %tr
               %td= format_simple_full_datetime(log.created_at)
               %td= log.owner.try(:name_with_username)
-              %td= formulate_log_message(log)
+              %td{style: 'word-wrap: break-word;'}= formulate_log_message(log)
