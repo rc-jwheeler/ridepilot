@@ -6,7 +6,7 @@ module RecurringRideCoordinator
   DAYS_OF_WEEK = %w{monday tuesday wednesday thursday friday saturday sunday}
 
   included do
-    before_save   :update_schedule_attributes
+    before_validation   :update_schedule_attributes
     after_save    :instantiate_recurring_ride_coordinators
 
     DAYS_OF_WEEK.each do |day|

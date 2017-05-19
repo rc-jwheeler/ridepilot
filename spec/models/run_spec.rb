@@ -31,4 +31,40 @@ RSpec.describe Run, type: :model do
       expect(run.complete?).to be_truthy
     end
   end
+  
+  describe 'name uniqueness validation' do
+    
+    # Set some context...
+    let(:provider_a) { create(:provider) }
+    let(:provider_b) { create(:provider) }
+    before(:each) { create(:run, :tomorrow, name: "Run A", provider: provider_a) }
+    before(:each) { create(:repeating_run, :tomorrow, name: "Run C", provider: provider_a) }
+    
+    it 'name must be unique among daily runs by date and provider' do
+      valid_run_diff_name = build(:run, :tomorrow, name: "Run B", provider: provider_a)
+      valid_run_diff_provider = build(:run, :tomorrow, name: "Run A", provider: provider_b)
+      valid_run_diff_date = build(:run, :next_week, name: "Run A", provider: provider_a)
+      invalid_run = build(:run, :tomorrow, name: "Run A", provider: provider_a)
+      
+      expect(valid_run_diff_name.valid?).to be true
+      expect(valid_run_diff_provider.valid?).to be true
+      expect(valid_run_diff_date.valid?).to be true
+      expect(invalid_run.valid?).to be false
+    end
+    
+    it 'name must be unique among repeating runs by date and provider' do
+      valid_run_diff_name = build(:run, :tomorrow, name: "Run D", provider: provider_a)
+      valid_run_diff_provider = build(:run, :tomorrow, name: "Run C", provider: provider_b)
+      valid_run_diff_date = build(:run, :next_week, name: "Run C", provider: provider_a)
+      invalid_run_this_week = build(:run, :tomorrow, name: "Run C", provider: provider_a)
+      invalid_run_next_week = build(:run, date: Date.tomorrow + 1.week, name: "Run C", provider: provider_a)
+            
+      expect(valid_run_diff_name.valid?).to be true
+      expect(valid_run_diff_provider.valid?).to be true
+      expect(valid_run_diff_date.valid?).to be true
+      expect(invalid_run_this_week.valid?).to be false
+      expect(invalid_run_next_week.valid?).to be false
+    end
+    
+  end
 end

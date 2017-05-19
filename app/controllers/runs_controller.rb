@@ -85,9 +85,7 @@ class RunsController < ApplicationController
     end
   end
 
-  def update
-    puts "UPDATING RUN", run_params.inspect, @run.inspect
-    
+  def update    
     authorize! :manage, @run
     
     # Massage trip_attributes. We're not using a nested form so that we can use

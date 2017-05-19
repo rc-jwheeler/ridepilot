@@ -98,12 +98,12 @@ class RepeatingRun < ActiveRecord::Base
   
   private
   
-  # determines if any daily runs overlap with this run and have the same name and provider
+  # Determines if any daily runs overlap with this run and have the same name and provider
   def daily_name_uniqueness
     daily_overlaps = provider.runs # same provider
       .where(name: name) # same name
       .where.not(repeating_run_id: [id].compact) # not a child of this repeating run; remove nil from the list of ids to exclude
-      .select {|r| schedule.occurs_on?(r.date)} # date collides with schedule
+      .select {|r| date_in_active_range?(r.date) && schedule.occurs_on?(r.date)} # date is in active range and collides with schedule
     unless daily_overlaps.empty?
       errors.add(:name,  "should be unique by day and by provider among daily runs")
     end

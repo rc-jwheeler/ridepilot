@@ -17,4 +17,50 @@ RSpec.describe RepeatingRun, type: :model do
       @occurrence_date_attribute = :date
     end
   end
+  
+  describe 'name uniqueness validation' do
+    
+    # Set some context...
+    let(:provider_a) { create(:provider) }
+    let(:provider_b) { create(:provider) }
+    before(:each) { create(:run, :tomorrow, name: "Run A", provider: provider_a) }
+    before(:each) { create(:repeating_run, :tomorrow, name: "Run C", provider: provider_a, repetition_interval: 2) }
+    
+    it 'name must be unique among daily runs by date and provider' do
+      valid_run_diff_name = build(:repeating_run, :tomorrow, name: "Run B", provider: provider_a)
+      valid_run_diff_provider = build(:repeating_run, :tomorrow, name: "Run A", provider: provider_b)
+      valid_run_diff_date = build(:repeating_run, :next_week, name: "Run A", provider: provider_a)
+      invalid_run_same_date = build(:repeating_run, :tomorrow, name: "Run A", provider: provider_a)
+      valid_run_zipper = build(:repeating_run, date: Date.tomorrow - 1.week, 
+                                name: "Run A", provider: provider_a, repetition_interval: 2)
+      invalid_run_collision = build(:repeating_run, date: Date.tomorrow - 1.week, 
+                                name: "Run A", provider: provider_a)
+      
+      expect(valid_run_diff_name.valid?).to be true
+      expect(valid_run_diff_provider.valid?).to be true
+      expect(valid_run_diff_date.valid?).to be true
+      expect(invalid_run_same_date.valid?).to be false
+      expect(valid_run_zipper.valid?).to be true
+      expect(invalid_run_collision.valid?).to be false      
+    end
+    
+    it 'name must be unique among repeating runs by date and provider' do
+      valid_run_diff_name     = build(:repeating_run, :tomorrow, name: "Run D", provider: provider_a)
+      valid_run_diff_provider = build(:repeating_run, :tomorrow, name: "Run C", provider: provider_b)
+      valid_run_diff_date     = build(:repeating_run, :next_week, name: "Run C", provider: provider_a)
+      invalid_run_same_date   = build(:repeating_run, :tomorrow, name: "Run C", provider: provider_a)
+      valid_run_zipper        = build(:repeating_run, date: Date.tomorrow - 1.week, 
+                                  name: "Run C", provider: provider_a, repetition_interval: 2)
+      invalid_run_collision   = build(:repeating_run, date: Date.tomorrow - 1.week, 
+                                  name: "Run C", provider: provider_a, repetition_interval: 3)
+            
+      expect(valid_run_diff_name.valid?).to be true
+      expect(valid_run_diff_provider.valid?).to be true
+      expect(valid_run_diff_date.valid?).to be true
+      expect(invalid_run_same_date.valid?).to be false
+      expect(valid_run_zipper.valid?).to be true
+      expect(invalid_run_collision.valid?).to be false
+    end
+    
+  end
 end
