@@ -191,7 +191,7 @@ class Run < ActiveRecord::Base
   # determines if any repeating runs overlap with this run and have the same name and provider
   # skip this validation if the date is within the advance day scheduling window for the provider
   def repeating_name_uniqueness
-    return true if date < (Date.today + provider.advance_day_scheduling.days)
+    return true if date.nil? || date < (Date.today + provider.advance_day_scheduling.days)
     repeating_overlaps = provider.repeating_runs  # same provider
       .where(name: name)                          # same name
       .where.not(id: repeating_run_id)            # not the parent repeating run
