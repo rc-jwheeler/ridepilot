@@ -14,6 +14,9 @@ class Driver < ActiveRecord::Base
   has_one :device_pool_driver, dependent: :destroy
   has_one :device_pool, through: :device_pool_driver
 
+  has_one :emergency_contact
+  accepts_nested_attributes_for :emergency_contact
+
   has_many :documents, as: :documentable, dependent: :destroy, inverse_of: :documentable
   has_many :driver_histories, dependent: :destroy, inverse_of: :driver
   has_many :runs, inverse_of: :driver

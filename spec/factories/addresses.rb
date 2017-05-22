@@ -11,6 +11,10 @@ FactoryGirl.define do
   
   factory :driver_address, parent: :address, class: DriverAddress
 
+  factory :geocoded_address, parent: :address, class: GeocodedAddress do 
+    the_geom RGeo::Geographic.spherical_factory(srid: 4326).point(100, 30)
+  end
+
   factory :customer_common_address, parent: :address, class: CustomerCommonAddress
 
   factory :provider_common_address, parent: :address, class: ProviderCommonAddress

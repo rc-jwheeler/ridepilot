@@ -283,6 +283,13 @@ en:
   driver_alt_address_heading: "Alternative Address"
   driver_completed_run_hours: "Completed Run Hours This Week"
 
+  # emergency contact
+  driver_form_emergency_contact_heading: 'Emergency Contact'
+  emergency_contact_name: 'Name'
+  emergency_contact_phone_number: 'Phone Number'
+  emergency_contact_relationship: 'Relationship'
+  emergency_contact_address: 'Address'
+
   # Driver histories
   driver_histories_heading: "History Events"
   driver_histories_add_link_title: "Add history event"

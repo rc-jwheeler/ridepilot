@@ -64,6 +64,10 @@
       = render 'shared/operating_hours'
     / END .col-md-6
     .col-sm-12.col-md-6
+      - @driver.build_emergency_contact if @driver.emergency_contact.nil?
+      = f.fields_for :emergency_contact, @driver.emergency_contact do |contact_form|
+        = render 'drivers/emergency_contact_panel', f: contact_form
+
       - if @driver.persisted?
         .panel.panel-primary
           .panel-heading= translate_helper("driver_documents_heading")
