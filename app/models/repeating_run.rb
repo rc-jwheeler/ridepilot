@@ -82,9 +82,6 @@ class RepeatingRun < ActiveRecord::Base
                 
         # Skip if occurrence is outside of schedule's active window
         next unless date_in_active_range?(date.to_date)
-        # date = date.to_date
-        # next if (start_date.present? && date < start_date) || 
-        #         (end_date.present? && date > end_date)
                 
         # Build a run belonging to the repeating run for each schedule 
         # occurrence that doesn't already have a run built for it.

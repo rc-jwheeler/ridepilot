@@ -80,9 +80,6 @@ class RepeatingTrip < ActiveRecord::Base
         
         # Skip if occurrence is outside of schedule's active window
         next unless date_in_active_range?(date.to_date)
-        # date = date.to_date
-        # next if (start_date.present? && date < start_date) || 
-        #         (end_date.present? && date > end_date)
         this_trip_pickup_time = Time.zone.local(date.year, date.month, date.day, pickup_time.hour, pickup_time.min, pickup_time.sec)
       
         # Build a trip belonging to the repeating trip for each schedule 
@@ -96,16 +93,13 @@ class RepeatingTrip < ActiveRecord::Base
                 "appointment_time" => this_trip_pickup_time + (appointment_time - pickup_time)
               } )
           )    
-          # repeating_run_id is not part of trip attributes
-          # attributes = self.attributes.select{ |k, v| (RepeatingTrip.ride_coordinator_attributes - ['repeating_run_id']).include? k.to_s }
-          # attributes["repeating_trip_id"] = id
-          # attributes["pickup_time"] = this_trip_pickup_time
-          # attributes["appointment_time"] = this_trip_pickup_time + (appointment_time - pickup_time)
-          # trip = Trip.new attributes
-          # no validation to allow creating individual instances despite some conflicts with other daily trips
-          # trip.save(validate: false)
         end
+  
       end
+      
+      # Timestamp the scheduler to its current timestamp or the end of the
+      # advance scheduling period, whichever comes last
+      self.scheduled_through = [self.scheduled_through, later].compact.max
     end
   end
 

@@ -58,9 +58,7 @@ RSpec.describe RepeatingRun, type: :model do
       invalid_run_collision   = build(:repeating_run_with_schedule, :triweekly, 
                                   start_date: Date.tomorrow - 1.week, 
                                   name: "Run C", provider: provider_a)
-      
-      puts "COLLIDING RUN", invalid_run_collision.schedule.to_hash
-      
+            
       expect(valid_run_diff_name.valid?).to be true
       expect(valid_run_diff_provider.valid?).to be true
       expect(valid_run_diff_date.valid?).to be true
