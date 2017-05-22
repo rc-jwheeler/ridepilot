@@ -38,7 +38,7 @@ RSpec.describe Run, type: :model do
     let(:provider_a) { create(:provider) }
     let(:provider_b) { create(:provider) }
     before(:each) { create(:run, :tomorrow, name: "Run A", provider: provider_a) }
-    before(:each) { create(:repeating_run_with_schedule, :weekly, :tomorrow, name: "Run C", provider: provider_a) }
+    before(:each) { create(:repeating_run, :weekly, :tomorrow, name: "Run C", provider: provider_a) }
     
     it 'name must be unique among daily runs by date and provider' do
       valid_run_diff_name = build(:run, :tomorrow, name: "Run B", provider: provider_a)

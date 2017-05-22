@@ -76,8 +76,6 @@ module RecurringRideCoordinator
     )
   end
   
-  # Returns true if date is in the scheduler's active window
-  
   private
 
   def update_schedule_attributes
