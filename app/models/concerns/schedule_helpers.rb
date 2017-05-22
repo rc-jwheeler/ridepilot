@@ -37,11 +37,6 @@ module ScheduleHelpers
   def date_in_range?(date, a, b)
     return false if date.nil?   # FALSE if DATE is nil
     !( ( a.present? && date < a ) || ( b.present? && date > b ) )
-    # (a.nil? && b.nil?) ||                       # TRUE if both START and END are nil.
-    # (a.nil? && !b.nil? && date <= b) ||         # TRUE if START is nil, and DATE falls before END.
-    # (b.nil? && !a.nil? && date >= a) ||         # TRUE if END is nil, and DATE falls after START.
-    # (!a.nil? && !b.nil? && ((a..b) === date))   # TRUE if DATE falls between START and END
-    #                                             # FALSE otherwise
   end
   
   # Determines if the passed date falls in this schedule's active range
@@ -66,6 +61,18 @@ module ScheduleHelpers
     # Check for collision based on start date and repeat interval
     offset = weeks_offset(schedule_start_date, other_record.schedule_start_date)
     return recurrences_intersect?(offset, repetition_interval, other_record.repetition_interval)
+  end
+  
+  # Sets an attribute in the schedule_attributes hash, converting dates to strings
+  # to avoid errors
+  def set_schedule_attribute(attr, value)
+    sched_attrs = self.try(:schedule_attributes).to_h
+    return false unless sched_attrs.present?
+    sched_attrs[attr] = value
+    sched_attrs = sched_attrs.map do |k,v|
+      [k, [Date, Time, DateTime].include?(v.class) ? v.to_s : v]
+    end.to_h
+    self.schedule_attributes = sched_attrs
   end
   
 end

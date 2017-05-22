@@ -50,15 +50,15 @@ RSpec.shared_examples "a recurring ride coordinator" do
         @coordinator = build @described_class_factory
       end
 
-      it "sets the @repetition_interval instance variable" do
-        expect(@coordinator.instance_variable_get("@repetition_interval")).to be_nil
-        @coordinator.repetition_interval = 5
-        expect(@coordinator.instance_variable_get("@repetition_interval")).to eq 5
+      it "sets the repetition_interval in schedule_attributes" do
+        old_schedule_interval = @coordinator.schedule_attributes[:interval]
+        @coordinator.repetition_interval = old_schedule_interval + 1
+        expect(@coordinator.schedule_attributes[:interval]).to eq(old_schedule_interval + 1)
       end
 
       it "converts values to integers" do
         @coordinator.repetition_interval = "5"
-        expect(@coordinator.instance_variable_get("@repetition_interval")).to eq 5
+        expect(@coordinator.repetition_interval).to eq 5
       end
     end
 
@@ -66,15 +66,14 @@ RSpec.shared_examples "a recurring ride coordinator" do
       before do
         @coordinator = build @described_class_factory
       end
-
-      it "returns the @repetition_interval instance variable if it's present" do
-        @coordinator.instance_variable_set "@repetition_interval", 5
-        expect(@coordinator.repetition_interval).to eq 5
-      end
     
-      it "returns the scheduler's schedule_attributes.interval if @repetition_interval is nil and the scheduler is present" do
-        @coordinator.send "schedule_attributes=", {repeat: 1, interval: 5, interval_unit: "day"}
-        expect(@coordinator.repetition_interval).to eq 5
+      it "returns the scheduler's schedule_attributes interval" do
+        old_repetition_interval = @coordinator.repetition_interval
+        @coordinator.send "schedule_attributes=", {
+          repeat: 1, interval: old_repetition_interval + 1, interval_unit: "day"
+        }
+
+        expect(@coordinator.repetition_interval).to eq(old_repetition_interval + 1)
       end
     end  
 

@@ -19,7 +19,7 @@ RSpec.describe RepeatingRun, type: :model do
     end
   end
   
-  describe 'name uniqueness validation' do
+  describe 'validations' do
     
     # Set some context...
     let(:provider_a) { create(:provider) }
@@ -67,5 +67,18 @@ RSpec.describe RepeatingRun, type: :model do
       expect(invalid_run_collision.valid?).to be false
     end
     
+    it 'at least one day of the week must be checked' do
+      valid_one_day   = build(:repeating_run_with_schedule, :no_repeating_days,
+                              repeats_mondays: true)
+      valid_many_days = build(:repeating_run_with_schedule, :no_repeating_days,
+                              repeats_tuesdays: true, repeats_wednesdays: true, repeats_thursdays: true)
+      invalid_no_days = build(:repeating_run_with_schedule, :no_repeating_days)
+      
+      expect(valid_one_day.valid?).to be true
+      expect(valid_many_days.valid?).to be true
+      expect(invalid_no_days.valid?).to be false
+    end
+    
   end
+  
 end

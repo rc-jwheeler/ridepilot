@@ -13,6 +13,7 @@ class RepeatingRun < ActiveRecord::Base
   validates :comments, :length => { :maximum => 30 }
   validate :daily_name_uniqueness
   validate :repeating_name_uniqueness
+  validate :repeating_schedule_day_present
   
   has_many :runs # Child runs created by this RepeatingRun's scheduler
 
@@ -135,6 +136,13 @@ class RepeatingRun < ActiveRecord::Base
       .select { |rr| schedule_conflicts_with?(rr) } # checks for overlap between recurrence rules
     unless repeating_overlaps.empty?
       errors.add(:name,  "should be unique by day and by provider among repeating runs")
+    end
+  end
+  
+  # At least one day of the week must be checked to create a repeating run
+  def repeating_schedule_day_present
+    unless Date::DAYNAMES.any? {|d| self.send("repeats_#{d.downcase}s").present? }
+      errors.add(:schedule_attributes,  "must have at least one day of the week checked for repeating schedule")
     end
   end
   

@@ -53,16 +53,13 @@ module RecurringRideCoordinator
     end
   end
 
+  # Set the interval in schedule attributes
   def repetition_interval=(value)
-    @repetition_interval = value.to_i
+    self.set_schedule_attribute(:interval, value.to_i)
   end
 
   def repetition_interval
-    if @repetition_interval.nil?
-      @repetition_interval = self.schedule_attributes.interval 
-    else
-      @repetition_interval
-    end
+    self.schedule_attributes[:interval].to_i
   end
   
   # Returns the first day in the current scheduler window: Either tomorrow, or
