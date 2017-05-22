@@ -36,11 +36,12 @@ module ScheduleHelpers
   # Determines if a date falls within a given range (a..b), allowing for open-ended ranges
   def date_in_range?(date, a, b)
     return false if date.nil?   # FALSE if DATE is nil
-    (a.nil? && b.nil?) ||       # TRUE if both START and END are nil.
-    (a.nil? && !b.nil? && date <= b) ||    # TRUE if START is nil, and DATE falls before END.
-    (b.nil? && !a.nil? && date >= a) ||    # TRUE if END is nil, and DATE falls after START.
-    (!a.nil? && !b.nil? && ((a..b) === date))          # TRUE if DATE falls between START and END
-                                # FALSE otherwise
+    !( ( a.present? && date < a ) || ( b.present? && date > b ) )
+    # (a.nil? && b.nil?) ||                       # TRUE if both START and END are nil.
+    # (a.nil? && !b.nil? && date <= b) ||         # TRUE if START is nil, and DATE falls before END.
+    # (b.nil? && !a.nil? && date >= a) ||         # TRUE if END is nil, and DATE falls after START.
+    # (!a.nil? && !b.nil? && ((a..b) === date))   # TRUE if DATE falls between START and END
+    #                                             # FALSE otherwise
   end
   
   # Determines if the passed date falls in this schedule's active range

@@ -7,7 +7,7 @@ module RecurringRideCoordinator
 
   included do
     before_validation   :update_schedule_attributes
-    after_save    :instantiate_recurring_ride_coordinators
+    before_save    :instantiate_recurring_ride_coordinators
 
     DAYS_OF_WEEK.each do |day|
       define_method "repeats_#{day}s=" do |value|
@@ -64,6 +64,21 @@ module RecurringRideCoordinator
       @repetition_interval
     end
   end
+  
+  # Returns the first day in the current scheduler window
+  def scheduler_window_start
+    Date.today.in_time_zone + 1.day
+  end
+    
+  # Returns the last day in the current scheduler window
+  def scheduler_window_end
+    scheduler_window_start.advance(
+      days: ( provider.try(:advance_day_scheduling) ||
+              Provider::DEFAULT_ADVANCE_DAY_SCHEDULING) - 1 
+    )
+  end
+  
+  # Returns true if date is in the scheduler's active window
   
   private
 

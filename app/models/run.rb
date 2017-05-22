@@ -198,7 +198,7 @@ class Run < ActiveRecord::Base
       .select do |rr| 
         rr.date_in_active_range?(date) &&         # date is in schedule's active range 
         rr.schedule.occurs_on?(date)              # schedule occurs on this date
-      end 
+      end
     unless repeating_overlaps.empty?
       errors.add(:name,  "should be unique by day and by provider among repeating runs")
     end

@@ -15,6 +15,10 @@ RSpec.shared_examples "a recurring ride coordinator" do
 
       # Set @occurrence_date_attribute in the described class
       fail "@occurrence_date_attribute instance variable required" unless defined? @occurrence_date_attribute
+      
+      # Set @scheduler_date_attribute in the described class
+      fail "@scheduler_date_attribute instance variable required" unless defined? @scheduler_date_attribute
+
     end
 
     describe "DAYS_OF_WEEK" do
@@ -85,9 +89,9 @@ RSpec.shared_examples "a recurring ride coordinator" do
           # Freeze date at Sun, 30 Aug 2015, 12:00 PM
           Timecop.freeze(Time.parse("2015-08-30 12:00").in_time_zone)
         
-          @coordinator = build @described_class_factory,
+          @coordinator = create @described_class_factory,
             # Schedule first occurrence on Mon, 31 Sep 2015
-            @occurrence_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
+            @scheduler_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
             :repeats_mondays => true, 
             :repeats_tuesdays => false,
             :repeats_wednesdays => false,
@@ -128,7 +132,7 @@ RSpec.shared_examples "a recurring ride coordinator" do
             #   2015-08-31
             #   2015-09-07
             #   2015-09-14
-            @occurrence_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
+            @scheduler_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
             :repeats_mondays => true, 
             :repeats_tuesdays => false,
             :repeats_wednesdays => false,
@@ -199,7 +203,7 @@ RSpec.shared_examples "a recurring ride coordinator" do
               #   2015-08-31
               #   2015-09-07
               #   2015-09-14
-              @occurrence_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
+              @scheduler_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
               :repeats_mondays => true, 
               :repeats_tuesdays => false,
               :repeats_wednesdays => false,
@@ -210,6 +214,7 @@ RSpec.shared_examples "a recurring ride coordinator" do
               :vehicle_id => @vehicle.id,
               :driver_id => @driver.id,
               :repetition_interval => 1
+              
           end
           
           # Now advance time two weeks, to Sun, 13 Sep 2015
@@ -219,6 +224,7 @@ RSpec.shared_examples "a recurring ride coordinator" do
           @coordinator.repeats_tuesdays = true
           @coordinator.save
           @coordinator.reload
+          
         end
 
         after do
@@ -281,7 +287,7 @@ RSpec.shared_examples "a recurring ride coordinator" do
               #   2015-08-31
               #   2015-09-07
               #   2015-09-14
-              @occurrence_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
+              @scheduler_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
               :repeats_mondays => true, 
               :repeats_tuesdays => false,
               :repeats_wednesdays => false,
@@ -296,9 +302,10 @@ RSpec.shared_examples "a recurring ride coordinator" do
           
           # Now advance time two weeks, to Sun, 13 Sep 2015
           Timecop.freeze(Time.parse("2015-09-13 12:00").in_time_zone)
-          
+                    
           @coordinator.repeats_mondays = false
           @coordinator.save
+          
         end
 
         after do

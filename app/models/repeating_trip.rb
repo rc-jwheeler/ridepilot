@@ -9,6 +9,8 @@ class RepeatingTrip < ActiveRecord::Base
   include PublicActivity::Common
 
   has_paper_trail
+  
+  has_many :trips # Child trips created by this repeating trip's scheduler
 
   schedules_occurrences_with with_attributes: -> (trip) {
       {
@@ -66,25 +68,42 @@ class RepeatingTrip < ActiveRecord::Base
   scope :active, -> { where("end_date is NULL or end_date >= ?", Date.today) }
   
   def instantiate!
-    return unless active?
+    return unless active? # Only build trips for active schedules
 
-    now = Date.today.in_time_zone + 1.day
-    later = now.advance(days: (provider.try(:advance_day_scheduling) || Provider::DEFAULT_ADVANCE_DAY_SCHEDULING) - 1)
+    # First and last days to create new trips
+    now, later = scheduler_window_start, scheduler_window_end
+    
+    # Transaction block ensures that no DB changes will be made if there are any errors
     RepeatingTrip.transaction do
+      # Potentially create a trip for each schedule occurrence in the scheduler window
       for date in schedule.occurrences_between(now, later)
-        date = date.to_date
-        next if (start_date.present? && date < start_date) || (end_date.present? && date > end_date)
+        
+        # Skip if occurrence is outside of schedule's active window
+        next unless date_in_active_range?(date.to_date)
+        # date = date.to_date
+        # next if (start_date.present? && date < start_date) || 
+        #         (end_date.present? && date > end_date)
         this_trip_pickup_time = Time.zone.local(date.year, date.month, date.day, pickup_time.hour, pickup_time.min, pickup_time.sec)
       
-        unless Trip.repeating_based_on(self).for_date(date).exists?
+        # Build a trip belonging to the repeating trip for each schedule 
+        # occurrence that doesn't already have a trip built for it.
+        unless self.trips.for_date(date).exists?
+          self.trips.build(
+            self.attributes
+              .select{ |k, v| (RepeatingTrip.ride_coordinator_attributes - ['repeating_run_id']).include?(k.to_s) }
+              .merge( {
+                "pickup_time" => this_trip_pickup_time,
+                "appointment_time" => this_trip_pickup_time + (appointment_time - pickup_time)
+              } )
+          )    
           # repeating_run_id is not part of trip attributes
-          attributes = self.attributes.select{ |k, v| (RepeatingTrip.ride_coordinator_attributes - ['repeating_run_id']).include? k.to_s }
-          attributes["repeating_trip_id"] = id
-          attributes["pickup_time"] = this_trip_pickup_time
-          attributes["appointment_time"] = this_trip_pickup_time + (appointment_time - pickup_time)
-          trip = Trip.new attributes
+          # attributes = self.attributes.select{ |k, v| (RepeatingTrip.ride_coordinator_attributes - ['repeating_run_id']).include? k.to_s }
+          # attributes["repeating_trip_id"] = id
+          # attributes["pickup_time"] = this_trip_pickup_time
+          # attributes["appointment_time"] = this_trip_pickup_time + (appointment_time - pickup_time)
+          # trip = Trip.new attributes
           # no validation to allow creating individual instances despite some conflicts with other daily trips
-          trip.save(validate: false)
+          # trip.save(validate: false)
         end
       end
     end

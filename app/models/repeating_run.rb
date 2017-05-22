@@ -14,6 +14,8 @@ class RepeatingRun < ActiveRecord::Base
   validate :daily_name_uniqueness
   validate :repeating_name_uniqueness
   
+  has_many :runs # Child runs created by this RepeatingRun's scheduler
+
   scope :active, -> { where("end_date is NULL or end_date >= ?", Date.today) }
   # a query to find repeating_runs that can be used to assign repeating_trips
   scope :during, -> (from_time, to_time) { where("NOT (scheduled_start_time::time <= ?) OR NOT(scheduled_end_time::time <= ?)", to_time.utc.to_s(:time), from_time.utc.to_s(:time)) }
@@ -66,24 +68,42 @@ class RepeatingRun < ActiveRecord::Base
       end
     }
 
+  # Builds runs based on the repeating run schedule
   def instantiate!
-    return unless active? 
+    return unless active? # Only build runs for active schedules
 
-    now = Date.today.in_time_zone + 1.day
-    later = now.advance(days: (provider.try(:advance_day_scheduling) || Provider::DEFAULT_ADVANCE_DAY_SCHEDULING) - 1)
+    # First and last days to create new runs
+    now, later = scheduler_window_start, scheduler_window_end
+        
+    # Transaction block ensures that no DB changes will be made if there are any errors
     RepeatingRun.transaction do
+      # Potentially create a run for each schedule occurrence in the scheduler window
       for date in schedule.occurrences_between(now, later)
-        date = date.to_date
-        next if (start_date.present? && date < start_date) || (end_date.present? && date > end_date)
-        unless Run.repeating_based_on(self).for_date(date).exists?
-          attributes = self.attributes.select{ |k, v| RepeatingRun.ride_coordinator_attributes.include? k.to_s }
-          attributes["date"] = date
-          attributes["repeating_run_id"] = id
-          run = Run.new attributes
-          # no validation to allow creating individual instances despite some conflicts with other daily runs
-          run.save(validate: false)
+                
+        # Skip if occurrence is outside of schedule's active window
+        next unless date_in_active_range?(date.to_date)
+        # date = date.to_date
+        # next if (start_date.present? && date < start_date) || 
+        #         (end_date.present? && date > end_date)
+                
+        # Build a run belonging to the repeating run for each schedule 
+        # occurrence that doesn't already have a run built for it.
+        unless self.runs.for_date(date).exists?
+          run = Run.new(
+            self.attributes
+              .select{ |k, v| RepeatingRun.ride_coordinator_attributes.include?(k.to_s) }
+              .merge( {
+                "date" => date
+              } )
+          )
+          self.runs << run
         end
+                
       end
+      
+      # Timestamp the scheduler to its current timestamp or the end of the
+      # advance scheduling period, whichever comes last
+      self.scheduled_through = [self.scheduled_through, later].compact.max
     end
   end
 
