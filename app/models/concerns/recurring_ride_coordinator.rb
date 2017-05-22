@@ -6,8 +6,8 @@ module RecurringRideCoordinator
   DAYS_OF_WEEK = %w{monday tuesday wednesday thursday friday saturday sunday}
 
   included do
-    before_save   :update_schedule_attributes
-    after_save    :instantiate_recurring_ride_coordinators
+    before_validation   :update_schedule_attributes
+    before_save    :instantiate_recurring_ride_coordinators
 
     DAYS_OF_WEEK.each do |day|
       define_method "repeats_#{day}s=" do |value|
@@ -53,16 +53,27 @@ module RecurringRideCoordinator
     end
   end
 
+  # Set the interval in schedule attributes
   def repetition_interval=(value)
-    @repetition_interval = value.to_i
+    self.set_schedule_attribute(:interval, value.to_i)
   end
 
   def repetition_interval
-    if @repetition_interval.nil?
-      @repetition_interval = self.schedule_attributes.interval 
-    else
-      @repetition_interval
-    end
+    self.schedule_attributes[:interval].to_i
+  end
+  
+  # Returns the first day in the current scheduler window: Either tomorrow, or
+  # the last day the scheduler has been run for, whichever comes last
+  def scheduler_window_start
+    [(Date.today.in_time_zone + 1.day), self.try(:scheduled_through)].compact.max
+  end
+    
+  # Returns the last day in the current scheduler window
+  def scheduler_window_end
+    Date.today.in_time_zone.advance(
+      days: ( provider.try(:advance_day_scheduling) ||
+              Provider::DEFAULT_ADVANCE_DAY_SCHEDULING)
+    )
   end
   
   private

@@ -15,6 +15,10 @@ RSpec.shared_examples "a recurring ride coordinator" do
 
       # Set @occurrence_date_attribute in the described class
       fail "@occurrence_date_attribute instance variable required" unless defined? @occurrence_date_attribute
+      
+      # Set @scheduler_date_attribute in the described class
+      fail "@scheduler_date_attribute instance variable required" unless defined? @scheduler_date_attribute
+
     end
 
     describe "DAYS_OF_WEEK" do
@@ -46,15 +50,15 @@ RSpec.shared_examples "a recurring ride coordinator" do
         @coordinator = build @described_class_factory
       end
 
-      it "sets the @repetition_interval instance variable" do
-        expect(@coordinator.instance_variable_get("@repetition_interval")).to be_nil
-        @coordinator.repetition_interval = 5
-        expect(@coordinator.instance_variable_get("@repetition_interval")).to eq 5
+      it "sets the repetition_interval in schedule_attributes" do
+        old_schedule_interval = @coordinator.schedule_attributes[:interval]
+        @coordinator.repetition_interval = old_schedule_interval + 1
+        expect(@coordinator.schedule_attributes[:interval]).to eq(old_schedule_interval + 1)
       end
 
       it "converts values to integers" do
         @coordinator.repetition_interval = "5"
-        expect(@coordinator.instance_variable_get("@repetition_interval")).to eq 5
+        expect(@coordinator.repetition_interval).to eq 5
       end
     end
 
@@ -62,15 +66,14 @@ RSpec.shared_examples "a recurring ride coordinator" do
       before do
         @coordinator = build @described_class_factory
       end
-
-      it "returns the @repetition_interval instance variable if it's present" do
-        @coordinator.instance_variable_set "@repetition_interval", 5
-        expect(@coordinator.repetition_interval).to eq 5
-      end
     
-      it "returns the scheduler's schedule_attributes.interval if @repetition_interval is nil and the scheduler is present" do
-        @coordinator.send "schedule_attributes=", {repeat: 1, interval: 5, interval_unit: "day"}
-        expect(@coordinator.repetition_interval).to eq 5
+      it "returns the scheduler's schedule_attributes interval" do
+        old_repetition_interval = @coordinator.repetition_interval
+        @coordinator.send "schedule_attributes=", {
+          repeat: 1, interval: old_repetition_interval + 1, interval_unit: "day"
+        }
+
+        expect(@coordinator.repetition_interval).to eq(old_repetition_interval + 1)
       end
     end  
 
@@ -85,9 +88,9 @@ RSpec.shared_examples "a recurring ride coordinator" do
           # Freeze date at Sun, 30 Aug 2015, 12:00 PM
           Timecop.freeze(Time.parse("2015-08-30 12:00").in_time_zone)
         
-          @coordinator = build @described_class_factory,
+          @coordinator = create @described_class_factory,
             # Schedule first occurrence on Mon, 31 Sep 2015
-            @occurrence_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
+            @scheduler_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
             :repeats_mondays => true, 
             :repeats_tuesdays => false,
             :repeats_wednesdays => false,
@@ -128,7 +131,7 @@ RSpec.shared_examples "a recurring ride coordinator" do
             #   2015-08-31
             #   2015-09-07
             #   2015-09-14
-            @occurrence_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
+            @scheduler_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
             :repeats_mondays => true, 
             :repeats_tuesdays => false,
             :repeats_wednesdays => false,
@@ -139,7 +142,8 @@ RSpec.shared_examples "a recurring ride coordinator" do
             :vehicle_id => @vehicle.id,
             :driver_id => @driver.id,
             :repetition_interval => 1
-
+            
+          @old_scheduled_through_date = @coordinator.try(:scheduled_through) 
           @coordinator.repeats_mondays = false
           @coordinator.repeats_tuesdays = true
           @coordinator.save
@@ -155,20 +159,18 @@ RSpec.shared_examples "a recurring ride coordinator" do
           expect(@coordinator.schedule_attributes.tuesday).to eq 1
         end
 
-        it "should have new child coordinators on the correct day" do
+        it "should not have new child coordinators on the new day" do
           # Time is still frozen at Sun, 30 Aug 2015. 3 weeks out is
-          # Sun, 20 Sep 2015. With weekly repeats now on Tuesdays, beginning 
-          # Mon, 31 Aug 2015, this gives us:
-          #   2015-09-01
-          #   2015-09-08
-          #   2015-09-15
-          # Not including the original (which was created on a Monday), we 
-          # should see 3 new occurrences
+          # Sun, 20 Sep 2015. Upon save, the scheduler should have scheduled 
+          # new occurrences on Tuesdays starting at the date the scheduler
+          # left off before the coordinator was last saved, through the end of
+          # the schedule window, but scheduled NO new occurrences before then.
           expect(
             @scheduled_instance_class.where(
               @occurrence_scheduler_association_id => @coordinator.id
-            ).select{ |c| c.send(@occurrence_date_attribute).strftime("%u") == "2" }.size
-          ).to eq 3
+            ).where("#{@occurrence_date_attribute} <= ?", @old_scheduled_through_date)
+            .select{ |c| c.send(@occurrence_date_attribute).wday == 2 }.size
+          ).to eq 0
         end
 
         it "should still have child coordinators on the old day" do
@@ -199,7 +201,7 @@ RSpec.shared_examples "a recurring ride coordinator" do
               #   2015-08-31
               #   2015-09-07
               #   2015-09-14
-              @occurrence_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
+              @scheduler_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
               :repeats_mondays => true, 
               :repeats_tuesdays => false,
               :repeats_wednesdays => false,
@@ -210,15 +212,18 @@ RSpec.shared_examples "a recurring ride coordinator" do
               :vehicle_id => @vehicle.id,
               :driver_id => @driver.id,
               :repetition_interval => 1
+              
           end
           
           # Now advance time two weeks, to Sun, 13 Sep 2015
           Timecop.freeze(Time.parse("2015-09-13 12:00").in_time_zone)
-          
+  
+          @old_scheduled_through_date = @coordinator.try(:scheduled_through)          
           @coordinator.repeats_mondays = false
           @coordinator.repeats_tuesdays = true
           @coordinator.save
           @coordinator.reload
+          
         end
 
         after do
@@ -230,20 +235,18 @@ RSpec.shared_examples "a recurring ride coordinator" do
           expect(@coordinator.schedule_attributes.tuesday).to eq 1
         end
 
-        it "should have new child coordinators on the correct day" do
+        it "should not have new child coordinators on the new day" do
           # Time is still frozen at Sun, 13 Sep 2015. 3 weeks out is
-          # Sun, 04 Oct 2015. With weekly repeats now on Tuesdays, beginning 
-          # Sun, 13 Sep 2015, this gives us:
-          #   2015-09-15
-          #   2015-09-22
-          #   2015-09-29
-          # Not including the originals (which were created on a Monday), we 
-          # should see 3 new occurrences
+          # Sun, 04 Oct 2015. Upon save, the scheduler should have scheduled 
+          # new occurrences on Tuesdays starting at the date the scheduler
+          # left off before the coordinator was last saved, through the end of
+          # the schedule window, but scheduled NO new occurrences before then.
           expect(
             @scheduled_instance_class.where(
               @occurrence_scheduler_association_id => @coordinator.id
-            ).select{ |c| c.send(@occurrence_date_attribute).strftime("%u") == "2" }.size
-          ).to eq 3
+            ).where("#{@occurrence_date_attribute} <= ?", @old_scheduled_through_date)
+            .select{ |c| c.send(@occurrence_date_attribute).wday == 2 }.size
+          ).to eq 0
         end
 
         it "should still have child coordinators on the old day beyond Sun, 13 Sep 2015" do
@@ -281,7 +284,7 @@ RSpec.shared_examples "a recurring ride coordinator" do
               #   2015-08-31
               #   2015-09-07
               #   2015-09-14
-              @occurrence_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
+              @scheduler_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
               :repeats_mondays => true, 
               :repeats_tuesdays => false,
               :repeats_wednesdays => false,
@@ -296,9 +299,10 @@ RSpec.shared_examples "a recurring ride coordinator" do
           
           # Now advance time two weeks, to Sun, 13 Sep 2015
           Timecop.freeze(Time.parse("2015-09-13 12:00").in_time_zone)
-          
+                    
           @coordinator.repeats_mondays = false
           @coordinator.save
+          
         end
 
         after do
@@ -312,6 +316,53 @@ RSpec.shared_examples "a recurring ride coordinator" do
             ).select{ |c| c.send(@occurrence_date_attribute).strftime("%u") == "1" }.size
           ).to eq 2
         end
+      end
+      
+      describe 'after the child coordinators have been destroyed' do
+        before do
+          # Freeze date at Sun, 30 Aug 2015, 12:00 PM
+          Timecop.freeze(Time.parse("2015-08-30 12:00").in_time_zone)
+          
+        
+          @coordinator = create @described_class_factory,
+            # Schedule first occurrence on Mon, 31 Sep 2015
+            # With weekly repeats on Mondays, this gives us:
+            #   2015-08-31
+            #   2015-09-07
+            #   2015-09-14
+            @scheduler_date_attribute => Time.parse("2015-08-31 12:00").in_time_zone,
+            :repeats_mondays => true, 
+            :repeats_tuesdays => false,
+            :repeats_wednesdays => false,
+            :repeats_thursdays => false,
+            :repeats_fridays => false,
+            :repeats_saturdays => false,
+            :repeats_sundays => false,
+            :vehicle_id => @vehicle.id,
+            :driver_id => @driver.id,
+            :repetition_interval => 1
+          
+          # Now, destroy the child coordinators and re-save the coordinator
+          child_coordinators = @scheduled_instance_class.where(
+            @occurrence_scheduler_association_id => @coordinator.id
+          )          
+          child_coordinators.destroy_all
+          
+          @coordinator.save
+          
+        end
+        
+        after do
+          Timecop.return
+        end
+        
+        it 'has not created new child coordinators' do
+          child_coordinators = @scheduled_instance_class.where(
+            @occurrence_scheduler_association_id => @coordinator.id
+          )
+          expect(child_coordinators.count).to eq(0)
+        end
+        
       end
     end
   end

@@ -38,6 +38,7 @@ RSpec.shared_examples "a recurring ride coordinator scheduler" do
       end
     
       it "populates the schedule_yaml field" do
+        @scheduler.schedule_yaml = nil
         expect(@scheduler.schedule_yaml).to be_nil
         @scheduler.schedule_attributes = {}
         expect(@scheduler.schedule_yaml).not_to be_nil

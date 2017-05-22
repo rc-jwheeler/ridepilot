@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170522163137) do
+ActiveRecord::Schema.define(version: 20170522180407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "fuzzystrmatch"
+  enable_extension "pg_stat_statements"
   enable_extension "postgis"
   enable_extension "postgis_topology"
-  enable_extension "fuzzystrmatch"
   enable_extension "uuid-ossp"
 
   create_table "activities", force: true do |t|
@@ -159,8 +160,8 @@ ActiveRecord::Schema.define(version: 20170522163137) do
     t.boolean  "ada_eligible"
     t.string   "service_level_old"
     t.integer  "service_level_id"
-    t.boolean  "is_elderly"
     t.string   "gender"
+    t.boolean  "is_elderly",                default: false
     t.datetime "deleted_at"
     t.text     "message"
     t.string   "token"
@@ -550,6 +551,7 @@ ActiveRecord::Schema.define(version: 20170522163137) do
     t.date     "end_date"
     t.string   "comments"
     t.integer  "unpaid_driver_break_time"
+    t.date     "scheduled_through"
   end
 
   add_index "repeating_runs", ["driver_id"], :name => "index_repeating_runs_on_driver_id"
@@ -580,13 +582,14 @@ ActiveRecord::Schema.define(version: 20170522163137) do
     t.boolean  "customer_informed"
     t.integer  "trip_purpose_id"
     t.string   "direction",                      default: "outbound"
+    t.date     "start_date"
+    t.date     "end_date"
     t.integer  "service_level_id"
     t.boolean  "medicaid_eligible"
     t.integer  "mobility_device_accommodations"
-    t.date     "start_date"
-    t.date     "end_date"
     t.string   "comments"
     t.integer  "repeating_run_id"
+    t.date     "scheduled_through"
   end
 
   add_index "repeating_trips", ["customer_id"], :name => "index_repeating_trips_on_customer_id"
@@ -596,6 +599,7 @@ ActiveRecord::Schema.define(version: 20170522163137) do
   add_index "repeating_trips", ["mobility_id"], :name => "index_repeating_trips_on_mobility_id"
   add_index "repeating_trips", ["pickup_address_id"], :name => "index_repeating_trips_on_pickup_address_id"
   add_index "repeating_trips", ["provider_id"], :name => "index_repeating_trips_on_provider_id"
+  add_index "repeating_trips", ["repeating_run_id"], :name => "index_repeating_trips_on_repeating_run_id"
   add_index "repeating_trips", ["service_level_id"], :name => "index_repeating_trips_on_service_level_id"
   add_index "repeating_trips", ["trip_purpose_id"], :name => "index_repeating_trips_on_trip_purpose_id"
   add_index "repeating_trips", ["vehicle_id"], :name => "index_repeating_trips_on_vehicle_id"
@@ -799,6 +803,7 @@ ActiveRecord::Schema.define(version: 20170522163137) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",                                                    default: 0
+    t.boolean  "round_trip"
     t.boolean  "medicaid_eligible"
     t.integer  "mileage"
     t.string   "service_level_old"

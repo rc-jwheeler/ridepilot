@@ -17,6 +17,8 @@ class Provider < ActiveRecord::Base
   has_many :roles, :dependent => :destroy
   has_many :users, :through => :roles
   has_many :vehicles, :dependent => :destroy
+  has_many :runs
+  has_many :repeating_runs
 
   has_one :address_upload_flag
 
