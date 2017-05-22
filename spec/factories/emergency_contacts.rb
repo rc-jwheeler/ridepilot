@@ -3,7 +3,7 @@ FactoryGirl.define do
     name "MyString"
     geocoded_address
     driver
-    phone_number "MyString"
+    phone_number "888-345-6789"
     relationship "MyString"
   end
 
