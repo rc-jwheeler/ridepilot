@@ -27,9 +27,27 @@ class DriversController < ApplicationController
       new_attrs.except!(:alt_address_attributes)
     end
 
+    is_emergency_contact_blank = check_blank_emergency_contact
+    is_geocoded_address_blank = check_blank_emergency_contact_geocoded_address
+    if is_emergency_contact_blank
+      prev_emergency_contact = @driver.emergency_contact
+      @driver.emergency_contact = nil
+      new_attrs.except!(:emergency_contact_attributes)
+    elsif is_geocoded_address_blank
+      if @driver.emergency_contact
+        prev_emergency_contact_address = @driver.emergency_contact.geocoded_address
+        @driver.emergency_contact.geocoded_address_id = nil 
+      end
+      new_attrs[:emergency_contact_attributes].except!(:geocoded_address_attributes)
+    end
+
     new_attrs.except!(:photo_attributes) if new_attrs[:photo_attributes].blank?
 
     @driver.attributes = new_attrs
+
+    if @driver.emergency_contact && @driver.emergency_contact.geocoded_address.present?
+      @driver.emergency_contact.geocoded_address.the_geom = Address.compute_geom(params[:lat], params[:lon])
+    end
     
     if !@driver.is_all_valid?(current_provider_id)
       prep_edit
@@ -39,6 +57,8 @@ class DriversController < ApplicationController
         Driver.transaction do
           @driver.save!
           prev_alt_address.destroy if is_alt_address_blank && prev_alt_address.present?
+          prev_emergency_contact.destroy if is_emergency_contact_blank && prev_emergency_contact.present?
+          prev_emergency_contact_address.destroy if is_geocoded_address_blank && prev_emergency_contact_address.present?
           create_or_update_hours!
         end
         redirect_to @driver, notice: 'Driver was successfully updated.'
@@ -57,8 +77,25 @@ class DriversController < ApplicationController
       new_attrs.except!(:alt_address_attributes)
     end
 
+    is_emergency_contact_blank = check_blank_emergency_contact
+    is_geocoded_address_blank = check_blank_emergency_contact_geocoded_address
+    if is_emergency_contact_blank
+      new_attrs.except!(:emergency_contact_attributes)
+    else
+      new_attrs[:emergency_contact_attributes].except!(:geocoded_address_attributes) if is_geocoded_address_blank
+    end
+
     @driver.attributes = new_attrs
     @driver.alt_address = nil if is_alt_address_blank
+    if is_emergency_contact_blank
+      @driver.emergency_contact = nil 
+    else
+      if is_geocoded_address_blank
+        @driver.emergency_contact.geocoded_address = nil
+      elsif @driver.emergency_contact.geocoded_address.present?
+        @driver.emergency_contact.geocoded_address.the_geom = Address.compute_geom(params[:lat], params[:lon])
+      end
+    end
 
     @driver.provider = current_provider
     if !@driver.is_all_valid?(current_provider_id)
@@ -145,6 +182,18 @@ class DriversController < ApplicationController
         :state,
         :zip,
         :notes
+      ],
+      :emergency_contact_attributes => [
+        :name,
+        :phone_number,
+        :relationship,
+        :geocoded_address_attributes => [
+          :provider_id,
+          :address,
+          :city,
+          :state,
+          :zip
+        ]
       ]
     )
   end
@@ -167,6 +216,45 @@ class DriversController < ApplicationController
         break
       end
     end if alt_address_params
+
+    is_blank
+  end
+
+  def check_blank_emergency_contact
+    contact_params = driver_params[:emergency_contact_attributes]
+    is_blank = true
+    contact_params.keys.each do |key|
+      if key.to_s == 'geocoded_address_attributes'
+        unless check_blank_emergency_contact_geocoded_address
+          is_blank = false
+          break
+        end
+      else
+        unless contact_params[key].blank?
+          is_blank = false
+          break
+        end
+      end
+    end if contact_params
+    
+    is_blank
+  end
+
+  def check_blank_emergency_contact_geocoded_address
+    is_blank = true
+    contact_params = driver_params[:emergency_contact_attributes]
+
+    unless contact_params.blank?
+      geocoded_address_params = contact_params[:geocoded_address_attributes]
+      
+      geocoded_address_params.keys.each do |key|
+        next if key.to_s == 'provider_id'
+        unless geocoded_address_params[key].blank?
+          is_blank = false
+          break
+        end
+      end if geocoded_address_params
+    end
 
     is_blank
   end
