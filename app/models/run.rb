@@ -34,7 +34,7 @@ class Run < ActiveRecord::Base
 
   before_validation :fix_dates, :set_complete
 
-  validates                 :name, presence: true #, uniqueness: { scope: [:provider, :date], message: "should be unique by day and by provider" }
+  validates                 :name, presence: true
   validate                  :daily_name_uniqueness
   validate                  :repeating_name_uniqueness
   validates_date            :date
