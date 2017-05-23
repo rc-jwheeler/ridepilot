@@ -5,6 +5,10 @@ FactoryGirl.define do
     driver
     provider
     today
+    
+    trait :child_run do
+      repeating_run
+    end
 
     trait :scheduled do
       scheduled_start_time "10:00 AM"

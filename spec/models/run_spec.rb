@@ -32,13 +32,13 @@ RSpec.describe Run, type: :model do
     end
   end
   
-  describe 'name uniqueness validation' do
+  describe 'validations' do
     
     # Set some context...
     let(:provider_a) { create(:provider) }
     let(:provider_b) { create(:provider) }
-    before(:each) { create(:run, :tomorrow, name: "Run A", provider: provider_a) }
-    before(:each) { create(:repeating_run, :weekly, :tomorrow, name: "Run C", provider: provider_a) }
+    let!(:run_a) { create(:run, :tomorrow, :scheduled, name: "Run A", provider: provider_a) }
+    let!(:repeating_run_c) { create(:repeating_run, :weekly, :tomorrow, name: "Run C", provider: provider_a) }
     
     it 'name must be unique among daily runs by date and provider' do
       valid_run_diff_name = build(:run, :tomorrow, name: "Run B", provider: provider_a)
@@ -59,18 +59,41 @@ RSpec.describe Run, type: :model do
       valid_run_diff_date = build(:run, :next_week, name: "Run C", provider: provider_a)
       invalid_run_this_week = build(:run, :tomorrow, name: "Run C", provider: provider_a)
       invalid_run_next_week = build(:run, date: Date.tomorrow + 1.week, name: "Run C", provider: provider_a)
-    
-      puts "REPEATING RUN SCHEDULE", RepeatingRun.find_by(name: "Run C").schedule.to_hash
-    
-      puts "INVALID RUN", invalid_run_this_week.inspect
-      puts "EXISTING RUN", RepeatingRun.find_by(name: "Run C").runs.where(date: Date.tomorrow).last.inspect
-      puts "INVALID RUN VALIDITY", invalid_run_this_week.valid?
       
       expect(valid_run_diff_name.valid?).to be true
       expect(valid_run_diff_provider.valid?).to be true
       expect(valid_run_diff_date.valid?).to be true
       expect(invalid_run_this_week.valid?).to be false
       expect(invalid_run_next_week.valid?).to be false
+    end
+    
+    it 'validates driver availability' do
+      
+      run_same_driver = build(:run, :tomorrow, :scheduled, driver: run_a.driver)
+      run_diff_driver = build(:run, :tomorrow, :scheduled)
+      
+      expect(run_same_driver.valid?).to be false
+      expect(run_diff_driver.valid?).to be true
+      
+    end
+    
+    it 'skips driver availability validation for child runs' do
+            
+      child_run_same_driver = build(:run, :child_run, :tomorrow, :scheduled, driver: run_a.driver)
+      expect(child_run_same_driver.valid?).to be true
+      
+      # Now make child run a daily run by setting repeating_run to nil
+      child_run_same_driver.repeating_run_id = nil
+      expect(child_run_same_driver.valid?).to be false
+      
+    end
+    
+    it 'checks availability for child runs as if they were daily runs' do
+      
+      child_run_same_driver = build(:run, :child_run, :tomorrow, :scheduled, driver: run_a.driver)
+      expect(child_run_same_driver.valid?).to be true
+      expect(child_run_same_driver.valid_as_daily_run?).to be false
+      
     end
     
   end
