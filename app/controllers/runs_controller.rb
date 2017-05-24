@@ -132,6 +132,27 @@ class RunsController < ApplicationController
     render :json =>  @runs.to_json 
   end
   
+  # Cancels multiple runs by id, removing associations with any trips on those runs
+  def cancel_multiple
+    @runs = Run.where(id: cancel_multiple_params[:run_ids].split(',').map(&:to_i))
+    trips_removed = @runs.cancel_all
+    respond_to do |format|
+      format.html { redirect_to(runs_path, notice: "#{trips_removed} trips successfully unscheduled from #{@runs.count} runs.")}
+    end
+  end
+  
+  # Destroys multiple runs by id, deleting them from the database
+  def delete_multiple
+    @runs = Run.where(id: delete_multiple_params[:run_ids].split(',').map(&:to_i))
+    runs_destroyed = can?(:delete, Run) ? @runs.destroy_all : Run.none
+    if runs_destroyed
+      respond_to do |format|
+        format.html { redirect_to(runs_path, notice: "#{runs_destroyed.count} runs successfully deleted.") }
+      end
+    end
+  end
+  
+  
   private
   
   def setup_run
@@ -208,5 +229,13 @@ class RunsController < ApplicationController
       run_result_id: session[:run_result_id], 
       days_of_week: session[:days_of_week]
     }
+  end
+  
+  def cancel_multiple_params
+    params.require(:cancel_multiple_runs).permit(:run_ids)
+  end
+  
+  def delete_multiple_params
+    params.require(:delete_multiple_runs).permit(:run_ids)
   end
 end

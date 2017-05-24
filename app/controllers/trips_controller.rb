@@ -182,7 +182,6 @@ class TripsController < ApplicationController
   end
 
   def change_result
-    puts "CHANGING RESULT IN CONTROLLER"
     @trip = Trip.find(params[:trip_id])
     @prev_trip_result_id = @trip.trip_result_id
 

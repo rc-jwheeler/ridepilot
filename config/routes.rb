@@ -168,6 +168,8 @@ Rails.application.routes.draw do
       collection do
         get :for_date
         get :uncompleted_runs
+        patch :cancel_multiple
+        delete :delete_multiple
       end
     end
 
