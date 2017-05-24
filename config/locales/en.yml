@@ -78,6 +78,7 @@ en:
   eligible_age: "Eligible Age"
   not_eligible: 'Not Eligible'
   ineligible_reason: 'Why not eligible?'
+  
   #customers
   customer_id_label: 'ID'
   customer_details_panel: 'Details'
@@ -144,6 +145,12 @@ en:
   cctc_new_riders_label: "# Riders New This Month"
   delete_customer_confirm: "Are you sure to delete this customer?"
   customer_message: 'Message'
+  customer_travel_trainings_panel: 'Travel Trainings'
+  travel_training_date: 'Date'
+  travel_training_comment: 'Comment'
+  add_travel_training: 'Add'
+  add_travel_training_dialog_title: 'Add Travel Training'
+  
   # Lookup tables
   add_value: "Add Value"
   delete_value: "Delete Value"
