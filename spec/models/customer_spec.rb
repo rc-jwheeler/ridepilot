@@ -127,4 +127,42 @@ RSpec.describe Customer do
       end
     end
   end
+  
+  describe 'travel_trainings' do
+    let(:customer) { create(:customer) }
+    let(:customer_w_trainings) { create(:customer, :with_travel_trainings) }
+    
+    it 'has many travel trainings' do
+      tt_count = customer.travel_trainings.count
+      customer.travel_trainings << create(:travel_training)
+      expect(customer.travel_trainings.count).to eq(tt_count + 1)
+      customer.travel_trainings << create(:travel_training)      
+      expect(customer.travel_trainings.count).to eq(tt_count + 2)      
+    end
+    
+    it 'edits travel trainings via hash' do
+      original_trainings = customer_w_trainings.travel_trainings
+      expect(customer_w_trainings.travel_trainings.count).to eq(3)
+      
+      # new trainings array consists of one new training, and two of the original
+      # ones. One old training is left out.
+      new_trainings_hash = [
+        { date: Date.today, comment: "new comment"},
+        original_trainings[0].attributes.with_indifferent_access,
+        original_trainings[1].attributes.with_indifferent_access
+      ]
+      
+      customer_w_trainings.edit_travel_trainings(new_trainings_hash)
+      customer_w_trainings.reload
+      new_trainings = customer_w_trainings.travel_trainings
+      
+      # Expect two of the old trainings and the one new one to be present
+      expect(new_trainings.pluck(:id).include?(original_trainings[0].id)).to be true
+      expect(new_trainings.pluck(:id).include?(original_trainings[1].id)).to be true
+      expect(new_trainings.pluck(:id).include?(original_trainings[2].id)).to be false
+      expect(new_trainings.where(comment: "new comment").count).to eq(1)
+      
+    end
+  end
+  
 end

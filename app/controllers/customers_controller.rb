@@ -144,6 +144,7 @@ class CustomersController < ApplicationController
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
         edit_donations
+        edit_travel_trainings
         edit_eligibilities
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
@@ -176,7 +177,6 @@ class CustomersController < ApplicationController
   end
 
   def update
-    puts "PARAMS FOR CUSTOMER UPDATE", params.inspect
     @customer = Customer.find(params[:id])
 
     authorize! :update, @customer if !@customer.authorized_for_provider(current_provider.id)
@@ -198,8 +198,6 @@ class CustomersController < ApplicationController
       providers.push(Provider.find(authorized_provider_id)) if authorized_provider_id.present?
     end
     @customer.authorized_providers = (providers << @customer.provider).uniq
-
-    puts "CUSTOMER FOR UPDATE", @customer.inspect
 
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
