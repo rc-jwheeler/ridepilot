@@ -886,6 +886,7 @@ en:
   mileage: "Mileage"
   license_plate: "License Plate"
   garaged_location: "Garaged Location"
+  
   #runs
   run_form_error_message:
     one: "%{count} error prohibited this run from being saved:"
@@ -916,6 +917,10 @@ en:
   run_tracking_low_income: "Low Income"
   number_of_one_way_trips: "Number of One Way Trips"
   number_of_passengers_served: "Number of Passengers Served"
+  modify_selected_runs: "Apply Action to Selected Runs"
+  delete_run: "Delete"
+  cancel_run: "Unschedule"
+  
   #shared
   generic_error_message:
       one: "%{count} error prohibited this record from being saved:"

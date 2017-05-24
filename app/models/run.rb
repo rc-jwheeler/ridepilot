@@ -26,6 +26,11 @@ class Run < ActiveRecord::Base
     :unpaid_driver_break_time,
     :paid,
   ].freeze
+  
+  BATCH_ACTIONS = [
+    :cancel,
+    :delete
+  ].freeze
 
   has_many :trips, -> { order(:pickup_time) }, :dependent => :nullify
   belongs_to :repeating_run
@@ -67,6 +72,16 @@ class Run < ActiveRecord::Base
 
   CAB_RUN_ID = -1 # id for cab runs
   UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)
+  
+  # "Cancels" a run: removes any trips from that run
+  def cancel
+    trips.delete_all # Doesn't actually destroy the records, just removes the association
+  end
+  
+  # Cancels all runs in the collection, returning the count of trips removed from runs
+  def self.cancel_all
+    Trip.where(run_id: self.all.pluck(:id)).update_all(run_id: nil)
+  end
 
   def as_calendar_json
     {

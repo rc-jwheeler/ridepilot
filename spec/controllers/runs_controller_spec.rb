@@ -206,6 +206,47 @@ RSpec.describe RunsController, type: :controller do
       expect(response).to render_template("index")
     end
   end
+  
+  describe "PATCH #cancel_multiple, DELETE #delete_multiple" do
+    
+    let(:run_1) { create(:run) }
+    let(:run_2) { create(:run) }
+    let(:run_3) { create(:run) }
+    let(:trip_1) { create(:trip) }
+    let(:trip_2) { create(:trip) }
+    let(:trip_3) { create(:trip) }
+    before(:each) do
+      run_1.trips << trip_1
+      run_1.trips << trip_2
+      run_2.trips << trip_3
+    end
+    
+    it "can cancel/unschedule multiple runs" do      
+      expect(run_1.trips.count).to eq(2)
+      expect(run_2.trips.count).to eq(1)
+      expect(run_3.trips.count).to eq(0)
+      trip_count = Trip.count
+      
+      patch :cancel_multiple, { cancel_multiple_runs: { run_ids: Run.pluck(:id).join(',') } }
+    
+      expect(run_1.trips.count).to eq(0)
+      expect(run_2.trips.count).to eq(0)
+      expect(run_3.trips.count).to eq(0)
+      expect(Trip.count).to eq(trip_count)
+    end
+    
+    it "can delete multiple runs" do
+      trip_count = Trip.count      
+      expect(Run.where(id: [run_1.id, run_2.id, run_3.id]).count).to eq(3)
+      
+      delete :delete_multiple, { delete_multiple_runs: { run_ids: Run.pluck(:id).join(',') } }
+      
+      expect(Run.where(id: [run_1.id, run_2.id, run_3.id]).count).to eq(0)
+      expect(Trip.count).to eq(trip_count)
+      
+    end
+    
+  end
 
   private
   

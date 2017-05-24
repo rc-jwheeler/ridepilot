@@ -1,4 +1,6 @@
-%tr{class: run.valid_as_daily_run? ? 'valid' : 'invalid'}
+%tr{class: 'run' + (run.valid_as_daily_run? ? ' valid' : ' invalid'), data: { 'run-id' => run.id }}
+  %td
+    %input.run-selected{type: "checkbox"}
   %td
     -if can? :show, run
       = link_to translate_helper("view"), run_path(run)
