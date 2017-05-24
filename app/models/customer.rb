@@ -13,9 +13,9 @@ class Customer < ActiveRecord::Base
   belongs_to :default_funding_source, -> { with_deleted }, :class_name=>'FundingSource'
   has_many   :trips, :dependent => :destroy, inverse_of: :customer
   has_many   :donations, :dependent => :destroy, inverse_of: :customer
-
-  has_many  :eligibilities, through: :customer_eligibilities
-  has_many  :customer_eligibilities
+  has_many   :travel_trainings, dependent: :destroy
+  has_many   :eligibilities, through: :customer_eligibilities
+  has_many   :customer_eligibilities
 
   # profile photo
   has_one  :photo, class_name: 'Image', as: :imageable, dependent: :destroy, inverse_of: :imageable
