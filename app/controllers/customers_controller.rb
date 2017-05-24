@@ -107,23 +107,23 @@ class CustomersController < ApplicationController
       middle_initial = @customer.middle_initial
       last_name = @customer.last_name
       dup_customers = Customer.accessible_by(current_ability).where([
-"(middle_initial = ? or middle_initial = '' or ? = '') and 
+        "(middle_initial = ? or middle_initial = '' or ? = '') and 
 
-(dmetaphone(last_name) = dmetaphone(?) or
- dmetaphone(last_name) = dmetaphone_alt(?) or 
- dmetaphone_alt(last_name) = dmetaphone(?) or 
- dmetaphone_alt(last_name) = dmetaphone_alt(?)) and
+        (dmetaphone(last_name) = dmetaphone(?) or
+         dmetaphone(last_name) = dmetaphone_alt(?) or 
+         dmetaphone_alt(last_name) = dmetaphone(?) or 
+         dmetaphone_alt(last_name) = dmetaphone_alt(?)) and
 
-(dmetaphone_alt(first_name) = dmetaphone_alt(?) or
- dmetaphone_alt(first_name) = dmetaphone(?) or
- dmetaphone(first_name) = dmetaphone(?)  or
- dmetaphone(first_name) = dmetaphone_alt(?)) or
-(email = ? and email !=  '' and email is not null and ? != '')
-", 
-middle_initial, middle_initial, 
-last_name, last_name, last_name, last_name, 
-first_name, first_name, first_name, first_name,
-@customer.email, @customer.email]).limit(1)
+        (dmetaphone_alt(first_name) = dmetaphone_alt(?) or
+         dmetaphone_alt(first_name) = dmetaphone(?) or
+         dmetaphone(first_name) = dmetaphone(?)  or
+         dmetaphone(first_name) = dmetaphone_alt(?)) or
+        (email = ? and email !=  '' and email is not null and ? != '')
+        ", 
+        middle_initial, middle_initial, 
+        last_name, last_name, last_name, last_name, 
+        first_name, first_name, first_name, first_name,
+        @customer.email, @customer.email]).limit(1)
 
       if dup_customers.size > 0
         dup = dup_customers[0]
@@ -144,6 +144,7 @@ first_name, first_name, first_name, first_name,
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
         edit_donations
+        edit_travel_trainings
         edit_eligibilities
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
@@ -201,6 +202,7 @@ first_name, first_name, first_name, first_name,
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
         edit_donations
+        edit_travel_trainings
         edit_eligibilities
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
@@ -262,6 +264,7 @@ first_name, first_name, first_name, first_name,
       :authorized_provider_ids,
       :is_elderly,
       :message,
+      :travel_trainings,
       photo_attributes: [:image],
       :address_attributes => [
         :address,
@@ -272,7 +275,7 @@ first_name, first_name, first_name, first_name,
         :state,
         :zip,
         :notes
-      ],
+      ]
     )
   end
 
@@ -344,6 +347,13 @@ first_name, first_name, first_name, first_name,
     if params[:donations]
       donations = JSON.parse(params[:donations], symbolize_names: true)
       @customer.edit_donations donations, current_user
+    end
+  end
+  
+  def edit_travel_trainings
+    if params[:travel_trainings]
+      travel_trainings = JSON.parse(params[:travel_trainings], symbolize_names: true)
+      @customer.edit_travel_trainings(travel_trainings)
     end
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170522180407) do
+ActiveRecord::Schema.define(version: 20170524152920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -755,6 +755,16 @@ ActiveRecord::Schema.define(version: 20170522180407) do
     t.integer "to_address_id"
     t.integer "seconds"
   end
+
+  create_table "travel_trainings", force: true do |t|
+    t.integer  "customer_id"
+    t.datetime "date"
+    t.text     "comment"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "travel_trainings", ["customer_id"], :name => "index_travel_trainings_on_customer_id"
 
   create_table "trip_purposes", force: true do |t|
     t.string   "name"

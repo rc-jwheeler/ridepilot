@@ -14,12 +14,16 @@ class Customer < ActiveRecord::Base
   has_many   :trips, :dependent => :destroy, inverse_of: :customer
   has_many   :donations, :dependent => :destroy, inverse_of: :customer
 
-  has_many  :eligibilities, through: :customer_eligibilities
-  has_many  :customer_eligibilities
+  has_many   :eligibilities, through: :customer_eligibilities
+  has_many   :customer_eligibilities
 
   # profile photo
   has_one  :photo, class_name: 'Image', as: :imageable, dependent: :destroy, inverse_of: :imageable
   accepts_nested_attributes_for :photo
+
+  # travel trainings
+  has_many   :travel_trainings, dependent: :destroy
+  accepts_nested_attributes_for :travel_trainings
 
   belongs_to :service_level, -> { with_deleted }
   delegate :name, to: :service_level, prefix: :service_level, allow_nil: true
@@ -270,6 +274,19 @@ class Customer < ActiveRecord::Base
     donation_objects.select {|r| r[:id].blank? }.each do |donation_hash|
       d = Donation.parse donation_hash, self, user
       d.save
+    end
+  end
+  
+  def edit_travel_trainings(travel_training_objects)
+    # remove non-existing ones
+    prev_travel_training_ids = travel_trainings.pluck(:id)
+    existing_travel_training_ids = travel_training_objects.select {|tt| tt[:id] != nil}.map{|tt| tt[:id]}
+    TravelTraining.where(id: prev_travel_training_ids - existing_travel_training_ids).delete_all
+  
+    # update travel trainings
+    travel_training_objects.select {|tt| tt[:id].blank? }.each do |travel_training_hash|
+      tt = TravelTraining.parse(travel_training_hash, self)
+      tt.save
     end
   end
 

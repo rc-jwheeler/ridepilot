@@ -147,6 +147,26 @@ RSpec.describe CustomersController, type: :controller do
         put :update, {:id => customer.to_param, :customer => valid_attributes}
         expect(response).to redirect_to(customer)
       end
+      
+      it "updates customer's travel trainings" do
+        customer = create(:customer, :with_travel_trainings, provider: @current_user.current_provider)
+        tt_1 = customer.travel_trainings.first
+        tt_2 = build(:travel_training, customer: customer)
+        new_tt_json = [tt_1, tt_2].to_json
+
+        original_tt_ids = customer.travel_trainings.pluck(:id)
+        expect(customer.travel_trainings.count).to eq(3)
+        
+        put :update, id: customer.to_param, customer: new_attributes, travel_trainings: new_tt_json
+        customer.reload
+        
+        new_tt_ids = customer.travel_trainings.pluck(:id)
+        
+        expect(customer.travel_trainings.count).to eq(2)
+        expect(new_tt_ids.include?(original_tt_ids.delete(tt_1.id))).to be true
+        expect(original_tt_ids.none? {|id| new_tt_ids.include?(id)}).to be true
+        expect(customer.travel_trainings.where(comment: tt_2.comment).count).to eq(1)
+      end
     end
 
     context "with invalid params" do
