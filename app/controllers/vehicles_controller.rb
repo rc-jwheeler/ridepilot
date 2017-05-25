@@ -84,6 +84,7 @@ class VehiclesController < ApplicationController
     @vehicle = Vehicle.find_by_id(params[:id])
     authorize! :edit, @vehicle
 
+    prev_mileage = @vehicle.initial_mileage
     @vehicle.assign_attributes change_initial_mileage_params
 
     respond_to do |format|
@@ -93,7 +94,7 @@ class VehiclesController < ApplicationController
           render action: :edit_initial_mileage
         else
           @vehicle.save(validate: false)
-          TrackerActionLog.change_vehicle_initial_mileage @vehicle, current_user
+          TrackerActionLog.change_vehicle_initial_mileage @vehicle, current_user, prev_mileage
           redirect_to @vehicle, notice: "Initial mileage has been updated."
         end
       }

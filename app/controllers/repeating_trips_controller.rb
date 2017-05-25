@@ -68,12 +68,12 @@ class RepeatingTripsController < ApplicationController
     process_google_address
     authorize! :manage, @trip
 
+    prev_schedule = @trip.schedule
     @trip.assign_attributes(trip_params)
     changes = @trip.changes
-    prev_schedule = @trip.schedule.to_s
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
-        TrackerActionLog.update_subscription_trip(@trip, current_user, changes, @trip.schedule.to_s != prev_schedule)
+        TrackerActionLog.update_subscription_trip(@trip, current_user, changes, prev_schedule)
         format.html { redirect_to(@trip, :notice => 'Trip was successfully updated.')  }
       else
         prep_view

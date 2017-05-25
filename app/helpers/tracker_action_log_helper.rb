@@ -38,7 +38,9 @@ module TrackerActionLogHelper
       if trip.present? && !params.blank?
         msg = "Subscription trip had following updates:"
         params.each do |k, v|
-          msg += "<div class='row'><div class='col-sm-4'><b>#{k}:</b></div><div class='col-sm-8'>#{v}</div></div>"
+          if v.try(:size) == 2 # [old_val, new_val] array
+            msg += "<div class='row'><div class='col-sm-4'><b>#{k}:</b></div><div class='col-sm-8'>#{v[1]} <br>(<b>was:</b> #{v[0]})</div></div>"
+          end
         end
 
         msg.html_safe
@@ -54,21 +56,23 @@ module TrackerActionLogHelper
       if run.present? && !params.blank?
         msg = "Subscription run had following updates:"
         params.each do |k, v|
-          msg += "<div class='row'><div class='col-sm-4'><b>#{k}:</b></div><div class='col-sm-8'>#{v}</div></div>"
+          if v.try(:size) == 2 # [old_val, new_val] array
+            msg += "<div class='row'><div class='col-sm-4'><b>#{k}:</b></div><div class='col-sm-8'>#{v[1]} <br>(<b>was:</b> #{v[0]}</div></div>"
+          end
         end
 
         msg.html_safe
       end
     when "vehicle.initial_mileage_changed"
       vehicle = log.trackable
-      if vehicle.present?
-        params = log.parameters || {}
-        mileage = params[:mileage]
+      params = log.parameters || {}
+      mileage = params[:mileage]
+      if vehicle.present? && mileage.try(:size) == 2 # [old_val, new_val]
         reason = params[:reason].blank? ? 'Not provided.' : params[:reason]
-        if mileage.blank?
-          "Initial mileage was removed. <br>Reason: #{reason}".html_safe
+        if mileage[1].blank?
+          "Initial mileage was removed (<b>was:<> #{mileage[0]}). <br><b>Reason:</b> #{reason}".html_safe
         else
-          "Initial mileage was changed to #{mileage}. <br>Reason: #{reason}".html_safe
+          "Initial mileage was changed to #{mileage[1]} (<b>was:</b> #{mileage[0]}). <br><b>Reason:</b> #{reason}".html_safe
         end
       end
     end

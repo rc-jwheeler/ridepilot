@@ -54,12 +54,12 @@ class RepeatingRunsController < ApplicationController
   def update
     authorize! :manage, @run
 
+    prev_schedule = @run.schedule
     @run.assign_attributes(run_params)
     changes = @run.changes
-    prev_schedule = @run.schedule.to_s
     respond_to do |format|
       if @run.is_all_valid?(current_provider_id) && @run.save
-        TrackerActionLog.update_subscription_run(@run, current_user, changes, @run.schedule.to_s != prev_schedule)
+        TrackerActionLog.update_subscription_run(@run, current_user, changes, prev_schedule)
         format.html { redirect_to(@run, :notice => 'Run was successfully updated.')  }
       else
         prep_view
