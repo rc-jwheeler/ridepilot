@@ -298,6 +298,7 @@ en:
   driver_address_heading: "Address"
   driver_alt_address_heading: "Alternative Address"
   driver_completed_run_hours: "Completed Run Hours This Week"
+  active_only: 'Active Only?'
 
   # emergency contact
   driver_form_emergency_contact_heading: 'Emergency Contact'

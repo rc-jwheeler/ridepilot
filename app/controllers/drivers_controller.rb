@@ -3,6 +3,7 @@ class DriversController < ApplicationController
 
   def index
     @drivers = @drivers.default_order.for_provider(current_provider.id)
+    @drivers = @drivers.active if params[:active_only] == 'true'
   end
 
   def show
