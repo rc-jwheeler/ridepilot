@@ -38,7 +38,7 @@ RSpec.describe DriversController, type: :controller do
       active_driver = create(:driver, :provider => @current_user.current_provider, :active => true)
       inactive_driver = create(:driver, :provider => @current_user.current_provider, :active => false)
       get :index, {show_inactive: 'true'}
-      expect(assigns(:drivers)).to match([active_driver, inactive_driver])
+      expect(assigns(:drivers)).to match_array([active_driver, inactive_driver])
     end
   end
 
