@@ -1,8 +1,9 @@
 class VehiclesController < ApplicationController
-  load_and_authorize_resource except: [:change_initial_mileage]
+  load_and_authorize_resource except: [:change_initial_mileage, :inactivate]
 
   def index
     @vehicles = @vehicles.default_order.for_provider(current_provider.id)
+    @vehicles = @vehicles.active if params[:show_inactive] != 'true'
   end
 
   def show
@@ -35,7 +36,7 @@ class VehiclesController < ApplicationController
       render action: :edit
     else
       begin      
-        Driver.transaction do
+        Vehicle.transaction do
           @vehicle.save!
           prev_garage_address.destroy if is_garage_address_blank && prev_garage_address.present?
         end
@@ -101,6 +102,38 @@ class VehiclesController < ApplicationController
     end
   end
 
+  def inactivate
+    @vehicle = Vehicle.find_by_id(params[:id])
+
+    authorize! :update, @vehicle
+    
+    prev_active_text = @vehicle.active_status_text
+    prev_reason = @vehicle.active_status_changed_reason
+
+    @vehicle.assign_attributes vehicle_inactivate_params
+
+    if @vehicle.inactivated?
+      if @vehicle.permanent_inactivated?
+        @vehicle.inactivated_start_date = nil
+        @vehicle.inactivated_end_date = nil
+      else
+        if @vehicle.inactivated_end_date.present? && !@vehicle.inactivated_start_date.present?
+          @vehicle.inactivated_start_date = Date.today.in_time_zone
+        end
+      end
+    else
+      @vehicle.active_status_changed_reason = nil  
+    end
+
+    if @vehicle.changed?
+      TrackerActionLog.vehicle_active_status_changed(@vehicle, current_user, prev_active_text, prev_reason)
+    end
+
+    @vehicle.save(validate: false)
+
+    redirect_to @vehicle
+  end
+
   private
 
   def vehicle_params
@@ -111,7 +144,6 @@ class VehiclesController < ApplicationController
       :model, 
       :license_plate, 
       :vin, 
-      :active, 
       :reportable, 
       :insurance_coverage_details, 
       :ownership, 
@@ -129,6 +161,15 @@ class VehiclesController < ApplicationController
         :state,
         :zip
       ])
+  end
+
+  def vehicle_inactivate_params
+    params.require(:vehicle).permit(
+      :active,
+      :inactivated_start_date,
+      :inactivated_end_date,
+      :active_status_changed_reason
+    )
   end
 
   def change_initial_mileage_params

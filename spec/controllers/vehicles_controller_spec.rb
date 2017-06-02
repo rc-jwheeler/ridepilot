@@ -16,11 +16,26 @@ RSpec.describe VehiclesController, type: :controller do
   }
 
   describe "GET #index" do
+
     it "assigns all vehicles for the current provider as @vehicles" do
-      vehicle_1 = create(:vehicle, :provider => @current_user.current_provider)
-      vehicle_2 = create(:vehicle)
+      vehicle_1 = create(:vehicle, :provider => @current_user.current_provider, :active => true)
+      vehicle_2 = create(:vehicle, :active => true)
       get :index, {}
-      expect(assigns(:vehicles)).to eq([vehicle_1])
+      expect(assigns(:vehicles)).to match([vehicle_1])
+    end
+
+    it "default to only active vehicles" do
+      active_vehicle = create(:vehicle, :provider => @current_user.current_provider, :active => true)
+      inactive_vehicle = create(:vehicle, :provider => @current_user.current_provider, :active => false)
+      get :index, {}
+      expect(assigns(:vehicles)).to match([active_vehicle])
+    end
+
+    it "gets all vehicles with show_inactive param as true" do
+      active_vehicle = create(:vehicle, :provider => @current_user.current_provider, :active => true)
+      inactive_vehicle = create(:vehicle, :provider => @current_user.current_provider, :active => false)
+      get :index, {show_inactive: 'true'}
+      expect(assigns(:vehicles)).to match_array([active_vehicle, inactive_vehicle])
     end
   end
 

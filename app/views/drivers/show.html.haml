@@ -13,3 +13,4 @@
           = @driver.inactivated? ? translate_helper(:activate) : translate_helper(:inactivate)
 
 = render partial: "form"
+= render 'shared/date_range_inactivate_dialog', resource: @driver, inactivation_url: inactivate_driver_path(@driver)

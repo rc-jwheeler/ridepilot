@@ -1,5 +1,6 @@
 class Vehicle < ActiveRecord::Base
   include RequiredFieldValidatorModule 
+  include Inactivateable
   include PublicActivity::Common
 
   acts_as_paranoid # soft delete

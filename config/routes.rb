@@ -148,11 +148,11 @@ Rails.application.routes.draw do
     end
 
     resources :drivers do
-      post :inactivate, :as => :inactivate
 
       member do
         get :delete_photo
         get :check_time_range_availability
+        post :inactivate
       end
 
       resources :documents, except: [:index, :show]
@@ -169,6 +169,7 @@ Rails.application.routes.draw do
       member do 
         get  :edit_initial_mileage
         post :update_initial_mileage
+        post :inactivate
       end
     end
 

@@ -136,14 +136,25 @@ class TrackerActionLog < PublicActivity::Activity
     end
   end
 
-  def self.active_status_changed(driver, user, prev_active_text, prev_reason)
+  def self.vehicle_active_status_changed(vehicle, user, prev_active_text, prev_reason)
+    return if !vehicle
+
+    vehicle.create_activity :active_status_changed, owner: user, params: {
+      prev_active_status_text: prev_active_text,
+      active_status_text: vehicle.active_status_text,
+      prev_reason: prev_reason || '(not provided)',
+      reason: vehicle.active_status_changed_reason  || '(not provided)'
+    }  
+  end
+
+  def self.driver_active_status_changed(driver, user, prev_active_text, prev_reason)
     return if !driver
 
     driver.create_activity :active_status_changed, owner: user, params: {
       prev_active_status_text: prev_active_text,
       active_status_text: driver.active_status_text,
-      prev_reason: prev_reason || '(not provided)',
-      reason: driver.active_status_changed_reason  || '(not provided)'
+      prev_reason: prev_reason.blank? ? '(not provided)' : prev_reason,
+      reason: driver.active_status_changed_reason.blank? ?  '(not provided)' : driver.active_status_changed_reason
     }  
   end
 

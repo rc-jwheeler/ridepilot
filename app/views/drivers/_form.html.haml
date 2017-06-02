@@ -130,8 +130,7 @@
   / END .row
   - unless @readonly
     .row.form-actions= f.submit translate_helper("driver_form_submit"), class: "btn action-button"
-
-= render 'inactivate_dialog' if @readonly 
+ 
 = render 'shared/hide_invisible_form_fields_js', model_name: "driver", table_name: 'drivers', provider_id:  current_provider.try(:id)
 = render 'shared/modal_dialog', modal_id: "modal-dialog"
 

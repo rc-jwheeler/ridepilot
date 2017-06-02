@@ -141,7 +141,7 @@ class DriversController < ApplicationController
   end
 
   def inactivate
-    @driver = Driver.find_by_id(params[:driver_id])
+    @driver = Driver.find_by_id(params[:id])
 
     authorize! :update, @driver
     
@@ -164,7 +164,7 @@ class DriversController < ApplicationController
     end
 
     if @driver.changed?
-      TrackerActionLog.active_status_changed(@driver, current_user, prev_active_text, prev_reason)
+      TrackerActionLog.driver_active_status_changed(@driver, current_user, prev_active_text, prev_reason)
     end
 
     @driver.save(validate: false)

@@ -26,10 +26,6 @@
       .col-md-10
         = f.text_field :vin, class: "form-control", disabled: @readonly
     .form-group
-      = f.label :active, translate_helper("vehicle_form_active_label"), class: "col-md-2 control-label"
-      .col-md-10
-        = f.select :active, [["Yes", "true"], ["No", "false"]], {:selected => @vehicle.active.to_s }, class: "form-control", disabled: @readonly
-    .form-group
       = f.label :reportable, translate_helper("vehicle_form_reportable_label"), class: "col-md-2 control-label"
       .col-md-10
         = f.select :reportable, [["Yes", "true"], ["No", "false"]], {:selected => @vehicle.reportable.to_s }, class: "form-control", disabled: @readonly
