@@ -8,12 +8,12 @@ class User < ActiveRecord::Base
   has_one    :device_pool_driver, through: :driver
   belongs_to :user_address, -> { with_deleted }, class_name: 'UserAddress', foreign_key: 'address_id'
   accepts_nested_attributes_for :user_address, update_only: true
+  has_many :verification_questions, dependent: :destroy
   
   # Include default devise modules. Others available are:
   # :rememberable, :token_authenticatable, :confirmable, :lockable
   devise :database_authenticatable, :recoverable, :trackable, :validatable, 
     :timeoutable, :password_expirable, :password_archivable, :account_expireable
-
   # Let Devise handle the email format requirement
   validates :username, :email, uniqueness: { :case_sensitive => false, conditions: -> { where(deleted_at: nil) } }
   validates_presence_of :first_name, :last_name, :username
