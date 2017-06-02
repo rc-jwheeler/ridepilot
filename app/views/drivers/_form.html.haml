@@ -50,10 +50,6 @@
                 - if @driver.user.present? && !@driver.user.deleted? && can?(:edit, @driver.user)
                   = link_to translate_helper("edit"), edit_user_path(@driver.user), class: "btn action-button"
           .form-group
-            = f.label :active, translate_helper("driver_form_active"), class: "col-md-2 control-label"
-            .col-md-10
-              = f.select :active, [["Active", "true"], ["Inactive", "false"]], { selected: @driver.active.to_s }, class: "form-control", disabled: @readonly
-          .form-group
             = f.label :paid, translate_helper("paid"), class: "col-md-2 control-label"
             .col-md-10
               = f.select :paid, [["Paid", "true"], ["Volunteer", "false"]], { selected: @driver.paid.to_s }, class: "form-control", disabled: @readonly
@@ -125,11 +121,17 @@
             .panel-footer
               .clearfix
                 = link_to translate_helper("driver_compliances_add_link_title"), new_driver_driver_compliance_path(@driver), class: "btn action-button pull-right", remote: true
+
+        - if @readonly
+          - logs = TrackerActionLog.for(@driver).order(created_at: :desc)
+          = render 'shared/action_log_panel', logs: logs if logs.any?
         / END .panel
     / END .col-md-6
   / END .row
   - unless @readonly
     .row.form-actions= f.submit translate_helper("driver_form_submit"), class: "btn action-button"
+
+= render 'inactivate_dialog' if @readonly 
 = render 'shared/hide_invisible_form_fields_js', model_name: "driver", table_name: 'drivers', provider_id:  current_provider.try(:id)
 = render 'shared/modal_dialog', modal_id: "modal-dialog"
 

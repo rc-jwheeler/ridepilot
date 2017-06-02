@@ -21,10 +21,24 @@ RSpec.describe DriversController, type: :controller do
 
   describe "GET #index" do
     it "assigns all drivers for the current provider as @drivers" do
-      driver_1 = create(:driver, :provider => @current_user.current_provider)
-      driver_2 = create(:driver)
+      driver_1 = create(:driver, :provider => @current_user.current_provider, :active => true)
+      driver_2 = create(:driver, :active => true)
       get :index, {}
-      expect(assigns(:drivers)).to eq([driver_1])
+      expect(assigns(:drivers)).to match([driver_1])
+    end
+
+    it "default to only active drivers" do
+      active_driver = create(:driver, :provider => @current_user.current_provider, :active => true)
+      inactive_driver = create(:driver, :provider => @current_user.current_provider, :active => false)
+      get :index, {}
+      expect(assigns(:drivers)).to match([active_driver])
+    end
+
+    it "gets all drivers with show_inactive param as true" do
+      active_driver = create(:driver, :provider => @current_user.current_provider, :active => true)
+      inactive_driver = create(:driver, :provider => @current_user.current_provider, :active => false)
+      get :index, {show_inactive: 'true'}
+      expect(assigns(:drivers)).to match_array([active_driver, inactive_driver])
     end
   end
 

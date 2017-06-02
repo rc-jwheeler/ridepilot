@@ -298,6 +298,16 @@ en:
   driver_address_heading: "Address"
   driver_alt_address_heading: "Alternative Address"
   driver_completed_run_hours: "Completed Run Hours This Week"
+  active_only: 'Active Only?'
+  show_inactive: 'Include inactive?'
+  permanent_inactive: 'Permanent Inactive?'
+  configure_inactivation_dialog_title: 'Configure Inactivation'
+  permanent_inactive: 'Permenent Inactive?'
+  date_range_inactive: 'Inactive for a date range'
+  inactivated_start_date: 'Start Date'
+  inactivated_end_date: 'End Date'
+  active_status_change_reason: 'Reason'
+  inactivated_end_date_earlier_than_start_date: 'End Date should be no earlier than Start Date'
 
   # emergency contact
   driver_form_emergency_contact_heading: 'Emergency Contact'

@@ -85,6 +85,23 @@ module TrackerActionLogHelper
           "Initial mileage was changed to #{mileage[1]} (<b>was:</b> #{mileage[0]}). <br><b>Reason:</b> #{reason}".html_safe
         end
       end
+    when "driver.active_status_changed"
+      driver = log.trackable
+      params = log.parameters || {}
+
+      if driver.present? && !params.blank?
+        msg = ""
+        if params[:prev_active_status_text] != params[:active_status_text]
+          msg += "Active status changed to:<div class='col-sm-12'>#{params[:active_status_text]}</div>" + 
+                "<p style='margin: 0px;'><b>Was: </b></p><div class='col-sm-12'>#{params[:prev_active_status_text]}</div>"+ 
+                "<p style='margin: 0px;'><b>Reason: </b></p><div class='col-sm-12'>#{params[:reason]}</div>"
+        elsif params[:prev_reason] != params[:reason]
+          msg = "Active status:<div class='col-sm-12'>#{params[:active_status_text]}</div>"  +
+                "<p style='margin: 0px;'><b>Reason: </b></p><div class='col-sm-12'>#{params[:reason]}</div>"
+        end
+
+        msg.html_safe
+      end
     end
   end
 end

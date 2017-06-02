@@ -148,6 +148,8 @@ Rails.application.routes.draw do
     end
 
     resources :drivers do
+      post :inactivate, :as => :inactivate
+
       member do
         get :delete_photo
         get :check_time_range_availability

@@ -136,6 +136,17 @@ class TrackerActionLog < PublicActivity::Activity
     end
   end
 
+  def self.active_status_changed(driver, user, prev_active_text, prev_reason)
+    return if !driver
+
+    driver.create_activity :active_status_changed, owner: user, params: {
+      prev_active_status_text: prev_active_text,
+      active_status_text: driver.active_status_text,
+      prev_reason: prev_reason || '(not provided)',
+      reason: driver.active_status_changed_reason  || '(not provided)'
+    }  
+  end
+
   private
 
   def self.compare_time_only(time_1, time_2)
