@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170527212202) do
+ActiveRecord::Schema.define(version: 20170601205119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -284,7 +284,7 @@ ActiveRecord::Schema.define(version: 20170527212202) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",     default: 0
+    t.integer  "lock_version",                 default: 0
     t.integer  "user_id"
     t.string   "email"
     t.integer  "address_id"
@@ -292,6 +292,9 @@ ActiveRecord::Schema.define(version: 20170527212202) do
     t.string   "phone_number"
     t.integer  "alt_address_id"
     t.string   "alt_phone_number"
+    t.date     "inactivated_start_date"
+    t.date     "inactivated_end_date"
+    t.text     "active_status_changed_reason"
   end
 
   add_index "drivers", ["address_id"], :name => "index_drivers_on_address_id"
@@ -601,6 +604,8 @@ ActiveRecord::Schema.define(version: 20170527212202) do
     t.string   "comments"
     t.integer  "repeating_run_id"
     t.date     "scheduled_through"
+    t.string   "pickup_address_notes"
+    t.string   "dropoff_address_notes"
   end
 
   add_index "repeating_trips", ["customer_id"], :name => "index_repeating_trips_on_customer_id"

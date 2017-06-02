@@ -1,9 +1,9 @@
 class DriversController < ApplicationController
-  load_and_authorize_resource except: [:delete_photo]
+  load_and_authorize_resource except: [:delete_photo, :inactivate]
 
   def index
     @drivers = @drivers.default_order.for_provider(current_provider.id)
-    @drivers = @drivers.active if params[:active_only] == 'true'
+    @drivers = @drivers.active if params[:show_inactive] != 'true'
   end
 
   def show
@@ -140,6 +140,38 @@ class DriversController < ApplicationController
     @is_available = @driver.available_between?(date.wday, start_time.strftime('%H:%M'), end_time.strftime('%H:%M')) if @driver && date && start_time && end_time
   end
 
+  def inactivate
+    @driver = Driver.find_by_id(params[:driver_id])
+
+    authorize! :update, @driver
+    
+    prev_active_text = @driver.active_status_text
+    prev_reason = @driver.active_status_changed_reason
+
+    @driver.assign_attributes driver_inactivate_params
+
+    if @driver.inactivated?
+      if @driver.permanent_inactivated?
+        @driver.inactivated_start_date = nil
+        @driver.inactivated_end_date = nil
+      else
+        if @driver.inactivated_end_date.present? && !@driver.inactivated_start_date.present?
+          @driver.inactivated_start_date = Date.today.in_time_zone
+        end
+      end
+    else
+      @driver.active_status_changed_reason = nil  
+    end
+
+    if @driver.changed?
+      TrackerActionLog.active_status_changed(@driver, current_user, prev_active_text, prev_reason)
+    end
+
+    @driver.save(validate: false)
+
+    redirect_to @driver
+  end
+
   private
   
   def prep_edit(readonly: false)
@@ -164,7 +196,6 @@ class DriversController < ApplicationController
   
   def driver_params
     params.require(:driver).permit(
-      :active, 
       :paid, 
       :email, 
       :user_id,
@@ -203,6 +234,15 @@ class DriversController < ApplicationController
           :zip
         ]
       ]
+    )
+  end
+
+  def driver_inactivate_params
+    params.require(:driver).permit(
+      :active,
+      :inactivated_start_date,
+      :inactivated_end_date,
+      :active_status_changed_reason
     )
   end
   
