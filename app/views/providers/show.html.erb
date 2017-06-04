@@ -103,6 +103,10 @@
 
 <hr />
 
+<h2 class="section-header"><%=translate_helper("configure_provider_driver_requirement_templates")%></h2>
+<%=link_to link_to translate_helper("provider_driver_requirement_templates_link_text"), driver_requirement_templates_path(provider_id: current_provider_id)%>
+<hr />
+
 <h2 class="section-header"><%=translate_helper("configure_provider_operating_hours")%></h2>
 <%= form_for current_provider, url: save_operating_hours_provider_path(current_provider) do |f| %>
   <% if current_provider.errors.any? %>

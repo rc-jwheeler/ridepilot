@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170602165555) do
+ActiveRecord::Schema.define(version: 20170604220728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -261,6 +261,7 @@ ActiveRecord::Schema.define(version: 20170602165555) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "recurring_driver_compliance_id"
+    t.boolean  "legal"
   end
 
   add_index "driver_compliances", ["driver_id"], :name => "index_driver_compliances_on_driver_id"
@@ -276,6 +277,16 @@ ActiveRecord::Schema.define(version: 20170602165555) do
   end
 
   add_index "driver_histories", ["driver_id"], :name => "index_driver_histories_on_driver_id"
+
+  create_table "driver_requirement_templates", force: true do |t|
+    t.integer  "provider_id"
+    t.string   "name"
+    t.boolean  "legal"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "driver_requirement_templates", ["provider_id"], :name => "index_driver_requirement_templates_on_provider_id"
 
   create_table "drivers", force: true do |t|
     t.boolean  "active"

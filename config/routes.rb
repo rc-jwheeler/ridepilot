@@ -114,6 +114,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :driver_requirement_templates 
+
     resources :recurring_vehicle_maintenance_compliances do
       collection do
         get :schedule_preview

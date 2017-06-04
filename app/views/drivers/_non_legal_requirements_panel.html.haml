@@ -1,0 +1,19 @@
+.panel.panel-primary
+  .panel-heading= translate_helper("driver_compliances_heading")
+  %table#driver_compliances-table.table.table-striped.table-condensed
+    %thead
+      %tr
+        %th.col-sm-3= translate_helper("driver_compliance_form_due_date")
+        %th= translate_helper("driver_compliance_form_event")
+        %th.col-sm-3= translate_helper("driver_compliance_form_compliance_date")
+        - unless @readonly
+          %th.col-sm-1
+    %tbody
+      - if @readonly and @driver.driver_compliances.non_legal.empty?
+        %tr
+          %td{:colspan => "3"}= translate_helper("driver_compliances_empty")
+      = render partial: 'driver_compliances/driver_compliance', collection: @driver.driver_compliances.non_legal.default_order
+  - unless @readonly
+    .panel-footer
+      .clearfix
+        = link_to translate_helper("driver_compliances_add_link_title"), new_driver_driver_compliance_path(@driver), class: "btn action-button pull-right", remote: true

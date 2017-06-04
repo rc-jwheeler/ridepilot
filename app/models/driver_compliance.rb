@@ -11,6 +11,8 @@ class DriverCompliance < ActiveRecord::Base
   validates :driver, presence: true
   validates_date :due_date
   
+  scope :legal,      ->  { where(legal: true) }
+  scope :non_legal,      ->  { where("legal is NULL or legal = ?", false) }
   scope :for_driver, -> (driver_id) { where(driver_id: driver_id) }
   scope :overdue, -> (as_of: Date.current) { incomplete.where("due_date < ?", as_of) }
   scope :due_soon, -> (as_of: Date.current, through: nil) { incomplete.where(due_date: as_of..(through || as_of + 6.days)) }

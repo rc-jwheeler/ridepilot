@@ -1,2 +1,6 @@
 $('#modal-dialog').modal('hide');
-$("<%= j (render @driver_compliance) %>").hide().appendTo('#driver_compliances-table tbody').slideDown('slow');
+<% if @driver_compliance.legal?%>
+  $("<%= j (render @driver_compliance) %>").hide().appendTo('#legal_driver_compliances-table tbody').slideDown('slow');
+<% else %>
+  $("<%= j (render @driver_compliance) %>").hide().appendTo('#driver_compliances-table tbody').slideDown('slow');
+<% end %>

@@ -56,6 +56,6 @@ class DriverCompliancesController < ApplicationController
   end
 
   def driver_compliance_params
-    params.require(:driver_compliance).permit(:event, :notes, :due_date, :compliance_date, document_associations_attributes: [:id, :document_id, :_destroy])
+    params.require(:driver_compliance).permit(:event, :notes, :due_date, :compliance_date, :legal, document_associations_attributes: [:id, :document_id, :_destroy])
   end
 end

@@ -332,6 +332,8 @@ en:
   driver_history_form_submit: "Save"
 
   # Driver compliances
+  legal_driver_compliances_heading: "Legal Requirements"
+  driver_requirement_template: 'Template'
   driver_compliances_heading: "Compliance Events"
   driver_compliances_add_link_title: "Add compliance event"
   driver_compliances_empty: "No compliance events exist for this driver"
@@ -346,6 +348,34 @@ en:
   driver_compliance_form_due_date: "Due Date"
   driver_compliance_form_compliance_date: "Compliance Date"
   driver_compliance_form_submit: "Save"
+
+  # Driver requirement templates
+  system_driver_requirement_templates_link_text: "System-wide Driver Requirements"
+  system_driver_requirement_templates_index_heading: "System-wide Driver Requirements"
+  provider_driver_requirement_templates_link_text: "Provider-specific Driver Requirements"
+  provider_driver_requirement_templates_index_heading: "Provider-specific Driver Requirements"
+  configure_provider_driver_requirement_templates: "Configure Provider Specific Driver Requirements"
+  driver_requirement_templates_link_text: "Driver Requirements"
+  driver_requirement_templates_index_heading: "Driver Requirements"
+  new_driver_requirement_template_link_text: "Create Driver Requirement"
+  new_driver_requirement_template_heading: "New Driver Requirement"
+  show_driver_requirement_template_heading: "Driver Requirement"
+  delete_driver_requirement_template_button: "Delete"
+  edit_driver_requirement_template_button: "Edit"
+  edit_driver_requirement_template_heading: "Edit Requirement"
+  delete_driver_requirement_template_confirm_button: "Confirm"
+  delete_driver_requirement_template_confirm: "Are you sure?"
+  delete_driver_requirement_template_confirm_heading: "You are about to delete '%{requirement_name}'"
+  delete_driver_requirement_template_heading: "Delete Requirement"
+  driver_requirement_template_form_name: 'Name'
+  driver_requirement_template_form_legal: 'Legal Requirement'
+  driver_requirement_template_form_submit: 'Submit'
+  driver_requirement_templates_empty: 'No requirements exist'
+  driver_requirement_template_name: 'Name'
+  driver_requirement_template_legal: 'Legal?'
+  driver_requirement_template_form_error:
+    one: "1 error prohibited this requirement from being saved"
+    other: "%{count} errors prohibited this requirement from being saved"
 
   # Recurring Driver Compliance Events
   recurring_driver_compliances_link_text: "Recurring Driver Compliance Events"
