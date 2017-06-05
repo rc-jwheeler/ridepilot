@@ -1,0 +1,14 @@
+%h2= translate_helper("new_password_heading")
+
+= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
+  = devise_error_messages!
+
+  .field
+    =f.label :email, translate_helper("email")
+    %br
+    =f.email_field :email, autofocus: true
+
+  .actions
+    = f.submit translate_helper("submit_new_password_form")
+  
+= render "devise/shared/links"
