@@ -300,25 +300,25 @@ body.monthlies #primary-nav li.reports a:link,
 body.monthlies #primary-nav li.reports a:visited,
 body.dispatch #primary-nav li.dispatch a:link, 
 body.dispatch #primary-nav li.dispatch a:visited,
-body.providers.show #secondary-nav li.vehicles-drivers-users a:link, 
-body.providers.show #secondary-nav li.vehicles-drivers-users a:visiteded,
-body.new-user #secondary-nav li.vehicles-drivers-users a:link, 
-body.new-user #secondary-nav li.vehicles-drivers-users a:visited,
-body.drivers #secondary-nav li.vehicles-drivers-users a:link, 
-body.drivers #secondary-nav li.vehicles-drivers-users a:visited,
-body.vehicles #secondary-nav li.vehicles-drivers-users a:link, 
-body.vehicles #secondary-nav li.vehicles-drivers-users a:visited, 
+body.providers.show #secondary-nav li.provider a:link, 
+body.providers.show #secondary-nav li.provider a:visiteded,
+body.new-user #secondary-nav li.provider a:link, 
+body.new-user #secondary-nav li.provider a:visited,
+body.drivers #secondary-nav li.provider a:link, 
+body.drivers #secondary-nav li.provider a:visited,
+body.vehicles #secondary-nav li.provider a:link, 
+body.vehicles #secondary-nav li.provider a:visited, 
 body.home.index #secondary-nav li.admin a:link, 
 body.home.index #secondary-nav li.admin a:visited {
   background: #fff;
   color: #009FFB;
 }
 /* override reports' vehicles class */
-body.reports #primary-nav li.vehicles-drivers-users a:link, body.reports #primary-nav li.vehicles-drivers-users a:visited { 
+body.reports #primary-nav li.provider a:link, body.reports #primary-nav li.provider a:visited { 
   color: #0081CC; background-image: -webkit-gradient( linear, left bottom, left top, #eee 35%, #fff 100% ); 
   background-image: -moz-linear-gradient( center bottom, #eee 35%, #fff 100% ); 
 }
-body.reports #primary-nav li.vehicles-drivers-users a:hover, body.reports #primary-nav li.vehicles-drivers-users a:active { 
+body.reports #primary-nav li.provider a:hover, body.reports #primary-nav li.provider a:active { 
   background: #fff; 
   color: #009FFB; 
 }

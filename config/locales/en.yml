@@ -161,6 +161,7 @@ en:
   add_value: "Add Value"
   delete_value: "Delete Value"
   lookup_table: "Lookup Table"
+  provider_lookup_table: "Provider Specific Lookup Table"
   edit_value: "Edit Value"
   hide_value: 'Hide Value'
   show_value: 'Show Value'
@@ -557,6 +558,8 @@ en:
   current_provider_link_text: "Vehicles, drivers and users"
   dispatch_link_text: "Dispatch"
   lookup_tables_link_text: "Lookup Tables"
+  provider_lookup_tables_link_text: "Provider Lookup Tables"
+  configure_provider_lookup_tables: "Configure Provider Lookup Tables"
   application_settings_link_text: "Application Settings"
   #footer
   footer_content: "Footer content here."

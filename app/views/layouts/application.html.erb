@@ -58,7 +58,7 @@
           <li class="admin"><%= link_to translate_helper("application_admin_link_text"), admin_path %></li>
         <% end %>
         <% if can_access_provider_settings_tab(current_user, current_provider) %>
-          <li class="vehicles-drivers-users"><%= link_to translate_helper("current_provider_settings_link_text"), provider_path(current_user.current_provider) %></li>
+          <li class="provider"><%= link_to translate_helper("current_provider_settings_link_text"), provider_path(current_user.current_provider) %></li>
         <% end %>
       </ul>
     </div><!-- /.wrap -->

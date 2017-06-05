@@ -5,7 +5,7 @@ class DriverRequirementTemplatesController < ApplicationController
     if params[:provider_id].blank?
       @driver_requirement_templates = DriverRequirementTemplate.system_wide
     else
-      @driver_requirement_templates = DriverRequirementTemplate.for_provider(params[:provider_id])
+      @driver_requirement_templates = DriverRequirementTemplate.provider_only(params[:provider_id])
     end
 
     @driver_requirement_templates.order(:name, :legal)

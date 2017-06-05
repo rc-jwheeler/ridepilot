@@ -36,6 +36,11 @@ namespace :ridepilot do
     seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_lookup_table_configurations.rb')
     load(seed_file) if File.exist?(seed_file)
     puts 'Finished seeding lookup table configurations'
+
+    puts 'provider lookup table configurations...'
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_provider_lookup_table_configurations.rb')
+    load(seed_file) if File.exist?(seed_file)
+    puts 'Finished seeding provider lookup table configurations'
   end
 
   desc 'Seed list of supporting custom reports'
@@ -193,5 +198,12 @@ namespace :ridepilot do
         user.update_attribute(:last_name, 'User') # default last name
       end
     end
+  end
+
+  desc 'Seed provider lookup tables configurations'
+  task :seed_provider_lookup_table_configurations => :environment do
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_provider_lookup_table_configurations.rb')
+    load(seed_file) if File.exist?(seed_file)
+    puts 'Finished seeding provider lookup table configurations'
   end
 end

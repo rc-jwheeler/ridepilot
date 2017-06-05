@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170604220728) do
+ActiveRecord::Schema.define(version: 20170605164722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -376,9 +376,11 @@ ActiveRecord::Schema.define(version: 20170604220728) do
   create_table "funding_sources", force: true do |t|
     t.string   "name"
     t.datetime "deleted_at"
+    t.integer  "provider_id"
   end
 
   add_index "funding_sources", ["deleted_at"], :name => "index_funding_sources_on_deleted_at"
+  add_index "funding_sources", ["provider_id"], :name => "index_funding_sources_on_provider_id"
 
   create_table "hidden_lookup_table_values", force: true do |t|
     t.integer  "provider_id"
@@ -463,6 +465,17 @@ ActiveRecord::Schema.define(version: 20170604220728) do
 
   add_index "operating_hours", ["operatable_id", "operatable_type"], :name => "index_operating_hours_on_operatable_id_and_operatable_type"
   add_index "operating_hours", ["operatable_id"], :name => "index_operating_hours_on_operatable_id"
+
+  create_table "provider_lookup_tables", force: true do |t|
+    t.string   "caption"
+    t.string   "name"
+    t.string   "value_column_name"
+    t.string   "model_name"
+    t.string   "code_column_name"
+    t.string   "description_column_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "provider_reports", force: true do |t|
     t.integer  "provider_id"
@@ -956,6 +969,15 @@ ActiveRecord::Schema.define(version: 20170604220728) do
   end
 
   add_index "vehicle_warranties", ["vehicle_id"], :name => "index_vehicle_warranties_on_vehicle_id"
+
+  create_table "vehicle_warranty_templates", force: true do |t|
+    t.string   "name"
+    t.integer  "provider_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "vehicle_warranty_templates", ["provider_id"], :name => "index_vehicle_warranty_templates_on_provider_id"
 
   create_table "vehicles", force: true do |t|
     t.string   "name"

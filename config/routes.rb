@@ -223,6 +223,14 @@ Rails.application.routes.draw do
         put :show_value
       end
     end
+
+    resources :provider_lookup_tables, :only => [:index, :show] do
+      member do
+        post :add_value
+        put :update_value
+        put :destroy_value
+      end
+    end
   end
 
   namespace :api, defaults: { format: :json } do
