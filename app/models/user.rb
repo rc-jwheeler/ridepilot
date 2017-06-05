@@ -94,6 +94,19 @@ class User < ActiveRecord::Base
   def name_with_username
     "#{last_name}, #{first_name} (#{username})"
   end
+  
+  def edit_verification_questions(verification_question_objects)
+    # remove non-existing ones
+    prev_verification_question_ids = verification_questions.pluck(:id)
+    existing_verification_question_ids = verification_question_objects.select {|vq| vq[:id] != nil}.map{|vq| vq[:id]}
+    VerificationQuestion.where(id: prev_verification_question_ids - existing_verification_question_ids).delete_all
+  
+    # update verification questions
+    verification_question_objects.select {|vq| vq[:id].blank? }.each do |vq_hash|
+      vq = VerificationQuestion.parse(vq_hash, self)
+      vq.save
+    end
+  end
 
   private
 

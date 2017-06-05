@@ -93,9 +93,10 @@ class UsersController < ApplicationController
       @user.address_id = nil
       new_attrs.except!(:user_address_attributes)
     end
-
+    
     if @user.update_attributes(new_attrs)
       prev_address.destroy if is_address_blank && prev_address.present?
+      edit_verification_questions
       flash.now[:notice] = "User updated."
       redirect_to user_path(@user)
     else
@@ -237,7 +238,8 @@ class UsersController < ApplicationController
         :provider_id,
         :state,
         :zip,
-        :notes
+        :notes,
+        :verification_questions
       ])
   end
 
@@ -273,5 +275,12 @@ class UsersController < ApplicationController
     end if address_params
 
     is_blank
+  end
+  
+  def edit_verification_questions
+    if params[:verification_questions]
+      verification_questions = JSON.parse(params[:verification_questions], symbolize_names: true)
+      @user.edit_verification_questions(verification_questions)
+    end
   end
 end
