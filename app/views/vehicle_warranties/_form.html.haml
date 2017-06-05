@@ -13,7 +13,7 @@
         .panel-body.form-horizontal
           .form-group
             .col-md-3.control-label
-              %label= translate_helper("vehicle_warranty_template")
+              %label= translate_helper("vehicle_warranty_type")
             .col-md-9
               = select_tag "vehicle_warranty_template", options_for_select(VehicleWarrantyTemplate.by_provider(current_provider_id).pluck(:name, :id)), include_blank: true, class: 'form-control', id: "vehicle_warranty_template"
           .form-group

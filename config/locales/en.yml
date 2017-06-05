@@ -1131,6 +1131,7 @@ en:
   back_to_provider: "Back"
 
   # Vehicle Warranties
+  vehicle_warranty_type: 'Warranty Type'
   vehicle_warranties_heading: "Vehicle and Equipment Warranties"
   vehicle_warranties_add_link_title: "Add warranty"
   vehicle_warranties_empty: "No warranties exist for this vehicle"
