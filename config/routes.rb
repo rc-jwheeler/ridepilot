@@ -30,6 +30,12 @@ Rails.application.routes.draw do
       member do 
         get :show_reset_password
         patch :reset_password
+        post "answer_verification_question" => "users#answer_verification_question"
+      end
+      
+      collection do
+        get "get_verification_question" => "users#get_verification_question"
+        post "get_verification_question" => "users#get_verification_question"
       end
     end
 

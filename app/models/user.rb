@@ -8,12 +8,12 @@ class User < ActiveRecord::Base
   has_one    :device_pool_driver, through: :driver
   belongs_to :user_address, -> { with_deleted }, class_name: 'UserAddress', foreign_key: 'address_id'
   accepts_nested_attributes_for :user_address, update_only: true
+  has_many :verification_questions, dependent: :destroy
   
   # Include default devise modules. Others available are:
   # :rememberable, :token_authenticatable, :confirmable, :lockable
   devise :database_authenticatable, :recoverable, :trackable, :validatable, 
     :timeoutable, :password_expirable, :password_archivable, :account_expireable
-
   # Let Devise handle the email format requirement
   validates :username, :email, uniqueness: { :case_sensitive => false, conditions: -> { where(deleted_at: nil) } }
   validates_presence_of :first_name, :last_name, :username
@@ -93,6 +93,25 @@ class User < ActiveRecord::Base
 
   def name_with_username
     "#{last_name}, #{first_name} (#{username})"
+  end
+  
+  # Edits/adds/deletes verification questions based on passed hashes
+  def edit_verification_questions(verification_question_objects)
+    # remove non-existing ones
+    prev_verification_question_ids = verification_questions.pluck(:id)
+    existing_verification_question_ids = verification_question_objects.select {|vq| vq[:id] != nil}.map{|vq| vq[:id]}
+    VerificationQuestion.where(id: prev_verification_question_ids - existing_verification_question_ids).delete_all
+  
+    # update verification questions
+    verification_question_objects.select {|vq| vq[:id].blank? }.each do |vq_hash|
+      vq = VerificationQuestion.parse(vq_hash, self)
+      vq.save
+    end
+  end
+  
+  # Returns a random question from the user's array of verification questions
+  def random_verification_question
+    verification_questions.shuffle.first
   end
 
   private

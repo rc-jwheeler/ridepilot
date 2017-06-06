@@ -241,4 +241,54 @@ RSpec.describe UsersController, type: :controller do
       expect(response.body).to eq('OK')
     end
   end
+  
+  
+  describe "verification questions" do
+    let(:user) { create(:user, :with_verification_questions) }
+    
+    describe "POST #get_verification_question" do
+      
+      it "responds with one of the user's security questions" do
+        post :get_verification_question, { user: {username: user.username} }
+        expect(assigns(:user)).to eq(user)
+        expect(user.verification_questions.include?(assigns(:question))).to be true
+      end
+      
+    end
+    
+    describe "POST #answer_verification_question" do
+    
+      it "redirects to show_reset_password on correct answer" do
+        question = user.verification_questions.take
+        
+        post :answer_verification_question, {
+          id: user.id,
+          answer_verification_question: {
+            answer: question.answer,
+            verification_question_id: question.id
+          }
+        }
+        
+        expect(response.location.include?("show_reset_password")).to be true
+        
+      end
+      
+      it "redirects to get_verification_question on incorrect answer" do
+        question = user.verification_questions.take
+        
+        post :answer_verification_question, {
+          id: user.id,
+          answer_verification_question: {
+            answer: question.answer + "X",
+            verification_question_id: question.id
+          }
+        }
+        
+        expect(response.location.include?("get_verification_question")).to be true
+      end
+    
+    end
+    
+  end
+
 end
