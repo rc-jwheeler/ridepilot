@@ -36,5 +36,15 @@ FactoryGirl.define do
         create(:role, :user => super_admin, :provider => super_admin.current_provider, :level => 200) unless super_admin.roles.any?
       end
     end
+    
+    # Creates verification questions for the user
+    trait :with_verification_questions do
+      after(:create) do |user|
+        3.times do
+          user.verification_questions << create(:verification_question)
+        end
+        user.save
+      end
+    end
   end
 end

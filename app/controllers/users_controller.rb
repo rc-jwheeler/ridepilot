@@ -233,10 +233,8 @@ class UsersController < ApplicationController
   # Presents a user with a random verification question
   def get_verification_question    
     @user = User.find_by(email: get_verification_question_params[:email])
-    puts @user.inspect
     if @user
       @question = @user.random_verification_question
-      puts @question.inspect
     end
     
     unless @user && @question
