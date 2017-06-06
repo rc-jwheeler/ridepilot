@@ -35,6 +35,7 @@
 
 :javascript
   $(function() {
+    $('#vehicles-table').dataTable();
     $('#show_active_only').prop('checked', #{params[:show_inactive] == 'true'});
     $('#show_active_only').change(function() {
       window.location.href = "#{vehicles_path}?show_inactive=" + $(this).is(':checked')
