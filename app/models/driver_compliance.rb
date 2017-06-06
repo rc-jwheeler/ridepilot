@@ -7,6 +7,8 @@ class DriverCompliance < ActiveRecord::Base
   
   belongs_to :driver, inverse_of: :driver_compliances
   belongs_to :recurring_driver_compliance, inverse_of: :driver_compliances
+
+  belongs_to :driver_requirement_template, -> { with_deleted }
   
   validates :driver, presence: true
   validates_date :due_date

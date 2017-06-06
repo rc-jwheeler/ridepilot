@@ -1,6 +1,6 @@
 - remote ||= false
 - legal = params[:legal] == 'true' || @driver_compliance.legal?
-- @driver_requirement_template = legal ? DriverRequirementTemplate.legal.provider_accessible(current_provider_id) : DriverRequirementTemplate.non_legal.provider_accessible(current_provider_id)
+- @driver_requirement_templates = legal ? DriverRequirementTemplate.legal.provider_accessible(current_provider_id) : DriverRequirementTemplate.non_legal.provider_accessible(current_provider_id)
 = nested_form_for [@driver, @driver_compliance], remote: remote do |f|
   = f.hidden_field :legal, value: legal
   - if @driver_compliance.errors.any?
@@ -18,7 +18,7 @@
             .col-md-3.control-label
               %label= translate_helper("driver_requirement_template_field_label")
             .col-md-9
-              = select_tag "driver_requirement_template", options_for_select(@driver_requirement_template.pluck(:name, :id)), include_blank: true, class: 'form-control', id: "driver_requirement_template"
+              = f.collection_select :driver_requirement_template_id, @driver_requirement_templates, :id, :name, { include_blank: true }, { class: "form-control", id: "driver_requirement_template" }
           .form-group
             = f.label :event, translate_helper("driver_compliance_form_event"), class: "col-md-3 control-label"
             .col-md-9

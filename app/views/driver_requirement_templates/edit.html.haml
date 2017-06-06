@@ -6,7 +6,7 @@
     .pull-right
       %button#driver_requirement_template_form_submit.btn.action-button
         = translate_helper("update")
-      = link_to translate_helper("cancel"), @driver_requirement_template(provider_id: params[:provider_id]), class: "btn action-button"
+      = link_to translate_helper("cancel"), driver_requirement_template_path(@driver_requirement_template, provider_id: params[:provider_id]), class: "btn action-button"
       
 = render partial: "form"
 

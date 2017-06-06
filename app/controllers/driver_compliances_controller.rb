@@ -7,6 +7,11 @@ class DriverCompliancesController < ApplicationController
   # GET /driver_compliances/new
   def new
     prep_edit
+    
+    unless params["driver_requirement_template_id"].blank?
+      @driver_compliance.driver_requirement_template_id = params["driver_requirement_template_id"]
+      @driver_compliance.event = @driver_compliance.driver_requirement_template.try(:name)
+    end
   end
 
   # GET /driver_compliances/1/edit
@@ -29,7 +34,9 @@ class DriverCompliancesController < ApplicationController
 
   # PATCH/PUT /driver_compliances/1
   def update
+    was_incomplete = !@driver_compliance.complete?
     if @driver_compliance.update(driver_compliance_params)
+      @is_newly_completed = was_incomplete && @driver_compliance.complete?
       respond_to do |format|
         format.html { redirect_to @driver, notice: 'Driver compliance was successfully updated.' }
         format.js
@@ -56,6 +63,6 @@ class DriverCompliancesController < ApplicationController
   end
 
   def driver_compliance_params
-    params.require(:driver_compliance).permit(:event, :notes, :due_date, :compliance_date, :legal, document_associations_attributes: [:id, :document_id, :_destroy])
+    params.require(:driver_compliance).permit(:event, :notes, :due_date, :compliance_date, :legal, :driver_requirement_template_id, document_associations_attributes: [:id, :document_id, :_destroy])
   end
 end

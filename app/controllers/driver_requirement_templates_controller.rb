@@ -47,6 +47,6 @@ class DriverRequirementTemplatesController < ApplicationController
   private
 
   def template_params
-    params.require(:driver_requirement_template).permit(:name, :provider_id, :legal)
+    params.require(:driver_requirement_template).permit(:name, :provider_id, :legal, :reoccuring)
   end
 end
