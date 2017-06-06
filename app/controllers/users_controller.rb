@@ -231,14 +231,16 @@ class UsersController < ApplicationController
   end
   
   # Presents a user with a random verification question
-  def get_verification_question
+  def get_verification_question    
     @user = User.find_by(email: get_verification_question_params[:email])
+    puts @user.inspect
     if @user
       @question = @user.random_verification_question
+      puts @question.inspect
     end
     
     unless @user && @question
-      flash.now[:notice] = TranslationEngine.translate_text(:no_verification_questions_set)
+      flash[:alert] = TranslationEngine.translate_text(:no_verification_questions_set)
       redirect_to :back
     end
   end
@@ -252,7 +254,7 @@ class UsersController < ApplicationController
       sign_in(@user, bypass: true)
       redirect_to action: :show_reset_password, id: @user.id
     else
-      flash.now[:notice] = TranslationEngine.translate_text(:verification_question_incorrect_answer)
+      flash[:alert] = TranslationEngine.translate_text(:verification_question_incorrect_answer)
       redirect_to action: :get_verification_question, user: {email: @user.email}
     end
   end
