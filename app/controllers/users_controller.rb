@@ -113,7 +113,6 @@ class UsersController < ApplicationController
   end
 
   def reset_password
-    puts "RESETTING PASSWORD...", current_user.inspect, @user.inspect
     
     @user = User.find(params[:id])
     authorize! :manage, @user
@@ -232,7 +231,8 @@ class UsersController < ApplicationController
   
   # Presents a user with a random verification question
   def get_verification_question    
-    @user = User.find_by(email: get_verification_question_params[:email])
+    @user = User.find_by(username: get_verification_question_params[:identifier].downcase)
+                
     if @user
       @question = @user.random_verification_question
     end
@@ -279,7 +279,7 @@ class UsersController < ApplicationController
   end
   
   def get_verification_question_params
-    params.require(:user).permit(:email)
+    params.require(:user).permit(:identifier)
   end
   
   def answer_verification_question_params
