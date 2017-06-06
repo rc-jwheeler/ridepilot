@@ -249,7 +249,7 @@ RSpec.describe UsersController, type: :controller do
     describe "POST #get_verification_question" do
       
       it "responds with one of the user's security questions" do
-        post :get_verification_question, { user: {email: user.email} }
+        post :get_verification_question, { user: {username: user.username} }
         expect(assigns(:user)).to eq(user)
         expect(user.verification_questions.include?(assigns(:question))).to be true
       end

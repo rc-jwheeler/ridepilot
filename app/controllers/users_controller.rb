@@ -231,7 +231,7 @@ class UsersController < ApplicationController
   
   # Presents a user with a random verification question
   def get_verification_question    
-    @user = User.find_by(username: get_verification_question_params[:identifier].downcase)
+    @user = User.find_by(username: get_verification_question_params[:username].downcase)
                 
     if @user
       @question = @user.random_verification_question
@@ -279,7 +279,7 @@ class UsersController < ApplicationController
   end
   
   def get_verification_question_params
-    params.require(:user).permit(:identifier)
+    params.require(:user).permit(:username)
   end
   
   def answer_verification_question_params
