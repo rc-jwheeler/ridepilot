@@ -4,3 +4,7 @@ $('#modal-dialog').modal('hide');
 <% else %>
   $("<%= j (render @driver_compliance) %>").hide().appendTo('#driver_compliances-table tbody').slideDown('slow');
 <% end %>
+
+<% if @driver_compliance.complete? && @driver_compliance.driver_requirement_template.try(:reoccuring?)%>
+  <%= render 'ask_for_reoccuring', driver: @driver, legal: @driver_compliance.legal?, driver_requirement_template_id: @driver_compliance.driver_requirement_template_id %>
+<% end %>

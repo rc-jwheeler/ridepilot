@@ -1,6 +1,8 @@
 class DriverRequirementTemplate < ActiveRecord::Base
   belongs_to :provider
 
+  acts_as_paranoid # soft delete
+
   validates :name, presence: true
 
   scope :system_wide,   -> { where(provider: nil)}

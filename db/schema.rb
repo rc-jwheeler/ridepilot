@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170605164722) do
+ActiveRecord::Schema.define(version: 20170606175102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -262,9 +262,11 @@ ActiveRecord::Schema.define(version: 20170605164722) do
     t.datetime "updated_at"
     t.integer  "recurring_driver_compliance_id"
     t.boolean  "legal"
+    t.integer  "driver_requirement_template_id"
   end
 
   add_index "driver_compliances", ["driver_id"], :name => "index_driver_compliances_on_driver_id"
+  add_index "driver_compliances", ["driver_requirement_template_id"], :name => "index_driver_compliances_on_driver_requirement_template_id"
   add_index "driver_compliances", ["recurring_driver_compliance_id"], :name => "index_driver_compliances_on_recurring_driver_compliance_id"
 
   create_table "driver_histories", force: true do |t|
@@ -284,6 +286,8 @@ ActiveRecord::Schema.define(version: 20170605164722) do
     t.boolean  "legal"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "reoccuring"
+    t.datetime "deleted_at"
   end
 
   add_index "driver_requirement_templates", ["provider_id"], :name => "index_driver_requirement_templates_on_provider_id"
@@ -1015,6 +1019,16 @@ ActiveRecord::Schema.define(version: 20170605164722) do
   add_index "vehicles", ["deleted_at"], :name => "index_vehicles_on_deleted_at"
   add_index "vehicles", ["garage_address_id"], :name => "index_vehicles_on_garage_address_id"
   add_index "vehicles", ["provider_id"], :name => "index_vehicles_on_provider_id"
+
+  create_table "verification_questions", force: true do |t|
+    t.integer  "user_id"
+    t.text     "question"
+    t.text     "answer"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "verification_questions", ["user_id"], :name => "index_verification_questions_on_user_id"
 
   create_table "versions", force: true do |t|
     t.string   "item_type",      null: false

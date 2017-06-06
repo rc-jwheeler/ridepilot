@@ -337,6 +337,7 @@ en:
   driver_requirement_template_field_label: 'Type'
   driver_compliances_heading: "Compliance Events"
   driver_compliances_add_link_title: "Add compliance event"
+  driver_legal_requirements_add_link_title: "Add legal requirement"
   driver_compliances_empty: "No compliance events exist for this driver"
   driver_compliance_delete_confirm: "Are you sure you want to delete this compliance event?"
   driver_compliance_form_error:
@@ -349,6 +350,7 @@ en:
   driver_compliance_form_due_date: "Due Date"
   driver_compliance_form_compliance_date: "Compliance Date"
   driver_compliance_form_submit: "Save"
+  confirm_creating_reoccuring_event: "This is a reoccuring event. Would you like to create a new record?"
 
   # Driver requirement templates
   system_driver_requirement_templates_link_text: "System-wide Driver Requirements"
@@ -368,12 +370,14 @@ en:
   delete_driver_requirement_template_confirm: "Are you sure?"
   delete_driver_requirement_template_confirm_heading: "You are about to delete '%{requirement_name}'"
   delete_driver_requirement_template_heading: "Delete Requirement"
-  driver_requirement_template_form_name: 'Name'
-  driver_requirement_template_form_legal: 'Legal Requirement'
-  driver_requirement_template_form_submit: 'Submit'
-  driver_requirement_templates_empty: 'No requirements exist'
   driver_requirement_template_name: 'Name'
   driver_requirement_template_legal: 'Legal?'
+  driver_requirement_template_reoccuring: 'Reoccuring?'
+  driver_requirement_template_form_submit: 'Submit'
+  driver_requirement_templates_empty: 'No requirements exist'
+  driver_requirement_template_name_field_label: 'Name'
+  driver_requirement_template_legal_field_label: 'Legal?'
+  driver_requirement_template_reoccuring_field_label: 'Reoccuring?'
   driver_requirement_template_form_error:
     one: "1 error prohibited this requirement from being saved"
     other: "%{count} errors prohibited this requirement from being saved"
