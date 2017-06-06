@@ -95,6 +95,7 @@ class User < ActiveRecord::Base
     "#{last_name}, #{first_name} (#{username})"
   end
   
+  # Edits/adds/deletes verification questions based on passed hashes
   def edit_verification_questions(verification_question_objects)
     # remove non-existing ones
     prev_verification_question_ids = verification_questions.pluck(:id)
@@ -106,6 +107,11 @@ class User < ActiveRecord::Base
       vq = VerificationQuestion.parse(vq_hash, self)
       vq.save
     end
+  end
+  
+  # Returns a random question from the user's array of verification questions
+  def random_verification_question
+    verification_questions.shuffle.first
   end
 
   private

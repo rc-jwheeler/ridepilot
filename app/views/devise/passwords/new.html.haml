@@ -1,14 +1,48 @@
 %h2= translate_helper("new_password_heading")
 
-= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f|
+.row
+  .col-sm-12.col-md-6
+    .panel.panel-primary
+      .panel-heading= translate_helper("new_password_form_heading")
+      .panel-body.form-horizontal
+        .form-group
+          %label.col-md-2.control-label Email
+          .col-md-10
+            %input.form-control#master-email-input{type: 'email', autofocus: true}
+
+-# PASSWORD RESET VIA EMAIL
+= form_for(resource, 
+    as: resource_name, 
+    url: password_path(resource_name), 
+    html: { method: :post, id: 'reset-password-via-email' }) do |f|
   = devise_error_messages!
-
-  .field
-    =f.label :email, translate_helper("email")
-    %br
-    =f.email_field :email, autofocus: true
-
-  .actions
-    = f.submit translate_helper("submit_new_password_form")
+  = f.email_field :email, hidden: true
   
+-# PASSWORD RESET VIA VERIFICATION question
+= form_for(resource, 
+    as: resource_name, 
+    url: get_verification_question_users_path, 
+    html: { method: :get, id: 'get-verification-question' }) do |f|
+  =f.email_field :email, hidden: true
+  
+#reset-password-via-email-form-submit.btn.btn-primary=translate_helper("submit_new_password_form_reset")
+#get-verification-question-form-submit.btn.btn-primary=translate_helper("submit_new_password_form_verification_question")
+
+%br
 = render "devise/shared/links"
+
+:javascript
+  $(function() {
+  
+    // Update the reset password via email form with email address from master input, and submit
+    $('#reset-password-via-email-form-submit').click(function() {
+      $('form#reset-password-via-email input#user_email').val($('#master-email-input').val());
+      $('form#reset-password-via-email').submit();
+    });
+
+    // Update the get verification question form with email address from master input, and submit    
+    $('#get-verification-question-form-submit').click(function() {
+      $('form#get-verification-question input#user_email').val($('#master-email-input').val());
+      $('form#get-verification-question').submit();
+    });
+  });

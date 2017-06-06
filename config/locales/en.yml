@@ -1111,7 +1111,19 @@ en:
   user_expires_at: "Inactivation Date"
   user_inactivation_reason: "Reasons"
   change_expiration_submit: "Update"
-
+  
+  #password reset & verification questions
+  verification_questions: "Security Questions"
+  verification_question_question: "Question"
+  verification_question_answer: "Answer"
+  reset_password: "Reset Password"
+  add_verification_question: "Add a Security Question"
+  add_verification_question_dialog_title: "Add a Security Question"
+  new_password_form_heading: "Enter your Email Address"
+  submit_new_password_form_reset: "Send a Password Reset Email"
+  submit_new_password_form_verification_question: "Reset Password by Answering a Security Question"
+  answer_verification_questions_heading: "Answer a Security Question to Reset your Password"
+  submit_answer_verification_questions_form: "Submit Answer"
 
   # Vehicle Maintenance Events
   vehicle_maintenance_event_form_error:

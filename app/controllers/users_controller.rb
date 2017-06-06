@@ -2,6 +2,7 @@ require 'new_user_mailer'
 
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :reset_password]
+  skip_before_filter :authenticate_user!, only: [:get_verification_question, :answer_verification_question]
 
   def new_user
     authorize! :edit, current_user.current_provider
@@ -112,13 +113,15 @@ class UsersController < ApplicationController
   end
 
   def reset_password
+    puts "RESETTING PASSWORD...", current_user.inspect, @user.inspect
+    
     @user = User.find(params[:id])
     authorize! :manage, @user
 
     @user.assign_attributes reset_password_params
     if @user.save
       if @user == current_user
-        sign_in(current_user, :bypass => true)
+        sign_in(@user, :bypass => true)
       end
 
       flash.now[:notice] = "Password reset"
@@ -226,11 +229,44 @@ class UsersController < ApplicationController
       redirect_to :back
     end
   end
+  
+  # Presents a user with a random verification question
+  def get_verification_question
+    @user = User.find_by(email: get_verification_question_params[:email])
+    if @user
+      @question = @user.random_verification_question
+    end
+    
+    unless @user && @question
+      flash.now[:notice] = TranslationEngine.translate_text(:no_verification_questions_set)
+      redirect_to :back
+    end
+  end
+  
+  # Determine's if an answer to a verification question is correct, and if so forwards
+  # on to the password reset page
+  def answer_verification_question
+    @user = User.find_by_id(params[:id])
+    @question = @user.verification_questions.find_by_id(answer_verification_question_params[:verification_question_id])
+    if @question.correct?(answer_verification_question_params[:answer])
+      sign_in(@user, bypass: true)
+      redirect_to action: :show_reset_password, id: @user.id
+    else
+      flash.now[:notice] = TranslationEngine.translate_text(:verification_question_incorrect_answer)
+      redirect_to action: :get_verification_question, user: {email: @user.email}
+    end
+  end
 
   private
   
   def user_params
-    params.require(:user).permit(:email, :first_name, :last_name, :username, :phone_number, :user_address_attributes => [
+    params.require(:user).permit(
+      :email, 
+      :first_name, 
+      :last_name, 
+      :username, 
+      :phone_number, 
+      :user_address_attributes => [
         :address,
         :building_name,
         :city,
@@ -238,9 +274,16 @@ class UsersController < ApplicationController
         :provider_id,
         :state,
         :zip,
-        :notes,
-        :verification_questions
+        :notes
       ])
+  end
+  
+  def get_verification_question_params
+    params.require(:user).permit(:email)
+  end
+  
+  def answer_verification_question_params
+    params.require(:answer_verification_question).permit(:answer, :verification_question_id)
   end
 
   def set_user
