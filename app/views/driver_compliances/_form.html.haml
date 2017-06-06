@@ -16,7 +16,7 @@
         .panel-body.form-horizontal
           .form-group
             .col-md-3.control-label
-              %label= translate_helper("driver_requirement_template")
+              %label= translate_helper("driver_requirement_template_field_label")
             .col-md-9
               = select_tag "driver_requirement_template", options_for_select(@driver_requirement_template.pluck(:name, :id)), include_blank: true, class: 'form-control', id: "driver_requirement_template"
           .form-group

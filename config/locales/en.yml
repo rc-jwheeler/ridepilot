@@ -334,7 +334,7 @@ en:
 
   # Driver compliances
   legal_driver_compliances_heading: "Legal Requirements"
-  driver_requirement_template: 'Template'
+  driver_requirement_template_field_label: 'Type'
   driver_compliances_heading: "Compliance Events"
   driver_compliances_add_link_title: "Add compliance event"
   driver_compliances_empty: "No compliance events exist for this driver"
