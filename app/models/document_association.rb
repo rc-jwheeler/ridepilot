@@ -6,6 +6,8 @@ class DocumentAssociation < ActiveRecord::Base
   validates :document_id, uniqueness: {scope: [:associable_type, :associable_id], message: 'can\'t be associated to the same record more than once.'}
   validates :associable, presence: true
   validate  :ensure_same_owner
+  
+  accepts_nested_attributes_for :document
 
   private
   

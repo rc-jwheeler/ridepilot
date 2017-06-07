@@ -10,6 +10,10 @@ module DocumentAssociable
   included do
     has_many :document_associations, as: :associable, dependent: :destroy, inverse_of: :associable
     accepts_nested_attributes_for :document_associations, allow_destroy: true, reject_if: proc { |attributes| attributes['document_id'].blank? }
+    
+    has_many :documents, through: :document_associations
+    accepts_nested_attributes_for :documents
+    
     validate  :uniqueness_of_document_associations_in_memory
     
     private
@@ -26,6 +30,19 @@ module DocumentAssociable
         'Document associations documents can\'t be associated to the same record more than once.'
       )
     end
+    
+  end
+  
+  # Custom build method for adding an associated document
+  def build_document(document_params)
+    self.document_associations.build(
+      document: Document.new(
+        document_params.merge(
+          documentable_id: self.associable_owner.id,
+          documentable_type: self.associable_owner.class.name
+        )
+      )
+    )
   end
   
   # This is mainly available for testing
@@ -90,5 +107,3 @@ module DocumentAssociable
     end
   end
 end
-
-

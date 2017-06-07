@@ -29,12 +29,19 @@ class DriverHistoriesController < ApplicationController
 
   # PATCH/PUT /driver_histories/1
   def update
+    description, document = params[:driver_history][:description], params[:driver_history][:document]
+    @driver_history.build_document(document: document, description: description)
+    
     if @driver_history.update(driver_history_params)
+      puts "UPDATE SUCCESSFUL", @driver_history.errors.inspect
+      
+      
       respond_to do |format|
         format.html { redirect_to @driver, notice: 'Driver history was successfully updated.' }
         format.js
       end
     else
+      puts "UPDATE FAILED", @driver_history.errors.inspect
       prep_edit
       render :edit
     end
@@ -52,10 +59,28 @@ class DriverHistoriesController < ApplicationController
   private
 
   def prep_edit
+    @parent = @driver
+    @document = @driver.documents.build
     @driver_history.document_associations.build
   end
 
   def driver_history_params
-    params.require(:driver_history).permit(:event, :notes, :event_date, document_associations_attributes: [:id, :document_id, :_destroy])
+    params.require(:driver_history).permit(
+      :event, 
+      :notes, 
+      :event_date, 
+      document_associations_attributes: [
+        :id, 
+        :document_id, 
+        :_destroy,
+        document_attributes: [
+          :id, 
+          :document_filename, 
+          :description,
+          :document,
+          :documentable_type
+        ]
+      ]
+    )
   end
 end
