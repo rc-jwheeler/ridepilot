@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe DriverCompliancesController, type: :routing do
   describe "routing" do
     describe "nested on drivers" do
-      it "does not route to #index" do
-        expect(:get => "/drivers/1/driver_compliances").not_to route_to("driver_compliances#index", driver_id: "1")
+      it "routes to #index" do
+        expect(:get => "/drivers/1/driver_compliances").to route_to("driver_compliances#index", driver_id: "1")
       end
 
       it "routes to #new" do

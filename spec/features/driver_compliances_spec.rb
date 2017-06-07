@@ -10,13 +10,14 @@ RSpec.describe "DriverCompliances" do
       click_button 'Log In'
       
       @driver = create :driver, :provider => @admin.current_provider
-      @driver_compliance = create :driver_compliance, driver: @driver, compliance_date: Date.current
+      @incomplete_driver_compliance = create :driver_compliance, driver: @driver
+      @past_driver_compliance = create :driver_compliance, driver: @driver, compliance_date: Date.current
     end
     
     it_behaves_like "it accepts nested attributes for document associations" do
       before do
         @owner = @driver
-        @example = @driver_compliance
+        @example = @past_driver_compliance
       end
     end
 
@@ -25,16 +26,16 @@ RSpec.describe "DriverCompliances" do
         visit driver_path(id: @driver.to_param)
       end
       
+      it "does not completed compliance event by default" do
+        expect(page).not_to have_text @past_driver_compliance.event
+      end
+
       it "shows the name of the compliance event" do
-        expect(page).to have_text @driver_compliance.event
+        expect(page).to have_text @incomplete_driver_compliance.event
       end
       
       it "shows the due date of the compliance event" do
-        expect(page).to have_text @driver_compliance.due_date.to_s(:long)
-      end
-      
-      it "shows the compliance date of the compliance event" do
-        expect(page).to have_text @driver_compliance.compliance_date.to_s(:long)
+        expect(page).to have_text @incomplete_driver_compliance.due_date.to_s(:long)
       end
     end
 
