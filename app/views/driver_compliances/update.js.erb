@@ -1,6 +1,12 @@
 $('#modal-dialog').modal('hide');
 var $new_row = $("<%= j (render @driver_compliance) %>").hide();
+<% if @driver_compliance.legal? %>
+$('#legal_driver_compliances-table .driver_compliance-<%= @driver_compliance.id %>').slideUp('fast').replaceWith($new_row);
+<% else %>
 $('#driver_compliances-table .driver_compliance-<%= @driver_compliance.id %>').slideUp('fast').replaceWith($new_row);
+<% end %>
+
+
 $new_row.slideDown('slow');
 
 <% if @is_newly_completed && @driver_compliance.driver_requirement_template.try(:reoccuring?)%>
