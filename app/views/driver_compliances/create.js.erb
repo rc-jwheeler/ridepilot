@@ -1,8 +1,8 @@
 $('#modal-dialog').modal('hide');
 <% if @driver_compliance.legal?%>
-  $("<%= j (render @driver_compliance) %>").hide().appendTo('#legal_driver_compliances-table tbody').slideDown('slow');
+  $("<%= j (render @driver_compliance) %>").hide().appendTo('#legal_driver_compliances_table tbody').slideDown('slow');
 <% else %>
-  $("<%= j (render @driver_compliance) %>").hide().appendTo('#driver_compliances-table tbody').slideDown('slow');
+  $("<%= j (render @driver_compliance) %>").hide().appendTo('#driver_compliances_table tbody').slideDown('slow');
 <% end %>
 
 <% if @driver_compliance.complete? && @driver_compliance.driver_requirement_template.try(:reoccuring?)%>

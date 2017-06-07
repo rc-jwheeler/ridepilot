@@ -4,6 +4,21 @@ class DriverCompliancesController < ApplicationController
   
   respond_to :html, :js
 
+  def index
+    @driver_compliances = @driver.driver_compliances
+    @readonly = params[:readonly] == 'true'
+
+    if params[:show_past] != 'true'
+      @driver_compliances = @driver_compliances.incomplete
+    end
+
+    if params[:legal] != 'true'
+      @driver_compliances = @driver_compliances.non_legal
+    else
+      @driver_compliances = @driver_compliances.legal
+    end
+  end
+
   # GET /driver_compliances/new
   def new
     prep_edit

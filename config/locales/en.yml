@@ -351,6 +351,7 @@ en:
   driver_compliance_form_compliance_date: "Compliance Date"
   driver_compliance_form_submit: "Save"
   confirm_creating_reoccuring_event: "This is a reoccuring event. Would you like to create a new record?"
+  show_past: "Show Past?"
 
   # Driver requirement templates
   system_driver_requirement_templates_link_text: "System-wide Driver Requirements"

@@ -165,7 +165,7 @@ Rails.application.routes.draw do
 
       resources :documents, except: [:index, :show]
       resources :driver_histories, except: [:index, :show]
-      resources :driver_compliances, except: [:index, :show]
+      resources :driver_compliances, except: [:show]
     end
     resources :monthlies, :except => [:show, :destroy]
     resources :vehicles do
