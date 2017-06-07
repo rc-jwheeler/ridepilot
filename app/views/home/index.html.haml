@@ -6,10 +6,6 @@
     %li= link_to translate_helper("providers_link_text"), providers_path
   - if can? :manage, DriverRequirementTemplate
     %li= link_to translate_helper("system_driver_requirement_templates_link_text"), driver_requirement_templates_path
-  - if can? :manage, RecurringDriverCompliance
-    %li= link_to translate_helper("recurring_driver_compliances_link_text"), recurring_driver_compliances_path
-  - if can? :manage, RecurringVehicleMaintenanceCompliance
-    %li= link_to translate_helper("recurring_vehicle_maintenance_compliances_link_text"), recurring_vehicle_maintenance_compliances_path
   - if can? :manage, LookupTable
     %li= link_to translate_helper("lookup_tables_link_text"), lookup_tables_path
   - if can? :manage, Translation

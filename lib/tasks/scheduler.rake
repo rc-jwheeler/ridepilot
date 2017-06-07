@@ -17,13 +17,6 @@ namespace :scheduler do
 
     # Standby -> Unmet Need
     #Trip.move_prior_standby_to_unmet!
-    
-    # Schedule recurring driver compliance events 5 years out
-    RecurringDriverCompliance.generate! date_range_length: 5.years
-
-    # Schedule recurring vehicle maintenance compliance events 5 years and 30000
-    # miles out
-    RecurringVehicleMaintenanceCompliance.generate! date_range_length: 5.years, mileage_range_length: 30_000
 
   end
 end
