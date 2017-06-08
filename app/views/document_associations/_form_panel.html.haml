@@ -7,14 +7,14 @@
       %thead
         %tr
           %th.hidden id
-          %th Description
-          %th File
+          %th=translate_helper(:document_description)
+          %th=translate_helper(:document_file)
           %th
       %tbody
         - @parent.documents.each do |doc|
           =render partial: 'document_associations/document_row', locals: {f: f, document: doc}
         =render partial: 'document_associations/document_row', locals: {f: f}
-    .btn.btn-primary.add-document-row.pull-right Add Document
+    .btn.btn-primary.add-document-row.pull-right=translate_helper(:add_document)
     
 :javascript
   $(document).ready(function() {
