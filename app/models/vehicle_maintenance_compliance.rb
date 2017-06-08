@@ -8,6 +8,7 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   
   belongs_to :vehicle, inverse_of: :vehicle_maintenance_compliances
   belongs_to :recurring_vehicle_maintenance_compliance, inverse_of: :vehicle_maintenance_compliances
+  belongs_to :vehicle_maintenance_schedule
   
   validates :vehicle, presence: true
   validates :due_type, inclusion: { in: DUE_TYPES.map(&:to_s) }
@@ -26,6 +27,8 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   scope :overdue, -> (as_of: Date.current) { where(id: incomplete.select{ |r| r.overdue?(as_of: as_of) }.collect(&:id)) }
   scope :due_soon, -> (as_of: Date.current, through: nil, within_mileage: 500) { where(id: incomplete.select{ |r|  r.overdue?(as_of: as_of..(through || as_of + 6.days), mileage: r.vehicle_odometer_reading..(r.vehicle_odometer_reading + within_mileage)) }.collect(&:id)) }
   
+  after_initialize :set_defaults
+
   # Extend the #overdue? method from the ComplianceEvent concern
   def overdue_with_due_type?(as_of: Date.current, mileage: vehicle_odometer_reading)
     case due_type.to_sym
@@ -54,6 +57,10 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   end
 
   private
+
+  def set_defaults
+    self.due_type ||= "mileage"
+  end
   
   def is_over_due_mileage?(mileage)
     if mileage.is_a? Range
