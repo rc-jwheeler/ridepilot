@@ -121,6 +121,9 @@ Rails.application.routes.draw do
     end
 
     resources :driver_requirement_templates 
+    resources :vehicle_maintenance_schedule_types do 
+      resources :vehicle_maintenance_schedules, except: [:show]
+    end
 
     resources :recurring_vehicle_maintenance_compliances do
       collection do
@@ -171,7 +174,7 @@ Rails.application.routes.draw do
     resources :vehicles do
       resources :documents, except: [:index, :show]
       resources :vehicle_maintenance_events, :except => [:index, :show]
-      resources :vehicle_maintenance_compliances, :except => [:index, :show]
+      resources :vehicle_maintenance_compliances, :except => [:show]
       resources :vehicle_warranties, :except => [:index, :show]
 
       member do 

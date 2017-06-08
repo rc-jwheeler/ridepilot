@@ -6,7 +6,7 @@
       .checkbox.pull-right
         %label
           %input#show_past_legal{type: 'checkbox'}
-            = translate_helper(:show_past)
+            %b= translate_helper(:show_past)
     = render 'driver_compliances_table', driver_compliances: @driver.driver_compliances.incomplete.legal.default_order, legal: true
   - unless @readonly
     .panel-footer

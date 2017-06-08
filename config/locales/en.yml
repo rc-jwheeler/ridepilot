@@ -510,6 +510,35 @@ en:
   recurring_vehicle_maintenance_compliance_form_future_schedule_time_span_preview_placeholder_text: "Complete all scheduling and new vehicle scheduling fields to see an example of future scheduling using 'After a time'"
   recurring_vehicle_maintenance_compliance_events_scheduled_heading: "Events Scheduled"
 
+  #vehicle maintenance schedule types
+  configure_provider_vehicle_maintenance_types: "Configure Vehicle Maintenance Schedule Types"
+  provider_vehicle_maintenance_types_link_text: "Provider-specific Vehicle Maintenance Schedule Types"
+  index_vehicle_maintenance_schedule_type_heading: "Maintenance Schedule Types"
+  vehicle_maintenance_schedule_type_label: "Maintenance Schedule Type"
+  new_vehicle_maintenance_schedule_type_link_text: "New"
+  vehicle_maintenance_schedule_type_name: "Name"
+  vehicle_maintenance_schedule_type_form_error:
+    one: "1 error prohibited this schedule type from being saved"
+    other: "%{count} errors prohibited this schedule type from being saved"
+  vehicle_maintenance_schedule_type_form_submit: "Submit"
+  vehicle_maintenance_schedule_type_delete_confirm: "Are you sure to delete this schedule type?"
+  vehicle_maintenance_schedule_types: 'Maintenance Schedule Types'
+  vehicle_maintenance_schedule_type_form_new_heading: "New Schedule Type"
+  vehicle_maintenance_schedule_form_edit_heading: "Edit Schedule Type"
+  show_all_compliances: "Show All?"
+
+  #vehicle maintenance schedules
+  new_vehicle_maintenance_schedule_link_text: "New"
+  vehicle_maintenance_schedule_name: "Name"
+  vehicle_maintenance_schedule_mileage: "Mileage"
+  vehicle_maintenance_schedule_form_error:
+    one: "1 error prohibited this schedule from being saved"
+    other: "%{count} errors prohibited this schedule from being saved"
+  vehicle_maintenance_schedule_form_submit: "Submit"
+  vehicle_maintenance_schedule_delete_confirm: "Are you sure to delete this schedule?"
+  vehicle_maintenance_schedule_form_new_heading: "New Schedule"
+  vehicle_maintenance_schedule_form_edit_heading: "Edit Schedule"
+
   # Documents
   driver_documents_heading: "Driver Documentation"
   driver_documents_add_link_title: "Add document"
@@ -1221,6 +1250,7 @@ en:
   vehicle_maintenance_compliance_form_new_heading: "New compliance event"
   vehicle_maintenance_compliance_form_edit_heading: "Edit compliance event"
   vehicle_maintenance_compliance_form_event: "Name"
+  vehicle_maintenance_compliance_form_schedule: "Schedule"
   vehicle_maintenance_compliance_form_notes: "Notes"
   vehicle_maintenance_compliance_form_due_type: "Due Based On"
   vehicle_maintenance_compliance_form_due_date: "Due Date"

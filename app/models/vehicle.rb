@@ -16,6 +16,8 @@ class Vehicle < ActiveRecord::Base
   
   has_one :device_pool_driver, :dependent => :destroy
   has_one :device_pool, :through => :device_pool_driver
+
+  belongs_to :vehicle_maintenance_schedule_type
   
   has_many :documents, as: :documentable, dependent: :destroy, inverse_of: :documentable
   has_many :runs, inverse_of: :vehicle # TODO add :dependent rule

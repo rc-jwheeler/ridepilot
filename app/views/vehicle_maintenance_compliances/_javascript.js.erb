@@ -1,3 +1,15 @@
+var schedule_mileages = <%= @vehicle_maintenance_schedules.pluck(:id, :mileage).to_h.to_json.html_safe || {}%>;
+var initial_mileage = <%= @vehicle.last_odometer_reading || 0%>;
+
+$('#vehicle_maintenance_schedule').change(function() {
+    var schedule_id = $(this).val();
+    if(schedule_id) {
+        var mileage = schedule_mileages[schedule_id] || 0;
+        $('#vehicle_maintenance_compliance_due_mileage').val(initial_mileage + mileage);
+        $('#vehicle_maintenance_compliance_event').val($(this).find('option:selected').text());
+    }
+});
+
 $("#vehicle_maintenance_compliance_due_type").on("change", function() {
   var $this = $(this);
   if ($this.val() == "date") {

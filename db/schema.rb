@@ -11,14 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170606175102) do
+ActiveRecord::Schema.define(version: 20170608220748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "fuzzystrmatch"
-  enable_extension "pg_stat_statements"
   enable_extension "postgis"
   enable_extension "postgis_topology"
+  enable_extension "fuzzystrmatch"
   enable_extension "uuid-ossp"
 
   create_table "activities", force: true do |t|
@@ -160,8 +159,8 @@ ActiveRecord::Schema.define(version: 20170606175102) do
     t.boolean  "ada_eligible"
     t.string   "service_level_old"
     t.integer  "service_level_id"
+    t.boolean  "is_elderly"
     t.string   "gender"
-    t.boolean  "is_elderly",                default: false
     t.datetime "deleted_at"
     t.text     "message"
     t.string   "token"
@@ -625,11 +624,11 @@ ActiveRecord::Schema.define(version: 20170606175102) do
     t.boolean  "customer_informed"
     t.integer  "trip_purpose_id"
     t.string   "direction",                      default: "outbound"
-    t.date     "start_date"
-    t.date     "end_date"
     t.integer  "service_level_id"
     t.boolean  "medicaid_eligible"
     t.integer  "mobility_device_accommodations"
+    t.date     "start_date"
+    t.date     "end_date"
     t.string   "comments"
     t.integer  "repeating_run_id"
     t.date     "scheduled_through"
@@ -644,7 +643,6 @@ ActiveRecord::Schema.define(version: 20170606175102) do
   add_index "repeating_trips", ["mobility_id"], :name => "index_repeating_trips_on_mobility_id"
   add_index "repeating_trips", ["pickup_address_id"], :name => "index_repeating_trips_on_pickup_address_id"
   add_index "repeating_trips", ["provider_id"], :name => "index_repeating_trips_on_provider_id"
-  add_index "repeating_trips", ["repeating_run_id"], :name => "index_repeating_trips_on_repeating_run_id"
   add_index "repeating_trips", ["service_level_id"], :name => "index_repeating_trips_on_service_level_id"
   add_index "repeating_trips", ["trip_purpose_id"], :name => "index_repeating_trips_on_trip_purpose_id"
   add_index "repeating_trips", ["vehicle_id"], :name => "index_repeating_trips_on_vehicle_id"
@@ -858,7 +856,6 @@ ActiveRecord::Schema.define(version: 20170606175102) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",                                                    default: 0
-    t.boolean  "round_trip"
     t.boolean  "medicaid_eligible"
     t.integer  "mileage"
     t.string   "service_level_old"
@@ -944,10 +941,12 @@ ActiveRecord::Schema.define(version: 20170606175102) do
     t.datetime "updated_at"
     t.integer  "recurring_vehicle_maintenance_compliance_id"
     t.integer  "compliance_mileage"
+    t.integer  "vehicle_maintenance_schedule_id"
   end
 
   add_index "vehicle_maintenance_compliances", ["recurring_vehicle_maintenance_compliance_id"], :name => "index_vehicle_maintenance_compliances_on_recurring_vehicle_main"
   add_index "vehicle_maintenance_compliances", ["vehicle_id"], :name => "index_vehicle_maintenance_compliances_on_vehicle_id"
+  add_index "vehicle_maintenance_compliances", ["vehicle_maintenance_schedule_id"], :name => "index_compl_veh_maint_sched_id"
 
   create_table "vehicle_maintenance_events", force: true do |t|
     t.integer  "vehicle_id"
@@ -965,6 +964,25 @@ ActiveRecord::Schema.define(version: 20170606175102) do
   end
 
   add_index "vehicle_maintenance_events", ["vehicle_id"], :name => "index_vehicle_maintenance_events_on_vehicle_id"
+
+  create_table "vehicle_maintenance_schedule_types", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "provider_id"
+  end
+
+  add_index "vehicle_maintenance_schedule_types", ["provider_id"], :name => "index_veh_maint_sched_type_provider_id"
+
+  create_table "vehicle_maintenance_schedules", force: true do |t|
+    t.string   "name"
+    t.integer  "mileage"
+    t.integer  "vehicle_maintenance_schedule_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "vehicle_maintenance_schedules", ["vehicle_maintenance_schedule_type_id"], :name => "index_vehicle_maintenance_schedule_type_id"
 
   create_table "vehicle_warranties", force: true do |t|
     t.integer  "vehicle_id"
@@ -995,10 +1013,10 @@ ActiveRecord::Schema.define(version: 20170606175102) do
     t.string   "vin"
     t.string   "garaged_location"
     t.integer  "provider_id"
-    t.boolean  "active",                         default: true
+    t.boolean  "active",                               default: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",                   default: 0
+    t.integer  "lock_version",                         default: 0
     t.integer  "default_driver_id"
     t.boolean  "reportable"
     t.text     "insurance_coverage_details"
@@ -1009,19 +1027,21 @@ ActiveRecord::Schema.define(version: 20170606175102) do
     t.text     "accessibility_equipment"
     t.datetime "deleted_at"
     t.integer  "mobility_device_accommodations"
-    t.integer  "initial_mileage",                default: 0
+    t.integer  "initial_mileage",                      default: 0
     t.integer  "garage_address_id"
     t.string   "garage_phone_number"
     t.text     "initial_mileage_change_reason"
     t.date     "inactivated_start_date"
     t.date     "inactivated_end_date"
     t.text     "active_status_changed_reason"
+    t.integer  "vehicle_maintenance_schedule_type_id"
   end
 
   add_index "vehicles", ["default_driver_id"], :name => "index_vehicles_on_default_driver_id"
   add_index "vehicles", ["deleted_at"], :name => "index_vehicles_on_deleted_at"
   add_index "vehicles", ["garage_address_id"], :name => "index_vehicles_on_garage_address_id"
   add_index "vehicles", ["provider_id"], :name => "index_vehicles_on_provider_id"
+  add_index "vehicles", ["vehicle_maintenance_schedule_type_id"], :name => "index_veh_maint_sched_type_id"
 
   create_table "verification_questions", force: true do |t|
     t.integer  "user_id"

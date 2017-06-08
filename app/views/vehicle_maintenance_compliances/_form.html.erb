@@ -18,6 +18,12 @@
       <div class="panel panel-primary">
         <div class="panel-body form-horizontal">
           <div class="form-group">
+            <%= f.label :vehicle_maintenance_schedule, translate_helper("vehicle_maintenance_compliance_form_schedule"), class: "col-md-3 control-label" %>
+            <div class="col-md-9">
+              <%= f.collection_select :vehicle_maintenance_schedule_id, @vehicle_maintenance_schedules.order(:name), :id, :name, { include_blank: true }, { class: "form-control", id: 'vehicle_maintenance_schedule' } %>
+            </div>
+          </div>
+          <div class="form-group">
             <%= f.label :event, translate_helper("vehicle_maintenance_compliance_form_event"), class: "col-md-3 control-label" %>
             <div class="col-md-9">
               <%= f.text_field :event, class: "form-control" %>
@@ -27,25 +33,6 @@
             <%= f.label :notes, translate_helper("vehicle_maintenance_compliance_form_notes"), class: "col-md-3 control-label" %>
             <div class="col-md-9">
               <%= f.text_area :notes, class: "form-control", rows: 3 %>
-            </div>
-          </div>
-          <div class="form-group">
-            <%= f.label :due_type, translate_helper("vehicle_maintenance_compliance_form_due_type"), class: "col-md-3 control-label" %>
-            <div class="col-md-9">
-              <%= f.select :due_type, VehicleMaintenanceCompliance::DUE_TYPES.map(&:to_s), { selected: @vehicle_maintenance_compliance.due_type, include_blank: true }, class: "form-control" %>
-            </div>
-          </div>  
-          <div class="form-group due-type-date">
-            <%= f.label :due_date, translate_helper("vehicle_maintenance_compliance_form_due_date"), class: "col-md-3 control-label" %>
-            <div class="col-md-9">
-              <div class="input-group datepicker-icon">
-                <%= f.text_field :due_date, class: "form-control datepicker" %>
-                <div class="input-group-btn">
-                  <button class="btn btn-default" type="button">
-                    <%= image_tag "calendar-clock.png" %>
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
           <div class="form-group due-type-mileage">

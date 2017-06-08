@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe VehicleMaintenanceCompliancesController, type: :routing do
   describe "routing" do
     describe "nested on vehicles" do
-      it "does not route to #index" do
-        expect(:get => "/vehicles/1/vehicle_maintenance_compliances").not_to route_to("vehicle_maintenance_compliances#index", vehicle_id: "1")
+      it "routes to #index" do
+        expect(:get => "/vehicles/1/vehicle_maintenance_compliances").to route_to("vehicle_maintenance_compliances#index", vehicle_id: "1")
       end
 
       it "routes to #new" do

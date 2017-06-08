@@ -31,7 +31,9 @@
 
 :javascript
   $(function() {
-    $('#drivers_table').dataTable();
+    $('#drivers_table').dataTable({
+      sort: false
+    });
     $('#show_active_only').prop('checked', #{params[:show_inactive] == 'true'});
     $('#show_active_only').change(function() {
       window.location.href = "#{drivers_path}?show_inactive=" + $(this).is(':checked')
