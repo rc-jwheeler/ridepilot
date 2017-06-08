@@ -1,15 +1,17 @@
+- @parent = @driver_history || @driver_compliance
+
 .panel.panel-primary
   .panel-heading= label_tag translate_helper("document_associations_documents_heading")
   .panel-body.form-horizontal
     %table#associated-documents.table.table-striped
       %thead
         %tr
-          %th id
+          %th.hidden id
           %th Description
           %th File
           %th
       %tbody
-        - @driver_history.documents.each do |doc|
+        - @parent.documents.each do |doc|
           =render partial: 'document_associations/document_row', locals: {f: f, document: doc}
         =render partial: 'document_associations/document_row', locals: {f: f}
     .btn.btn-primary.add-document-row.pull-right Add Document

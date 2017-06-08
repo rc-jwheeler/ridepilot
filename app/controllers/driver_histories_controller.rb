@@ -2,6 +2,8 @@ class DriverHistoriesController < ApplicationController
   load_and_authorize_resource :driver
   before_action :load_driver_history
   
+  include DocumentAssociableController
+  
   respond_to :html, :js
 
   # GET /driver_histories/new
@@ -28,7 +30,7 @@ class DriverHistoriesController < ApplicationController
   end
 
   # PATCH/PUT /driver_histories/1
-  def update
+  def update    
     params = build_new_documents(driver_history_params)
             
     if @driver_history.update(params)
@@ -55,31 +57,13 @@ class DriverHistoriesController < ApplicationController
   def load_driver_history
     @driver_history = DriverHistory.find_by_id(params[:id]) || @driver.driver_histories.build
   end
-  
-  # Builds new associated documents from params
-  def build_new_documents(params)
-    # Build new documents as appropriate
-    params[:documents_attributes].each do |i, doc|
-      unless doc[:id].present?
-        if doc[:document].present? && doc[:description].present? && doc[:_destroy].to_i.zero?      
-          @driver_history.build_document(
-            document: doc[:document], 
-            description: doc[:description]
-          )
-        end
-        params[:documents_attributes].delete(i)
-      end
-    end
-    
-    return params
-  end
 
   def driver_history_params
     params.require(:driver_history).permit(
       :event, 
       :notes, 
       :event_date,
-      documents_attributes: [:id, :document, :description, :_destroy]
+      documents_attributes: documents_attributes
     )
   end
 end
