@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170607202015) do
+ActiveRecord::Schema.define(version: 20170608220748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -941,10 +941,12 @@ ActiveRecord::Schema.define(version: 20170607202015) do
     t.datetime "updated_at"
     t.integer  "recurring_vehicle_maintenance_compliance_id"
     t.integer  "compliance_mileage"
+    t.integer  "vehicle_maintenance_schedule_id"
   end
 
   add_index "vehicle_maintenance_compliances", ["recurring_vehicle_maintenance_compliance_id"], :name => "index_vehicle_maintenance_compliances_on_recurring_vehicle_main"
   add_index "vehicle_maintenance_compliances", ["vehicle_id"], :name => "index_vehicle_maintenance_compliances_on_vehicle_id"
+  add_index "vehicle_maintenance_compliances", ["vehicle_maintenance_schedule_id"], :name => "index_compl_veh_maint_sched_id"
 
   create_table "vehicle_maintenance_events", force: true do |t|
     t.integer  "vehicle_id"
@@ -967,7 +969,10 @@ ActiveRecord::Schema.define(version: 20170607202015) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "provider_id"
   end
+
+  add_index "vehicle_maintenance_schedule_types", ["provider_id"], :name => "index_veh_maint_sched_type_provider_id"
 
   create_table "vehicle_maintenance_schedules", force: true do |t|
     t.string   "name"
@@ -1008,10 +1013,10 @@ ActiveRecord::Schema.define(version: 20170607202015) do
     t.string   "vin"
     t.string   "garaged_location"
     t.integer  "provider_id"
-    t.boolean  "active",                         default: true
+    t.boolean  "active",                               default: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",                   default: 0
+    t.integer  "lock_version",                         default: 0
     t.integer  "default_driver_id"
     t.boolean  "reportable"
     t.text     "insurance_coverage_details"
@@ -1022,19 +1027,21 @@ ActiveRecord::Schema.define(version: 20170607202015) do
     t.text     "accessibility_equipment"
     t.datetime "deleted_at"
     t.integer  "mobility_device_accommodations"
-    t.integer  "initial_mileage",                default: 0
+    t.integer  "initial_mileage",                      default: 0
     t.integer  "garage_address_id"
     t.string   "garage_phone_number"
     t.text     "initial_mileage_change_reason"
     t.date     "inactivated_start_date"
     t.date     "inactivated_end_date"
     t.text     "active_status_changed_reason"
+    t.integer  "vehicle_maintenance_schedule_type_id"
   end
 
   add_index "vehicles", ["default_driver_id"], :name => "index_vehicles_on_default_driver_id"
   add_index "vehicles", ["deleted_at"], :name => "index_vehicles_on_deleted_at"
   add_index "vehicles", ["garage_address_id"], :name => "index_vehicles_on_garage_address_id"
   add_index "vehicles", ["provider_id"], :name => "index_vehicles_on_provider_id"
+  add_index "vehicles", ["vehicle_maintenance_schedule_type_id"], :name => "index_veh_maint_sched_type_id"
 
   create_table "verification_questions", force: true do |t|
     t.integer  "user_id"

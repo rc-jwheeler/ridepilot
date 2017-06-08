@@ -12,6 +12,8 @@ class Ability
     can :read, FundingSource
     can :read, Region
     can :read, DriverRequirementTemplate
+    can :read, VehicleMaintenanceScheduleType
+    can :read, VehicleMaintenanceSchedule
 
     for role in user.roles
       if role.system_admin?
@@ -68,6 +70,8 @@ class Ability
       can :manage, VehicleWarranty, :vehicle => {:provider_id => provider.id}
       can :load,   Address
       can :manage, DriverRequirementTemplate, :provider_id => provider.id
+      can :manage, VehicleMaintenanceScheduleType, :provider_id => provider.id
+      can :manage, VehicleMaintenanceSchedule, :vehicle_maintenance_schedule_type => { :provider_id => provider.id}
     else
       can :read, User, :roles => {:provider_id => provider.id}
       can :edit, user
