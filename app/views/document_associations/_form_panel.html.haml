@@ -26,9 +26,10 @@
     
     // Add a new document row on click of add-document-row button
     $('.add-document-row').click(function() {
-      console.log($('table#associated-documents tr:last').after(
+      $('table#associated-documents tr:last').after(
         "#{escape_javascript(render partial: 'document_associations/document_row', locals: {f: f})}"
-      ).find('.delete-document-row'));
+      );
+      $('table#associated-documents tr:last').find('.delete-document-row').click(deleteDocumentRow);
       
     });
     

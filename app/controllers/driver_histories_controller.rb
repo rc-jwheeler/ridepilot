@@ -30,7 +30,7 @@ class DriverHistoriesController < ApplicationController
   # PATCH/PUT /driver_histories/1
   def update
     params = build_new_documents(driver_history_params)
-        
+            
     if @driver_history.update(params)
       respond_to do |format|
         format.html { redirect_to @driver, notice: 'Driver history was successfully updated.' }

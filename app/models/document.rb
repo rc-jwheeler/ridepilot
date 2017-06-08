@@ -4,9 +4,9 @@ class Document < ActiveRecord::Base
   has_paper_trail
   
   has_attached_file :document
-
+  
   validates :description, presence: true
-  validates :documentable, presence: true
+  # validates :documentable, presence: true
   validates_attachment_presence :document
   validates_attachment_content_type :document, content_type: [
       "image/jpeg", "image/gif", "image/png", # image files (.png, .gif, .jpg)
@@ -28,5 +28,5 @@ class Document < ActiveRecord::Base
     .where(document_associations: { document_id: nil} )
   end
   scope :default_order, -> { order(description: :asc) }
-  
+
 end
