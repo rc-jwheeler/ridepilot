@@ -85,7 +85,7 @@ class DriverCompliancesController < ApplicationController
       :due_date, 
       :compliance_date, 
       :legal,
-      :driver_requirement_template_id
+      :driver_requirement_template_id,
       documents_attributes: documents_attributes
     )
   end

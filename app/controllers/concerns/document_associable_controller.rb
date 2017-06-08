@@ -6,6 +6,8 @@ module DocumentAssociableController
   
   # Builds new associated documents from params
   def build_new_documents(params)
+    return params unless params[:document_attributes].present?
+    
     # Build new documents as appropriate
     params[:documents_attributes].each do |i, doc|
       unless doc[:id].present?
