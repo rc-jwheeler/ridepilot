@@ -525,6 +525,7 @@ en:
   vehicle_maintenance_schedule_types: 'Maintenance Schedule Types'
   vehicle_maintenance_schedule_type_form_new_heading: "New Schedule Type"
   vehicle_maintenance_schedule_form_edit_heading: "Edit Schedule Type"
+  show_all_compliances: "Show All?"
 
   #vehicle maintenance schedules
   new_vehicle_maintenance_schedule_link_text: "New"

@@ -17,8 +17,8 @@
   .col-sm-12{style: "padding-top: 10px;"}
     .checkbox.pull-right
       %label
-        %input#show_past_compliances{type: 'checkbox'}
-          %b= translate_helper(:show_past)
+        %input#show_all_compliances{type: 'checkbox'}
+          %b= translate_helper(:show_all)
   = render 'vehicle_maintenance_compliances_table', vehicle_maintenance_compliances: @vehicle.vehicle_maintenance_compliances.default_order
   - unless @readonly
     .panel-footer
@@ -28,7 +28,7 @@
 
 :javascript
   $(function() {
-    $('#show_past_compliances').change(function() {
+    $('#show_all_compliances').change(function() {
       $.ajax({url: "#{vehicle_vehicle_maintenance_compliances_path(@vehicle)}?readonly=#{@readonly}&show_past=" + $(this).is(':checked')});
     });
   });
