@@ -1,5 +1,8 @@
 - remote ||= false
-= nested_form_for [@driver, @driver_history], remote: remote, multipart: true, authenticity_token: true do |f|
+= nested_form_for [@driver, @driver_history], 
+    remote: remote, 
+    multipart: true, 
+    authenticity_token: true do |f|
   - if @driver_history.errors.any?
     .panel.panel-danger
       .panel-heading= translate_helper("driver_history_form_error", count: @driver_history.errors.count)

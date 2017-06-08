@@ -20,6 +20,13 @@ class Document < ActiveRecord::Base
       "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ], if: lambda { |d| d.document.present? }
   validates_attachment_size :document, :in => 1..2.gigabytes, if: lambda { |d| d.document.present? }
-          
+  
+  
+  # Returns documents that have no associated DocumentAssociation
+  scope :unassociated, -> do
+    includes(:document_associations)
+    .where(document_associations: { document_id: nil} )
+  end
   scope :default_order, -> { order(description: :asc) }
+  
 end

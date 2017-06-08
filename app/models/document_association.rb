@@ -7,7 +7,7 @@ class DocumentAssociation < ActiveRecord::Base
   validates :associable, presence: true
   validate  :ensure_same_owner
   
-  accepts_nested_attributes_for :document
+  accepts_nested_attributes_for :document, allow_destroy: true
 
   private
   

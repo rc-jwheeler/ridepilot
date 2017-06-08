@@ -1,48 +1,42 @@
 class DriverHistoriesController < ApplicationController
   load_and_authorize_resource :driver
-  load_and_authorize_resource :driver_history, through: :driver
+  before_action :load_driver_history
   
   respond_to :html, :js
 
   # GET /driver_histories/new
   def new
-    prep_edit
   end
 
   # GET /driver_histories/1/edit
   def edit
-    prep_edit
   end
 
   # POST /driver_histories
   def create
+    params = build_new_documents(driver_history_params)
+    @driver_history.assign_attributes(params)
+    
     if @driver_history.save
       respond_to do |format|
         format.html { redirect_to @driver, notice: 'Driver history was successfully created.' }
         format.js
       end
     else
-      prep_edit
       render :new
     end
   end
 
   # PATCH/PUT /driver_histories/1
   def update
-    description, document = params[:driver_history][:description], params[:driver_history][:document]
-    @driver_history.build_document(document: document, description: description)
-    
-    if @driver_history.update(driver_history_params)
-      puts "UPDATE SUCCESSFUL", @driver_history.errors.inspect
-      
-      
+    params = build_new_documents(driver_history_params)
+        
+    if @driver_history.update(params)
       respond_to do |format|
         format.html { redirect_to @driver, notice: 'Driver history was successfully updated.' }
         format.js
       end
     else
-      puts "UPDATE FAILED", @driver_history.errors.inspect
-      prep_edit
       render :edit
     end
   end
@@ -57,30 +51,35 @@ class DriverHistoriesController < ApplicationController
   end
 
   private
-
-  def prep_edit
-    @parent = @driver
-    @document = @driver.documents.build
-    @driver_history.document_associations.build
+  
+  def load_driver_history
+    @driver_history = DriverHistory.find_by_id(params[:id]) || @driver.driver_histories.build
+  end
+  
+  # Builds new associated documents from params
+  def build_new_documents(params)
+    # Build new documents as appropriate
+    params[:documents_attributes].each do |i, doc|
+      unless doc[:id].present?
+        if doc[:document].present? && doc[:description].present? && doc[:_destroy].to_i.zero?      
+          @driver_history.build_document(
+            document: doc[:document], 
+            description: doc[:description]
+          )
+        end
+        params[:documents_attributes].delete(i)
+      end
+    end
+    
+    return params
   end
 
   def driver_history_params
     params.require(:driver_history).permit(
       :event, 
       :notes, 
-      :event_date, 
-      document_associations_attributes: [
-        :id, 
-        :document_id, 
-        :_destroy,
-        document_attributes: [
-          :id, 
-          :document_filename, 
-          :description,
-          :document,
-          :documentable_type
-        ]
-      ]
+      :event_date,
+      documents_attributes: [:id, :document, :description, :_destroy]
     )
   end
 end

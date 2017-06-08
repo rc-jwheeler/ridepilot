@@ -12,7 +12,7 @@ module DocumentAssociable
     accepts_nested_attributes_for :document_associations, allow_destroy: true, reject_if: proc { |attributes| attributes['document_id'].blank? }
     
     has_many :documents, through: :document_associations
-    accepts_nested_attributes_for :documents
+    accepts_nested_attributes_for :documents, allow_destroy: true
     
     validate  :uniqueness_of_document_associations_in_memory
     
@@ -26,7 +26,7 @@ module DocumentAssociable
     def uniqueness_of_document_associations_in_memory
       validate_uniqueness_of_in_memory(
         document_associations,
-        [:document_id, :associable_type, :associable_id],
+        [:document_id, :associable_type, :associable_id, :document],
         'Document associations documents can\'t be associated to the same record more than once.'
       )
     end
@@ -34,7 +34,7 @@ module DocumentAssociable
   end
   
   # Custom build method for adding an associated document
-  def build_document(document_params)
+  def build_document(document_params)    
     self.document_associations.build(
       document: Document.new(
         document_params.merge(
