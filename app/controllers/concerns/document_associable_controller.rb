@@ -1,12 +1,25 @@
 module DocumentAssociableController
 
+  # Set @parent instance variable
+  def self.included(including_class)
+    including_class.before_action :load_associable_resource
+  end
+
+  # Sets the including controller's resource to a generic @parent instance variable,
+  # for use in views
+  def load_associable_resource
+    @parent = self.model_instance
+  end
+
+  # Returns the including controller's resource model instance
   def model_instance
     self.instance_variable_get('@' + self.class.controller_name.classify.underscore)
   end
   
   # Builds new associated documents from params
   def build_new_documents(params)
-    return params unless params[:document_attributes].present?
+    puts "BUILDING NEW DOCUMENTS", params.inspect
+    return params unless params[:documents_attributes].present?
     
     # Build new documents as appropriate
     params[:documents_attributes].each do |i, doc|
@@ -21,6 +34,8 @@ module DocumentAssociableController
       end
     end
     
+    puts "NEW DOCUMENTS BUILT", params.inspect
+        
     return params
   end
   
