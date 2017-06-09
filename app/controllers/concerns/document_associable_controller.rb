@@ -18,7 +18,6 @@ module DocumentAssociableController
   
   # Builds new associated documents from params
   def build_new_documents(params)
-    puts "BUILDING NEW DOCUMENTS", params.inspect
     return params unless params[:documents_attributes].present?
     
     # Build new documents as appropriate
@@ -33,9 +32,7 @@ module DocumentAssociableController
         params[:documents_attributes].delete(i)
       end
     end
-    
-    puts "NEW DOCUMENTS BUILT", params.inspect
-        
+            
     return params
   end
   

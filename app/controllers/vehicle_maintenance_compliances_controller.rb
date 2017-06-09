@@ -1,6 +1,8 @@
 class VehicleMaintenanceCompliancesController < ApplicationController
   load_and_authorize_resource :vehicle
-  load_and_authorize_resource :vehicle_maintenance_compliance, through: :vehicle
+  before_action :load_vehicle_maintenance_compliance
+  
+  include DocumentAssociableController
   
   respond_to :html, :js
 
@@ -25,6 +27,9 @@ class VehicleMaintenanceCompliancesController < ApplicationController
 
   # POST /vehicle_maintenance_compliances
   def create
+    params = build_new_documents(vehicle_maintenance_compliance_params)
+    @vehicle_maintenance_compliance.assign_attributes(params)
+    
     if @vehicle_maintenance_compliance.save
       respond_to do |format|
         format.html { redirect_to @vehicle, notice: 'Vehicle maintenance compliance was successfully created.' }
@@ -38,7 +43,9 @@ class VehicleMaintenanceCompliancesController < ApplicationController
 
   # PATCH/PUT /vehicle_maintenance_compliances/1
   def update
-    if @vehicle_maintenance_compliance.update(vehicle_maintenance_compliance_params)
+    params = build_new_documents(vehicle_maintenance_compliance_params)
+    
+    if @vehicle_maintenance_compliance.update(params)
       respond_to do |format|
         format.html { redirect_to @vehicle, notice: 'Vehicle maintenance compliance was successfully updated.' }
         format.js
@@ -60,8 +67,13 @@ class VehicleMaintenanceCompliancesController < ApplicationController
 
   private
 
+  def load_vehicle_maintenance_compliance
+    @vehicle_maintenance_compliance = VehicleMaintenanceCompliance.find_by_id(params[:id]) || 
+                                      @vehicle.vehicle_maintenance_compliances.build
+  end
+
   def prep_edit
-    @vehicle_maintenance_compliance.document_associations.build
+    # @vehicle_maintenance_compliance.document_associations.build
     @vehicle_maintenance_schedule_type = if !params[:vehicle_maintenance_schedule_type_id].blank? 
       VehicleMaintenanceScheduleType.find_by_id(params[:vehicle_maintenance_schedule_type_id])
     else
@@ -71,6 +83,16 @@ class VehicleMaintenanceCompliancesController < ApplicationController
   end
 
   def vehicle_maintenance_compliance_params
-    params.require(:vehicle_maintenance_compliance).permit(:event, :notes, :due_type, :due_date, :due_mileage, :compliance_date, :compliance_mileage, :vehicle_maintenance_schedule_id, document_associations_attributes: [:id, :document_id, :_destroy])
+    params.require(:vehicle_maintenance_compliance).permit(
+      :event, 
+      :notes, 
+      :due_type, 
+      :due_date, 
+      :due_mileage, 
+      :compliance_date, 
+      :compliance_mileage, 
+      :vehicle_maintenance_schedule_id, 
+      documents_attributes: documents_attributes
+    )
   end
 end
