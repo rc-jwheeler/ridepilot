@@ -55,7 +55,8 @@ class DriverHistoriesController < ApplicationController
   private
   
   def load_driver_history
-    @driver_history = DriverHistory.find_by_id(params[:id]) || @driver.driver_histories.build
+    @driver_history = DriverHistory.find_by_id(params[:id]) || 
+                      @driver.driver_histories.build
   end
 
   def driver_history_params
