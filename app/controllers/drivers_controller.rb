@@ -1,5 +1,8 @@
 class DriversController < ApplicationController
   load_and_authorize_resource except: [:delete_photo, :inactivate]
+  
+  # Load documents through their associated parent
+  load_and_authorize_resource :document, through: [:driver]
 
   def index
     @drivers = @drivers.default_order.for_provider(current_provider.id)

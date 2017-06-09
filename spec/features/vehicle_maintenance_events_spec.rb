@@ -13,12 +13,13 @@ RSpec.describe "VehicleMaintenanceEvents" do
       @vehicle_maintenance_event = create :vehicle_maintenance_event, vehicle: @vehicle, service_date: Date.current
     end
     
-    it_behaves_like "it accepts nested attributes for document associations" do
-      before do
-        @owner = @vehicle
-        @example = @vehicle_maintenance_event
-      end
-    end
+    # Document Associations has been refactored
+    # it_behaves_like "it accepts nested attributes for document associations" do
+    #   before do
+    #     @owner = @vehicle
+    #     @example = @vehicle_maintenance_event
+    #   end
+    # end
 
     describe "GET /vehicles/:id" do
       before do

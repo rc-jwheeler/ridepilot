@@ -57,6 +57,7 @@ gem 'jc-validates_timeliness', '~> 3.1.1'
 # AWS SDK v2 separately for other tasks.
 gem 'paperclip', '~> 4.3.0'
 gem 'fog', '~> 1.32.0'
+gem 'remotipart', '~> 1.2' # allows remote multipart (file upload) forms
 
 gem 'will_paginate', '~> 3.0.7'
 gem 'attribute_normalizer', '~> 1.2.0'

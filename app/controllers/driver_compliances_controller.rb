@@ -1,6 +1,8 @@
 class DriverCompliancesController < ApplicationController
   load_and_authorize_resource :driver
-  load_and_authorize_resource :driver_compliance, through: :driver
+  before_action :load_driver_compliance
+  
+  include DocumentAssociableController
   
   respond_to :html, :js
 
@@ -21,8 +23,6 @@ class DriverCompliancesController < ApplicationController
 
   # GET /driver_compliances/new
   def new
-    prep_edit
-    
     unless params["driver_requirement_template_id"].blank?
       @driver_compliance.driver_requirement_template_id = params["driver_requirement_template_id"]
       @driver_compliance.event = @driver_compliance.driver_requirement_template.try(:name)
@@ -31,24 +31,26 @@ class DriverCompliancesController < ApplicationController
 
   # GET /driver_compliances/1/edit
   def edit
-    prep_edit
   end
 
   # POST /driver_compliances
   def create
+    params = build_new_documents(driver_compliance_params)
+    @driver_compliance.assign_attributes(params)
+    
     if @driver_compliance.save
       respond_to do |format|
         format.html { redirect_to @driver, notice: 'Driver compliance was successfully created.' }
         format.js
       end
     else
-      prep_edit
       render :new
     end
   end
 
   # PATCH/PUT /driver_compliances/1
   def update
+    params = build_new_documents(driver_compliance_params)
     was_incomplete = !@driver_compliance.complete?
     if @driver_compliance.update(driver_compliance_params)
       @is_newly_completed = was_incomplete && @driver_compliance.complete?
@@ -57,7 +59,6 @@ class DriverCompliancesController < ApplicationController
         format.js
       end
     else
-      prep_edit
       render :edit
     end
   end
@@ -73,11 +74,19 @@ class DriverCompliancesController < ApplicationController
 
   private
   
-  def prep_edit
-    @driver_compliance.document_associations.build
+  def load_driver_compliance
+    @driver_compliance = DriverCompliance.find_by_id(params[:id]) || @driver.driver_compliances.build
   end
 
   def driver_compliance_params
-    params.require(:driver_compliance).permit(:event, :notes, :due_date, :compliance_date, :legal, :driver_requirement_template_id, document_associations_attributes: [:id, :document_id, :_destroy])
+    params.require(:driver_compliance).permit(
+      :event, 
+      :notes, 
+      :due_date, 
+      :compliance_date, 
+      :legal,
+      :driver_requirement_template_id,
+      documents_attributes: documents_attributes
+    )
   end
 end

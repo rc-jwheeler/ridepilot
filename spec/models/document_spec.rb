@@ -10,14 +10,14 @@ RSpec.describe Document, type: :model do
     expect(document.valid?).to be_truthy
   end
 
-  it "requires an associated documentable object" do
-    document = build :document, documentable: nil
-    expect(document.valid?).to be_falsey
-    expect(document.errors.keys).to include :documentable
-
-    document.documentable = create :driver
-    expect(document.valid?).to be_truthy
-  end
+  # it "requires an associated documentable object" do
+  #   document = build :document, documentable: nil
+  #   expect(document.valid?).to be_falsey
+  #   expect(document.errors.keys).to include :documentable
+  # 
+  #   document.documentable = create :driver
+  #   expect(document.valid?).to be_truthy
+  # end
 
   it "requires a document to be attached" do
     document = build :document, :no_attachment

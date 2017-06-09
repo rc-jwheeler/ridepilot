@@ -559,6 +559,9 @@ en:
   document_form_file_name_currently: "Current file:"
   document_form_submit: "Save"
   document_download: "Download"
+  document_description: "Description"
+  document_file: "File"
+  add_document: "Add Document"
 
   # Document Associations
   document_associations_documents_heading: "Associated Documents"
