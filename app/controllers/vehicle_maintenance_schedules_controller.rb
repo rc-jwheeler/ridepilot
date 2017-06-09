@@ -1,6 +1,7 @@
 class VehicleMaintenanceSchedulesController < ApplicationController
   load_and_authorize_resource :vehicle_maintenance_schedule_type
   load_and_authorize_resource :vehicle_maintenance_schedule, through: :vehicle_maintenance_schedule_type, except: [:create]
+  before_action :load_document, except: [:index]
 
   respond_to :html, :js
 
@@ -12,7 +13,8 @@ class VehicleMaintenanceSchedulesController < ApplicationController
   end
 
   def create
-    @vehicle_maintenance_schedule = VehicleMaintenanceSchedule.new(schedule_params)
+    puts "PARAMS FOR CREATE", params.inspect, schedule_params.inspect
+    @vehicle_maintenance_schedule.assign_attributes(schedule_params)
     @vehicle_maintenance_schedule.vehicle_maintenance_schedule_type = @vehicle_maintenance_schedule_type
     if @vehicle_maintenance_schedule.save
       respond_to do |format|
@@ -27,6 +29,7 @@ class VehicleMaintenanceSchedulesController < ApplicationController
   end
 
   def update
+    
     if @vehicle_maintenance_schedule.update(schedule_params)
       respond_to do |format|
         format.js
@@ -44,8 +47,37 @@ class VehicleMaintenanceSchedulesController < ApplicationController
   end
 
   private
+  
+  def load_document
+    @vehicle_maintenance_schedule ||= VehicleMaintenanceSchedule.new
+    @document = @vehicle_maintenance_schedule.document || 
+                @vehicle_maintenance_schedule.build_document(description: "Inspection Report")
+  end
 
   def schedule_params
-    params.require(:vehicle_maintenance_schedule).permit(:name, :mileage)
+    safe_params = vehicle_maintenance_schedule_params
+    
+    document_attributes = safe_params[:document_attributes]
+    unless document_attributes_valid?(document_attributes)
+      safe_params.delete(:document_attributes) 
+      @vehicle_maintenance_schedule.document = nil
+    end
+    
+    safe_params
   end
+  
+  def vehicle_maintenance_schedule_params
+    params.require(:vehicle_maintenance_schedule).permit(
+      :name, 
+      :mileage,
+      :vehicle_maintenance_schedule_type,
+      document_attributes: [:id, :document, :description, :_destroy]
+    )
+  end
+  
+  def document_attributes_valid?(document_attributes)
+    document_attributes[:_destroy].to_i > 0 ||
+    (document_attributes[:description].present? && document_attributes[:document].present?)
+  end
+  
 end
