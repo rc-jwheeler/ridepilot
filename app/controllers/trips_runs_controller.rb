@@ -26,11 +26,8 @@ class TripsRunsController < ApplicationController
 
     base_runs = @runs
     base_runs = add_cab_run(base_runs) if current_provider.try(:cab_enabled?)
-    @runs_array       = add_unscheduled_run(base_runs).map{ |run|
-      as_resource_json(run)
-    }
 
-    @runs_for_dropdown = @runs_array.collect {|r| [r[:label], r[:id]]}
+    @runs_for_dropdown = add_unscheduled_run(base_runs).collect {|r| [r.label, r.id]}
 
     respond_to do |format|
       format.html
@@ -41,6 +38,11 @@ class TripsRunsController < ApplicationController
     respond_to do |format|
       format.js { render json: TripScheduler.new(params[:trip_id], params[:run_id]).execute }
     end
+  end
+
+  # Ajax to update Run filter given a new date
+  def runs_by_date
+    @runs = Run.for_date(Utility.new.parse_date(params[:run_trip_day])).order(:name)
   end
   
   private
@@ -108,24 +110,5 @@ class TripsRunsController < ApplicationController
 
   def add_unscheduled_run(runs)
     runs + [Run.fake_unscheduled_run]
-  end
-
-  def as_resource_json(run)
-    if run.id && run.id >= 0 
-      name = "<input type='radio' name='run_records' value=#{run.id}></input>&nbsp;<a href='#{runs_path}/#{run.id}'>#{run.label}</a>"
-    else
-      name = "<input type='radio' name='run_records' value=#{run.id}></input>&nbsp;#{run.label}"
-    end
-
-    {
-      id:   run.id, 
-      label: run.label,
-      isDate: false,
-      name: name
-    }
-  end
-
-  # Ajax to update Run filter given a new date
-  def runs_by_date
   end
 end
