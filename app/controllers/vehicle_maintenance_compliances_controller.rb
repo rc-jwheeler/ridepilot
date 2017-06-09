@@ -18,6 +18,14 @@ class VehicleMaintenanceCompliancesController < ApplicationController
   # GET /vehicle_maintenance_compliances/new
   def new
     prep_edit
+    unless params[:schedule_id].blank?
+      schedule = VehicleMaintenanceSchedule.find_by_id(params[:schedule_id])
+      if schedule
+        @vehicle_maintenance_compliance.vehicle_maintenance_schedule = schedule
+        @vehicle_maintenance_compliance.event = schedule.name
+        @base_mileage = @vehicle.vehicle_maintenance_compliances.where(vehicle_maintenance_schedule: schedule).complete.maximum(:compliance_mileage)
+      end
+    end
   end
 
   # GET /vehicle_maintenance_compliances/1/edit
@@ -44,8 +52,10 @@ class VehicleMaintenanceCompliancesController < ApplicationController
   # PATCH/PUT /vehicle_maintenance_compliances/1
   def update
     params = build_new_documents(vehicle_maintenance_compliance_params)
-    
+
+    was_incomplete = @vehicle_maintenance_compliance.complete?
     if @vehicle_maintenance_compliance.update(params)
+      @is_newly_completed = was_incomplete && @vehicle_maintenance_compliance.complete?
       respond_to do |format|
         format.html { redirect_to @vehicle, notice: 'Vehicle maintenance compliance was successfully updated.' }
         format.js
