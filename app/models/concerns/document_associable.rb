@@ -14,7 +14,7 @@ module DocumentAssociable
     has_many :documents, through: :document_associations, dependent: :destroy
     accepts_nested_attributes_for :documents, allow_destroy: true
     
-    validate  :uniqueness_of_document_associations_in_memory
+    # validate  :uniqueness_of_document_associations_in_memory
     
     private
 
@@ -25,8 +25,8 @@ module DocumentAssociable
     # the problem.
     def uniqueness_of_document_associations_in_memory
       validate_uniqueness_of_in_memory(
-        document_associations,
-        [:document_id, :associable_type, :associable_id, :document],
+        document_associations.where.not(document_id: nil),
+        [:document_id, :associable_type, :associable_id],
         'Document associations documents can\'t be associated to the same record more than once.'
       )
     end

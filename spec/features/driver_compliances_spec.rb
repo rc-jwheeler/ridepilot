@@ -13,13 +13,14 @@ RSpec.describe "DriverCompliances" do
       @incomplete_driver_compliance = create :driver_compliance, driver: @driver
       @past_driver_compliance = create :driver_compliance, driver: @driver, compliance_date: Date.current
     end
-    
-    it_behaves_like "it accepts nested attributes for document associations" do
-      before do
-        @owner = @driver
-        @example = @past_driver_compliance
-      end
-    end
+
+    # Document Associations have been refactored    
+    # it_behaves_like "it accepts nested attributes for document associations" do
+    #   before do
+    #     @owner = @driver
+    #     @example = @past_driver_compliance
+    #   end
+    # end
 
     describe "GET /drivers/:id" do
       before do
