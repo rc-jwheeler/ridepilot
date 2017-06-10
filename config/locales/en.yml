@@ -539,9 +539,9 @@ en:
   vehicle_maintenance_schedule_delete_confirm: "Are you sure to delete this schedule?"
   vehicle_maintenance_schedule_form_new_heading: "New Schedule"
   vehicle_maintenance_schedule_form_edit_heading: "Edit Schedule"
-  vehicle_maintenance_schedule_document: "Maintenance Report"
-  vehicle_maintenance_schedule_document_upload: "Upload Maintenance Report"
-  vehicle_maintenance_schedule_document_description: "Maintenance Report"
+  vehicle_maintenance_schedule_document: "Inspection Requirement Sheet"
+  vehicle_maintenance_schedule_document_upload: "Upload Inspection Requirement Sheet"
+  vehicle_maintenance_schedule_document_description: "Inspection Requirement Sheet"
 
   # Documents
   driver_documents_heading: "Driver Documentation"
