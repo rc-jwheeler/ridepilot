@@ -173,7 +173,7 @@ Rails.application.routes.draw do
     resources :monthlies, :except => [:show, :destroy]
     resources :vehicles do
       resources :documents, except: [:index, :show]
-      resources :vehicle_maintenance_events
+      resources :vehicle_maintenance_events, except: [:index]
       resources :vehicle_maintenance_compliances
       resources :vehicle_warranties, :except => [:index]
 

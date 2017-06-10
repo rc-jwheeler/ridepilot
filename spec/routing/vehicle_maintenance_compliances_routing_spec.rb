@@ -11,8 +11,8 @@ RSpec.describe VehicleMaintenanceCompliancesController, type: :routing do
         expect(:get => "/vehicles/1/vehicle_maintenance_compliances/new").to route_to("vehicle_maintenance_compliances#new", vehicle_id: "1")
       end
 
-      it "does not route to #show" do
-        expect(:get => "/vehicles/1/vehicle_maintenance_compliances/1").not_to route_to("vehicle_histories#show", id: "1", vehicle_id: "1")
+      it "routes to #show" do
+        expect(:get => "/vehicles/1/vehicle_maintenance_compliances/1").to route_to("vehicle_maintenance_compliances#show", id: "1", vehicle_id: "1")
       end
 
       it "routes to #edit" do

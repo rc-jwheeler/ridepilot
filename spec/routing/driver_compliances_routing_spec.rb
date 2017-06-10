@@ -11,8 +11,8 @@ RSpec.describe DriverCompliancesController, type: :routing do
         expect(:get => "/drivers/1/driver_compliances/new").to route_to("driver_compliances#new", driver_id: "1")
       end
 
-      it "does not route to #show" do
-        expect(:get => "/drivers/1/driver_compliances/1").not_to route_to("driver_compliances#show", id: "1", driver_id: "1")
+      it "routes to #show" do
+        expect(:get => "/drivers/1/driver_compliances/1").to route_to("driver_compliances#show", id: "1", driver_id: "1")
       end
 
       it "routes to #edit" do
