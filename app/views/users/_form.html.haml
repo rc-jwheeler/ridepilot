@@ -34,12 +34,14 @@
             .col-md-10
               = f.text_field :email, class: "form-control"
           - if @user != current_user
-            - editable_roles = Role.editable_role_array_by_user(current_user)
-            - if editable_roles.any?
-              .form-group
-                = f.label :permissions, translate_helper("permissions"), class: "col-md-2 control-label"
-                .col-md-10
-                  = select :role, :level, Role.editable_role_array_by_user(current_user), {}, { class: "form-control" }
+            - role = Role.find_by(user: @user, provider: current_provider)
+            - if @user.new_record? || can_edit_role?(role)
+              - editable_roles = Role.editable_role_array_by_user(current_user)
+              - if editable_roles.any?
+                .form-group
+                  = f.label :permissions, translate_helper("permissions"), class: "col-md-2 control-label"
+                  .col-md-10
+                    = select :role, :level, editable_roles, {selected: role.try(:level)}, { class: "form-control" }
           .form-group
             = f.label :phone_number, translate_helper("phone_number"), class: "col-md-2 control-label"
             .col-md-10

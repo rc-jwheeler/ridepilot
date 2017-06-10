@@ -96,6 +96,8 @@ class UsersController < ApplicationController
     end
     
     if @user.update_attributes(new_attrs)
+      role = Role.find_by(user: @user, provider: current_provider)
+      role.update(level: params[:role][:level]) if role
       prev_address.destroy if is_address_blank && prev_address.present?
       edit_verification_questions
       flash.now[:notice] = "User updated."
