@@ -4,7 +4,7 @@
       = due_string vehicle_maintenance_compliance
   %td
     %p.form-control-static
-      = link_to_unless @readonly, vehicle_maintenance_compliance.event, polymorphic_path([vehicle_maintenance_compliance.vehicle, vehicle_maintenance_compliance], action: :edit), remote: true
+      = link_to vehicle_maintenance_compliance.event, polymorphic_path([vehicle_maintenance_compliance.vehicle, vehicle_maintenance_compliance], action: @readonly ? nil : :edit), remote: true
       - if vehicle_maintenance_compliance.documents.present?
         %i.fa.fa-paperclip{'aria-hidden' => true}
   %td
@@ -13,6 +13,10 @@
   %td
     %p.form-control-static
       = number_with_delimiter vehicle_maintenance_compliance.compliance_mileage unless vehicle_maintenance_compliance.compliance_mileage.blank?
+  %td
+    - schedule = vehicle_maintenance_compliance.vehicle_maintenance_schedule
+    - if schedule && schedule.document.present?
+      = link_to translate_helper(:document_download), schedule.document.document.url, target: :blank
   - unless @readonly
     %td
       = link_to polymorphic_path([vehicle_maintenance_compliance.vehicle, vehicle_maintenance_compliance]), 

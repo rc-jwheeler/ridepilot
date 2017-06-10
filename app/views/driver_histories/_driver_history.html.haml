@@ -4,7 +4,7 @@
       = driver_history.event_date.to_s(:long)
   %td
     %p.form-control-static
-      = link_to_unless @readonly, driver_history.event, polymorphic_path([driver_history.driver, driver_history], action: :edit), remote: true
+      = link_to driver_history.event, polymorphic_path([driver_history.driver, driver_history], action: @readonly ? nil : :edit), remote: true
       - if driver_history.documents.present?
         %i.fa.fa-paperclip{'aria-hidden' => true}
   - unless @readonly

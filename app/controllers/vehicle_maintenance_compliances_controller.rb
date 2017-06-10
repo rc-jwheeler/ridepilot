@@ -15,6 +15,11 @@ class VehicleMaintenanceCompliancesController < ApplicationController
     end
   end
 
+  def show
+    prep_edit
+    @readonly = true
+  end
+
   # GET /vehicle_maintenance_compliances/new
   def new
     prep_edit

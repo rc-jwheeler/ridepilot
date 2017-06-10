@@ -4,7 +4,9 @@
       = vehicle_warranty.expiration_date.to_s(:long)
   %td
     %p.form-control-static
-      = link_to_unless @readonly, vehicle_warranty.description, polymorphic_path([vehicle_warranty.vehicle, vehicle_warranty], action: :edit), remote: true
+      = link_to vehicle_warranty.description, polymorphic_path([vehicle_warranty.vehicle, vehicle_warranty], action: @readonly ? nil : :edit), remote: true
+      - if vehicle_warranty.documents.present?
+        %i.fa.fa-paperclip{'aria-hidden' => true}
   - unless @readonly
     %td
       = link_to polymorphic_path([vehicle_warranty.vehicle, vehicle_warranty]), 

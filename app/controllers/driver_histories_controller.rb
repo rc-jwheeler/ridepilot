@@ -14,6 +14,10 @@ class DriverHistoriesController < ApplicationController
   def edit
   end
 
+  def show
+    @readonly = true
+  end
+
   # POST /driver_histories
   def create
     params = build_new_documents(driver_history_params)

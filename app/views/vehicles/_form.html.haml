@@ -38,4 +38,7 @@
 
 = render 'shared/hide_invisible_form_fields_js', model_name: "vehicle", table_name: 'vehicles', provider_id:  current_provider.try(:id) 
 
-= render 'shared/modal_dialog', modal_id: "modal-dialog" 
+- if @readonly
+  = render 'shared/readonly_modal_dialog', modal_id: "modal-dialog" 
+- else 
+  = render 'shared/modal_dialog', modal_id: "modal-dialog" 

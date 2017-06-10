@@ -10,6 +10,10 @@ class VehicleWarrantiesController < ApplicationController
   def new
   end
 
+  def show
+    @readonly = true
+  end
+
   # GET /vehicle_warranties/1/edit
   def edit
   end

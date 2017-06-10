@@ -17,22 +17,23 @@
           .form-group
             = f.label :event, translate_helper("driver_history_form_event"), class: "col-md-3 control-label"
             .col-md-9
-              = f.text_field :event, class: "form-control"
+              = f.text_field :event, class: "form-control", disabled: @readonly
           .form-group
             = f.label :notes, translate_helper("driver_history_form_notes"), class: "col-md-3 control-label"
             .col-md-9
-              = f.text_area :notes, class: "form-control", rows: 3
+              = f.text_area :notes, class: "form-control", rows: 3, disabled: @readonly
           .form-group
             = f.label :event_date, translate_helper("driver_history_form_event_date"), class: "col-md-3 control-label"
             .col-md-9
               .input-group.datepicker-icon
-                = f.text_field :event_date, class: "form-control datepicker"
-                .input-group-btn
-                  %button.btn.btn-default{:type => "button"}
-                    = image_tag "calendar-clock.png"
+                = f.text_field :event_date, class: "form-control datepicker", disabled: @readonly
+                - unless @readonly
+                  .input-group-btn
+                    %button.btn.btn-default{:type => "button"}
+                      = image_tag "calendar-clock.png"
         / END .panel-body
       / END .panel
       = render partial: "document_associations/form_panel", locals: {f: f, documents: @driver_history.driver.documents}
     / END .col-md-12
   / END .row
-  .row.form-actions= f.submit translate_helper("driver_history_form_submit"), class: "btn action-button"
+  .row.form-actions= f.submit translate_helper("driver_history_form_submit"), class: "btn action-button" unless @readonly

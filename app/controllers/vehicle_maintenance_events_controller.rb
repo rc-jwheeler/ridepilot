@@ -14,6 +14,10 @@ class VehicleMaintenanceEventsController < ApplicationController
   def edit
   end
 
+  def show
+    @readonly = true
+  end
+
   # POST /vehicle_maintenance_events
   def create
     params = build_new_documents(vehicle_maintenance_event_params)

@@ -7,12 +7,14 @@
           %th.hidden id
           %th=translate_helper(:document_description)
           %th=translate_helper(:document_file)
-          %th
+          - unless @readonly 
+            %th
       %tbody
         - @parent.documents.each do |doc|
           =render partial: 'document_associations/document_row', locals: {f: f, document: doc}
-        =render partial: 'document_associations/document_row', locals: {f: f}
-    .btn.btn-primary.add-document-row.pull-right=translate_helper(:add_document)
+        =render partial: 'document_associations/document_row', locals: {f: f} unless @readonly
+    - unless @readonly
+      .btn.btn-primary.add-document-row.pull-right=translate_helper(:add_document)
     
 :javascript
   $(document).ready(function() {

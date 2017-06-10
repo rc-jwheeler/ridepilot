@@ -115,7 +115,11 @@
     .row.form-actions= f.submit translate_helper("driver_form_submit"), class: "btn action-button"
  
 = render 'shared/hide_invisible_form_fields_js', model_name: "driver", table_name: 'drivers', provider_id:  current_provider.try(:id)
-= render 'shared/modal_dialog', modal_id: "modal-dialog"
+
+- if @readonly
+  = render 'shared/readonly_modal_dialog', modal_id: "modal-dialog" 
+- else 
+  = render 'shared/modal_dialog', modal_id: "modal-dialog" 
 
 :javascript
   $(document).ready(function(){

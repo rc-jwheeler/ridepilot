@@ -21,6 +21,10 @@ class DriverCompliancesController < ApplicationController
     end
   end
 
+  def show
+    @readonly = true
+  end
+
   # GET /driver_compliances/new
   def new
     unless params["driver_requirement_template_id"].blank?

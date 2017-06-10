@@ -167,15 +167,15 @@ Rails.application.routes.draw do
       end
 
       resources :documents, except: [:index, :show]
-      resources :driver_histories, except: [:index, :show]
-      resources :driver_compliances, except: [:show]
+      resources :driver_histories, except: [:index]
+      resources :driver_compliances
     end
     resources :monthlies, :except => [:show, :destroy]
     resources :vehicles do
       resources :documents, except: [:index, :show]
-      resources :vehicle_maintenance_events, :except => [:index, :show]
-      resources :vehicle_maintenance_compliances, :except => [:show]
-      resources :vehicle_warranties, :except => [:index, :show]
+      resources :vehicle_maintenance_events
+      resources :vehicle_maintenance_compliances
+      resources :vehicle_warranties, :except => [:index]
 
       member do 
         get  :edit_initial_mileage
