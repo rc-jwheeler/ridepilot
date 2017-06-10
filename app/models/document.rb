@@ -1,5 +1,5 @@
 class Document < ActiveRecord::Base
-  belongs_to :documentable, polymorphic: true, inverse_of: :documents
+  belongs_to :documentable, polymorphic: true #, inverse_of: :documents
   has_many :document_associations, inverse_of: :document, dependent: :destroy
   has_paper_trail
   

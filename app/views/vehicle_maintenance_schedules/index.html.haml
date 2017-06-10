@@ -11,6 +11,7 @@
         %tr
           %th= translate_helper("vehicle_maintenance_schedule_name")
           %th= translate_helper("vehicle_maintenance_schedule_mileage")
+          %th= translate_helper("vehicle_maintenance_schedule_document")
           %th
       %tbody
         = render partial: 'vehicle_maintenance_schedule', collection: @vehicle_maintenance_schedules
