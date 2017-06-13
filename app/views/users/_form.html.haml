@@ -35,7 +35,7 @@
               = f.text_field :email, class: "form-control"
           - if @user != current_user
             - role = Role.find_by(user: @user, provider: current_provider)
-            - if @user.new_record? || can_edit_role?(role)
+            - if @user.new_record? || can?(:manage, role)
               - editable_roles = Role.editable_role_array_by_user(current_user)
               - if editable_roles.any?
                 .form-group

@@ -73,6 +73,9 @@ class Ability
       can :manage, DriverRequirementTemplate, :provider_id => provider.id
       can :manage, VehicleMaintenanceScheduleType, :provider_id => provider.id
       can :manage, VehicleMaintenanceSchedule, :vehicle_maintenance_schedule_type => { :provider_id => provider.id}
+      can :manage, Role do |r|
+        r.provider_id == provider.id && !r.system_admin?
+      end
     else
       can :read, User, :roles => {:provider_id => provider.id}
       can :edit, user
