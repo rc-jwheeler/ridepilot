@@ -15,7 +15,7 @@
           = link_to translate_helper("activate"), customer_activate_path(@customer), method: :post, :class=>'btn action-button'
         - else
           = link_to translate_helper("new_trip_link_text"), new_trip_path(:customer_id=>@customer.id), :class=>'btn action-button' if !@read_only_customer
-          = button_tag :type => 'button', id: 'inactivateCustomer', "data-target" => "#inactivateCustomerDialog", "data-toggle" => "modal", :class => "btn action-button btn-danger" do
+          = button_tag :type => 'button', id: 'inactivateCustomer', "data-target" => "#inactivateCustomerDialog", "data-toggle" => "modal", :class => "btn action-button" do
             = translate_helper(:inactivate)
         - if !@customer.new_record? && can?(:destroy, @customer)
           - if @customer.trips.present?

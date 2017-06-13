@@ -8,23 +8,23 @@
 = hidden_field_tag :lon, address.longitude, class: 'address_lon'
 %li.selfclear
   = form.label :name, translate_helper("address_name")
-  = form.text_field :name, maxlength: 30
+  = form.text_field :name, maxlength: 30, class: 'form-control'
 %li.selfclear.full_address
   = label_tag "#{prefix}_full_address", translate_helper("full_address_name")
   - if edit_mode == :edit
     = address.try(:address_text)
   - else
-    = text_field_tag "#{prefix}_full_address", address.try(:address_text), class: 'address_search'
+    = text_field_tag "#{prefix}_full_address", address.try(:address_text), class: 'address_search form-control'
 %li.selfclear
   = form.label :phone_number, translate_helper("phone_number")
-  = form.text_field :phone_number
+  = form.text_field :phone_number, class: 'form-control'
 %li.selfclear
   = form.label :default_trip_purpose, translate_helper("default_trip_purpose")
-  = form.select :trip_purpose_id, TripPurpose.by_provider(current_provider).map { |tp| [tp.name, tp.id] }, :include_blank => true
+  = form.select :trip_purpose_id, TripPurpose.by_provider(current_provider).map { |tp| [tp.name, tp.id] }, :include_blank => true, class: 'form-control'
 %li.selfclear
   = form.label :in_district, translate_helper("in_district")
-  = form.select :in_district, [[translate_helper("unspecified"),nil], [translate_helper("yes"), true], [translate_helper("no"), false]]
+  = form.select :in_district, [[translate_helper("unspecified"),nil], [translate_helper("yes"), true], [translate_helper("no"), false]], class: 'form-control'
 %li.selfclear
   = form.label :notes, translate_helper("address_notes")
-  = form.text_area :notes
+  = form.text_area :notes, class: 'form-control'
 = render 'addresses/google_place_autocomplete_js' if prefix != 'pickup'

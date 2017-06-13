@@ -83,6 +83,8 @@ en:
   customer_id_label: 'ID'
   customer_details_panel: 'Details'
   customer_addresses_panel: 'Addresses'
+  customer_saved_address_dialog_title: "Customer Saved Address"
+  address_code: "Code"
   is_mailing_address: 'Mailing'
   customer_providers_panel: 'Authorized Providers'
   customer_eligibility_panel: 'Eligibility'

@@ -75,11 +75,11 @@ class AddressesController < ApplicationController
     address_params[:the_geom]    = the_geom if the_geom
 
     if params[:address_id].present?
-      address = Address.find(params[:address_id])
+      address = CustomerCommonAddress.find_by_id(params[:address_id])
       address.attributes = address_params
     else
       address_params[:provider_id] = current_provider_id
-      address = Address.new(address_params)
+      address = CustomerCommonAddress.new(address_params)
     end
 
     if address.valid?
