@@ -136,7 +136,7 @@ module ApplicationHelper
 
 
   def can_access_admin_tab(a_user)
-    a_user && a_user.editor? && can?(:read, a_user)
+    a_user && a_user.super_admin?
   end
 
   def can_access_provider_settings_tab(a_user, a_provider)
