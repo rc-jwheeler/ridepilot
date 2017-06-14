@@ -194,7 +194,12 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
     authorize! :edit, @customer
 
+    prev_active_text = @customer.active_status_text
+    prev_reason = @customer.active_status_changed_reason
+
     @customer.reactivate!
+
+    TrackerActionLog.customer_active_status_changed(@customer, current_user, prev_active_text, prev_reason)
 
     redirect_to @customer
   end
