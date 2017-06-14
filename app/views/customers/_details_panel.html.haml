@@ -50,7 +50,7 @@
       .col-sm-3
         = f.label :gender, translate_helper(:gender) 
       .col-sm-9
-        = f.collection_select :gender, [[:male, translate_helper(:male)], [:female, translate_helper(:female)]], :first, :last, {include_blank: true}, {class: 'form-control'}
+        = f.collection_select :gender, [[:male, translate_helper(:male)], [:female, translate_helper(:female)], [:other, translate_helper(:other_gender)]], :first, :last, {include_blank: true}, {class: 'form-control'}
     .form-group.col-sm-12
       .col-sm-3
         = f.label :phone_number_1, translate_helper(:phone_number) 
@@ -131,5 +131,3 @@
           = f.label :inactivated_reason, translate_helper(:inactivated_reason) 
         .col-sm-9
           = f.text_field :inactivated_reason, class: 'form-control'
-
-

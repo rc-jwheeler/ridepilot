@@ -97,6 +97,7 @@ en:
   gender: 'Gender'
   male: 'Male'
   female: 'Female'
+  other_gender: 'Non-Binary'
   alternate_phone: "Alternate Phone"
   email: "Email"
   date_of_birth: "Date of Birth"
