@@ -17,7 +17,6 @@ class Trip < ActiveRecord::Base
   belongs_to :repeating_trip
   has_one    :donation
 
-
   delegate :label, to: :run, prefix: :run, allow_nil: true
   delegate :code, :name, to: :trip_result, prefix: :trip_result, allow_nil: true
 
@@ -29,6 +28,7 @@ class Trip < ActiveRecord::Base
   validate :provider_availability
   validate :return_trip_later_than_outbound_trip
   validate :within_advance_day_scheduling
+  validate :customer_active
 
   scope :after,              -> (pickup_time) { where('pickup_time > ?', pickup_time.utc) }
   scope :after_today,        -> { where('CAST(pickup_time AS date) > ?', Date.today.in_time_zone.utc) }
@@ -421,6 +421,12 @@ class Trip < ActiveRecord::Base
     advance_day_scheduling = provider.try(:get_advance_day_scheduling)
     if date && advance_day_scheduling.present? && (date - Date.current).to_i > advance_day_scheduling
       errors.add(:date, TranslationEngine.translate_text(:beyond_advance_day_scheduling) % {advance_day_scheduling: advance_day_scheduling})
+    end
+  end
+
+  def customer_active
+    if customer && date && !customer.active_for_date?(date)
+      errors.add(:customer, TranslationEngine.translate_text(:customer_inactive_for_trip_date)) 
     end
   end
 

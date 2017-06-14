@@ -1,5 +1,5 @@
 class VehiclesController < ApplicationController
-  load_and_authorize_resource except: [:change_initial_mileage, :inactivate]
+  load_and_authorize_resource except: [:change_initial_mileage, :inactivate, :reactivate]
 
   def index
     @vehicles = @vehicles.default_order.for_provider(current_provider.id)
@@ -138,10 +138,7 @@ class VehiclesController < ApplicationController
     @vehicle = Vehicle.find(params[:id])
     authorize! :edit, @vehicle
 
-    @vehicle.active = true
-    @vehicle.inactivated_start_date = nil
-    @vehicle.inactivated_end_date = nil
-    @vehicle.save
+    @vehicle.reactivate!
 
     redirect_to @vehicle
   end

@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  load_and_authorize_resource :except=>[:autocomplete, :found, :edit, :show, :update, :delete_photo]
+  load_and_authorize_resource :except=>[:autocomplete, :found, :edit, :show, :update, :delete_photo, :inactivate, :reactivate]
 
   def autocomplete
     customers = Customer.for_provider(current_provider_id).by_term( params['term'].downcase, 10 ).accessible_by(current_ability)
@@ -34,7 +34,7 @@ class CustomersController < ApplicationController
     @customers = Customer.for_provider(current_provider_id).accessible_by(current_ability)
     @customers = @customers.by_letter(params[:letter]) if params[:letter].present?
 
-    @customers = @customers.where(:inactivated_date => nil) if @active_only
+    @customers = @customers.active if @active_only
 
     respond_to do |format|
       format.html { @customers = @customers.paginate :page => params[:page], :per_page => PER_PAGE }
@@ -158,23 +158,45 @@ class CustomersController < ApplicationController
   end
 
   def inactivate
-    @customer = Customer.find(params[:customer_id])
-    authorize! :edit, @customer
+    @customer = Customer.find_by_id(params[:id])
 
-    @customer.inactivated_date = Date.today
-    @customer.inactivated_reason = params[:customer][:inactivated_reason]
-    @customer.save
-    redirect_to action: :index
+    authorize! :update, @customer
+    
+    prev_active_text = @customer.active_status_text
+    prev_reason = @customer.active_status_changed_reason
+
+    @customer.assign_attributes customer_inactivate_params
+
+    if @customer.inactivated?
+      if @customer.permanent_inactivated?
+        @customer.inactivated_date = Date.today
+        @customer.inactivated_start_date = nil
+        @customer.inactivated_end_date = nil
+      else
+        if @customer.inactivated_end_date.present? && !@customer.inactivated_start_date.present?
+          @customer.inactivated_start_date = Date.today.in_time_zone
+        end
+      end
+    else
+      @customer.active_status_changed_reason = nil  
+    end
+
+    if @customer.changed?
+      TrackerActionLog.customer_active_status_changed(@customer, current_user, prev_active_text, prev_reason)
+    end
+
+    @customer.save(validate: false)
+
+    redirect_to @customer
   end
 
-  def activate
-    @customer = Customer.find(params[:customer_id])
+  def reactivate
+    @customer = Customer.find(params[:id])
     authorize! :edit, @customer
 
-    @customer.inactivated_date = nil
-    @customer.inactivated_reason = nil
-    @customer.save
-    redirect_to action: :index
+    @customer.reactivate!
+
+    redirect_to @customer
   end
 
   def update
@@ -279,6 +301,15 @@ class CustomersController < ApplicationController
         :zip,
         :notes
       ]
+    )
+  end
+
+  def customer_inactivate_params
+    params.require(:customer).permit(
+      :active,
+      :inactivated_start_date,
+      :inactivated_end_date,
+      :active_status_changed_reason
     )
   end
 

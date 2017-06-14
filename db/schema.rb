@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170609135940) do
+ActiveRecord::Schema.define(version: 20170614172325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -149,10 +149,10 @@ ActiveRecord::Schema.define(version: 20170609135940) do
     t.text     "private_notes"
     t.text     "public_notes"
     t.integer  "provider_id"
-    t.boolean  "group",                     default: false
+    t.boolean  "group",                        default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "lock_version",              default: 0
+    t.integer  "lock_version",                 default: 0
     t.boolean  "medicaid_eligible"
     t.string   "prime_number"
     t.integer  "default_funding_source_id"
@@ -164,6 +164,10 @@ ActiveRecord::Schema.define(version: 20170609135940) do
     t.datetime "deleted_at"
     t.text     "message"
     t.string   "token"
+    t.boolean  "active"
+    t.date     "inactivated_start_date"
+    t.date     "inactivated_end_date"
+    t.text     "active_status_changed_reason"
   end
 
   add_index "customers", ["address_id"], :name => "index_customers_on_address_id"

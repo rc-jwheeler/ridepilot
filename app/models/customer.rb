@@ -1,5 +1,8 @@
 class Customer < ActiveRecord::Base
   include RequiredFieldValidatorModule 
+  include Inactivateable
+  include PublicActivity::Common
+
   before_validation :generate_uuid_token, on: :create
 
   acts_as_paranoid # soft delete
@@ -50,7 +53,6 @@ class Customer < ActiveRecord::Base
   scope :by_letter,    -> (letter) { where("lower(last_name) LIKE ?", "#{letter.downcase}%") }
   scope :for_provider, -> (provider_id) { where("provider_id = ? OR id IN (SELECT customer_id FROM customers_providers WHERE provider_id = ?)", provider_id, provider_id) }
   scope :individual,   -> { where(:group => false) }
-  scope :active,       -> { where(inactivated_date: nil) }
 
   has_paper_trail
 
@@ -63,10 +65,6 @@ class Customer < ActiveRecord::Base
     else
       return "%s %s" % [first_name, last_name]
     end
-  end
-
-  def active?
-    !inactivated_date
   end
 
   def age_in_years

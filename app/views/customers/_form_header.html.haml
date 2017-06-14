@@ -11,12 +11,11 @@
         = f.submit translate_helper(:update), class: 'btn action-button'
         = link_to translate_helper(:cancel), customers_path, class: "btn btn-default"
       - else
-        - if @customer.inactivated_date
-          = link_to translate_helper("activate"), customer_activate_path(@customer), method: :post, :class=>'btn action-button'
+        - if @customer.permanent_inactivated?
+          = link_to translate_helper("reactivate"), reactivate_customer_path(@customer), method: :post, :class=>'btn action-button', :data => { :confirm => translate_helper(:reactivate_confirmation)}
         - else
-          = link_to translate_helper("new_trip_link_text"), new_trip_path(:customer_id=>@customer.id), :class=>'btn action-button' if !@read_only_customer
-          = button_tag :type => 'button', id: 'inactivateCustomer', "data-target" => "#inactivateCustomerDialog", "data-toggle" => "modal", :class => "btn action-button" do
-            = translate_helper(:inactivate)
+          = button_tag :type => 'button', id: 'inactivateCustomer', "data-target" => "#inactivateDialog", "data-toggle" => "modal", :class => "btn action-button" do
+            = @customer.inactivated? ? translate_helper(:activate) : translate_helper(:inactivate)
         - if !@customer.new_record? && can?(:destroy, @customer)
           - if @customer.trips.present?
             = link_to(translate_helper("merge"), @customer, :id => 'customer_merge', :class=>'btn action-button btn-danger')
