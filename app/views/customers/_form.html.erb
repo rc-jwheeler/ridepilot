@@ -51,15 +51,17 @@
     <%= render 'providers_panel', f: f, edit_mode: edit_mode %>
     <%= render 'donations_panel', f: f, edit_mode: edit_mode  %>
     <%= render 'others_panel', f: f, edit_mode: edit_mode %>
+    <% if edit_mode == :show %>
+      <% logs = TrackerActionLog.for(@customer).order(created_at: :desc) %>
+      <%= render 'shared/action_log_panel', logs: logs if logs.any? %>
+    <% end %>
   </div>
 <% end %>
 
-<%= render 'inactivate_dialog' if edit_mode == :show %>
 <%= render 'add_donation_dialog' if edit_mode == :edit || edit_mode == :new %>
 <%= render 'add_address_dialog', edit_mode: edit_mode %>
 <%= render 'add_travel_training_dialog' if edit_mode == :edit || edit_mode == :new %>
 <%= render 'add_funding_authorization_number_dialog' if edit_mode == :edit || edit_mode == :new %>
-
 <%= render 'shared/hide_invisible_form_fields_js', model_name: "customer", table_name: 'customers', provider_id:  current_provider.try(:id) %>
 <script>
 // hide middle/last names for group customer

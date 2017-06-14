@@ -46,9 +46,6 @@ Rails.application.routes.draw do
     end
 
     resources :customers do
-      post :inactivate, :as => :inactivate
-      post :activate, :as => :activate
-
       collection do
         get :autocomplete
         get :found
@@ -58,6 +55,8 @@ Rails.application.routes.draw do
 
       member do
         get :delete_photo
+        post :inactivate
+        post :reactivate
       end
     end
 

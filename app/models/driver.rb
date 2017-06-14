@@ -50,6 +50,8 @@ class Driver < ActiveRecord::Base
   scope :for_provider,  -> (provider_id) { where(provider_id: provider_id) }
   scope :default_order, -> { joins("left outer join users on users.id = drivers.user_id").reorder("lower(users.last_name)", "lower(users.first_name)") }
 
+  after_initialize :set_defaults
+  
   def self.unassigned(provider)
     users.for_provider(provider).reject { |driver| driver.device_pool.present? }
   end
@@ -68,6 +70,10 @@ class Driver < ActiveRecord::Base
   end
 
   private
+
+  def set_defaults
+    self.active = true if self.active.nil?
+  end
 
   def valid_phone_number
     util = Utility.new

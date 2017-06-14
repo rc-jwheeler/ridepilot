@@ -46,6 +46,8 @@ class Vehicle < ActiveRecord::Base
   scope :reportable,    -> { where(reportable: true) }
   scope :default_order, -> { order(:name) }
 
+  after_initialize :set_defaults
+
   def self.unassigned(provider)
     for_provider(provider).reject { |vehicle| vehicle.device_pool.present? }
   end
@@ -79,6 +81,10 @@ class Vehicle < ActiveRecord::Base
   end
 
   private
+
+  def set_defaults
+    self.active = true if self.active.nil?
+  end
 
   def valid_phone_number
     util = Utility.new

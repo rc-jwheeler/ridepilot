@@ -25,7 +25,7 @@ class Ability
     
     unless can_manage_all
       for role in user.roles
-        if role.editor?
+        if role.admin?
           action = :manage
         else
           action = :read
@@ -78,7 +78,6 @@ class Ability
       end
     else
       can :read, User, :roles => {:provider_id => provider.id}
-      can :edit, user
       can :manage, user # User can manage themselves
       cannot :delete, Vehicle
       cannot :delete, Driver

@@ -158,6 +158,17 @@ class TrackerActionLog < PublicActivity::Activity
     }  
   end
 
+  def self.customer_active_status_changed(customer, user, prev_active_text, prev_reason)
+    return if !customer
+
+    customer.create_activity :active_status_changed, owner: user, params: {
+      prev_active_status_text: prev_active_text,
+      active_status_text: customer.active_status_text,
+      prev_reason: prev_reason.blank? ? '(not provided)' : prev_reason,
+      reason: customer.active_status_changed_reason.blank? ?  '(not provided)' : customer.active_status_changed_reason
+    }  
+  end
+
   private
 
   def self.compare_time_only(time_1, time_2)

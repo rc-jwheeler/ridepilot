@@ -24,6 +24,14 @@ module Inactivateable
       !permanent_inactivated? && (inactivated_start_date.present? || inactivated_end_date.present?)
     end
 
+    def reactivate!
+      self.active = true
+      self.inactivated_start_date = nil
+      self.inactivated_end_date = nil
+      self.active_status_changed_reason = nil
+      self.save(validate: false)
+    end
+
     def active_for_date?(date)
       active && (!inactivated_start_date || inactivated_start_date > date) && (!inactivated_end_date || inactivated_end_date < date)
     end

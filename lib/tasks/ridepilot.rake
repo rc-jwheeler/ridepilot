@@ -209,4 +209,11 @@ namespace :ridepilot do
     load(seed_file) if File.exist?(seed_file)
     puts 'Finished seeding provider lookup table configurations'
   end
+
+  desc 'Migrate inactive customers'
+  task :migrate_inactive_customers => :environment do
+    Customer.unscoped.where(inactivated_date: nil).update_all(active: true)
+    Customer.unscoped.where.not(inactivated_date: nil).update_all(active: false)
+    puts 'Finished inactive customer data migration'
+  end
 end

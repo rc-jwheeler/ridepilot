@@ -1,5 +1,5 @@
 class DriversController < ApplicationController
-  load_and_authorize_resource except: [:delete_photo, :inactivate]
+  load_and_authorize_resource except: [:delete_photo, :inactivate, :reactivate]
   
   # Load documents through their associated parent
   load_and_authorize_resource :document, through: [:driver]
@@ -171,10 +171,11 @@ class DriversController < ApplicationController
     @driver = Driver.find(params[:id])
     authorize! :edit, @driver
 
-    @driver.active = true
-    @driver.inactivated_start_date = nil
-    @driver.inactivated_end_date = nil
-    @driver.save(validate: false)
+    prev_active_text = @driver.active_status_text
+    prev_reason = @driver.active_status_changed_reason
+
+    @driver.reactivate!
+    TrackerActionLog.driver_active_status_changed(@driver, current_user, prev_active_text, prev_reason)
 
     redirect_to @driver
   end
