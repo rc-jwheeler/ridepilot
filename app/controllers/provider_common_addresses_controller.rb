@@ -99,7 +99,7 @@ class ProviderCommonAddressesController < AddressesController
     
     if @address.update_attributes new_addr_params
       flash.now[:notice] = "Address '#{@address.name}' was successfully updated"
-      redirect_to provider_path(@address.provider)
+      redirect_to addresses_provider_path(@address.provider)
     else
       render :action => :edit
     end
@@ -108,13 +108,13 @@ class ProviderCommonAddressesController < AddressesController
   def destroy
     if @address.trips.present?
       if new_address = @address.replace_with!(params[:address_id])
-        redirect_to new_address.provider, :notice => "Address #{@address.name} was successfully replaced with new address #{new_address.name}."
+        redirect_to addresses_provider_path(new_address.provider), :notice => "Address #{@address.name} was successfully replaced with new address #{new_address.name}."
       else
         redirect_to edit_provider_common_address_path(@address), :notice => "Address #{@address.name} can't be deleted without associating trips with another address."
       end
     else
       @address.destroy
-      redirect_to current_provider, :notice => "Address #{@address.name} was successfully deleted."
+      redirect_to addresses_provider_path(current_provider), :notice => "Address #{@address.name} was successfully deleted."
     end
   end
 
@@ -171,7 +171,7 @@ class ProviderCommonAddressesController < AddressesController
 
     respond_to do |format|
       format.js
-      format.html {redirect_to provider_url(current_provider), alert: full_error_msg }
+      format.html {redirect_to addresses_provider_path(current_provider), alert: full_error_msg }
     end
   end
 

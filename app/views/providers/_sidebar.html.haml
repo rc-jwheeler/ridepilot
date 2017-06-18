@@ -1,0 +1,46 @@
+:css
+  /* Sidebar navigation */
+  .nav-sidebar {
+    margin-right: -21px; /* 20px padding + 1px border */
+    margin-bottom: 20px;
+    margin-left: -20px;
+  }
+  .nav-sidebar > li > a {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+  .nav-sidebar > .active > a,
+  .nav-sidebar > .active > a:hover,
+  .nav-sidebar > .active > a:focus {
+    color: #fff;
+    background-color: #336699;
+  }
+
+%ul.nav.nav-sidebar
+  %li{class: action_name == "show" ? 'active' : ''}
+    %a{href: provider_path(@provider)}
+      = translate_helper('provider_profile_label')
+  %li{class: action_name == "general" ? 'active' : ''}
+    %a{href: general_provider_path(@provider)}
+      1. 
+      = translate_helper('provider_general_label')
+  %li{class: action_name == "users" ? 'active' : ''}
+    %a{href: users_provider_path(@provider)}
+      2.
+      = translate_helper('provider_users_label')
+  %li{class: action_name == "drivers" ? 'active' : ''}
+    %a{href: drivers_provider_path(@provider)}
+      3.
+      = translate_helper('provider_drivers_label')
+  %li{class: action_name == "vehicles" ? 'active' : ''}
+    %a{href: vehicles_provider_path(@provider)}
+      4.
+      = translate_helper('provider_vehicles_label')
+  %li{class: action_name == "addresses" ? 'active' : ''}
+    %a{href: addresses_provider_path(@provider)}
+      5.
+      = translate_helper('provider_addresses_label')
+  %li{class: action_name == "customers" ? 'active' : ''}
+    %a{href: customers_provider_path(@provider)}
+      6.
+      = translate_helper('provider_customers_label')

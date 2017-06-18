@@ -104,6 +104,12 @@ Rails.application.routes.draw do
         post :save_region
         post :save_viewport
         patch :save_operating_hours
+        get :general
+        get :users
+        get :drivers
+        get :vehicles
+        get :addresses
+        get :customers
       end
     end
 

@@ -659,6 +659,19 @@ en:
   new_monthly_link_text:  "Add New Monthly Data"
   new_monthly_heading: "Create Monthly Report"
   #Providers
+  provider_profile_label: 'Profile'
+  provider_general_label: 'General'
+  provider_users_label: 'Users'
+  provider_drivers_label: 'Drivers'
+  provider_vehicles_label: 'Vehicles'
+  provider_addresses_label: 'Addresses'
+  provider_customers_label: 'Customers'
+  manage_drivers: 'Manage Drivers'
+  manage_drivers_link_text: 'Drivers Tab'
+  manage_vehicles: 'Manage Vehicles'
+  manage_vehicles_link_text: 'Vehicles Tab'
+  manage_customers: 'Manage Customers'
+  manage_customers_link_text: 'Customers Tab'
   customer_authorized_providers: "Authorized Providers"
   provider_form_name: "Name"
   provider_form_logo: "Logo"

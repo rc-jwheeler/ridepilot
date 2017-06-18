@@ -13,24 +13,12 @@ class ProvidersController < ApplicationController
   end
   
   def show
-    @unassigned_drivers = Driver.unassigned(@provider)
-    @unassigned_vehicles = Vehicle.unassigned(@provider)
-    array = (0..19).zip(0..19).map()
-    @zoom_choices = array.inject({}) do |memo, values|
-      memo[values.first.to_s] = values.last.to_s
-      memo
-    end
-
-    @hours = @provider.hours_hash
-
-    @start_hours = OperatingHours.available_start_times
-    @end_hours = OperatingHours.available_end_times
   end
 
   def save_operating_hours
     create_or_update_hours!
 
-    redirect_to @provider
+    redirect_to general_provider_path(@provider, anchor: "hour_settings")
   end
 
   # POST /providers/:id/save_region
@@ -50,7 +38,8 @@ class ProvidersController < ApplicationController
       @provider.region_se_corner = RGeo::Geographic.spherical_factory(srid: 4326).point(east, south)
     end
     @provider.save!
-    redirect_to provider_path(@provider, anchor: "region")
+
+    redirect_to general_provider_path(@provider, anchor: "region_map")
   end
 
   # POST /providers/:id/save_viewport
@@ -70,7 +59,8 @@ class ProvidersController < ApplicationController
       @provider.viewport_center = RGeo::Geographic.spherical_factory(srid: 4326).point(lng, lat)
     end
     @provider.save!
-    redirect_to provider_path(@provider, anchor: "viewport")
+
+    redirect_to general_provider_path(@provider, anchor: "viewport")
   end
 
   def delete_role
@@ -81,7 +71,8 @@ class ProvidersController < ApplicationController
     if user.roles.size == 0
       user.destroy
     end
-    redirect_to provider_path(params[:provider_id])
+
+    redirect_to users_provider_path(params[:provider_id])
   end
 
   def change_role
@@ -89,45 +80,80 @@ class ProvidersController < ApplicationController
     authorize! :edit, role
     role.level = params[:role][:level]
     role.save!
-    redirect_to provider_path(params[:provider_id])
+
+    redirect_to users_provider_path(params[:provider_id])
   end
   
   def change_cab_enabled
     @provider.update_attribute :cab_enabled, params[:cab_enabled]
     
-    redirect_to provider_path(@provider)
+    redirect_to general_provider_path(@provider, anchor: "cab_settings")
   end
   
   def change_scheduling
     @provider.update_attribute :scheduling, params[:scheduling]
-    redirect_to provider_path(@provider)
+
+    redirect_to general_provider_path(@provider, anchor: "scheduling_settings")
   end
 
   def change_run_tracking
     @provider.update_attribute :run_tracking, params[:run_tracking]
-    redirect_to provider_path(@provider)
+
+    redirect_to general_provider_path(@provider, anchor: "run_tracking_settings")
   end
 
   def change_advance_day_scheduling
     @provider.update_attribute :advance_day_scheduling, params[:advance_day_scheduling]
     
-    redirect_to provider_path(@provider)
+    redirect_to general_provider_path(@provider, anchor: "advance_day_settings")
   end
 
   def change_eligible_age
     @provider.update_attribute :eligible_age, params[:eligible_age]
     
-    redirect_to provider_path(@provider)
+    redirect_to customers_provider_path(@provider)
   end
 
   def change_reimbursement_rates
     @provider.update_attributes reimbursement_params
-    redirect_to provider_path(@provider)
+
+    redirect_to general_provider_path(@provider, anchor: "reimbursement_rates_settings")
   end
   
   def change_fields_required_for_run_completion
     @provider.update_attribute :fields_required_for_run_completion, params[:fields_required_for_run_completion]
-    redirect_to provider_path(@provider)
+
+    redirect_to general_provider_path(@provider, anchor: "run_fields_settings")
+  end
+
+  def general
+    @hours = @provider.hours_hash
+
+    @start_hours = OperatingHours.available_start_times
+    @end_hours = OperatingHours.available_end_times
+
+    array = (0..19).zip(0..19).map()
+    @zoom_choices = array.inject({}) do |memo, values|
+      memo[values.first.to_s] = values.last.to_s
+      memo
+    end
+  end 
+
+  def users
+  end
+  
+  def drivers
+  end
+
+  def vehicles
+    @unassigned_drivers = Driver.unassigned(@provider)
+    @unassigned_vehicles = Vehicle.unassigned(@provider)
+  end
+
+  def addresses
+  end
+
+  def customers
   end
   
   private
