@@ -659,6 +659,15 @@ en:
   new_monthly_link_text:  "Add New Monthly Data"
   new_monthly_heading: "Create Monthly Report"
   #Providers
+  new_provider_heading: 'New Provider'
+  provider_form_details_heading: 'Details'
+  provider_form_business_address_heading: 'Business Address'
+  provider_form_mailing_address_heading: 'Mailing Address'
+  provider_form_website: "Website"
+  provider_form_admin_name: "Admin Name"
+  provider_form_primary_contact_name: "Name"
+  provider_form_primary_contact_phone: "Phone"
+  provider_form_primary_contact_email: "Email"
   provider_profile_label: 'Profile'
   provider_general_label: 'General'
   provider_users_label: 'Users'
@@ -666,6 +675,8 @@ en:
   provider_vehicles_label: 'Vehicles'
   provider_addresses_label: 'Addresses'
   provider_customers_label: 'Customers'
+  configure_provider_vehicle_warranties: "Configure Vehicle Warranties"
+  provider_vehicle_warranties_link_text: "Vehicle Warrenties Lookup Table"
   manage_drivers: 'Manage Drivers'
   manage_drivers_link_text: 'Drivers Tab'
   manage_vehicles: 'Manage Vehicles'

@@ -1,0 +1,17 @@
+%table#address_results
+  %tr
+    %th= translate_helper("address_results_name_column")
+    %th= translate_helper("address")
+    %th= translate_helper("city")
+    %th= translate_helper("state")
+    %th= translate_helper("phone_number")
+    %th= translate_helper("in_district")
+    %th= translate_helper("address_notes")
+    - if can? :edit, Vehicle
+      %th
+  - if @provider.addresses.size == 0
+    %tr
+      %td= translate_helper("no_addresses_yet")
+  - else
+    %tr
+      %td= translate_helper("search_for_address")
