@@ -1,0 +1,13 @@
+%h2.section-header= translate_helper("age_eligibility")
+- if can? :edit, @provider
+  = form_tag change_eligible_age_provider_path(@provider) do
+    %fieldset
+      %ol.section.fourth
+        %li
+          = label_tag translate_helper("eligible_age")
+          = number_field_tag "eligible_age", @provider.eligible_age || Provider::DEFAULT_ELIGIBLE_AGE, { class: 'form-control' }
+      .actions
+        = submit_tag translate_helper("update")
+%hr/
+%h2.section-header= translate_helper("manage_customers")
+= link_to translate_helper("manage_customers_link_text"), customers_path, target: '_blank'

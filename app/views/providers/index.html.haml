@@ -1,0 +1,12 @@
+#page-header.clearfix
+  %h1= translate_helper("provider_index_heading")
+%table
+  %tr
+    %th= translate_helper("provider_index_name")
+    %th= translate_helper("provider_index_users")
+  - @providers.each do |provider|
+    %tr
+      %td= link_to provider.name, provider_path(provider)
+      %td= provider.users.size
+- if can? :new, Provider
+  %p= link_to translate_helper("new_provider_link_text"), new_provider_path, :class=>'btn action-button'

@@ -23,6 +23,12 @@ class Provider < ActiveRecord::Base
 
   has_one :address_upload_flag
 
+  belongs_to :business_address, -> { with_deleted }, class_name: 'ProviderBusinessAddress', foreign_key: 'business_address_id'
+  belongs_to :mailing_address, -> { with_deleted }, class_name: 'ProviderMailingAddress', foreign_key: 'mailing_address_id'
+
+  accepts_nested_attributes_for :business_address, update_only: true
+  accepts_nested_attributes_for :mailing_address, update_only: true
+
   has_attached_file :logo, :styles => { :small => "150x150>" }
   
   REIMBURSEMENT_ATTRIBUTES = [
@@ -60,6 +66,7 @@ class Provider < ActiveRecord::Base
   validate                  :fields_required_for_run_completion_includes_allowed_values
   # How many days in advance to create subscription trips/runs
   validates_numericality_of :advance_day_scheduling, :greater_than => 0, :allow_blank => true 
+  validate  :valid_phone_number
   
   after_initialize :init
 
@@ -103,5 +110,27 @@ class Provider < ActiveRecord::Base
   # Returns true if the passed date falls within the advance scheduling window
   def scheduler_window_covers?(date)
     date < (Date.today + get_advance_day_scheduling.days)
+  end
+
+  # has admin or system_admin
+  def has_admin?
+    roles.admin_and_aboves.any?
+  end
+
+  private
+
+  def valid_phone_number
+    util = Utility.new
+    if phone_number.present?
+      errors.add(:phone_number, 'is invalid') unless util.phone_number_valid?(phone_number)
+    end
+
+    if alt_phone_number.present?
+      errors.add(:alt_phone_number, 'is invalid') unless util.phone_number_valid?(alt_phone_number)
+    end
+
+    if primary_contact_phone_number.present?
+      errors.add(:primary_contact_phone_number, 'is invalid') unless util.phone_number_valid?(primary_contact_phone_number)
+    end
   end
 end

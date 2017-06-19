@@ -11,14 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170614172325) do
+ActiveRecord::Schema.define(version: 20170618231357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
-  enable_extension "fuzzystrmatch"
-  enable_extension "pg_stat_statements"
   enable_extension "postgis_topology"
+  enable_extension "fuzzystrmatch"
   enable_extension "uuid-ossp"
 
   create_table "activities", force: true do |t|
@@ -160,8 +159,8 @@ ActiveRecord::Schema.define(version: 20170614172325) do
     t.boolean  "ada_eligible"
     t.string   "service_level_old"
     t.integer  "service_level_id"
+    t.boolean  "is_elderly"
     t.string   "gender"
-    t.boolean  "is_elderly",                   default: false
     t.datetime "deleted_at"
     t.text     "message"
     t.string   "token"
@@ -529,9 +528,20 @@ ActiveRecord::Schema.define(version: 20170614172325) do
     t.boolean  "cab_enabled"
     t.integer  "eligible_age"
     t.boolean  "run_tracking"
+    t.string   "phone_number"
+    t.string   "alt_phone_number"
+    t.string   "url"
+    t.string   "primary_contact_name"
+    t.string   "primary_contact_phone_number"
+    t.string   "primary_contact_email"
+    t.integer  "business_address_id"
+    t.integer  "mailing_address_id"
+    t.string   "admin_name"
   end
 
+  add_index "providers", ["business_address_id"], :name => "index_providers_on_business_address_id"
   add_index "providers", ["deleted_at"], :name => "index_providers_on_deleted_at"
+  add_index "providers", ["mailing_address_id"], :name => "index_providers_on_mailing_address_id"
 
   create_table "recurring_driver_compliances", force: true do |t|
     t.integer  "provider_id"
@@ -629,11 +639,11 @@ ActiveRecord::Schema.define(version: 20170614172325) do
     t.boolean  "customer_informed"
     t.integer  "trip_purpose_id"
     t.string   "direction",                      default: "outbound"
-    t.date     "start_date"
-    t.date     "end_date"
     t.integer  "service_level_id"
     t.boolean  "medicaid_eligible"
     t.integer  "mobility_device_accommodations"
+    t.date     "start_date"
+    t.date     "end_date"
     t.string   "comments"
     t.integer  "repeating_run_id"
     t.date     "scheduled_through"
@@ -648,7 +658,6 @@ ActiveRecord::Schema.define(version: 20170614172325) do
   add_index "repeating_trips", ["mobility_id"], :name => "index_repeating_trips_on_mobility_id"
   add_index "repeating_trips", ["pickup_address_id"], :name => "index_repeating_trips_on_pickup_address_id"
   add_index "repeating_trips", ["provider_id"], :name => "index_repeating_trips_on_provider_id"
-  add_index "repeating_trips", ["repeating_run_id"], :name => "index_repeating_trips_on_repeating_run_id"
   add_index "repeating_trips", ["service_level_id"], :name => "index_repeating_trips_on_service_level_id"
   add_index "repeating_trips", ["trip_purpose_id"], :name => "index_repeating_trips_on_trip_purpose_id"
   add_index "repeating_trips", ["vehicle_id"], :name => "index_repeating_trips_on_vehicle_id"
@@ -862,7 +871,6 @@ ActiveRecord::Schema.define(version: 20170614172325) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",                                                    default: 0
-    t.boolean  "round_trip"
     t.boolean  "medicaid_eligible"
     t.integer  "mileage"
     t.string   "service_level_old"

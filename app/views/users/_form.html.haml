@@ -1,4 +1,4 @@
-- url = edit_mode == :new ? url_for(:action=>:create_user) : user_path(@user)
+- url = edit_mode == :new ? create_user_provider_users_path(@provider) : user_path(@user)
 - is_editing = edit_mode == :edit || edit_mode == :new
 = form_for @user, :url=>url, :html => {class: 'user_form'} do |f|
   = render 'form_header', edit_mode: edit_mode, f: f
@@ -34,7 +34,7 @@
             .col-md-10
               = f.text_field :email, class: "form-control"
           - if @user != current_user
-            - role = Role.find_by(user: @user, provider: current_provider)
+            - role = Role.find_by(user: @user, provider: @provider)
             - if @user.new_record? || can?(:manage, role)
               - editable_roles = Role.editable_role_array_by_user(current_user)
               - if editable_roles.any?

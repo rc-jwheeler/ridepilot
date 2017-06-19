@@ -16,7 +16,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe "GET #new_user" do
     it "assigns a new user as @user" do
-      get :new_user, {}
+      get :new_user, {provider_id: @current_user.current_provider.id}
       expect(assigns(:user)).to be_a_new(User)
     end
   end
@@ -28,18 +28,18 @@ RSpec.describe UsersController, type: :controller do
       
         it "creates a new User" do
           expect {
-            post :create_user, {:user => valid_attributes, :role => {:level => 50}}
+            post :create_user, {provider_id: @current_user.current_provider.id, :user => valid_attributes, :role => {:level => 50}}
           }.to change(User, :count).by(1)
         end
 
         it "assigns a newly created user as @user" do
-          post :create_user, {:user => valid_attributes, :role => {:level => 50}}
+          post :create_user, {provider_id: @current_user.current_provider.id, :user => valid_attributes, :role => {:level => 50}}
           expect(assigns(:user)).to be_a(User)
           expect(assigns(:user)).to be_persisted
         end
 
         it "assigns the user to a new role for the current provider" do
-          post :create_user, {:user => valid_attributes, :role => {:level => 50}}
+          post :create_user, {provider_id: @current_user.current_provider.id, :user => valid_attributes, :role => {:level => 50}}
           expect(assigns(:role)).to be_a(Role)
           expect(assigns(:role)).to be_persisted
           expect(assigns(:role).user).to eq(assigns(:user))
@@ -48,7 +48,7 @@ RSpec.describe UsersController, type: :controller do
         end
 
         it "redirects to the current provider" do
-          post :create_user, {:user => valid_attributes, :role => {:level => 50}}
+          post :create_user, {provider_id: @current_user.current_provider.id, :user => valid_attributes, :role => {:level => 50}}
           expect(response).to redirect_to(@current_user.current_provider)
         end
       end
@@ -61,12 +61,12 @@ RSpec.describe UsersController, type: :controller do
         
         it "does not create a new User" do
           expect {
-            post :create_user, {:user => @new_attrs, :role => {:level => 50}}
+            post :create_user, {provider_id: @current_user.current_provider.id, :user => @new_attrs, :role => {:level => 50}}
           }.to_not change(User, :count)
         end
 
         it "assigns the user to a new role for the current provider" do
-          post :create_user, {:user => @new_attrs, :role => {:level => 50}}
+          post :create_user, {provider_id: @current_user.current_provider.id, :user => @new_attrs, :role => {:level => 50}}
           expect(assigns(:role)).to be_a(Role)
           expect(assigns(:role)).to be_persisted
           expect(assigns(:role).user).to eq(@new_user)
@@ -75,7 +75,7 @@ RSpec.describe UsersController, type: :controller do
         end
 
         it "redirects to the current provider" do
-          post :create_user, {:user => @new_attrs, :role => {:level => 50}}
+          post :create_user, {provider_id: @current_user.current_provider.id, :user => @new_attrs, :role => {:level => 50}}
           expect(response).to redirect_to(@current_user.current_provider)
         end
       end
@@ -83,12 +83,12 @@ RSpec.describe UsersController, type: :controller do
 
     context "with invalid params" do
       it "assigns a newly created but unsaved user as @user" do
-        post :create_user, {:user => invalid_attributes}
+        post :create_user, {provider_id: @current_user.current_provider.id, :user => invalid_attributes}
         expect(assigns(:user)).to be_a_new(User)
       end
 
       it "re-renders the 'new_user' template" do
-        post :create_user, {:user => invalid_attributes}
+        post :create_user, {provider_id: @current_user.current_provider.id, :user => invalid_attributes}
         expect(response).to render_template("new_user")
       end
     end

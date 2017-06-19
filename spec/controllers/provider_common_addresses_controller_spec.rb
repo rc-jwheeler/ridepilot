@@ -157,7 +157,7 @@ RSpec.describe ProviderCommonAddressesController, type: :controller do
       it "redirects to the provider of the address" do
         address = ProviderCommonAddress.create! valid_attributes.merge({:provider_id => @current_user.current_provider.id})
         put :update, {:id => address.to_param, :provider_common_address => valid_attributes}
-        expect(response).to redirect_to(address.provider)
+        expect(response).to redirect_to(addresses_provider_path(address.provider))
       end
     end
 
@@ -203,7 +203,7 @@ RSpec.describe ProviderCommonAddressesController, type: :controller do
         it "redirects to the provider of the replacement address" do
           address = ProviderCommonAddress.create! valid_attributes.merge({:provider_id => @current_user.current_provider.id})
           delete :destroy, {:id => address.to_param, :address_id => @replacement_address.id}
-          expect(response).to redirect_to(@replacement_address.provider)
+          expect(response).to redirect_to( addresses_provider_path(@replacement_address.provider))
         end        
       end
       
@@ -232,7 +232,7 @@ RSpec.describe ProviderCommonAddressesController, type: :controller do
       it "redirects to the current user's provider" do
         address = ProviderCommonAddress.create! valid_attributes.merge({:provider_id => @current_user.current_provider.id})
         delete :destroy, {:id => address.to_param}
-        expect(response).to redirect_to(@current_user.current_provider)
+        expect(response).to redirect_to(addresses_provider_path(@current_user.current_provider))
       end
     end
   end

@@ -25,6 +25,7 @@ class Role < ActiveRecord::Base
 
   scope :system_admins, -> { where(level: SYSTEM_ADMIN_LEVEL) }
   scope :admins, -> { where(level: ADMIN_LEVEL) }
+  scope :admin_and_aboves, -> { where("level >= ?", ADMIN_LEVEL) }
   scope :editors, -> { where(level: EDITOR_LEVEL) }
 
   # TODO: need to discuss with Chris on using >= instead of == here

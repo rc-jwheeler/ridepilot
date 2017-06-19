@@ -1,8 +1,7 @@
-<div class="address-form" id="provider-address-form">
-  <%= render 'addresses/new_form', :prefix=>'provider', address: Address.new %>
-</div>
+.address-form#provider-address-form
+  = render 'addresses/new_form', :prefix=>'provider', address: Address.new 
 
-<script type='text/javascript'>
+:javascript
   $(document).ready(function() {
     
     // happens after you submit an address (not autocomplete)
