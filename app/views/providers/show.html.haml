@@ -2,7 +2,6 @@
   - if can? :manage, @provider
     .pull-right
       = link_to translate_helper("create_first_admin_user"), new_user_provider_users_path(@provider), class: "btn action-button" unless @provider.has_admin?
-      = link_to translate_helper("delete_provider_button"), @provider, method: :delete, data: { confirm: translate_helper("delete_provider_confirm") }, class: "btn action-button  btn-danger" if can?(:delete, @provider)
       = link_to translate_helper("edit_provider_button"), edit_provider_path(@provider), class: "btn action-button"
   %h1
     = translate_helper("show_provider_heading", provider: @provider.name)
