@@ -6,8 +6,27 @@ class ProvidersController < ApplicationController
   end
 
   def create
+    new_attrs = provider_params
+
+    is_business_address_blank = check_blank_address("business")
+    if is_business_address_blank
+      new_attrs.except!(:business_address_attributes)
+    end
+    is_mailing_address_blank = check_blank_address("mailing")
+    if is_mailing_address_blank
+      new_attrs.except!(:mailing_address_attributes)
+    end
+
+    @provider.attributes = new_attrs
+    @provider.business_address = nil if is_business_address_blank
+    @provider.mailing_address = nil if is_mailing_address_blank
+
     if @provider.save
-      redirect_to @provider, notice: 'Provider was successfully created.'
+      if @provider.has_admin?
+        redirect_to @provider, notice: 'Provider was successfully created.'
+      else
+        redirect_to new_user_provider_users_path(@provider), notice: "Please create an admin user for provider: #{@provider.name}"
+      end
     else
       prep_edit
       render action: :new
@@ -19,8 +38,31 @@ class ProvidersController < ApplicationController
   end
 
   def update
-    if @provider.update_attributes(provider_params)
-      redirect_to @provider, notice: 'Provider was successfully updated.'
+    new_attrs = provider_params
+    is_business_address_blank = check_blank_address("business")
+    if is_business_address_blank
+      prev_business_address = @provider.business_address
+      @provider.business_address_id = nil
+      new_attrs.except!(:business_address_attributes)
+    end
+
+    is_mailing_address_blank = check_blank_address("mailing")
+    if is_mailing_address_blank
+      prev_mailing_address = @provider.mailing_address
+      @provider.mailing_address_id = nil
+      new_attrs.except!(:mailing_address_attributes)
+    end
+
+    @provider.attributes = new_attrs
+
+    if @provider.update_attributes(new_attrs)
+      prev_business_address.destroy if is_business_address_blank && prev_business_address.present?
+      prev_mailing_address.destroy if is_mailing_address_blank && prev_mailing_address.present?
+      if @provider.has_admin?
+        redirect_to @provider, notice: 'Provider was successfully updated.'
+      else
+        redirect_to new_user_provider_users_path(@provider), notice: "Please create an admin user for provider: #{@provider.name}"
+      end
     else
       prep_edit
       render action: :edit
@@ -219,5 +261,19 @@ class ProvidersController < ApplicationController
   def prep_edit
     @provider.business_address ||= @provider.build_business_address(provider_id: @provider.id)
     @provider.mailing_address ||= @provider.build_mailing_address(provider_id: @provider.id) 
+  end
+
+  def check_blank_address(type)
+    address_params = provider_params["#{type}_address_attributes".to_sym]
+    is_blank = true
+    address_params.keys.each do |key|
+      next if key.to_s == 'provider_id'
+      unless address_params[key].blank?
+        is_blank = false
+        break
+      end
+    end if address_params
+
+    is_blank
   end
 end

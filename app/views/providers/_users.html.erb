@@ -1,4 +1,14 @@
-<h2 class="section-header">Users</h2>
+<div class="col-sm-12" style="padding: 0px;">
+  <div class="pull-right">
+    <% if is_add_user_allowed?(current_user) %>
+    <%= link_to translate_helper("create_user_link_text"), new_user_provider_users_path(@provider), :class=>'btn action-button' %></p>
+    <% end %>
+  </div>
+  <h2 class="section-header">
+    <%= translate_helper(:provider_users_label)%>
+  </h2>
+</div>
+
 <fieldset style="padding: 0px;">
 <% if @provider.roles.empty? %>
   <p><%= translate_helper("no_users_yet") %></p>
@@ -46,9 +56,5 @@
     </tr>
     <% end %>
  </table>
-<% end %>
-
-<% if is_add_user_allowed?(current_user) %>
-  <p style="padding-left: 10px;"><%= link_to translate_helper("create_user_link_text"), new_user_path, :class=>'btn action-button' %></p>
 <% end %>
 </fieldset>

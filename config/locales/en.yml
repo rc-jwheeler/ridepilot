@@ -660,11 +660,12 @@ en:
   new_monthly_heading: "Create Monthly Report"
   #Providers
   new_provider_heading: 'New Provider'
+  create_first_admin_user: 'Create Admin User'
   provider_form_details_heading: 'Details'
   provider_form_primary_contact_heading: 'Primary Contact'
   provider_form_business_address_heading: 'Business Address'
   provider_form_mailing_address_heading: 'Mailing Address'
-  provider_form_website: "Website"
+  provider_form_website: "Website (add http or https)"
   provider_form_admin_name: "Admin Name"
   provider_form_admin_name_label: "Admin Name (if different)"
   provider_form_primary_contact_name: "Name"
@@ -682,12 +683,14 @@ en:
   edit_provider_button: 'Edit'
   configure_provider_vehicle_warranties: "Configure Vehicle Warranties"
   provider_vehicle_warranties_link_text: "Vehicle Warrenties Lookup Table"
+  manage_provider_lookup_tables: "Configure Provider Lookup Table"
+  manage_provider_lookup_tables_link_text: "Open Provider Lookup Table"
   manage_drivers: 'Manage Drivers'
-  manage_drivers_link_text: 'Drivers Tab'
+  manage_drivers_link_text: 'Open Drivers Tab'
   manage_vehicles: 'Manage Vehicles'
-  manage_vehicles_link_text: 'Vehicles Tab'
+  manage_vehicles_link_text: 'Open Vehicles Tab'
   manage_customers: 'Manage Customers'
-  manage_customers_link_text: 'Customers Tab'
+  manage_customers_link_text: 'Open Customers Tab'
   customer_authorized_providers: "Authorized Providers"
   provider_form_error:
     one: "1 error prohibited this provider from being saved"

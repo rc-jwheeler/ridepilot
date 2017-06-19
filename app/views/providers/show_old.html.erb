@@ -98,7 +98,7 @@
 <% end %>
 
 <% if is_add_user_allowed?(current_user) %>
-  <p><%= link_to translate_helper("create_user_link_text"), new_user_path, :class=>'new-user action-bttn' %></p>
+  <p><%= link_to translate_helper("create_user_link_text"), new_user_provider_users_path(@provider), :class=>'new-user action-bttn' %></p>
 <% end %>
 
 <hr />

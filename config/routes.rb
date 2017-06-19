@@ -12,8 +12,6 @@ Rails.application.routes.draw do
     devise_for :users
 
     devise_scope :user do
-      get "new_user" => "users#new_user"
-      post "create_user" => "users#create_user"
       get "show_change_password" => "users#show_change_password"
       patch "change_password"  => "users#change_password"
       get "show_change_email" => "users#show_change_email"
@@ -93,6 +91,14 @@ Rails.application.routes.draw do
     resources :providers, :except => [:destroy] do
       post :change_role
       post :delete_role
+
+      resources :users, only: [] do 
+        collection do 
+          get :new_user 
+          post :create_user
+        end
+      end
+
       member do
         post :change_cab_enabled
         post :change_reimbursement_rates

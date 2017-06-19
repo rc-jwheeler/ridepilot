@@ -22,6 +22,46 @@
 
 <hr />
 
+<h2 class="section-header">
+  <%= translate_helper("manage_provider_lookup_tables") %>
+</h2>
+<%= link_to translate_helper("manage_provider_lookup_tables_link_text"), provider_lookup_tables_path, target: '_blank' %>
+
+<hr>
+
+<h2 class="section-header" id="advance_day_settings"><%=translate_helper("advance_day_scheduling")%></h2>
+<% if can? :edit, @provider %>
+  <%= form_tag change_advance_day_scheduling_provider_path(@provider) do %>
+    <fieldset>
+      <ol class="section fourth">
+        <li>
+          <%= label_tag translate_helper("days_in_advance") %>
+          <%= select_tag "advance_day_scheduling", options_for_select( [[7, 7], [14, 14], [21, 21]], @provider.get_advance_day_scheduling), { :onchange => "form.submit();" } %>
+        </li>
+      </ol>
+    </fieldset>
+  <% end %>
+<% end %>
+
+<hr />
+
+
+<h2 class="section-header" id="run_tracking_settings"><%=translate_helper("provider_form_run_tracking")%></h2>
+<% if can? :edit, @provider %>
+  <%= form_tag change_run_tracking_provider_path(@provider) do %>
+    <fieldset>
+      <ol class="section fourth">
+        <li>
+          <%= label_tag translate_helper("enabled") %>
+          <%= select_tag "run_tracking", options_for_select( [["No", false], ["Yes", true]], @provider.run_tracking? ), { :onchange => "form.submit();" } %>
+        </li>
+      </ol>
+    </fieldset>
+  <% end %>
+<% end %>
+
+<hr />
+
 <h2 class="section-header" id="cab_settings"><%=translate_helper("cab")%></h2>
 <% if can? :edit, @provider %>
   <%= form_tag change_cab_enabled_provider_path(@provider) do %>
@@ -46,38 +86,6 @@
         <li>
           <%= label_tag translate_helper("enabled") %>
           <%= select_tag "scheduling", options_for_select( [["No", false], ["Yes", true]], @provider.scheduling? ), { :onchange => "form.submit();" } %>
-        </li>
-      </ol>
-    </fieldset>
-  <% end %>
-<% end %>
-
-<hr />
-
-<h2 class="section-header" id="run_tracking_settings"><%=translate_helper("provider_form_run_tracking")%></h2>
-<% if can? :edit, @provider %>
-  <%= form_tag change_run_tracking_provider_path(@provider) do %>
-    <fieldset>
-      <ol class="section fourth">
-        <li>
-          <%= label_tag translate_helper("enabled") %>
-          <%= select_tag "run_tracking", options_for_select( [["No", false], ["Yes", true]], @provider.run_tracking? ), { :onchange => "form.submit();" } %>
-        </li>
-      </ol>
-    </fieldset>
-  <% end %>
-<% end %>
-
-<hr />
-
-<h2 class="section-header" id="advance_day_settings"><%=translate_helper("advance_day_scheduling")%></h2>
-<% if can? :edit, @provider %>
-  <%= form_tag change_advance_day_scheduling_provider_path(@provider) do %>
-    <fieldset>
-      <ol class="section fourth">
-        <li>
-          <%= label_tag translate_helper("days_in_advance") %>
-          <%= select_tag "advance_day_scheduling", options_for_select( [[7, 7], [14, 14], [21, 21]], @provider.get_advance_day_scheduling), { :onchange => "form.submit();" } %>
         </li>
       </ol>
     </fieldset>

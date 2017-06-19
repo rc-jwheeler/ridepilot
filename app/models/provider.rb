@@ -112,6 +112,11 @@ class Provider < ActiveRecord::Base
     date < (Date.today + get_advance_day_scheduling.days)
   end
 
+  # has admin or system_admin
+  def has_admin?
+    roles.admin_and_aboves.any?
+  end
+
   private
 
   def valid_phone_number

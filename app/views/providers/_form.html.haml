@@ -19,7 +19,7 @@
             = f.label :logo, translate_helper("provider_form_logo"), class: "col-md-2 control-label"
             .col-md-10
               - if @provider.logo.present? && !@provider.new_record?
-                = image_tag @provider.logo.url(:thumb)
+                = image_tag @provider.logo.url(:small)
               - unless @readonly
                 = f.file_field :logo, class: 'form-control'
           .form-group
@@ -44,7 +44,7 @@
               - if @readonly
                 = link_to @provider.url, @provider.url if @provider.url
               - else
-                = f.text_field :url, class: 'form-control', disabled: @readonly
+                = f.url_field :url, class: 'form-control', disabled: @readonly
       .panel.panel-primary
         .panel-heading= translate_helper("provider_form_primary_contact_heading")
         .panel-body.form-horizontal      
@@ -63,7 +63,7 @@
           .form-group
             = f.label :primary_contact_email, translate_helper("provider_form_primary_contact_email"), class: "col-md-2 control-label"
             .col-md-10
-              = f.text_field :primary_contact_email, class: 'form-control', disabled: @readonly
+              = f.email_field :primary_contact_email, class: 'form-control', disabled: @readonly
           .form-group
             = f.label :admin_name, translate_helper("provider_form_admin_name"), class: "col-md-2 control-label"
             .col-md-10

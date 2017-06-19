@@ -1,17 +1,18 @@
 require 'new_user_mailer'
 
 class UsersController < ApplicationController
+  load_and_authorize_resource :provider, only: [:new_user, :create_user]
   before_action :set_user, only: [:show, :edit, :update, :reset_password]
-  skip_before_filter :authenticate_user!, only: [:get_verification_question, :answer_verification_question]
+  skip_before_filter :authenticate_user!, only: [:new_user, :create_user, :get_verification_question, :answer_verification_question]
 
   def new_user
-    authorize! :edit, current_user.current_provider
+    authorize! :edit, @provider
     @user = User.new
     @errors = []
   end
 
   def create_user
-    authorize! :edit, current_user.current_provider
+    authorize! :edit, @provider
     
     @user = User.only_deleted.find_by_username(params[:user][:username])
     @is_user_deleted = @user.try(:deleted_at).present?
@@ -38,13 +39,13 @@ class UsersController < ApplicationController
             raw, enc = Devise.token_generator.generate(User, :reset_password_token)
             @user.reset_password_token = enc
             @user.reset_password_sent_at = Time.zone.now.utc
-            @user.current_provider = current_provider
+            @user.current_provider = @provider
             @user.save!
             new_user = true
           end
 
           @role.user = @user
-          @role.provider = current_provider
+          @role.provider = @provider
           @role.level = params[:role][:level] if params[:role].present? && params[:role][:level].present?
           @role.save!
 
@@ -65,7 +66,7 @@ class UsersController < ApplicationController
         @user.send_reset_password_instructions  if new_user
 
         flash.now[:notice] = "%s has been added and the instructions has been emailed" % @user.email
-        redirect_to provider_path(current_provider)
+        redirect_to provider_path(@provider)
       else
         user_errors = @user.valid? ? {} : @user.errors.messages
 
@@ -82,10 +83,12 @@ class UsersController < ApplicationController
 
   def show
     authorize! :read, @user
+    @provider = @user.current_provider
   end
 
   def edit
     authorize! :edit, @user
+    @provider = @user.current_provider
   end
 
   def update
