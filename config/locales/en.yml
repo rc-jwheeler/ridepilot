@@ -661,10 +661,12 @@ en:
   #Providers
   new_provider_heading: 'New Provider'
   provider_form_details_heading: 'Details'
+  provider_form_primary_contact_heading: 'Primary Contact'
   provider_form_business_address_heading: 'Business Address'
   provider_form_mailing_address_heading: 'Mailing Address'
   provider_form_website: "Website"
   provider_form_admin_name: "Admin Name"
+  provider_form_admin_name_label: "Admin Name (if different)"
   provider_form_primary_contact_name: "Name"
   provider_form_primary_contact_phone: "Phone"
   provider_form_primary_contact_email: "Email"
@@ -675,6 +677,9 @@ en:
   provider_vehicles_label: 'Vehicles'
   provider_addresses_label: 'Addresses'
   provider_customers_label: 'Customers'
+  delete_provider_button: 'Delete'
+  delete_provider_confirm: "Are you sure to delete this provider?"
+  edit_provider_button: 'Edit'
   configure_provider_vehicle_warranties: "Configure Vehicle Warranties"
   provider_vehicle_warranties_link_text: "Vehicle Warrenties Lookup Table"
   manage_drivers: 'Manage Drivers'
@@ -684,6 +689,9 @@ en:
   manage_customers: 'Manage Customers'
   manage_customers_link_text: 'Customers Tab'
   customer_authorized_providers: "Authorized Providers"
+  provider_form_error:
+    one: "1 error prohibited this provider from being saved"
+    other: "%{count} errors prohibited this provider from being saved"
   provider_form_name: "Name"
   provider_form_logo: "Logo"
   provider_form_dispatch: "Dispatch enabled"
@@ -698,6 +706,7 @@ en:
   provider_index_details: "Details"
   new_provider_link_text: "New Provider"
   show_provider_heading: "Provider: %{provider}"
+  edit_provider_heading: "Edit Provider: %{provider}"
   show_provider_address_heading: "Addresses"
   show_provider_search_addresses: "Search addresses:"
   address_results_name_column: "Name"

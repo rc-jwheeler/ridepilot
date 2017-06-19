@@ -90,7 +90,7 @@ Rails.application.routes.draw do
     end
     resources :repeating_runs
 
-    resources :providers, :except => [:edit, :update, :destroy] do
+    resources :providers, :except => [:destroy] do
       post :change_role
       post :delete_role
       member do

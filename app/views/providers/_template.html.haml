@@ -15,10 +15,12 @@
     }
   }
 
-= render 'shared/highlight_active_tab_js', is_primary_nav: false, tab_class: 'provider' 
-%div.clearfix#page-header
-  %h1
-    = translate_helper("show_provider_heading", provider: @provider.name)
+- hide_header = false if local_assigns[:hide_header].nil?
+
+- unless hide_header
+  %div.clearfix#page-header
+    %h1
+      = translate_helper("show_provider_heading", provider: @provider.name)
 
 .row
   .col-sm-12
@@ -26,3 +28,5 @@
       = render 'sidebar'
     .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2
       = render partial_name
+
+= render 'shared/highlight_active_tab_js', is_primary_nav: false, tab_class: 'provider' 

@@ -45,6 +45,9 @@
                 = link_to @provider.url, @provider.url if @provider.url
               - else
                 = f.text_field :url, class: 'form-control', disabled: @readonly
+      .panel.panel-primary
+        .panel-heading= translate_helper("provider_form_primary_contact_heading")
+        .panel-body.form-horizontal      
           .form-group
             = f.label :primary_contact_name, translate_helper("provider_form_primary_contact_name"), class: "col-md-2 control-label"
             .col-md-10
@@ -65,6 +68,31 @@
             = f.label :admin_name, translate_helper("provider_form_admin_name"), class: "col-md-2 control-label"
             .col-md-10
               = f.text_field :admin_name, class: 'form-control', disabled: @readonly
+
+    .col-sm-12.col-md-6
+      - prefix = "provider_business_address_attributes"
+      .panel.panel-primary
+        .panel-heading= translate_helper("provider_form_business_address_heading")
+        .panel-body.form-horizontal
+          = f.fields_for :business_address, @provider.business_address do |address_form|
+            = render 'addresses/non_geocoding_form_fields', address_form: address_form, readonly: @readonly
+
+      - prefix = "provider_mailing_address_attributes"
+      .panel.panel-primary
+        .panel-heading= translate_helper("provider_form_mailing_address_heading")
+        .panel-body.form-horizontal
+          = f.fields_for :mailing_address, @provider.mailing_address do |address_form|
+            = render 'addresses/non_geocoding_form_fields', address_form: address_form, readonly: @readonly
+
+      = render 'addresses/google_place_autocomplete_js'
+      :javascript
+        $(function() {
+          // Force uppercase text
+          $('[data-convert="uppercase"]').keyup(function(evt) {
+            convert_uppercase(this);
+          });
+        });
+ 
 
 :javascript
   $(function() {

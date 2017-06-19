@@ -2,11 +2,29 @@ class ProvidersController < ApplicationController
   load_and_authorize_resource
 
   def new
+    prep_edit
   end
 
   def create
-    @provider.save!
-    redirect_to provider_path(@provider)
+    if @provider.save
+      redirect_to @provider, notice: 'Provider was successfully created.'
+    else
+      prep_edit
+      render action: :new
+    end
+  end
+
+  def edit
+    prep_edit
+  end
+
+  def update
+    if @provider.update_attributes(provider_params)
+      redirect_to @provider, notice: 'Provider was successfully updated.'
+    else
+      prep_edit
+      render action: :edit
+    end
   end
 
   def index
@@ -14,6 +32,7 @@ class ProvidersController < ApplicationController
   
   def show
     @readonly = true
+    prep_edit
   end
 
   def save_operating_hours
@@ -162,7 +181,27 @@ class ProvidersController < ApplicationController
   def provider_params
     params.require(:provider).permit(
       :name, :logo, :phone_number, :alt_phone_number, :url, :primary_contact_name, :primary_contact_phone_number,
-      :primary_contact_email, :admin_name)
+      :primary_contact_email, :admin_name,
+      :business_address_attributes => [
+        :address,
+        :building_name,
+        :city,
+        :name,
+        :provider_id,
+        :state,
+        :zip,
+        :notes
+      ],
+      :mailing_address_attributes => [
+        :address,
+        :building_name,
+        :city,
+        :name,
+        :provider_id,
+        :state,
+        :zip,
+        :notes
+      ])
   end
 
   def reimbursement_params
@@ -175,5 +214,10 @@ class ProvidersController < ApplicationController
       start_hour: params[:start_hour],
       end_hour: params[:end_hour]
       }).process!
+  end
+
+  def prep_edit
+    @provider.business_address ||= @provider.build_business_address(provider_id: @provider.id)
+    @provider.mailing_address ||= @provider.build_mailing_address(provider_id: @provider.id) 
   end
 end
