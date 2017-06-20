@@ -20,6 +20,7 @@ class Provider < ActiveRecord::Base
   has_many :runs
   has_many :repeating_runs
   has_many :driver_requirement_templates, :dependent => :destroy
+  has_many :documents, as: :documentable, dependent: :destroy, inverse_of: :documentable
 
   has_one :address_upload_flag
 
@@ -125,6 +126,24 @@ class Provider < ActiveRecord::Base
   # has admin or system_admin
   def has_admin?
     roles.admin_and_aboves.any?
+  end
+  
+  # points at the document with the description "Approved Vendor List"
+  def vendor_list
+    documents.find_by(description: "Approved Vendor List")
+  end
+  
+  # pass a file object and will replace the vendor_list with that file
+  def update_vendor_list(file)
+    old_vendor_list = vendor_list
+    new_vendor_list = documents.build(description: "Approved Vendor List", document: file)
+    if new_vendor_list.valid?
+      documents.delete(old_vendor_list) if old_vendor_list
+      return self.save
+    else
+      documents.delete(new_vendor_list)
+      return false
+    end
   end
 
   private
