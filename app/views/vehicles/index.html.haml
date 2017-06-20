@@ -35,7 +35,7 @@
   -# APPROVED VENDORS LIST FORM
   .col-sm-6
     %h2=translate_helper(:vendor_list)
-    - if can? :edit, current_provider
+    - if can? :manage, Vehicle
       = form_for current_provider, 
           url: upload_vendor_list_provider_path(current_provider),
           method: :patch,
