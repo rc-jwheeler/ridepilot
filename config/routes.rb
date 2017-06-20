@@ -53,6 +53,7 @@ Rails.application.routes.draw do
 
       member do
         get :delete_photo
+        get :customer_comments_report
         post :inactivate
         post :reactivate
       end

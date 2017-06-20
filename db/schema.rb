@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170618231357) do
+ActiveRecord::Schema.define(version: 20170620191112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -169,6 +169,7 @@ ActiveRecord::Schema.define(version: 20170618231357) do
     t.date     "inactivated_start_date"
     t.date     "inactivated_end_date"
     t.text     "active_status_changed_reason"
+    t.text     "comments"
   end
 
   add_index "customers", ["address_id"], :name => "index_customers_on_address_id"
