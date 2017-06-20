@@ -95,6 +95,16 @@ class Provider < ActiveRecord::Base
     !inactivated_date
   end
 
+  def inactivate!
+    self.inactivated_date = Date.today 
+    self.save(validate: false)
+  end
+
+  def reactivate!
+    self.inactivated_date = nil 
+    self.save(validate: false)
+  end
+
   def check_age_eligible(age)
     if age.present? && (eligible_age || DEFAULT_ELIGIBLE_AGE) <= age
       true 

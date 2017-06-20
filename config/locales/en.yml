@@ -692,6 +692,8 @@ en:
   manage_customers: 'Manage Customers'
   manage_customers_link_text: 'Open Customers Tab'
   customer_authorized_providers: "Authorized Providers"
+  inactivate_provider_confirmation: "Are you sure to inactivate this provider?"
+  reactivate_provider_confirmation: "Are you sure to reactivate this provider?"
   provider_form_error:
     one: "1 error prohibited this provider from being saved"
     other: "%{count} errors prohibited this provider from being saved"

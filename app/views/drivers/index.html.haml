@@ -1,11 +1,10 @@
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'drivers'
 #page-header.row
-  .col-sm-12.col-md-6
-    %h1= translate_helper("index_driver_heading")
-  .col-sm-12.col-md-6
+  .col-sm-12{style: 'padding: 0px;'}
     - if can? :create, Driver
       .pull-right
         = link_to translate_helper("new_driver_link_text"), new_driver_path, class: "btn action-button"
+    %h1= translate_helper("index_driver_heading")
 .row
   .col-sm-12.pull-right
     .checkbox

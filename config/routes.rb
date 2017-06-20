@@ -116,6 +116,8 @@ Rails.application.routes.draw do
         get :vehicles
         get :addresses
         get :customers
+        post :inactivate
+        post :reactivate
       end
     end
 

@@ -70,6 +70,8 @@ class ProvidersController < ApplicationController
   end
 
   def index
+    @providers = @providers.order(:name)
+    @providers = @providers.active if params[:show_inactive] != 'true'
   end
   
   def show
@@ -186,6 +188,24 @@ class ProvidersController < ApplicationController
     @provider.update_attribute :fields_required_for_run_completion, params[:fields_required_for_run_completion]
 
     redirect_to general_provider_path(@provider, anchor: "run_fields_settings")
+  end
+
+  def inactivate
+    @provider = Provider.find(params[:id])
+    authorize! :edit, @provider
+
+    @provider.inactivate!
+
+    redirect_to @provider
+  end
+
+  def reactivate
+    @provider = Provider.find(params[:id])
+    authorize! :edit, @provider
+
+    @provider.reactivate!
+
+    redirect_to @provider
   end
 
   def general
