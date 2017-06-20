@@ -35,18 +35,18 @@
   -# APPROVED VENDORS LIST FORM
   .col-sm-6
     %h2=translate_helper(:vendor_list)
+    - if current_provider && current_provider.vendor_list
+      .form-group
+        = link_to translate_helper(:vendor_list_download), 
+            current_provider.vendor_list.document.url,
+            class: "form-control btn btn-link",
+            target: :blank
     - if can? :manage, Vehicle
       = form_for current_provider, 
           url: upload_vendor_list_provider_path(current_provider),
           method: :patch,
           html: {multipart: true} do |f|
         =f.hidden_field :name
-        - if current_provider && current_provider.vendor_list
-          .form-group
-            = link_to translate_helper(:vendor_list_download), 
-                current_provider.vendor_list.document.url,
-                class: "form-control btn btn-link",
-                target: :blank
         .form-group
           = f.label :vendor_list, translate_helper(:vendor_list), class: "col-md-3 control-label"
           .col-md-9
