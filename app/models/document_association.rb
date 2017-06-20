@@ -9,7 +9,7 @@ class DocumentAssociation < ActiveRecord::Base
   
   accepts_nested_attributes_for :document, allow_destroy: true
   
-  after_destroy :destroy_orphaned_document
+  # after_destroy :destroy_orphaned_document
 
   private
   

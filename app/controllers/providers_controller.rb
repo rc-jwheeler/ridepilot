@@ -238,12 +238,21 @@ class ProvidersController < ApplicationController
   def customers
   end
   
+  def upload_vendor_list
+    if @provider.update_vendor_list(provider_params[:vendor_list])
+      flash[:notice] = "Vendor List Uploaded Successfully"
+    else
+      flash[:alert] = "Vendor List Upload Failed"
+    end
+    redirect_to vehicles_path
+  end
+  
   private
   
   def provider_params
     params.require(:provider).permit(
       :name, :logo, :phone_number, :alt_phone_number, :url, :primary_contact_name, :primary_contact_phone_number,
-      :primary_contact_email, :admin_name,
+      :primary_contact_email, :admin_name, :vendor_list,
       :business_address_attributes => [
         :address,
         :building_name,
@@ -263,7 +272,8 @@ class ProvidersController < ApplicationController
         :state,
         :zip,
         :notes
-      ])
+      ]
+    )
   end
 
   def reimbursement_params
@@ -296,4 +306,5 @@ class ProvidersController < ApplicationController
 
     is_blank
   end
+  
 end

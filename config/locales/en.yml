@@ -831,6 +831,11 @@ en:
   later_trips: "Later ride today"
   age_and_ethnicity_report_heading: "Reports: Unduplicated Age &amp; Ethnicity"
   age_and_ethnicity_page_title: "Age and Ethnicity: %{provider}, %{start_date}"
+  
+  # Approved Vendors List
+  vendor_list_download: "Download Approved Vendors List"
+  vendor_list: "Approved Vendors List"
+  upload_vendor_list: "Upload Approved Vendors List"
 
   reports: "Reports"
   age_and_ethnicity_table_heading: "Unduplicated Age & Ethnicity Report"

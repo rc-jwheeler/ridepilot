@@ -13,8 +13,10 @@ class Document < ActiveRecord::Base
       "text/plain",                           # plain text files (.txt)
       "application/pdf",                      # PDF (.pdf)
       
-      # MS Excel (.xls, .xlsx)
-      "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      # MS Excel (.xls, .xlsx, .csv)
+      "application/vnd.ms-excel", 
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "text/csv",
       
       # MS Word (.doc, .docx)
       "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
