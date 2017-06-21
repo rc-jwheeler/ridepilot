@@ -143,7 +143,7 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
-        TrackerActionLog.customer_comments_created(@customer, current_user) unless @customer.comments.empty?
+        TrackerActionLog.customer_comments_created(@customer, current_user) unless @customer.comments.blank?
         edit_donations
         edit_travel_trainings
         edit_funding_authorization_numbers
