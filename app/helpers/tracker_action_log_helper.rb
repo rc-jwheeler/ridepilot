@@ -136,6 +136,18 @@ module TrackerActionLogHelper
 
         msg.html_safe
       end
+    when "customer.customer_comments_created"
+      customer = log.trackable
+
+      if customer.present?
+        "Customer comments added."
+      end
+    when "customer.customer_comments_updated"
+      customer = log.trackable
+
+      if customer.present?
+        "Customer comments updated."
+      end
     end
   end
 end

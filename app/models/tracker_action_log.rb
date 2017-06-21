@@ -177,6 +177,18 @@ class TrackerActionLog < PublicActivity::Activity
     }  
   end
 
+  def self.customer_comments_created(customer, user)
+    return if !customer
+
+    customer.create_activity :customer_comments_created, owner: user
+  end
+
+  def self.customer_comments_updated(customer, user)
+    return if !customer
+
+    customer.create_activity :customer_comments_updated, owner: user
+  end
+
   private
 
   def self.compare_time_only(time_1, time_2)

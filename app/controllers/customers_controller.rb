@@ -143,6 +143,7 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
+        TrackerActionLog.customer_comments_created(@customer, current_user) unless @customer.comments.empty?
         edit_donations
         edit_travel_trainings
         edit_funding_authorization_numbers
@@ -227,8 +228,11 @@ class CustomersController < ApplicationController
     end
     @customer.authorized_providers = (providers << @customer.provider).uniq
 
+    customer_comments_updated = @customer.comments_changed?
+
     respond_to do |format|
       if @customer.is_all_valid?(current_provider_id) && @customer.save
+        TrackerActionLog.customer_comments_updated(@customer, current_user) if customer_comments_updated
         edit_donations
         edit_travel_trainings
         edit_funding_authorization_numbers
