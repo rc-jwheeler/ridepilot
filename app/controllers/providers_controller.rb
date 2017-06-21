@@ -75,6 +75,14 @@ class ProvidersController < ApplicationController
   end
   
   def show
+    # change current provider
+    if @provider.active? && @provider != current_provider && can?(:read, @provider)
+      current_user.current_provider = @provider
+      current_user.save!
+
+      flash.now[:notice] = "Current provider has been changed to #{@provider.name}"
+    end
+
     @readonly = true
     prep_edit
   end

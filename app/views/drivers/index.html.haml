@@ -4,7 +4,8 @@
     - if can? :create, Driver
       .pull-right
         = link_to translate_helper("new_driver_link_text"), new_driver_path, class: "btn action-button"
-    %h1= translate_helper("index_driver_heading")
+    %h1
+      = translate_helper("index_driver_heading")
 .row
   .col-sm-12.pull-right
     .checkbox
