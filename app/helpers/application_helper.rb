@@ -162,4 +162,27 @@ module ApplicationHelper
     number_to_phone norm_number, area_code: true
   end
 
+  def show_provider_setting_alert(provider, section)
+    return unless provider && !section.blank?
+
+    has_alert = case section
+    when 'general'
+      provider.operating_hours.empty?
+    when 'users'
+      provider.roles.empty?
+    when 'drivers'
+      provider.drivers.empty?
+    when 'vehicles'
+      provider.vehicles.empty? 
+    when 'addresses'
+      ProviderCommonAddress.where(provider: provider).empty?
+    when 'customers'
+      Customer.for_provider(provider.try(:id)).empty?
+    end
+
+    if has_alert
+      "<div class='pull-right'><i style='color: red;' class='fa fa-exclamation-triangle'></i></div>".html_safe
+    end
+  end
+
 end

@@ -17,30 +17,15 @@
   }
 
 %ul.nav.nav-sidebar
+
   %li{class: action_name == "show" ? 'active' : ''}
     %a{href: provider_path(@provider)}
       = translate_helper('provider_profile_label')
-  %li{class: action_name == "general" ? 'active' : ''}
-    %a{href: general_provider_path(@provider)}
-      1. 
-      = translate_helper('provider_general_label')
-  %li{class: action_name == "users" ? 'active' : ''}
-    %a{href: users_provider_path(@provider)}
-      2.
-      = translate_helper('provider_users_label')
-  %li{class: action_name == "drivers" ? 'active' : ''}
-    %a{href: drivers_provider_path(@provider)}
-      3.
-      = translate_helper('provider_drivers_label')
-  %li{class: action_name == "vehicles" ? 'active' : ''}
-    %a{href: vehicles_provider_path(@provider)}
-      4.
-      = translate_helper('provider_vehicles_label')
-  %li{class: action_name == "addresses" ? 'active' : ''}
-    %a{href: addresses_provider_path(@provider)}
-      5.
-      = translate_helper('provider_addresses_label')
-  %li{class: action_name == "customers" ? 'active' : ''}
-    %a{href: customers_provider_path(@provider)}
-      6.
-      = translate_helper('provider_customers_label')
+  - ['general', 'users', 'drivers', 'vehicles', 'addresses', 'customers'].each_with_index do |section, index|
+    %li{class: action_name == section ? 'active' : ''}
+      %a{href: polymorphic_path(@provider, action: section)}
+        = "#{index + 1}." 
+        = translate_helper("provider_#{section}_label")
+        = show_provider_setting_alert(@provider, section)
+
+  

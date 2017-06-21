@@ -1,4 +1,9 @@
-<h2 class="section-header" id="hour_settings"><%=translate_helper("configure_provider_operating_hours")%></h2>
+<h2 class="section-header" id="hour_settings">
+  <%=translate_helper("configure_provider_operating_hours")%>
+  <% if @provider.operating_hours.empty? %>
+    <i class="fa fa-exclamation-triangle" style='color: red'></i>
+  <% end %>
+</h2>
 <fieldset style="padding: 0px;">
 <%= form_for current_provider, url: save_operating_hours_provider_path(current_provider) do |f| %>
   <% if current_provider.errors.any? %>

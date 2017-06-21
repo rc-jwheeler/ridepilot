@@ -8,5 +8,10 @@
   = link_to translate_helper("provider_vehicle_warranties_link_text"), provider_lookup_table_path(vehicle_warranty_table), target: '_blank'
   %hr
   
-%h2.section-header= translate_helper("manage_vehicles")
+%h2.section-header
+  = translate_helper("manage_vehicles")
+  - if @provider.vehicles.empty?
+    %span.badge
+      0
+    %i.fa.fa-exclamation-triangle{style: 'color: red'}
 = link_to translate_helper("manage_vehicles_link_text"), vehicles_path, target: '_blank'

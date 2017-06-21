@@ -9,5 +9,10 @@
       .actions
         = submit_tag translate_helper("update")
 %hr/
-%h2.section-header= translate_helper("manage_customers")
+%h2.section-header
+  = translate_helper("manage_customers")
+  - if Customer.for_provider(@provider.id).empty?
+    %span.badge
+      0
+    %i.fa.fa-exclamation-triangle{style: 'color: red'}
 = link_to translate_helper("manage_customers_link_text"), customers_path, target: '_blank'
