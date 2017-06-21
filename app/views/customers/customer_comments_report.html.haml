@@ -20,36 +20,10 @@
       %b Birth Date:
     %td=@customer.birth_date
 
--# BOOTSTRAP
--# .row
--#   .col-sm-2
--#     %label Name: 
--#   .col-sm-10
--#     =@customer.name
--#     
--# .row
--#   .col-sm-2
--#     %label ID: 
--#   .col-sm-10
--#     =@customer.id 
--#     
--# .row
--#   .col-sm-2
--#     %label Birth Date: 
--#   .col-sm-10
--#     =@customer.birth_date
-
 %hr
 
 -# BODY SECTION
 
 -# VANILLA HTML
 %b Comments
-%p=@customer.comments
-
--# BOOTSTRAP
--# .row
--#   .col-sm-12
--#     %label Comments
--#   .col-sm-12
--#     =@customer.comments
+%p=simple_format(@customer.comments)
