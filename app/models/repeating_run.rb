@@ -95,7 +95,7 @@ class RepeatingRun < ActiveRecord::Base
 
   # Builds runs based on the repeating run schedule
   def instantiate!
-    return unless active? # Only build runs for active schedules
+    return unless provider.try(:active?) && active? # Only build runs for active schedules
 
     # First and last days to create new runs
     now, later = scheduler_window_start, scheduler_window_end

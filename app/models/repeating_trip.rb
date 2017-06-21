@@ -68,7 +68,7 @@ class RepeatingTrip < ActiveRecord::Base
   scope :active, -> { where("end_date is NULL or end_date >= ?", Date.today) }
   
   def instantiate!
-    return unless active? # Only build trips for active schedules
+    return unless provider.try(:active?) && active? # Only build trips for active schedules
 
     # First and last days to create new trips
     now, later = scheduler_window_start, scheduler_window_end
