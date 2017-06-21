@@ -36,11 +36,27 @@
   .col-sm-6
     %h2=translate_helper(:vendor_list)
     - if current_provider && current_provider.vendor_list
-      .form-group
+      -# .form-group
+      .col-sm-11
         = link_to translate_helper(:vendor_list_download), 
             current_provider.vendor_list.document.url,
             class: "form-control btn btn-link",
             target: :blank
+      -if can? :edit, current_provider
+        .col-sm-1
+          = link_to remove_vendor_list_provider_path(current_provider), 
+              method: :delete,
+              class: "btn btn-danger btn-sm",
+              data: { confirm: translate_helper(:remove_vendor_list_confirm) } do
+            %i.fa.fa-remove{'aria-hidden' => true}
+    - else
+      .col-sm-12
+        %h5.text-muted.text-center= translate_helper(:no_vendor_list)
+    
+    %br
+    %br
+    %hr
+        
     - if can? :manage, Vehicle
       = form_for current_provider, 
           url: upload_vendor_list_provider_path(current_provider),

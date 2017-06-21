@@ -145,6 +145,12 @@ class Provider < ActiveRecord::Base
       return false
     end
   end
+  
+  # removes the vendor list associated with the provider
+  def remove_vendor_list
+    documents.delete(vendor_list)
+    return self.save
+  end
 
   private
 

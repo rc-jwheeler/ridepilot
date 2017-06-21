@@ -110,7 +110,6 @@ Rails.application.routes.draw do
         post :change_fields_required_for_run_completion
         post :save_region
         post :save_viewport
-        patch :upload_vendor_list
         patch :save_operating_hours
         get :general
         get :users
@@ -120,6 +119,8 @@ Rails.application.routes.draw do
         get :customers
         post :inactivate
         post :reactivate
+        patch :upload_vendor_list
+        delete :remove_vendor_list
       end
     end
 

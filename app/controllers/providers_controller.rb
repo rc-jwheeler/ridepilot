@@ -1,5 +1,5 @@
 class ProvidersController < ApplicationController
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:upload_vendor_list, :remove_vendor_list]
 
   def new
     prep_edit
@@ -247,11 +247,27 @@ class ProvidersController < ApplicationController
   end
   
   def upload_vendor_list
+    @provider = Provider.find(params[:id])
+    authorize! :manage, Vehicle
+    
     if @provider.update_vendor_list(provider_params[:vendor_list])
       flash[:notice] = "Vendor List Uploaded Successfully"
     else
       flash[:alert] = "Vendor List Upload Failed"
     end
+    redirect_to vehicles_path
+  end
+  
+  def remove_vendor_list
+    @provider = Provider.find(params[:id])
+    authorize! :edit, @provider
+    
+    if @provider.remove_vendor_list
+      flash[:notice] = "Vendor List Successfully Removed"
+    else
+      flash[:alert] = "Vendor List Removal Failed"
+    end
+    
     redirect_to vehicles_path
   end
   
