@@ -266,6 +266,13 @@ class CustomersController < ApplicationController
     redirect_to @customer, :notice => "Photo has been deleted."
   end
   
+  # Displays a report of customer comments for a given customer
+  def customer_comments_report
+    @customer = Customer.find(params[:id])
+    
+    render layout: false
+  end
+  
   private
   
   def customer_params
@@ -293,6 +300,7 @@ class CustomersController < ApplicationController
       :authorized_provider_ids,
       :is_elderly,
       :message,
+      :comments,
       :travel_trainings,
       :funding_authorization_numbers,
       photo_attributes: [:image],
