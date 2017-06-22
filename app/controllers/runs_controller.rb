@@ -59,7 +59,7 @@ class RunsController < ApplicationController
   end
 
   def create
-    authorize! :manage, current_provider
+    authorize! :manage, @run
  
     @run = Run.new(run_params)
     @run.provider = current_provider
