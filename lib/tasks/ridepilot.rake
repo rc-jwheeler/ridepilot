@@ -168,7 +168,8 @@ namespace :ridepilot do
       trips_runs: 'Dispatch',
       new_password_form_heading: 'Enter your Username',
       no_verification_questions_set: "You have not set up any security questions. Please contact your administrator to reset your password.",
-      verification_question_incorrect_answer: "That answer is not correct. Please try again or contact your administrator to reset your password."
+      verification_question_incorrect_answer: "That answer is not correct. Please try again or contact your administrator to reset your password.",
+      customer_inactive_for_trip_date: "is not active on the trip scheduled date."
     }
 
     en_locale = Locale.find_by_name 'en'
