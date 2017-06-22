@@ -27,9 +27,6 @@
           %th= translate_helper("vehicle_overdue_events")
           %th= translate_helper("vehicle_expired_warranties")
       %tbody
-        - if @vehicles.empty?
-          %tr
-            %td{:colspan => "12"}= translate_helper("no_vehicles")
         = render partial: 'vehicle', collection: @vehicles
         
   -# APPROVED VENDORS LIST FORM
