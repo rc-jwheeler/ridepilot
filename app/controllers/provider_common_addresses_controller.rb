@@ -69,7 +69,6 @@ class ProviderCommonAddressesController < AddressesController
       authorize! :new, ProviderCommonAddress
       address = ProviderCommonAddress.new(address_params)
     end
-
     if address.save
       attrs = address.attributes
       attrs[:label] = address.text.gsub(/\s+/, ' ')

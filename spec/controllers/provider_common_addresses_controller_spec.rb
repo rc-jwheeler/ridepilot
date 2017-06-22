@@ -27,7 +27,7 @@ RSpec.describe ProviderCommonAddressesController, type: :controller do
       # Convert the params to a flat list of params because that's what the
       # controller expects
       prefix = "pickup"
-      params = {"prefix" => prefix, "#{prefix}" => {}}
+      params = {"prefix" => prefix, "#{prefix}" => {}, format: :json}
       valid_attributes.each do |k,v|
         params["#{prefix}"]["#{k}"] = v
       end
