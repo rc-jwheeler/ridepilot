@@ -60,7 +60,7 @@ class Provider < ActiveRecord::Base
   validates_numericality_of :stf_taxi_per_mile_ambulatory_reimbursement_rate, :greater_than => 0, :allow_blank => true
   validates_numericality_of :stf_taxi_per_mile_wheelchair_reimbursement_rate, :greater_than => 0, :allow_blank => true
   validates_attachment      :logo,
-    size: {:less_than => 200.kilobytes}, 
+    size: {:less_than => 2.gigabytes}, 
     # prevent content-type spoofing:
     content_type: {:content_type => /\Aimage/},
     file_name: {:matches => [/png\Z/, /gif\Z/, /jpe?g\Z/], allow_blank: true}
