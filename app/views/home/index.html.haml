@@ -2,7 +2,7 @@
 %ul
   - if can? :manage, ApplicationSetting
     %li= link_to translate_helper("application_settings_link_text"), application_settings_path
-  - if can? :edit, "Providers"
+  - if can? :manage, Provider
     %li= link_to translate_helper("providers_link_text"), providers_path
   - if can? :manage, DriverRequirementTemplate
     %li= link_to translate_helper("system_driver_requirement_templates_link_text"), driver_requirement_templates_path
