@@ -74,11 +74,21 @@ class ProviderCommonAddressesController < AddressesController
       attrs = address.attributes
       attrs[:label] = address.text.gsub(/\s+/, ' ')
       attrs[:prefix] = prefix
-      render :json => attrs.to_json
+      respond_to do |format|
+        format.html {
+          redirect_to addresses_provider_path(current_provider)
+        }
+        format.json { render json: attrs.to_json }
+      end
     else
       errors = address.errors.messages
       errors['prefix'] = prefix
-      render :json => errors
+      respond_to do |format|
+        format.html {
+          redirect_to addresses_provider_path(current_provider)
+        }
+        format.json { render json: errors }
+      end
     end
   end
 

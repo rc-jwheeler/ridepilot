@@ -11,16 +11,8 @@
               0
             %i.fa.fa-exclamation-triangle{style: 'color: red'}
   .panel-body
-    .row
-      .col-sm-12
-        = form_tag search_provider_common_addresses_path, :method => :get, :remote => true, :id => "search_addresses", :class => 'form-inline' do 
-          = hidden_field_tag :provider_id, @provider.id 
-          .form-group
-            = text_field_tag :name, nil, class: 'form-control'
-            = submit_tag translate_helper("search"), class: 'btn action-button'
-
-      .col-sm-12{style: 'padding-top: 15px;'}
-        = render 'addresses_table'
+    .row.col-sm-12
+      = render 'addresses_table'
     
 
 = render 'new_address_dialog'

@@ -1,4 +1,4 @@
-= form_for address, url: provider_common_addresses_path, as: prefix, :method=>:post, html: {:class=>'address-search', :remote=>true, 'data-id-element' => "#trip_#{prefix}_address_id", 'data-label-element' => "##{prefix}_search_address"} do |form|
+= form_for address, url: provider_common_addresses_path, as: prefix, :method=>:post, html: {:class=>'address-search', 'data-id-element' => "#trip_#{prefix}_address_id", 'data-label-element' => "##{prefix}_search_address"} do |form|
   = hidden_field_tag 'address_id', address.id
   = hidden_field_tag 'customer_id', address.customer_id
   = hidden_field_tag 'prefix', prefix
