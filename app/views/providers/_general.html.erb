@@ -28,10 +28,22 @@
 <hr />
 
 <h2 class="section-header">
-  <%= translate_helper("manage_provider_lookup_tables") %>
+  <%= translate_helper("lookup_table") %>
 </h2>
-<%= link_to translate_helper("manage_provider_lookup_tables_link_text"), provider_lookup_tables_path, target: '_blank' %>
-
+<fieldset>
+  <div class="row col-sm-12">
+    <label> <%= translate_helper(:configure_provider_lookup_tables) %>: </label>
+    <div class="col-sm-12">
+      <%= link_to translate_helper("manage_provider_lookup_tables_link_text"), provider_lookup_tables_path, target: '_blank' %> 
+    </div>
+  </div>
+  <div class="row col-sm-12" style="padding-top: 10px;">
+    <label> <%= translate_helper(:show_hide_system_lookup_tables) %>: </label>
+    <div class="col-sm-12">
+      <%= link_to translate_helper("open_system_lookup_tables_link_text"), lookup_tables_path, target: '_blank' %>
+    </div>
+  </div>
+</fieldset>
 <hr>
 
 <h2 class="section-header" id="advance_day_settings"><%=translate_helper("advance_day_scheduling")%></h2>

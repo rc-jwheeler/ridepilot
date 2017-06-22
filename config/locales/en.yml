@@ -687,7 +687,9 @@ en:
   configure_provider_vehicle_warranties: "Configure Vehicle Warranties"
   provider_vehicle_warranties_link_text: "Vehicle Warrenties Lookup Table"
   manage_provider_lookup_tables: "Configure Provider Lookup Table"
-  manage_provider_lookup_tables_link_text: "Open Provider Lookup Table"
+  manage_provider_lookup_tables_link_text: "Open Provider Lookup Table Page"
+  show_hide_system_lookup_tables: "Show/hide System-wide Lookup Table Entries"
+  open_system_lookup_tables_link_text: "Open System Lookup Tables Page"
   manage_drivers: 'Manage Drivers'
   manage_drivers_link_text: 'Open Drivers Tab'
   manage_vehicles: 'Manage Vehicles'
