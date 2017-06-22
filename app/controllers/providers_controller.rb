@@ -1,5 +1,6 @@
 class ProvidersController < ApplicationController
   load_and_authorize_resource except: [:upload_vendor_list, :remove_vendor_list]
+  before_action :redirect_to_current_provider, only: [:users, :drivers, :general, :vehicles, :customers, :addresses]
 
   def new
     prep_edit
@@ -334,4 +335,9 @@ class ProvidersController < ApplicationController
     is_blank
   end
   
+  def redirect_to_current_provider
+    if @provider != current_provider
+      redirect_to polymorphic_path(current_provider, action: action_name), notice: 'Page reloaded to show data for current selected provider.'
+    end
+  end
 end
