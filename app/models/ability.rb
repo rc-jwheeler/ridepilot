@@ -84,6 +84,7 @@ class Ability
     end
 
     if role.editor?
+      can :manage, :cab_trip
       can :manage, RecurringDriverCompliance, :provider_id => provider.id
       can :manage, RecurringVehicleMaintenanceCompliance, :provider_id => provider.id
       # can :edit, Provider, :id => provider.id
