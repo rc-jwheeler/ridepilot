@@ -88,9 +88,12 @@ class ProvidersController < ApplicationController
   end
 
   def save_operating_hours
-    create_or_update_hours!
-
-    redirect_to general_provider_path(@provider, anchor: "hour_settings")
+    errors = create_or_update_hours!
+    if errors
+      redirect_to :back, flash: {alert: 'There is error updating operating hours. Please make sure From Time is earlier than To Time.'}
+    else
+      redirect_to general_provider_path(@provider, anchor: "hour_settings")
+    end
   end
 
   # POST /providers/:id/save_region
