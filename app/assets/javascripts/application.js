@@ -35,6 +35,7 @@
 //= require trip_result_reason
 //= require double_booked_trips
 //= require bootbox.min
+//= require selectize
 //= require_self
 
 function ISODateFormatToDateObject(str) {
@@ -441,7 +442,7 @@ function showAddressValidationErrors(form, data) {
     } else {
       text_field = $('#' + data.prefix + "_" + field);
       error_element_id = data.prefix + "_" + field + '_error';
-      error_message = field + " " + data[field] + "; ";
+      error_message = data[field];
       if ($("#" + error_element_id).length === 0) {
         text_field.after('<span class="error" id="' + error_element_id + '">' + error_message + "</span>");
         text_field.attr('data-error-element', "#" + error_element_id);

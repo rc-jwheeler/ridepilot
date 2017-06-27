@@ -2,6 +2,7 @@ require 'faker'
 
 FactoryGirl.define do
   factory :address do
+    name { Faker::Lorem.words(2).join(' ') }
     address { Faker::Address.street_address }
     city { Faker::Address.city }
     state "OR"
@@ -17,5 +18,7 @@ FactoryGirl.define do
 
   factory :customer_common_address, parent: :address, class: CustomerCommonAddress
 
-  factory :provider_common_address, parent: :address, class: ProviderCommonAddress
+  factory :provider_common_address, parent: :address, class: ProviderCommonAddress do 
+    address_group
+  end
 end
