@@ -165,6 +165,10 @@ class RunsController < ApplicationController
       end
     end
   end 
+
+  def cancel
+    @run.cancel!
+  end
   
   private
   

@@ -1443,6 +1443,37 @@ en:
   assigned_to_other_overlapping_run: 'has been assigned to another overlapping run'
   assigned_to_overlapping_repeating_run: 'has been assigned to another overlapping subscription run'
   unknown_error: 'There was something wrong with the request, please try again.'
+  runs_panel_header: 'Runs'
+  run_table_header_name: 'Name'
+  run_table_header_type: 'Type'
+  run_table_header_vehicle: 'Vehicle'
+  run_table_header_driver: 'Driver'
+  run_table_header_start: 'Start'
+  run_table_header_end: 'End'
+  run_table_header_trips: 'Trips'
+  run_type_recurring: 'Recur'
+  run_type_daily: 'Daily'
+  run_manifest_table_header_action: "Action"
+  run_manifest_table_header_customer: 'Customer'
+  run_manifest_table_header_address: 'Address'
+  run_manifest_table_header_driver_notified: "Driver Notified"
+  run_manifest_table_header_pickup_time: 'Pickup'
+  run_manifest_table_header_dropoff_time: 'Dropoff'
+  run_manifest_table_header_eta: 'ETA'
+  run_manifest_table_header_occupancy: 'Occupancy'
+  run_manifest_table_header_comments: 'Comments'
+  unassigned_trips: "Trips"
+  unassigned_trips_table_header_customer: "Customer"
+  unassigned_trips_table_header_phone: "Phone#"
+  unassigned_trips_table_header_pickup_time: "Pickup"
+  unassigned_trips_table_header_appointment_time: "Appt"
+  unassigned_trips_table_header_pickup_address: "Pickup Address"
+  unassigned_trips_table_header_dropoff_address: "Dropoff Address"
+  unassigned_trips_table_header_type: "Type"
+  unassigned_trips_table_header_riders_count: "# of Riders"
+  unassigned_trips_table_header_fare: "Fare"
+  unassigned_trips_table_header_actions: "Actions"
+  
   # address upload
   address_file_uploaded: 'Address file was uploaded.'
   not_authorized: 'You are not authorized.'

@@ -1,0 +1,8 @@
+.panel.panel-warning#unscheduled_trips_panel
+  .panel-heading
+    .pull-right{style: 'padding-right: 0px;'}
+      %span.panel-expand-collapse.dispatch-action
+        %i.fa.fa-chevron-up
+    %h3.panel-title= translate_helper("unassigned_trips")
+  .panel-body
+    = render 'trips_runs/unassigned_trips_table'

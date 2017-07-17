@@ -36,6 +36,7 @@
 //= require double_booked_trips
 //= require bootbox.min
 //= require selectize
+//= require jquery.splitter
 //= require_self
 
 function ISODateFormatToDateObject(str) {

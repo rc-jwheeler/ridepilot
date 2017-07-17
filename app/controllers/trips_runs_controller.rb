@@ -44,6 +44,10 @@ class TripsRunsController < ApplicationController
   def runs_by_date
     @runs = Run.for_date(Utility.new.parse_date(params[:run_trip_day])).order(:name)
   end
+
+  def run_trips
+    @run = Run.find_by_id params[:run_id]
+  end
   
   private
 

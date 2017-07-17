@@ -79,8 +79,8 @@ class Run < ActiveRecord::Base
   UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)
   
   # "Cancels" a run: removes any trips from that run
-  def cancel
-    trips.delete_all # Doesn't actually destroy the records, just removes the association
+  def cancel!
+    trips.clear # Doesn't actually destroy the records, just removes the association
   end
   
   # Cancels all runs in the collection, returning the count of trips removed from runs

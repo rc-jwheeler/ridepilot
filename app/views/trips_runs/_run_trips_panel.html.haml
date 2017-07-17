@@ -1,0 +1,10 @@
+.panel.panel-success.run_trips_panel{id: "run_trips_panel_#{run.id}"}
+  .panel-heading
+    .pull-right{style: 'padding-right: 0px;'}
+      %span.panel-close.dispatch-action
+        %i.fa.fa-remove
+      %span.panel-expand-collapse.dispatch-action
+        %i.fa.fa-chevron-up
+    %h3.panel-title= run.name
+  .panel-body
+    = render 'trips_runs/run_manifest_table'

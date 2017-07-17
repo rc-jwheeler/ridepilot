@@ -1,69 +1,70 @@
-= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips_runs'
-.clearfix.row#page-header{style: 'padding: 0px;'}
-  - if can?(:edit, Run)
-    = link_to translate_helper("new_run_link_text"), new_run_path, :class=>'btn action-button pull-right'
-  %h1= translate_helper("trips_runs") + ": " + format_time_as_title_for_listing_day(@run_trip_day)
-  .clearfix
+:css
+  .dispatch-action {
+    cursor: pointer;
+    font-size: large;
+    padding-left: 5px;
+  }
 
+  #runs_panel .panel-body, 
+  .run_trips_panel .panel-body,
+  #unscheduled_trips_panel .panel-body  {
+    padding: 0px;
+  }
+
+  #runs_table, .run-manifest-table, #unassigned_trips_table {
+    margin: 0px;
+  }
+
+  #runs_table tr th, 
+  .run-manifest-table tr th,
+  #unassigned_trips_table tr th {
+    color: black;
+    background-color: lightgrey;
+  }
+
+  .panel-success > .panel-heading {
+    color: white;
+    background-color: #3c763d;
+    border-color: #3c763d;
+  }
+
+  .panel-warning > .panel-heading {
+    color: white;
+    background-color: #8a6d3b;
+    border-color: #8a6d3b;
+  }
+
+  #unscheduled_trips_panel {
+    position: fixed;
+    bottom: 0px;
+    max-height: 230px;
+    left: 0px;
+    right: 0px;
+    margin: 0px;
+  }
+  
+= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips_runs'
 .col-md-2{style: 'padding: 0px 15px 0px 0px;'}
   = render :partial => 'filters'
-.col-md-10{style: 'padding: 0px;'}
-  = render :partial => 'trip_list'
+.col-md-10.dispatch-main{style: 'padding: 0px;'}
+  = render 'runs_list'
+= render 'unassigned_trips_panel'
 
 :javascript
-  $(document).ready(function() {
-    var unscheduledRunId = #{Run::UNSCHEDULED_RUN_ID}
-
-    function assignTripToRun(tripId, runId, prevRunId) {
-      $.ajax({
-        type: "POST",
-        url: "#{schedule_trips_runs_path}",
-        dataType: 'json',
-        data: {
-          trip_id: tripId,
-          run_id: runId
-        },
-        success: function(resp) {
-          if(!resp.success) {
-            show_alert(resp.message);
-            resetTripSchedule(tripId, prevRunId);
-          } else {
-            hide_alert();
-            // update data-run-id for run dropdown in trips table 
-            $('.trip-run-options[data-trip-id='+ tripId + '][data-run-id=' + prevRunId+ ']').attr('data-run-id',runId); 
-            $('.trip-run-options[data-trip-id='+ tripId + '][data-run-id=' + runId+ ']').val(runId); 
-          }
-        },
-        failure: function() {
-          show_alert("#{translate_helper(:unknown_error)}");
-          resetTripSchedule(tripId, prevRunId);
-        }
-      });
+  $(document).on('click', '.panel-heading span.panel-expand-collapse', function(e){
+    var $this = $(this);
+    if(!$this.hasClass('panel-collapsed')) {
+      $this.parents('.panel').find('.panel-body').slideUp();
+      $this.addClass('panel-collapsed');
+      $this.find('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+    } else {
+      $this.parents('.panel').find('.panel-body').slideDown();
+      $this.removeClass('panel-collapsed');
+      $this.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
     }
-
-    function resetTripSchedule(tripId, prevRunId) {
-      $('.trip-run-options[data-run-id=' + prevRunId+ ']').val(prevRunId);
-    }
-
-    function getSelectedTripId() {
-      return parseInt($('#tripsTable input[name=trip_records]:checked').val());
-    }
-
-    function getSelectedTripRunId() {
-      return parseInt($('#tripsTable input[name=trip_records]:checked').parents('tr').find('.trip-run-options').val());
-    }
-
-    function getSelectedTripPrevRunId() {
-      return parseInt($('#tripsTable input[name=trip_records]:checked').parents('tr').find('.trip-run-options').attr('data-run-id') );
-    }
-
-    $('#tripsTable').on('change', '.trip-run-options', function() {
-      assignTripToRun(parseInt($(this).attr('data-trip-id') ), parseInt($(this).val()), parseInt($(this).attr('data-run-id') ) );
-    });
-
-    $('#tripsTable').on('change', 'input[name=trip_records]', function() {
-      $('#tripsTable tr.row-highlight').removeClass('row-highlight');
-      $('#tripsTable input[name=trip_records]:checked').parents('tr').addClass('row-highlight');
-    });
   });
 
+  $(document).on('click', '.panel-heading span.panel-close', function(e){
+    var $panel = $(this).parents('.panel');
+    $panel.hide('slow', function(){ $panel.remove(); });
+  });

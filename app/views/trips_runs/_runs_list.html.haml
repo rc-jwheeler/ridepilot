@@ -1,0 +1,10 @@
+.panel.panel-primary#runs_panel
+  .panel-heading
+    .pull-right{style: 'padding-right: 0px;'}
+      = link_to new_run_path(from_dispath: true), style: 'color: white;', class: 'dispatch-action', title: translate_helper("new_run_link_text") do 
+        %i.fa.fa-plus
+      %span.panel-expand-collapse.dispatch-action{title: 'Collapse/expand'}
+        %i.fa.fa-chevron-up
+    %h3.panel-title= translate_helper(:runs_panel_header)
+  .panel-body
+    = render 'runs_table'

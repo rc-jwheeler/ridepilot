@@ -213,12 +213,18 @@ Rails.application.routes.draw do
         delete :delete_multiple
         get :check_driver_vehicle_availability
       end
+
+      member do
+        patch :cancel 
+        get :append_trips
+      end
     end
 
     resources :trips_runs, only: [:index] do
       collection do
         post :schedule
         get :runs_by_date
+        get :run_trips
       end
     end
 
