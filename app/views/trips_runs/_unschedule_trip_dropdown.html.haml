@@ -1,0 +1,15 @@
+%span.dropdown.dispatch-action.unschedule_trip_dropdown{style: 'margin-bottom: 5px;'}
+  %a.dropdown-toggle.non_jump_top{href: '#', type: 'button', style: 'color: white; font-size: small;', data: {toggle: 'dropdown'}} 
+    Change to
+    %i.fa.fa-ellipsis-h
+    %span.caret
+  %ul.dropdown-menu
+    - options = []
+    - options << ['Unscheduled', Run::UNSCHEDULED_RUN_ID]
+    - options << ['Standby', Run::STANDBY_RUN_ID]
+    - options << ['Cab', Run::CAB_RUN_ID] if current_provider.try(:cab_enabled?)
+    
+    - options.each do |opt|
+      %li
+        %a.unschedule_trip.non_jump_top{href: '#', data: {status_id: opt[1]} }
+          = opt[0]

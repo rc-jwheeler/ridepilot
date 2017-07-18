@@ -1,66 +1,46 @@
-:css
-  .dispatch-action {
-    cursor: pointer;
-    font-size: large;
-    padding-left: 5px;
-  }
-
-  #runs_panel .panel-body, 
-  .run_trips_panel .panel-body,
-  #unscheduled_trips_panel .panel-body  {
-    padding: 0px;
-  }
-
-  #runs_table, .run-manifest-table, #unassigned_trips_table {
-    margin: 0px;
-  }
-
-  #runs_table tr th, 
-  .run-manifest-table tr th,
-  #unassigned_trips_table tr th {
-    color: black;
-    background-color: lightgrey;
-  }
-
-  .panel-success > .panel-heading {
-    color: white;
-    background-color: #3c763d;
-    border-color: #3c763d;
-  }
-
-  .panel-warning > .panel-heading {
-    color: white;
-    background-color: #8a6d3b;
-    border-color: #8a6d3b;
-  }
-
-  #unscheduled_trips_container {
-    position: fixed;
-    bottom: 0px;
-    max-height: 230px;
-    left: 0px;
-    right: 0px;
-    margin: 0px 0px 5px 0px;
-    padding-bottom: 30px;
-    background: white;
-  }
-
-  .drop-zone-active {
-    -moz-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    -webkit-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    border: 2px solid #000;
-  }
-  
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips_runs'
 .col-md-2{style: 'padding: 0px 15px 0px 0px; margin-bottom: 230px;'}
   = render :partial => 'filters'
 .col-md-10.dispatch-main{style: 'padding: 0px; margin-bottom: 230px;'}
-  = render 'runs_list'
+  = render 'runs_panel'
 .col-md-12#unscheduled_trips_container
   = render 'unassigned_trips_panel'
 
 :javascript
+  // update one trip schedule status
+  function schedule_trip(trip_id, run_id, prev_run_id) {
+    // re-schedule a trip
+    $.ajax({
+      url: "#{schedule_trips_runs_path}",
+      method: 'post',
+      data: {
+        trip_id: trip_id,
+        run_id: run_id,
+        prev_run_id: prev_run_id
+      }
+    });
+  }
+
+  // unschedule multiple trips
+  function unschedule_trips(trip_ids, run_id, prev_run_id) {
+    // re-schedule a trip
+    $.ajax({
+      url: "#{unschedule_trips_runs_path}",
+      method: 'post',
+      data: {
+        trip_ids: trip_ids,
+        run_id: run_id,
+        prev_run_id: prev_run_id
+      }
+    });
+  }
+
+  function scroll_to_run_trips_panel(run_id) {
+    $('html, body').animate({
+      scrollTop: $("#run_trips_panel_" + run_id).offset().top
+    }, 1000);
+  }
+
   $(document).on('click', '.panel-heading span.panel-expand-collapse', function(e){
     var $this = $(this);
     if(!$this.hasClass('panel-collapsed')) {
@@ -91,3 +71,32 @@
     var $panel = $(this).parents('.panel');
     $panel.hide('slow', function(){ $panel.remove(); });
   });
+
+  // One checkbox to rule them all
+  $(document).on('change', '.master-select-checkbox', function(e){
+    $(this).parents('table').find('.trip-selected').prop('checked', $(this).prop('checked'));
+  });
+
+  // Batch unschedule trips
+  $(document).on('click', '.unschedule_trip', function(e){
+    var run_panel = $(this).parents('.panel');
+    var prev_run_id = run_panel.data('run-id');
+    var run_id = $(this).data('status-id');
+    var trip_ids = [];
+    run_panel.find('input:checked').each(function() {
+      trip_ids.push($(this).parents('tr').data('trip-id'));
+    });
+    if(trip_ids.length > 0) {
+      bootbox.confirm('Are you sure to change the status?', function(){
+        unschedule_trips(trip_ids.join(','), run_id, prev_run_id);
+      });
+    } else {
+      bootbox.alert('Please select trips first.');
+    }
+  });
+
+  // stop # link jumping to page top
+  $(document).on('click', '.non_jump_top', function(e){
+    e.preventDefault();
+  });
+  

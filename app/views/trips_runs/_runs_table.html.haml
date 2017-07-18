@@ -11,30 +11,36 @@
       %th
   %tbody
     - @runs.each do |run|
-      %tr
+      %tr{data: {run_id: run.id}}
         %td
-          = link_to run.name, '#', data: {run_id: run.id}, class: 'run_name_link'
+          = link_to run.name, '#', data: {run_id: run.id}, class: 'run_name_link non_jump_top', title: 'Click to open manifest'
         %td= run.repeating_run_id.present? ? translate_helper(:run_trip_type_recurring) : translate_helper(:run_trip_type_daily)
         %td= run.vehicle.try(:name)
         %td= run.driver.try(:name)
         %td= format_time_for_listing run.scheduled_start_time
         %td= format_time_for_listing run.scheduled_end_time
-        %td= run.trips.count
+        %td.trips_count= run.trips.count
         %td
           = link_to edit_run_path(run, from_dispath: true), style: 'padding-right: 5px;', title: 'Edit' do 
             %i.fa.fa-pencil
-          = link_to cancel_run_path(run, from_dispath: true), title: 'Cancel', data: {confirm: 'Are you sure?'} do 
+          = link_to cancel_run_path(run, from_dispath: true), title: 'Cancel run', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
             %i.fa.fa-undo
 
 :javascript
   $(function() {
     $(document).on('click', '.run_name_link', function(e) {
+      e.preventDefault();
       var run_id = $(this).data('run-id');
       if($("#run_trips_panel_" + run_id).length > 0) {
-        e.preventDefault();
+        scroll_to_run_trips_panel(run_id);
         return false;
       } else {
-        $.get("#{run_trips_trips_runs_path}?run_id=" + run_id);
+        $.ajax({
+          url: "#{run_trips_trips_runs_path}?run_id=" + run_id,
+          success: function() {
+            scroll_to_run_trips_panel(run_id);
+          }
+        });
       }
     });
   });

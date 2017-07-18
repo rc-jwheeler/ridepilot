@@ -1,11 +1,19 @@
-.panel.panel-success.run_trips_panel{id: "run_trips_panel_#{run.id}"}
+.panel.panel-success.run_trips_panel{id: "run_trips_panel_#{run.id}", data: {run_id: run.id}}
   .panel-heading
     .pull-right{style: 'padding-right: 0px;'}
-      %span.panel-close.dispatch-action
+      = render 'unschedule_trip_dropdown'
+      %span.dispatch-action
+        = link_to cancel_run_path(run, from_dispath: true), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
+          %i.fa.fa-undo
+      %span.panel-close.dispatch-action{title: 'Close'}
         %i.fa.fa-remove
-      %span.panel-expand-collapse.dispatch-action
+      %span.panel-expand-collapse.dispatch-action{title: 'Collapse/expand'}
         %i.fa.fa-chevron-up
-    %h3.panel-title= run.name
+    %h3.panel-title.text-center
+      .pull-left
+        = run.name
+      %span{style: 'font-size: small;'}
+        = run_summary(run)
   .panel-body
     = render 'trips_runs/run_manifest_table', trips: run.trips
 
@@ -13,8 +21,17 @@
   $("#run_trips_panel_#{run.id}").droppable({
     tolerance: 'pointer',
     hoverClass : 'drop-zone-active',
-    drop: function() {
-      alert('dropped');
+    drop: function(e, ui) {
+      var source_panel = ui.draggable.parents('.panel');
+      var prev_run_id = source_panel.data('run-id');
+      var trip_id = ui.draggable.parents('tr').data('trip-id');
+      var run_id = #{run.id};
+      if(prev_run_id == run_id) {
+        // TODO: same run, itinerary sequence change
+      } else {
+        schedule_trip(trip_id, run_id, prev_run_id);
+      }
     }
   });
+
   $("#run_trips_panel_#{run.id} table tbody").sortable();

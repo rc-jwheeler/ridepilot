@@ -1473,6 +1473,8 @@ en:
   unassigned_trips_table_header_riders_count: "# of Riders"
   unassigned_trips_table_header_fare: "Fare"
   unassigned_trips_table_header_actions: "Actions"
+  empty_trips: "No trips"
+  empty_runs: "No runs"
   
   # address upload
   address_file_uploaded: 'Address file was uploaded.'

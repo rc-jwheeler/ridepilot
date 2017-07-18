@@ -72,11 +72,14 @@ class Run < ActiveRecord::Base
   scope :repeating_based_on,     ->(scheduler) { where(repeating_run_id: scheduler.try(:id)) }
   scope :other_than,             -> (run) { run.new_record? ? all : where.not(id: run.id) }
   scope :not_a_child_of,         -> (repeating_run) { where.not(repeating_run_id: [repeating_run.id].compact) }
+  scope :daily,              -> {where(repeating_run_id: nil)}
+  scope :recurring,                  -> {where.not(repeating_run_id: nil)}
 
   scope :other_overlapped_runs, -> (run) { overlapped(run).other_than(run) }
 
   CAB_RUN_ID = -1 # id for cab runs
   UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)
+  STANDBY_RUN_ID = -3 # standby queue id
   
   # "Cancels" a run: removes any trips from that run
   def cancel!
