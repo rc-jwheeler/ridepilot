@@ -12,3 +12,22 @@
       %th= translate_helper(:unassigned_trips_table_header_fare)
       %th= translate_helper(:unassigned_trips_table_header_actions)
   %tbody
+    - trips.each do |trip|
+      %tr
+        %td= trip.customer.name
+        %td= simple_format [trip.customer.phone_number_1, trip.customer.phone_number_2].compact.join('<br>')
+        %td= format_time_for_listing(trip.pickup_time)
+        %td= format_time_for_listing(trip.appointment_time) if trip.appointment_time
+        %td= trip.pickup_address.try(:one_line_text)
+        %td= trip.dropoff_address.try(:one_line_text)
+        %td= trip.repeating_trip_id.present? ? translate_helper(:run_trip_type_recurring) : translate_helper(:run_trip_type_daily)
+        %td= trip.trip_size
+        %td
+        %td
+
+:javascript
+  $('#unassigned_trips_table tbody tr td').draggable({
+    helper: function() {
+      return $(this).parent('tr').clone();
+    }
+  });

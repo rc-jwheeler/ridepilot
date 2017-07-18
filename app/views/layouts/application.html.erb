@@ -12,6 +12,7 @@
   <%= yield :head %>
 </head>
 <body class="<%= bodytag_class %>">
+  <div class="row col-sm-12">
   <div id="session-timeout-warning" style="display: none;">
     <%= translate_helper("session_timeout_warning") %>
   </div>
@@ -64,7 +65,7 @@
     </div><!-- /.wrap -->
   </div><!-- /#crossbar -->
 
-  <div id="main">
+  <div id="main" class="row">
     <div id="messages" class="wrap selfclear">
       <% if notice %>
         <p class="alert alert-info"><%= notice %></p>
@@ -93,5 +94,6 @@
       });
     <% end %>
   <% end %>
+  </div>
 </body>
 </html>

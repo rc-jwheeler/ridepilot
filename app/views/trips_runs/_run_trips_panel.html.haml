@@ -7,4 +7,14 @@
         %i.fa.fa-chevron-up
     %h3.panel-title= run.name
   .panel-body
-    = render 'trips_runs/run_manifest_table'
+    = render 'trips_runs/run_manifest_table', trips: run.trips
+
+:javascript
+  $("#run_trips_panel_#{run.id}").droppable({
+    tolerance: 'pointer',
+    hoverClass : 'drop-zone-active',
+    drop: function() {
+      alert('dropped');
+    }
+  });
+  $("#run_trips_panel_#{run.id} table tbody").sortable();

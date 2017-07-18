@@ -21,6 +21,8 @@ class TripsRunsController < ApplicationController
     exclude_trip_result_ids = TripResult.non_dispatchable_result_ids
     @trips = @trips.where("trip_result_id is NULL or trip_result_id not in (?)", exclude_trip_result_ids)
     filter_trips
+
+    @unassigned_trips = @trips.where("cab = ? and run_id is NULL", false)
     
     @run_trip_day    = Utility.new.parse_date(session[:run_trip_day])
 
@@ -59,7 +61,6 @@ class TripsRunsController < ApplicationController
   def filter_trips
     trip_filter = TripFilter.new(@trips, trip_sessions)
     @trips = trip_filter.filter!
-
   end
 
   def filter_runs

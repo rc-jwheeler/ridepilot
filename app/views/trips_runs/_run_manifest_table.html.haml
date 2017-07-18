@@ -12,3 +12,17 @@
       %th= translate_helper(:run_manifest_table_header_comments)
       %th
   %tbody
+    - itins = get_itineraries(trips)
+    - itins.each do |itin|
+      - is_pickup = itin[:action] == 'Pickup'
+      %tr
+        %td= itin[:action]
+        %td= itin[:customer]
+        %td= itin[:address]
+        %td= itin[:driver_notified]
+        %td= format_time_for_listing(itin[:time]) if is_pickup
+        %td= format_time_for_listing(itin[:time]) unless is_pickup
+        %td 
+        %td
+        %td= itin[:comments]
+        %td

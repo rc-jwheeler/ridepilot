@@ -1451,8 +1451,8 @@ en:
   run_table_header_start: 'Start'
   run_table_header_end: 'End'
   run_table_header_trips: 'Trips'
-  run_type_recurring: 'Recur'
-  run_type_daily: 'Daily'
+  run_trip_type_recurring: 'Recur'
+  run_trip_type_daily: 'Daily'
   run_manifest_table_header_action: "Action"
   run_manifest_table_header_customer: 'Customer'
   run_manifest_table_header_address: 'Address'
@@ -1465,8 +1465,8 @@ en:
   unassigned_trips: "Trips"
   unassigned_trips_table_header_customer: "Customer"
   unassigned_trips_table_header_phone: "Phone#"
-  unassigned_trips_table_header_pickup_time: "Pickup"
-  unassigned_trips_table_header_appointment_time: "Appt"
+  unassigned_trips_table_header_pickup_time: "Pickup Time"
+  unassigned_trips_table_header_appointment_time: "Appt Time"
   unassigned_trips_table_header_pickup_address: "Pickup Address"
   unassigned_trips_table_header_dropoff_address: "Dropoff Address"
   unassigned_trips_table_header_type: "Type"
