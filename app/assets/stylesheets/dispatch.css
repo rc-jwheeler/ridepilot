@@ -19,7 +19,7 @@
   margin: 0px;
 }
 
-table th {
+.dispatch-main table th, #unassigned_trips_panel table th {
   color: black !important;
   background-color: lightgrey !important;
 }
