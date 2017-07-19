@@ -1,69 +1,107 @@
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips_runs'
-.clearfix.row#page-header{style: 'padding: 0px;'}
-  - if can?(:edit, Run)
-    = link_to translate_helper("new_run_link_text"), new_run_path, :class=>'btn action-button pull-right'
-  %h1= translate_helper("trips_runs") + ": " + format_time_as_title_for_listing_day(@run_trip_day)
-  .clearfix
-
-.col-md-2{style: 'padding: 0px 15px 0px 0px;'}
+.col-md-2{style: 'padding: 0px 15px 0px 0px; margin-bottom: 230px;'}
   = render :partial => 'filters'
-.col-md-10{style: 'padding: 0px;'}
-  = render :partial => 'trip_list'
+.col-md-10.dispatch-main{style: 'padding: 0px; margin-bottom: 230px;'}
+  = render 'runs_panel'
+.col-md-12#unassigned_trips_container
+  = render 'unassigned_trips_panel'
 
 :javascript
-  $(document).ready(function() {
-    var unscheduledRunId = #{Run::UNSCHEDULED_RUN_ID}
-
-    function assignTripToRun(tripId, runId, prevRunId) {
-      $.ajax({
-        type: "POST",
-        url: "#{schedule_trips_runs_path}",
-        dataType: 'json',
-        data: {
-          trip_id: tripId,
-          run_id: runId
-        },
-        success: function(resp) {
-          if(!resp.success) {
-            show_alert(resp.message);
-            resetTripSchedule(tripId, prevRunId);
-          } else {
-            hide_alert();
-            // update data-run-id for run dropdown in trips table 
-            $('.trip-run-options[data-trip-id='+ tripId + '][data-run-id=' + prevRunId+ ']').attr('data-run-id',runId); 
-            $('.trip-run-options[data-trip-id='+ tripId + '][data-run-id=' + runId+ ']').val(runId); 
-          }
-        },
-        failure: function() {
-          show_alert("#{translate_helper(:unknown_error)}");
-          resetTripSchedule(tripId, prevRunId);
-        }
-      });
-    }
-
-    function resetTripSchedule(tripId, prevRunId) {
-      $('.trip-run-options[data-run-id=' + prevRunId+ ']').val(prevRunId);
-    }
-
-    function getSelectedTripId() {
-      return parseInt($('#tripsTable input[name=trip_records]:checked').val());
-    }
-
-    function getSelectedTripRunId() {
-      return parseInt($('#tripsTable input[name=trip_records]:checked').parents('tr').find('.trip-run-options').val());
-    }
-
-    function getSelectedTripPrevRunId() {
-      return parseInt($('#tripsTable input[name=trip_records]:checked').parents('tr').find('.trip-run-options').attr('data-run-id') );
-    }
-
-    $('#tripsTable').on('change', '.trip-run-options', function() {
-      assignTripToRun(parseInt($(this).attr('data-trip-id') ), parseInt($(this).val()), parseInt($(this).attr('data-run-id') ) );
+  // update one trip schedule status
+  function schedule_trip(trip_id, run_id, prev_run_id) {
+    // re-schedule a trip
+    $.ajax({
+      url: "#{schedule_trips_runs_path}",
+      method: 'post',
+      data: {
+        trip_id: trip_id,
+        run_id: run_id,
+        prev_run_id: prev_run_id
+      }
     });
+  }
 
-    $('#tripsTable').on('change', 'input[name=trip_records]', function() {
-      $('#tripsTable tr.row-highlight').removeClass('row-highlight');
-      $('#tripsTable input[name=trip_records]:checked').parents('tr').addClass('row-highlight');
+  // unschedule multiple trips
+  function unschedule_trips(trip_ids, run_id, prev_run_id) {
+    // re-schedule a trip
+    $.ajax({
+      url: "#{unschedule_trips_runs_path}",
+      method: 'post',
+      data: {
+        trip_ids: trip_ids,
+        run_id: run_id,
+        prev_run_id: prev_run_id
+      }
     });
+  }
+
+  function scroll_to_run_trips_panel(run_id) {
+    $('html, body').animate({
+      scrollTop: $("#run_trips_panel_" + run_id).offset().top
+    }, 1000);
+  }
+
+  $(document).on('click', '.panel-heading span.panel-expand-collapse', function(e){
+    var $this = $(this);
+    if(!$this.hasClass('panel-collapsed')) {
+      $this.parents('.panel').find('.panel-body').slideUp();
+      $this.addClass('panel-collapsed');
+      $this.find('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+    } else {
+      $this.parents('.panel').find('.panel-body').slideDown();
+      $this.removeClass('panel-collapsed');
+      $this.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+    }
   });
 
+  $(document).on('click', '.panel-heading span.panel-expand-collapse-reverse', function(e){
+    var $this = $(this);
+    if(!$this.hasClass('panel-collapsed')) {
+      $this.parents('.panel').find('.panel-body').slideUp();
+      $this.addClass('panel-collapsed');
+      $this.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+    } else {
+      $this.parents('.panel').find('.panel-body').slideDown();
+      $this.removeClass('panel-collapsed');
+      $this.find('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+    }
+  });
+
+  $(document).on('click', '.panel-heading span.panel-close', function(e){
+    var $panel = $(this).parents('.panel');
+    $panel.hide('slow', function(){ $panel.remove(); });
+  });
+
+  // One checkbox to rule them all
+  $(document).on('change', '.master-select-checkbox', function(e){
+    $(this).parents('table').find('.trip-selected').prop('checked', $(this).prop('checked'));
+  });
+
+  // Batch unschedule trips
+  $(document).on('click', '.unschedule_trip', function(e){
+    var run_panel = $(this).parents('.panel');
+    var prev_run_id = run_panel.data('run-id');
+    var run_id = $(this).data('status-id');
+    var trip_ids = [];
+    run_panel.find('input:checked').each(function() {
+      trip_ids.push($(this).parents('tr').data('trip-id'));
+    });
+    if(trip_ids.length > 0) {
+      bootbox.confirm('Are you sure to change the status?', function(){
+        unschedule_trips(trip_ids.join(','), run_id, prev_run_id);
+      });
+    } else {
+      bootbox.alert('Please select trips first.');
+    }
+  });
+
+  // stop # link jumping to page top
+  $(document).on('click', '.non_jump_top', function(e){
+    e.preventDefault();
+  });
+
+  $(function() {
+    // by default, collapse Unassigned Trips panel
+    $('#unassigned_trips_panel .panel-expand-collapse-reverse').click();
+  });
+  

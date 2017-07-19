@@ -1,0 +1,62 @@
+.dispatch-action {
+  cursor: pointer;
+  font-size: large;
+  padding-left: 5px;
+}
+
+#runs_panel .panel-body, 
+.run_trips_panel .panel-body,
+#unassigned_trips_panel .panel-body  {
+  padding: 0px;
+}
+
+#unassigned_trips_panel .panel-body  {
+  height: 200px;
+  overflow-y: auto;
+}
+
+#runs_table, .run-manifest-table, #unassigned_trips_table {
+  margin: 0px;
+}
+
+.dispatch-main table th, #unassigned_trips_panel table th {
+  color: black !important;
+  background-color: lightgrey !important;
+}
+
+#unassigned_trips_table p {
+  margin: 0px;
+}
+
+.panel-success > .panel-heading {
+  color: white;
+  background-color: #3c763d;
+  border-color: #3c763d;
+}
+
+.panel-warning > .panel-heading {
+  color: white;
+  background-color: #8a6d3b;
+  border-color: #8a6d3b;
+}
+
+#unassigned_trips_container {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  margin: 0px 0px 5px 0px;
+  padding-bottom: 30px;
+  background: white;
+}
+
+.drop-zone-active {
+  -moz-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  border: 2px solid #000;
+}
+
+.dispatch-action a:hover, a:focus {
+  text-decoration: none !important;
+}

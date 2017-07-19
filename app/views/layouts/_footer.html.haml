@@ -1,9 +1,11 @@
 :css
   #footer {
+    background: white;
     position: fixed;
     bottom: 0px;
+    z-index: 10000;
   }
-.col-sm-12#footer{:role => "contentinfo", :aria => {:label => 'Footer'}}
+.row.col-sm-12#footer{:role => "contentinfo", :aria => {:label => 'Footer'}}
   .col-sm-12#footer_text
     = translate_helper("footer_content")
   #versionLang.col-sm-12

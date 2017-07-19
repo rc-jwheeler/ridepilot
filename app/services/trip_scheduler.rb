@@ -1,14 +1,16 @@
 class TripScheduler
-  attr_reader :trip, :run
+  attr_reader :trip, :run, :errors
 
   def initialize(trip_id, run_id)
     @trip = Trip.find_by_id(trip_id)
     @run = get_run(run_id.to_i)
+    @errors = []
   end
 
   def execute
-    return response_as_json(false) if !@trip || !@run 
-    return response_as_json(true) if @trip.adjusted_run_id == @run.id
+    return if !@trip || !@run 
+
+    return if @trip.adjusted_run_id == @run.id
 
     case @run.id
     when Run::UNSCHEDULED_RUN_ID
@@ -36,27 +38,32 @@ class TripScheduler
   def unschedule
     @trip.update_attribute :cab, false
     @trip.update_attribute :run, nil
-    response_as_json true
   end
 
   def schedule_to_cab
     @trip.update_attribute :cab, true
     @trip.update_attribute :run, nil
-    response_as_json true
   end
 
   def schedule_to_run
     if !validate_time_availability
-      response_as_json false, TranslationEngine.translate_text(:not_fit_in_run_schedule)
-    elsif !validate_vehicle_availability 
-      response_as_json false, TranslationEngine.translate_text(:vehicle_unavailable)
-    elsif !validate_driver_availability 
-      response_as_json false, TranslationEngine.translate_text(:driver_unavailable)
-    else
+      errors << TranslationEngine.translate_text(:not_fit_in_run_schedule)
+    end
+
+    if !validate_vehicle_availability 
+      errors << TranslationEngine.translate_text(:vehicle_unavailable)
+    end
+
+    if !validate_driver_availability 
+      errors << TranslationEngine.translate_text(:driver_unavailable)
+    end
+
+    if errors.empty?
       @trip.cab = false
       @trip.run = @run
-      response_as_json @trip.save, @trip.errors.full_messages.join(';')
+      @trip.save(validate: false)
     end
+
   end
 
   # run avaiability validations
