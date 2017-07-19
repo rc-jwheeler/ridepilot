@@ -55,7 +55,7 @@ class TripsRunsController < ApplicationController
 
   # Ajax to update Run filter given a new date
   def runs_by_date
-    @runs = Run.for_date(Utility.new.parse_date(params[:run_trip_day])).order(:name)
+    @runs = Run.for_provider(current_provider_id).for_date(Utility.new.parse_date(params[:run_trip_day])).order(:name)
   end
 
   def run_trips
