@@ -35,6 +35,7 @@
 //= require trip_result_reason
 //= require double_booked_trips
 //= require bootbox.min
+//= require bootstrap-table
 //= require selectize
 //= require_self
 

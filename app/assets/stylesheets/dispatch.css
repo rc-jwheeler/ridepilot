@@ -10,15 +10,22 @@
   padding: 0px;
 }
 
+#unassigned_trips_panel .panel-body  {
+  height: 200px;
+  overflow-y: auto;
+}
+
 #runs_table, .run-manifest-table, #unassigned_trips_table {
   margin: 0px;
 }
 
-#runs_table tr th, 
-.run-manifest-table tr th,
-#unassigned_trips_table tr th {
-  color: black;
-  background-color: lightgrey;
+table th {
+  color: black !important;
+  background-color: lightgrey !important;
+}
+
+#unassigned_trips_table p {
+  margin: 0px;
 }
 
 .panel-success > .panel-heading {
@@ -33,16 +40,14 @@
   border-color: #8a6d3b;
 }
 
-#unscheduled_trips_container {
+#unassigned_trips_container {
   position: fixed;
   bottom: 0px;
-  max-height: 230px;
   left: 0px;
   right: 0px;
   margin: 0px 0px 5px 0px;
   padding-bottom: 30px;
   background: white;
-  overflow-y: auto;
 }
 
 .drop-zone-active {
@@ -52,6 +57,6 @@
   border: 2px solid #000;
 }
 
-.unschedule_trip_dropdown a:hover, a:focus {
+.dispatch-action a:hover, a:focus {
   text-decoration: none !important;
 }

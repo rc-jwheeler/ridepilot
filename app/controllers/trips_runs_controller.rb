@@ -79,7 +79,7 @@ class TripsRunsController < ApplicationController
   def query_trips_runs
     filters_hash = runs_trips_params || {}
 
-    @runs = Run.for_provider(current_provider_id).order(:name, :date, :actual_start_time)
+    @runs = Run.for_provider(current_provider_id).order(:name, :date, :scheduled_start_time)
     @runs = @runs.where(id: filters_hash[:run_id]) unless filters_hash[:run_id].blank?
     filter_runs
 

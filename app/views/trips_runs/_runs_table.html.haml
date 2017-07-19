@@ -1,4 +1,12 @@
-%table.table.table-striped.table-condensed.table-bordered#runs_table{style: 'max-height: 300px; overflow-y: auto;'}
+%table.table.table-striped.table-condensed.table-bordered#runs_table{:data => {:toggle => 'table',
+    :pagination => 'false',
+    :show_pagination_switch => 'false',
+    :page_list => "[5, 10, 20]",
+    :page_size => 5,
+    :search => 'false',
+    :show_export => 'false',
+    :show_columns => 'false',
+    :show_toggle => 'false'}}
   %thead
     %tr
       %th= translate_helper(:run_table_header_name)

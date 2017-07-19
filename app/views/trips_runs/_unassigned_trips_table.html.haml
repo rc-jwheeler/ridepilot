@@ -1,4 +1,13 @@
-%table.table.table-striped.table-bordered#unassigned_trips_table
+%table.table.table-striped.table-bordered#unassigned_trips_table{:data => {:toggle => 'table',
+    :pagination => 'false',
+    :show_pagination_switch => 'false',
+    :page_list => "[5, 10, 20]",
+    :page_size => 5,
+    :search => 'false',
+    :show_export => 'false',
+    :show_columns => 'false',
+    :show_toggle => 'false',
+    :height => 200}}
   %thead
     %tr
       %th
@@ -31,8 +40,12 @@
             %i.fa.fa-pencil
 
 :javascript
-  $('#unassigned_trips_table tbody tr td').draggable({
-    helper: function() {
-      return $(this).parent('tr').clone();
-    }
+  $(function() {
+    $('#unassigned_trips_table tbody tr td').draggable({
+      appendTo: 'body',
+      zIndex: 10010,
+      helper: function() {
+        return $(this).parent('tr').clone();
+      }
+    });
   });

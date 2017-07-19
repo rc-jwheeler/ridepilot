@@ -5,6 +5,9 @@
       %span.dispatch-action
         = link_to cancel_run_trips_runs_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
           %i.fa.fa-undo
+      %span.dispatch-action
+        = link_to edit_run_path(run, from_dispath: true), style: 'color: white;', title: 'Edit' do 
+          %i.fa.fa-pencil
       %span.panel-close.dispatch-action{title: 'Close'}
         %i.fa.fa-remove
       %span.panel-expand-collapse.dispatch-action{title: 'Collapse/expand'}
@@ -24,7 +27,12 @@
     drop: function(e, ui) {
       var source_panel = ui.draggable.parents('.panel');
       var prev_run_id = source_panel.data('run-id');
-      var trip_id = ui.draggable.parents('tr').data('trip-id');
+      var trip_id = null;
+      if(prev_run_id) {
+        trip_id = ui.draggable.data('trip-id');
+      } else {
+        trip_id = ui.draggable.parents('tr').data('trip-id');
+      }
       var run_id = #{run.id};
       if(prev_run_id == run_id) {
         // TODO: same run, itinerary sequence change

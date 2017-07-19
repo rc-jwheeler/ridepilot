@@ -1,7 +1,7 @@
+var prev_run_id = <%= params[:prev_run_id] || false %> || null;
 <% if @scheduler.errors.empty? %>
   var trip_id = <%= params[:trip_id] || false %> || null;
   <% if @prev_run.present? %>
-    var prev_run_id = <%= params[:prev_run_id] || false %> || null;
     $('#run_trips_panel_' + prev_run_id).find('tr[data-trip-id=' + trip_id + ']').remove();
     $('#runs_panel table tbody tr[data-run-id=' + prev_run_id + '] td.trips_count').html(<%= @prev_run.reload.trips.count%>);
   <% else %>
@@ -15,5 +15,9 @@
     $('#runs_panel table tbody tr[data-run-id=' + run_id + '] td.trips_count').html(<%= @run.reload.trips.count%>);
   }
 <% else %>
+  if(prev_run_id) {
+    // as this is triggered by sortable, so need to revert
+    $("#run_trips_panel_" + prev_run_id + " table tbody").sortable('cancel');
+  }
   bootbox.alert("<%= @scheduler.errors.join('.')%>");
 <% end %>

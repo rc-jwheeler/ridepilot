@@ -3,7 +3,7 @@
   = render :partial => 'filters'
 .col-md-10.dispatch-main{style: 'padding: 0px; margin-bottom: 230px;'}
   = render 'runs_panel'
-.col-md-12#unscheduled_trips_container
+.col-md-12#unassigned_trips_container
   = render 'unassigned_trips_panel'
 
 :javascript
@@ -98,5 +98,10 @@
   // stop # link jumping to page top
   $(document).on('click', '.non_jump_top', function(e){
     e.preventDefault();
+  });
+
+  $(function() {
+    // by default, collapse Unassigned Trips panel
+    $('#unassigned_trips_panel .panel-expand-collapse-reverse').click();
   });
   

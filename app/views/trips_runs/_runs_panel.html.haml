@@ -1,8 +1,11 @@
 .panel.panel-primary#runs_panel
   .panel-heading
     .pull-right{style: 'padding-right: 0px;'}
-      = link_to new_run_path(from_dispath: true), style: 'color: white;', class: 'dispatch-action', title: translate_helper("new_run_link_text") do 
-        %i.fa.fa-plus
+      %span.dispatch-action
+        = link_to new_run_path(from_dispath: true), style: 'color: white;', title: translate_helper("new_run_link_text") do 
+          %i.fa.fa-plus
+      %span.panel-close-all-runs.dispatch-action{title: 'Close opened run panels'}
+        %i.fa.fa-remove
       %span.panel-expand-collapse.dispatch-action{title: 'Collapse/expand'}
         %i.fa.fa-chevron-up
     %h3.panel-title.text-center
@@ -18,3 +21,10 @@
           = translate_helper(:empty_runs)
   .panel-body
     = render 'runs_table'
+
+:javascript
+  $(function() {
+    $(document).on('click', '.panel-heading span.panel-close-all-runs', function(e){
+      $('.run_trips_panel').hide('slow', function(){ $(this).remove(); });
+    });
+  });
