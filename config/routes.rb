@@ -215,7 +215,6 @@ Rails.application.routes.draw do
       end
 
       member do
-        patch :cancel 
         get :append_trips
       end
     end
@@ -224,6 +223,7 @@ Rails.application.routes.draw do
       collection do
         post :schedule
         post :unschedule
+        get :cancel_run
         get :runs_by_date
         get :run_trips
       end

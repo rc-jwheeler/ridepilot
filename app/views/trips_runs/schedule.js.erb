@@ -15,5 +15,5 @@
     $('#runs_panel table tbody tr[data-run-id=' + run_id + '] td.trips_count').html(<%= @run.reload.trips.count%>);
   }
 <% else %>
-  show_alert(<%= @scheduler.errors.joins('.')%>);
+  bootbox.alert("<%= @scheduler.errors.join('.')%>");
 <% end %>

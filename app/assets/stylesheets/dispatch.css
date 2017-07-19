@@ -42,6 +42,7 @@
   margin: 0px 0px 5px 0px;
   padding-bottom: 30px;
   background: white;
+  overflow-y: auto;
 }
 
 .drop-zone-active {

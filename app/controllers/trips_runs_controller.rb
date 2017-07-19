@@ -61,6 +61,13 @@ class TripsRunsController < ApplicationController
   def run_trips
     @run = Run.find_by_id params[:run_id]
   end
+
+  def cancel_run
+    @run = Run.find_by_id params[:run_id]
+    @run.cancel! if @run
+
+    query_trips_runs
+  end
   
   private
 
