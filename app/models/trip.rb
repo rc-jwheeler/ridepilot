@@ -29,6 +29,7 @@ class Trip < ActiveRecord::Base
   validate :return_trip_later_than_outbound_trip
   validate :within_advance_day_scheduling
   validate :customer_active
+  validate :fit_run_schedule
 
   scope :after,              -> (pickup_time) { where('pickup_time > ?', pickup_time.utc) }
   scope :after_today,        -> { where('CAST(pickup_time AS date) > ?', Date.today.in_time_zone.utc) }
@@ -432,4 +433,21 @@ class Trip < ActiveRecord::Base
     end
   end
 
+  def fit_run_schedule
+    if run 
+      run_start_time = run.scheduled_start_time
+      run_end_time = run.scheduled_end_time
+
+      if run_start_time && run_end_time
+        is_valid = (time_portion(self.pickup_time) >= time_portion(run_start_time)) && 
+        (self.appointment_time.nil? || time_portion(self.appointment_time) <= time_portion(run_end_time))
+
+        errors.add(:base, TranslationEngine.translate_text(:not_fit_in_run_schedule)) unless is_valid
+      end
+    end
+  end
+
+  def time_portion(time)
+    (time - time.beginning_of_day) if time
+  end
 end

@@ -21,10 +21,3 @@
           = translate_helper(:empty_runs)
   .panel-body
     = render 'runs_table'
-
-:javascript
-  $(function() {
-    $(document).on('click', '.panel-heading span.panel-close-all-runs', function(e){
-      $('.run_trips_panel .panel-heading span.panel-close').click();
-    });
-  });

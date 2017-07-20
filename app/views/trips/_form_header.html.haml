@@ -5,6 +5,10 @@
       = link_to translate_helper(:cancel), (params[:from_dispatch] == 'true' ? trips_runs_path : trips_path), class: "btn btn-default"
     %h1
       = translate_helper("new_trip")
+      - if @trip.run
+        %span{style: 'font-size: small;'}
+          = "#{translate_helper(:run)}: "
+          = link_to @trip.run.name, run_path(@trip.run), target: '_blank'
   - else
     .pull-right
       - if edit_mode == :edit
@@ -18,3 +22,7 @@
         = link_to translate_helper(:back), (params[:from_dispatch] == 'true' ? trips_runs_path : trips_path), class: "btn btn-default"
     %h1
       = translate_helper("trip")
+      - if @trip.run
+        %span{style: 'font-size: small;'}
+          = "#{translate_helper(:run)}: "
+          = link_to @trip.run.name, run_path(@trip.run), target: '_blank'
