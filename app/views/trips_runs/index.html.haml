@@ -10,6 +10,7 @@
   var target_run_id = #{params[:run_id] || false} || null;
   // Local Storages
   // dispatch_loaded_run_ids = [] (list of run panels that are open)
+  // dispatch_runs_panel_collapsed: 1/0 (0 if the runs panel is collapsed)
   // dispatch_run_panel_{id}_collapsed: 1/0 (0 if a specific run panel is collapsed)
   // dispatch_unassigned_trips_collapsed: 1/0 (0 if the unassigned trips panel is collapsed)
 
@@ -114,6 +115,12 @@
 
   // load previously open run manifest panels
   function load_runs_panel() {
+    var was_collapsed = localStorage.getItem('dispatch_runs_panel_collapsed');
+    if(was_collapsed == '0') {
+      // by default, collapse Unassigned Trips panel
+      $('#runs_panel .panel-expand-collapse').click();
+    }
+
     var loaded_run_ids = get_loaded_run_id_array();
     if(loaded_run_ids.length > 0) {
       loaded_run_ids.forEach(function(run_id) {
@@ -150,6 +157,10 @@
       if(panel.hasClass('run_trips_panel')) {
         var run_id = panel.data('run-id');
         localStorage.setItem('dispatch_run_panel_' + run_id + '_collapsed', (is_collapsed ? '0' : '1'));
+      }
+
+      if(panel.attr('id') == 'runs_panel') {
+        localStorage.setItem('dispatch_runs_panel_collapsed', (is_collapsed ? '0' : '1'));
       }
     });
 
@@ -236,7 +247,7 @@
       
     });
 
-    load_unassigned_trips_panel();
     load_runs_panel();
+    load_unassigned_trips_panel();
   });
   
