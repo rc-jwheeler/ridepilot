@@ -5,6 +5,7 @@
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'runs' 
 
 = form_for @run, :html => (@remote ? {"data-remote" => true, class: 'run_form'} : {class: 'run_form'} ) do |f| 
+  = hidden_field_tag :from_dispatch, params[:from_dispatch]
   - if @is_repeating_run
     = render 'repeating_runs/form_header', edit_mode: edit_mode, f: f 
   - else  

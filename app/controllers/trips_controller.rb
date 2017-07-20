@@ -306,10 +306,14 @@ class TripsController < ApplicationController
               TrackerActionLog.create_return_trip(@trip, current_user)
             end
 
-            if params[:run_id].present?
-              redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')
+            if params[:from_dispatch] == 'true'
+              redirect_to trips_runs_path, :notice => 'Trip was successfully created.'
             else
-              redirect_to(@trip, :notice => 'Trip was successfully created.')
+              if params[:run_id].present?
+                redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')
+              else
+                redirect_to(@trip, :notice => 'Trip was successfully created.')
+              end
             end
           end
         }
@@ -369,7 +373,13 @@ class TripsController < ApplicationController
         TripDistanceCalculationWorker.perform_async(@trip.id) if is_address_changed
         TrackerActionLog.cancel_or_turn_down_trip(@trip, current_user) if is_trip_result_changed && @trip.is_cancelled_or_turned_down? 
 
-        format.html { redirect_to(@trip, :notice => 'Trip was successfully updated.')  }
+        format.html {
+          if params[:from_dispatch] == 'true'
+            redirect_to trips_runs_path, :notice => 'Trip was successfully updated.'  
+          else
+            redirect_to @trip, :notice => 'Trip was successfully updated.'  
+          end
+        }
         format.js {
           render :json => {:status => "success"}, :content_type => "text/json"
         }

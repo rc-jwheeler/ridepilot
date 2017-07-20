@@ -6,7 +6,7 @@
         = link_to cancel_run_trips_runs_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
           %i.fa.fa-undo
       %span.dispatch-action
-        = link_to edit_run_path(run, from_dispath: true), style: 'color: white;', title: 'Edit' do 
+        = link_to edit_run_path(run, from_dispatch: true), style: 'color: white;', title: 'Edit' do 
           %i.fa.fa-pencil
       %span.panel-close.dispatch-action{title: 'Close'}
         %i.fa.fa-remove
