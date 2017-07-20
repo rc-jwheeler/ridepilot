@@ -82,11 +82,7 @@ class Address < ActiveRecord::Base
   end
 
   def text
-    if building_name.to_s.size > 0 and name.to_s.size > 0
-      first_line = "%s - %s\n" % [name, building_name]
-    elsif building_name.to_s.size > 0
-      first_line = building_name + "\n"
-    elsif name.to_s.size > 0
+    if name.to_s.size > 0
       first_line = name + "\n"
     else
       first_line = ''
@@ -97,7 +93,11 @@ class Address < ActiveRecord::Base
   end
 
   def one_line_text
-    text.gsub(/\s+/, ' ')
+    if name
+      ("%s (%s %s, %s %s)" % [name, address, city, state, zip]).strip
+    else
+      ("%s %s, %s %s" % [address, city, state, zip]).strip
+    end
   end
 
   def address_text

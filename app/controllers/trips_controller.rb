@@ -208,11 +208,8 @@ class TripsController < ApplicationController
     @trip = Trip.new(:provider_id => current_provider_id)
 
     if params[:run_id] && run = Run.find_by_id(params[:run_id])
-      d = run.date
-      t = run.scheduled_start_time || (d.at_midnight + 12.hours)
-      @trip.run_id = run.id
-      @trip.pickup_time = Time.zone.local(d.year, d.month, d.day, t.hour, t.min, 0)
-      @trip.appointment_time = @trip.pickup_time + (current_provider.min_trip_time_gap_in_mins).minutes
+      @trip.run_id = run.id 
+      @trip.date = run.date
     end
 
     if params[:customer_id] && customer = Customer.find_by_id(params[:customer_id])
@@ -292,11 +289,17 @@ class TripsController < ApplicationController
       @trip.outbound_trip = Trip.find_by_id(params[:trip][:outbound_trip_id])
     end
 
+    if params[:run_id].present?
+      @trip.run_id = params[:run_id]
+    end
+
+    from_dispatch = params[:from_dispatch] == 'true'
+
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
         TripDistanceCalculationWorker.perform_async(@trip.id) #sidekiq needs to run
-        @ask_for_return_trip = true if @trip.is_outbound?
+        @ask_for_return_trip = true if @trip.is_outbound? && !from_dispatch
         format.html {
           if @ask_for_return_trip
             TrackerActionLog.create_trip(@trip, current_user)
@@ -306,14 +309,10 @@ class TripsController < ApplicationController
               TrackerActionLog.create_return_trip(@trip, current_user)
             end
 
-            if params[:from_dispatch] == 'true'
-              redirect_to trips_runs_path, :notice => 'Trip was successfully created.'
+            if from_dispatch
+              redirect_to trips_runs_path(run_id: params[:run_id]), :notice => 'Trip was successfully created.'
             else
-              if params[:run_id].present?
-                redirect_to(edit_run_path(@trip.run), :notice => 'Trip was successfully created.')
-              else
-                redirect_to(@trip, :notice => 'Trip was successfully created.')
-              end
+              redirect_to(@trip, :notice => 'Trip was successfully created.')
             end
           end
         }
@@ -375,7 +374,7 @@ class TripsController < ApplicationController
 
         format.html {
           if params[:from_dispatch] == 'true'
-            redirect_to trips_runs_path, :notice => 'Trip was successfully updated.'  
+            redirect_to trips_runs_path(run_id: @trip.run_id), :notice => 'Trip was successfully updated.'  
           else
             redirect_to @trip, :notice => 'Trip was successfully updated.'  
           end
@@ -425,7 +424,6 @@ class TripsController < ApplicationController
       :pickup_address_id,
       :pickup_time,
       :provider_id, # We normally wouldn't accept this and would set it manually on the instance, but in this controller we're setting it in the params dynamically
-      :run_id,
       :cab,
       :service_level_id,
       :trip_purpose_id,
@@ -452,12 +450,6 @@ class TripsController < ApplicationController
     @vehicles           = add_cab(@vehicles) if current_provider.try(:cab_enabled?)
     @repeating_vehicles = @vehicles
     @service_levels     = ServiceLevel.by_provider(current_provider).order(:name).pluck(:name, :id)
-
-    @trip.run_id = -1 if @trip.cab
-
-    #cab_run = Run.new :cab => true
-    #cab_run.id = -1
-    #@runs = Run.for_provider(@trip.provider_id).incomplete_on(@trip.pickup_time.try(:to_date)) << cab_run
   end
 
   # Strong params for changing trip result and result_reason
@@ -466,19 +458,10 @@ class TripsController < ApplicationController
   end
 
   def handle_trip_params(trip_params)
-    if trip_params[:run_id] == '-1'
-      #cab trip
-      trip_params[:run_id] = nil
-      trip_params[:cab] = true
-    else
-      trip_params[:cab] = false
-    end
-
     if trip_params[:customer_informed] and not @trip.customer_informed
       trip_params[:called_back_by] = current_user
       trip_params[:called_back_at] = DateTime.current.to_s
     end
-
   end
 
   def filter_trips

@@ -7,6 +7,7 @@
 = form_for @trip,
   html: { class: 'trip_form', "data-remote" => @remote } do |f|
   = hidden_field_tag :from_dispatch, params[:from_dispatch]
+  = hidden_field_tag :run_id, params[:run_id]
   - if @is_repeating_trip
     = render 'repeating_trips/form_header', edit_mode: edit_mode, f: f
   - else

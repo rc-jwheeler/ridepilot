@@ -69,7 +69,7 @@ class RunsController < ApplicationController
         TrackerActionLog.create_run(@run, current_user)
         format.html { 
           if params[:from_dispatch] == 'true'
-            redirect_to trips_runs_path, :notice => 'Run was successfully created.' 
+            redirect_to trips_runs_path(run_id: @run.id), :notice => 'Run was successfully created.' 
           else
             redirect_to @run, :notice => 'Run was successfully created.' 
           end
@@ -102,7 +102,7 @@ class RunsController < ApplicationController
       if @run.is_all_valid?(current_provider_id) && @run.update_attributes(run_params)
         format.html { 
           if params[:from_dispatch] == 'true'
-            redirect_to trips_runs_path, :notice => 'Run was successfully updated.' 
+            redirect_to trips_runs_path(run_id: @run.id), :notice => 'Run was successfully updated.' 
           else
             redirect_to @run, :notice => 'Run was successfully updated.' 
           end
