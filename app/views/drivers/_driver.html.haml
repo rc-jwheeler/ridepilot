@@ -1,5 +1,6 @@
 %tr
-  %td
+  - driver_overdue_check = get_driver_warnings(driver)
+  %td{class: driver_overdue_check[:class_name], title: driver_overdue_check[:tips] }
     = link_to_if can?(:read, driver), driver.user_name, driver
   %td
     = driver.active_status_text

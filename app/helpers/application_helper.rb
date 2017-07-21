@@ -185,4 +185,58 @@ module ApplicationHelper
     end
   end
 
+  def get_vehicle_warnings(vehicle)
+    return {} unless vehicle
+
+    class_name = ''
+    tips = []
+    
+    if vehicle.vehicle_compliances.legal.overdue.any?
+      tips << "legal requirement"
+      class_name = 'overdue-danger'
+    end
+
+    if vehicle.vehicle_maintenance_compliances.has_overdue?
+      tips << "maintenance compliance"
+      class_name = 'overdue-warning' if class_name.blank?
+    end
+
+    if vehicle.vehicle_compliances.non_legal.overdue.any?
+      tips << "compliance event"
+      class_name = 'overdue-warning' if class_name.blank?
+    end
+
+    if vehicle.expired?
+      tips << "warranty"
+      class_name = 'overdue-warning' if class_name.blank?
+    end
+
+    {
+      class_name: class_name,
+      tips: "Overdue: " + tips.join(', ')
+    }
+  end 
+
+  def get_driver_warnings(driver)
+    return {} unless driver
+
+    class_name = ''
+    tips = []
+    
+    if driver.driver_compliances.legal.overdue.any?
+      tips << "legal requirement"
+      class_name = 'overdue-danger'
+    end
+
+    if driver.driver_compliances.non_legal.overdue.any?
+      tips << "compliance event"
+      class_name = 'overdue-warning' if class_name.blank?
+    end
+
+    {
+      class_name: class_name,
+      tips: "Overdue: " + tips.join(', ')
+    }
+  end 
+
 end

@@ -137,3 +137,16 @@ table.dataTable tbody tr.selected {
   overflow-y: auto;
 }
 
+.overdue-danger {
+  background-color: red !important;
+  color: white !important;
+}
+
+.overdue-warning {
+  background-color: yellow !important;
+}
+
+.overdue-danger a {
+  color: white !important;
+}
+

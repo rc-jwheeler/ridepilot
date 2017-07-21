@@ -50,6 +50,16 @@ class VehicleMaintenanceCompliance < ActiveRecord::Base
   def self.editable_occurrence_attributes
     [:compliance_date, :compliance_mileage]
   end
+
+  def self.has_overdue?(as_of: Date.current)
+    self.incomplete.each do |r|
+      if r.overdue?(as_of: as_of)
+        return true
+      end
+    end
+
+    false
+  end
   
   # Only used internally, but public for testability
   def is_recurring?
