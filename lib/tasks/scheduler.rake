@@ -16,7 +16,7 @@ namespace :scheduler do
     Run.update_prior_run_complete_status!
 
     # Standby -> Unmet Need
-    #Trip.move_prior_standby_to_unmet!
+    Trip.move_prior_standby_to_unmet!
 
   end
 end

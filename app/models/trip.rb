@@ -309,7 +309,7 @@ class Trip < ActiveRecord::Base
     return unless provider.try(:active?)
     
     unmet = TripResult.find_by_code('UNMET')
-    Trip.prior_to_today.scheduled.standby.update_all(trip_result_id: unmet.id) if unmet.present?
+    Trip.prior_to_today.standby.update_all(is_stand_by: false, trip_result_id: unmet.id) if unmet.present?
   end
 
   def scheduled?
