@@ -218,11 +218,11 @@ module ApplicationHelper
       class_name = 'overdue-warning' if class_name.blank?
     end
 
-    overdue_msg = "Overdue: " + tips.join(', ')
+    overdue_msg = "Overdue: " + tips.join(', ') if tips.any?
     
     {
       class_name: class_name,
-      tips: warning_msg ? warning_msg + " " + overdue_msg : overdue_msg
+      tips: warning_msg ? warning_msg + " " + overdue_msg.to_s : overdue_msg.to_s
     }
   end 
 
@@ -249,11 +249,11 @@ module ApplicationHelper
       class_name = 'overdue-warning' if class_name.blank?
     end
 
-    overdue_msg = "Overdue: " + tips.join(', ')
+    overdue_msg = "Overdue: " + tips.join(', ') if tips.any?
     
     {
       class_name: class_name,
-      tips: warning_msg ? warning_msg + " " + overdue_msg : overdue_msg
+      tips: warning_msg ? warning_msg + " " + overdue_msg.to_s : overdue_msg.to_s
     }
   end 
 

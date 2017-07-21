@@ -1,10 +1,16 @@
 .pull-left
   = translate_helper("unassigned_trips")
-- stats = []
-- stats << "#{@unassigned_trips.count} unscheduled" if @unassigned_trips.any?
-- stats << "#{@standby_trips.count} standby" if @standby_trips.any?
 %span{style: 'font-size: small;'}
-  - if stats.any?
+  - stats = []
+  - total_count = @trips.count
+  - unscheduled_count = @unassigned_trips.count
+  - standby_count = @standby_trips.count
+  - scheduled_count = total_count - unscheduled_count - standby_count
+  - stats << "#{unscheduled_count} unscheduled" if unscheduled_count > 0
+  - stats << "#{standby_count} standby" if standby_count > 0
+  - stats << "#{scheduled_count} scheduled" if scheduled_count > 0
+  - stats << "#{total_count} total" if total_count > 0
+  - if total_count > 0
     = "#{stats.join(', ')}"
   - else 
     = translate_helper(:empty_trips)
