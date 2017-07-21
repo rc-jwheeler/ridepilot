@@ -185,12 +185,19 @@ module ApplicationHelper
     end
   end
 
-  def get_vehicle_warnings(vehicle)
+  def get_vehicle_warnings(vehicle, run_date = nil)
     return {} unless vehicle
 
     class_name = ''
-    tips = []
+    warning_msg = ''
+
+    if run_date && vehicle.active_for_date?(run_date)
+      class_name = "overdue-danger"
+      warning_msg = "Inactive on the run day (#{format_date run_date})."
+    end
     
+    tips = []
+
     if vehicle.vehicle_compliances.legal.overdue.any?
       tips << "legal requirement"
       class_name = 'overdue-danger'
@@ -211,16 +218,25 @@ module ApplicationHelper
       class_name = 'overdue-warning' if class_name.blank?
     end
 
+    overdue_msg = "Overdue: " + tips.join(', ')
+    
     {
       class_name: class_name,
-      tips: "Overdue: " + tips.join(', ')
+      tips: warning_msg ? warning_msg + " " + overdue_msg : overdue_msg
     }
   end 
 
-  def get_driver_warnings(driver)
+  def get_driver_warnings(driver, run_date = nil)
     return {} unless driver
 
     class_name = ''
+    warning_msg = ''
+
+    if run_date && driver.active_for_date?(run_date)
+      class_name = "overdue-danger"
+      warning_msg = "Inactive on the run day (#{format_date run_date})."
+    end
+
     tips = []
     
     if driver.driver_compliances.legal.overdue.any?
@@ -233,9 +249,11 @@ module ApplicationHelper
       class_name = 'overdue-warning' if class_name.blank?
     end
 
+    overdue_msg = "Overdue: " + tips.join(', ')
+    
     {
       class_name: class_name,
-      tips: "Overdue: " + tips.join(', ')
+      tips: warning_msg ? warning_msg + " " + overdue_msg : overdue_msg
     }
   end 
 
