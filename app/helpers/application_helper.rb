@@ -40,7 +40,7 @@ module ApplicationHelper
   end
 
   def format_time_for_listing_day(time)
-    time.strftime('%d-%b-%Y %a') if time
+    time.strftime('%a %b %d, %Y') if time
   end
 
   def format_time_as_title_for_listing_day(time)

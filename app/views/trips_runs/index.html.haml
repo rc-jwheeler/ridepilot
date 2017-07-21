@@ -1,7 +1,8 @@
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips_runs'
-.col-md-2{style: 'padding: 0px 15px 0px 0px; margin-bottom: 230px;'}
+.col-md-12{style: 'padding: 0px;'}
   = render :partial => 'filters'
-.col-md-10.dispatch-main{style: 'padding: 0px; margin-bottom: 230px;'}
+%hr
+.col-12.dispatch-main{style: 'padding: 0px; margin-bottom: 230px;'}
   = render 'runs_panel'
 .col-md-12#unassigned_trips_container
   = render 'unassigned_trips_panel'

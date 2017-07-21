@@ -189,7 +189,7 @@ $(function() {
 
   // Setting z-index to 999 ensures the calendar appears over bootstrap input group components
   $('#new_monthly #monthly_start_date, #new_monthly #monthly_end_date, input.datepicker').datepicker({
-		dateFormat: 'yy-mm-dd',
+		dateFormat: 'D M dd, yy',
     showButtonPanel: true
   }).css('z-index', 999);
 

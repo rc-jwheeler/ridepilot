@@ -17,15 +17,16 @@
     });
   }
 
-  function makeDatePickers(selector) {
+  function makeDatePickers(selector, show_buttons) {
+    show_buttons = show_buttons || true;
     selector = selector || '.date-picker';
     $(selector).datepicker({
       showOn: 'both',
       buttonImage: "<%=  image_path 'calendar-clock.png' %>",
       buttonImageOnly: true,
       constrainInput: false,
-      dateFormat: 'dd-M-yy D',
-      showButtonPanel: true,
+      dateFormat: 'D M dd, yy',
+      showButtonPanel: show_buttons,
       closeText: 'Clear', // Text to show for "close" button
       onClose: function () {
           var event = arguments.callee.caller.caller.arguments[0];
