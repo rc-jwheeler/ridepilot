@@ -40,11 +40,12 @@ class TripsRunsController < ApplicationController
     @prev_run = Run.find_by_id(params[:prev_run_id])
     @target_trips = Trip.where(id: params[:trip_ids].split(','))
     if @target_trips.any?
-      case params[:run_id]
+      run_id = params[:run_id].to_i if params[:run_id]
+      case run_id
       when Run::STANDBY_RUN_ID
-        #TODO: standby
+        @target_trips.update_all(cab: false, is_stand_by: true)
       when Run::CAB_RUN_ID
-        @target_trips.update_all(cab: true)
+        @target_trips.update_all(cab: true, is_stand_by: false)
       end
 
       @target_trips.update_all(run_id: nil)
@@ -90,8 +91,8 @@ class TripsRunsController < ApplicationController
     @trips = @trips.where("trip_result_id is NULL or trip_result_id not in (?)", exclude_trip_result_ids)
     filter_trips
 
-    @unassigned_trips = @trips.where("cab = ? and run_id is NULL", false)
-    @standby_trips = Trip.none
+    @unassigned_trips = @trips.unscheduled
+    @standby_trips = @trips.standby
   end
 
   def filter_trips

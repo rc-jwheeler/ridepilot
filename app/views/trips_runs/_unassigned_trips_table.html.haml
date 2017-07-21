@@ -41,13 +41,5 @@
 
 :javascript
   $(function() {
-    $('#unassigned_trips_table tbody tr td').draggable({
-      appendTo: 'body',
-      zIndex: 10010,
-      helper: function() {
-        return $(this).parent('tr').clone();
-      }
-    });
-
-    $('#unassigned_trips_table').bootstrapTable();
+    configure_unassigned_trips_table();
   });

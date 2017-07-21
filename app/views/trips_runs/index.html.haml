@@ -58,13 +58,13 @@
   function expand_panel(panel) {
     panel.find('.panel-body').slideDown();
     panel.find('.panel-expand-collapse').removeClass('panel-collapsed');
-    panel.find('.panel-expand-collapse i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+    panel.find('.panel-expand-collapse i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
   }
 
   function reverse_collapse_panel(panel) {
     panel.find('.panel-body').slideUp();
     panel.find('.panel-expand-collapse-reverse').addClass('panel-collapsed');
-    panel.find('.panel-expand-collapse-reverse i').removeClass('fa-chevron-up').addClass('fa-chevron-down'); 
+    panel.find('.panel-expand-collapse-reverse i').removeClass('fa-chevron-down').addClass('fa-chevron-up'); 
   }
 
   function reverse_expand_panel(panel) {
@@ -136,6 +136,19 @@
       // by default, collapse Unassigned Trips panel
       $('#unassigned_trips_panel .panel-expand-collapse-reverse').click();
     }
+  }
+
+  // configure to be draggable
+  function configure_unassigned_trips_table() {
+    $('#unassigned_trips_table tbody tr td').draggable({
+      appendTo: 'body',
+      zIndex: 10010,
+      helper: function() {
+        return $(this).parent('tr').clone();
+      }
+    });
+
+    $('#unassigned_trips_table').bootstrapTable();
   }
 
   // page main entry point

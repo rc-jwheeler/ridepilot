@@ -45,17 +45,21 @@ class Trip < ActiveRecord::Base
   scope :by_result,          -> (code) { includes(:trip_result).references(:trip_result).where("trip_results.code = ?", code) }
   scope :called_back,        -> { where('called_back_at IS NOT NULL') }
   scope :completed,          -> { joins(:trip_result).where(trip_results: {code: 'COMP'}) }
-  scope :for_cab,            -> { where(cab: true) }
-  scope :not_for_cab,        -> { where(cab: false) }
   scope :for_driver,         -> (driver_id) { not_for_cab.where(runs: {driver_id: driver_id}).joins(:run) }
   scope :for_vehicle,        -> (vehicle_id) { not_for_cab.where(runs: {vehicle_id: vehicle_id}).joins(:run) }
   scope :incomplete,         -> { where(trip_result: nil) }
   scope :empty_or_completed, -> { includes(:trip_result).references(:trip_result).where("trips.trip_result_id is NULL or trip_results.code = 'COMP'") }
   scope :turned_down,        -> { joins(:trip_result).where(trip_results: {code: 'TD'}) }
-  scope :scheduled,          -> { where("cab = ? or run_id is not NULL", true) }
   scope :repeating_based_on, ->(scheduler) { where(repeating_trip_id: scheduler.try(:id)) }
   scope :outbound,           ->() { where(direction: 'outbound') }
   scope :return,             ->() { where(direction: 'return') }
+
+  scope :standby,            -> { where(is_stand_by: true) }
+  scope :scheduled,          -> { where("cab = ? or run_id is not NULL", true) }
+  scope :unscheduled,        -> { where(run_id: nil).where("is_stand_by is NULL or is_stand_by = ?", false).where("cab is NULL or cab = ?", false) }
+  scope :scheduled_to_run,   -> { where.not(run_id: nil) }
+  scope :for_cab,            -> { where(cab: true) }
+  scope :not_for_cab,        -> { where("cab is NULL or cab = ?", false) }
 
   # List of attributes of which the change would affect the run
   ATTRIBUTES_CAN_DISRUPT_RUN = [
