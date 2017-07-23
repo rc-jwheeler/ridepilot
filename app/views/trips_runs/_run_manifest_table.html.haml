@@ -3,35 +3,39 @@
     %tr
       %th
         %input.master-select-checkbox{type: "checkbox"}
+      %th= translate_helper(:run_manifest_table_header_trip_type)
       %th= translate_helper(:run_manifest_table_header_action)
       %th= translate_helper(:run_manifest_table_header_customer)
       %th= translate_helper(:run_manifest_table_header_address)
-      %th= translate_helper(:run_manifest_table_header_driver_notified)
-      %th= translate_helper(:run_manifest_table_header_pickup_time)
-      %th= translate_helper(:run_manifest_table_header_dropoff_time)
+      %th= translate_helper(:run_manifest_table_header_scheduled_time)
       %th= translate_helper(:run_manifest_table_header_eta)
       %th= translate_helper(:run_manifest_table_header_occupancy)
+      %th= translate_helper(:run_manifest_table_header_fare)
       %th= translate_helper(:run_manifest_table_header_comments)
+      %th= translate_helper(:run_manifest_table_header_trip_result)
+      %th= translate_helper(:run_manifest_table_header_customer_phone)
+      %th= translate_helper(:run_manifest_table_header_driver_notified)
       %th
   %tbody
     - if trips.empty?
       %tr
-        %td{colspan: 11}= translate_helper(:empty_trips)
+        %td{colspan: 14}= translate_helper(:empty_trips)
     - else
       - itins = get_itineraries(trips)
       - itins.each do |itin|
-        - is_pickup = itin[:action] == 'Pickup'
         %tr{data: {trip_id: itin[:trip_id]}}
           %td
             %input.trip-selected{type: "checkbox"}
+          %td= itin[:is_recurring] ? 'Recur' : 'Daily'
           %td= itin[:action]
           %td= itin[:customer]
           %td= itin[:address]
-          %td= itin[:driver_notified]
-          %td= format_time_for_listing(itin[:time]) if is_pickup
-          %td= format_time_for_listing(itin[:time]) unless is_pickup
-          %td 
-          %td
+          %td= format_time_for_listing(itin[:time])
+          %td= itin[:eta]
+          %td= itin[:capacity]
+          %td= itin[:fare]
           %td= itin[:comments]
+          %td= itin[:result]
+          %td= simple_format(itin[:phone].join('<br>')) unless itin[:phone].empty?
+          %td= itin[:driver_notified]
           %td
-

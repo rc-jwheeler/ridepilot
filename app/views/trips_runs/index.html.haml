@@ -1,13 +1,19 @@
+:css
+  table td p {
+    line-height: normal;
+    margin: 0px;
+  }
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips_runs'
-.col-md-12{style: 'padding: 0px;'}
+.col-sm-12{style: 'padding: 0px;'}
   = render :partial => 'filters'
 %hr
-.col-12.dispatch-main{style: 'padding: 0px; margin-bottom: 230px;'}
+.col-sm-12.dispatch-main{style: 'padding: 0px; margin-bottom: 230px;'}
   = render 'runs_panel'
-.col-md-12#unassigned_trips_container
+.col-sm-12#unassigned_trips_container
   = render 'unassigned_trips_panel'
 
 :javascript
+  var run_ids = #{@runs.pluck(:id) || []};
   var target_run_id = #{params[:run_id] || false} || null;
   // Local Storages
   // dispatch_loaded_run_ids = [] (list of run panels that are open)
@@ -125,7 +131,9 @@
     var loaded_run_ids = get_loaded_run_id_array();
     if(loaded_run_ids.length > 0) {
       loaded_run_ids.forEach(function(run_id) {
-        load_run_manifest(run_id, false);
+        if(run_ids.indexOf(parseInt(run_id)) >= 0) {
+          load_run_manifest(run_id, false);
+        }
       });
     }
   }

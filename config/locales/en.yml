@@ -1460,6 +1460,11 @@ en:
   run_manifest_table_header_pickup_time: 'Pickup'
   run_manifest_table_header_dropoff_time: 'Dropoff'
   run_manifest_table_header_eta: 'ETA'
+  run_manifest_table_header_trip_type: 'Type'
+  run_manifest_table_header_scheduled_time: 'Schedule Time'
+  run_manifest_table_header_fare: 'Fare'
+  run_manifest_table_header_trip_result: 'Result'
+  run_manifest_table_header_customer_phone: 'Phone #'
   run_manifest_table_header_occupancy: 'Occupancy'
   run_manifest_table_header_comments: 'Comments'
   unassigned_trips: "Trips"
@@ -1473,8 +1478,8 @@ en:
   unassigned_trips_table_header_riders_count: "# of Riders"
   unassigned_trips_table_header_fare: "Fare"
   unassigned_trips_table_header_actions: "Actions"
-  empty_trips: "No trips"
-  empty_runs: "No runs"
+  empty_trips: "No trip"
+  empty_runs: "No run"
   
   # address upload
   address_file_uploaded: 'Address file was uploaded.'

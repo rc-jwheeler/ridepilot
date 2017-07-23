@@ -18,7 +18,7 @@
     %h3.panel-title.text-center
       .pull-left
         = run.name
-      %span{style: 'font-size: small;'}
+      %span.run_summary{style: 'font-size: small;'}
         = run_summary(run)
   .panel-body
     = render 'trips_runs/run_manifest_table', trips: run.trips
