@@ -42,7 +42,9 @@
     - if trip.run.present?
       = link_to trip.run_text, run_path(trip.run.id)
     - elsif trip.cab
-      = translate_helper("cab")
+      Cab
+    - elsif trip.is_stand_by
+      Standby
   %td
     - if can? :edit, trip
       = form_for trip, url: trip_callback_path(trip), remote: true, method: :patch, html: { class: 'change-trip-callback' } do |f|

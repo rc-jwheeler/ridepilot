@@ -1,8 +1,8 @@
-<% if @target_trips.any? %>
+<% if @target_trip_ids.any? %>
   $('#unassigned_trips_panel').replaceWith("<%= j render('trips_runs/unassigned_trips_panel') %>");
   configure_unassigned_trips_table();
 
   <% if @errors && @errors.any? && @error_trip_count > 0 %>
-    bootbox.alert("<b>Action failed for <%= @error_trip_count%> trips. Errors are as follows:</b><br><%= @errors.join('.<br>')%>");
+    bootbox.alert("<b>Action failed for <%= @error_trip_count %> trip(s). Error(s) are as follows:</b><br><%= @errors.join('.<br>')%>");
   <% end %>
 <% end %>

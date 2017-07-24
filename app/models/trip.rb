@@ -360,6 +360,20 @@ class Trip < ActiveRecord::Base
     end
   end
 
+  def post_process_trip_result_changed!(user = nil)
+    TrackerActionLog.cancel_or_turn_down_trip(self, user) if self.is_cancelled_or_turned_down?
+    self.is_stand_by = false
+    if self.scheduled? && self.is_cancelled_or_turned_down?
+      if self.run.present?
+        self.run = nil
+      elsif self.cab
+        self.cab = false
+      end
+    end
+    
+    self.save(validate: false) if self.changed?
+  end
+
   private
 
   def driver_is_valid_for_vehicle

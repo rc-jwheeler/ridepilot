@@ -1,7 +1,7 @@
-<% if @target_trips.any? %>
+<% if @target_trip_ids.any? %>
   <% if @prev_run.present? %>
     var prev_run_id = <%= @prev_run.id %>;
-    var trip_ids = <%= @target_trips.pluck(:id) %>;
+    var trip_ids = <%= @target_trip_ids.to_json.html_safe %>;
     trip_ids.forEach(function(trip_id) {
       $('#run_trips_panel_' + prev_run_id).find('tr[data-trip-id=' + trip_id + ']').remove();
     });
@@ -12,5 +12,7 @@
   <% if @need_to_update_trips_panel %>
     $('#unassigned_trips_panel').replaceWith("<%= j render('trips_runs/unassigned_trips_panel') %>");
     configure_unassigned_trips_table();
+  <% else %>
+    $('#unassigned_trips_panel .panel-title').html("<%= j render('trips_runs/unassigned_trips_panel_title') %>");
   <% end%>
 <% end %>

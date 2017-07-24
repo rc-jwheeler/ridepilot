@@ -15,6 +15,8 @@ class TripScheduler
     case @run.id
     when Run::UNSCHEDULED_RUN_ID
       unschedule
+    when Run::STANDBY_RUN_ID 
+      schedule_to_standby
     when Run::CAB_RUN_ID 
       schedule_to_cab
     else
@@ -36,13 +38,24 @@ class TripScheduler
   end
 
   def unschedule
-    @trip.update_attribute :cab, false
-    @trip.update_attribute :run, nil
+    @trip.cab = false 
+    @trip.run = nil 
+    @trip.is_stand_by = false
+    @trip.save(validate: false)
+  end
+
+  def schedule_to_standby
+    @trip.cab = false 
+    @trip.run = nil 
+    @trip.is_stand_by = true
+    @trip.save(validate: false)
   end
 
   def schedule_to_cab
-    @trip.update_attribute :cab, true
-    @trip.update_attribute :run, nil
+    @trip.cab = true 
+    @trip.run = nil 
+    @trip.is_stand_by = false
+    @trip.save(validate: false)
   end
 
   def schedule_to_run
@@ -60,6 +73,7 @@ class TripScheduler
 
     if errors.empty?
       @trip.cab = false
+      @trip.is_stand_by = false
       @trip.run = @run
       @trip.save(validate: false)
     end

@@ -33,6 +33,8 @@
         %td= format_time_for_listing run.scheduled_end_time
         %td.trips_count= run.trips.count
         %td
+          = link_to run_path(run, from_dispatch: true), style: 'padding-right: 5px;', title: "View details" do 
+            %i.fa.fa-external-link
           - if can?(:new, Trip)
             = link_to new_trip_path(from_dispatch: true, run_id: run.id), style: 'padding-right: 5px;', title: "New Trip" do 
               %i.fa.fa-plus

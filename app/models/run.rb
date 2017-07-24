@@ -104,11 +104,15 @@ class Run < ActiveRecord::Base
   end
 
   def self.fake_cab_run
-    Run.new name: TranslationEngine.translate_text(:cab), id: Run::CAB_RUN_ID
+    Run.new name: 'Cab', id: Run::CAB_RUN_ID
+  end
+
+  def self.fake_standby_run
+    Run.new name: 'Standby', id: Run::STANDBY_RUN_ID
   end
 
   def self.fake_unscheduled_run
-    Run.new name: TranslationEngine.translate_text(:unscheduled), id: Run::UNSCHEDULED_RUN_ID
+    Run.new name: 'Unscheduled', id: Run::UNSCHEDULED_RUN_ID
   end
 
   def self.update_prior_run_complete_status!

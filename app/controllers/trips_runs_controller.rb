@@ -35,21 +35,21 @@ class TripsRunsController < ApplicationController
   end
 
   def schedule_multiple
-    @target_trips = Trip.where(id: params[:trip_ids].split(',')) if params[:trip_ids].present?
+    @target_trip_ids = params[:trip_ids].split(',') if params[:trip_ids].present?
   
-    if @target_trips && @target_trips.any?
+    if @target_trip_ids && @target_trip_ids.any?
       @new_status_id = params[:status_id].to_i if params[:status_id]
       if [Run::UNSCHEDULED_RUN_ID, Run::STANDBY_RUN_ID, Run::CAB_RUN_ID].include? @new_status_id
         unschedule_trips
       elsif @new_status_id == Run::TRIP_UNMET_NEED_ID
-        @target_trips.move_to_unmet!
+        Trip.where(id: @target_trip_ids).move_to_unmet!
       else
         @errors = []
         @error_trip_count = 0
-        @target_trips.each do |t|
-          scheduler = TripScheduler.new(t.id, @new_status_id)
+        @target_trip_ids.each do |trip_id|
+          scheduler = TripScheduler.new(trip_id, @new_status_id)
           scheduler.execute
-
+          
           if scheduler.errors.any?
             @error_trip_count += 1
             @errors += scheduler.errors
@@ -66,8 +66,8 @@ class TripsRunsController < ApplicationController
 
   def unschedule
     @prev_run = Run.find_by_id(params[:prev_run_id])
-    @target_trips = Trip.where(id: params[:trip_ids].split(','))
-    if @target_trips.any?
+    @target_trip_ids = params[:trip_ids].split(',')
+    if @target_trip_ids.any?
       @new_status_id = params[:run_id].to_i if params[:run_id]
       unschedule_trips
 
@@ -98,6 +98,27 @@ class TripsRunsController < ApplicationController
 
     query_trips_runs
     prepare_unassigned_trip_schedule_options
+  end
+
+  def batch_change_same_run_trip_result
+    @target_trips = Trip.where(id: params[:trip_ids].split(',')) if params[:trip_ids].present?
+
+    if @target_trips && @target_trips.any?
+      @target_run = @target_trips.first.run
+      trip_result = TripResult.find_by_id(params[:trip_result_id])
+      if trip_result
+        @target_trips.each do |trip|
+          trip.trip_result = trip_result
+          trip.result_reason = params[:result_reason]
+          trip.save(validate: false)
+
+          trip.post_process_trip_result_changed!(current_user)
+        end
+
+        query_trips_runs
+        prepare_unassigned_trip_schedule_options
+      end
+    end
   end
   
   private
@@ -159,13 +180,16 @@ class TripsRunsController < ApplicationController
 
   def unschedule_trips
     @need_to_update_trips_panel = @new_status_id == session[:unassigned_trip_status_id].try(:to_i)
-    case @new_status_id
-    when Run::STANDBY_RUN_ID
-      @target_trips.update_all(cab: false, is_stand_by: true, run_id: nil)
-    when Run::CAB_RUN_ID
-      @target_trips.update_all(cab: true, is_stand_by: false, run_id: nil)
-    when Run::UNSCHEDULED_RUN_ID
-      @target_trips.update_all(cab: false, is_stand_by: false, run_id: nil)
+    target_trips = Trip.where(id: @target_trip_ids)
+    if target_trips.any?
+      case @new_status_id
+      when Run::STANDBY_RUN_ID
+        target_trips.update_all(cab: false, is_stand_by: true, run_id: nil)
+      when Run::CAB_RUN_ID
+        target_trips.update_all(cab: true, is_stand_by: false, run_id: nil)
+      when Run::UNSCHEDULED_RUN_ID
+        target_trips.update_all(cab: false, is_stand_by: false, run_id: nil)
+      end
     end
   end
 

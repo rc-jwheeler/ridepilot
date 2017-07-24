@@ -39,6 +39,8 @@
         %td
         %td= trip.notes
         %td
+          = link_to trip_path(trip, from_dispatch: true), style: 'padding-right: 5px;', title: "View details" do 
+            %i.fa.fa-external-link
           - if can?(:edit, trip)
             = link_to edit_trip_path(trip, from_dispatch: true), style: 'padding-right: 5px;', title: 'Edit' do 
               %i.fa.fa-pencil

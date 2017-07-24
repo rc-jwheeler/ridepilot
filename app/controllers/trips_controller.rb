@@ -181,19 +181,10 @@ class TripsController < ApplicationController
       if !@trip.update_attributes(change_result_params)
         @message = @trip.errors.full_messages.join(';')
       else
-        TrackerActionLog.cancel_or_turn_down_trip(@trip, current_user) if @trip.is_cancelled_or_turned_down?
-
         @trip_result_filters = trip_sessions[:trip_result_id]
-        if @trip.scheduled? && @trip.is_cancelled_or_turned_down?
-          if @trip.run.present?
-            @trip.run = nil
-            @trip.save
-          elsif @trip.cab
-            @trip.cab = false
-            @trip.save
-          end
-          @clear_trip_status = true
-        end
+        @clear_trip_status = true if @trip.scheduled? && @trip.is_cancelled_or_turned_down?
+
+        @trip.post_process_trip_result_changed!(current_user)
       end
     else
       @message = TranslationEngine.translate_text(:operation_not_authorized)

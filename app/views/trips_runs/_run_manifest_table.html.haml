@@ -21,6 +21,7 @@
       %tr
         %td{colspan: 14}= translate_helper(:empty_trips)
     - else
+      - run_id = trips.first.run_id
       - itins = get_itineraries(trips)
       - itins.each do |itin|
         %tr{data: {trip_id: itin[:trip_id]}}
@@ -39,3 +40,8 @@
           %td= simple_format(itin[:phone].join('<br>')) unless itin[:phone].empty?
           %td= itin[:driver_notified]
           %td
+            = link_to trip_path(itin[:trip_id], from_dispatch: true, run_id: run_id), style: 'padding-right: 5px;', title: "View details" do 
+              %i.fa.fa-external-link
+            - if can?(:edit, Trip)
+              = link_to edit_trip_path(itin[:trip_id], from_dispatch: true, run_id: run_id), style: 'padding-right: 5px;', title: 'Edit' do 
+                %i.fa.fa-pencil

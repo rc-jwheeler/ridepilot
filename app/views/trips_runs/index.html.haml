@@ -186,6 +186,18 @@
     $('#unassigned_trips_table').bootstrapTable();
   }
 
+  function change_trips_trip_result(trip_ids, result_id, reason) {
+    $.ajax({
+      url: "#{batch_change_same_run_trip_result_trips_runs_path}",
+      method: 'post',
+      data: {
+        trip_ids: trip_ids,
+        trip_result_id: result_id,
+        result_reason: reason
+      }
+    });
+  }
+
   // page main entry point
   $(function() {  
     // Initialize a helper object with the trip result reason modal, and a list of cancellation codes.
@@ -197,7 +209,7 @@
     // Handler for changing multiple selected trip results
       $(document).on('click', '.trip_result_option', function() {
         var trip_ids = [];
-        $(this).parents('.panel').find('input:checked').each(function() {
+        $(this).parents('.panel').find('tbody input:checked').each(function() {
           trip_ids.push($(this).parents('tr').data('trip-id'));
         });
 
@@ -206,6 +218,7 @@
           return;
         }
 
+        trip_ids = trip_ids.join(','); 
         var resultCode = $(this).data('trip-result-id');
 
         if(trh.isReasonNeeded(resultCode)) { // If result is a code that needs to ask for reason...
@@ -214,10 +227,10 @@
             true, // Show result reason input
             { // Prepare modal responses:
               confirm: function() { // update the results and result reason and submit form
-                console.log('TODO: submit with cancellation code');
+                change_trips_trip_result(trip_ids, resultCode, trh.modalInput.val());
               },
               skip: function() { // just update results and submit the form
-                console.log('TODO: submit without comment');
+                change_trips_trip_result(trip_ids, resultCode, null);
               },
               cancel: function() { // don't update results or submit form
                 return;
@@ -230,7 +243,7 @@
             false, // Don't show result reason input
             { // Prepare modal responses:
               confirm: function() {
-                console.log('TODO: submit with non-cancellation code');
+                change_trips_trip_result(trip_ids, resultCode, null);
               },
               cancel: function() {
                 return;
@@ -324,7 +337,7 @@
       var prev_run_id = run_panel.data('run-id');
       var run_id = $(this).data('status-id');
       var trip_ids = [];
-      run_panel.find('input:checked').each(function() {
+      run_panel.find('tbody input:checked').each(function() {
         trip_ids.push($(this).parents('tr').data('trip-id'));
       });
       if(trip_ids.length > 0) {
@@ -341,7 +354,7 @@
       var run_panel = $(this).parents('.panel');
       var status_id = $(this).data('status-id');
       var trip_ids = [];
-      run_panel.find('input:checked').each(function() {
+      run_panel.find('tbody input:checked').each(function() {
         trip_ids.push($(this).parents('tr').data('trip-id'));
       });
 
