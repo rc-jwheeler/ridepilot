@@ -14,7 +14,7 @@
       = render 'unassigned_trips_schedule_dropdown'
       - if can?(:new, Trip)
         %span.dispatch-action
-          = link_to new_trip_path(from_dispatch: true), style: 'color: white;', title: translate_helper("new_trip_link_text") do 
+          = link_to new_trip_path(from_dispatch: true, run_id: session[:unassigned_trip_status_id].try(:to_i)), style: 'color: white;', title: translate_helper("new_trip_link_text") do 
             %i.fa.fa-plus
       %span.panel-expand-collapse-reverse.dispatch-action
         %i.fa.fa-chevron-down

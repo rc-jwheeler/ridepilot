@@ -1,6 +1,7 @@
 .panel.panel-success.run_trips_panel{id: "run_trips_panel_#{run.id}", data: {run_id: run.id}}
   .panel-heading
     .pull-right{style: 'padding-right: 0px;'}
+      = render 'trip_result_dropdown'
       = render 'unschedule_trip_dropdown'
       - if can?(:cancel, run)  
         %span.dispatch-action

@@ -290,7 +290,16 @@ class TripsController < ApplicationController
     end
 
     if params[:run_id].present?
-      @trip.run_id = params[:run_id]
+      status_id = params[:run_id].to_i
+      case status_id
+      when Run::STANDBY_RUN_ID
+        @trip.is_stand_by = true
+      when Run::CAB_RUN_ID
+        @trip.cab = true
+      else 
+        @trip.run_id = status_id if status_id != Run::UNSCHEDULED_RUN_ID
+      end
+      
     end
 
     from_dispatch = params[:from_dispatch] == 'true'
@@ -425,6 +434,7 @@ class TripsController < ApplicationController
       :pickup_time,
       :provider_id, # We normally wouldn't accept this and would set it manually on the instance, but in this controller we're setting it in the params dynamically
       :cab,
+      :is_stand_by,
       :service_level_id,
       :trip_purpose_id,
       :trip_result_id,
