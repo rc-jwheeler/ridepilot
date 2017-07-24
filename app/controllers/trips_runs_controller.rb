@@ -5,6 +5,7 @@ class TripsRunsController < ApplicationController
     Date.beginning_of_week= :sunday
     filters_hash = runs_trips_params || {}
     update_sessions(filters_hash.except(:start, :end))
+    update_unassigned_trip_type_session
 
     # by default, select all trip results
     unless session[:trip_result_id].present?
@@ -40,8 +41,9 @@ class TripsRunsController < ApplicationController
     @prev_run = Run.find_by_id(params[:prev_run_id])
     @target_trips = Trip.where(id: params[:trip_ids].split(','))
     if @target_trips.any?
-      run_id = params[:run_id].to_i if params[:run_id]
-      case run_id
+      @new_run_id = params[:run_id].to_i if params[:run_id]
+      @need_to_update_trips_panel = @new_run_id == session[:unassigned_trip_status_id].try(:to_i)
+      case @new_run_id
       when Run::STANDBY_RUN_ID
         @target_trips.update_all(cab: false, is_stand_by: true)
       when Run::CAB_RUN_ID
@@ -69,12 +71,26 @@ class TripsRunsController < ApplicationController
 
     query_trips_runs
   end
+
+  def load_trips
+    update_unassigned_trip_type_session
+
+    query_trips_runs
+  end
   
   private
 
   def authorization
     authorize! :read, Run, :provider_id => current_provider_id
     authorize! :read, Trip, :provider_id => current_provider_id
+  end
+
+  def update_unassigned_trip_type_session
+    session[:unassigned_trip_status_id] = if params[:trip_status_id].present?
+      params[:trip_status_id]
+    else 
+      session[:unassigned_trip_status_id] || Run::UNSCHEDULED_RUN_ID
+    end
   end
 
   def query_trips_runs
@@ -91,8 +107,9 @@ class TripsRunsController < ApplicationController
     @trips = @trips.where("trip_result_id is NULL or trip_result_id not in (?)", exclude_trip_result_ids)
     filter_trips
 
-    @unassigned_trips = @trips.unscheduled
+    @unscheduled_trips = @trips.unscheduled
     @standby_trips = @trips.standby
+    @cab_trips = @trips.for_cab
   end
 
   def filter_trips

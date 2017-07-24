@@ -138,6 +138,17 @@
     }
   }
 
+  // load specific type of trips
+  function load_trips(type_id) {
+    // re-schedule a trip
+    $.ajax({
+      url: "#{load_trips_trips_runs_path}",
+      data: {
+        trip_status_id: type_id
+      }
+    });
+  }
+
   // expand or collapse given previous state
   function load_unassigned_trips_panel() {
     var was_collapsed = localStorage.getItem('dispatch_unassigned_trips_collapsed');
@@ -267,6 +278,11 @@
         load_run_manifest(run_id, true);
       }
       
+    });
+
+    // Change trip type to load
+    $(document).on('click', '.unassigned_trip_type', function(e){
+      load_trips($(this).data('status-id'));
     });
 
     load_runs_panel();

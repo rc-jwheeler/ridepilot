@@ -226,6 +226,7 @@ Rails.application.routes.draw do
         get :cancel_run
         get :runs_by_date
         get :run_trips
+        get :load_trips
       end
     end
 

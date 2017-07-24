@@ -1477,6 +1477,7 @@ en:
   unassigned_trips_table_header_type: "Type"
   unassigned_trips_table_header_riders_count: "# of Riders"
   unassigned_trips_table_header_fare: "Fare"
+  unassigned_trips_table_header_comments: "Comments"
   unassigned_trips_table_header_actions: "Actions"
   empty_trips: "No trip"
   empty_runs: "No run"

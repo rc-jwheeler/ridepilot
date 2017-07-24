@@ -1,6 +1,16 @@
+:ruby
+  trips = case session[:unassigned_trip_status_id].try(:to_i)
+  when Run::UNSCHEDULED_RUN_ID
+    @unscheduled_trips
+  when Run::STANDBY_RUN_ID
+    @standby_trips
+  when Run::CAB_RUN_ID
+    @cab_trips
+  end
 .panel.panel-warning#unassigned_trips_panel{style: 'margin: 0px;'}
   .panel-heading
     .pull-right{style: 'padding-right: 0px;'}
+      = render 'unassigned_trip_type_dropdown'
       %span.dispatch-action
         = link_to new_trip_path(from_dispatch: true), style: 'color: white;', title: translate_helper("new_trip_link_text") do 
           %i.fa.fa-plus
@@ -10,4 +20,4 @@
       = render 'unassigned_trips_panel_title'
 
   .panel-body
-    = render 'trips_runs/unassigned_trips_table', trips: @unassigned_trips
+    = render 'trips_runs/unassigned_trips_table', trips: trips

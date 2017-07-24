@@ -3,7 +3,7 @@
 %span{style: 'font-size: small;'}
   - stats = []
   - total_count = @trips.count
-  - unscheduled_count = @unassigned_trips.count
+  - unscheduled_count = @unscheduled_trips.count
   - standby_count = @standby_trips.count
   - scheduled_count = total_count - unscheduled_count - standby_count
   - stats << "#{unscheduled_count} unscheduled" if unscheduled_count > 0
