@@ -10,6 +10,10 @@
   padding: 0px;
 }
 
+#unassigned_trips_panel {
+  overflow-y: auto;
+}
+
 #unassigned_trips_panel .panel-body  {
   height: 200px;
   overflow-y: auto;
@@ -45,8 +49,7 @@
   bottom: 0px;
   left: 0px;
   right: 0px;
-  margin: 0px 0px 5px 0px;
-  padding-bottom: 30px;
+  margin: 0px 0px 32px 0px;
   background: white;
 }
 

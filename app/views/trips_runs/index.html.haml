@@ -49,6 +49,19 @@
     });
   }
 
+  // schedule multiple unassigned trips
+  function schedule_multiple_trips(trip_ids, status_id) {
+    // re-schedule a trip
+    $.ajax({
+      url: "#{schedule_multiple_trips_runs_path}",
+      method: 'post',
+      data: {
+        trip_ids: trip_ids,
+        status_id: status_id
+      }
+    });
+  }
+
   // scroll to a rendered run manifest panel
   function scroll_to_run_trips_panel(run_id) {
     $('html, body').animate({
@@ -241,7 +254,12 @@
 
     // master checkbox to select/unselect all
     $(document).on('change', '.master-select-checkbox', function(e){
-      $(this).parents('table').find('.trip-selected').prop('checked', $(this).prop('checked'));
+      $(this).parents('table').find('input.trip-selected').prop('checked', $(this).prop('checked'));
+    });
+
+    // unassigned trips panel checkbox
+    $(document).on('change', '#unassigned_trips_master_checkbox', function(e){
+      $('#unassigned_trips_table').find('input.trip-selected').prop('checked', $(this).prop('checked'));
     });
 
     // Batch unschedule trips
@@ -256,6 +274,24 @@
       if(trip_ids.length > 0) {
         bootbox.confirm('Are you sure to change the status?', function(){
           unschedule_trips(trip_ids.join(','), run_id, prev_run_id);
+        });
+      } else {
+        bootbox.alert('Please select trips first.');
+      }
+    });
+
+    // Batch schedule unassigned trips
+    $(document).on('click', '.schedule_trip', function(e){
+      var run_panel = $(this).parents('.panel');
+      var status_id = $(this).data('status-id');
+      var trip_ids = [];
+      run_panel.find('input:checked').each(function() {
+        trip_ids.push($(this).parents('tr').data('trip-id'));
+      });
+
+      if(trip_ids.length > 0) {
+        bootbox.confirm('Are you sure to change the status?', function(){
+          schedule_multiple_trips(trip_ids.join(','), status_id);
         });
       } else {
         bootbox.alert('Please select trips first.');

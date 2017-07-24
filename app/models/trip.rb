@@ -306,10 +306,14 @@ class Trip < ActiveRecord::Base
 
   # Move past scheduled trips in Standby queue to Unmet Need
   def self.move_prior_standby_to_unmet!
-    return unless provider.try(:active?)
+    Trip.prior_to_today.standby.move_to_unmet!
+  end
+
+  def self.move_to_unmet!
+    return unless self.first.provider.try(:active?)
     
     unmet = TripResult.find_by_code('UNMET')
-    Trip.prior_to_today.standby.update_all(is_stand_by: false, trip_result_id: unmet.id) if unmet.present?
+    self.update_all(is_stand_by: false, trip_result_id: unmet.id) if unmet.present?
   end
 
   def scheduled?

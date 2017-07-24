@@ -11,6 +11,7 @@
   %thead
     %tr
       %th
+        %input#unassigned_trips_master_checkbox{type: "checkbox"}
       %th= translate_helper(:unassigned_trips_table_header_type)
       %th= translate_helper(:unassigned_trips_table_header_customer)
       %th= translate_helper(:unassigned_trips_table_header_phone)
@@ -38,8 +39,9 @@
         %td
         %td= trip.notes
         %td
-          = link_to edit_trip_path(trip, from_dispatch: true), style: 'padding-right: 5px;', title: 'Edit' do 
-            %i.fa.fa-pencil
+          - if can?(:edit, trip)
+            = link_to edit_trip_path(trip, from_dispatch: true), style: 'padding-right: 5px;', title: 'Edit' do 
+              %i.fa.fa-pencil
 
 :javascript
   $(function() {

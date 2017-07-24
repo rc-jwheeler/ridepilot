@@ -13,13 +13,9 @@ class TripsRunsController < ApplicationController
     end
     
     query_trips_runs
-    
+    prepare_unassigned_trip_schedule_options
+
     @run_trip_day    = Utility.new.parse_date(session[:run_trip_day])
-
-    base_runs = @runs
-    base_runs = add_cab_run(base_runs) if current_provider.try(:cab_enabled?)
-
-    @runs_for_dropdown = add_unscheduled_run(base_runs).collect {|r| [r.label, r.id]}
 
     respond_to do |format|
       format.html
@@ -34,6 +30,37 @@ class TripsRunsController < ApplicationController
       @scheduler.execute
 
       query_trips_runs
+      prepare_unassigned_trip_schedule_options
+    end
+  end
+
+  def schedule_multiple
+    @target_trips = Trip.where(id: params[:trip_ids].split(',')) if params[:trip_ids].present?
+  
+    if @target_trips && @target_trips.any?
+      @new_status_id = params[:status_id].to_i if params[:status_id]
+      if [Run::UNSCHEDULED_RUN_ID, Run::STANDBY_RUN_ID, Run::CAB_RUN_ID].include? @new_status_id
+        unschedule_trips
+      elsif @new_status_id == Run::TRIP_UNMET_NEED_ID
+        @target_trips.move_to_unmet!
+      else
+        @errors = []
+        @error_trip_count = 0
+        @target_trips.each do |t|
+          scheduler = TripScheduler.new(t.id, @new_status_id)
+          scheduler.execute
+
+          if scheduler.errors.any?
+            @error_trip_count += 1
+            @errors += scheduler.errors
+          end
+        end
+
+        @errors.uniq!
+      end
+
+      query_trips_runs
+      prepare_unassigned_trip_schedule_options
     end
   end
 
@@ -41,18 +68,11 @@ class TripsRunsController < ApplicationController
     @prev_run = Run.find_by_id(params[:prev_run_id])
     @target_trips = Trip.where(id: params[:trip_ids].split(','))
     if @target_trips.any?
-      @new_run_id = params[:run_id].to_i if params[:run_id]
-      @need_to_update_trips_panel = @new_run_id == session[:unassigned_trip_status_id].try(:to_i)
-      case @new_run_id
-      when Run::STANDBY_RUN_ID
-        @target_trips.update_all(cab: false, is_stand_by: true)
-      when Run::CAB_RUN_ID
-        @target_trips.update_all(cab: true, is_stand_by: false)
-      end
-
-      @target_trips.update_all(run_id: nil)
+      @new_status_id = params[:run_id].to_i if params[:run_id]
+      unschedule_trips
 
       query_trips_runs
+      prepare_unassigned_trip_schedule_options
     end
   end
 
@@ -70,12 +90,14 @@ class TripsRunsController < ApplicationController
     @run.cancel! if @run
 
     query_trips_runs
+    prepare_unassigned_trip_schedule_options
   end
 
   def load_trips
     update_unassigned_trip_type_session
 
     query_trips_runs
+    prepare_unassigned_trip_schedule_options
   end
   
   private
@@ -110,6 +132,41 @@ class TripsRunsController < ApplicationController
     @unscheduled_trips = @trips.unscheduled
     @standby_trips = @trips.standby
     @cab_trips = @trips.for_cab
+  end
+
+  def prepare_unassigned_trip_schedule_options
+    @schedule_options = []
+    case session[:unassigned_trip_status_id].try(:to_i)
+    when Run::UNSCHEDULED_RUN_ID
+      @schedule_options += [[Run::STANDBY_RUN_ID, 'Standby']]
+      @schedule_options += [[Run::CAB_RUN_ID, 'Cab']] if current_provider.try(:cab_enabled?)
+    when Run::STANDBY_RUN_ID
+      @schedule_options += [[Run::UNSCHEDULED_RUN_ID, 'Unscheduled']]
+      @schedule_options += [[Run::CAB_RUN_ID, 'Cab']] if current_provider.try(:cab_enabled?)
+    when Run::CAB_RUN_ID
+      @schedule_options += [[Run::STANDBY_RUN_ID, 'Standby']]
+      @schedule_options += [[Run::UNSCHEDULED_RUN_ID, 'Unscheduled']]
+    end
+
+    @schedule_options += @runs.pluck(:id, :name)
+
+    if session[:unassigned_trip_status_id].try(:to_i) == Run::STANDBY_RUN_ID
+      @schedule_options += [[Run::TRIP_UNMET_NEED_ID, 'Unmet Need']] 
+    end
+
+    @schedule_options.compact
+  end
+
+  def unschedule_trips
+    @need_to_update_trips_panel = @new_status_id == session[:unassigned_trip_status_id].try(:to_i)
+    case @new_status_id
+    when Run::STANDBY_RUN_ID
+      @target_trips.update_all(cab: false, is_stand_by: true, run_id: nil)
+    when Run::CAB_RUN_ID
+      @target_trips.update_all(cab: true, is_stand_by: false, run_id: nil)
+    when Run::UNSCHEDULED_RUN_ID
+      @target_trips.update_all(cab: false, is_stand_by: false, run_id: nil)
+    end
   end
 
   def filter_trips

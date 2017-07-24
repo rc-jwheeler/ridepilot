@@ -80,6 +80,7 @@ class Run < ActiveRecord::Base
   CAB_RUN_ID = -1 # id for cab runs
   UNSCHEDULED_RUN_ID = -2 # id for unscheduled run (empty container)
   STANDBY_RUN_ID = -3 # standby queue id
+  TRIP_UNMET_NEED_ID = -4 # put trip to unmet need
   
   # "Cancels" a run: removes any trips from that run
   def cancel!

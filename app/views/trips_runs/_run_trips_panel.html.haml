@@ -2,15 +2,19 @@
   .panel-heading
     .pull-right{style: 'padding-right: 0px;'}
       = render 'unschedule_trip_dropdown'
-      %span.dispatch-action
-        = link_to cancel_run_trips_runs_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
-          %i.fa.fa-undo
-      %span.dispatch-action
-        = link_to edit_run_path(run, from_dispatch: true), style: 'color: white;', title: 'Edit' do 
-          %i.fa.fa-pencil
-      %span.dispatch-action
-        = link_to new_trip_path(from_dispatch: true, run_id: run.id), style: 'color: white;', title: translate_helper("new_trip_link_text") do 
-          %i.fa.fa-plus
+      - if can?(:cancel, run)  
+        %span.dispatch-action
+          = link_to cancel_run_trips_runs_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
+            %i.fa.fa-undo
+      - if can?(:edit, run)
+        %span.dispatch-action
+          = link_to edit_run_path(run, from_dispatch: true), style: 'color: white;', title: 'Edit' do 
+            %i.fa.fa-pencil
+
+      - if can?(:new, Trip)
+        %span.dispatch-action
+          = link_to new_trip_path(from_dispatch: true, run_id: run.id), style: 'color: white;', title: translate_helper("new_trip_link_text") do 
+            %i.fa.fa-plus
       %span.panel-close.dispatch-action{title: 'Close'}
         %i.fa.fa-remove
       %span.panel-expand-collapse.dispatch-action{title: 'Collapse/expand'}

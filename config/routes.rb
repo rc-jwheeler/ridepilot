@@ -223,6 +223,7 @@ Rails.application.routes.draw do
       collection do
         post :schedule
         post :unschedule
+        post :schedule_multiple
         get :cancel_run
         get :runs_by_date
         get :run_trips
