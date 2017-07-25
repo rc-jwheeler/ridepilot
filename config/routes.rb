@@ -225,6 +225,7 @@ Rails.application.routes.draw do
         post :unschedule
         post :schedule_multiple
         post :batch_change_same_run_trip_result
+        post :update_run_manifest_order
         get :cancel_run
         get :runs_by_date
         get :run_trips

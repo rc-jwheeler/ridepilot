@@ -8,6 +8,8 @@ class RepeatingRun < ActiveRecord::Base
   include RecurringRideCoordinatorScheduler
   include PublicActivity::Common
 
+  serialize :manifest_order, Array
+
   has_paper_trail
 
   validates :comments, :length => { :maximum => 30 }
