@@ -21,14 +21,14 @@
       %tr
         %td{colspan: 14}= translate_helper(:empty_trips)
     - else
-      - run_id = trips.first.run_id
-      - itins = get_itineraries(trips)
+      - run_id = run.id
+      - itins = get_itineraries(run)
       - itins.each do |itin|
-        %tr.manifest-row{data: {trip_id: itin[:trip_id], id: itin[:id], leg_flag: itin[:leg_id]}}
+        %tr.manifest-row{data: {trip_id: itin[:trip_id], id: itin[:id], leg_flag: itin[:leg_flag]}}
           %td
             %input.trip-selected{type: "checkbox"}
           %td= itin[:is_recurring] ? 'Recur' : 'Daily'
-          %td= itin[:leg_id] == 1 ? 'PU' : 'DO'
+          %td= itin[:leg_flag] == 1 ? 'PU' : 'DO'
           %td= itin[:customer]
           %td= itin[:address]
           %td= format_time_for_listing(itin[:time])

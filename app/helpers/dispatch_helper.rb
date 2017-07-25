@@ -1,9 +1,11 @@
 module DispatchHelper
 
-  def get_itineraries(trips)
+  def get_itineraries(run)
+    return [] unless run
+
     itins = []
 
-    trips.each do |trip|
+    run.trips.each do |trip|
       trip_data = {
         trip_id: trip.id,
         is_recurring: trip.repeating_trip_id.present?,
@@ -13,20 +15,24 @@ module DispatchHelper
         result: trip.trip_result.try(:name) || 'Pending'
       }
       itins << trip_data.merge(
-        id: "trip_{trip.id}_leg_1",
+        id: "trip_#{trip.id}_leg_1",
         leg_flag: 1,
         time: trip.pickup_time,
         address: trip.pickup_address.try(:one_line_text)
       )
       itins << trip_data.merge(
-        id: "trip_{trip.id}_leg_2",
+        id: "trip_#{trip.id}_leg_2",
         leg_flag: 2,
         time: trip.appointment_time,
         address: trip.dropoff_address.try(:one_line_text)
       )
     end
 
-    itins.sort_by { |hsh| hsh[:time] }
+    if run.manifest_order && run.manifest_order.any?
+      itins.sort_by { |itin| run.manifest_order.index(itin[:id]) }
+    else
+      itins.sort_by { |itin| itin[:time] }
+    end
   end
 
   def run_summary(run)

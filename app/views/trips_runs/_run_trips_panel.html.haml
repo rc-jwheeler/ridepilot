@@ -29,7 +29,7 @@
       %span.run_summary{style: 'font-size: small;'}
         = run_summary(run)
   .panel-body
-    = render 'trips_runs/run_manifest_table', trips: run.trips
+    = render 'trips_runs/run_manifest_table', run: run, trips: run.trips
 
 :javascript
   $("#run_trips_panel_#{run.id}").droppable({
@@ -46,29 +46,29 @@
       }
       var run_id = #{run.id};
       if(prev_run_id == run_id) {
-        var new_manifest_order = [];
-        source_panel.find('table tr.manifest-row').each(function(tr) {
-          new_manifest_order.push($(this).data('id'));
-        });
-        // same run, itinerary sequence change
-        var leg_flag = ui.draggable.data('leg-id');
-        var itin_id = $(this).data('id');
-        current_itin_index = new_manifest_order.indexOf(itin_id);
+        setTimeout(function() {
+          var new_manifest_order = [];
+          source_panel.find('table tr.manifest-row').each(function(tr) {
+            new_manifest_order.push($(this).data('id'));
+          });
+          // same run, itinerary sequence change
+          var leg_flag = ui.draggable.data('leg-flag');
+          var itin_id = ui.draggable.data('id');
+          current_itin_index = new_manifest_order.indexOf(itin_id);
 
-        var is_pickup = (leg_flag == '1');
-        var the_other_leg_flag = (is_pickup ? '2' : '1');
-        other_itin_index = new_manifest_order.indexOf("trip_" + trip_id + "_leg_" + the_other_leg_flag);
-        if(is_pickup && other_itin_index < current_itin_index) {
-          bootbox.alert('Pickup cannot be scheduled after the dropoff');
-          $("#run_trips_panel_" + run_id + " table tbody").sortable('cancel');
-          return;
-        } else if(!is_pickup && current_itin_index < other_itin_index) {
-          bootbox.alert('Dropoff cannot be scheduled before the pickup');
-          $("#run_trips_panel_" + run_id + " table tbody").sortable('cancel');
-          return;
-        }
-
-        change_run_manifest_order(run_id);
+          var is_pickup = (leg_flag == '1');
+          var the_other_leg_flag = (is_pickup ? '2' : '1');
+          other_itin_index = new_manifest_order.indexOf("trip_" + trip_id + "_leg_" + the_other_leg_flag);
+          if(is_pickup && other_itin_index < current_itin_index) {
+            $("#run_trips_panel_" + run_id + " table tbody").sortable('cancel');
+            bootbox.alert('Pickup cannot be scheduled after the dropoff');
+          } else if(!is_pickup && current_itin_index < other_itin_index) {
+            $("#run_trips_panel_" + run_id + " table tbody").sortable('cancel');
+            bootbox.alert('Dropoff cannot be scheduled before the pickup');
+          } else {
+            change_run_manifest_order(run_id, new_manifest_order);
+          }
+          }, 300);
       } else {
         schedule_trip(trip_id, run_id, prev_run_id);
       }
