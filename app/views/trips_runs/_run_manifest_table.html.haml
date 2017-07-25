@@ -24,11 +24,11 @@
       - run_id = trips.first.run_id
       - itins = get_itineraries(trips)
       - itins.each do |itin|
-        %tr{data: {trip_id: itin[:trip_id]}}
+        %tr.manifest-row{data: {trip_id: itin[:trip_id], id: itin[:id], leg_flag: itin[:leg_id]}}
           %td
             %input.trip-selected{type: "checkbox"}
           %td= itin[:is_recurring] ? 'Recur' : 'Daily'
-          %td= itin[:action]
+          %td= itin[:leg_id] == 1 ? 'PU' : 'DO'
           %td= itin[:customer]
           %td= itin[:address]
           %td= format_time_for_listing(itin[:time])

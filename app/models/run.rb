@@ -7,6 +7,8 @@ class Run < ActiveRecord::Base
 
   has_paper_trail
 
+  serialize :manifest_order, Array
+
   # Ignores:
   #   Already required:
   #     date

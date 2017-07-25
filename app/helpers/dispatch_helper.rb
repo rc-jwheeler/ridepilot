@@ -13,12 +13,14 @@ module DispatchHelper
         result: trip.trip_result.try(:name) || 'Pending'
       }
       itins << trip_data.merge(
-        action: 'PU',
+        id: "trip_{trip.id}_leg_1",
+        leg_flag: 1,
         time: trip.pickup_time,
         address: trip.pickup_address.try(:one_line_text)
       )
       itins << trip_data.merge(
-        action: 'DO',
+        id: "trip_{trip.id}_leg_2",
+        leg_flag: 2,
         time: trip.appointment_time,
         address: trip.dropoff_address.try(:one_line_text)
       )

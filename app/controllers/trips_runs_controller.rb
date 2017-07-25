@@ -120,6 +120,16 @@ class TripsRunsController < ApplicationController
       end
     end
   end
+
+  def update_run_manifest_order
+    @run = Run.find_by_id params[:run_id]
+
+    if @run && params[:manifest_order].present?
+      new_order = params[:manifest_order].split(',').uniq
+      @run.manifest_order = new_order 
+      @run.save(validate: false)
+    end
+  end
   
   private
 

@@ -64,6 +64,19 @@
     });
   }
 
+  // update run manifest order
+  function change_run_manifest_order(run_id, new_manifest_order) {
+    // re-schedule a trip
+    $.ajax({
+      url: "#{update_run_manifest_order_trips_runs_path}",
+      method: 'post',
+      data: {
+        run_id: run_id,
+        manifest_order: new_manifest_order.join(',')
+      }
+    });
+  }
+
   // scroll to a rendered run manifest panel
   function scroll_to_run_trips_panel(run_id) {
     $('html, body').animate({
