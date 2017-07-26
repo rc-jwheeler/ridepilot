@@ -193,7 +193,7 @@ module ApplicationHelper
 
     if run_date && vehicle.active_for_date?(run_date)
       class_name = "overdue-danger"
-      warning_msg = "Inactive today."
+      warning_msg = "Inactive for the run date."
     end
     
     tips = []
@@ -234,7 +234,7 @@ module ApplicationHelper
 
     if run_date && driver.active_for_date?(run_date)
       class_name = "overdue-danger"
-      warning_msg = "Inactive today."
+      warning_msg = "Inactive for the run date."
     end
 
     tips = []
