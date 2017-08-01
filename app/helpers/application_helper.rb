@@ -185,13 +185,13 @@ module ApplicationHelper
     end
   end
 
-  def get_vehicle_warnings(vehicle, run_date = nil)
+  def get_vehicle_warnings(vehicle, run = nil)
     return {} unless vehicle
 
     class_name = ''
     warning_msg = ''
 
-    if run_date && !vehicle.active_for_date?(run_date)
+    if run && !vehicle.active_for_date?(run.date)
       class_name = "overdue-danger"
       warning_msg = "Inactive for the run date."
     end
@@ -226,15 +226,27 @@ module ApplicationHelper
     }
   end 
 
-  def get_driver_warnings(driver, run_date = nil)
+  def get_driver_warnings(driver, run = nil)
     return {} unless driver
 
     class_name = ''
     warning_msg = ''
 
-    if run_date && !driver.active_for_date?(run_date)
-      class_name = "overdue-danger"
-      warning_msg = "Inactive for the run date."
+    if run && run.date
+      if !driver.active_for_date?(run.date)
+        class_name = "overdue-danger"
+        warning_msg = "Inactive for the run date. "
+      elsif run.scheduled_start_time && run.scheduled_end_time
+        unless driver.available_between?(run.date.wday, run.scheduled_start_time, run.scheduled_end_time)
+          class_name = "overdue-danger"
+          warning_msg += "Unavailable for the whole run time range. "
+        end
+      elsif 
+        unless driver.available?(run.date.wday)
+          class_name = "overdue-danger"
+          warning_msg += "Unavailable for the run time. "
+        end
+      end
     end
 
     tips = []

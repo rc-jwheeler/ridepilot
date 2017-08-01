@@ -60,7 +60,7 @@ module DispatchHelper
 
       vehicle = run.vehicle
       if vehicle 
-        vehicle_overdue_check = get_vehicle_warnings(vehicle, run.date)
+        vehicle_overdue_check = get_vehicle_warnings(vehicle, run)
         vehicle_part = "<span class='#{vehicle_overdue_check[:class_name]}' title='#{vehicle_overdue_check[:tips]}'>Vehicle: #{vehicle.try(:name) || '(empty)'}</span>"
       else
         vehicle_part = "<span>Vehicle: (empty)</span>"
@@ -68,7 +68,7 @@ module DispatchHelper
 
       driver = run.driver
       if driver 
-        driver_overdue_check = get_driver_warnings(driver, run.date)
+        driver_overdue_check = get_driver_warnings(driver, run)
         driver_part = "<span class='#{driver_overdue_check[:class_name]}' title='#{driver_overdue_check[:tips]}'>Driver: #{driver.try(:user_name) || '(empty)'}</span>"
       else
         driver_part = "<span>Driver: (empty)</span>"
