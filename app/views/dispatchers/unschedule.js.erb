@@ -10,9 +10,9 @@
   <% end %>
 
   <% if @need_to_update_trips_panel %>
-    $('#unassigned_trips_panel').replaceWith("<%= j render('trips_runs/unassigned_trips_panel') %>");
+    $('#unassigned_trips_panel').replaceWith("<%= j render('dispatchers/unassigned_trips_panel') %>");
     configure_unassigned_trips_table();
   <% else %>
-    $('#unassigned_trips_panel .panel-title').html("<%= j render('trips_runs/unassigned_trips_panel_title') %>");
+    $('#unassigned_trips_panel .panel-title').html("<%= j render('dispatchers/unassigned_trips_panel_title') %>");
   <% end%>
 <% end %>

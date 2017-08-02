@@ -161,7 +161,7 @@ module TrackerActionLogHelper
 
         msg.html_safe
       end
-    when "run.trip_added"
+    when "run.trip_added", "repeating_run.trip_added"
       run = log.trackable
       params = log.parameters || {}
 
@@ -175,7 +175,7 @@ module TrackerActionLogHelper
           end
         end
       end
-    when "run.trip_removed"
+    when "run.trip_removed", "repeating_run.trip_removed"
       run = log.trackable
       params = log.parameters || {}
 
@@ -189,10 +189,10 @@ module TrackerActionLogHelper
           end
         end
       end
-    when "run.itinerary_rearranged"
+    when "run.itinerary_rearranged", "repeating_run.itinerary_rearranged"
       run = log.trackable
       "Trip itineraries rearranged" if run.present?
-    when "run.run_cancelled"
+    when "run.run_cancelled", "repeating_run.run_cancelled"  
       run = log.trackable
       if run.present?
         "Run cancelled." 

@@ -1,0 +1,37 @@
+#weekday_select
+  %label
+    = translate_helper("days_of_week")
+  - days_abbr = translate_helper("date.day_name_initials").split(",")
+  #weekday_select_buttons.btn-group{"data-toggle" => "buttons", :style => "padding:0px;"}
+    %label.btn.btn-default{:for => "weekday_sun"}
+      = days_abbr[0]
+      %input#weekday_sun{:autocomplete => "off", :type => "radio", :data => {wday: 0}}
+    %label.btn.btn-default{:for => "weekday_mon"}
+      = days_abbr[1]
+      %input#weekday_mon{:autocomplete => "off", :type => "radio", :data => {wday: 1}}
+    %label.btn.btn-default{:for => "weekday_tue"}
+      = days_abbr[2]
+      %input#weekday_tue{:autocomplete => "off", :type => "radio", :data => {wday: 2}}
+    %label.btn.btn-default{:for => "weekday_wed"}
+      = days_abbr[3]
+      %input#weekday_wed{:autocomplete => "off", :type => "radio", :data => {wday: 3}}
+    %label.btn.btn-default{:for => "weekday_thu"}
+      = days_abbr[4]
+      %input#weekday_thu{:autocomplete => "off", :type => "radio", :data => {wday: 4}}
+    %label.btn.btn-default{:for => "weekday_fri"}
+      = days_abbr[5]
+      %input#weekday_fri{:autocomplete => "off", :type => "radio", :data => {wday: 5}}
+    %label.btn.btn-default{:for => "weekday_sat"}
+      = days_abbr[6]
+      %input#weekday_sat{:autocomplete => "off", :type => "radio", :data => {wday: 6}}
+
+:javascript
+  $(document).ready(function() {
+    function initWeekdaySelect() {
+      var dayToShow = #{@day_of_week || Date.today.wday};
+
+      $('#weekday_select_buttons .btn').eq(dayToShow).button('toggle');
+    }
+
+    initWeekdaySelect();
+  });

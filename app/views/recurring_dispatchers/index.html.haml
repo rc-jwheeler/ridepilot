@@ -1,0 +1,407 @@
+:css
+  table td p {
+    line-height: normal;
+    margin: 0px;
+  }
+= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'dispatchers'
+.col-sm-12{style: 'padding: 0px;'}
+  .pull-right
+    = link_to translate_helper(:daily_scheduling), dispatchers_path, class: 'btn action-button'
+  = render :partial => 'filters'
+%hr
+.col-sm-12.dispatch-main{style: 'padding: 0px; margin-bottom: 230px;'}
+  = render 'runs_panel'
+.col-sm-12#unassigned_trips_container
+  = render 'unassigned_trips_panel'
+
+:javascript
+  var run_ids = #{@runs.pluck(:id) || []};
+  var target_run_id = #{params[:run_id] || false} || null;
+  var dropping_to_trips = false;
+  // Local Storages
+  // dispatch_loaded_run_ids = [] (list of run panels that are open)
+  // dispatch_runs_panel_collapsed: 1/0 (0 if the runs panel is collapsed)
+  // dispatch_run_panel_{id}_collapsed: 1/0 (0 if a specific run panel is collapsed)
+  // dispatch_unassigned_trips_collapsed: 1/0 (0 if the unassigned trips panel is collapsed)
+
+  // update one trip schedule status
+  function schedule_trip(trip_id, run_id, prev_run_id) {
+    // re-schedule a trip
+    $.ajax({
+      url: "#{schedule_recurring_dispatchers_path}",
+      method: 'post',
+      data: {
+        trip_id: trip_id,
+        run_id: run_id,
+        prev_run_id: prev_run_id
+      }
+    });
+  }
+
+  // unschedule multiple trips
+  function unschedule_trips(trip_ids, run_id, prev_run_id) {
+    // re-schedule a trip
+    $.ajax({
+      url: "#{unschedule_recurring_dispatchers_path}",
+      method: 'post',
+      data: {
+        trip_ids: trip_ids,
+        run_id: run_id,
+        prev_run_id: prev_run_id
+      }
+    });
+  }
+
+  // schedule multiple unassigned trips
+  function schedule_multiple_trips(trip_ids, status_id) {
+    // re-schedule a trip
+    $.ajax({
+      url: "#{schedule_multiple_recurring_dispatchers_path}",
+      method: 'post',
+      data: {
+        trip_ids: trip_ids,
+        status_id: status_id
+      }
+    });
+  }
+
+  // update run manifest order
+  function change_run_manifest_order(run_id, new_manifest_order) {
+    // re-schedule a trip
+    $.ajax({
+      url: "#{update_run_manifest_order_recurring_dispatchers_path}",
+      method: 'post',
+      data: {
+        run_id: run_id,
+        manifest_order: new_manifest_order.join(',')
+      }
+    });
+  }
+
+  // scroll to a rendered run manifest panel
+  function scroll_to_run_trips_panel(run_id) {
+    $('html, body').animate({
+      scrollTop: $("#run_trips_panel_" + run_id).offset().top
+    }, 1000);
+  }
+
+  function collapse_panel(panel) {
+    panel.find('.panel-body').slideUp();
+    panel.find('.panel-expand-collapse').addClass('panel-collapsed');
+    panel.find('.panel-expand-collapse i').removeClass('fa-chevron-up').addClass('fa-chevron-down'); 
+  }
+
+  function expand_panel(panel) {
+    panel.find('.panel-body').slideDown();
+    panel.find('.panel-expand-collapse').removeClass('panel-collapsed');
+    panel.find('.panel-expand-collapse i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+  }
+
+  function reverse_collapse_panel(panel) {
+    panel.find('.panel-body').slideUp();
+    panel.find('.panel-expand-collapse-reverse').addClass('panel-collapsed');
+    panel.find('.panel-expand-collapse-reverse i').removeClass('fa-chevron-down').addClass('fa-chevron-up'); 
+  }
+
+  function reverse_expand_panel(panel) {
+    panel.find('.panel-body').slideDown();
+    panel.find('.panel-expand-collapse-reverse').removeClass('panel-collapsed');
+    panel.find('.panel-expand-collapse-reverse i').removeClass('fa-chevron-up').addClass('fa-chevron-down'); 
+  }
+
+  function collapse_run_manifest(run_id) {
+    collapse_panel($("#run_trips_panel_" + run_id));
+  }
+
+  // ajax load run manifest panel and render
+  function load_run_manifest(run_id, scroll_to) {
+    $.ajax({
+      url: "#{run_trips_recurring_dispatchers_path}?run_id=" + run_id,
+      success: function() {
+        var loaded_run_ids = get_loaded_run_id_array();
+        if(loaded_run_ids.indexOf(run_id) < 0) {
+          loaded_run_ids.push(run_id);
+          localStorage.setItem('recurring_dispatch_loaded_run_ids', loaded_run_ids.join(','));
+        }
+        is_target_run = false;
+        if(run_id || run_id == 0) {
+          is_target_run = run_id == target_run_id;
+        }
+        if(scroll_to || is_target_run) {
+          scroll_to_run_trips_panel(run_id);
+        }
+
+        var was_collapsed = localStorage.getItem('recurring_dispatch_run_panel_' + run_id + '_collapsed');
+        if(was_collapsed == '0') {
+          collapse_run_manifest(run_id);
+        }
+      }
+    });
+  }
+
+  function get_loaded_run_id_array() {
+    var id_array = [];
+    var loaded_run_id_string = localStorage.getItem('recurring_dispatch_loaded_run_ids');
+    if(loaded_run_id_string) {
+      id_array = loaded_run_id_string.split(',');
+    }
+
+    return id_array;
+  }
+
+  // load previously open run manifest panels
+  function load_runs_panel() {
+    var was_collapsed = localStorage.getItem('recurring_dispatch_runs_panel_collapsed');
+    if(was_collapsed == '0') {
+      // by default, collapse Unassigned Trips panel
+      $('#runs_panel .panel-expand-collapse').click();
+    }
+
+    var loaded_run_ids = get_loaded_run_id_array();
+    if(loaded_run_ids.length > 0) {
+      loaded_run_ids.forEach(function(run_id) {
+        if(run_ids.indexOf(parseInt(run_id)) >= 0) {
+          load_run_manifest(run_id, false);
+        }
+      });
+    }
+  }
+
+  // expand or collapse given previous state
+  function load_unassigned_trips_panel() {
+    var was_collapsed = localStorage.getItem('recurring_dispatch_unassigned_trips_collapsed');
+    if(was_collapsed != '1') {
+      // by default, collapse Unassigned Trips panel
+      $('#unassigned_trips_panel .panel-expand-collapse-reverse').click();
+    }
+  }
+
+  // configure to be draggable
+  function configure_unassigned_trips_table() {
+    $('#unassigned_trips_table tbody tr td').draggable({
+      appendTo: 'body',
+      zIndex: 10010,
+      helper: function() {
+        return $(this).parent('tr').clone();
+      }
+    });
+
+    $("#unassigned_trips_panel").droppable({
+      tolerance: 'pointer',
+      hoverClass: "drop-zone-active-red",
+      over: function(event, ui) {
+        $(".run_trips_panel").droppable("disable");
+      },
+      out: function(event, ui) {
+        $(".run_trips_panel").droppable("enable");
+      },
+      drop: function(e, ui) {
+        $('.drop-zone-active').removeClass('drop-zone-active');
+        var source_panel = ui.draggable.parents('.panel');
+        var prev_run_id = source_panel.data('run-id');
+        if(prev_run_id) {
+          var trip_id = ui.draggable.data('trip-id');
+          unschedule_trips(trip_id, $('.unassigned_trip_type_dropdown').data('status-id'), prev_run_id);
+        }
+
+        setTimeout(function() {
+          $(".run_trips_panel").droppable("enable");
+        }, 200);
+        
+      }
+    });
+
+    $('#unassigned_trips_table').bootstrapTable();
+  }
+
+  // page main entry point
+  $(function() {  
+    // Initialize a helper object with the trip result reason modal, and a list of cancellation codes.
+    var trh = new TripResultHelper(
+      "#tripResultReasonDialog",
+      #{TripResult.reason_needed_result_ids}
+    );
+
+    // Handler for changing multiple selected trip results
+      $(document).on('click', '.trip_result_option', function() {
+        var trip_ids = [];
+        $(this).parents('.panel').find('tbody input.trip-selected:checked').each(function() {
+          trip_ids.push($(this).parents('tr').data('trip-id'));
+        });
+
+        if(trip_ids.length == 0) {
+          bootbox.alert('Please select trips first.');
+          return;
+        }
+
+        trip_ids = trip_ids.join(','); 
+        var resultCode = $(this).data('trip-result-id');
+
+        if(trh.isReasonNeeded(resultCode)) { // If result is a code that needs to ask for reason...
+          trh.prepareModal(
+            "", // Set result reason input to blank
+            true, // Show result reason input
+            { // Prepare modal responses:
+              confirm: function() { // update the results and result reason and submit form
+                change_trips_trip_result(trip_ids, resultCode, trh.modalInput.val());
+              },
+              skip: function() { // just update results and submit the form
+                change_trips_trip_result(trip_ids, resultCode, null);
+              },
+              cancel: function() { // don't update results or submit form
+                return;
+              }
+            }
+          )
+        } else { // If result is NOT a cancel code...
+          trh.prepareModal(
+            "", // Set result reason input to blank
+            false, // Don't show result reason input
+            { // Prepare modal responses:
+              confirm: function() {
+                change_trips_trip_result(trip_ids, resultCode, null);
+              },
+              cancel: function() {
+                return;
+              }
+            }
+          )
+        }
+
+        trh.showModal();
+        
+      });
+
+    // run manifest panel expand/collapse
+    $(document).on('click', '.panel-heading span.panel-expand-collapse', function(e){
+      var $this = $(this);
+      var panel = $this.parents('.panel');
+      var is_collapsed = false;
+      if(!$this.hasClass('panel-collapsed')) {
+        collapse_panel(panel);
+
+        is_collapsed = true;      
+      } else {
+        expand_panel(panel);
+      }
+
+      if(panel.hasClass('run_trips_panel')) {
+        var run_id = panel.data('run-id');
+        localStorage.setItem('recurring_dispatch_run_panel_' + run_id + '_collapsed', (is_collapsed ? '0' : '1'));
+      }
+
+      if(panel.attr('id') == 'runs_panel') {
+        localStorage.setItem('recurring_dispatch_runs_panel_collapsed', (is_collapsed ? '0' : '1'));
+      }
+    });
+
+    // unassigned trips panel expand/collapse
+    $(document).on('click', '.panel-heading span.panel-expand-collapse-reverse', function(e){
+      var $this = $(this);
+      var panel = $this.parents('.panel');
+      var is_collapsed = false;
+      if(!$this.hasClass('panel-collapsed')) {
+        reverse_collapse_panel(panel);
+        is_collapsed = true;
+      } else {
+        reverse_expand_panel(panel);
+      }
+
+      if(panel.attr('id') == 'unassigned_trips_panel') {
+        localStorage.setItem('recurring_dispatch_unassigned_trips_collapsed', (is_collapsed ? '0' : '1'));
+      }
+    });
+
+    // run manifest panel close
+    $(document).on('click', '.panel-heading span.panel-close', function(e){
+      var $panel = $(this).parents('.panel');
+      $panel.hide('slow', function(){ $panel.remove(); });
+
+      if($panel.hasClass('run_trips_panel')) {
+        // clean up local storage
+        var run_id = $panel.data('run-id');
+        localStorage.removeItem('recurring_dispatch_run_panel_' + run_id + '_collapsed');
+        var loaded_run_ids = get_loaded_run_id_array();
+        var run_id_index = loaded_run_ids.indexOf(run_id.toString());
+        if(run_id_index >= 0) {
+          loaded_run_ids.splice(run_id_index, 1);
+          localStorage.setItem('recurring_dispatch_loaded_run_ids', loaded_run_ids.join(','))
+        }
+
+        console.log(loaded_run_ids);
+      }
+    });
+
+    // close all run panels
+    $(document).on('click', '.panel-heading span.panel-close-all-runs', function(e){
+      $('.run_trips_panel .panel-heading span.panel-close').click();
+    });
+
+    // master checkbox to select/unselect all
+    $(document).on('change', '.master-select-checkbox', function(e){
+      $(this).parents('table').find('input.trip-selected').prop('checked', $(this).prop('checked'));
+    });
+
+    // unassigned trips panel checkbox
+    $(document).on('change', '#unassigned_trips_master_checkbox', function(e){
+      $('#unassigned_trips_table').find('input.trip-selected').prop('checked', $(this).prop('checked'));
+    });
+
+    // Batch unschedule trips
+    $(document).on('click', '.unschedule_trip', function(e){
+      var run_panel = $(this).parents('.panel');
+      var prev_run_id = run_panel.data('run-id');
+      var run_id = $(this).data('status-id');
+      var trip_ids = [];
+      run_panel.find('tbody input.trip-selected:checked').each(function() {
+        trip_ids.push($(this).parents('tr').data('trip-id'));
+      });
+      if(trip_ids.length > 0) {
+        bootbox.confirm('Are you sure to change the status?', function(){
+          unschedule_trips(trip_ids.join(','), run_id, prev_run_id);
+        });
+      } else {
+        bootbox.alert('Please select trips first.');
+      }
+    });
+
+    // Batch schedule unassigned trips
+    $(document).on('click', '.schedule_trip', function(e){
+      var run_panel = $(this).parents('.panel');
+      var status_id = $(this).data('status-id');
+      var trip_ids = [];
+      run_panel.find('tbody input.trip-selected:checked').each(function() {
+        trip_ids.push($(this).parents('tr').data('trip-id'));
+      });
+
+      if(trip_ids.length > 0) {
+        bootbox.confirm('Are you sure to change the status?', function(){
+          schedule_multiple_trips(trip_ids.join(','), status_id);
+        });
+      } else {
+        bootbox.alert('Please select trips first.');
+      }
+    });
+
+    // stop # link jumping to page top
+    $(document).on('click', '.non_jump_top', function(e){
+      e.preventDefault();
+    });
+
+    // click run_name in runs table
+    $(document).on('click', '.run_name_link', function(e) {
+      e.preventDefault();
+      var run_id = $(this).data('run-id');
+      if($("#run_trips_panel_" + run_id).length > 0) {
+        scroll_to_run_trips_panel(run_id);
+        return false;
+      } else {
+        load_run_manifest(run_id, true);
+      }
+      
+    });
+
+    load_runs_panel();
+    load_unassigned_trips_panel();
+  });
+  

@@ -341,7 +341,7 @@ class TripsController < ApplicationController
             render action: :show
           else
             if from_dispatch
-              redirect_to trips_runs_path(run_id: params[:run_id]), :notice => 'Trip was successfully created.'
+              redirect_to dispatchers_path(run_id: params[:run_id]), :notice => 'Trip was successfully created.'
             else
               redirect_to(@trip, :notice => 'Trip was successfully created.')
             end
@@ -405,7 +405,7 @@ class TripsController < ApplicationController
 
         format.html {
           if params[:from_dispatch] == 'true'
-            redirect_to trips_runs_path(run_id: @trip.run_id), :notice => 'Trip was successfully updated.'  
+            redirect_to dispatchers_path(run_id: @trip.run_id), :notice => 'Trip was successfully updated.'  
           else
             redirect_to @trip, :notice => 'Trip was successfully updated.'  
           end

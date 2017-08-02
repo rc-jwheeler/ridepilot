@@ -1,21 +1,27 @@
 module DispatchHelper
 
-  def get_itineraries(run)
+  def get_itineraries(run, is_recurring = false, recurring_dispatch_wday = nil)
     return [] unless run
 
     itins = []
 
-    run.trips.each do |trip|
+    trips = if is_recurring
+      RepeatingTrip.where(id: run.weekday_assignments.for_wday(recurring_dispatch_wday).pluck(:repeating_trip_id))
+    else
+      run.trips
+    end
+
+    trips.each do |trip|
       trip_data = {
         trip: trip,
         trip_id: trip.id,
-        is_recurring: trip.repeating_trip_id.present?,
+        is_recurring: is_recurring ? true : trip.repeating_trip_id.present?,
         customer: trip.customer.try(:name),
         phone: [trip.customer.phone_number_1, trip.customer.phone_number_2].compact,
         comments: trip.notes,
-        result: trip.trip_result.try(:name) || 'Pending'
+        result: is_recurring ? nil : (trip.trip_result.try(:name) || 'Pending')
       }
-      pickup_sort_key = trip.pickup_time.try(:to_i).to_s + "_1"
+      pickup_sort_key = time_portion(trip.pickup_time).try(:to_i).to_s + "_1"
       itins << trip_data.merge(
         id: "trip_#{trip.id}_leg_1",
         leg_flag: 1,
@@ -24,7 +30,7 @@ module DispatchHelper
         address: trip.pickup_address.try(:one_line_text)
       )
 
-      dropoff_sort_time = trip.appointment_time ? trip.appointment_time : trip.pickup_time
+      dropoff_sort_time = trip.appointment_time ? time_portion(trip.appointment_time) : time_portion(trip.pickup_time)
       dropoff_sort_key = dropoff_sort_time.try(:to_i).to_s + "_2"
       itins << trip_data.merge(
         id: "trip_#{trip.id}_leg_2",
@@ -82,6 +88,49 @@ module DispatchHelper
       
       [vehicle_part, driver_part, run_time_part, trips_part].join(', ')
     end
+  end
+
+  def recurring_run_summary(run, wday = Date.today.wday)
+    if run
+      trip_count = run.weekday_assignments.for_wday(wday).count
+      trips_part = if trip_count == 0
+        "No trip" 
+      elsif trip_count == 1
+        "1 trip"
+      else
+        "#{trip_count} trips"
+      end
+
+      vehicle = run.vehicle
+      if vehicle 
+        vehicle_overdue_check = get_vehicle_warnings(vehicle, run)
+        vehicle_part = "<span class='#{vehicle_overdue_check[:class_name]}' title='#{vehicle_overdue_check[:tips]}'>Vehicle: #{vehicle.try(:name) || '(empty)'}</span>"
+      else
+        vehicle_part = "<span>Vehicle: (empty)</span>"
+      end
+
+      driver = run.driver
+      if driver 
+        driver_overdue_check = get_driver_warnings(driver, run)
+        driver_part = "<span class='#{driver_overdue_check[:class_name]}' title='#{driver_overdue_check[:tips]}'>Driver: #{driver.try(:user_name) || '(empty)'}</span>"
+      else
+        driver_part = "<span>Driver: (empty)</span>"
+      end
+
+      run_time_part = if !run.scheduled_start_time && !run.scheduled_end_time
+        "Run time: (not specified)"
+      else
+        "Run Time: #{format_time_for_listing(run.scheduled_start_time)} - #{format_time_for_listing(run.scheduled_end_time)}"
+      end
+      
+      [vehicle_part, driver_part, run_time_part, trips_part].join(', ')
+    end
+  end
+
+  private
+
+  def time_portion(time)
+    (time - time.beginning_of_day) if time
   end
 
 end

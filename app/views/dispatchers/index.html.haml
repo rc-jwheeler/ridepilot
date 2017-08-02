@@ -3,8 +3,10 @@
     line-height: normal;
     margin: 0px;
   }
-= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips_runs'
+= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'dispatchers'
 .col-sm-12{style: 'padding: 0px;'}
+  .pull-right
+    = link_to translate_helper(:recurring_scheduling), recurring_dispatchers_path, class: 'btn action-button'
   = render :partial => 'filters'
 %hr
 .col-sm-12.dispatch-main{style: 'padding: 0px; margin-bottom: 230px;'}
@@ -28,7 +30,7 @@
   function schedule_trip(trip_id, run_id, prev_run_id) {
     // re-schedule a trip
     $.ajax({
-      url: "#{schedule_trips_runs_path}",
+      url: "#{schedule_dispatchers_path}",
       method: 'post',
       data: {
         trip_id: trip_id,
@@ -42,7 +44,7 @@
   function unschedule_trips(trip_ids, run_id, prev_run_id) {
     // re-schedule a trip
     $.ajax({
-      url: "#{unschedule_trips_runs_path}",
+      url: "#{unschedule_dispatchers_path}",
       method: 'post',
       data: {
         trip_ids: trip_ids,
@@ -56,7 +58,7 @@
   function schedule_multiple_trips(trip_ids, status_id) {
     // re-schedule a trip
     $.ajax({
-      url: "#{schedule_multiple_trips_runs_path}",
+      url: "#{schedule_multiple_dispatchers_path}",
       method: 'post',
       data: {
         trip_ids: trip_ids,
@@ -69,7 +71,7 @@
   function change_run_manifest_order(run_id, new_manifest_order) {
     // re-schedule a trip
     $.ajax({
-      url: "#{update_run_manifest_order_trips_runs_path}",
+      url: "#{update_run_manifest_order_dispatchers_path}",
       method: 'post',
       data: {
         run_id: run_id,
@@ -116,7 +118,7 @@
   // ajax load run manifest panel and render
   function load_run_manifest(run_id, scroll_to) {
     $.ajax({
-      url: "#{run_trips_trips_runs_path}?run_id=" + run_id,
+      url: "#{run_trips_dispatchers_path}?run_id=" + run_id,
       success: function() {
         var loaded_run_ids = get_loaded_run_id_array();
         if(loaded_run_ids.indexOf(run_id) < 0) {
@@ -171,7 +173,7 @@
   function load_trips(type_id) {
     // re-schedule a trip
     $.ajax({
-      url: "#{load_trips_trips_runs_path}",
+      url: "#{load_trips_dispatchers_path}",
       data: {
         trip_status_id: type_id
       }
@@ -227,7 +229,7 @@
 
   function change_trips_trip_result(trip_ids, result_id, reason) {
     $.ajax({
-      url: "#{batch_change_same_run_trip_result_trips_runs_path}",
+      url: "#{batch_change_same_run_trip_result_dispatchers_path}",
       method: 'post',
       data: {
         trip_ids: trip_ids,

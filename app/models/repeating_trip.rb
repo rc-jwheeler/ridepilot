@@ -1,6 +1,3 @@
-# This is a 'dumb' model. It is managed by a Trip instance, which creates a 
-# repeating instance of itself when instructed to. Validation is nonexistent 
-# since all data should already have been vetted by the Trip instance.
 class RepeatingTrip < ActiveRecord::Base
   include RequiredFieldValidatorModule
   include RecurringRideCoordinatorScheduler
@@ -62,6 +59,9 @@ class RepeatingTrip < ActiveRecord::Base
 
   belongs_to :driver, -> { with_deleted } 
   belongs_to :vehicle, -> { with_deleted }
+
+  has_many :repeating_runs, through: :weekday_assignments
+  has_many :weekday_assignments, dependent: :destroy
 
   validates :comments, :length => { :maximum => 30 } 
  

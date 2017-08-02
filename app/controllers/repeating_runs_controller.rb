@@ -39,9 +39,13 @@ class RepeatingRunsController < ApplicationController
 
     respond_to do |format|
       if @run.is_all_valid?(current_provider_id) && @run.save
+        TrackerActionLog.create_subscription_run(@run, current_user)
         format.html {
-          TrackerActionLog.create_subscription_run(@run, current_user)
-          redirect_to @run, :notice => 'Subscription run template was successfully created.'
+          if params[:from_dispatch] == 'true'
+            redirect_to recurring_dispatchers_path(run_id: @run.id), :notice => 'Run was successfully created.' 
+          else
+            redirect_to @run, :notice => 'Subscription run template was successfully created.'
+          end
         }
       else
         prep_view
@@ -60,7 +64,13 @@ class RepeatingRunsController < ApplicationController
     respond_to do |format|
       if @run.is_all_valid?(current_provider_id) && @run.save
         TrackerActionLog.update_subscription_run(@run, current_user, changes, prev_schedule)
-        format.html { redirect_to(@run, :notice => 'Run was successfully updated.')  }
+        format.html { 
+          if params[:from_dispatch] == 'true'
+            redirect_to recurring_dispatchers_path(run_id: @run.id), :notice => 'Run was successfully updated.' 
+          else
+            redirect_to @run, :notice => 'Subscription run template was successfully updated.'
+          end  
+        }
       else
         prep_view
         format.html { render :action => "edit"  }

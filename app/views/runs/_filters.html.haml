@@ -23,7 +23,7 @@
             %button.btn.btn-default{:type => "button"}
               = image_tag "calendar-clock.png"
       .col-sm-12{style: 'padding: 5px;'}
-        = render partial: 'trips/weekday_select'
+        = render partial: 'shared/weekday_select'
       .col-sm-12{style: 'padding: 5px;'}
         = f.label :vehicle_id, translate_helper(:vehicle)
         = f.select :vehicle_id, options_from_collection_for_select( @vehicles, :id, :name, session[:runs_vehicle_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }

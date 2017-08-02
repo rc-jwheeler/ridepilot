@@ -12,6 +12,9 @@ class RepeatingRun < ActiveRecord::Base
 
   has_paper_trail
 
+  has_many :repeating_trips, through: :weekday_assignments
+  has_many :weekday_assignments, dependent: :destroy
+
   validates :comments, :length => { :maximum => 30 }
   validate :name_uniqueness
   normalize_attribute :name, :with => [ :strip ]

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170726184037) do
+ActiveRecord::Schema.define(version: 20170802212800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1140,5 +1140,16 @@ ActiveRecord::Schema.define(version: 20170726184037) do
   end
 
   add_index "versions", ["item_type", "item_id"], :name => "index_versions_on_item_type_and_item_id"
+
+  create_table "weekday_assignments", force: true do |t|
+    t.integer  "repeating_trip_id"
+    t.integer  "repeating_run_id"
+    t.integer  "wday"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "weekday_assignments", ["repeating_run_id"], :name => "index_weekday_assignments_on_repeating_run_id"
+  add_index "weekday_assignments", ["repeating_trip_id"], :name => "index_weekday_assignments_on_repeating_trip_id"
 
 end

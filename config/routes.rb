@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
     mount TranslationEngine::Engine => "/translation_engine"
 
-    root :to => "trips_runs#index"
+    root :to => "dispatchers#index"
 
     get "admin", :controller => :home, :action => :index
 
@@ -220,7 +220,21 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :trips_runs, only: [:index] do
+    resources :dispatchers,only: [:index] do
+      collection do
+        post :schedule
+        post :unschedule
+        post :schedule_multiple
+        post :batch_change_same_run_trip_result
+        post :update_run_manifest_order
+        get :cancel_run
+        get :runs_by_date
+        get :run_trips
+        get :load_trips
+      end
+    end
+
+    resources :recurring_dispatchers,only: [:index] do
       collection do
         post :schedule
         post :unschedule
@@ -246,8 +260,6 @@ Rails.application.routes.draw do
       match "v1/device_pool_drivers/:id" => "v1/device_pool_drivers#update", :as => "v1_device_pool_driver"
     end
 
-    get "dispatch", :controller => :dispatch, :action => :index
-    #get "reports", :controller=>:reports, :action=>:index
     get "custom_reports/:id", :controller=>:reports, :action=>:show, as: :custom_report
     get "reports/:action", :controller=>:reports
     get "reports/:action/:id", :controller=>:reports

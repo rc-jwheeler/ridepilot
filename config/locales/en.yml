@@ -1435,7 +1435,7 @@ en:
   trip_round_trip_column: 'Round Trip?'
   guest_count_column: 'Guest Count'
   attendant_count_column: 'Attendant Count'
-  # trips runs tab
+  # dispatch tab
   application_trips_runs_link_text: 'Dispatch'
   trips_runs: 'Dispatch'
   trips_runs_filter: 'Filter'
@@ -1487,6 +1487,8 @@ en:
   unassigned_trips_table_header_actions: "Actions"
   empty_trips: "No trip"
   empty_runs: "No run"
+  daily_scheduling: "Daily Scheduling"
+  recurring_scheduling: "Recurring Scheduling"
   
   # address upload
   address_file_uploaded: 'Address file was uploaded.'

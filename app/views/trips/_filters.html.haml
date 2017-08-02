@@ -24,7 +24,7 @@
               %button.btn.btn-default{:type => "button"}
                 = image_tag "calendar-clock.png"
         .col-sm-12{style: 'padding: 5px;'}
-          = render partial: 'weekday_select'
+          = render partial: 'shared/weekday_select'
         .col-sm-12{style: 'padding: 5px;'}
           = f.label :status_id, translate_helper(:status)
           = f.select :status_id, options_for_select( [[translate_helper(:scheduled), 1], [translate_helper(:unscheduled), 2]], session[:trips_status_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }

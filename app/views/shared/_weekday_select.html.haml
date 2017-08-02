@@ -1,0 +1,56 @@
+#weekday_select
+  %label
+    = translate_helper("days_of_week")
+  - days_abbr = translate_helper("date.day_name_initials").split(",")
+  #weekday_select_buttons.btn-group.col-sm-12{"data-toggle" => "buttons", :style => "padding:0px;"}
+    %label.btn.btn-default{:for => "weekday_sun"}
+      = days_abbr[0]
+      %input#weekday_sun{:autocomplete => "off", :type => "checkbox"}
+    %label.btn.btn-default{:for => "weekday_mon"}
+      = days_abbr[1]
+      %input#weekday_mon{:autocomplete => "off", :type => "checkbox"}
+    %label.btn.btn-default{:for => "weekday_tue"}
+      = days_abbr[2]
+      %input#weekday_tue{:autocomplete => "off", :type => "checkbox"}
+    %label.btn.btn-default{:for => "weekday_wed"}
+      = days_abbr[3]
+      %input#weekday_wed{:autocomplete => "off", :type => "checkbox"}
+    %label.btn.btn-default{:for => "weekday_thu"}
+      = days_abbr[4]
+      %input#weekday_thu{:autocomplete => "off", :type => "checkbox"}
+    %label.btn.btn-default{:for => "weekday_fri"}
+      = days_abbr[5]
+      %input#weekday_fri{:autocomplete => "off", :type => "checkbox"}
+    %label.btn.btn-default{:for => "weekday_sat"}
+      = days_abbr[6]
+      %input#weekday_sat{:autocomplete => "off", :type => "checkbox"}
+
+:javascript
+  $(document).ready(function() {
+    function initWeekdaySelect() {
+      var buttons = $('#weekday_select input');
+      var daysToShow = #{@days_of_week};
+      $('.days_of_week_hidden_field').val(daysToShow);
+
+      daysToShow.forEach(function(i) {
+        $('#weekday_select_buttons .btn').eq(i).button('toggle');
+      });
+      
+      $('#weekday_select input').bind("change", updateWeekdays);
+    }
+
+    function updateWeekdays() {
+      // Determine first and last days selected
+      var buttons = $('#weekday_select input');
+      var daysToShow = [];
+      for (var i = 0; i < 7; i++) {
+        if ($(buttons.get(i)).is(':checked')) {
+          daysToShow.push(i);
+        } 
+      }
+
+      $('.days_of_week_hidden_field').val(daysToShow);
+    }
+
+    initWeekdaySelect();
+  });

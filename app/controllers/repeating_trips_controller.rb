@@ -47,9 +47,14 @@ class RepeatingTripsController < ApplicationController
 
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
+        TrackerActionLog.create_subscription_trip(@trip, current_user)
         format.html {
-          TrackerActionLog.create_subscription_trip(@trip, current_user)
           redirect_to @trip, :notice => 'Subscription trip template was successfully created.'
+          if from_dispatch
+            redirect_to recurring_dispatchers_path(run_id: params[:run_id]), :notice => 'TrSubscription trip templateip was successfully created.'
+          else
+            redirect_to(@trip, :notice => 'Subscription trip template was successfully created.')
+          end
         }
       else
         prep_view
@@ -74,7 +79,13 @@ class RepeatingTripsController < ApplicationController
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
         TrackerActionLog.update_subscription_trip(@trip, current_user, changes, prev_schedule)
-        format.html { redirect_to(@trip, :notice => 'Trip was successfully updated.')  }
+        format.html { 
+          if params[:from_dispatch] == 'true'
+            redirect_to recurring_dispatchers_path(run_id: params[:run_id]), :notice => 'Trip was successfully updated.'  
+          else
+            redirect_to @trip, :notice => 'Trip was successfully updated.'  
+          end
+        }
       else
         prep_view
         format.html { render :action => "edit"  }

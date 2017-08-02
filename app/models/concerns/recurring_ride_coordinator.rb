@@ -22,6 +22,16 @@ module RecurringRideCoordinator
         end
       end
     end
+
+    scope :schedule_occurs_on_wday, -> (wday) do
+      if wday && wday.between?(0,6)
+        select do |rr| 
+          rr.try("repeats_#{DAYS_OF_WEEK[wday]}s")
+        end
+      else
+        []
+      end
+    end
   end
   
   module ClassMethods

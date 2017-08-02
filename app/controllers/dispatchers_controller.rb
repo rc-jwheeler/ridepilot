@@ -1,4 +1,4 @@
-class TripsRunsController < ApplicationController
+class DispatchersController < ApplicationController
   before_action :authorization
 
   def index

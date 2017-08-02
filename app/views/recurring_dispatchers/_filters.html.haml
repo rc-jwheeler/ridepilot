@@ -1,0 +1,10 @@
+= render partial: 'shared/single_weekday_select'
+
+:javascript
+  $(document).ready(function(){
+    $('#weekday_select input').change(function() {
+      window.location.href = "#{recurring_dispatchers_path}?day_of_week=" + $(this).data('wday');
+    });
+  });
+      
+    

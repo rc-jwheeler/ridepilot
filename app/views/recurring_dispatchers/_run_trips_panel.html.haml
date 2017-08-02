@@ -1,23 +1,25 @@
+:ruby
+  assignments = run.weekday_assignments.for_wday(@day_of_week)
+  trips = RepeatingTrip.where(id: assignments.pluck(:repeating_trip_id))
 .panel.panel-success.run_trips_panel{id: "run_trips_panel_#{run.id}", data: {run_id: run.id}}
   .panel-heading
     .pull-right{style: 'padding-right: 0px;'}
-      = render 'trip_result_dropdown'
       = render 'unschedule_trip_dropdown'
       - if can?(:cancel, run)  
         %span.dispatch-action
-          = link_to cancel_run_trips_runs_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
+          = link_to cancel_run_recurring_dispatchers_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
             %i.fa.fa-undo
       %span.dispatch-action
-        = link_to run_path(run, from_dispatch: true), style: 'color: white;', title: "View details" do 
+        = link_to repeating_run_path(run, from_dispatch: true), style: 'color: white;', title: "View details" do 
           %i.fa.fa-external-link
       - if can?(:edit, run)
         %span.dispatch-action
-          = link_to edit_run_path(run, from_dispatch: true), style: 'color: white;', title: 'Edit' do 
+          = link_to edit_repeating_run_path(run, from_dispatch: true), style: 'color: white;', title: 'Edit' do 
             %i.fa.fa-pencil
 
-      - if can?(:new, Trip)
+      - if can?(:new, RepeatingTrip)
         %span.dispatch-action
-          = link_to new_trip_path(from_dispatch: true, run_id: run.id), style: 'color: white;', title: translate_helper("new_trip_link_text") do 
+          = link_to new_repeating_trip_path(from_dispatch: true, run_id: run.id), style: 'color: white;', title: translate_helper("new_repeating_trip_link_text") do 
             %i.fa.fa-plus
       %span.panel-close.dispatch-action{title: 'Close'}
         %i.fa.fa-remove
@@ -27,9 +29,9 @@
       .pull-left
         = run.name
       %span.run_summary{style: 'font-size: small;'}
-        = simple_format run_summary(run)
+        = simple_format recurring_run_summary(run, @day_of_week)
   .panel-body
-    = render 'trips_runs/run_manifest_table', run: run, trips: run.trips
+    = render 'recurring_dispatchers/run_manifest_table', run: run, trips: trips
 
 :javascript
   $("#run_trips_panel_#{run.id}").droppable({
