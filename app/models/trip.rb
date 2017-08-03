@@ -264,7 +264,7 @@ class Trip < ActiveRecord::Base
     {
       trip_id: id,
       pickup_time: pickup_time.try(:iso8601),
-      dropff_time: appointment_time.try(:iso8601),
+      dropoff_time: appointment_time.try(:iso8601),
       comments: notes,
       status: status_json
     }
