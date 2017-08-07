@@ -236,6 +236,10 @@ class TrackerActionLog < PublicActivity::Activity
   private
 
   def self.compare_time_only(time_1, time_2)
-    time_1.utc.strftime( "%H%M%S%N" ) == time_2.utc.strftime( "%H%M%S%N" )
+    if time_1 && time_2
+      time_1.utc.strftime( "%H%M%S%N" ) == time_2.utc.strftime( "%H%M%S%N" )
+    else
+      !time_1 && !time_2
+    end
   end
 end
