@@ -191,7 +191,7 @@ module ApplicationHelper
     class_name = ''
     warning_msg = ''
 
-    if run && !vehicle.active_for_date?(run.date)
+    if run && run.date && !vehicle.active_for_date?(run.date)
       class_name = "overdue-danger"
       warning_msg = "Inactive for the run date."
     end
