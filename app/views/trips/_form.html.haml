@@ -74,6 +74,9 @@
         });
       });
 
+
+= render 'trips/customer_message_dialog'
+
 - if @is_repeating_trip
   = render 'shared/hide_invisible_form_fields_js', model_name: "repeatingtrip", table_name: 'repeating_trips', provider_id:  current_provider.try(:id)
 - else
