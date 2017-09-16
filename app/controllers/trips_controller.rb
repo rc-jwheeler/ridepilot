@@ -307,6 +307,9 @@ class TripsController < ApplicationController
 
     if @trip.is_return? && params[:trip][:outbound_trip_id].present?
       @trip.outbound_trip = Trip.find_by_id(params[:trip][:outbound_trip_id])
+      if @trip.outbound_trip.try(:is_stand_by)
+        @trip.is_stand_by = true
+      end
     end
 
     if params[:run_id].present?
@@ -321,7 +324,6 @@ class TripsController < ApplicationController
           @trip.run_id = status_id 
         end
       end
-      
     end
 
     from_dispatch = params[:from_dispatch] == 'true'
