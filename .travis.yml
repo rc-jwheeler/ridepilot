@@ -3,6 +3,8 @@ cache: bundler
 bundler_args: "--without development"
 rvm:
 - 2.2.1
+before_install:
+  - gem update bundler
 before_script:
 - cp config/database.yml.travis config/database.yml
 - psql -U postgres -c "create extension postgis"
