@@ -6,7 +6,7 @@
       - if can?(:cancel, run)  
         %span.dispatch-action
           = link_to cancel_run_dispatchers_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
-            %i.fa.fa-undo
+            %i.fa.fa-power-off
       %span.dispatch-action
         = link_to run_path(run, from_dispatch: true), style: 'color: white;', title: "View details" do 
           %i.fa.fa-external-link

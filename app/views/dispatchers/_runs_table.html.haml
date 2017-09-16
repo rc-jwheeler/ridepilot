@@ -46,4 +46,4 @@
               %i.fa.fa-pencil
           - if can?(:cancel, run)
             = link_to cancel_run_dispatchers_path(run_id: run.id), title: 'Cancel run', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
-              %i.fa.fa-undo
+              %i.fa.fa-power-off
