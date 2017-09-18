@@ -12,7 +12,6 @@
     %tr
       %th
         %input#unassigned_trips_master_checkbox{type: "checkbox"}
-      %th= translate_helper(:unassigned_trips_table_header_recur)
       %th= translate_helper(:unassigned_trips_table_header_customer)
       %th= translate_helper(:unassigned_trips_table_header_phone)
       %th= translate_helper(:unassigned_trips_table_header_pickup_time)
@@ -29,10 +28,10 @@
         %td
           %input.trip-selected{type: "checkbox"}
         %td
+          = trip.customer.name
           - if trip.repeating_trip_id.present?
             %span.label.label-info
               Recur
-        %td= trip.customer.name
         %td= simple_format [trip.customer.phone_number_1, trip.customer.phone_number_2].compact.join('<br>')
         %td= format_time_for_listing(trip.pickup_time)
         %td= format_time_for_listing(trip.appointment_time) if trip.appointment_time
