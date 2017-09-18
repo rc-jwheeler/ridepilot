@@ -43,3 +43,12 @@
             - if can?(:edit, Trip)
               = link_to edit_repeating_trip_path(itin[:trip_id], from_dispatch: true, run_id: run_id), style: 'padding-right: 5px;', title: 'Edit' do 
                 %i.fa.fa-pencil
+
+:javascript
+  $(function() {
+    $(document).on('change', 'tr.manifest-row input.trip-selected', function() {
+      console.log('selection changed');
+      var trip_id = $(this).parents('tr.manifest-row').data('trip-id');
+      $('tr.manifest-row[data-trip-id="' + trip_id + '"] input.trip-selected').prop('checked', $(this).is(':checked'));
+    });
+  });
