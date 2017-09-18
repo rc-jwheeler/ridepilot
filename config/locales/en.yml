@@ -1481,6 +1481,7 @@ en:
   unassigned_trips_table_header_pickup_address: "Pickup Address"
   unassigned_trips_table_header_dropoff_address: "Dropoff Address"
   unassigned_trips_table_header_type: "Type"
+  unassigned_trips_table_header_recur: "Recur?"
   unassigned_trips_table_header_riders_count: "# of Riders"
   unassigned_trips_table_header_fare: "Fare"
   unassigned_trips_table_header_comments: "Comments"
