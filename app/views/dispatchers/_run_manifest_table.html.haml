@@ -7,7 +7,6 @@
     %tr
       %th
         %input.master-select-checkbox{type: "checkbox"}
-      %th= translate_helper(:run_manifest_table_header_trip_type)
       %th= translate_helper(:run_manifest_table_header_action)
       %th= translate_helper(:run_manifest_table_header_customer)
       %th= translate_helper(:run_manifest_table_header_address)
@@ -32,12 +31,15 @@
         %tr.manifest-row{data: {trip_id: itin[:trip_id], id: itin[:id], leg_flag: itin[:leg_flag]}}
           %td
             %input.trip-selected{type: "checkbox"}
-          %td= itin[:is_recurring] ? 'Recur' : 'Daily'
           %td{style: 'white-space: nowrap;'}
             = itin[:leg_flag] == 1 ? 'PU' : 'DO'
-            - is_new = !trip.driver_notified && trip.date == Date.today
-            %span.badge.new-trip-badge.pull-right{style: (is_new ? "" : "display: none;")}
-              New
+            .pull-right
+              - if itin[:is_recurring]
+                %span.label.label-info
+                  Recur
+              - is_new = !trip.driver_notified && trip.date == Date.today
+              %span.badge.new-trip-badge{style: (is_new ? "" : "display: none;")}
+                New
           %td= itin[:customer]
           %td= itin[:address]
           %td= format_time_for_listing(itin[:time])

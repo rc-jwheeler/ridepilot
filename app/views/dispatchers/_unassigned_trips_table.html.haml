@@ -28,7 +28,10 @@
       %tr{data: {trip_id: trip.id}}
         %td
           %input.trip-selected{type: "checkbox"}
-        %td= trip.repeating_trip_id.present? ? translate_helper(:run_trip_type_recurring) : translate_helper(:run_trip_type_daily)
+        %td
+          - if trip.repeating_trip_id.present?
+            %span.label.label-info
+              Recur
         %td= trip.customer.name
         %td= simple_format [trip.customer.phone_number_1, trip.customer.phone_number_2].compact.join('<br>')
         %td= format_time_for_listing(trip.pickup_time)

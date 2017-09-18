@@ -10,7 +10,6 @@
   %thead
     %tr
       %th= translate_helper(:run_table_header_name)
-      %th= translate_helper(:run_table_header_type)
       %th= translate_helper(:run_table_header_vehicle)
       %th= translate_helper(:run_table_header_driver)
       %th= translate_helper(:run_table_header_start)
@@ -22,7 +21,10 @@
       %tr{data: {run_id: run.id}}
         %td
           = link_to run.name, '#', data: {run_id: run.id}, class: 'run_name_link non_jump_top', title: 'Click to open manifest'
-        %td= run.repeating_run_id.present? ? translate_helper(:run_trip_type_recurring) : translate_helper(:run_trip_type_daily)
+          .pull-right
+            - if run.repeating_run_id.present?
+              %span.label.label-info
+                Recur
         - vehicle_overdue_check = get_vehicle_warnings(run.vehicle, run)
         %td{class: vehicle_overdue_check[:class_name], title: vehicle_overdue_check[:tips] }
           = link_to run.vehicle.try(:name), vehicle_path(run.vehicle), target: '_blank' if run.vehicle
