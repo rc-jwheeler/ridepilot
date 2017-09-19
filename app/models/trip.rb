@@ -370,13 +370,15 @@ class Trip < ActiveRecord::Base
     if self.is_cancelled_or_turned_down?
       TrackerActionLog.cancel_or_turn_down_trip(self, user) 
       
-      if self.scheduled? 
-        if self.run.present?
-          run = self.run
-          self.run = nil
-          TrackerActionLog.trips_removed_from_run(run, [self], user)
-        elsif self.cab
-          self.cab = false
+      unless TripResult::CANCEL_CODES_BUT_KEEP_RUN.include?(self.trip_result.code)
+        if self.scheduled? 
+          if self.run.present?
+            run = self.run
+            self.run = nil
+            TrackerActionLog.trips_removed_from_run(run, [self], user)
+          elsif self.cab
+            self.cab = false
+          end
         end
       end
     end

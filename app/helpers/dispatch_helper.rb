@@ -30,15 +30,17 @@ module DispatchHelper
         address: trip.pickup_address.try(:one_line_text)
       )
 
-      dropoff_sort_time = trip.appointment_time ? time_portion(trip.appointment_time) : time_portion(trip.pickup_time)
-      dropoff_sort_key = dropoff_sort_time.try(:to_i).to_s + "_2"
-      itins << trip_data.merge(
-        id: "trip_#{trip.id}_leg_2",
-        leg_flag: 2,
-        time: trip.appointment_time,
-        sort_key: dropoff_sort_key,
-        address: trip.dropoff_address.try(:one_line_text)
-      )
+      unless TripResult::CANCEL_CODES_BUT_KEEP_RUN.include?(trip.trip_result.try(:code))
+        dropoff_sort_time = trip.appointment_time ? time_portion(trip.appointment_time) : time_portion(trip.pickup_time)
+        dropoff_sort_key = dropoff_sort_time.try(:to_i).to_s + "_2"
+        itins << trip_data.merge(
+          id: "trip_#{trip.id}_leg_2",
+          leg_flag: 2,
+          time: trip.appointment_time,
+          sort_key: dropoff_sort_key,
+          address: trip.dropoff_address.try(:one_line_text)
+        )
+      end
     end
     
     manifest_order = if is_recurring

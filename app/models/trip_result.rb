@@ -7,6 +7,7 @@ class TripResult < ActiveRecord::Base
 
   # Cancelled, Late Cancel, Same Day Cancel, Missed Trip, No Show
   CANCEL_CODES = ['CANC', 'LTCANC', 'SDCANC', 'MT', 'NS']
+  CANCEL_CODES_BUT_KEEP_RUN = ['MT', 'NS'] # do not take trip off the run
   NON_DISPATCHABLE_CODES = CANCEL_CODES + ['UNMET', 'TD']
   CODES_NEED_REASON = CANCEL_CODES + ['TD']
 
