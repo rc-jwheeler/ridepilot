@@ -6,17 +6,20 @@ module TrackerActionLogHelper
     when "trip.created"
       trip = log.trackable
       if trip.present?
-        "Trip created.".html_safe
+        creator = trip.repeating_trip_id.present? ? 'subscription' : (log.owner ? log.owner.try(:name) : 'person')
+        "Trip created by #{creator}.".html_safe
       end
     when "run.created"
       run = log.trackable
       if run.present?
-        "Run created.".html_safe
+        creator = run.repeating_run_id.present? ? 'subscription' : (log.owner ? log.owner.try(:name) : 'person')
+        "Run created by #{creator}.".html_safe
       end
     when "trip.create_return"
       return_trip = log.trackable.try(:return_trip)
       if return_trip.present?
-        "Return trip (#{link_to return_trip.id, return_trip}) created.".html_safe
+        creator = log.owner ? log.owner.try(:name) : 'person'
+        "Return trip (#{link_to return_trip.id, return_trip}) created by #{creator}.".html_safe
       end
     when "trip.return_created"
       outbound_trip = log.trackable.try(:outbound_trip)

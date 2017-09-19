@@ -95,6 +95,8 @@ class RepeatingTrip < ActiveRecord::Base
           )  
 
           trip.save(validate: false)  #allow invalid trip exist
+
+          TrackerActionLog.create_run(trip, nil)
         end
       end
       

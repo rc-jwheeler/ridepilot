@@ -128,6 +128,8 @@ class RepeatingRun < ActiveRecord::Base
           )
           
           run.save(validate: false) #allow invalid run exist
+
+          TrackerActionLog.create_run(run, nil)
         end
                 
       end
