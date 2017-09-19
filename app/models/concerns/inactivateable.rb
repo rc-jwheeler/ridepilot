@@ -47,7 +47,11 @@ module Inactivateable
         "permanently out of service"
       elsif temporarily_inactivated?
         if inactivated_end_date.present? 
-          "temporarily inactive from #{inactivated_start_date.try(:strftime, '%m/%d/%Y')} to #{inactivated_end_date.try(:strftime, '%m/%d/%Y')}" if inactivated_end_date >= Date.today
+          if inactivated_end_date >= Date.today
+            "temporarily inactive from #{inactivated_start_date.try(:strftime, '%m/%d/%Y')} to #{inactivated_end_date.try(:strftime, '%m/%d/%Y')}" 
+          else
+            "active"
+          end
         else
           "temporarily inactive from #{inactivated_start_date.try(:strftime, '%m/%d/%Y')}"
         end
