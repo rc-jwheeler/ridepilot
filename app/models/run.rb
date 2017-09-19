@@ -79,6 +79,8 @@ class Run < ActiveRecord::Base
   scope :not_a_child_of,         -> (repeating_run) { where.not(repeating_run_id: [repeating_run.id].compact) }
   scope :daily,                  -> {where(repeating_run_id: nil)}
   scope :recurring,              -> {where.not(repeating_run_id: nil)}
+  scope :cancelled,              -> {where(cancelled: true)}
+  scope :not_cancelled,          -> {where('cancelled is NULL or cancelled = ?', false)}
 
   scope :other_overlapped_runs, -> (run) { overlapped(run).other_than(run) }
 
@@ -165,6 +167,9 @@ class Run < ActiveRecord::Base
 
   # "Cancels" a run: removes any trips from that run
   def cancel!
+    self.cancelled = true
+    self.save(validate: false)
+    
     trips.clear # Doesn't actually destroy the records, just removes the association
   end
   

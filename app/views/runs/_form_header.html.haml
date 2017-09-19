@@ -16,3 +16,6 @@
         = link_to translate_helper(:back), (params[:from_dispatch] == 'true' ? dispatchers_path(run_id: params[:run_id]) : runs_path), class: "btn btn-default"
     %h1
       = translate_helper("run")
+      - if @run.cancelled?
+        %span.label.label-danger{style: 'font-size: small;'}
+          Cancelled

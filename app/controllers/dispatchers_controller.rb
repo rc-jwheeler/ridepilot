@@ -106,11 +106,10 @@ class DispatchersController < ApplicationController
 
   def cancel_run
     @run = Run.find_by_id params[:run_id]
-    if @run && @run.trips.any?
+    if @run
       @run.cancel! 
       TrackerActionLog.cancel_run(@run, current_user)
     end
-
 
     query_trips_runs
     prepare_unassigned_trip_schedule_options
@@ -173,7 +172,7 @@ class DispatchersController < ApplicationController
   def query_trips_runs
     filters_hash = runs_trips_params || {}
 
-    @runs = Run.for_provider(current_provider_id).order(:name, :date, :scheduled_start_time)
+    @runs = Run.not_cancelled.for_provider(current_provider_id).order(:name, :date, :scheduled_start_time)
     @runs = @runs.where(id: filters_hash[:run_id]) unless filters_hash[:run_id].blank?
     filter_runs
 
