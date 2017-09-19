@@ -6,9 +6,9 @@ class TrackerActionLog < PublicActivity::Activity
   def self.create_trip(trip, user)
     if trip
       trip.create_activity :created, owner: user 
-      if trip.run.present?
-        TrackerActionLog.trips_added_to_run(trip.run, [trip], user)
-      end
+      #if trip.run.present?
+      #  TrackerActionLog.trips_added_to_run(trip.run, [trip], user)
+      #end
     end
   end
 
@@ -24,9 +24,9 @@ class TrackerActionLog < PublicActivity::Activity
       outbound_trip = return_trip.outbound_trip
       outbound_trip.create_activity :create_return, owner: user if outbound_trip
 
-      if return_trip.run.present?
-        TrackerActionLog.trips_added_to_run(return_trip.run, [return_trip], user)
-      end
+      #if return_trip.run.present?
+      #  TrackerActionLog.trips_added_to_run(return_trip.run, [return_trip], user)
+      #end
     end
   end
 

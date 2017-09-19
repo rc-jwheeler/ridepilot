@@ -375,7 +375,7 @@ class Trip < ActiveRecord::Base
           if self.run.present?
             run = self.run
             self.run = nil
-            TrackerActionLog.trips_removed_from_run(run, [self], user)
+            #TrackerActionLog.trips_removed_from_run(run, [self], user)
           elsif self.cab
             self.cab = false
           end

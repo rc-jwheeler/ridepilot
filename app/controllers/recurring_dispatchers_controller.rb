@@ -19,11 +19,11 @@ class RecurringDispatchersController < ApplicationController
       @scheduler.execute
 
       trip = RepeatingTrip.find_by_id params[:trip_id]
-      if @prev_run
-        TrackerActionLog.trips_removed_from_run(@prev_run, [trip], current_user, RepeatingRun::DAYS_OF_WEEK[@day_of_week])
-      end
+      #if @prev_run
+        #TrackerActionLog.trips_removed_from_run(@prev_run, [trip], current_user, RepeatingRun::DAYS_OF_WEEK[@day_of_week])
+      #end
 
-      TrackerActionLog.trips_added_to_run(@run, [trip], current_user, RepeatingRun::DAYS_OF_WEEK[@day_of_week])
+      #TrackerActionLog.trips_added_to_run(@run, [trip], current_user, RepeatingRun::DAYS_OF_WEEK[@day_of_week])
 
       query_trips_runs
     end
@@ -51,9 +51,9 @@ class RecurringDispatchersController < ApplicationController
       end
 
       @target_run = RepeatingRun.find_by_id @new_status_id
-      if @target_run
-        TrackerActionLog.trips_added_to_run(@target_run, RepeatingTrip.where(id: assigned_trip_ids), current_user, RepeatingRun::DAYS_OF_WEEK[@day_of_week])
-      end
+      #if @target_run
+        #TrackerActionLog.trips_added_to_run(@target_run, RepeatingTrip.where(id: assigned_trip_ids), current_user, RepeatingRun::DAYS_OF_WEEK[@day_of_week])
+      #end
 
       @errors.uniq!
 
@@ -69,7 +69,7 @@ class RecurringDispatchersController < ApplicationController
 
       if @prev_run
         @prev_run.weekday_assignments.for_wday(@day_of_week).where(repeating_trip_id: @target_trip_ids).delete_all
-        TrackerActionLog.trips_removed_from_run(@prev_run, RepeatingTrip.where(id: @target_trip_ids), current_user, RepeatingRun::DAYS_OF_WEEK[@day_of_week])
+        #TrackerActionLog.trips_removed_from_run(@prev_run, RepeatingTrip.where(id: @target_trip_ids), current_user, RepeatingRun::DAYS_OF_WEEK[@day_of_week])
       end
 
       query_trips_runs

@@ -427,9 +427,9 @@ class TripsController < ApplicationController
     @trip = Trip.find(params[:id])
     run = @trip.run 
     @trip.destroy
-    if run 
-      TrackerActionLog.trips_removed_from_run(run, [@trip], current_user)
-    end
+    #if run 
+    #  TrackerActionLog.trips_removed_from_run(run, [@trip], current_user)
+    #end
 
     respond_to do |format|
       format.html { redirect_to(trips_url) }

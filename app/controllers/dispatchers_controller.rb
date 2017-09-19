@@ -30,11 +30,11 @@ class DispatchersController < ApplicationController
       @scheduler.execute
 
       trip = Trip.find_by_id params[:trip_id]
-      if @prev_run
-        TrackerActionLog.trips_removed_from_run(@prev_run, [trip], current_user)
-      end
+      #if @prev_run
+      #  TrackerActionLog.trips_removed_from_run(@prev_run, [trip], current_user)
+      #end
 
-      TrackerActionLog.trips_added_to_run(@run, [trip], current_user)
+      #TrackerActionLog.trips_added_to_run(@run, [trip], current_user)
 
       query_trips_runs
       prepare_unassigned_trip_schedule_options
@@ -67,9 +67,9 @@ class DispatchersController < ApplicationController
         end
 
         @target_run = Run.find_by_id @new_status_id
-        if @target_run
-          TrackerActionLog.trips_added_to_run(@target_run, Trip.where(id: assigned_trip_ids), current_user)
-        end
+        #if @target_run
+        #  TrackerActionLog.trips_added_to_run(@target_run, Trip.where(id: assigned_trip_ids), current_user)
+        #end
 
         @errors.uniq!
       end
@@ -86,9 +86,9 @@ class DispatchersController < ApplicationController
       @new_status_id = params[:run_id].to_i if params[:run_id]
       unschedule_trips
 
-      if @prev_run
-        TrackerActionLog.trips_removed_from_run(@prev_run, Trip.where(id: @target_trip_ids), current_user)
-      end
+      #if @prev_run
+      #  TrackerActionLog.trips_removed_from_run(@prev_run, Trip.where(id: @target_trip_ids), current_user)
+      #end
 
       query_trips_runs
       prepare_unassigned_trip_schedule_options
