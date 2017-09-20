@@ -17,6 +17,8 @@
 - else
   .col-md-9{style: 'padding: 0px;'}
     .cancel-selected-trips.dropdown{style: 'margin-bottom: 5px;'}
+      .pull-right
+        = link_to "Report", report_trips_path, class: 'btn action-button'
       %button.btn.btn-primary.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}} 
         =translate_helper(:change_selected_trips_result)
         %span.caret

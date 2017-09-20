@@ -8,8 +8,7 @@ class TripsController < ApplicationController
     unless session[:trips_trip_result_id].present?
       session[:trips_trip_result_id] = [TripResult::UNSCHEDULED_ID, TripResult::SHOW_ALL_ID] + TripResult.pluck(:id).uniq
     end
-    @trips = Trip.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]}).distinct
-    .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
+    
     filter_trips
 
     @vehicles        = Vehicle.where(:provider_id => current_provider_id)
@@ -35,6 +34,14 @@ class TripsController < ApplicationController
       format.xml  { render :xml => @trips }
       format.json { render :json => @trips }
     end
+  end
+
+  def report
+    @start_pickup_date = Time.zone.at(session[:trips_start].to_i).to_date
+    @end_pickup_date = Time.zone.at(session[:trips_end].to_i).to_date
+    filter_trips
+
+    render layout: false
   end
 
   # list trips for a specific customer within given date range
@@ -503,6 +510,9 @@ class TripsController < ApplicationController
   end
 
   def filter_trips
+    @trips = Trip.for_provider(current_provider_id).includes(:customer, :pickup_address, {:run => [:driver, :vehicle]}).distinct
+    .references(:customer, :pickup_address, {:run => [:driver, :vehicle]}).order(:pickup_time)
+
     filters_hash = params[:trip_filters] || {}
 
     update_sessions(filters_hash)

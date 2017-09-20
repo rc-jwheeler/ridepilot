@@ -81,6 +81,7 @@ Rails.application.routes.draw do
         get :unscheduled
         get :customer_trip_summary
         post :check_double_booked
+        get :report
       end
     end
 
