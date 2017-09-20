@@ -320,7 +320,7 @@
         
         // only process 1 customer
         var cancel_codes = #{TripResult.cancel_result_ids.to_json.html_safe};
-        if(cancel_codes.indexOf(resultCode) >= 0 && customer_ids.length > 0) { // canceling a trip
+        if(cancel_codes.indexOf(resultCode) >= 0 && $.unique(customer_ids).length == 1) { // canceling a trip
           handle_client_code_verification(customer_ids[0], callback_fn);
         } else {
           callback_fn();
