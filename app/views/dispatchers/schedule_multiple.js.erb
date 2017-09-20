@@ -3,7 +3,7 @@
   configure_unassigned_trips_table();
 
   <% if @errors && @errors.any? && @error_trip_count > 0 %>
-    bootbox.alert("<b>Action failed for <%= @error_trip_count %> trip(s). Error(s) are as follows:</b><br><%= @errors.join('.<br>')%>");
+    bootbox.alert("<b>Action failed for <%= @error_trip_count %> trip(s). Error(s) are as follows:</b><br>" + <%= @errors.to_json.html_safe %>.join('.<br>'));
   <% end %>
 
   <% if @target_run %>
