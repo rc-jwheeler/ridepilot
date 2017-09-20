@@ -205,7 +205,7 @@ class TrackerActionLog < PublicActivity::Activity
     }  
   end
 
-  def self.trip_scheduled_to_run(trip, from, to)
+  def self.trip_scheduled_to_run(trip, user, from, to)
     return if !trip
     params = {
       from: from,

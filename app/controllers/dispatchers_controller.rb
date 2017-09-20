@@ -47,7 +47,7 @@ class DispatchersController < ApplicationController
 
       #TrackerActionLog.trips_added_to_run(@run, [trip], current_user)
           
-      TrackerActionLog.trip_scheduled_to_run(trip, from_label, @run.name)
+      TrackerActionLog.trip_scheduled_to_run(trip, current_user, from_label, @run.name)
 
       query_trips_runs
       prepare_unassigned_trip_schedule_options
@@ -80,7 +80,7 @@ class DispatchersController < ApplicationController
             "Unscheduled"
           end
           
-          TrackerActionLog.trip_scheduled_to_run(trip, from_label, to_label)
+          TrackerActionLog.trip_scheduled_to_run(trip, current_user, from_label, to_label)
 
           trip_id = trip.id
           scheduler = TripScheduler.new(trip_id, @new_status_id)
