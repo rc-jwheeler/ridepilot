@@ -6,7 +6,7 @@ module TrackerActionLogHelper
     when "trip.created"
       trip = log.trackable
       if trip.present?
-        creator = trip.repeating_trip_id.present? ? 'subscription on #{trip.created_at.try(:strftime, '%m/%d/%Y')}' : (log.owner ? log.owner.try(:name) : 'person')
+        creator = trip.repeating_trip_id.present? ? "subscription on #{trip.created_at.try(:strftime, '%m/%d/%Y')}" : (log.owner ? log.owner.try(:name) : 'person')
         "Trip created by #{creator}.".html_safe
       end
     when "run.created"
