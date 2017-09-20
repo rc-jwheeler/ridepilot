@@ -53,7 +53,7 @@
               %span.label.label-danger
                 = trip.trip_result.name
             - else
-              = trip.trip_result.name
+              = trip.trip_result.try(:name)
           %td= simple_format(itin[:phone].join('<br>')) unless itin[:phone].empty?
           %td
             = form_for trip, url: trip_notify_driver_path(trip), remote: true, method: :patch, html: { class: 'change-trip-driver-notified' } do |f|
