@@ -6,13 +6,13 @@ module TrackerActionLogHelper
     when "trip.created"
       trip = log.trackable
       if trip.present?
-        creator = trip.repeating_trip_id.present? ? 'subscription' : (log.owner ? log.owner.try(:name) : 'person')
+        creator = trip.repeating_trip_id.present? ? 'subscription on #{trip.created_at.try(:strftime, '%m/%d/%Y')}' : (log.owner ? log.owner.try(:name) : 'person')
         "Trip created by #{creator}.".html_safe
       end
     when "run.created"
       run = log.trackable
       if run.present?
-        creator = run.repeating_run_id.present? ? 'subscription' : (log.owner ? log.owner.try(:name) : 'person')
+        creator = run.repeating_run_id.present? ? "subscription on #{run.created_at.try(:strftime, '%m/%d/%Y')}" : (log.owner ? log.owner.try(:name) : 'person')
         "Run created by #{creator}.".html_safe
       end
     when "trip.create_return"
@@ -163,6 +163,13 @@ module TrackerActionLogHelper
         end
 
         msg.html_safe
+      end
+    when "trip.trip_scheduled"
+      trip = log.trackable
+      params = log.parameters || {}
+
+      if trip.present?
+        "Trip scheduled to #{params[:to]} from #{params[:from]}"
       end
     when "run.trip_added", "repeating_run.trip_added"
       run = log.trackable

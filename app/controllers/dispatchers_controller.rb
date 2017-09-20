@@ -26,15 +26,28 @@ class DispatchersController < ApplicationController
     @run = Run.find_by_id params[:run_id]
     @prev_run = Run.find_by_id(params[:prev_run_id]) if params[:prev_run_id].present?
     if @run
+      trip = Trip.find_by_id params[:trip_id]
+
+      from_label = if @prev_run
+        @prev_run.name
+      elsif trip.is_stand_by
+        "Standby"
+      elsif trip.cab?
+        "Cab"
+      else
+        "Unscheduled"
+      end
+
       @scheduler = TripScheduler.new(params[:trip_id], params[:run_id])
       @scheduler.execute
 
-      trip = Trip.find_by_id params[:trip_id]
       #if @prev_run
       #  TrackerActionLog.trips_removed_from_run(@prev_run, [trip], current_user)
       #end
 
       #TrackerActionLog.trips_added_to_run(@run, [trip], current_user)
+          
+      TrackerActionLog.trip_scheduled_to_run(trip, from_label, @run.name)
 
       query_trips_runs
       prepare_unassigned_trip_schedule_options
@@ -54,7 +67,22 @@ class DispatchersController < ApplicationController
         @errors = []
         assigned_trip_ids = []
         @error_trip_count = 0
-        @target_trip_ids.each do |trip_id|
+        @target_run = Run.find_by_id @new_status_id
+        to_label = @target_run.name
+        Trip.where(id: assigned_trip_ids).each do |trip|
+          from_label = if trip.run
+            trip.run.name
+          elsif trip.is_stand_by
+            "Standby"
+          elsif trip.cab?
+            "Cab"
+          else
+            "Unscheduled"
+          end
+          
+          TrackerActionLog.trip_scheduled_to_run(trip, from_label, to_label)
+
+          trip_id = trip.id
           scheduler = TripScheduler.new(trip_id, @new_status_id)
           scheduler.execute
           
@@ -66,7 +94,6 @@ class DispatchersController < ApplicationController
           end
         end
 
-        @target_run = Run.find_by_id @new_status_id
         #if @target_run
         #  TrackerActionLog.trips_added_to_run(@target_run, Trip.where(id: assigned_trip_ids), current_user)
         #end

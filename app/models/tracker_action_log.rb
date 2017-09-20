@@ -205,6 +205,16 @@ class TrackerActionLog < PublicActivity::Activity
     }  
   end
 
+  def self.trip_scheduled_to_run(trip, from, to)
+    return if !trip
+    params = {
+      from: from,
+      to: to
+    } 
+
+    trip.create_activity :trip_scheduled, owner: user, params: params
+  end
+
   def self.trips_added_to_run(run, trips, user, day_of_week = nil)
     return if !run || !trips || trips.empty?
     params = {
