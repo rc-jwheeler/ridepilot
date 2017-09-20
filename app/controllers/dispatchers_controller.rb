@@ -65,11 +65,11 @@ class DispatchersController < ApplicationController
         Trip.where(id: @target_trip_ids).move_to_unmet!
       else
         @errors = []
-        assigned_trip_ids = []
         @error_trip_count = 0
         @target_run = Run.find_by_id @new_status_id
         to_label = @target_run.name
-        Trip.where(id: assigned_trip_ids).each do |trip|
+
+        Trip.where(id: @target_trip_ids).each do |trip|
           from_label = if trip.run
             trip.run.name
           elsif trip.is_stand_by
@@ -80,8 +80,6 @@ class DispatchersController < ApplicationController
             "Unscheduled"
           end
           
-          TrackerActionLog.trip_scheduled_to_run(trip, current_user, from_label, to_label)
-
           trip_id = trip.id
           scheduler = TripScheduler.new(trip_id, @new_status_id)
           scheduler.execute
@@ -90,7 +88,7 @@ class DispatchersController < ApplicationController
             @error_trip_count += 1
             @errors += scheduler.errors
           else
-            assigned_trip_ids << trip_id
+            TrackerActionLog.trip_scheduled_to_run(trip, current_user, from_label, to_label)
           end
         end
 

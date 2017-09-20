@@ -20,5 +20,5 @@ var prev_run_id = <%= params[:prev_run_id] || false %> || null;
     // as this is triggered by sortable, so need to revert
     $("#run_trips_panel_" + prev_run_id + " table tbody").sortable('cancel');
   }
-  bootbox.alert("<%= @scheduler.errors.join('.<br>')%>");
+  bootbox.alert(<%= @scheduler.errors.to_json.html_safe%>.join('.<br>'));
 <% end %>
