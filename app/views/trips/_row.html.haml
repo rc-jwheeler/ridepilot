@@ -1,4 +1,4 @@
-%tr.trip{"data-trip-id" => trip.id }
+%tr.trip{data: {trip_id: trip.id, customer_id: trip.customer.try(:id) }}
   %td
     %input.trip-selected{type: "checkbox"}
   %td
@@ -54,7 +54,7 @@
   %td.trip_table_result_column
     - if can? :edit, trip
       = form_for trip, url: trip_change_result_path(trip), remote: true, method: :patch, html: { class: 'change-trip-result' }  do |f|
-        = f.select :trip_result_id, @trip_results,  { :include_blank => true }, {class: 'form-control'} #, :onchange => "$(this).parents('form').submit()"}
+        = f.select :trip_result_id, @trip_results,  { :include_blank => true }, {class: 'form-control', data: {result_id: trip.trip_result.try(:id)}} #, :onchange => "$(this).parents('form').submit()"}
         = f.text_field :result_reason, hidden: true
     - else
       = display_trip_result(trip.trip_result)

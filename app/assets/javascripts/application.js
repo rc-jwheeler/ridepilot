@@ -37,6 +37,7 @@
 //= require bootbox.min
 //= require bootstrap-table
 //= require selectize
+//= require verify_client_code
 //= require_self
 
 function ISODateFormatToDateObject(str) {

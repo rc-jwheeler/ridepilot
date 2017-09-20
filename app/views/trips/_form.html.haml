@@ -74,11 +74,35 @@
         });
       });
 
-
 = render 'trips/customer_message_dialog'
+
+:javascript
+  // if customer has code, then need to verify the code first
+  function handle_client_code_verification(customer_id, form) {
+    var callback_fn = function(data) {
+      if (data.show_prompt) {
+        verify_client_code(data.code, "#{verify_code_customer_path('xxx')}".replace('xxx', customer_id), function() {
+          form.submit();
+        });
+      } else {
+        form.submit();
+      }
+    }
+    var url = "#{prompt_code_customer_path('xxx')}".replace('xxx', customer_id);
+    check_if_verify_client_code(url, callback_fn);
+  }
 
 - if @is_repeating_trip
   = render 'shared/hide_invisible_form_fields_js', model_name: "repeatingtrip", table_name: 'repeating_trips', provider_id:  current_provider.try(:id)
+
+  :javascript
+    $(function() {
+      $('.trip_form').submit(function(e) {
+        var form = this;
+        e.preventDefault();
+        handle_client_code_verification($('#repeating_trip_customer_id').val(), form);
+      });
+    });
 - else
   = render 'shared/hide_invisible_form_fields_js', model_name: "trip", table_name: 'trips', provider_id:  current_provider.try(:id)
 
@@ -149,25 +173,34 @@
         }
       }
 
-  - if @trip.is_return? && @trip.run && !@trip.new_record?
-    :javascript
-      $(function() {
-        $('.trip_form').submit(function(e) {
-          var form = this;
-          e.preventDefault();
-          var callback = function() {
-            form.submit();
-          };
-          // first check run disruption warning
-          if(typeof check_run_disruption != 'undefined') {
-            check_run_disruption(callback);
-          } else {
-            callback();
-          }
+  - if @trip.is_return? 
+    - if @trip.run && !@trip.new_record?
+      :javascript
+        $(function() {
+          $('.trip_form').submit(function(e) {
+            var form = this;
+            e.preventDefault();
+            var callback = function() {
+              handle_client_code_verification($('#trip_customer_id').val(), form);
+            };
+            // first check run disruption warning
+            if(typeof check_run_disruption != 'undefined') {
+              check_run_disruption(callback);
+            } else {
+              callback();
+            }
+          });
         });
-      });
-
-  - if !@trip.is_return?
+    - else
+      :javascript
+        $(function() {
+          $('.trip_form').submit(function(e) {
+            var form = this;
+            e.preventDefault();
+            handle_client_code_verification($('#trip_customer_id').val(), form);
+          });
+        });
+  - else
     = render partial: 'trips/double_booked_trip_dialog'
     :javascript
       $(document).ready(function(){
@@ -195,11 +228,11 @@
                 dbh.showModal();
                 // If modal submit button is clicked, submit form.
                 dbh.modal.find('.submit-double-book-modal').click(function() {
-                  form.submit();
+                  handle_client_code_verification($('#trip_customer_id').val(), form);
                 });
               // Else, submit form
               } else {
-                form.submit();
+                handle_client_code_verification($('#trip_customer_id').val(), form);
               }
             });
           }

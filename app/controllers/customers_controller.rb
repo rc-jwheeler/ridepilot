@@ -285,6 +285,26 @@ class CustomersController < ApplicationController
     
     render layout: false
   end
+
+  def prompt_code
+    @customer = Customer.find(params[:id])
+    if @customer && !@customer.code.blank? && session["client_code_#{@customer.id}"] != '1'
+      show_prompt = true
+    end
+
+    render :json => {
+      id: @customer.try(:id), 
+      code: @customer.try(:code),
+      show_prompt: show_prompt
+    }
+  end
+
+  def verify_code
+    @customer = Customer.find(params[:id])
+    if @customer
+      session["client_code_#{@customer.id}"] = '1'
+    end
+  end
   
   private
   
@@ -314,6 +334,7 @@ class CustomersController < ApplicationController
       :authorized_provider_ids,
       :is_elderly,
       :message,
+      :code,
       :comments,
       :travel_trainings,
       :funding_authorization_numbers,

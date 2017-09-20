@@ -28,7 +28,7 @@
       - itins = get_itineraries(run)
       - itins.each do |itin|
         - trip = itin[:trip]
-        %tr.manifest-row{data: {trip_id: itin[:trip_id], id: itin[:id], leg_flag: itin[:leg_flag]}}
+        %tr.manifest-row{data: {trip_id: itin[:trip_id], id: itin[:id], leg_flag: itin[:leg_flag], customer_id: trip.customer.try(:id)}}
           %td
             %input.trip-selected{type: "checkbox"}
           %td{style: 'white-space: nowrap;'}

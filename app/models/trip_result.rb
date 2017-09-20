@@ -43,6 +43,10 @@ class TripResult < ActiveRecord::Base
     @non_dispatchable_result_ids ||= where(code: NON_DISPATCHABLE_CODES).pluck(:id)
   end
 
+  def self.cancel_result_ids
+    @cancel_result_ids ||= where(code: CANCEL_CODES).pluck(:id)
+  end
+
   def self.reason_needed_result_ids
     @reason_needed_result_ids ||= where(code: CODES_NEED_REASON).pluck(:id)
   end

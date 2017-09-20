@@ -219,62 +219,6 @@
 
   // page main entry point
   $(function() {  
-    // Initialize a helper object with the trip result reason modal, and a list of cancellation codes.
-    var trh = new TripResultHelper(
-      "#tripResultReasonDialog",
-      #{TripResult.reason_needed_result_ids}
-    );
-
-    // Handler for changing multiple selected trip results
-      $(document).on('click', '.trip_result_option', function() {
-        var trip_ids = [];
-        $(this).parents('.panel').find('tbody input.trip-selected:checked').each(function() {
-          trip_ids.push($(this).parents('tr').data('trip-id'));
-        });
-
-        if(trip_ids.length == 0) {
-          bootbox.alert('Please select trips first.');
-          return;
-        }
-
-        trip_ids = trip_ids.join(','); 
-        var resultCode = $(this).data('trip-result-id');
-
-        if(trh.isReasonNeeded(resultCode)) { // If result is a code that needs to ask for reason...
-          trh.prepareModal(
-            "", // Set result reason input to blank
-            true, // Show result reason input
-            { // Prepare modal responses:
-              confirm: function() { // update the results and result reason and submit form
-                change_trips_trip_result(trip_ids, resultCode, trh.modalInput.val());
-              },
-              skip: function() { // just update results and submit the form
-                change_trips_trip_result(trip_ids, resultCode, null);
-              },
-              cancel: function() { // don't update results or submit form
-                return;
-              }
-            }
-          )
-        } else { // If result is NOT a cancel code...
-          trh.prepareModal(
-            "", // Set result reason input to blank
-            false, // Don't show result reason input
-            { // Prepare modal responses:
-              confirm: function() {
-                change_trips_trip_result(trip_ids, resultCode, null);
-              },
-              cancel: function() {
-                return;
-              }
-            }
-          )
-        }
-
-        trh.showModal();
-        
-      });
-
     // run manifest panel expand/collapse
     $(document).on('click', '.panel-heading span.panel-expand-collapse', function(e){
       var $this = $(this);

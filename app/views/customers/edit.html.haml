@@ -1,0 +1,14 @@
+= render 'form', edit_mode: :edit, is_group: @customer.group 
+
+- if check_if_verify_client_code(@customer)
+  :javascript
+    $(function() {
+      $('form').on('submit', function(e) {
+        var form = this;
+        e.preventDefault();
+
+        verify_client_code("#{@customer.code}", "#{verify_code_customer_path(@customer)}", function() {
+          form.submit();
+        });
+      });
+    });

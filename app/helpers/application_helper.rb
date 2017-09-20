@@ -280,4 +280,8 @@ module ApplicationHelper
     }
   end 
 
+  def check_if_verify_client_code(customer)
+    customer && !customer.code.blank? && session["client_code_#{customer.id}"] != '1'
+  end
+
 end

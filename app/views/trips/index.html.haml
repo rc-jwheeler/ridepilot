@@ -36,6 +36,21 @@
 
   :javascript
     $(function() {
+      // if customer has code, then need to verify the code first
+      function handle_client_code_verification(customer_id, proceed_fn, abort_fn) {
+        var callback_fn = function(data) {
+          if (data.show_prompt) {
+            verify_client_code(data.code, "#{verify_code_customer_path('xxx')}".replace('xxx', customer_id), function() {
+              proceed_fn();
+            }, abort_fn);
+          } else {
+            proceed_fn();
+          }
+        }
+        var url = "#{prompt_code_customer_path('xxx')}".replace('xxx', customer_id);
+        check_if_verify_client_code(url, callback_fn);
+      }
+
       // Initialize a helper object with the trip result reason modal, and a list of cancellation codes.
       var trh = new TripResultHelper(
         "#tripResultReasonDialog",
@@ -56,25 +71,36 @@
         var resultCode = $(this).val();
         var form = $(this).closest('form');
         var resultReasonInput = form.find('input#trip_result_reason');
-        if(trh.isReasonNeeded(resultCode)) { // If result is a code that needs to ask for reason...
-          trh.prepareModal(
-            resultReasonInput.val(), // Set result reason input to current value
-            true, // Show result reason input
-            {
-              confirm: function() { // update the result reason based on user input, and submit form
-                resultReasonInput.val(trh.modalInput.val());
-                form.submit();
-              },
-              skip: function() { // Just submit the form
-                form.submit();
+        var customer_id = $(this).closest('tr').data('customer-id');
+        var _select = this;
+        var callback_fn = function() {
+          $(_select).data('result-id', resultCode);
+          if(trh.isReasonNeeded(resultCode)) { // If result is a code that needs to ask for reason...
+            trh.prepareModal(
+              resultReasonInput.val(), // Set result reason input to current value
+              true, // Show result reason input
+              {
+                confirm: function() { // update the result reason based on user input, and submit form
+                  resultReasonInput.val(trh.modalInput.val());
+                  form.submit();
+                },
+                skip: function() { // Just submit the form
+                  form.submit();
+                }
               }
-            }
-          );
-          trh.showModal();
-        } else { // If result is NOT a cancel code...
-          form.submit(); // ...just submit the form as-is.
-        }
+            );
+            trh.showModal();
+          } else { // If result is NOT a cancel code...
+            form.submit(); // ...just submit the form as-is.
+          }
+        };
 
+        var abort_fn = function() {
+          //aborting...
+          $(_select).val($(_select).data('result-id'));
+        };
+        // check client code
+        handle_client_code_verification(customer_id, callback_fn, abort_fn);
       });
 
       // Handler for changing multiple selected trip results
@@ -88,45 +114,62 @@
         var forms = resultSelectors.closest('form');
         var resultReasonInputs = forms.find('input#trip_result_reason');
 
-        if(trh.isReasonNeeded(resultCode)) { // If result is a code that needs to ask for reason...
-          trh.prepareModal(
-            "", // Set result reason input to blank
-            true, // Show result reason input
-            { // Prepare modal responses:
-              confirm: function() { // update the results and result reason and submit form
-                resultSelectors.val(resultCode);
-                resultReasonInputs.val(trh.modalInput.val());
-                forms.submit();
-                clearCheckboxes();
-              },
-              skip: function() { // just update results and submit the form
-                resultSelectors.val(resultCode);
-                forms.submit();
-                clearCheckboxes();
-              },
-              cancel: function() { // don't update results or submit form
-                return;
+        var callback_fn = function() {
+          if(trh.isReasonNeeded(resultCode)) { // If result is a code that needs to ask for reason...
+            trh.prepareModal(
+              "", // Set result reason input to blank
+              true, // Show result reason input
+              { // Prepare modal responses:
+                confirm: function() { // update the results and result reason and submit form
+                  resultSelectors.val(resultCode);
+                  resultSelectors.data('result-id', resultCode);
+                  resultReasonInputs.val(trh.modalInput.val());
+                  forms.submit();
+                  clearCheckboxes();
+                },
+                skip: function() { // just update results and submit the form
+                  resultSelectors.val(resultCode);
+                  resultSelectors.data('result-id', resultCode);
+                  forms.submit();
+                  clearCheckboxes();
+                },
+                cancel: function() { // don't update results or submit form
+                  return;
+                }
               }
-            }
-          )
-        } else { // If result is NOT a cancel code...
-          trh.prepareModal(
-            "", // Set result reason input to blank
-            false, // Don't show result reason input
-            { // Prepare modal responses:
-              confirm: function() {
-                resultSelectors.val(resultCode);
-                forms.submit();
-                clearCheckboxes();
-              },
-              cancel: function() {
-                return;
+            )
+          } else { // If result is NOT a cancel code...
+            trh.prepareModal(
+              "", // Set result reason input to blank
+              false, // Don't show result reason input
+              { // Prepare modal responses:
+                confirm: function() {
+                  resultSelectors.val(resultCode);
+                  resultSelectors.data('result-id', resultCode);
+                  forms.submit();
+                  clearCheckboxes();
+                },
+                cancel: function() {
+                  return;
+                }
               }
-            }
-          )
-        }
+            )
+          }
 
-        trh.showModal();
+          trh.showModal();
+        };
+
+        // only process 1 customer
+        var customer_ids = [];
+        tripRows.each(function() {
+          customer_ids.push($(this).data('customer-id'));
+        });
+        var cancel_codes = #{TripResult.cancel_result_ids.to_json.html_safe};
+        if(cancel_codes.indexOf(resultCode) >= 0 && customer_ids.length > 0) { // canceling a trip
+          handle_client_code_verification(customer_ids[0], callback_fn);
+        } else {
+          callback_fn();
+        }
         
       });
 

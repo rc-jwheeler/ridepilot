@@ -148,6 +148,7 @@ en:
   cctc_new_riders_label: "# Riders New This Month"
   delete_customer_confirm: "Are you sure to delete this customer?"
   customer_message: 'Message'
+  customer_code: 'Code'
   customer_travel_trainings_panel: 'Travel Trainings'
   travel_training_date: 'Date'
   travel_training_comment: 'Comment'
