@@ -175,7 +175,7 @@ class DispatchersController < ApplicationController
       @run.manifest_order = new_order 
       @run.save(validate: false)
 
-      TrackerActionLog.rearrange_trip_itineraries(@run, current_user)
+      #TrackerActionLog.rearrange_trip_itineraries(@run, current_user)
     end
   end
   

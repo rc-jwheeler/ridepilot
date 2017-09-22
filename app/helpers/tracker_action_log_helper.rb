@@ -15,6 +15,19 @@ module TrackerActionLogHelper
         creator = run.repeating_run_id.present? ? "subscription on #{run.created_at.try(:strftime, '%m/%d/%Y')}" : (log.owner ? log.owner.try(:name) : 'person')
         "Run created by #{creator}.".html_safe
       end
+    when "run.updated"
+      run = log.trackable
+      params = log.parameters || {}
+      if run.present? && !params.blank?
+        msg = "Run had following updates:"
+        params.each do |k, v|
+          if v.try(:size) == 2 # [old_val, new_val] array
+            msg += "<div class='row'><div class='col-sm-4'><b>#{k}:</b></div><div class='col-sm-8'>#{v[1]} <br>(<b>was:</b> #{v[0]})</div></div>"
+          end
+        end
+
+        msg.html_safe
+      end
     when "trip.create_return"
       return_trip = log.trackable.try(:return_trip)
       if return_trip.present?

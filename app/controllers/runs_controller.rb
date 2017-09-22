@@ -98,9 +98,11 @@ class RunsController < ApplicationController
       params[:run][:trips_attributes] = corrected_trip_attributes
     end
     
-    @run.assign_attributes run_params            
+    @run.assign_attributes run_params 
+    changes = @run.changes           
     respond_to do |format|
       if @run.is_all_valid?(current_provider_id) && @run.save
+        TrackerActionLog.update_run(@run, current_user, changes)
         format.html { 
           if params[:from_dispatch] == 'true'
             redirect_to dispatchers_path(run_id: @run.id), :notice => 'Run was successfully updated.' 

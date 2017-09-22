@@ -100,7 +100,7 @@ class RecurringDispatchersController < ApplicationController
       manifest_order.manifest_order = new_order 
       manifest_order.save(validate: false)
 
-      TrackerActionLog.rearrange_trip_itineraries(@run, current_user, RepeatingRun::DAYS_OF_WEEK[@day_of_week])
+      #TrackerActionLog.rearrange_trip_itineraries(@run, current_user, RepeatingRun::DAYS_OF_WEEK[@day_of_week])
     end
   end
 

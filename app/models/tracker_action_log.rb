@@ -142,6 +142,29 @@ class TrackerActionLog < PublicActivity::Activity
     end
   end
 
+  def self.update_run(run, user, changes)
+    if run
+      params = {}
+      changes.each do |k, change|
+        case k
+        when 'scheduled_start_time'
+          params["Scheduled Start Time"] = [change[0].try(:strftime,'%I:%M%P'), run.scheduled_start_time.strftime('%I:%M%P')] if !compare_time_only(change[0], change[1])
+        when 'scheduled_end_time'
+          params["Scheduled End Time"] = [change[0].try(:strftime,'%I:%M%P'), run.scheduled_end_time.strftime('%I:%M%P')] if !compare_time_only(change[0], change[1])
+        when 'vehicle_id'
+          old_vehicle = Vehicle.find_by_id change[0]
+          params["Vehicle"] = [old_vehicle.try(:name), run.vehicle.try(:name)] 
+        when 'driver_id'
+          old_driver = Driver.find_by_id change[0]
+          params["Driver"] = [old_driver.try(:user_name), run.driver.try(:user_name)]
+        end
+      end
+
+
+      run.create_activity :updated, owner: user, params: params unless params.blank?
+    end
+  end
+
   def self.change_vehicle_initial_mileage(vehicle, user, prev_mileage)
     if vehicle 
       vehicle.create_activity :initial_mileage_changed, owner: user, params: {
