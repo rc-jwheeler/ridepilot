@@ -1,12 +1,11 @@
 language: ruby
+cache: bundler
+bundler_args: "--without development"
 rvm:
 - 2.2.1
 before_install:
-  - gem update --system
+  - gem update --system 2.4.6
   - gem --version
-  - gem install bundler
-install:
-- bundle install --no-deployment
 before_script:
 - cp config/database.yml.travis config/database.yml
 - psql -U postgres -c "create extension postgis"
