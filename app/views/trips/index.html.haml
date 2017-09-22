@@ -164,7 +164,7 @@
         tripRows.each(function() {
           customer_ids.push($(this).data('customer-id'));
         });
-        var cancel_codes = #{TripResult.cancel_result_ids.to_json.html_safe};
+        var cancel_codes = #{TripResult.client_code_verify_result_ids.to_json.html_safe};
         if(cancel_codes.indexOf(resultCode) >= 0 && $.unique(customer_ids).length == 1 ) { // canceling a trip
           handle_client_code_verification(customer_ids[0], callback_fn);
         } else {

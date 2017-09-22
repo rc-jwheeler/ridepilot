@@ -8,6 +8,7 @@ class TripResult < ActiveRecord::Base
   # Cancelled, Late Cancel, Same Day Cancel, Missed Trip, No Show
   CANCEL_CODES = ['CANC', 'LTCANC', 'SDCANC', 'MT', 'NS']
   CANCEL_CODES_BUT_KEEP_RUN = ['MT', 'NS'] # do not take trip off the run
+  CLIENT_CODE_VERIFY_RESULT_CODES = ['CANC', 'LTCANC', 'SDCANC']
   NON_DISPATCHABLE_CODES = CANCEL_CODES + ['UNMET', 'TD']
   CODES_NEED_REASON = CANCEL_CODES + ['TD']
 
@@ -45,6 +46,10 @@ class TripResult < ActiveRecord::Base
 
   def self.cancel_result_ids
     @cancel_result_ids ||= where(code: CANCEL_CODES).pluck(:id)
+  end
+
+  def self.client_code_verify_result_ids
+    @client_code_verify_result_ids ||= where(code: CLIENT_CODE_VERIFY_RESULT_CODES).pluck(:id)
   end
 
   def self.reason_needed_result_ids

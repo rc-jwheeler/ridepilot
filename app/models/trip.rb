@@ -256,6 +256,8 @@ class Trip < ActiveRecord::Base
     to_lat = dropoff_address.try(:latitude)
     to_lon = dropoff_address.try(:longitude)
 
+    return unless from_lat && from_lon && to_lat && to_lon
+
     self.drive_distance = TripPlanner.new(from_lat, from_lon, to_lat, to_lon, pickup_time).get_drive_distance
     self.save
   end

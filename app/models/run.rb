@@ -35,6 +35,8 @@ class Run < ActiveRecord::Base
   has_many :trips, -> { order(:pickup_time) }, :dependent => :nullify
   belongs_to :repeating_run
 
+  has_one :run_distance
+
   accepts_nested_attributes_for :trips
 
   before_validation :fix_dates, :set_complete
@@ -264,6 +266,9 @@ class Run < ActiveRecord::Base
   #  Any fields that the run provider has listed as required are valued
   def set_complete
     self.complete = self.check_complete_status
+    if self.complete && self.complete_changed?
+      RunDistanceCalculationWorker.perform_async(self.id)
+    end
     true
   end
 

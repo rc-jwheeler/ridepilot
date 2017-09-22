@@ -30,7 +30,7 @@ module DispatchHelper
         address: trip.pickup_address.try(:one_line_text)
       )
 
-      unless TripResult::CANCEL_CODES_BUT_KEEP_RUN.include?(trip.trip_result.try(:code))
+      if is_recurring || !TripResult::CANCEL_CODES_BUT_KEEP_RUN.include?(trip.trip_result.try(:code))
         dropoff_sort_time = trip.appointment_time ? time_portion(trip.appointment_time) : time_portion(trip.pickup_time)
         dropoff_sort_key = dropoff_sort_time.try(:to_i).to_s + "_2"
         itins << trip_data.merge(
@@ -48,16 +48,31 @@ module DispatchHelper
     else
       run.manifest_order
     end
-    if manifest_order && manifest_order.any?
+    
+
+    itins = if manifest_order && manifest_order.any?
       itins.sort_by { |itin| 
         ordinal = manifest_order.index(itin[:id]) 
-        itin[:is_new] = true unless ordinal
         # put unindexed itineraries at the bottom
         ordinal ? "a_#{ordinal}" : "b_#{itin[:sort_key]}" 
       }
     else
       itins.sort_by { |itin| itin[:sort_key] }
     end
+
+    # calculate occupancy
+    occupancy = 0
+    itins.each do |itin|
+      if itin[:leg_flag] == 1
+        occupancy += itin[:trip].trip_size
+      elsif itin[:leg_flag] == 2
+        occupancy -= itin[:trip].trip_size
+      end
+      
+      itin[:capacity] = occupancy
+    end
+
+    itins
   end
 
   def run_summary(run)

@@ -1,0 +1,35 @@
+:css
+  #run_distance_table td {
+    border: none;
+  }
+
+  #run_distance_table tr {
+    background: none;
+  }
+
+- run_distance = @run.run_distance
+.panel.panel-primary#run_distance_panel
+  .panel-heading
+    %h3.panel-title
+      = translate_helper(:run_distance)
+  .panel-body{style: 'padding: 5px;'}
+    .col-sm-12
+      %table.table#run_distance_table
+        %tbody
+          %tr
+            %td= translate_helper(:run_distance_deadhead_from_garage)
+            %td= run_distance.deadhead_from_garage.try(:round, 2)
+          %tr
+            %td= translate_helper(:run_distance_revenue_miles)
+            %td= run_distance.revenue_miles.try(:round, 2)
+          %tr
+            %td= translate_helper(:run_distance_non_revenue_miles)
+            %td= run_distance.non_revenue_miles.try(:round, 2)
+          %tr
+            %td= translate_helper(:run_distance_deadhead_to_garage)
+            %td= run_distance.deadhead_to_garage.try(:round, 2)
+          %tr
+            %td{style: 'border-top: 1px solid;'}
+              %b= translate_helper(:run_distance_total)
+            %td{style: 'border-top: 1px solid;'}
+              %b= run_distance.total_dist.try(:round, 2)

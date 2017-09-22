@@ -1,0 +1,3 @@
+<% if @run %>
+  $('#run_trips_panel_' + "<%= @run.id %>").replaceWith("<%= j render('dispatchers/run_trips_panel', run: @run) %>");
+<% end %>

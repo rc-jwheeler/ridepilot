@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170920191021) do
+ActiveRecord::Schema.define(version: 20170921181949) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -786,6 +786,17 @@ ActiveRecord::Schema.define(version: 20170920191021) do
   add_index "roles", ["deleted_at"], :name => "index_roles_on_deleted_at"
   add_index "roles", ["provider_id"], :name => "index_roles_on_provider_id"
   add_index "roles", ["user_id"], :name => "index_roles_on_user_id"
+
+  create_table "run_distances", force: true do |t|
+    t.float    "total_dist"
+    t.float    "revenue_miles"
+    t.float    "non_revenue_miles"
+    t.float    "deadhead_from_garage"
+    t.float    "deadhead_to_garage"
+    t.integer  "run_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "runs", force: true do |t|
     t.string   "name"
