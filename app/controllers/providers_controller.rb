@@ -199,11 +199,14 @@ class ProvidersController < ApplicationController
   end
   
   def change_fields_required_for_run_completion
-    if params[:fields_required_for_run_completion]
-      new_fields = params[:fields_required_for_run_completion].select{ |attr| Run::FIELDS_FOR_COMPLETION.include?(attr.try(:to_sym)) }
 
-      @provider.update_attribute :fields_required_for_run_completion, new_fields
+    new_fields = if params[:fields_required_for_run_completion]
+      params[:fields_required_for_run_completion].select{ |attr| Run::FIELDS_FOR_COMPLETION.include?(attr.try(:to_sym)) }
+    else
+      []
     end
+
+    @provider.update_attribute :fields_required_for_run_completion, new_fields
 
     redirect_to general_provider_path(@provider, anchor: "run_fields_settings")
   end
