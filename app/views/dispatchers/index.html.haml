@@ -17,6 +17,7 @@
 = render 'trips/trip_result_reason_dialog'
 
 :javascript
+  var cancel_codes = #{TripResult.client_code_verify_result_ids.to_json.html_safe};
   var run_ids = #{@runs.pluck(:id) || []};
   var target_run_id = #{params[:run_id].try(:to_i) || nil.to_json};
   var dropping_to_trips = false;
@@ -319,7 +320,6 @@
         };
         
         // only process 1 customer
-        var cancel_codes = #{TripResult.client_code_verify_result_ids.to_json.html_safe};
         if(cancel_codes.indexOf(resultCode) >= 0 && $.unique(customer_ids).length == 1) { // canceling a trip
           handle_client_code_verification(customer_ids[0], callback_fn);
         } else {

@@ -35,6 +35,7 @@
   = render 'trips/trip_result_reason_dialog'
 
   :javascript
+    var cancel_codes = #{TripResult.client_code_verify_result_ids.to_json.html_safe};
     $(function() {
       // if customer has code, then need to verify the code first
       function handle_client_code_verification(customer_id, proceed_fn, abort_fn) {
@@ -100,7 +101,11 @@
           $(_select).val($(_select).data('result-id'));
         };
         // check client code
-        handle_client_code_verification(customer_id, callback_fn, abort_fn);
+        if(cancel_codes.indexOf(resultCode) >= 0) {
+          handle_client_code_verification(customer_id, callback_fn, abort_fn);
+        } else {
+          callback_fn();
+        }
       });
 
       // Handler for changing multiple selected trip results
@@ -164,7 +169,7 @@
         tripRows.each(function() {
           customer_ids.push($(this).data('customer-id'));
         });
-        var cancel_codes = #{TripResult.client_code_verify_result_ids.to_json.html_safe};
+        
         if(cancel_codes.indexOf(resultCode) >= 0 && $.unique(customer_ids).length == 1 ) { // canceling a trip
           handle_client_code_verification(customer_ids[0], callback_fn);
         } else {
