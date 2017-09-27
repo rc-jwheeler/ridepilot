@@ -24,6 +24,7 @@ FactoryGirl.define do
       scheduled_morning
       start_odometer 100
       end_odometer 200
+      complete true
     end
 
     trait :last_week do

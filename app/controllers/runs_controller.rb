@@ -46,7 +46,7 @@ class RunsController < ApplicationController
   end
 
   def uncompleted_runs
-    @runs = Run.for_provider(current_provider_id).where("complete = false").order("date desc")
+    @runs = Run.for_provider(current_provider_id).incomplete.order("date desc")
     render "index"
   end
 
