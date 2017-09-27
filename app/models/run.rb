@@ -9,19 +9,6 @@ class Run < ActiveRecord::Base
 
   serialize :manifest_order, Array
 
-  # Ignores:
-  #   Already required:
-  #     date
-  #     driver_id
-  #     provider_id
-  #     vehicle_id
-  #   Already checked by set_complete:
-  #     start_odometer
-  #     end_odometer 
-  #   Meta
-  #     created_at
-  #     updated_at
-  #     lock_version
   FIELDS_FOR_COMPLETION = [
     :unpaid_driver_break_time,
     :paid,
@@ -37,9 +24,14 @@ class Run < ActiveRecord::Base
 
   has_one :run_distance
 
+  belongs_to :from_garage_address, -> { with_deleted }, class_name: 'GarageAddress', foreign_key: 'from_garage_address_id'
+  accepts_nested_attributes_for :from_garage_address, update_only: true
+  belongs_to :to_garage_address, -> { with_deleted }, class_name: 'GarageAddress', foreign_key: 'to_garage_address_id'
+  accepts_nested_attributes_for :to_garage_address, update_only: true
+
   accepts_nested_attributes_for :trips
 
-  before_validation :fix_dates, :set_complete
+  before_validation :fix_dates
 
   validate                  :name_uniqueness
   normalize_attribute :name, :with => [ :strip ]
@@ -206,13 +198,26 @@ class Run < ActiveRecord::Base
   def self.update_prior_run_complete_status!
     
     Run.prior_to(Date.today).where(provider: Provider.active.pluck(:id)).incomplete.each do |r|
-      completed = r.check_complete_status
-      r.update(complete: true) if completed
+      if r.completable?
+        r.set_complete!
+      end
     end
   end
 
-  def check_complete_status
-    start_odometer.present? && end_odometer.present? && start_odometer < end_odometer && trips.incomplete.empty? && check_provider_fields_required_for_run_completion
+  def completable?
+    vehicle.present? && start_odometer.present? && end_odometer.present? && start_odometer < end_odometer && trips.incomplete.empty? && check_provider_fields_required_for_run_completion
+  end
+
+  def set_complete!
+    if !self.from_garage_address
+      self.from_garage_address = self.vehicle.try(:garage_address).try(:dup)
+    end
+    if !self.to_garage_address
+      self.to_garage_address = self.vehicle.try(:garage_address).try(:dup)
+    end
+    self.complete = true
+    self.save(validate: false)
+    RunDistanceCalculationWorker.perform_async(self.id)
   end
   
   # Returns sum of actual run hours across a collection
@@ -258,19 +263,6 @@ class Run < ActiveRecord::Base
   end
 
   private
-
-  # A run is considered complete if:
-  #  actual_end_time is valued (which requires that actual_start_time is also valued)
-  #  actual_end_time is before "now"
-  #  None of its trips are still considered pending
-  #  Any fields that the run provider has listed as required are valued
-  def set_complete
-    self.complete = self.check_complete_status
-    if self.complete && self.complete_changed?
-      RunDistanceCalculationWorker.perform_async(self.id)
-    end
-    true
-  end
 
   def fix_dates
     d = self.date

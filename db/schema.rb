@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170921181949) do
+ActiveRecord::Schema.define(version: 20170927153219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -820,13 +820,17 @@ ActiveRecord::Schema.define(version: 20170921181949) do
     t.datetime "deleted_at"
     t.text     "manifest_order"
     t.boolean  "cancelled"
+    t.integer  "from_garage_address_id"
+    t.integer  "to_garage_address_id"
   end
 
   add_index "runs", ["deleted_at"], :name => "index_runs_on_deleted_at"
   add_index "runs", ["driver_id"], :name => "index_runs_on_driver_id"
+  add_index "runs", ["from_garage_address_id"], :name => "index_runs_on_from_garage_address_id"
   add_index "runs", ["provider_id", "date"], :name => "index_runs_on_provider_id_and_date"
   add_index "runs", ["provider_id", "scheduled_start_time"], :name => "index_runs_on_provider_id_and_scheduled_start_time"
   add_index "runs", ["repeating_run_id"], :name => "index_runs_on_repeating_run_id"
+  add_index "runs", ["to_garage_address_id"], :name => "index_runs_on_to_garage_address_id"
   add_index "runs", ["vehicle_id"], :name => "index_runs_on_vehicle_id"
 
   create_table "service_levels", force: true do |t|

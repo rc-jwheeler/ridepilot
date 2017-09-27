@@ -185,6 +185,25 @@ class RunsController < ApplicationController
       end
     end
   end 
+
+  def request_completion
+  end
+
+  def complete
+    @run.attributes = run_params
+
+    if @run.from_garage_address.present?
+      @run.from_garage_address.the_geom = Address.compute_geom(params[:from_garage_address_lat], params[:from_garage_address_lon])
+    end
+
+    if @run.to_garage_address.present?
+      @run.to_garage_address.the_geom = Address.compute_geom(params[:to_garage_address_lat], params[:to_garage_address_lon])
+    end
+
+    @run.set_complete!
+
+    redirect_to run_path(@run)
+  end
   
   private
   
@@ -228,6 +247,20 @@ class RunsController < ApplicationController
       :trips_attributes => [
         :id,
         :trip_result_id
+      ],
+      :from_garage_address_attributes => [
+        :provider_id,
+        :address,
+        :city,
+        :state,
+        :zip
+      ],
+      :to_garage_address_attributes => [
+        :provider_id,
+        :address,
+        :city,
+        :state,
+        :zip
       ]
     )
   end

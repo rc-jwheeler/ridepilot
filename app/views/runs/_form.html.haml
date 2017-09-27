@@ -28,12 +28,13 @@
   .col-sm-12.col-md-6
     = render 'runs/date_time_panel', f: f, edit_mode: edit_mode
     - if !@is_repeating_run && edit_mode == :show
-      = render 'runs/tracking_panel' if current_provider.run_tracking?
       = render 'runs/distance_panel' if @run.run_distance.present?
+      = render 'runs/tracking_panel' if current_provider.run_tracking?
   .col-sm-12.col-md-6
     = render 'repeating_runs/repetition_panel', f: f if @is_repeating_run
     = render 'runs/vehicle_panel', f: f 
     = render 'runs/driver_panel', f: f 
+    = render 'runs/run_completion_panel', f: f, edit_mode: edit_mode if !@is_repeating_run
     - if edit_mode == :show
       - logs = TrackerActionLog.for(@run).order(created_at: :desc)
       = render 'shared/action_log_panel', logs: logs if logs.any?

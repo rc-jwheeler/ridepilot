@@ -8,13 +8,15 @@
         = f.label :driver, translate_helper("driver")
       .col-sm-9
         = f.collection_select :driver_id, @drivers, :id, :user_name, {include_blank: true}, {class: 'form-control'}
-    .form-group.col-sm-12
-      .col-sm-3
-        = f.label :unpaid_driver_break_time, translate_helper("unpaid_break_time")
-      .col-sm-9
-        = f.text_field :unpaid_driver_break_time, class: 'form-control'
-    .form-group.col-sm-12
-      .col-sm-3
-        = f.label :paid, translate_helper("paid")
-      .col-sm-9
-        = f.select :paid, [[translate_helper("yes"), "true"], [translate_helper("no"), "false"]], {:selected => @run.paid.to_s }, class: 'form-control'
+    - if @is_repeating_run || !current_provider.fields_required_for_run_completion.include?("unpaid_driver_break_time")
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :unpaid_driver_break_time, translate_helper("unpaid_break_time")
+        .col-sm-9
+          = f.text_field :unpaid_driver_break_time, class: 'form-control'
+    - if @is_repeating_run || !current_provider.fields_required_for_run_completion.include?("paid")  
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :paid, translate_helper("paid")
+        .col-sm-9
+          = f.select :paid, [[translate_helper("yes"), "true"], [translate_helper("no"), "false"]], {:selected => @run.paid.to_s }, class: 'form-control'

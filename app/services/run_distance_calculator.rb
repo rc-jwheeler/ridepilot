@@ -21,7 +21,7 @@ class RunDistanceCalculator
     non_revenue_miles = 0
     deadhead_to_garage = 0
 
-    from_address = @run.vehicle.try(:garage_address)
+    from_address = @run.from_garage_address || @run.vehicle.try(:garage_address)
     to_address = itins[0][:address]
     time = @run.scheduled_start_time
     
@@ -44,7 +44,8 @@ class RunDistanceCalculator
     end
 
     last_stop = itins.last
-    to_address = last_stop[:address]
+    from_address = last_stop[:address]
+    to_address = @run.to_garage_address || @run.vehicle.try(:garage_address)
     time = last_stop[:time]
     deadhead_to_garage = get_drive_distance(from_address, to_address, time)
 

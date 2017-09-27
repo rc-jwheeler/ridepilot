@@ -1,3 +1,5 @@
+:ruby
+  container = 'form' if local_assigns[:container].nil?
 :javascript
   $(document).ready(function() {
 
@@ -33,11 +35,12 @@
 
     // reset values when there is a change
     $(".address_search").change(function() {
-      resetAddressDetails($(this).parents('form'));
+      resetAddressDetails($(this).parents("#{container}"));
     });
 
     $(".address_search").geocomplete(autocompleteOptions)
       .bind("geocode:result", function(event, result){
-        fillInAddressDetails($(this).parents('form'), googlePlaceParser(result));
+        console.log('filling place...');
+        fillInAddressDetails($(this).parents("#{container}"), googlePlaceParser(result));
       });
   });

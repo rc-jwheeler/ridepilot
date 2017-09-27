@@ -220,6 +220,8 @@ Rails.application.routes.draw do
 
       member do
         get :append_trips
+        get :request_completion
+        patch :complete
       end
     end
 

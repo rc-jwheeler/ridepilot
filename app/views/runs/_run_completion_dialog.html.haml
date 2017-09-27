@@ -1,0 +1,42 @@
+:ruby
+  @run.from_garage_address ||= @run.vehicle.garage_address.try(:dup) || @run.build_from_garage_address(provider_id: current_provider_id)
+  @run.to_garage_address ||= @run.vehicle.garage_address.try(:dup) || @run.build_to_garage_address(provider_id: current_provider_id)
+#runCompletionDialog.modal.fade.col-sm-12{:role => "dialog", "aria-hidden" => 'true', :tabindex => "-1", "data-backdrop" => 'static'}
+  .modal-dialog
+    .modal-content
+      = form_for @run, url: complete_run_path(@run) do |f| 
+        .modal-header
+          .pull-right
+            = button_tag translate_helper(:ok), type: :submit, style: "margin-right: 5px;", class: "btn action-button", id: 'completeRun'
+            = button_tag class: 'btn action-button', data: {dismiss: 'modal'} do
+              = translate_helper(:cancel)
+          .modal-title{:style => "text-align:left;"}
+            %strong
+              = translate_helper(:complete_run_dialog_title)
+        .modal-body.row
+          %p.col-sm-12
+            %b
+              Please confirm the start and end garage locations.
+          - ['from', 'to'].each do |address_flag|
+            - address = address_flag == 'from' ? @run.from_garage_address : @run.to_garage_address
+            - address_field = "#{address_flag}_garage_address"
+            - prefix = "run_#{address_field}_attributes"
+            .garage_address
+              = f.fields_for address_field, address do |address_form|
+                = address_form.hidden_field :provider_id
+                = address_form.hidden_field :address, class: 'address_text'
+                = address_form.hidden_field :city, class: 'address_city'
+                = address_form.hidden_field :state, class: 'address_state'
+                = address_form.hidden_field :zip, class: 'address_zip'
+                = hidden_field_tag "#{address_field}_lat", address.latitude, class: 'address_lat'
+                = hidden_field_tag "#{address_field}_lon", address.longitude, class: 'address_lon'
+                .form-group.col-sm-12
+                  = label_tag "#{prefix}_full_address", translate_helper("#{address_field}_label"), class: "col-md-2 control-label"
+                  .col-md-10
+                    = text_field_tag "#{prefix}_full_address", address.try(:address_text), required: true, class: "address_search form-control"
+          = render 'addresses/google_place_autocomplete_js', container: '.garage_address'
+
+:javascript
+  $('#runCompletionDialog').on('hidden.bs.modal', function() {
+    $('#runCompletionDialog').remove();
+  });

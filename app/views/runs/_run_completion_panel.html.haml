@@ -1,0 +1,41 @@
+.panel.panel-primary#run_completion_panel
+  .panel-heading
+    %h3.panel-title
+      = translate_helper(:run_completion_required)
+  .panel-body{style: 'padding: 5px;'}
+    - if @run.complete?
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :from_garage_address, translate_helper("from_garage")
+        .col-sm-9
+          = @run.from_garage_address.try(:address_text)
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :to_garage_address, translate_helper("to_garage")
+        .col-sm-9
+          = @run.to_garage_address.try(:address_text)
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :start_odometer, translate_helper("start_odometer")
+      .col-sm-9
+        = f.text_field :start_odometer, class: 'form-control'
+    .form-group.col-sm-12
+      .col-sm-3
+        = f.label :end_odometer, translate_helper("end_odometer")
+      .col-sm-9
+        = f.text_field :end_odometer, class: 'form-control'
+    - if current_provider.fields_required_for_run_completion.include?("unpaid_driver_break_time")
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :unpaid_driver_break_time, translate_helper("unpaid_break_time")
+        .col-sm-9
+          = f.text_field :unpaid_driver_break_time, class: 'form-control'
+    - if current_provider.fields_required_for_run_completion.include?("paid")
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :paid, translate_helper("paid")
+        .col-sm-9
+          = f.select :paid, [[translate_helper("yes"), "true"], [translate_helper("no"), "false"]], {:selected => @run.paid.to_s }, class: 'form-control'
+    - if edit_mode == :show && !@run.new_record? && can?(:edit, @run) && !@run.complete?
+      .col-sm-12
+        = link_to translate_helper(:complete), request_completion_run_path(@run), :remote => true,  :disabled => !@run.completable?, :title => !@run.completable? ? "Incomplete trips or missing fields" : "", :class => "btn action-button pull-right run-completion-button"

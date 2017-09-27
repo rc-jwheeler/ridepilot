@@ -1153,6 +1153,12 @@ en:
   driver_temporarily_inactive: "Driver is put on temporarily inactive for the date."
   unavailable_driver_for_run_time_range_warning: "Driver is not available within the run scheduled time range."
   proceed_button: "Proceed"
+  run_completion_required: "Required for Completion"
+  from_garage: "From Garage"
+  to_garage: "To Garage"
+  from_garage_address_label: "From Garage"
+  to_garage_address_label: "To Garage"
+  complete_run_dialog_title: "Complete Run"
   
   #shared
   generic_error_message:
