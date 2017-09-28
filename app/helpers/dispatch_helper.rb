@@ -62,14 +62,17 @@ module DispatchHelper
 
     # calculate occupancy
     occupancy = 0
+    delta = 0
     itins.each do |itin|
-      if itin[:leg_flag] == 1
-        occupancy += itin[:trip].trip_size
-      elsif itin[:leg_flag] == 2
-        occupancy -= itin[:trip].trip_size
-      end
-      
+      trip = itin[:trip]
+      occupancy += delta
       itin[:capacity] = occupancy
+
+      if itin[:leg_flag] == 1
+        delta = trip.trip_size unless TripResult::NON_DISPATCHABLE_CODES.include?(trip.trip_result.try(:code))
+      elsif itin[:leg_flag] == 2
+        delta = -1 * trip.trip_size
+      end
     end
 
     itins
