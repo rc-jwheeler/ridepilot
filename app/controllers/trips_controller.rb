@@ -203,14 +203,13 @@ class TripsController < ApplicationController
     @prev_trip_result_id = @trip.trip_result_id
 
     if can? :edit, @trip
-      if !@trip.update_attributes(change_result_params)
-        @message = @trip.errors.full_messages.join(';')
-      else
-        @trip_result_filters = trip_sessions[:trip_result_id]
-        @clear_trip_status = true if @trip.scheduled? && @trip.is_cancelled_or_turned_down?
+      @trip.attributes = change_result_params
+      @trip.save(validate: false)
 
-        @trip.post_process_trip_result_changed!(current_user)
-      end
+      @trip_result_filters = trip_sessions[:trip_result_id]
+      @clear_trip_status = true if @trip.scheduled? && @trip.is_cancelled_or_turned_down?
+
+      @trip.post_process_trip_result_changed!(current_user)
     else
       @message = TranslationEngine.translate_text(:operation_not_authorized)
     end

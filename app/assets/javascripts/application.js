@@ -133,8 +133,7 @@ function hide_alert () {
 }
 
 function show_alert_dialog(message) {
-  $('#applicationAlertDialog .alert-message').text(message || '');
-  $('#applicationAlertDialog').modal('show');
+  bootbox.alert(message);
 }
 
 function escapeQuotes( str ) {
