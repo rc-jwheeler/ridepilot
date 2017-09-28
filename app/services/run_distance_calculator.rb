@@ -32,7 +32,7 @@ class RunDistanceCalculator
       next if index < 1
 
       from_address = itins[index - 1][:address]
-      to_address = itins[:address]
+      to_address = itin[:address]
       time = itin[:time]
 
       dist = get_drive_distance(from_address, to_address, time)
