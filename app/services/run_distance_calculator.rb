@@ -29,7 +29,7 @@ class RunDistanceCalculator
 
     itin_count = itins.size
     itins.each_with_index do |itin, index|
-      break if index < 1
+      next if index < 1
 
       from_address = itin[index - 1][:address]
       to_address = itins[:address]
