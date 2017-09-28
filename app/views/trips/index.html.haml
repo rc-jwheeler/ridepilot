@@ -101,7 +101,7 @@
           $(_select).val($(_select).data('result-id'));
         };
         // check client code
-        if(cancel_codes.indexOf(resultCode) >= 0) {
+        if(resultCode && cancel_codes.indexOf(parseInt(resultCode)) >= 0) {
           handle_client_code_verification(customer_id, callback_fn, abort_fn);
         } else {
           callback_fn();
