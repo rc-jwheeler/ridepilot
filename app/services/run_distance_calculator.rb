@@ -31,7 +31,7 @@ class RunDistanceCalculator
     itins.each_with_index do |itin, index|
       next if index < 1
 
-      from_address = itin[index - 1][:address]
+      from_address = itins[index - 1][:address]
       to_address = itins[:address]
       time = itin[:time]
 
