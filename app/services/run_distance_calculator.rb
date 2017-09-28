@@ -29,10 +29,10 @@ class RunDistanceCalculator
 
     itin_count = itins.size
     itins.each_with_index do |itin, index|
-      break if index > itin_count - 2
+      break if index < 1
 
-      from_address = itin[:address]
-      to_address = itins[index + 1][:address]
+      from_address = itin[index - 1][:address]
+      to_address = itins[:address]
       time = itin[:time]
 
       dist = get_drive_distance(from_address, to_address, time)
