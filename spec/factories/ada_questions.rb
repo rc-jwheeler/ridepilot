@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :ada_question do
-    name "MyString"
+    name  { Faker::Lorem.words(2).join(' ') }
   end
 
 end

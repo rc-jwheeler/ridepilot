@@ -3,7 +3,7 @@ class AdaQuestion < ActiveRecord::Base
 
   has_many   :customer_ada_questions, dependent: :destroy
   
-  validates_presence_of :name
+  validates :name, presence: true, uniqueness: { :case_sensitive => false, scope: :provider }
 
   scope :by_provider, ->(provider_id) { where(provider_id: provider_id) }
 end

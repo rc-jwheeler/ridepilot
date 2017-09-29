@@ -13,6 +13,11 @@
     name: 'ada_questions',
     caption: 'ADA Eligibility Question (yes/no)',
     value_column_name: 'name'
+  },
+  {
+    name: 'capacity_types',
+    caption: 'Capacity Type',
+    value_column_name: 'name'
   }
 ].each do | config_data|
   config = ProviderLookupTable.find_by(name: config_data[:name])

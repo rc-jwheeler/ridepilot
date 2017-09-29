@@ -38,6 +38,11 @@
     caption: 'Eligibility',
     value_column_name: 'code',
     description_column_name: 'description'
+  },
+  {
+    name: 'capacity_types',
+    caption: 'Capacity Type',
+    value_column_name: 'name'
   }
 ].each do | config_data|
   config = LookupTable.find_by(name: config_data[:name])

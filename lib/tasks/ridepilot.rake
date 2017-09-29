@@ -310,4 +310,26 @@ namespace :ridepilot do
       puts "please specifiy file path following: rake ridepilot:seed_user_data CSV_PATH=xxx"
     end
   end
+
+  desc 'Add capacity type lookup table'
+  task :add_capacity_type_lookup_table => :environment do
+    config_data = {
+      name: 'capacity_types',
+      caption: 'Capacity Type',
+      value_column_name: 'name'
+    }
+    config = LookupTable.find_by(name: config_data[:name])
+    if config 
+      config.update_attributes(config_data)
+    else
+      LookupTable.create(config_data)
+    end
+
+    p_config = ProviderLookupTable.find_by(name: config_data[:name])
+    if p_config 
+      p_config.update_attributes(config_data)
+    else
+      ProviderLookupTable.create(config_data)
+    end
+  end
 end

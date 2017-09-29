@@ -2,7 +2,7 @@ class Ethnicity < ActiveRecord::Base
   acts_as_paranoid # soft delete
   has_paper_trail
 
-  validates :name, :length => { :minimum => 2 }
+  validates :name, presence: true, length: { minimum: 2 }, uniqueness: {case_sensitive: false, conditions: -> { where(deleted_at: nil) } }
 
   default_scope { order('name') }
 

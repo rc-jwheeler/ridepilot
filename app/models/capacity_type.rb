@@ -1,7 +1,7 @@
-class FundingSource < ActiveRecord::Base
+class CapacityType < ActiveRecord::Base
   acts_as_paranoid # soft delete
-  has_paper_trail
-
+  belongs_to :provider
+  
   validates_presence_of :name
   validates_length_of :name, minimum: 2
   validate :name_uniqueness
@@ -14,8 +14,9 @@ class FundingSource < ActiveRecord::Base
   private
 
   def name_uniqueness
-    if FundingSource.where("deleted_at is NULL and lower(name) = ? and (provider_id is NULL or provider_id = ?)", name.try(:downcase), provider_id).any?
+    if CapacityType.where("deleted_at is NULL and lower(name) = ? and (provider_id is NULL or provider_id = ?)", name.try(:downcase), provider_id).any?
       errors.add(:base, "Name has already been taken")
     end
   end
+
 end

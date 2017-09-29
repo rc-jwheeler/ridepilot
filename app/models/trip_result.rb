@@ -12,7 +12,9 @@ class TripResult < ActiveRecord::Base
   NON_DISPATCHABLE_CODES = CANCEL_CODES + ['UNMET', 'TD']
   CODES_NEED_REASON = CANCEL_CODES + ['TD']
 
-  validates_presence_of :name, :code
+  validates :name, presence: true, uniqueness: {case_sensitive: false, conditions: -> { where(deleted_at: nil) } }
+  validates :code, presence: true, uniqueness: {case_sensitive: false, conditions: -> { where(deleted_at: nil) } }
+
   scope :cancel_codes, -> { where(code: CANCEL_CODES) }
 
   def self.by_provider(provider)

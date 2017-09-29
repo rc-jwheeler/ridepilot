@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170927153219) do
+ActiveRecord::Schema.define(version: 20170929214020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,6 +120,16 @@ ActiveRecord::Schema.define(version: 20170927153219) do
     t.string "name", limit: 16
     t.string "note", limit: 16
   end
+
+  create_table "capacity_types", force: true do |t|
+    t.string   "name"
+    t.integer  "provider_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "capacity_types", ["provider_id"], :name => "index_capacity_types_on_provider_id"
 
   create_table "custom_reports", force: true do |t|
     t.string   "name"
@@ -1000,6 +1010,17 @@ ActiveRecord::Schema.define(version: 20170927153219) do
   add_index "users", ["password_changed_at"], :name => "index_users_on_password_changed_at"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
+  create_table "vehicle_capacities", force: true do |t|
+    t.integer  "capacity_type_id"
+    t.integer  "capacity"
+    t.integer  "vehicle_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "vehicle_capacities", ["capacity_type_id"], :name => "index_vehicle_capacities_on_capacity_type_id"
+  add_index "vehicle_capacities", ["vehicle_type_id"], :name => "index_vehicle_capacities_on_vehicle_type_id"
+
   create_table "vehicle_compliances", force: true do |t|
     t.integer  "vehicle_id"
     t.string   "event"
@@ -1086,6 +1107,15 @@ ActiveRecord::Schema.define(version: 20170927153219) do
   end
 
   add_index "vehicle_requirement_templates", ["provider_id"], :name => "index_vehicle_requirement_templates_on_provider_id"
+
+  create_table "vehicle_types", force: true do |t|
+    t.string   "name"
+    t.integer  "provider_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "vehicle_types", ["provider_id"], :name => "index_vehicle_types_on_provider_id"
 
   create_table "vehicle_warranties", force: true do |t|
     t.integer  "vehicle_id"

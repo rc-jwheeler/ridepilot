@@ -1,7 +1,7 @@
 class ServiceLevel < ActiveRecord::Base
   acts_as_paranoid # soft delete
   
-  validates_presence_of :name
+  validates :name, presence: true, uniqueness: { :case_sensitive => false }
 
   def self.by_provider(provider)
     hidden_ids = HiddenLookupTableValue.hidden_ids self.table_name, provider.try(:id)
