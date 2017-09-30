@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :vehicle_type do
-    name "MyString"
-provider nil
+    name { Faker::Lorem.words(2).join(' ') }
+    provider 
   end
 
 end

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :trip_result do
-    code "result_code"
-    name "result_name"
+    code { Faker::Lorem.words(2).join(' ') }
+    name { Faker::Lorem.words(2).join(' ') }
     description "result_description"
   end
 
