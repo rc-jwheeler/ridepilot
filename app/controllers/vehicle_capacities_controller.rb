@@ -8,6 +8,10 @@ class VehicleCapacitiesController < ApplicationController
     @vehicle_capacities = @vehicle_type.vehicle_capacities.default_order
   end
 
+  def list 
+    @vehicle_capacities = @vehicle_type.vehicle_capacities.default_order
+  end
+
   def new
   end
 

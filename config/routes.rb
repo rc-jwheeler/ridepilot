@@ -147,7 +147,11 @@ Rails.application.routes.draw do
       resources :vehicle_maintenance_schedules, except: [:show]
     end
     resources :vehicle_types do 
-      resources :vehicle_capacities, except: [:show]
+      resources :vehicle_capacities, except: [:show] do 
+        collection do 
+          get :list 
+        end
+      end
     end
 
     resources :recurring_vehicle_maintenance_compliances do

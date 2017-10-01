@@ -5,7 +5,7 @@
       %label= translate_helper("vehicle_maintenance_schedule_type_label")
     .col-md-6
       - if @vehicle.vehicle_maintenance_schedule_type.present?
-        = @vehicle.vehicle_maintenance_schedule_type.name
+        = @vehicle.vehicle_maintenance_schedule_type.name 
       - elsif !@readonly
         = f.collection_select :vehicle_maintenance_schedule_type_id, VehicleMaintenanceScheduleType.for_provider(current_provider_id).default_order, :id, :name, { include_blank: true }, { class: "form-control", id: "vehicle_maintenance_schedule_type" }
         :javascript
@@ -14,6 +14,8 @@
               $('#new_maintenance_compliance_link').prop('href', "#{new_vehicle_vehicle_maintenance_compliance_path(@vehicle)}?vehicle_maintenance_schedule_type_id=" + $(this).val());
             });
           });
+      - else
+        %b= "(#{translate_helper(:not_set)})"
   .col-sm-12{style: "padding-top: 10px;"}
     .checkbox.pull-right
       %label

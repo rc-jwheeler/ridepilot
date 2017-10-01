@@ -1235,6 +1235,7 @@ en:
   update: 'Update'
   assignment: 'Assignment'
   n_a: 'N/A'
+  not_set: 'Not Set'
   view: 'View'
   trip_form_error_message: 'Please correct following errors'
   ask_for_creating_return_trip_message: 'Would you like to create a return trip?'
@@ -1365,6 +1366,8 @@ en:
   vehicle_form_reportable_label: "Vehicle Should Appear on Vehicle Report"
   vehicle_form_last_odometer_reading: "Last Reported Mileage"
   vehicle_form_initial_mileage: "Initial Mileage"
+  vehicle_form_capacity_heading: "Capacity"
+  vehicle_form_vehicle_type_label: "Vehicle Type"
   vehicle_overdue_events: "Maintenance Overdue"
   vehicle_expired_warranties: "Expired Warranties"
   vehicle_form_submit: "Submit"
@@ -1382,6 +1385,39 @@ en:
   vehicle_maintenance_event_delete_confirm: "Are you sure?"
   edit_vehicle_initial_mileage_heading: "Change initial mileage"
   vehicle_form_initial_mileage_change_reason: "Reason"
+
+  #vehicle types
+  vehicle_types: "Vehicle Types"
+  configure_provider_vehicle_types: "Configure Vehicle Types"
+  provider_vehicle_types_link_text: "Provider-specific Vehicle Types"
+  index_vehicle_type_heading: "Vehicle Types"
+  vehicle_type_label: "Vehicle Type"
+  new_vehicle_type_link_text: "New"
+  vehicle_type_name: "Name"
+  vehicle_type_form_error:
+    one: "1 error prohibited this type from being saved"
+    other: "%{count} errors prohibited this type from being saved"
+  vehicle_type_form_edit_heading: "Edit Vehicle Type"
+  vehicle_type_form_submit: "Submit"
+  vehicle_type_delete_confirm: "Are you sure to delete this type?"
+  no_vehicle_type: 'No vehicle type.'
+  vehicle_type_form_new_heading: "New Type"
+  vehicle_form_edit_heading: "Edit Type"
+
+  #vehicle capacities
+  new_vehicle_capacity_link_text: "New"
+  vehicle_capacity_capacity: "Capacity"
+  vehicle_capacity_type: "Type"
+  vehicle_capacity_form_error:
+    one: "1 error prohibited this type from being saved"
+    other: "%{count} errors prohibited this from being saved"
+  vehicle_capacity_form_submit: "Submit"
+  vehicle_capacity_delete_confirm: "Are you sure to delete this type?"
+  vehicle_capacity_form_new_heading: "New Type"
+  vehicle_capacity_form_edit_heading: "Edit Type"
+  configure_provider_capacity_types: "Configure Provider Specific Capacity Types"
+  provider_capacity_types_link_text: "Provider-specific Capacity Types"
+  capacity_type_label: "Capacity Type"
 
   # Vehicle Maintenance Compliances
   vehicle_maintenance_compliances_heading: "Preventive Maintenance Logs (PM)"

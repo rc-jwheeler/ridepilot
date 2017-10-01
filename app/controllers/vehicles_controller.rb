@@ -168,6 +168,7 @@ class VehiclesController < ApplicationController
       :initial_mileage,
       :garage_phone_number,
       :vehicle_maintenance_schedule_type_id,
+      :vehicle_type_id,
       :garage_address_attributes => [
         :provider_id,
         :address,

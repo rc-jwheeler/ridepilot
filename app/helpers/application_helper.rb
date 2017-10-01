@@ -173,7 +173,7 @@ module ApplicationHelper
     when 'drivers'
       provider.drivers.empty?
     when 'vehicles'
-      provider.vehicles.empty? 
+      provider.vehicles.empty? || VehicleType.for_provider(provider.id).empty?
     when 'addresses'
       ProviderCommonAddress.where(provider: provider).empty?
     when 'customers'

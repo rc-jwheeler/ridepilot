@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170929214020) do
+ActiveRecord::Schema.define(version: 20171001141424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1168,6 +1168,7 @@ ActiveRecord::Schema.define(version: 20170929214020) do
     t.date     "inactivated_end_date"
     t.text     "active_status_changed_reason"
     t.integer  "vehicle_maintenance_schedule_type_id"
+    t.integer  "vehicle_type_id"
   end
 
   add_index "vehicles", ["default_driver_id"], :name => "index_vehicles_on_default_driver_id"
@@ -1175,6 +1176,7 @@ ActiveRecord::Schema.define(version: 20170929214020) do
   add_index "vehicles", ["garage_address_id"], :name => "index_vehicles_on_garage_address_id"
   add_index "vehicles", ["provider_id"], :name => "index_vehicles_on_provider_id"
   add_index "vehicles", ["vehicle_maintenance_schedule_type_id"], :name => "index_veh_maint_sched_type_id"
+  add_index "vehicles", ["vehicle_type_id"], :name => "index_vehicles_on_vehicle_type_id"
 
   create_table "verification_questions", force: true do |t|
     t.integer  "user_id"

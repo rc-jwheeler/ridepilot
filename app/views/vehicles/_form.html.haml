@@ -12,6 +12,7 @@
     - if @vehicle.persisted?
       .col-sm-12.col-md-6
         = render 'details_panel', f: f
+        = render 'capacity_panel', f: f
         = render 'garage_panel', f: f
         = render 'additional_info_panel', f: f
       .col-sm-12.col-md-6
@@ -28,6 +29,7 @@
       .col-md-6
         = render 'details_panel', f: f
       .col-md-6
+        = render 'capacity_panel', f: f
         = render 'garage_panel', f: f
         = render 'additional_info_panel', f: f
         - if @readonly
