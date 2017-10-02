@@ -88,8 +88,13 @@
         form.submit();
       }
     }
-    var url = "#{prompt_code_customer_path('xxx')}".replace('xxx', customer_id);
-    check_if_verify_client_code(url, callback_fn);
+
+    if(customer_id) {
+      var url = "#{prompt_code_customer_path('xxx')}".replace('xxx', customer_id);
+      check_if_verify_client_code(url, callback_fn);
+    } else {
+      callback_fn({});
+    }
   }
 
 - if @is_repeating_trip

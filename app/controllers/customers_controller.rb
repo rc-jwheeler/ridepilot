@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  load_and_authorize_resource :except=>[:autocomplete, :found, :edit, :create, :show, :update, :delete_photo, :inactivate, :reactivate]
+  load_and_authorize_resource :except=>[:autocomplete, :found, :edit, :create, :show, :update, :delete_photo, :inactivate, :reactivate, :prompt_code, :verify_code]
 
   def autocomplete
     customers = Customer.for_provider(current_provider_id).by_term( params['term'].downcase, 10 ).accessible_by(current_ability)
@@ -270,7 +270,7 @@ class CustomersController < ApplicationController
   end
 
   def delete_photo
-    @customer = Customer.find(params[:id])
+    @customer = Customer.find_by_id(params[:id])
 
     authorize! :update, @customer if !@customer.authorized_for_provider(current_provider.id)
 
@@ -287,7 +287,7 @@ class CustomersController < ApplicationController
   end
 
   def prompt_code
-    @customer = Customer.find(params[:id])
+    @customer = Customer.find_by_id(params[:id])
     if @customer && !@customer.code.blank? && session["client_code_#{@customer.id}"] != '1'
       show_prompt = true
     end
@@ -300,7 +300,7 @@ class CustomersController < ApplicationController
   end
 
   def verify_code
-    @customer = Customer.find(params[:id])
+    @customer = Customer.find_by_id(params[:id])
     if @customer
       session["client_code_#{@customer.id}"] = '1'
     end
