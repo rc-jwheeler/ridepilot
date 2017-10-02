@@ -29,11 +29,15 @@ class RecurringTripScheduler
       errors << TranslationEngine.translate_text(:not_fit_in_run_schedule)
     end
 
-    if !validate_vehicle_availability 
+    if !@run.vehicle
+      errors << TranslationEngine.translate_text(:no_vehicle)
+    elsif !validate_vehicle_availability 
       errors << TranslationEngine.translate_text(:vehicle_unavailable)
     end
 
-    if !validate_driver_availability 
+    if !@run.driver
+      errors << TranslationEngine.translate_text(:no_driver)
+    elsif !validate_driver_availability 
       errors << TranslationEngine.translate_text(:driver_unavailable)
     end
 
