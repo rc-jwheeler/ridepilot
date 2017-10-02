@@ -1494,8 +1494,8 @@ en:
   not_fit_in_run_schedule: 'Trip schedule does not fit in run schedule'
   vehicle_unavailable: 'Vehicle is not available'
   driver_unavailable: 'Driver is not available'
-  no_vehicle: "No vehicle is assigned"
-  no_driver: "No driver is assigned"
+  no_vehicle_assigned: "No vehicle is assigned"
+  no_driver_assigned: "No driver is assigned"
   assigned_to_other_overlapping_run: 'has been assigned to another overlapping run'
   assigned_to_overlapping_repeating_run: 'has been assigned to another overlapping subscription run'
   unknown_error: 'There was something wrong with the request, please try again.'
