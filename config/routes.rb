@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     root :to => "dispatchers#index"
 
     get "admin", :controller => :home, :action => :index
+    get "schedule_recurring", :controller => :home, :action => :schedule_recurring
 
     devise_for :users
 

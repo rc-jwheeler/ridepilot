@@ -1,6 +1,9 @@
 = render 'shared/highlight_active_tab_js', is_primary_nav: false, tab_class: 'admin'
 
-%ul
+- if !Rails.env.production? || ENV['HAS_RECURRING_TRIP_RUN_SCHDULING_BUTTON'] == 'true'
+  .col-sm-12
+    = link_to translate_helper("schedule_recurring_trips_runs"), schedule_recurring_path, class: 'btn action-button'
+%ul  
   - if can? :manage, ApplicationSetting
     %li= link_to translate_helper("application_settings_link_text"), application_settings_path
   - if can? :manage, Provider

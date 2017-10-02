@@ -664,6 +664,7 @@ en:
   provider_lookup_tables_link_text: "Provider Lookup Tables"
   configure_provider_lookup_tables: "Configure Provider Lookup Tables"
   application_settings_link_text: "Application Settings"
+  schedule_recurring_trips_runs: "Schedule Recurring Trips and Runs"
   #footer
   footer_content: "Footer content here."
   #application layout
