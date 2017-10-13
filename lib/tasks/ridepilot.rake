@@ -332,4 +332,15 @@ namespace :ridepilot do
       ProviderLookupTable.create(config_data)
     end
   end
+
+  desc 'Add new custom reports'
+  task :add_v2_custom_reports => :environment do
+    # flag previous reports as v1
+    CustomReport.where(version: nil).update_all(version: '1')
+
+    # seed v2 reports
+    seed_file = File.join(Rails.root, 'db', 'tasks', 'seed_v2_custom_reports.rb')
+    load(seed_file) if File.exist?(seed_file)
+    puts 'Finished seeding supporting version 2 custom reports'
+  end
 end

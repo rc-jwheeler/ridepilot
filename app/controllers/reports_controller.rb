@@ -10,6 +10,7 @@ class Query
   attr_accessor :vehicle_id
   attr_accessor :driver_id
   attr_accessor :trip_display
+  attr_accessor :address_group_id
 
   def convert_date(obj, base)
     return Date.new(obj["#{base}(1i)"].to_i,obj["#{base}(2i)"].to_i,(obj["#{base}(3i)"] || 1).to_i)
@@ -48,6 +49,9 @@ class Query
       if params["driver_id"]
         @driver_id = params["driver_id"].to_i
       end
+      if params["address_group_id"]
+        @address_group_id = params["address_group_id"]
+      end
       if params["trip_display"]
         @trip_display = params["trip_display"]
       end
@@ -82,6 +86,11 @@ class ReportsController < ApplicationController
 
     redirect_to action: @custom_report.name if @custom_report.redirect_to_results
   end
+
+  ######################################################################################
+  # V1 reports
+  # HTML report only
+  ######################################################################################
 
   def vehicles_monthly
     query_params = params[:query] || {}
@@ -671,6 +680,35 @@ class ReportsController < ApplicationController
     }
   end
 
+  ######################################################################################
+  # V2 reports
+  # supports PDF & CSV
+  ######################################################################################
+
+  def provider_common_location_report
+    query_params = params[:query] || {}
+    @query = Query.new(query_params)
+    
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      @addresses = current_provider.addresses.sort_by_name
+      unless @query.address_group_id.blank?
+        address_group = AddressGroup.find_by_id @query.address_group_id
+        @addresses = @addresses.where(address_group_id: @query.address_group_id)
+        @report_params << ["Address Type", address_group.try(:name)]
+      end
+    end
+
+    respond_to do |format|
+      format.html
+      format.csv
+      format.pdf do
+        render pdf_template
+      end
+    end
+  end
+
+
   private
 
   def set_reports
@@ -712,5 +750,31 @@ class ReportsController < ApplicationController
   def fiscal_year_start_date(date)
     year = (date.month < 7 ? date.year - 1 : date.year)
     Date.new(year, 7, 1)
+  end
+
+  def pdf_template
+    report_name = @custom_report.name
+
+    {
+      pdf: "#{report_name}",
+      :margin => {
+          :top => 30,
+          :bottom => 10
+      },
+      :header => {
+          :spacing => 20,
+          :html => {
+              :template => "reports/pdf_header.pdf.haml"
+          }
+      },
+      :show_as_html => params[:debug].present?,
+      :template => "reports/#{report_name}.pdf.haml",
+      :layout => 'pdf.html',
+      :orientation => 'landscape',
+      :footer => {
+          :center => view_context.format_for_pdf_printing(Time.now),
+          :right => 'Page [page] of [topage]'
+      }
+    }
   end
 end

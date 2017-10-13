@@ -1,10 +1,10 @@
-.row.info-header
+.row.info-header{style: 'margin-top: 10px;'}
   .col-sm-12
     .btns.pull-right
       = button_tag type: :submit, id: 'runReporting', class: 'btn action-button controls' do
         = translate_helper(:run)
-    %h1
-      = translate_helper(:reports)
+    - if report
+      %h1= @is_generic_report ? report.name : report.display_name
 
   :javascript
     $('#runReporting').on('click', function() {

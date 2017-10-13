@@ -16,7 +16,8 @@ module Reporting::ReportHelper
         {
           id: report.id,
           name: report.name,
-          is_generic: true
+          is_generic: true,
+          version: '1'
         }
     }
 
@@ -26,7 +27,8 @@ module Reporting::ReportHelper
         {
           id: report.id,
           name: report.display_name,
-          is_generic: false
+          is_generic: false,
+          version: report.version
         }
     }
 

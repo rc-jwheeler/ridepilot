@@ -54,6 +54,10 @@ module ApplicationHelper
   def format_date_for_daily_manifest(date)
     date.strftime('%A, %v') if date
   end
+
+  def format_for_pdf_printing(datetime)
+    datetime.strftime(" %m/%d/%Y @ %k:%M")
+  end
   
   def delete_trippable_link(trippable)
     if can? :destroy, trippable

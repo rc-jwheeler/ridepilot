@@ -21,7 +21,7 @@ module Reporting
     def show
       @reports = all_report_infos
       @report = Report.find(params[:id])
-
+      @is_generic_report = true
       # reset column information
       @report.data_model.reset_column_information
 

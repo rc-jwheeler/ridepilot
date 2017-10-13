@@ -1,0 +1,15 @@
+%table.table.table-bordered#address_results
+  %thead
+    %tr
+      %th= translate_helper("address_results_type_column")
+      %th= translate_helper("address_results_name_column")
+      %th= translate_helper("address")
+      %th= translate_helper("phone_number")
+  %tbody
+    - @addresses.each do |address|
+      %tr
+        %td= address.address_group.try(:name) 
+        %td= address.name
+        %td= address.address
+        %td= format_phone_number address.phone_number
+

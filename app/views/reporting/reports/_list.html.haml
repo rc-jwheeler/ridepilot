@@ -1,22 +1,17 @@
 - report_id ||= 0
-%select.form-control.reporting-reports-list{onChange:"window.location.href=this.value"}
-  - reports.each do |report_info|
-    - if report_info[:is_generic]
-      - report = Reporting::Report.find(report_info[:id])
-      - if is_generic_report && report.id == report_id
-        %option{value: "#{reporting.report_path(report)}", selected: true}
-          = report.name
-      - else
-        %option{value: "#{reporting.report_path(report)}"}
-          = report.name
-    -else
-      - report = CustomReport.find(report_info[:id])
-      - if !is_generic_report && report.id == report_id
-        %option{value: "#{custom_report_path(report)}", selected: true}
-          = report.display_name
-      - else
-        %option{value: "#{custom_report_path(report)}"}
-          = report.display_name
+.row
+  .col-sm-6
+    %h4
+      New Reports
+    - v2_reports = @reports.select{|r| r[:version] == '2'}
+    = render 'reporting/reports/dropdown', reports: v2_reports, report_id: report_id
+
+  .col-sm-6
+    %h4
+      Previous Reports
+    
+    - v1_reports = @reports.select{|r| r[:version] == '1'}
+    = render 'reporting/reports/dropdown', reports: v1_reports, report_id: report_id
 
 
   

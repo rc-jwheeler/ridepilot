@@ -7,6 +7,8 @@ class ProviderCommonAddress < Address
 
   scope :type_unknown, -> { where(address_group_id: nil) }
 
+  scope :sort_by_name, -> { order("lower(name)") }
+
   #validates :provider, presence: true
 
   def self.load_addresses(filename, provider) 

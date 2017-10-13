@@ -1,0 +1,10 @@
+.col-xs-12
+  .row
+    %h4.text-center
+      = @custom_report.display_name
+  - if @report_params && @report_params.any?
+    .col-xs-12
+      - @report_params.each do |name, label|
+        %span.pull-right
+          = "#{name}: #{label}"
+        %br
