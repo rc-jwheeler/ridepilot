@@ -3,6 +3,6 @@
     <%= f.date_select  :start_date, :order => [:month,:day,:year] rescue nil%>
     <%= translate_helper("through") %>  
     <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
-    <%= f.submit translate_helper("show") %>
+    <%= f.submit translate_helper("run"), class: 'btn action-button' %>
   </fieldset>
 <% end %>

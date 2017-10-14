@@ -2,13 +2,13 @@
 .row
   .col-sm-6
     %h4
-      New Reports
+      = translate_helper(:new_reports)
     - v2_reports = @reports.select{|r| r[:version] == '2'}
     = render 'reporting/reports/dropdown', reports: v2_reports, report_id: report_id
 
   .col-sm-6
     %h4
-      Previous Reports
+      = translate_helper(:previous_reports)
     
     - v1_reports = @reports.select{|r| r[:version] == '1'}
     = render 'reporting/reports/dropdown', reports: v1_reports, report_id: report_id

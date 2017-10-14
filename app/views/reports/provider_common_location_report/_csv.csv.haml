@@ -1,0 +1,16 @@
+- # report name
+= CSV.generate_line [@custom_report.display_name], {:row_sep => nil}
+
+- # report params
+- (@report_params || []).each do |param|
+  = CSV.generate_line param, {:row_sep => nil}
+
+- # divider
+= CSV.generate_line [], {:row_sep => nil}
+
+- # Header
+= CSV.generate_line [translate_helper("address_results_type_column"), translate_helper("address_results_name_column"), translate_helper("address"), translate_helper("phone_number")], {:row_sep => nil}
+
+- # Data
+- @addresses.each do |addr|
+  = CSV.generate_line([addr.address_group.try(:name), addr.name, addr.address, format_phone_number(addr.phone_number)], {:row_sep => nil}).html_safe

@@ -701,7 +701,11 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.csv
+      format.csv do 
+        headers['Content-Disposition'] = "attachment;filename=#{@custom_report.name}.csv"
+        render template: "reports/show.csv.haml"
+      end
+
       format.pdf do
         render pdf_template
       end
@@ -757,6 +761,7 @@ class ReportsController < ApplicationController
 
     {
       pdf: "#{report_name}",
+      disposition: 'attachment',
       :margin => {
           :top => 30,
           :bottom => 10

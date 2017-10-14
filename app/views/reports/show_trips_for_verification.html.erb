@@ -12,7 +12,7 @@
         through 
         <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
         <%= f.select       :trip_display, TRIP_VERIFICATION_DISPLAY_OPTIONS %>
-        <%= f.submit translate_helper("show_trips_submit") %>
+        <%= f.submit translate_helper("show_trips_submit"), class: 'btn action-button' %>
       </p>
     </fieldset>
   <% end %>

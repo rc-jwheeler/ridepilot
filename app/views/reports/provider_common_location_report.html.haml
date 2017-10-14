@@ -1,7 +1,8 @@
 = render 'custom_report_header'
 
-- if @query 
-  = render 'reports/forms/provider_common_location_report'
+- if @query
+  .filter-form 
+    = render 'reports/forms/provider_common_location_report'
 
   - if @addresses
     = render 'reports/provider_common_location_report/table'

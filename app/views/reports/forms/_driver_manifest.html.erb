@@ -2,6 +2,6 @@
   <fieldset>
     <%= f.date_select  :start_date rescue nil%>
     <%= f.collection_select :driver_id, @drivers, :id, :user_name %>
-    <%= f.submit translate_helper("show") %>
+    <%= f.submit translate_helper("run"), class: 'btn action-button' %>
   </fieldset>
 <% end %>

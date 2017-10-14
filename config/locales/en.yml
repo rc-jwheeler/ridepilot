@@ -871,6 +871,10 @@ en:
   new_provider_common_address_dialog_title: "New Address"
 
   #reports
+  new_reports: "New Reports"
+  previous_reports: "Previous Reports"
+  report_format: "Format"
+  report_type: "Report Type"
   service_performed: "Service Performed"
   odometer_reading: "Odometer Reading"
   vendor: "Vendor"

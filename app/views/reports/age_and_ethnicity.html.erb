@@ -6,7 +6,7 @@
     <fieldset class="select-month">
       <p>
         <%= f.date_select  :start_date, :order => [:month,:year] rescue nil%>
-        <%= f.submit translate_helper("show") %>
+        <%= f.submit translate_helper("run"), class: 'btn action-button' %>
       </p>
     </fieldset>
   <% end %>

@@ -1,0 +1,12 @@
+- has_multiple_report_types = true if local_assigns[:has_multiple_report_types].nil?
+
+%label
+  = "#{translate_helper(:report_format)}:"
+  = select nil, "format", [['HTML', 'html'],['CSV', 'csv'],['PDF', 'pdf']]
+
+- if has_multiple_report_types
+  %label
+    = "#{translate_helper(:report_type)}:"
+    = select nil, "type", [['Summary Report', 'summary'],['Detailed Report', 'detail']]
+
+= f.submit translate_helper("run"), class: 'btn action-button'

@@ -11,7 +11,7 @@
         <%= f.date_select  :start_date, :order => [:month,:day,:year] rescue nil%>
         <%= translate_helper("crtr_through")%> 
         <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
-        <%= f.submit translate_helper("update") %>
+        <%= f.submit translate_helper("update"), class: 'btn action-button' %>
       </p>
     </fieldset>
   <% end %>

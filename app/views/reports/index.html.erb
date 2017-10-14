@@ -21,7 +21,7 @@
     <%= f.date_select  :start_date, :order => [:month,:day,:year] rescue nil%>
     <%= translate_helper("through") %> 
     <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
-    <%= f.submit translate_helper("export") %>
+    <%= f.submit translate_helper("export"), class: 'btn action-button' %>
   </fieldset>
 <% end %>
 
@@ -32,7 +32,7 @@
 <%= form_for @trips_query, :url=>url_for(:action=>:cctc_summary_report), :html=>{:method=>:get} do |f| %>
   <fieldset>
     <%= f.date_select :start_date, :order => [:month,:year] rescue nil%>
-    <%= f.submit translate_helper("show") %>
+    <%= f.submit translate_helper("run"), class: 'btn action-button' %>
   </fieldset>
 <% end %>
 
@@ -43,7 +43,7 @@
 <%= form_for @driver_query, :url=>url_for(:action=>:daily_trips), :html=>{:method=>:get} do |f| %>
   <fieldset>
     <%= f.date_select  :start_date rescue nil%>
-    <%= f.submit translate_helper("show") %>
+    <%= f.submit translate_helper("run"), class: 'btn action-button' %>
   </fieldset>
 <% end %>
 
@@ -56,7 +56,7 @@
     <%= f.date_select  :start_date, :order => [:month,:day,:year] rescue nil%>
     <%= translate_helper("through") %>  
     <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
-    <%= f.submit translate_helper("show") %>
+    <%= f.submit translate_helper("run"), class: 'btn action-button' %>
   </fieldset>
 <% end %>
 
@@ -69,7 +69,7 @@
     <h3><%= translate_helper("daily_manifest_label") %> </h3>
     <%= f.date_select  :start_date rescue nil%>
     <%= f.collection_select :driver_id, @drivers_with_cab, :id, :user_name %>
-    <%= f.submit translate_helper("show") %>
+    <%= f.submit translate_helper("run"), class: 'btn action-button' %>
   </fieldset>
 <% end %>
 
@@ -78,7 +78,7 @@
     <h3><%= translate_helper("daily_manifest_with_cab_summary_label") %></h3>
     <%= f.date_select  :start_date rescue nil%>
     <%= f.collection_select :driver_id, @drivers, :id, :user_name %>
-    <%= f.submit translate_helper("show") %>
+    <%= f.submit translate_helper("run"), class: 'btn action-button' %>
   </fieldset>
 <% end %>
 
@@ -87,7 +87,7 @@
     <h3><%= translate_helper("daily_manifest_by_half_hour_label") %></h3>
     <%= f.date_select  :start_date rescue nil%>
     <%= f.collection_select :driver_id, @drivers_with_cab, :id, :user_name %>
-    <%= f.submit translate_helper("show") %>
+    <%= f.submit translate_helper("run"), class: 'btn action-button' %>
   </fieldset>
 <% end %>
 
@@ -96,7 +96,7 @@
     <h3><%= translate_helper("daily_manifest_by_half_hour_with_cab_summary_label") %></h3>
     <%= f.date_select  :start_date rescue nil%>
     <%= f.collection_select :driver_id, @drivers, :id, :user_name %>
-    <%= f.submit translate_helper("show") %>
+    <%= f.submit translate_helper("run"), class: 'btn action-button' %>
   </fieldset>
 <% end %>
 
@@ -111,7 +111,7 @@
     <%= translate_helper("through") %>  
     <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
     <%= f.select       :trip_display, TRIP_VERIFICATION_DISPLAY_OPTIONS %>
-    <%= f.submit translate_helper("show") %>
+    <%= f.submit translate_helper("run"), class: 'btn action-button' %>
   </fieldset>
 <% end %>
 
@@ -121,6 +121,6 @@
     <%= f.date_select  :start_date, :order => [:month,:day,:year] rescue nil%>
     <%= translate_helper("through") %>  
     <%= f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil%>
-    <%= f.submit translate_helper("show") %>
+    <%= f.submit translate_helper("run"), class: 'btn action-button' %>
   </fieldset>
 <% end %>
