@@ -2,11 +2,11 @@
 
 %label
   = "#{translate_helper(:report_format)}:"
-  = select nil, "format", [['HTML', 'html'],['CSV', 'csv'],['PDF', 'pdf']]
+  = f.select :report_format, options_for_select([['HTML', 'html'],['CSV', 'csv'],['PDF', 'pdf']], params[:query][:report_format])
 
 - if has_multiple_report_types
   %label
     = "#{translate_helper(:report_type)}:"
-    = select nil, "type", [['Summary Report', 'summary'],['Detailed Report', 'detail']]
+    = f.select :report_type, options_for_select([['Summary Report', 'summary'],['Detailed Report', 'detail']], params[:query][:report_type])
 
 = f.submit translate_helper("run"), class: 'btn action-button'

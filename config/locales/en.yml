@@ -314,7 +314,6 @@ en:
   show_inactive: 'Include inactive?'
   permanent_inactive: 'Permanent Inactive?'
   configure_inactivation_dialog_title: 'Configure Inactivation'
-  permanent_inactive: 'Permenent Inactive?'
   date_range_inactive: 'Inactive for a date range'
   inactivated_start_date: 'Start Date'
   inactivated_end_date: 'End Date'

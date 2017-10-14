@@ -11,6 +11,8 @@ class Query
   attr_accessor :driver_id
   attr_accessor :trip_display
   attr_accessor :address_group_id
+  attr_accessor :report_format
+  attr_accessor :report_type
 
   def convert_date(obj, base)
     return Date.new(obj["#{base}(1i)"].to_i,obj["#{base}(2i)"].to_i,(obj["#{base}(3i)"] || 1).to_i)
@@ -699,17 +701,27 @@ class ReportsController < ApplicationController
       end
     end
 
-    respond_to do |format|
-      format.html
-      format.csv do 
-        headers['Content-Disposition'] = "attachment;filename=#{@custom_report.name}.csv"
-        render template: "reports/show.csv.haml"
-      end
+    apply_v2_response
+  end
 
-      format.pdf do
-        render pdf_template
+  def ineligible_customer_status_report
+    query_params = params[:query] || {}
+    @query = Query.new(query_params)
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      @customers = Customer.for_provider(current_provider_id).order("lower(last_name)", "lower(first_name)")
+      if query_params[:report_type] == 'summary'
+        @report_params << ["Inactive Type", "Temporary"]
+        # only temp_inactive for summary report
+        @customers = @customers.temporarily_inactive_for_date(Date.today)
+      else
+        @report_params << ["Inactive Type", "Permanent and Temporary"]
+        # temp_inactive and perm_inactive for detailed report
+        @customers = @customers.inactive_for_date(Date.today)
       end
     end
+
+    apply_v2_response
   end
 
 
@@ -773,7 +785,7 @@ class ReportsController < ApplicationController
           }
       },
       :show_as_html => params[:debug].present?,
-      :template => "reports/#{report_name}.pdf.haml",
+      :template => "reports/show.pdf.haml",
       :layout => 'pdf.html',
       :orientation => 'landscape',
       :footer => {
@@ -781,5 +793,20 @@ class ReportsController < ApplicationController
           :right => 'Page [page] of [topage]'
       }
     }
+  end
+
+  def apply_v2_response
+    request.format = params[:query][:report_format] || 'html'
+    respond_to do |format|
+      format.html
+      format.csv do 
+        headers['Content-Disposition'] = "attachment;filename=#{@custom_report.name}.csv"
+        render template: "reports/show.csv.haml"
+      end
+
+      format.pdf do
+        render pdf_template
+      end
+    end
   end
 end

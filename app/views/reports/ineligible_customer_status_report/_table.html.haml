@@ -1,0 +1,22 @@
+%table.table.table-bordered
+  %thead
+    %tr
+      %th= translate_helper("name")
+      %th= translate_helper("permanent_inactive")
+      %th= translate_helper("inactivated_start_date")
+      %th= translate_helper("inactivated_end_date")
+      %th= translate_helper("inactivated_reason")
+  %tbody
+    - @customers.each do |customer|
+      %tr
+        %td= customer.name
+        - if customer.permanent_inactivated?
+          %td Permanent
+          %td= format_date(customer.inactivated_date)
+          %td
+        - else
+          %td
+          %td= format_date(customer.inactivated_start_date)
+          %td= format_date(customer.inactivated_end_date)
+        %td= customer.inactivated_reason
+

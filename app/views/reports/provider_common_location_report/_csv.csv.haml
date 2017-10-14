@@ -1,15 +1,8 @@
-- # report name
-= CSV.generate_line [@custom_report.display_name], {:row_sep => nil}
-
-- # report params
-- (@report_params || []).each do |param|
-  = CSV.generate_line param, {:row_sep => nil}
-
-- # divider
-= CSV.generate_line [], {:row_sep => nil}
+- # common
+= render 'reports/common_csv_header.csv.haml'
 
 - # Header
-= CSV.generate_line [translate_helper("address_results_type_column"), translate_helper("address_results_name_column"), translate_helper("address"), translate_helper("phone_number")], {:row_sep => nil}
+= CSV.generate_line([translate_helper("address_results_type_column"), translate_helper("address_results_name_column"), translate_helper("address"), translate_helper("phone_number")], {:row_sep => nil}).html_safe
 
 - # Data
 - @addresses.each do |addr|

@@ -1,0 +1,9 @@
+- # report name
+= CSV.generate_line([@custom_report.display_name], {:row_sep => nil}).html_safe
+
+- # report params
+- (@report_params || []).each do |param|
+  = CSV.generate_line(param, {:row_sep => nil}).html_safe
+
+- # divider from main data
+= CSV.generate_line([""], {:row_sep => nil}).html_safe

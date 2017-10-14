@@ -1,0 +1,8 @@
+= render 'custom_report_header'
+
+- if @query
+  .filter-form 
+    = render 'reports/forms/ineligible_customer_status_report'
+
+  - if @customers
+    = render 'reports/ineligible_customer_status_report/table'
