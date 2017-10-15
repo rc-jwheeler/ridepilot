@@ -54,6 +54,12 @@ class Query
       if params["address_group_id"]
         @address_group_id = params["address_group_id"]
       end
+      if params["report_format"]
+        @report_format = params["report_format"]
+      end
+      if params["report_type"]
+        @report_type = params["report_type"]
+      end
       if params["trip_display"]
         @trip_display = params["trip_display"]
       end
@@ -724,6 +730,27 @@ class ReportsController < ApplicationController
     apply_v2_response
   end
 
+  def inactive_driver_status_report
+    query_params = params[:query] || {}
+    @query = Query.new(query_params)
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      @drivers = Driver.for_provider(current_provider_id).default_order
+      if query_params[:report_type] == 'summary'
+        @is_summary_report = true
+        @report_params << ["Inactive Type", "Permanent"]
+        # only perm_inactive for summary report
+        @drivers = @drivers.permanent_inactive
+      else
+        @report_params << ["Inactive Type", "Permanent and Temporary"]
+        # temp_inactive and perm_inactive for detailed report
+        @drivers = @drivers.inactive_for_date(Date.today)
+      end
+    end
+
+    apply_v2_response
+  end
+
 
   private
 
@@ -796,7 +823,7 @@ class ReportsController < ApplicationController
   end
 
   def apply_v2_response
-    request.format = params[:query][:report_format] || 'html'
+    request.format = @query.report_format if @query && @query.report_format
     respond_to do |format|
       format.html
       format.csv do 

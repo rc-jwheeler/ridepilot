@@ -1,0 +1,10 @@
+- # common
+= render 'reports/common_csv_header.csv.haml'
+
+- if @is_summary_report
+  = render "reports/#{@custom_report.name}/summary.csv.haml"
+- else
+  = render "reports/#{@custom_report.name}/detailed.csv.haml"
+  
+
+  

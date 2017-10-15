@@ -1,0 +1,8 @@
+= render 'custom_report_header'
+
+- if @query
+  .filter-form 
+    = render 'reports/forms/inactive_driver_status_report'
+
+  - if @drivers
+    = render 'reports/inactive_driver_status_report/table'
