@@ -710,6 +710,27 @@ class ReportsController < ApplicationController
     apply_v2_response
   end
 
+  def missing_data_report
+    query_params = params[:query] || {start_date: Date.today.prev_month + 1}
+    @query = Query.new(query_params)
+    
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.end_date.strftime('%m/%d/%Y')}"]
+      @runs = Run.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).incomplete.order(:date, "lower(name)")
+      @data_by_date = {}
+      @runs.each do |run|
+        @data_by_date[run.date] = [] unless @data_by_date.has_key?(run.date)
+        day_data = @data_by_date[run.date]
+        day_data << [run.name, run.incomplete_reason.join("; ")]
+      end
+
+      @run_dates = @data_by_date.keys.sort
+    end
+
+    apply_v2_response
+  end
+
   def ineligible_customer_status_report
     query_params = params[:query] || {}
     @query = Query.new(query_params)

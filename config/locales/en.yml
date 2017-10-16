@@ -899,6 +899,7 @@ en:
   later_trips: "Later ride today"
   age_and_ethnicity_report_heading: "Reports: Unduplicated Age &amp; Ethnicity"
   age_and_ethnicity_page_title: "Age and Ethnicity: %{provider}, %{start_date}"
+  run_incomplete_reason: "Incomplete Reason"
   
   # Approved Vendors List
   vendor_list_download: "Download Approved Vendors List"

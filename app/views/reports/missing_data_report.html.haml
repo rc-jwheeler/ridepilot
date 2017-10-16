@@ -1,0 +1,8 @@
+= render 'custom_report_header'
+
+- if @query
+  .filter-form 
+    = render 'reports/forms/missing_data_report'
+
+  - if @runs
+    = render 'reports/missing_data_report/table'

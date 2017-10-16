@@ -261,6 +261,34 @@ class Run < ActiveRecord::Base
     r.valid?
   end
 
+  # lists incomplete reason
+  def incomplete_reason
+    reasons = []
+
+    unless driver_id
+      reasons << "Driver not assigned"
+    end
+    unless vehicle_id
+      reasons << "Vehicle not assigned"
+    end
+    unless start_odometer
+      reasons << "Missing beginning mileage"
+    end
+    unless end_odometer
+      reasons << "Missing ending mileage"
+    end
+
+    (provider.fields_required_for_run_completion & Run::FIELDS_FOR_COMPLETION).each do |extra_field|
+      if extra_field == "paid" && extra_field.nil?
+        reasons << "Paid field is not specified"
+      elsif extra_field == "unpaid_driver_break_time" && extra_field.nil?
+        reasons << "Driver Unpaid Break Time field is not specified"
+      end
+    end
+
+    reasons
+  end
+
   private
 
   def fix_dates
