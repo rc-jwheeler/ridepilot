@@ -772,6 +772,44 @@ class ReportsController < ApplicationController
     apply_v2_response
   end
 
+  def customer_donation_report
+    query_params = params[:query] || {start_date: Date.today.prev_month + 1}
+    @query = Query.new(query_params)
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.end_date.strftime('%m/%d/%Y')}"]
+
+      @customers = Customer.active_for_date(Date.today).for_provider(current_provider_id)
+      customer_ids = @customers.pluck(:id)
+      donations = Donation.for_date_range(@query.start_date, @query.end_date).where(customer_id: customer_ids)
+      donations_by_customer = donations.group(:customer_id).sum(:amount)
+      @report_data = {}
+      donations.order(:customer_id, :date).each do |d|
+        customer_id = d.customer_id
+        @report_data[customer_id] = {donations: [], total: donations_by_customer[customer_id]} unless @report_data.has_key?(customer_id)
+        customer_donation_data = @report_data[customer_id]
+        customer_donation_data[:donations] << [d.date, d.amount]
+      end
+      @total_amount = donations.sum(:amount)
+
+      if query_params[:report_type] == 'summary'
+        @is_summary_report = true
+      else
+        @customer_trip_sizes = {}
+        trips = Trip.for_date_range(@query.start_date, @query.end_date).where(customer_id: customer_ids).order(:customer_id)
+        trips.each do |t|
+          if @customer_trip_sizes.has_key?(t.customer_id)
+            @customer_trip_sizes[t.customer_id] += t.trip_count
+          else
+            @customer_trip_sizes[t.customer_id] = t.trip_count
+          end
+        end
+      end
+    end
+
+    apply_v2_response
+  end
+
 
   private
 

@@ -1,0 +1,31 @@
+%h2= "#{translate_helper("total_donations")}: #{@total_amount}"
+
+- @customers.each do |customer|
+  - customer_data = @report_data[customer.id]
+  - next unless customer_data && customer_data[:donations].any?
+  - donations = customer_data[:donations]
+  %h3= customer.name
+  %table.table.table-bordered
+    %thead
+      %tr
+        %th{style: 'width: 150px;'}= translate_helper("date")
+        %th= translate_helper("donation_amount")
+    %tbody
+      - donations.each do |data|
+        %tr
+          %td{style: 'width: 150px;'}= format_date(data[0])
+          %td= data[1]
+      %tr
+        %td.text-right
+          %b= translate_helper("total")
+        %td
+          %b= customer_data[:total]
+      - unless @is_summary_report
+        %tr
+          %td.text-right
+            %b= translate_helper("unlinked_trip_count")
+          %td
+            %b= @customer_trip_sizes[customer.id] || 0
+
+
+

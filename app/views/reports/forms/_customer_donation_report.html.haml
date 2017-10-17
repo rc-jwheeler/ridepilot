@@ -1,0 +1,7 @@
+= form_for @query, :url=>url_for(:action=>:customer_donation_report), :html=>{:method=>:get} do |f| 
+  %fieldset
+    = f.date_select  :start_date, :order => [:month,:day,:year] rescue nil
+    = translate_helper("through") 
+    = f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil
+
+    = render 'reports/forms/v2_reports/common_controls', has_multiple_report_types: true, f: f
