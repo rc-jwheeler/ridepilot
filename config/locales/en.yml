@@ -900,6 +900,15 @@ en:
   age_and_ethnicity_report_heading: "Reports: Unduplicated Age &amp; Ethnicity"
   age_and_ethnicity_page_title: "Age and Ethnicity: %{provider}, %{start_date}"
   run_incomplete_reason: "Incomplete Reason"
+  summary: "Summary"
+  total_hours: "Total Hours"
+  volunteer_driver_count: "Number of Volunteer Drivers"
+  paid_driver_count: "Number of Paid Drivers"
+  driver_type: "Type"
+  total_hours_scheduled: "Total Hours Scheduled"
+  hours_scheduled: "Hours Scheduled"
+  number_of_runs_completed: "Number of Runs Completed"
+  days_worked: "Days Worked"
   
   # Approved Vendors List
   vendor_list_download: "Download Approved Vendors List"
@@ -907,10 +916,8 @@ en:
   upload_vendor_list: "Upload Approved Vendors List"
   no_vendor_list: "No Approved Vendor List has been uploaded"
   remove_vendor_list_confirm: "Are you sure you want to remove the Approved Vendor List?"
-
   reports: "Reports"
   age_and_ethnicity_table_heading: "Unduplicated Age & Ethnicity Report"
-
   age: "Age"
   current_month: "Current Month"
   fiscal_ytd: "Fiscal YTD"

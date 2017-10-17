@@ -1,0 +1,43 @@
+%h2= translate_helper(:summary)
+%table.table.table-bordered
+  %tbody
+    %tr
+      %td{style: "width: 200px;"}= translate_helper(:total_hours_scheduled)
+      %td= format_float_number(@total_hours) || 0
+    %tr
+      %td{style: "width: 200px;"}= translate_helper(:volunteer_driver_count)
+      %td= @total_volunteer_driver_count || 0
+    %tr
+      %td{style: "width: 200px;"}= translate_helper(:paid_driver_count)
+      %td= @total_paid_driver_count || 0
+
+- unless @is_summary_report && @service_drivers.any?
+  %table.table.table-bordered
+    %thead
+      %tr
+        %th= translate_helper(:driver_form_name)
+        %th= translate_helper(:days_worked)
+        %th= translate_helper(:number_of_runs_completed)
+        %th= translate_helper(:hours_scheduled)
+        %th= translate_helper(:driver_type)
+    %tbody
+      - @service_drivers.each do |driver|
+        %tr
+          %td= driver.user_name
+          %td= @days_worked_by_driver[driver.id] || 0
+          %td= @runs_completed_by_driver[driver.id] || 0
+          %td= format_float_number(@seconds_scheduled_by_driver[driver.id] / 3600.0)|| 0
+          %td= driver.paid? ? "Paid" : "Volunteer"
+      %tr
+        %td.text-right
+          %b= translate_helper("total")
+        %td
+          %b= @total_days_worked
+        %td
+          %b= @total_runs_completed
+        %td
+          %b= format_float_number(@total_hours) || 0
+        %td
+          %b= "#{@total_paid_driver_count} Paid, #{@total_volunteer_driver_count} Volunteer"
+
+

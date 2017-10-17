@@ -58,7 +58,11 @@ module ApplicationHelper
   def format_for_pdf_printing(datetime)
     datetime.strftime(" %m/%d/%Y @ %k:%M")
   end
-  
+
+  def format_float_number(number, precision = 2)
+    number_with_precision(number, precision: precision, strip_insignificant_zeros: true)
+  end
+
   def delete_trippable_link(trippable)
     if can? :destroy, trippable
       link_to trippable.trips.present? ? translate_helper("merge") : translate_helper("delete"), trippable, :class => 'delete'

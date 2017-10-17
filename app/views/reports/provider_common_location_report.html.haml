@@ -2,7 +2,7 @@
 
 - if @query
   .filter-form 
-    = render 'reports/forms/provider_common_location_report'
+    = render "reports/forms/#{@custom_report.name}"
 
   - if @addresses
-    = render 'reports/provider_common_location_report/table'
+    = render "reports/#{@custom_report.name}/table"

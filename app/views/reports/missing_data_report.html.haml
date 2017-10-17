@@ -2,7 +2,7 @@
 
 - if @query
   .filter-form 
-    = render 'reports/forms/missing_data_report'
+    = render "reports/forms/#{@custom_report.name}"
 
   - if @runs
-    = render 'reports/missing_data_report/table'
+    = render "reports/#{@custom_report.name}/table"

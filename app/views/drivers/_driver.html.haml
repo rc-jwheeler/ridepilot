@@ -11,4 +11,4 @@
   %td
     = driver.compliant? ? translate_helper("no") : translate_helper("yes")
   %td
-    = number_with_precision(driver.run_hours, precision: 2, strip_insignificant_zeros: true)
+    = format_float_number(driver.run_hours)

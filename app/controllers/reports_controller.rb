@@ -46,10 +46,10 @@ class Query
         @end_date = start_date.next_month
       end
       if params["vehicle_id"]
-        @vehicle_id = params["vehicle_id"].to_i
+        @vehicle_id = params["vehicle_id"].to_i unless params["vehicle_id"].blank?
       end
       if params["driver_id"]
-        @driver_id = params["driver_id"].to_i
+        @driver_id = params["driver_id"].to_i unless params["driver_id"].blank?
       end
       if params["address_group_id"]
         @address_group_id = params["address_group_id"]
@@ -804,6 +804,43 @@ class ReportsController < ApplicationController
             @customer_trip_sizes[t.customer_id] = t.trip_count
           end
         end
+      end
+    end
+
+    apply_v2_response
+  end
+
+  def driver_monthly_service_report
+    query_params = params[:query] || {start_date: Date.today.prev_month + 1}
+    @query = Query.new(query_params)
+    @active_drivers = Driver.for_provider(current_provider_id).active.default_order
+
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.end_date.strftime('%m/%d/%Y')}"]
+      
+      unless @query.driver_id.blank?
+        @drivers = Driver.where(id: @query.driver_id)
+      else
+        @drivers = @active_drivers
+      end
+
+      @runs = Run.for_provider(current_provider_id).for_driver(@drivers.pluck(:id)).for_date_range(@query.start_date, @query.end_date)
+
+      @total_hours = @runs.sum("extract(epoch from (scheduled_end_time - scheduled_start_time))") / 3600.0
+      @service_drivers = Driver.where(id: @runs.pluck(:driver_id).uniq) # drivers that provided service
+      @total_driver_count = @service_drivers.count
+      @total_paid_driver_count = @runs.joins(:driver).where(drivers: {paid: true}).pluck(:driver_id).uniq.count
+      @total_volunteer_driver_count = @total_driver_count - @total_paid_driver_count
+
+      if query_params[:report_type] == 'summary'
+        @is_summary_report = true
+      else
+        @total_runs_completed = @runs.complete.count
+        @total_days_worked = @runs.today_and_prior.count(:date)
+        @days_worked_by_driver = @runs.today_and_prior.group(:driver_id).count(:date)
+        @runs_completed_by_driver = @runs.complete.group(:driver_id).count(:id)
+        @seconds_scheduled_by_driver = @runs.group(:driver_id).sum("extract(epoch from (scheduled_end_time - scheduled_start_time))")
       end
     end
 
