@@ -1,0 +1,35 @@
+%table.table.table-bordered
+  %thead
+    %tr
+      %th= translate_helper(:driver_form_name)
+      %th= translate_helper(:phone_number)
+      %th= translate_helper(:driver_type)
+      - unless @is_summary_report
+        %th= translate_helper(:driver_form_email)
+        %th= translate_helper(:driver_address_heading)
+        %th= translate_helper(:driver_alt_address_heading)
+        %th= translate_helper(:driver_form_emergency_contact_heading)
+
+  %tbody
+    - @drivers.each do |driver|
+      %tr
+        %td= driver.user_name
+        %td
+          = simple_format [format_phone_number(driver.phone_number), format_phone_number(driver.alt_phone_number)].compact.join("<br>")
+
+        %td= driver.paid? ? "Paid" : "Volunteer"
+        - unless @is_summary_report
+          %td= driver.user.try(:email) 
+          %td= driver.address.try(:one_line_text)
+          %td= driver.alt_address.try(:one_line_text)
+          %td
+            - if driver.emergency_contact
+              = simple_format format_driver_emergency_contact(driver.emergency_contact).html_safe
+    %tr
+      %td.text-right
+        %b= translate_helper("total")
+      %td
+      %td{colspan: @is_summary_report ? 1 : 5}
+        %b= "#{@total_paid_driver_count} Paid, #{@total_volunteer_driver_count} Volunteer"
+
+

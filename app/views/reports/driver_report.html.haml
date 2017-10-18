@@ -4,5 +4,5 @@
   .filter-form 
     = render "reports/forms/#{@custom_report.name}"
 
-  - if @runs 
+  - if @drivers 
     = render "reports/#{@custom_report.name}/table"

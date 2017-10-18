@@ -292,4 +292,17 @@ module ApplicationHelper
     customer && !customer.code.blank? && session["client_code_#{customer.id}"] != '1'
   end
 
+  def format_driver_emergency_contact(contact)
+    return "" unless contact 
+
+    parts = []
+    name_part = "#{contact.name}"
+    name_part += " (#{contact.relationship})" unless contact.relationship.blank?
+    parts << name_part
+    parts << format_phone_number(contact.phone_number) unless contact.phone_number.blank?
+    parts << contact.geocoded_address.try(:one_line_text) if contact.geocoded_address
+
+    parts.join("\n")
+  end
+
 end

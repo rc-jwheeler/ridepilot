@@ -17,7 +17,7 @@ module DispatchHelper
         trip_id: trip.id,
         is_recurring: is_recurring ? true : trip.repeating_trip_id.present?,
         customer: trip.customer.try(:name),
-        phone: [trip.customer.phone_number_1, trip.customer.phone_number_2].compact,
+        phone: [format_phone_number(trip.customer.phone_number_1), format_phone_number(trip.customer.phone_number_2)].compact,
         comments: trip.notes,
         result: is_recurring ? nil : (trip.trip_result.try(:name) || 'Pending')
       }

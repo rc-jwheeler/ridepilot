@@ -847,6 +847,32 @@ class ReportsController < ApplicationController
     apply_v2_response
   end
 
+  def driver_report
+    query_params = params[:query] || {}
+    @query = Query.new(query_params)
+    @active_drivers = Driver.for_provider(current_provider_id).active.default_order
+
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      
+      unless @query.driver_id.blank?
+        @drivers = Driver.where(id: @query.driver_id)
+      else
+        @drivers = @active_drivers
+      end
+
+      @total_paid_driver_count = @drivers.where(paid: true).count 
+      @total_volunteer_driver_count = @drivers.count - @total_paid_driver_count
+
+      if query_params[:report_type] == 'summary'
+        @is_summary_report = true
+      else
+        
+      end
+    end
+
+    apply_v2_response
+  end
 
   private
 
