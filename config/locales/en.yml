@@ -909,6 +909,7 @@ en:
   hours_scheduled: "Hours Scheduled"
   number_of_runs_completed: "Number of Runs Completed"
   days_worked: "Days Worked"
+  number_of_trips: "Number of Trips" 
   
   # Approved Vendors List
   vendor_list_download: "Download Approved Vendors List"
