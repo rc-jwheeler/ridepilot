@@ -1,25 +1,23 @@
 - # common
 = render 'reports/common_csv_header.csv.haml'
 
-- if @drivers
-  - column_headers = [translate_helper(:driver_form_name), translate_helper(:phone_number), translate_helper(:driver_type)]
-  - unless @is_summary_report
-    - column_headers += [translate_helper(:driver_form_email), translate_helper(:driver_address_heading), translate_helper(:driver_alt_address_heading), translate_helper(:driver_form_emergency_contact_heading)]
+- if @vehicles
+  = CSV.generate_line([translate_helper(:summary)], {:row_sep => nil}).html_safe
+  = CSV.generate_line([translate_helper(:vehicle_form_name_label), translate_helper(:mileage)], {:row_sep => nil}).html_safe
+  - @service_vehicles.each do |vehicle|
+    = CSV.generate_line([vehicle.name, @miles_by_vehicle[vehicle.id]], {:row_sep => nil}).html_safe
+  = CSV.generate_line([translate_helper("total"), "#{@total_vehicle_count} vehicles, #{@total_vehicle_miles} miles"], {:row_sep => nil}).html_safe
 
-  = CSV.generate_line(column_headers, {:row_sep => nil}).html_safe
-
-  - @drivers.each do | driver |
-    - data = [driver.user_name, [format_phone_number(driver.phone_number), format_phone_number(driver.alt_phone_number)].compact.join("\n"), driver.paid? ? "Paid" : "Volunteer"]
-
-    - unless @is_summary_report
-      - data += [driver.user.try(:email), driver.address.try(:one_line_text), driver.alt_address.try(:one_line_text)]
-      - if driver.emergency_contact
-        - data += [format_driver_emergency_contact(driver.emergency_contact).html_safe]
-    
-    = CSV.generate_line(data, {:row_sep => nil}).html_safe
-  
-  = CSV.generate_line([translate_helper("total"), "#{@total_paid_driver_count} Paid, #{@total_volunteer_driver_count} Volunteer"], {:row_sep => nil}).html_safe
-
-
+  = CSV.generate_line([""], {:row_sep => nil}).html_safe
+  - @run_dates.each do |date|
+    - next if @report_data[date].blank?
+    = CSV.generate_line([format_date(date)], {:row_sep => nil}).html_safe
+    = CSV.generate_line([translate_helper(:vehicle_form_name_label), translate_helper(:start_odometer), translate_helper(:end_odometer), translate_helper(:mileage), translate_helper(:run_distance_revenue_miles), translate_helper(:run_distance_non_revenue_miles), translate_helper(:number_of_trips)], {:row_sep => nil}).html_safe
+    - @vehicles_basic_data.each do | vehicle_id, vehicle_name |
+      - next if @report_data[date][vehicle_id].blank?
+      - vehicle_data = @report_data[date][vehicle_id]
+      = CSV.generate_line([vehicle_name, format_float_number(vehicle_data[:beginning_mileage]), format_float_number(vehicle_data[:ending_mileage]), format_float_number(vehicle_data[:mileage]), format_float_number(vehicle_data[:revenue_miles_sum]), format_float_number(vehicle_data[:non_revenue_miles_sum]), vehicle_data[:trips_count]], {:row_sep => nil}).html_safe
+    - total_data = @report_data_totals[date]
+    = CSV.generate_line([translate_helper(:total), "", "", format_float_number(total_data[:mileage]), format_float_number(total_data[:revenue_miles_sum]), format_float_number(total_data[:non_revenue_miles_sum]), total_data[:trips_count]], {:row_sep => nil}).html_safe
 
   
