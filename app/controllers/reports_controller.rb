@@ -717,7 +717,7 @@ class ReportsController < ApplicationController
     if params[:query]
       @report_params = [["Provider", current_provider.name]]
       @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.end_date.strftime('%m/%d/%Y')}"]
-      @runs = Run.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).incomplete.order(:date, "lower(name)")
+      @runs = Run.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date + 1.day).incomplete.order(:date, "lower(name)")
       @data_by_date = {}
       @runs.each do |run|
         @data_by_date[run.date] = [] unless @data_by_date.has_key?(run.date)
@@ -781,7 +781,7 @@ class ReportsController < ApplicationController
 
       @customers = Customer.active_for_date(Date.today).for_provider(current_provider_id)
       customer_ids = @customers.pluck(:id)
-      donations = Donation.for_date_range(@query.start_date, @query.end_date).where(customer_id: customer_ids)
+      donations = Donation.for_date_range(@query.start_date, @query.end_date + 1.day).where(customer_id: customer_ids)
       donations_by_customer = donations.group(:customer_id).sum(:amount)
       @report_data = {}
       donations.order(:customer_id, :date).each do |d|
@@ -796,7 +796,7 @@ class ReportsController < ApplicationController
         @is_summary_report = true
       else
         @customer_trip_sizes = {}
-        trips = Trip.for_date_range(@query.start_date, @query.end_date).where(customer_id: customer_ids).order(:customer_id)
+        trips = Trip.for_date_range(@query.start_date, @query.end_date + 1.day).where(customer_id: customer_ids).order(:customer_id)
         trips.each do |t|
           if @customer_trip_sizes.has_key?(t.customer_id)
             @customer_trip_sizes[t.customer_id] += t.trip_count
@@ -837,6 +837,40 @@ class ReportsController < ApplicationController
     apply_v2_response
   end
 
+  def driver_compliances_report
+    query_params = params[:query] || {start_date: Date.today.prev_month + 1}
+    @query = Query.new(query_params)
+    @active_drivers = Driver.for_provider(current_provider_id).active.default_order
+
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.end_date.strftime('%m/%d/%Y')}"]
+      
+      unless @query.driver_id.blank?
+        @drivers = Driver.where(id: @query.driver_id)
+      else
+        @drivers = @active_drivers
+      end
+      driver_ids = @drivers.pluck(:id)
+      
+      base_driver_compliances = DriverCompliance.for_driver(driver_ids).due_date_range(@query.start_date, @query.end_date).default_order
+
+      if query_params[:report_type] == 'summary'
+        @is_summary_report = true 
+        # summary report for upcoming events only
+        driver_compliances = base_driver_compliances.incomplete
+      else
+        driver_compliances = base_driver_compliances
+        @driver_histories = DriverHistory.for_driver(driver_ids).event_date_range(@query.start_date, @query.end_date).default_order.group_by{|dh| dh.driver_id}
+      end
+
+      @legal_compliances = driver_compliances.legal.group_by{|dc| dc.driver_id}
+      @non_legal_compliances = driver_compliances.non_legal.group_by{|dc| dc.driver_id}
+    end
+
+    apply_v2_response
+  end
+
   def driver_monthly_service_report
     query_params = params[:query] || {start_date: Date.today.prev_month + 1}
     @query = Query.new(query_params)
@@ -852,7 +886,7 @@ class ReportsController < ApplicationController
         @drivers = @active_drivers
       end
 
-      @runs = Run.for_provider(current_provider_id).for_driver(@drivers.pluck(:id)).for_date_range(@query.start_date, @query.end_date)
+      @runs = Run.for_provider(current_provider_id).for_driver(@drivers.pluck(:id)).for_date_range(@query.start_date, @query.end_date + 1.day)
 
       @total_hours = @runs.sum("extract(epoch from (scheduled_end_time - scheduled_start_time))") / 3600.0
       @service_drivers = Driver.where(id: @runs.pluck(:driver_id).uniq) # drivers that provided service
@@ -890,7 +924,7 @@ class ReportsController < ApplicationController
       end
 
       # Only past runs with odometers
-      @runs = Run.with_odometer_readings.today_and_prior.for_provider(current_provider_id).for_vehicle(@vehicles.pluck(:id)).for_date_range(@query.start_date, @query.end_date)
+      @runs = Run.with_odometer_readings.today_and_prior.for_provider(current_provider_id).for_vehicle(@vehicles.pluck(:id)).for_date_range(@query.start_date, @query.end_date + 1.day)
 
       @service_vehicles = Vehicle.where(id: @runs.pluck(:vehicle_id).uniq) # vehicles that provided service
       @total_vehicle_count = @service_vehicles.count
