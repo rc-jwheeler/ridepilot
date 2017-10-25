@@ -1,11 +1,11 @@
 - # common
 = render 'reports/common_csv_header.csv.haml'
 
-- if @active_drivers 
+- if @drivers 
   - compliance_event_headers = [translate_helper("driver_compliance_form_due_date"), translate_helper("driver_compliance_form_event"), translate_helper("driver_compliance_form_compliance_date")]
   - history_event_headers = [translate_helper("driver_history_form_event_date"), translate_helper("driver_history_form_event")]
-  - @active_drivers.each do |driver|
-    = CSV.generate_line([driver.user_name], {:row_sep => nil}).html_safe
+  - @drivers.each do |driver|
+    = CSV.generate_line(["Driver Name", driver.user_name], {:row_sep => nil}).html_safe
     
     - # legal compliances
     = CSV.generate_line([""], {:row_sep => nil}).html_safe
@@ -19,6 +19,7 @@
       = CSV.generate_line(["No record"], {:row_sep => nil}).html_safe
 
     - # non legal compliances
+    = CSV.generate_line([""], {:row_sep => nil}).html_safe
     = CSV.generate_line([translate_helper("driver_compliances_heading")], {:row_sep => nil}).html_safe
     - non_legal_compliances = @non_legal_compliances[driver.id]
     - unless non_legal_compliances.blank?
@@ -30,6 +31,7 @@
 
     - # histories
     - unless @is_summary_report
+      = CSV.generate_line([""], {:row_sep => nil}).html_safe
       = CSV.generate_line([translate_helper("driver_histories_heading")], {:row_sep => nil}).html_safe
       - driver_histories = @driver_histories[driver.id]
       - unless driver_histories.blank?

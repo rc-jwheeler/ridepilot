@@ -908,6 +908,39 @@ class ReportsController < ApplicationController
     apply_v2_response
   end
 
+  def vehicle_report
+    query_params = params[:query] || {start_date: Date.today.prev_month + 1}
+    @query = Query.new(query_params)
+    @active_vehicles = Vehicle.for_provider(current_provider_id).active.default_order
+
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.before_end_date.strftime('%m/%d/%Y')}"]
+      
+      unless @query.vehicle_id.blank?
+        @vehicles = Vehicle.where(id: @query.vehicle_id)
+      else
+        @vehicles = @active_vehicles
+      end
+      vehicle_ids = @vehicles.pluck(:id)
+
+      base_compliances = VehicleCompliance.for_vehicle(vehicle_ids).due_date_range(@query.start_date, @query.end_date).default_order
+
+      if query_params[:report_type] == 'summary'
+        @is_summary_report = true
+      else
+        @vehicle_maintenance_compliances = VehicleMaintenanceCompliance.for_vehicle(vehicle_ids).default_order.group_by{|c| c.vehicle_id}
+        @vehicle_warranties = VehicleWarranty.for_vehicle(vehicle_ids).default_order.group_by{|c| c.vehicle_id}
+        @repair_events = VehicleMaintenanceEvent.for_vehicle(vehicle_ids).default_order.group_by{|c| c.vehicle_id}
+      end
+
+      @legal_compliances = base_compliances.legal.group_by{|c| c.vehicle_id}
+      @non_legal_compliances = base_compliances.non_legal.group_by{|c| c.vehicle_id}
+    end
+
+    apply_v2_response
+  end
+
   def vehicle_monthly_service_report
     query_params = params[:query] || {start_date: Date.today.prev_month + 1}
     @query = Query.new(query_params)

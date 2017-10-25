@@ -1,4 +1,4 @@
-- @active_drivers.each do |driver|
+- @drivers.each do |driver|
   %h2{style: "text-decoration: underline;"}= driver.user_name
   - legal_compliances = @legal_compliances[driver.id]
   %h4= translate_helper("legal_driver_compliances_heading") 
