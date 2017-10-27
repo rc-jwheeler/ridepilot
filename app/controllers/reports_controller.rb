@@ -9,6 +9,7 @@ class Query
   attr_accessor :end_date
   attr_accessor :vehicle_id
   attr_accessor :driver_id
+  attr_accessor :mobility_id
   attr_accessor :trip_display
   attr_accessor :address_group_id
   attr_accessor :report_format
@@ -50,6 +51,9 @@ class Query
       end
       if params["driver_id"]
         @driver_id = params["driver_id"].to_i unless params["driver_id"].blank?
+      end
+      if params["mobility_id"]
+        @mobility_id = params["mobility_id"].to_i unless params["mobility_id"].blank?
       end
       if params["address_group_id"]
         @address_group_id = params["address_group_id"]
@@ -804,6 +808,32 @@ class ReportsController < ApplicationController
             @customer_trip_sizes[t.customer_id] = t.trip_count
           end
         end
+      end
+    end
+
+    apply_v2_response
+  end
+
+  def customers_report
+    query_params = params[:query] || {}
+    @query = Query.new(query_params)
+    @mobilities = Mobility.by_provider(current_provider).order(:name)
+
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      
+      active_customers = Customer.for_provider(current_provider_id).active
+      unless @query.mobility_id.blank?
+        @report_params << [["Mobility Device", Mobility.find_by_id(@query.mobility_id).try(:name)]]
+        @customers = active_customers.where(mobility_id: @query.mobility_id)
+      else
+        @customers = active_customers
+      end
+
+      if query_params[:report_type] == 'summary'
+        @is_summary_report = true
+      else
+        
       end
     end
 
