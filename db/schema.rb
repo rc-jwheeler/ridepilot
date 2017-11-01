@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171031153307) do
+ActiveRecord::Schema.define(version: 20171101195547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1023,6 +1023,14 @@ ActiveRecord::Schema.define(version: 20171031153307) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["password_changed_at"], :name => "index_users_on_password_changed_at"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+
+  create_table "vehicle_capacity_configurations", force: true do |t|
+    t.integer  "vehicle_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "vehicle_capacity_configurations", ["vehicle_type_id"], :name => "index_vehicle_capacity_configurations_on_vehicle_type_id"
 
   create_table "vehicle_compliances", force: true do |t|
     t.integer  "vehicle_id"

@@ -1422,17 +1422,17 @@ en:
   vehicle_type_form_new_heading: "New Type"
   vehicle_form_edit_heading: "Edit Type"
 
-  #vehicle capacities
-  new_vehicle_capacity_link_text: "New"
+  #vehicle capacity configurations
+  new_vehicle_capacity_configuration_link_text: "New Configuration"
   vehicle_capacity_capacity: "Capacity"
   vehicle_capacity_type: "Type"
-  vehicle_capacity_form_error:
-    one: "1 error prohibited this type from being saved"
+  vehicle_capacity_configuration_form_error:
+    one: "1 error prohibited this configuration from being saved"
     other: "%{count} errors prohibited this from being saved"
-  vehicle_capacity_form_submit: "Submit"
-  vehicle_capacity_delete_confirm: "Are you sure to delete this type?"
-  vehicle_capacity_form_new_heading: "New Type"
-  vehicle_capacity_form_edit_heading: "Edit Type"
+  vehicle_capacity_configuration_form_submit: "Submit"
+  vehicle_capacity_configuration_delete_confirm: "Are you sure to delete this configuration?"
+  vehicle_capacity_configuration_form_new_heading: "New Configuration"
+  vehicle_capacity_configuration_form_edit_heading: "Edit Configuration"
   configure_provider_capacity_types: "Configure Provider Specific Capacity Types"
   provider_capacity_types_link_text: "Provider-specific Capacity Types"
   capacity_type_label: "Capacity Type"
