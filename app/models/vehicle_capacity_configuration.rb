@@ -21,16 +21,18 @@ class VehicleCapacityConfiguration < ActiveRecord::Base
   private
 
   def must_have_capacity
-    has_capacity = false
-    vehicle_capacities.each do |vc|
-      if vc.capacity.to_i > 0
-        has_capacity = true 
-        break
+    if vehicle_capacities.any?
+      has_capacity = false
+      vehicle_capacities.each do |vc|
+        if vc.capacity.to_i > 0
+          has_capacity = true 
+          break
+        end
       end
-    end
 
-    unless has_capacity
-      errors.add(:base, "Must have at least capacity for one type")
+      unless has_capacity
+        errors.add(:base, "Must have at least capacity for one type")
+      end
     end
   end
 
