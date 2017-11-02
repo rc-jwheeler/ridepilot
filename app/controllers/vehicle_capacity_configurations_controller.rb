@@ -28,6 +28,10 @@ class VehicleCapacityConfigurationsController < ApplicationController
     end
   end
 
+  def list 
+    @vehicle_capacity_configurations = @vehicle_type.vehicle_capacity_configurations
+  end
+
   private 
 
   def capacity_params

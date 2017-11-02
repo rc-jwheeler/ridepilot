@@ -5,9 +5,9 @@
       = f.label :vehicle_type_id, translate_helper("vehicle_form_vehicle_type_label"), class: "col-md-2 control-label"
       .col-md-10
         = f.collection_select :vehicle_type_id, VehicleType.for_provider(current_provider_id).default_order, :id, :name, { include_blank: true }, { class: "form-control", disabled: @readonly }
-        .vehicle-capacities
-          - if @vehicle.vehicle_type && @vehicle.vehicle_type.vehicle_capacities.any?
-            = render 'vehicle_capacities/list', vehicle_capacities: @vehicle.vehicle_type.vehicle_capacities
+        .vehicle-capacity-configurations
+          - if @vehicle.vehicle_type && @vehicle.vehicle_type.vehicle_capacity_configurations.any?
+            = render 'vehicle_capacity_configurations/list', vehicle_capacity_configurations: @vehicle.vehicle_type.vehicle_capacity_configurations
     .form-group
       = f.label :seating_capacity, translate_helper("vehicle_form_seating_capacity_label"), class: "col-md-2 control-label"
       .col-md-10
@@ -24,7 +24,7 @@
         var new_type_id = $(this).val();
         if(new_type_id) {
           $.ajax({
-            url: "#{list_vehicle_type_vehicle_capacities_path('xxx')}".replace('xxx', new_type_id)
+            url: "#{list_vehicle_type_vehicle_capacity_configurations_path('xxx')}".replace('xxx', new_type_id)
           });
         } else {
           $(".vehicle-capacities").html("");
