@@ -10,7 +10,7 @@ class VehicleCapacityConfiguration < ActiveRecord::Base
   def capacity_in_array
     capacity_data = []
 
-    vehicle_capacities.default_order.each do |vc|
+    vehicle_capacities.each do |vc|
       next unless vc.capacity.to_i > 0
       capacity_data << [vc.capacity_type_id, vc.capacity.to_i]
     end
@@ -40,7 +40,7 @@ class VehicleCapacityConfiguration < ActiveRecord::Base
     if vehicle_type
       
       capacity_data = capacity_in_array
-
+      
       has_duplicate = false
       vehicle_type.vehicle_capacity_configurations.each do |config|
         next if config == self
