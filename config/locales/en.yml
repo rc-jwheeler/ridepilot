@@ -1440,6 +1440,7 @@ en:
   # mobility capacity mappings
   mobility_capacities_link_text: "Mapping Mobility Types to Capacity Types"
   save_mobility_capacities: "Save"
+  mobility_capacities_edit_notes: "Click each number to edit."
 
   # Vehicle Maintenance Compliances
   vehicle_maintenance_compliances_heading: "Preventive Maintenance Logs (PM)"

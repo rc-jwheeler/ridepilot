@@ -157,6 +157,7 @@ Rails.application.routes.draw do
 
     resources :mobility_capacities, only: [:index] do
       collection do 
+        get :batch_edit
         post :batch_update
       end 
     end

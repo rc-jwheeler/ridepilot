@@ -7,8 +7,13 @@ class MobilityCapacitiesController < ApplicationController
     @mobility_capacity_mappings = @mobility_capacities.group_by{|c|[c.host_id, c.capacity_type_id]}
   end
 
-  def batch_update
+  def batch_edit
+    @capacity_types = CapacityType.by_provider(current_provider).order(:name)
+    @mobility_types = Mobility.by_provider(current_provider).order(:name)
+    @mobility_capacity_mappings = @mobility_capacities.group_by{|c|[c.host_id, c.capacity_type_id]}
+  end
 
+  def batch_update
     capacities = params[:capacities]
     MobilityCapacity.delete_all
 
