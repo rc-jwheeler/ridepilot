@@ -208,7 +208,7 @@ class Run < ActiveRecord::Base
     vehicle.present? && start_odometer.present? && end_odometer.present? && start_odometer < end_odometer && trips.incomplete.empty? && check_provider_fields_required_for_run_completion
   end
 
-  def set_complete!
+  def set_complete!(user = nil)
     if !self.from_garage_address
       self.from_garage_address = self.vehicle.try(:garage_address).try(:dup)
     end
@@ -218,12 +218,14 @@ class Run < ActiveRecord::Base
     self.complete = true
     self.save(validate: false)
     RunDistanceCalculationWorker.perform_async(self.id)
+    TrackerActionLog.complete_run(self, user)
   end
 
-  def set_incomplete!
+  def set_incomplete!(user = nil)
     self.complete = false
     self.save(validate: false)
     self.run_distance.destroy if self.run_distance
+    TrackerActionLog.uncomplete_run(self, user)
   end
   
   # Returns sum of actual run hours across a collection

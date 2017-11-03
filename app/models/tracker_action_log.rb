@@ -165,6 +165,18 @@ class TrackerActionLog < PublicActivity::Activity
     end
   end
 
+  def self.complete_run(run, user)
+    if run && run.complete? 
+      run.create_activity :completed, owner: user
+    end
+  end
+
+  def self.uncomplete_run(run, user)
+    if run && !run.complete? 
+      run.create_activity :uncompleted, owner: user, params: {reason: run.uncomplete_reason}
+    end
+  end
+
   def self.change_vehicle_initial_mileage(vehicle, user, prev_mileage)
     if vehicle 
       vehicle.create_activity :initial_mileage_changed, owner: user, params: {

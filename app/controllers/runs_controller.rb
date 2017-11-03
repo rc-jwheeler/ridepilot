@@ -197,7 +197,7 @@ class RunsController < ApplicationController
   end
 
   def uncomplete
-    @run.set_incomplete!
+    @run.set_incomplete!(current_user)
     redirect_to run_path(@run)
   end
 
@@ -212,7 +212,7 @@ class RunsController < ApplicationController
       @run.to_garage_address.the_geom = Address.compute_geom(params[:to_garage_address_lat], params[:to_garage_address_lon])
     end
 
-    @run.set_complete!
+    @run.set_complete!(current_user)
 
     redirect_to run_path(@run)
   end
