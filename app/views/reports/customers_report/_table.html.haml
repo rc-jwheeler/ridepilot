@@ -1,7 +1,7 @@
 - if @customers
   - @customers.each do |customer|
     %h2{style: 'text-decoration: underline;'}= customer.name
-    - unless @is_summary_repot
+    - unless @is_summary_report
       %p
         %b= "Birthdate: "
         = format_date(customer.birth_date) || "(Not specified)"
