@@ -155,6 +155,12 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :mobility_capacities, only: [:index] do
+      collection do 
+        post :batch_update
+      end 
+    end
+
     resources :recurring_vehicle_maintenance_compliances do
       collection do
         get :schedule_preview

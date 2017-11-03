@@ -5,6 +5,7 @@ class Ability
     can_manage_all = false
 
     can :read, Mobility
+    can :read, MobilityCapacity
     can :read, TripPurpose
     can :read, TripResult
     can :read, ServiceLevel

@@ -1437,6 +1437,10 @@ en:
   provider_capacity_types_link_text: "Provider-specific Capacity Types"
   capacity_type_label: "Capacity Type"
 
+  # mobility capacity mappings
+  mobility_capacities_link_text: "Mapping Mobility Types to Capacity Types"
+  save_mobility_capacities: "Save"
+
   # Vehicle Maintenance Compliances
   vehicle_maintenance_compliances_heading: "Preventive Maintenance Logs (PM)"
   vehicle_maintenance_compliances_add_link_title: "Add compliance event"

@@ -38,6 +38,8 @@
 //= require bootstrap-table
 //= require selectize
 //= require verify_client_code
+//= require bootstrap-editable
+//= require bootstrap-editable-rails
 //= require_self
 
 function ISODateFormatToDateObject(str) {
