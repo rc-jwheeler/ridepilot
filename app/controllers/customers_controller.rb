@@ -155,6 +155,7 @@ class CustomersController < ApplicationController
         edit_funding_authorization_numbers
         edit_eligibilities
         edit_ada_questions
+        edit_mobilities
         format.html { redirect_to(@customer, :notice => 'Customer was successfully created.') }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
@@ -247,6 +248,7 @@ class CustomersController < ApplicationController
         edit_funding_authorization_numbers
         edit_eligibilities
         edit_ada_questions
+        edit_mobilities
         format.html { redirect_to(@customer, :notice => 'Customer was successfully updated.') }
         format.xml  { head :ok }
       else
@@ -453,6 +455,18 @@ class CustomersController < ApplicationController
 
   def edit_ada_questions
     @customer.edit_ada_questions params[:ada_questions]
+  end
+
+  def edit_mobilities
+    unless params[:mobilities].blank?
+      mobilities = JSON.parse(params[:mobilities], symbolize_names: true)
+      @customer.ridership_mobilities.delete_all
+
+      mobilities.each do |config|
+        new_item = @customer.ridership_mobilities.new(mobility_id: config[:mobility_id], ridership_id: config[:ridership_id], capacity: config[:capacity].to_i)
+        new_item.save
+      end
+    end
   end
 
 end

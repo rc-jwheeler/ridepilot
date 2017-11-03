@@ -16,6 +16,7 @@ class Trip < ActiveRecord::Base
   belongs_to :outbound_trip, class_name: 'Trip', foreign_key: :linking_trip_id
   belongs_to :repeating_trip
   has_one    :donation
+  has_many   :ridership_mobilities, class_name: "TripRidershipMobility", foreign_key: :host_id, dependent: :destroy
 
   delegate :label, to: :run, prefix: :run, allow_nil: true
   delegate :code, :name, to: :trip_result, prefix: :trip_result, allow_nil: true

@@ -336,6 +336,7 @@ class TripsController < ApplicationController
 
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
+        edit_mobilities
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
         TripDistanceCalculationWorker.perform_async(@trip.id) #sidekiq needs to run
         @ask_for_return_trip = true if @trip.is_outbound?
@@ -406,6 +407,7 @@ class TripsController < ApplicationController
     is_run_disrupted = @trip.run_disrupted_by_trip_changes?
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
+        edit_mobilities
         @trip.unschedule_trip if is_run_disrupted
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
         TripDistanceCalculationWorker.perform_async(@trip.id) if is_address_changed
@@ -567,6 +569,18 @@ class TripsController < ApplicationController
       new_temp_addr = TempAddress.new(addr_params.select{|x| TempAddress.allowable_params.include?(x)})
       new_temp_addr.the_geom = RGeo::Geographic.spherical_factory(srid: 4326).point(addr_params['lon'].to_f, addr_params['lat'].to_f)
       @trip.dropoff_address = new_temp_addr
+    end
+  end
+
+  def edit_mobilities
+    unless params[:mobilities].blank?
+      mobilities = JSON.parse(params[:mobilities], symbolize_names: true)
+      @trip.ridership_mobilities.delete_all
+
+      mobilities.each do |config|
+        new_item = @trip.ridership_mobilities.new(mobility_id: config[:mobility_id], ridership_id: config[:ridership_id], capacity: config[:capacity].to_i)
+        new_item.save
+      end
     end
   end
 end

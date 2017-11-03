@@ -191,3 +191,8 @@ table.dataTable tbody tr.selected {
   width: 100% !important;
 }
 
+.inline-editing-table td.input-column {
+  width: 10%;
+  min-width: 110px;
+}
+

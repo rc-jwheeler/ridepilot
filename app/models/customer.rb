@@ -24,6 +24,8 @@ class Customer < ActiveRecord::Base
   has_many   :ada_questions, through: :customer_ada_questions
   has_many   :customer_ada_questions, dependent: :destroy
 
+  has_many   :ridership_mobilities, class_name: "CustomerRidershipMobility", foreign_key: :host_id, dependent: :destroy
+
   # profile photo
   has_one  :photo, class_name: 'Image', as: :imageable, dependent: :destroy, inverse_of: :imageable
   accepts_nested_attributes_for :photo

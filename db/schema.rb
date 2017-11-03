@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171101195547) do
+ActiveRecord::Schema.define(version: 20171103153810) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -798,6 +798,18 @@ ActiveRecord::Schema.define(version: 20171101195547) do
 
   add_index "reporting_specific_filter_groups", ["filter_group_id"], :name => "index_of_filter_group_on_specific_filter_group"
   add_index "reporting_specific_filter_groups", ["report_id"], :name => "index_of_report_on_specific_filter_group"
+
+  create_table "ridership_mobility_mappings", force: true do |t|
+    t.integer  "ridership_id"
+    t.integer  "mobility_id"
+    t.integer  "capacity"
+    t.string   "type"
+    t.integer  "host_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "ridership_mobility_mappings", ["mobility_id"], :name => "index_ridership_mobility_mappings_on_mobility_id"
 
   create_table "roles", force: true do |t|
     t.integer  "user_id"

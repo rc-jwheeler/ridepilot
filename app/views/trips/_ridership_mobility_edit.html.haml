@@ -1,31 +1,21 @@
-- editable = can? :manage, MobilityCapacity
-
-.col-sm-12{style: 'padding: 10px;'}
-  %h2= translate_helper(:mobility_capacities_link_text)
-  %span= translate_helper(:mobility_capacities_edit_notes)
-  - if editable
-    .pull-right{style: 'padding-bottom: 5px;'}
-      %button.btn.btn-primary#save_capacities
-        = translate_helper("save_mobility_capacities")
-      = link_to translate_helper("back"), mobility_capacities_path, class: "btn action-button"
-  %table.table.table-bordered.table-hover.table-condensed.inline-editing-table#mobility_capacities_table
-    %thead
-      %tr.report-header
+%table.table.table-bordered.table-hover.table-condensed.inline-editing-table
+  %thead
+    %tr.report-header
+      %th
+        = translate_helper("mobility")
+      - RidershipMobilityMapping::RIDERSHIP_LIST.each do |riderhsip_id, ridership_name|
         %th
-          = translate_helper("mobility")
-        - @capacity_types.pluck(:name).each do |ct_name|
-          %th
-            = ct_name
-    %tbody
-      - @mobility_types.each do |mt|
-        %tr{data: {mobility_id: mt.id}}
-          %td= mt.name
-          - @capacity_types.pluck(:id).each do |ct_id|
-            - mc = @mobility_capacity_mappings[[mt.id, ct_id]]
-            %td.input-column
-              - val = mc && mc.first.try(:capacity) || 0
-              %a.editable-cell.editable-number{href:"#", data: {type:"text", capacity_type_id: ct_id, mobility_id: mt.try(:id), original_value: val} }
-                = val
+          = ridership_name
+  %tbody
+    - Mobility.by_provider(current_provider).order(:name).each do |mt|
+      %tr{data: {mobility_id: mt.id}}
+        %td= mt.name
+        - RidershipMobilityMapping::RIDERSHIP_LIST.each do |riderhsip_id, ridership_name|
+          - mc = @ridership_mobility_mappings[[mt.id, riderhsip_id]]
+          %td.input-column
+            - val = mc && mc.first.try(:capacity) || 0
+            %a.editable-cell.editable-number{href:"#", data: {type:"text", ridership_id: riderhsip_id, mobility_id: mt.id, original_value: val} }
+              = val
 
 :javascript
   $(function() {
@@ -54,7 +44,7 @@
     // number cells
     $('.editable-number').editable({
       tpl: '<input type="number" min="0" step="1" required>',
-      disabled: !(#{editable}),
+      disabled: false,
       savenochange: true,
       showbuttons: false,
       clear: false,
@@ -121,18 +111,6 @@
       processCell(editableCell, isNotesCell, newValue, keyCode)
     });
 
-    $(document).on("keydown", '.editable-input input', function (e) {
-    });
-
-    // if there are unsaved changes, alert user when leaving page
-    $(window).bind('beforeunload', function(e){
-      if($('#mobility_capacities_table .editable-unsaved').length > 0) {
-        return "There are unsaved changes in the report.";
-      } else {
-        e = null; // not trigger leave page alert
-      }
-    });
-
     $('.editable-number').on('save', function(e, params) {
       params = params || {};
 
@@ -156,39 +134,4 @@
       });
     });
 
-    // serialize existing numbers to save
-    function getCapacities() {
-      var data = {};
-      $('.editable-number').each(function() {
-        var mobility_id = $(this).data('mobility-id');
-        var capacity_type_id = $(this).data('capacity-type-id');
-        var value = parseInt($(this).text());
-        if(!$.isNumeric(value)) {
-          value = 0;
-        }
-
-        if(!data[mobility_id]) {
-          data[mobility_id] = {};
-        }
-
-        data[mobility_id][capacity_type_id] = value;
-      });
-
-      return data;
-    }
-
-    // save button
-    $('#save_capacities').click(function(e) {
-      if($('#mobility_capacities_table .editable-unsaved').length == 0) {
-        // no changes
-        window.location.href = "#{mobility_capacities_path}";
-      } else {
-        $.ajax({
-          url: "#{batch_update_mobility_capacities_path}",
-          method: 'post',
-          data: { capacities: getCapacities()}
-        });
-      }
-    });
-  
   })

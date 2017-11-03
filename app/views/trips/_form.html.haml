@@ -8,6 +8,8 @@
   html: { class: 'trip_form', "data-remote" => @remote } do |f|
   = hidden_field_tag :from_dispatch, params[:from_dispatch]
   = hidden_field_tag :run_id, params[:run_id]
+  = hidden_field_tag :mobilities 
+
   - if @is_repeating_trip
     = render 'repeating_trips/form_header', edit_mode: edit_mode, f: f
   - else
@@ -30,6 +32,7 @@
   - if @is_repeating_trip 
     .col-sm-12.col-md-6
       = render 'trips/required_trip_details_panel', f: f, edit_mode: edit_mode
+      = render 'trips/mobility_panel', f: f, edit_mode: edit_mode 
       = render 'trips/notes_panel', f: f, edit_mode: edit_mode
       = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
     .col-sm-12.col-md-6
@@ -44,6 +47,7 @@
   - else
     .col-sm-12.col-md-6
       = render 'trips/required_trip_details_panel', f: f, edit_mode: edit_mode
+      = render 'trips/mobility_panel', f: f, edit_mode: edit_mode 
       = render 'trips/notes_panel', f: f, edit_mode: edit_mode
       = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
     .col-sm-12.col-md-6
@@ -96,6 +100,30 @@
       callback_fn({});
     }
   }
+
+  // serialize existing numbers to save
+  function getMobilities() {
+    var data = [];
+    $('.editable-number').each(function() {
+      var mobility_id = $(this).data('mobility-id');
+      var ridership_id = $(this).data('ridership-id');
+      var value = parseInt($(this).text());
+      if(!$.isNumeric(value)) {
+        value = 0;
+      }
+
+      data.push({mobility_id: mobility_id, ridership_id: ridership_id, capacity: value});
+    });
+
+    return data;
+  }
+
+  $('.trip_form').submit(function() {
+    // serializing mobilities
+    if($('.inline-editing-table .editable-unsaved').length > 0) {
+      $('.trip_form input[name=mobilities]').val(JSON.stringify(getMobilities()));
+    }
+  });
 
 - if @is_repeating_trip
   = render 'shared/hide_invisible_form_fields_js', model_name: "repeatingtrip", table_name: 'repeating_trips', provider_id:  current_provider.try(:id)

@@ -1,0 +1,13 @@
+:ruby
+  @ridership_mobility_mappings = @customer.ridership_mobilities.group_by{|c|[c.mobility_id, c.ridership_id]}
+
+- edit_mode = :edit if !defined? edit_mode
+.panel.panel-primary#customer_mobility_panel
+  .panel-heading
+    %h3.panel-title
+      = translate_helper(:customer_mobility_panel)
+  .panel-body{style: 'padding: 5px;'}
+    - if edit_mode == :show
+      = render 'customers/ridership_mobility_listing'
+    - else
+      = render 'customers/ridership_mobility_edit'

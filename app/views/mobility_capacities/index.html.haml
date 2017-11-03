@@ -4,7 +4,7 @@
   - if editable
     .pull-right{style: 'padding-bottom: 5px;'}
       = link_to translate_helper("edit"), batch_edit_mobility_capacities_path, class: "btn action-button"
-  %table.table.table-bordered.table-hover.table-condensed#mobility_capacities_table
+  %table.table.table-bordered.table-hover.table-condensed.inline-editing-table#mobility_capacities_table
     %thead
       %tr.report-header
         %th

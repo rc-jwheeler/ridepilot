@@ -1441,6 +1441,8 @@ en:
   mobility_capacities_link_text: "Mapping Mobility Types to Capacity Types"
   save_mobility_capacities: "Save"
   mobility_capacities_edit_notes: "Click each number to edit."
+  customer_mobility_panel: "Mobility Configuration"
+  trip_mobility_panel: "Mobility Configuration"
 
   # Vehicle Maintenance Compliances
   vehicle_maintenance_compliances_heading: "Preventive Maintenance Logs (PM)"

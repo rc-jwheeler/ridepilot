@@ -1,0 +1,23 @@
+class RidershipMobilityMapping < ActiveRecord::Base
+  after_initialize :set_defaults
+  belongs_to :mobility
+
+  validates :capacity, presence: true, 
+                    numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  scope :default_order, -> { joins(:mobility).order("mobilities.name") }
+
+  RIDERSHIP_LIST = {
+    1 => 'Customer',
+    2 => 'Guest',
+    3 => 'Attendant',
+    4 => 'Service Animal'
+  }
+
+
+  private
+
+  def set_defaults
+    self.capacity = 0 if self.capacity.blank?
+  end
+end

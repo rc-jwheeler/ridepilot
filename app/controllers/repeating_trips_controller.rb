@@ -47,6 +47,7 @@ class RepeatingTripsController < ApplicationController
 
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
+        edit_mobilities
         TrackerActionLog.create_subscription_trip(@trip, current_user)
         format.html {
           if params[:from_dispatch] == 'true'
@@ -77,6 +78,7 @@ class RepeatingTripsController < ApplicationController
     changes = @trip.changes
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
+        edit_mobilities
         TrackerActionLog.update_subscription_trip(@trip, current_user, changes, prev_schedule)
         format.html { 
           if params[:from_dispatch] == 'true'
@@ -202,5 +204,17 @@ class RepeatingTripsController < ApplicationController
       @trip.dropoff_address = new_temp_addr
     end
         
+  end
+
+  def edit_mobilities
+    unless params[:mobilities].blank?
+      mobilities = JSON.parse(params[:mobilities], symbolize_names: true)
+      @trip.ridership_mobilities.delete_all
+
+      mobilities.each do |config|
+        new_item = @trip.ridership_mobilities.new(mobility_id: config[:mobility_id], ridership_id: config[:ridership_id], capacity: config[:capacity].to_i)
+        new_item.save
+      end
+    end
   end
 end
