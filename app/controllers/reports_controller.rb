@@ -824,11 +824,20 @@ class ReportsController < ApplicationController
       
       active_customers = Customer.for_provider(current_provider_id).active
       unless @query.mobility_id.blank?
-        @report_params << [["Mobility Device", Mobility.find_by_id(@query.mobility_id).try(:name)]]
+        @mobilities = @mobilities.where(id: @query.mobility_id)
+        @report_params << [["Mobility Device", @mobilities.first.try(:name)]]
         @customers = active_customers.where(mobility_id: @query.mobility_id)
       else
         @customers = active_customers
       end
+
+      @count_by_mobilities = @customers.reorder('').group(:mobility_id).count
+      provider_eligible_age = current_provider.eligible_age || Provider::DEFAULT_ELIGIBLE_AGE
+      eligible_birth_date = Date.today - (provider_eligible_age).years
+      @age_eligible_count = @customers.where("birth_date is not NULL and birth_date <= ?", eligible_birth_date).count
+      @ada_eligible_count = @customers.where(ada_eligible: true).count
+      @count_by_eligibility = CustomerEligibility.where(customer_id: @customers.pluck(:id)).eligible.reorder('').group(:eligibility_id).count
+      @eligibilities = Eligibility.by_provider(current_provider).order(:description)
 
       if query_params[:report_type] == 'summary'
         @is_summary_report = true
