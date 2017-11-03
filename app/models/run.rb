@@ -216,13 +216,15 @@ class Run < ActiveRecord::Base
       self.to_garage_address = self.vehicle.try(:garage_address).try(:dup)
     end
     self.complete = true
+    self.uncomplete_reason = nil
     self.save(validate: false)
     RunDistanceCalculationWorker.perform_async(self.id)
     TrackerActionLog.complete_run(self, user)
   end
 
-  def set_incomplete!(user = nil)
+  def set_incomplete!(reason = nil, user = nil)
     self.complete = false
+    self.uncomplete_reason = reason
     self.save(validate: false)
     self.run_distance.destroy if self.run_distance
     TrackerActionLog.uncomplete_run(self, user)

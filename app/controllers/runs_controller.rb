@@ -197,7 +197,7 @@ class RunsController < ApplicationController
   end
 
   def uncomplete
-    @run.set_incomplete!(current_user)
+    @run.set_incomplete!(params[:run][:uncomplete_reason], current_user)
     redirect_to run_path(@run)
   end
 
