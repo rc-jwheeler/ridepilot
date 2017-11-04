@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  load_and_authorize_resource :except=>[:autocomplete, :found, :edit, :create, :show, :update, :delete_photo, :inactivate, :reactivate, :prompt_code, :verify_code, :data_for_trip, :get_eligibilities_for_trip]
+  load_and_authorize_resource :except=>[:autocomplete, :found, :edit, :create, :show, :update, :delete_photo, :inactivate, :reactivate, :prompt_code, :verify_code, :data_for_trip, :get_eligibilities_mobilities_for_trip]
 
   def autocomplete
     customers = Customer.for_provider(current_provider_id).by_term( params['term'].downcase, 10 ).accessible_by(current_ability)
@@ -12,8 +12,13 @@ class CustomersController < ApplicationController
     render :json => @customer ? @customer.trip_related_data : {}
   end
 
-  def get_eligibilities_for_trip
+  def get_eligibilities_mobilities_for_trip
     @customer = Customer.for_provider(current_provider_id).where(id: params[:id]).first
+    if @customer
+      @ridership_mobility_mappings = @customer.ridership_mobilities.group_by{|c|[c.mobility_id, c.ridership_id]}
+    else
+      @ridership_mobility_mappings = {}
+    end
   end
 
   def found

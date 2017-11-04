@@ -2,6 +2,8 @@
   @is_repeating_trip = @trip.is_a? RepeatingTrip
   @trip_id = @trip ? @trip.id : nil
 
+  @ridership_mobility_mappings = @trip.ridership_mobilities.group_by{|c|[c.mobility_id, c.ridership_id]}
+
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'trips'
 - edit_mode = :edit if !defined? edit_mode
 = form_for @trip,
