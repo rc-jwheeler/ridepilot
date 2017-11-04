@@ -208,12 +208,14 @@ class Trip < ActiveRecord::Base
     cloned_trip.outbound_trip = nil
     cloned_trip.direction = :outbound
 
+    cloned_trip.ridership_mobilities = self.ridership_mobilities.where("capacity is not null and capacity  > 0").collect{|m| m.dup}
+
     cloned_trip
   end
 
   def clone_for_return!(pickup_time_str = nil, appointment_time_str = nil)
 
-    return_trip = self.dup
+    return_trip = self.dup 
     return_trip.direction = :return
     return_trip.pickup_address = self.dropoff_address
     return_trip.dropoff_address = self.pickup_address
@@ -228,6 +230,9 @@ class Trip < ActiveRecord::Base
     return_trip.drive_distance = nil
     return_trip.trip_result = nil
     return_trip.result_reason = nil
+
+    return_trip.ridership_mobilities = self.ridership_mobilities.where("capacity is not null and capacity  > 0").collect{|m| m.dup}
+
     return_trip
   end
 

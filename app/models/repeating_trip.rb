@@ -98,6 +98,10 @@ class RepeatingTrip < ActiveRecord::Base
 
           trip.save(validate: false)  #allow invalid trip exist
 
+          self.ridership_mobilities.where("capacity is not null and capacity  > 0").each do |m|
+            trip.ridership_mobilities.create(capacity: m.capacity, ridership_id: m.ridership_id, mobility_id: m.mobility_id)
+          end
+
           TrackerActionLog.create_run(trip, nil)
         end
       end
