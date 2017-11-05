@@ -1403,6 +1403,7 @@ en:
   vehicle_maintenance_event_delete_confirm: "Are you sure?"
   edit_vehicle_initial_mileage_heading: "Change initial mileage"
   vehicle_form_initial_mileage_change_reason: "Reason"
+  vehicle_cannot_accommodate_warning: "Vehicle cannot accommodate"
 
   #vehicle types
   vehicle_types: "Vehicle Types"

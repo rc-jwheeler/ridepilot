@@ -189,8 +189,8 @@
         if($('#trip_group_size').length >0 && $('#trip_group_size').val() != "#{@trip.group_size}") {
           attrs.push('group size');
         }
-        if($('#trip_mobility_device_accommodations').val() != "#{@trip.mobility_device_accommodations}") {
-          attrs.push('mobility device count');
+        if($('.inline-editing-table .editable-unsaved').length > 0) {
+          attrs.push('mobility type and ridership type matrix');
         }
 
         if(attrs.length == 0) {

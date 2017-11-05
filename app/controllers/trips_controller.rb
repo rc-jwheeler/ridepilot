@@ -476,7 +476,6 @@ class TripsController < ApplicationController
       :trip_result_id,
       :result_reason,
       :vehicle_id,
-      :mobility_device_accommodations,
       :number_of_senior_passengers_served,
       :number_of_disabled_passengers_served,
       :number_of_low_income_passengers_served,

@@ -7,6 +7,8 @@ class RidershipMobilityMapping < ActiveRecord::Base
 
   scope :default_order, -> { joins(:mobility).order("mobilities.name") }
 
+  scope :has_capacity, -> { where("capacity > 0") }
+
   RIDERSHIP_LIST = {
     1 => 'Customer',
     2 => 'Guest',

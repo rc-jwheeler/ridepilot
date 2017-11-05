@@ -8,14 +8,6 @@
         .vehicle-capacity-configurations
           - if @vehicle.vehicle_type && @vehicle.vehicle_type.vehicle_capacity_configurations.any?
             = render 'vehicle_capacity_configurations/list', vehicle_capacity_configurations: @vehicle.vehicle_type.vehicle_capacity_configurations
-    .form-group
-      = f.label :seating_capacity, translate_helper("vehicle_form_seating_capacity_label"), class: "col-md-2 control-label"
-      .col-md-10
-        = f.number_field :seating_capacity, min: 1, class: "form-control", disabled: @readonly
-    .form-group
-      = f.label :mobility_device_accommodations, translate_helper("vehicle_form_mobility_device_accommodations_label"), class: "col-md-2 control-label"
-      .col-md-10
-        = f.number_field :mobility_device_accommodations, min: 0, class: "form-control", disabled: @readonly
 
 - if !@readonly
   :javascript

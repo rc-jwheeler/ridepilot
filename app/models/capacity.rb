@@ -7,4 +7,5 @@ class Capacity < ActiveRecord::Base
                     numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   scope :default_order, -> { joins(:capacity_type).order("capacity_types.name") }
+  scope :has_capacity, -> { where("capacity > 0") }
 end

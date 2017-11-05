@@ -162,7 +162,6 @@ class RepeatingTripsController < ApplicationController
       :service_level_id,
       :trip_purpose_id,
       :customer_informed,
-      :mobility_device_accommodations,
       :comments,
       :start_date,
       :end_date,
