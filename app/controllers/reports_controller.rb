@@ -817,17 +817,18 @@ class ReportsController < ApplicationController
   def customers_report
     query_params = params[:query] || {}
     @query = Query.new(query_params)
-    @mobilities = Mobility.by_provider(current_provider).order(:name)
+    @all_mobilities = Mobility.by_provider(current_provider).order(:name)
 
     if params[:query]
       @report_params = [["Provider", current_provider.name]]
       
       active_customers = Customer.for_provider(current_provider_id).active
       unless @query.mobility_id.blank?
-        @mobilities = @mobilities.where(id: @query.mobility_id)
+        @mobilities = @all_mobilities.where(id: @query.mobility_id)
         @report_params << [["Mobility Device", @mobilities.first.try(:name)]]
         @customers = active_customers.where(mobility_id: @query.mobility_id)
       else
+        @mobilities = @all_mobilities
         @customers = active_customers
       end
 
