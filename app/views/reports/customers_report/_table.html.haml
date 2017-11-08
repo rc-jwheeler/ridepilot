@@ -30,7 +30,7 @@
           %td= e.description
           %td= @count_by_eligibility[e.id] || 0
 
-- if @customers
+- if !@is_summary_report && @customers
   - @customers.each do |customer|
     %h3{style: 'text-decoration: underline;'}= customer.name
     %p

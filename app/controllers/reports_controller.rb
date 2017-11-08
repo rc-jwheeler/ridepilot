@@ -9,6 +9,7 @@ class Query
   attr_accessor :end_date
   attr_accessor :vehicle_id
   attr_accessor :driver_id
+  attr_accessor :customer_id
   attr_accessor :mobility_id
   attr_accessor :trip_display
   attr_accessor :address_group_id
@@ -51,6 +52,9 @@ class Query
       end
       if params["driver_id"]
         @driver_id = params["driver_id"].to_i unless params["driver_id"].blank?
+      end
+      if params["customer_id"]
+        @customer_id = params["customer_id"].to_i unless params["customer_id"].blank?
       end
       if params["mobility_id"]
         @mobility_id = params["mobility_id"].to_i unless params["mobility_id"].blank?
@@ -839,6 +843,29 @@ class ReportsController < ApplicationController
       @ada_eligible_count = @customers.where(ada_eligible: true).count
       @count_by_eligibility = CustomerEligibility.where(customer_id: @customers.pluck(:id)).eligible.reorder('').group(:eligibility_id).count
       @eligibilities = Eligibility.by_provider(current_provider).order(:description)
+
+      if query_params[:report_type] == 'summary'
+        @is_summary_report = true
+      end
+    end
+
+    apply_v2_response
+  end
+
+  # Cancellations, No Show or Missed Trip report
+  def cancellations_report
+    query_params = params[:query] || {start_date: Date.today.prev_month + 1, end_date: Date.today + 1}
+    @query = Query.new(query_params)
+    @active_customers = Customer.active_for_date(Date.today).for_provider(current_provider_id)
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.before_end_date.strftime('%m/%d/%Y')}"]
+
+      unless @query.customer_id.blank?
+        @customers = @active_customers.where(id: @query.customer_id)
+      else
+        @customers = @active_customers
+      end
 
       if query_params[:report_type] == 'summary'
         @is_summary_report = true

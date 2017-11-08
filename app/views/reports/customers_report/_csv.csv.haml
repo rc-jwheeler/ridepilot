@@ -20,7 +20,7 @@
     = CSV.generate_line([e.description, @count_by_eligibility[e.id] || 0], {:row_sep => nil}).html_safe
   
 
-- if @customers
+- if !@is_summary_report && @customers 
   - @customers.each do |customer|
     = CSV.generate_line([""], {:row_sep => nil}).html_safe
     = CSV.generate_line(["Name", customer.name], {:row_sep => nil}).html_safe
