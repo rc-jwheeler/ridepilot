@@ -16,7 +16,7 @@ class MobilityCapacitiesController < ApplicationController
   def batch_update
     capacities = params[:capacities]
     MobilityCapacity.delete_all
-
+    
     capacities.each do |mobility_id, data|
       data.each do |capacity_type_id, capacity|
         new_item = MobilityCapacity.new(host_id: mobility_id, capacity_type_id: capacity_type_id, capacity: capacity.to_i)

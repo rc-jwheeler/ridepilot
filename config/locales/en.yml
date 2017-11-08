@@ -105,6 +105,7 @@ en:
   ethnicity: "Ethnicity"
   mobility: "Mobility"
   mobility_notes: "Mobility Notes"
+  total_space: "Total"
   medicaid_eligible: "Medicaid Eligible"
   ada_eligible: "ADA Eligibile"
   default_service_level: "Default Service Level"
@@ -1259,7 +1260,7 @@ en:
   ask_for_creating_return_trip_message: 'Would you like to create a return trip?'
   linking_to: 'Link to'
   trip_form_mobility_device_accommodations_label: 'Mobility Device Count'
-  eligibility_and_accommodation: 'Eligibility and Accommodation'
+  trip_eligibility_panel: 'Eligibility'
   number_of_passengers_tracking: "Number of Passengers Tracking"
   number_of_senior_passengers_tracking_label: "Senior"
   number_of_disabled_passengers_tracking_label: "Disabled"

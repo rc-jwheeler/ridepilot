@@ -55,12 +55,6 @@ RSpec.describe RepeatingTrip do
       @trip.attendant_count = 1
       expect(@trip.trip_size).to eq 3
     end
-
-    it "accounts for groups" do
-      @trip.customer = create :customer, group: true
-      @trip.group_size = 4
-      expect(@trip.trip_size).to eq 4
-    end
   end
   
   describe ".by_funding_source" do

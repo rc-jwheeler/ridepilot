@@ -68,11 +68,7 @@ class Trip < ActiveRecord::Base
     'pickup_time',
     'appointment_time',
     'pickup_address_id',
-    'dropoff_address_id',
-    'mobility_id',
-    'guest_count',
-    'attendant_count',
-    'group_size'
+    'dropoff_address_id'
   ]
 
   def self.attributes_can_disrupt_run

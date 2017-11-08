@@ -8,6 +8,7 @@
 
 $('.trip_mobility_panel').html("<%= j(render 'trips/mobility_panel', edit_mode: :edit) %>");
 
+// Following code is to re-enable inline-editing in mobility configuration
 $.fn.editable.defaults.mode = 'inline';
 
 // function to process new value (Tab, Enter, or Click away)
@@ -100,6 +101,18 @@ $(document).on("keydown", '.editable-input input', function (e) {
   processCell(editableCell, isNotesCell, newValue, keyCode)
 });
 
+function getColTotal(ridership_id) {
+  var total = 0;
+  var selector = '.editable-number' +
+    '[data-ridership-id="' + ridership_id + '"]';
+  
+  $(selector).each(function() {
+    total += parseInt($(this).text());
+  }); 
+
+  return total;
+}
+
 $('.editable-number').on('save', function(e, params) {
   params = params || {};
 
@@ -114,6 +127,13 @@ $('.editable-number').on('save', function(e, params) {
   }
   var isChanged = (newValue != parseInt($(this).data('original-value')));
   $(this).editable('setValue', newValue);
+
+  if(isChanged) {
+    // update total
+    var ridership_id = $(this).data('ridership-id');
+    var col_sum = getColTotal(ridership_id);
+    $('.total-column[data-ridership-id=' + ridership_id + ']').text(col_sum);
+  }
 
   var that = this;
   setTimeout(function() {

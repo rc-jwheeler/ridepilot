@@ -39,8 +39,7 @@
       = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
     .col-sm-12.col-md-6
       = render 'repeating_trips/repetition_panel', f: f
-      = render 'trips/tracking_panel', f: f, edit_mode: edit_mode 
-      = render 'trips/eligibility_accommodation_panel', f: f, edit_mode: edit_mode
+      = render 'trips/eligibility_panel', f: f, edit_mode: edit_mode
       = render 'trips/other_panel', f: f
       - if edit_mode == :show
         - logs = TrackerActionLog.for(@trip).order(created_at: :desc)
@@ -54,7 +53,7 @@
       = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
     .col-sm-12.col-md-6
       = render 'trips/tracking_panel', f: f, edit_mode: edit_mode 
-      = render 'trips/eligibility_accommodation_panel', f: f, edit_mode: edit_mode
+      = render 'trips/eligibility_panel', f: f, edit_mode: edit_mode
       = render 'trips/other_panel', f: f
       - if edit_mode == :show
         - logs = TrackerActionLog.for(@trip).order(created_at: :desc)
@@ -170,27 +169,11 @@
         if(new_appointment_time - original_appointment_time != 0) {
           attrs.push('appointment time');
         }
-
         if($('#trip_pickup_address_id').val() != "#{@trip.pickup_address_id}") {
           attrs.push('pickup address');
         }
         if($('#trip_dropoff_address_id').val() != "#{@trip.dropoff_address_id}") {
           attrs.push('dropoff address');
-        }
-        if($('#trip_mobility_id').val() != "#{@trip.mobility_id}") {
-          attrs.push('mobility');
-        }
-        if($('#trip_guest_count').length > 0 && $('#trip_guest_count').val() != "#{@trip.guest_count}") {
-          attrs.push('guest size');
-        }
-        if($('#trip_attendant_count').length > 0 && $('#trip_attendant_count').val() != "#{@trip.attendant_count}") {
-          attrs.push('attendant size');
-        }
-        if($('#trip_group_size').length >0 && $('#trip_group_size').val() != "#{@trip.group_size}") {
-          attrs.push('group size');
-        }
-        if($('.inline-editing-table .editable-unsaved').length > 0) {
-          attrs.push('mobility type and ridership type matrix');
         }
 
         if(attrs.length == 0) {

@@ -38,11 +38,7 @@ module TripCore
   end
 
   def trip_size
-    if customer.try(:group)
-      group_size
-    else
-      guest_count + attendant_count + 1
-    end
+    (customer_space_count || 1) + guest_count + attendant_count + service_animal_space_count
   end
 
   def trip_count

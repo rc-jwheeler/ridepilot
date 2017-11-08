@@ -91,6 +91,18 @@
     processCell(editableCell, isNotesCell, newValue, keyCode)
   });
 
+  function getColTotal(ridership_id) {
+    var total = 0;
+    var selector = '.editable-number' +
+      '[data-ridership-id="' + ridership_id + '"]';
+    
+    $(selector).each(function() {
+      total += parseInt($(this).text());
+    }); 
+
+    return total;
+  }
+
   $('.editable-number').on('save', function(e, params) {
     params = params || {};
 
@@ -105,6 +117,13 @@
     }
     var isChanged = (newValue != parseInt($(this).data('original-value')));
     $(this).editable('setValue', newValue);
+
+    if(isChanged) {
+      // update total
+      var ridership_id = $(this).data('ridership-id');
+      var col_sum = getColTotal(ridership_id);
+      $('.total-column[data-ridership-id=' + ridership_id + ']').text(col_sum);
+    }
 
     var that = this;
     setTimeout(function() {

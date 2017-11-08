@@ -83,10 +83,8 @@ class TrackerActionLog < PublicActivity::Activity
           params["Guests"] = change
         when 'attendant_count'
           params["Attendants"] = change
-        when 'group_size'
-          params["Group Size"] = change
-        when 'mobility_device_accommodations'
-          params["Mobility Device Count"] = change
+        when 'service_animal_count'
+          params["Service Animal"] = change
         when 'start_date'
           params["Start Date"] = [change[0].try(:strftime, "%B %d, %Y"), trip.start_date.try(:strftime, "%B %d, %Y")]
         when 'end_date'

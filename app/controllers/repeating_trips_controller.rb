@@ -139,12 +139,9 @@ class RepeatingTripsController < ApplicationController
   def trip_params
     params.require(:repeating_trip).permit(
       :appointment_time,
-      :attendant_count,
       :customer_id,
       :dropoff_address_id,
       :funding_source_id,
-      :group_size,
-      :guest_count,
       :medicaid_eligible,
       :mobility_id,
       :notes,
@@ -214,6 +211,14 @@ class RepeatingTripsController < ApplicationController
         new_item = @trip.ridership_mobilities.new(mobility_id: config[:mobility_id], ridership_id: config[:ridership_id], capacity: config[:capacity].to_i)
         new_item.save
       end
+
+      # update space totals
+      capacity_sum = @trip.ridership_mobilities.group(:ridership_id).sum(:capacity)
+      @trip.customer_space_count = capacity_sum[1]
+      @trip.guest_count = capacity_sum[2]
+      @trip.attendant_count = capacity_sum[3]
+      @trip.service_animal_space_count = capacity_sum[4]
+      @trip.save(validate: false)
     end
   end
 end

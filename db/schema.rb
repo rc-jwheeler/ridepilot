@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171103153810) do
+ActiveRecord::Schema.define(version: 20171108204027) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -714,6 +714,8 @@ ActiveRecord::Schema.define(version: 20171103153810) do
     t.date     "scheduled_through"
     t.string   "pickup_address_notes"
     t.string   "dropoff_address_notes"
+    t.integer  "customer_space_count"
+    t.integer  "service_animal_space_count"
   end
 
   add_index "repeating_trips", ["customer_id"], :name => "index_repeating_trips_on_customer_id"
@@ -985,6 +987,8 @@ ActiveRecord::Schema.define(version: 20171103153810) do
     t.string   "dropoff_address_notes"
     t.boolean  "is_stand_by"
     t.boolean  "driver_notified"
+    t.integer  "customer_space_count"
+    t.integer  "service_animal_space_count"
   end
 
   add_index "trips", ["called_back_by_id"], :name => "index_trips_on_called_back_by_id"
