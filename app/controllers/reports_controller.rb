@@ -765,15 +765,15 @@ class ReportsController < ApplicationController
     if params[:query]
       @report_params = [["Provider", current_provider.name]]
       @drivers = Driver.for_provider(current_provider_id).default_order
-      if query_params[:report_type] == 'summary'
-        @is_summary_report = true
+      if query_params[:report_type] == 'perm_inacitve'
+        @is_perm_inactive_report = true
         @report_params << ["Inactive Type", "Permanent"]
-        # only perm_inactive for summary report
+        # only perm_inactive
         @drivers = @drivers.permanent_inactive
       else
-        @report_params << ["Inactive Type", "Permanent and Temporary"]
-        # temp_inactive and perm_inactive for detailed report
-        @drivers = @drivers.inactive_for_date(Date.today)
+        @report_params << ["Inactive Type", "Temporary"]
+        # temp_inactive for detailed report
+        @drivers = @drivers.active.inactive_for_date(Date.today)
       end
     end
 
