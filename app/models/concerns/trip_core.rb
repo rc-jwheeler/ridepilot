@@ -38,7 +38,7 @@ module TripCore
   end
 
   def trip_size
-    (customer_space_count || 1) + guest_count + attendant_count + service_animal_space_count
+    (customer_space_count || 1) + guest_count + attendant_count + service_animal_space_count.to_i
   end
 
   def trip_count
