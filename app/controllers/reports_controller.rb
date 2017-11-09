@@ -10,6 +10,7 @@ class Query
   attr_accessor :vehicle_id
   attr_accessor :driver_id
   attr_accessor :run_ids
+  attr_accessor :run_id
   attr_accessor :customer_id
   attr_accessor :mobility_id
   attr_accessor :trip_display
@@ -54,8 +55,13 @@ class Query
       if params["driver_id"]
         @driver_id = params["driver_id"].to_i unless params["driver_id"].blank?
       end
+
+      if params["run_id"]
+        @run_ids = [params["run_id"].to_i] unless params["run_id"].blank?
+      end
+
       if params["run_ids"]
-        @run_ids = params["run_id"] unless params["run_id"].blank?
+        @run_ids = params["run_id"] unless params["run_ids"].blank?
       end
       if params["customer_id"]
         @customer_id = params["customer_id"].to_i unless params["customer_id"].blank?
@@ -1089,11 +1095,13 @@ class ReportsController < ApplicationController
 
     if params[:query]
       @report_params = [["Provider", current_provider.name]]
-      @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.before_end_date.strftime('%m/%d/%Y')}"]
+      unless @query.run_ids && @query.run_ids.any?
+        @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.before_end_date.strftime('%m/%d/%Y')}"]
+      end
         
       @capacity_types_hash = CapacityType.by_provider(current_provider).pluck(:id, :name).to_h
       if @query.run_ids && !@query.run_ids.blank?
-        @runs = @all_runs.where(id: @query.run_ids)
+        @runs = Run.where(id: @query.run_ids)
       else
         @runs = @all_runs
       end

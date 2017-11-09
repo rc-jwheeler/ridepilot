@@ -4,6 +4,10 @@
       - unless run.complete?
         = render 'trip_result_dropdown'
         = render 'unschedule_trip_dropdown'
+        - if @manifest_report
+          %span.dispatch-action
+            = link_to url_for(:controller => :reports, :action=>:manifest, id: @manifest_report.id, query: {run_id: run.id}, format: :pdf), title: 'Print manifest', style: 'color: white;' do 
+              %i.fa.fa-print
         - if can?(:cancel, run)  
           %span.dispatch-action
             = link_to cancel_run_dispatchers_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
