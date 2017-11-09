@@ -1,4 +1,4 @@
-.row{style: (is_first_run ? '' : 'padding-top: 20px; border-top: solid 3px black;') }
+.row
   .pull-left{style: 'padding-left: 0px;font-size: 16px;font-weight: bold; max-width: 230px;'}
     %p= run.driver.try(:user_name) || "(#{translate_helper('no_driver')})"
     %p
@@ -11,7 +11,7 @@
     %p
       = translate_helper("driver_manifest_scheduled_run_time") 
       = ": #{format_time_for_listing(run.scheduled_start_time)} - #{format_time_for_listing(run.scheduled_end_time)}"
-  .pull-right{style: 'border: 1px solid black; padding: 0px; width: 470px;'}
+  .pull-right{style: 'border: 1px solid black; padding: 5px; width: 470px;'}
     %table{style: 'font-size: 14px;'}
       %tbody
         %tr

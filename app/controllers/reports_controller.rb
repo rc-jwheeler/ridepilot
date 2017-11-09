@@ -1100,7 +1100,7 @@ class ReportsController < ApplicationController
 
       run_ids = @runs.pluck(:id).uniq
 
-      @runs = @runs.joins(:trips).includes(trips: [:pickup_address, :dropoff_address, :customer]).order("runs.date", :scheduled_start_time).distinct  
+      @runs = @runs.joins(:trips).includes(trips: [:pickup_address, :dropoff_address, :customer]).reorder(:date, :scheduled_start_time).distinct  
     end
 
     apply_v2_response

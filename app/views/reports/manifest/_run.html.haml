@@ -1,18 +1,4 @@
-:css
-  table {
-    border: none;
-  }
 
-  table th {
-    background: white;
-    color: black;
-    border-top: 2px black solid;
-    border-bottom: 2px black solid;
-  }
-
-  tr.odd {
-    background: white;
-  }
 
 = render "reports/manifest/run_header#{@is_pdf ? '.html.haml' : ''}", run: run, is_first_run: is_first_run
 .row
