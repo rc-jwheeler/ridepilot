@@ -9,6 +9,7 @@ class Query
   attr_accessor :end_date
   attr_accessor :vehicle_id
   attr_accessor :driver_id
+  attr_accessor :run_ids
   attr_accessor :customer_id
   attr_accessor :mobility_id
   attr_accessor :trip_display
@@ -52,6 +53,9 @@ class Query
       end
       if params["driver_id"]
         @driver_id = params["driver_id"].to_i unless params["driver_id"].blank?
+      end
+      if params["run_ids"]
+        @run_ids = params["run_id"] unless params["run_id"].blank?
       end
       if params["customer_id"]
         @customer_id = params["customer_id"].to_i unless params["customer_id"].blank?
@@ -1073,6 +1077,30 @@ class ReportsController < ApplicationController
         end
 
       end
+    end
+
+    apply_v2_response
+  end
+
+  def manifest
+    query_params = params[:query] || {start_date: Date.today.prev_month + 1, end_date: Date.today + 1}
+    @query = Query.new(query_params)
+    @all_runs = Run.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).order(:name)
+
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.before_end_date.strftime('%m/%d/%Y')}"]
+        
+      @capacity_types_hash = CapacityType.by_provider(current_provider).pluck(:id, :name).to_h
+      if @query.run_ids && !@query.run_ids.blank?
+        @runs = @all_runs.where(id: @query.run_ids)
+      else
+        @runs = @all_runs
+      end
+
+      run_ids = @runs.pluck(:id).uniq
+
+      @runs = @runs.joins(:trips).includes(trips: [:pickup_address, :dropoff_address, :customer]).order("runs.date", :scheduled_start_time).distinct  
     end
 
     apply_v2_response

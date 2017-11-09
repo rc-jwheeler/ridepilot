@@ -1,0 +1,11 @@
+= form_for @query, :url=>url_for(:action=>:manifest), :html=>{:method=>:get} do |f| 
+  %fieldset
+    = f.date_select  :start_date, :order => [:month,:day,:year] rescue nil
+    = translate_helper("through") 
+    = f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil
+    
+    %label
+      = "#{translate_helper(:report_format)}:"
+      = f.select :report_format, options_for_select([['HTML', 'html'],['PDF', 'pdf']], @query.report_format || 'html')
+
+    = f.submit translate_helper("run"), class: 'btn action-button'

@@ -105,6 +105,7 @@ en:
   ethnicity: "Ethnicity"
   mobility: "Mobility"
   mobility_notes: "Mobility Notes"
+  customer_default_mobility: "Default Mobility"
   total_space: "Total"
   medicaid_eligible: "Medicaid Eligible"
   ada_eligible: "ADA Eligibile"
