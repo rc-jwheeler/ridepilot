@@ -43,9 +43,10 @@
           - if run.repeating_run_id.present?
             = link_to recurring_dispatchers_path(run_id: run.repeating_run_id), style: 'padding-right: 5px;', title: "View Subscription Run Template" do 
               %i.fa.fa-repeat
-          - if @manifest_report
-            = link_to url_for(:controller => :reports, :action=>:manifest, id: @manifest_report.id, query: {run_id: run.id}, format: :pdf), title: 'Print manifest' do 
-              %i.fa.fa-print
+          - if run.trips.any?
+            - if @manifest_report
+              = link_to url_for(:controller => :reports, :action=>:manifest, id: @manifest_report.id, query: {run_id: run.id}, format: :pdf), title: 'Print manifest' do 
+                %i.fa.fa-print
           - unless run.complete?
             - if can?(:new, Trip)
               = link_to new_trip_path(from_dispatch: true, run_id: run.id), style: 'padding-right: 5px;', title: "New Trip" do 

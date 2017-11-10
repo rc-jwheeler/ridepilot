@@ -1,12 +1,12 @@
 :ruby
   runs_hash = {}
-  runs.reorder(:date, :name).pluck(:date, :id, :name).each do |r|
+  runs.pluck(:date, :id, :name).each do |r|
     date = r[0]
     runs_hash[date] = [] unless runs_hash.has_key?(date)
     runs_hash[date] << [r[1], r[2]]
   end
 
-  select_ids = selected_runs.pluck(:id).uniq
+  select_ids = selected_runs.reorder("").pluck(:id).uniq
 
 :css
   li.opt label {

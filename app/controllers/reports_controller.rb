@@ -1091,7 +1091,8 @@ class ReportsController < ApplicationController
   def manifest
     query_params = params[:query] || {start_date: Date.today.prev_month + 1, end_date: Date.today + 1}
     @query = Query.new(query_params)
-    @all_runs = Run.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).order(:date, :name)
+    @runs_with_trips = Run.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).joins(:trips).distinct
+    @all_runs = @runs_with_trips.reorder(:date, :name)
 
     if params[:query]
       @report_params = [["Provider", current_provider.name]]
@@ -1103,16 +1104,20 @@ class ReportsController < ApplicationController
         @runs = @all_runs
       end
 
-      @runs = @runs.includes(trips: [:pickup_address, :dropoff_address, :customer]).references(trips: [:pickup_address, :dropoff_address, :customer]).reorder(:date, :scheduled_start_time)  
+      @runs = @runs.includes(trips: [:pickup_address, :dropoff_address, :customer])
+        .references(trips: [:pickup_address, :dropoff_address, :customer])
+        .reorder(:date, :scheduled_start_time)  
     end
 
     apply_v2_response
   end
 
+  # refresh run dropdown whenever date range is changed
   def get_run_list
     query_params = params[:query]
     @query = Query.new(query_params)
-    @all_runs = Run.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).order(:date, :name)
+    @runs_with_trips = Run.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).joins(:trips).distinct
+    @all_runs = @runs_with_trips.reorder(:date, :name)  
   end
 
   private
