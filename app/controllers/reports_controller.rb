@@ -61,7 +61,7 @@ class Query
       end
 
       if params["run_ids"]
-        @run_ids = params["run_id"] unless params["run_ids"].blank?
+        @run_ids = params["run_ids"].split(',') unless params["run_ids"].blank?
       end
       if params["customer_id"]
         @customer_id = params["customer_id"].to_i unless params["customer_id"].blank?
@@ -97,7 +97,7 @@ end
 class ReportsController < ApplicationController
   include Reporting::ReportHelper
 
-  before_action :set_reports
+  before_action :set_reports, except: [:get_run_list]
 
   def show
     @driver_query = Query.new :start_date => Date.today, :end_date => Date.today
@@ -1091,13 +1091,10 @@ class ReportsController < ApplicationController
   def manifest
     query_params = params[:query] || {start_date: Date.today.prev_month + 1, end_date: Date.today + 1}
     @query = Query.new(query_params)
-    @all_runs = Run.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).order(:name)
+    @all_runs = Run.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).order(:date, :name)
 
     if params[:query]
       @report_params = [["Provider", current_provider.name]]
-      unless @query.run_ids && @query.run_ids.any?
-        @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.before_end_date.strftime('%m/%d/%Y')}"]
-      end
         
       @capacity_types_hash = CapacityType.by_provider(current_provider).pluck(:id, :name).to_h
       if @query.run_ids && !@query.run_ids.blank?
@@ -1106,12 +1103,16 @@ class ReportsController < ApplicationController
         @runs = @all_runs
       end
 
-      run_ids = @runs.pluck(:id).uniq
-
-      @runs = @runs.joins(:trips).includes(trips: [:pickup_address, :dropoff_address, :customer]).reorder(:date, :scheduled_start_time).distinct  
+      @runs = @runs.includes(trips: [:pickup_address, :dropoff_address, :customer]).references(trips: [:pickup_address, :dropoff_address, :customer]).reorder(:date, :scheduled_start_time)  
     end
 
     apply_v2_response
+  end
+
+  def get_run_list
+    query_params = params[:query]
+    @query = Query.new(query_params)
+    @all_runs = Run.for_provider(current_provider_id).for_date_range(@query.start_date, @query.end_date).order(:date, :name)
   end
 
   private

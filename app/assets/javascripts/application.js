@@ -38,6 +38,7 @@
 //= require bootstrap-table
 //= require selectize
 //= require verify_client_code
+//= require jquery.sumoselect
 //= require bootstrap-editable
 //= require bootstrap-editable-rails
 //= require_self

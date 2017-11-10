@@ -286,6 +286,11 @@ Rails.application.routes.draw do
     get "custom_reports/:id", :controller=>:reports, :action=>:show, as: :custom_report
     get "reports/:action", :controller=>:reports
     get "reports/:action/:id", :controller=>:reports
+    resources :reports, only: [] do 
+      collection do 
+        get :get_run_list
+      end
+    end
     # reporting engine
     mount Reporting::Engine, at: "/reporting"
 

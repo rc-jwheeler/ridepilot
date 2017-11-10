@@ -33,10 +33,7 @@
   }
 
 .col-sm-12.col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2
-  - prev_driver_id = nil
   - @runs.each_with_index do |run, index|
-    - is_first_run = (index == 0 || run.driver_id != prev_driver_id)
-    - prev_driver_id = run.driver_id
     .page-break{style: (index == 0 ? "page-break-before: auto;" : "")}
     .row
       .col-xs-6{style: 'font-size: 18px; font-weight: bold; padding-left: 0px;'}
@@ -52,7 +49,7 @@
             %img{src: "/uta_logo.png", height:40, width:151}
           
     %br  
-    = render "reports/manifest/run#{@is_pdf ? '.html.haml' : ''}", run: run, is_first_run: is_first_run
+    = render "reports/manifest/run#{@is_pdf ? '.html.haml' : ''}", run: run
 
 
        
