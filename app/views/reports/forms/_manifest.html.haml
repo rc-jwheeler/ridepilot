@@ -8,7 +8,7 @@
     %label
       = "#{translate_helper(:run)}:"
       =f.hidden_field :run_ids
-      = render 'reports/forms/run_multiple_dropdown', runs: @all_runs, selected_runs: @runs
+      = render 'reports/forms/run_multiple_dropdown', runs: @all_runs, selected_runs: @runs || @all_runs
     
     %label
       = "#{translate_helper(:report_format)}:"
