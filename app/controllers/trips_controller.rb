@@ -266,6 +266,7 @@ class TripsController < ApplicationController
 
   def clone
     @trip = @trip.clone_for_future!
+    @is_clone = true
     prep_view
 
     respond_to do |format|
@@ -276,6 +277,7 @@ class TripsController < ApplicationController
   end
 
   def return
+    @is_return = true
     if params[:trip].present?
       @trip = @trip.clone_for_return!(params[:trip][:pickup_time], params[:trip][:appointment_time])
     else
