@@ -333,12 +333,13 @@ class TripsController < ApplicationController
         end
       end
     end
+    
+    edit_mobilities
 
     from_dispatch = params[:from_dispatch] == 'true'
 
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
-        edit_mobilities
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
         TripDistanceCalculationWorker.perform_async(@trip.id) #sidekiq needs to run
         @ask_for_return_trip = true if @trip.is_outbound?
@@ -404,12 +405,14 @@ class TripsController < ApplicationController
     authorize! :manage, @trip
 
     @trip.assign_attributes(trip_params)
+    
+    edit_mobilities
+
     is_address_changed = @trip.pickup_address_id_changed? || @trip.dropoff_address_id_changed?
     is_trip_result_changed = @trip.trip_result_id_changed?
     is_run_disrupted = @trip.run_disrupted_by_trip_changes?
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
-        edit_mobilities
         @trip.unschedule_trip if is_run_disrupted
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
         TripDistanceCalculationWorker.perform_async(@trip.id) if is_address_changed
@@ -575,18 +578,20 @@ class TripsController < ApplicationController
       mobilities = JSON.parse(params[:mobilities], symbolize_names: true)
       @trip.ridership_mobilities.delete_all
 
+      sum_by_ridership = {}
       mobilities.each do |config|
-        new_item = @trip.ridership_mobilities.new(mobility_id: config[:mobility_id], ridership_id: config[:ridership_id], capacity: config[:capacity].to_i)
-        new_item.save
+        ridership_id = config[:ridership_id].to_i
+        capacity = config[:capacity].to_i
+        sum_by_ridership[ridership_id] = 0 if !sum_by_ridership.has_key?(ridership_id)
+        sum_by_ridership[ridership_id] += capacity
+        @trip.ridership_mobilities.build(mobility_id: config[:mobility_id], ridership_id: ridership_id, capacity: capacity)
       end
 
       # update space totals
-      capacity_sum = @trip.ridership_mobilities.group(:ridership_id).sum(:capacity)
-      @trip.customer_space_count = capacity_sum[1]
-      @trip.guest_count = capacity_sum[2]
-      @trip.attendant_count = capacity_sum[3]
-      @trip.service_animal_space_count = capacity_sum[4]
-      @trip.save(validate: false)
+      @trip.customer_space_count = sum_by_ridership[1].to_i
+      @trip.guest_count = sum_by_ridership[2].to_i
+      @trip.attendant_count = sum_by_ridership[3].to_i
+      @trip.service_animal_space_count = sum_by_ridership[4].to_i
     end
   end
 end

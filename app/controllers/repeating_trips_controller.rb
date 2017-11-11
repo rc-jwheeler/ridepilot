@@ -44,10 +44,10 @@ class RepeatingTripsController < ApplicationController
     @trip = RepeatingTrip.new(trip_params)
     process_google_address
     authorize! :manage, @trip
+    edit_mobilities
 
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
-        edit_mobilities
         TrackerActionLog.create_subscription_trip(@trip, current_user)
         format.html {
           if params[:from_dispatch] == 'true'
@@ -75,10 +75,11 @@ class RepeatingTripsController < ApplicationController
 
     prev_schedule = @trip.schedule
     @trip.assign_attributes(trip_params)
+
+    edit_mobilities
     changes = @trip.changes
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
-        edit_mobilities
         TrackerActionLog.update_subscription_trip(@trip, current_user, changes, prev_schedule)
         format.html { 
           if params[:from_dispatch] == 'true'
@@ -207,18 +208,20 @@ class RepeatingTripsController < ApplicationController
       mobilities = JSON.parse(params[:mobilities], symbolize_names: true)
       @trip.ridership_mobilities.delete_all
 
+      sum_by_ridership = {}
       mobilities.each do |config|
-        new_item = @trip.ridership_mobilities.new(mobility_id: config[:mobility_id], ridership_id: config[:ridership_id], capacity: config[:capacity].to_i)
-        new_item.save
+        ridership_id = config[:ridership_id].to_i
+        capacity = config[:capacity].to_i
+        sum_by_ridership[ridership_id] = 0 if !sum_by_ridership.has_key?(ridership_id)
+        sum_by_ridership[ridership_id] += capacity
+        @trip.ridership_mobilities.build(mobility_id: config[:mobility_id], ridership_id: ridership_id, capacity: capacity)
       end
 
       # update space totals
-      capacity_sum = @trip.ridership_mobilities.group(:ridership_id).sum(:capacity)
-      @trip.customer_space_count = capacity_sum[1]
-      @trip.guest_count = capacity_sum[2]
-      @trip.attendant_count = capacity_sum[3]
-      @trip.service_animal_space_count = capacity_sum[4]
-      @trip.save(validate: false)
+      @trip.customer_space_count = sum_by_ridership[1].to_i
+      @trip.guest_count = sum_by_ridership[2].to_i
+      @trip.attendant_count = sum_by_ridership[3].to_i
+      @trip.service_animal_space_count = sum_by_ridership[4].to_i
     end
   end
 end
