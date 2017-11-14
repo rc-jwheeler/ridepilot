@@ -142,11 +142,13 @@ class RepeatingTripsController < ApplicationController
       :appointment_time,
       :customer_id,
       :dropoff_address_id,
+      :dropoff_address_notes,
       :funding_source_id,
       :medicaid_eligible,
       :mobility_id,
       :notes,
       :pickup_address_id,
+      :pickup_address_notes,
       :pickup_time,
       :provider_id, # We normally wouldn't accept this and would set it manually on the instance, but in this controller we're setting it in the params dynamically
       :repeats_sundays,
