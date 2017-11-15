@@ -19,10 +19,8 @@
       %th= translate_helper(:run_manifest_table_header_customer)
       %th= translate_helper(:run_manifest_table_header_address)
       %th= translate_helper(:run_manifest_table_header_scheduled_time)
-      %th= translate_helper(:run_manifest_table_header_eta)
       - @capacity_types_hash.each do |c_id, c_name|
         %th= c_name
-      %th= translate_helper(:run_manifest_table_header_fare)
       %th= translate_helper(:run_manifest_table_header_comments)
       %th= translate_helper(:run_manifest_table_header_trip_result)
       %th= translate_helper(:run_manifest_table_header_customer_phone)
@@ -55,10 +53,8 @@
           %td= itin[:customer]
           %td= itin[:address]
           %td= format_time_for_listing(itin[:time])
-          %td= itin[:eta]
           - @capacity_types_hash.each do |c_id, c_name|
             %td{class: itin[:capacity_warning] ? "capacity_warning" : "", title: itin[:capacity_warning] ? vehicle_cannot_accommodate_warning : ""}= (itin[:occupancy] && itin[:occupancy][c_id].to_i || 0)
-          %td= itin[:fare]
           %td= itin[:comments]
           %td
             - if TripResult::CANCEL_CODES_BUT_KEEP_RUN.include?(trip.trip_result.try(:code))
