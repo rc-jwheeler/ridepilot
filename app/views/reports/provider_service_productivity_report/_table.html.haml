@@ -24,7 +24,7 @@
 
 - if @run_dates
   - @run_dates.each do |date|
-    - next unless @ride_counts_by_date[date].to_i > 0
+    - next unless @ride_counts_by_date[date] && @ride_counts_by_date[date].to_i > 0
     %h3= format_date(date)
 
     %h4 Mobility
