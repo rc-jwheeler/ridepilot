@@ -912,6 +912,8 @@ en:
   number_of_runs_completed: "Number of Runs Completed"
   days_worked: "Days Worked"
   number_of_trips: "Number of Trips" 
+  total_passengers: "Total Passengers"
+  total_hours_driven: "Total Hours Driven"
   
   # Approved Vendors List
   vendor_list_download: "Download Approved Vendors List"

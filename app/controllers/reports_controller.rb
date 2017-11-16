@@ -1040,6 +1040,14 @@ class ReportsController < ApplicationController
       @total_vehicle_count = @service_vehicles.count
       @total_vehicle_miles = @runs.sum("(end_odometer - start_odometer)")
       @miles_by_vehicle = @runs.group(:vehicle_id).sum("(end_odometer - start_odometer)")
+      @vehicle_hours = @runs.group(:vehicle_id).sum("extract(epoch from (scheduled_end_time - scheduled_start_time))")
+      @total_vehicle_hours = @runs.total_scheduled_hours
+      run_trips = @runs.joins(:trips).where("trips.trip_result_id is NULL or trips.trip_result_id = ?", TripResult.find_by_code('COMP').try(:id))
+      @trips_count = run_trips.group(:vehicle_id).count
+      @total_trips_count = run_trips.count
+      # Total passenger count
+      @passengers_count = run_trips.group(:vehicle_id).sum("customer_space_count + guest_count + attendant_count")
+      @total_passengers_count = run_trips.sum("customer_space_count + guest_count + attendant_count")
 
       if query_params[:report_type] == 'summary'
         @is_summary_report = true

@@ -4,6 +4,7 @@ module TripCore
   extend ActiveSupport::Concern
 
   included do
+    after_initialize :set_defaults
     belongs_to :customer, -> { with_deleted }, validate: false
     belongs_to :dropoff_address,  -> { with_deleted }, class_name: "Address"
     belongs_to :funding_source, -> { with_deleted }
@@ -38,7 +39,7 @@ module TripCore
   end
 
   def trip_size
-    (customer_space_count || 1) + guest_count + attendant_count + service_animal_space_count.to_i
+    (customer_space_count || 1) + guest_count.to_i + attendant_count.to_i + service_animal_space_count.to_i
   end
 
   def trip_count
@@ -50,5 +51,14 @@ module TripCore
   end
 
   module ClassMethods
+  end
+
+  private
+
+  def set_defaults
+    self.customer_space_count = 1 if self.customer_space_count.nil?
+    self.guest_count = 0 if self.guest_count.nil?
+    self.attendant_count = 0 if self.attendant_count.nil?
+    self.service_animal_space_count = 0 if self.service_animal_space_count.nil?
   end
 end

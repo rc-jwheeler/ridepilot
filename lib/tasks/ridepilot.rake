@@ -353,4 +353,17 @@ namespace :ridepilot do
     end
     puts 'Finished removal'
   end
+
+  desc 'Migrate trip size fields'
+  task :migrate_trip_size_fields => :environment do
+    Trip.where(customer_space_count: nil).update_all(customer_space_count: 1)
+    Trip.where(guest_count: nil).update_all(guest_count: 0)
+    Trip.where(attendant_count: nil).update_all(attendant_count: 0)
+    Trip.where(service_animal_space_count: nil).update_all(service_animal_space_count: 0)
+
+    RepeatingTrip.where(customer_space_count: nil).update_all(customer_space_count: 1)
+    RepeatingTrip.where(guest_count: nil).update_all(guest_count: 0)
+    RepeatingTrip.where(attendant_count: nil).update_all(attendant_count: 0)
+    RepeatingTrip.where(service_animal_space_count: nil).update_all(service_animal_space_count: 0)
+  end
 end
