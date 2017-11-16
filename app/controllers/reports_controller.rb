@@ -1114,8 +1114,6 @@ class ReportsController < ApplicationController
       # Only past runs with odometers
       @runs = Run.with_odometer_readings.today_and_prior.for_provider(current_provider_id).for_vehicle(@vehicles.pluck(:id)).for_date_range(@query.start_date, @query.end_date)
 
-      @run_dates = @runs.pluck(:date).uniq.sort
-
       @service_vehicles = Vehicle.where(id: @runs.pluck(:vehicle_id).uniq) # vehicles that provided service
       run_trips = @runs.joins(:trips).where("trips.trip_result_id is NULL or trips.trip_result_id = ?", TripResult.find_by_code('COMP').try(:id))
       @total_trips_count = run_trips.count

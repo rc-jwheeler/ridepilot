@@ -13,7 +13,7 @@
   = CSV.generate_line([""], {:row_sep => nil}).html_safe
   - if @run_dates
     - @run_dates.each do |date|
-      - next unless @ride_counts_by_date[date] && @ride_counts_by_date[date].to_i > 0
+      - next unless @ride_counts_by_date && @ride_counts_by_date[date].to_i > 0
       = CSV.generate_line([format_date(date)], {:row_sep => nil}).html_safe
       = CSV.generate_line(["Mobility"], {:row_sep => nil}).html_safe
       = CSV.generate_line(["Mobility Type", "Count"], {:row_sep => nil}).html_safe
