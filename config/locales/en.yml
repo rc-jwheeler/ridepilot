@@ -914,6 +914,8 @@ en:
   number_of_trips: "Number of Trips" 
   total_passengers: "Total Passengers"
   total_hours_driven: "Total Hours Driven"
+  passenger_type: "Passenger Type"
+  passenger_count: "Count"
   
   # Approved Vendors List
   vendor_list_download: "Download Approved Vendors List"

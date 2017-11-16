@@ -1096,6 +1096,56 @@ class ReportsController < ApplicationController
     apply_v2_response
   end
 
+  def provider_service_productivity_report
+    query_params = params[:query] || {start_date: Date.today.prev_month + 1, end_date: Date.today + 1}
+    @query = Query.new(query_params)
+    @active_vehicles = Vehicle.for_provider(current_provider_id).active.default_order
+
+    if params[:query]
+      @report_params = [["Provider", current_provider.name]]
+      @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.before_end_date.strftime('%m/%d/%Y')}"]
+      
+      unless @query.vehicle_id.blank?
+        @vehicles = Vehicle.where(id: @query.vehicle_id)
+      else
+        @vehicles = @active_vehicles
+      end
+
+      # Only past runs with odometers
+      @runs = Run.with_odometer_readings.today_and_prior.for_provider(current_provider_id).for_vehicle(@vehicles.pluck(:id)).for_date_range(@query.start_date, @query.end_date)
+
+      @run_dates = @runs.pluck(:date).uniq.sort
+
+      @service_vehicles = Vehicle.where(id: @runs.pluck(:vehicle_id).uniq) # vehicles that provided service
+      run_trips = @runs.joins(:trips).where("trips.trip_result_id is NULL or trips.trip_result_id = ?", TripResult.find_by_code('COMP').try(:id))
+      @total_trips_count = run_trips.count
+
+      # Total passenger count
+      @total_customer_count = run_trips.sum("customer_space_count")
+      @total_guest_count = run_trips.sum("guest_count")
+      @total_attendant_count = run_trips.sum("attendant_count")
+      @total_service_animal_count = run_trips.sum("service_animal_space_count")
+      @total_passengers_count = @total_customer_count + @total_guest_count + @total_attendant_count + @total_service_animal_count
+
+      if query_params[:report_type] == 'summary'
+        @is_summary_report = true
+      else
+        @run_dates = @runs.pluck(:date).uniq.sort
+
+        run_trips = @runs.joins(:trips).where("trips.trip_result_id is NULL or trips.trip_result_id = ?", TripResult.find_by_code('COMP').try(:id))
+        @ride_counts_by_trip_purpose = run_trips.group(:date, "trips.trip_purpose_id").count
+        @ride_counts_by_date = run_trips.group(:date).count
+        @mobility_counts = @runs.joins(trips: :ridership_mobilities)
+          .where("trips.trip_result_id is NULL or trips.trip_result_id = ?", TripResult.find_by_code('COMP').try(:id))
+          .where("ridership_mobility_mappings.capacity > 0")
+          .group(:date, "ridership_mobility_mappings.mobility_id")
+          .sum("ridership_mobility_mappings.capacity")
+      end
+    end
+
+    apply_v2_response
+  end
+
   def manifest
     query_params = params[:query] || {start_date: Date.today.prev_month + 1, end_date: Date.today + 1}
     @query = Query.new(query_params)
