@@ -877,12 +877,25 @@ class ReportsController < ApplicationController
         @customers = @active_customers
       end
 
-      @trips = Trip.for_provider(current_provider_id).where(customer_id: @customers.pluck(:id)).for_date_range(@query.start_date, @query.end_date)
+      @cancelled_trips_results = TripResult.where(code: TripResult::NON_DISPATCHABLE_CODES)
+
+      @cancelled_trips = Trip.for_provider(current_provider_id)
+        .for_date_range(@query.start_date, @query.end_date)
+        .where(trip_result_id: @cancelled_trips_results.pluck(:id))
+        .where(customer_id: @customers.pluck(:id))
+
+      @customer_count = @cancelled_trips.group(:trip_result_id).sum("trips.customer_space_count")
+      @guest_count = @cancelled_trips.group(:trip_result_id).sum("trips.guest_count")
+      @attendant_count = @cancelled_trips.group(:trip_result_id).sum("trips.attendant_count")
+      @total_rider_count = @cancelled_trips.group(:trip_result_id).sum("trips.customer_space_count + trips.guest_count + trips.attendant_count")
+
+      @mobility_types = Mobility.by_provider(current_provider).order(:name)
+      @mobility_count = @cancelled_trips.joins(:ridership_mobilities).group(:trip_result_id, "ridership_mobility_mappings.mobility_id").sum("ridership_mobility_mappings.capacity")
 
       if query_params[:report_type] == 'summary'
         @is_summary_report = true
       else
-        
+        @customer_names = @cancelled_trips.joins(:customer).reorder("pickup_time::date").order("last_name, first_name, middle_initial").pluck(:first_name, :last_name)
       end
     end
 
