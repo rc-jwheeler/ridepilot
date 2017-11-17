@@ -877,6 +877,8 @@ class ReportsController < ApplicationController
         @customers = @active_customers
       end
 
+      @trips = Trip.for_provider(current_provider_id).where(customer_id: @customers.pluck(:id)).for_date_range(@query.start_date, @query.end_date)
+
       if query_params[:report_type] == 'summary'
         @is_summary_report = true
       else
