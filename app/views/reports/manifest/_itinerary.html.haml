@@ -1,6 +1,7 @@
 - trip = itinerary[:trip]
 - is_pickup = itinerary[:leg_flag] == 1
 - address = is_pickup ? trip.pickup_address : trip.dropoff_address
+- address_notes = is_pickup ? trip.pickup_address_notes : trip.dropoff_address_notes
 - schedule_time = itinerary[:time]
 - customer = trip.customer
 
@@ -14,9 +15,9 @@
         = address.address
       %span.pull-right
         = address.city
-    - if address.notes
+    - if address_notes
       %br
-      %p= address.notes
+      %p= address_notes
 
   %td{style: 'text-align: right;'}= format_time_for_listing(schedule_time) if schedule_time
   %td
