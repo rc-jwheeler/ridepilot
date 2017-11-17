@@ -56,9 +56,9 @@ module TripCore
   private
 
   def set_defaults
-    self.customer_space_count = 1 if self.customer_space_count.nil?
-    self.guest_count = 0 if self.guest_count.nil?
-    self.attendant_count = 0 if self.attendant_count.nil?
-    self.service_animal_space_count = 0 if self.service_animal_space_count.nil?
+    self.customer_space_count = 1 if self.respond_to?(:customer_space_count) && self.customer_space_count.nil?
+    self.guest_count = 0 if self.respond_to?(:guest_count) && self.guest_count.nil?
+    self.attendant_count = 0 if self.respond_to?(:attendant_count) && self.attendant_count.nil?
+    self.service_animal_space_count = 0 if self.respond_to?(:service_animal_space_count) && self.service_animal_space_count.nil?
   end
 end
