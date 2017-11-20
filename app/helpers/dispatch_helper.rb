@@ -94,7 +94,7 @@ module DispatchHelper
     
     # add itinerary specific data
     itins = if manifest_order && manifest_order.any?
-      itins.sort_by { |itin| [itin[:ordinal] >= 0, itin[:ordinal], itin[:sort_key], itin[:leg_flag]] }
+      itins.sort_by { |itin| [itin[:ordinal] >= 0 ? 0 : 1, itin[:ordinal], itin[:sort_key], itin[:leg_flag]] }
     else
       itins.sort_by { |itin| [itin[:sort_key], itin[:leg_flag]] }
     end
