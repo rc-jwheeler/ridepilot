@@ -1441,8 +1441,8 @@ en:
   vehicle_capacity_configuration_form_new_heading: "New Configuration"
   vehicle_capacity_configuration_form_edit_heading: "Edit Configuration"
   configure_capacity_types: "Configure Capacity Types"
-  capacity_types_link_text: "Capacity Types"
-  capacity_type_label: "Capacity Type Lookup Table"
+  capacity_types_link_text: "Capacity Type Lookup Table"
+  capacity_type_label: "Capacity Type"
   configure_mobility_types: "Configure Mobility Types"
   mobility_types_link_text: "Mobility Type Lookup Table"
 
