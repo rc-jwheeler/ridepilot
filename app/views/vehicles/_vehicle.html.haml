@@ -4,7 +4,7 @@
     = link_to_if can?(:read, vehicle), vehicle.name, vehicle
     .pull-right
       - unless vehicle.vehicle_type
-        %span.label.label-warning
+        %span.label.label-info
           Veh. Type?
   %td
     = vehicle.year

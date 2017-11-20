@@ -34,7 +34,7 @@
             = link_to run.vehicle.try(:name), vehicle_path(run.vehicle), target: '_blank' 
             .pull-right
               - unless run.vehicle.vehicle_type
-                %span.label.label-warning
+                %span.label.label-info
                   Veh. Type?
         - driver_overdue_check = get_driver_warnings(run.driver, run)
         %td{class: driver_overdue_check[:class_name], title: driver_overdue_check[:tips] }
