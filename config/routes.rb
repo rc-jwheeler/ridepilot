@@ -202,6 +202,7 @@ Rails.application.routes.draw do
         get :delete_photo
         post :inactivate
         post :reactivate
+        get :availability
       end
 
       resources :documents, except: [:index, :show]
