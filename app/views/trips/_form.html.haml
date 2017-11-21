@@ -102,6 +102,21 @@
     }
   }
 
+  // check if no mobility config
+  function checkMissingMobilities() {
+    var is_blank = true;
+    var cell_count = $('.editable-number').length;
+    for(var i =0; i<cell_count; i++) {
+      var value = parseInt($(this).text());
+      if($.isNumeric(value) && value > 0) {
+        is_blank = false;
+        break;
+      }
+    }
+
+    return is_blank;
+  }
+
   // serialize existing numbers to save
   function getMobilities() {
     var data = [];
@@ -118,6 +133,20 @@
 
     return data;
   }
+
+  $('.trip_form input[type=submit]').click(function(e) {
+    e.preventDefault();
+
+    // form validation to warn user about blank mobilities
+    var is_mobility_blank = checkMissingMobilities();
+    if(is_mobility_blank) {
+      bootbox.confirm("You haven't configured trip mobilities. Are you sure to save the trip?", function(result) {
+        if(result) {
+          $('.trip_form').submit();
+        }
+      });
+    }
+  });
 
   $('.trip_form').submit(function() {
     // serializing mobilities

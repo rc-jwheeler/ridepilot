@@ -46,6 +46,10 @@
             %span.badge.new-trip-badge{style: (is_new ? "" : "display: none;")}
               New
 
+            - if trip.ridership_mobilities.has_capacity.empty?
+              %span.label.label-danger
+                Mobility?
+
             .pull-right
               - if itin[:is_recurring]
                 %span.label.label-info
