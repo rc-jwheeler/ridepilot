@@ -107,7 +107,7 @@
     var is_blank = true;
     var cell_count = $('.editable-number').length;
     for(var i =0; i<cell_count; i++) {
-      var value = parseInt($(this).text());
+      var value = parseInt($($('.editable-number')[i]).text());
       if($.isNumeric(value) && value > 0) {
         is_blank = false;
         break;
@@ -145,6 +145,8 @@
           $('.trip_form').submit();
         }
       });
+    } else {
+      $('.trip_form').submit();
     }
   });
 
