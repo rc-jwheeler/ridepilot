@@ -372,7 +372,7 @@ class TripsController < ApplicationController
     params = check_double_booked_params
     unless params[:customer_id].blank? || params[:date].blank?
       @customer = Customer.find_by_id(params[:customer_id])
-      if @Customer
+      if @customer
         double_booked_trips = @customer.trips.for_date(Date.parse(params[:date]))
           .where.not(id: params[:id]).order(:pickup_time, :appointment_time)
 
