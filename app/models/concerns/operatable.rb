@@ -6,7 +6,7 @@ module Operatable
   extend ActiveSupport::Concern
 
   included do
-    has_many :operating_hours, class_name: :OperatingHours, dependent: :destroy, as: :operatable, inverse_of: :operatable
+    has_many :operating_hours, dependent: :destroy, as: :operatable, inverse_of: :operatable
     
     def hours_hash
       result = {}

@@ -1,0 +1,101 @@
+:ruby
+  min_hour = 0
+  start_hour = min_hour
+  max_hour = 24
+  interval_min = 30
+  tick_gap_hour = ((max_hour - min_hour) / 8.to_f).ceil
+  interval_count = (max_hour - min_hour) * 60 / interval_min
+  days_ahead = 30
+
+
+  # get hour tick lines
+  ticks = []
+  while start_hour <= max_hour do
+    tick = [start_hour]
+    if (start_hour - min_hour) % tick_gap_hour == 0
+      if start_hour == 0 || start_hour == 24
+        tick << "12am"
+      elsif start_hour == 12
+        tick << "12pm"
+      else
+        tick << (start_hour < 12 ? "#{start_hour.to_i}am" : "#{start_hour.to_i - 12}pm")
+      end 
+    else
+      tick << ""
+    end
+
+    start_hour += interval_min.to_f / 60
+
+    ticks << tick
+  end
+
+  # get row labels
+  row_data = []
+  unless is_daily
+    Date::DAYNAMES.each_with_index do |day_name, day_value|
+      row_data << {
+        id: day_value,
+        label: day_name,
+        is_all_day: false,
+        is_provider_unavailable: false,
+        is_unavailable: false,
+        start_time: nil,
+        end_time: nil
+      }
+    end
+  else
+    start_day = Date.today
+    days_ahead.times do
+      row_data << {
+        id: start_day,
+        label: start_day.strftime('%a %m/%d'),
+        is_all_day: false,
+        is_provider_unavailable: false,
+        is_unavailable: false,
+        start_time: nil,
+        end_time: nil
+      }
+      start_day += 1.day
+    end
+  end
+
+
+:css
+  .availability-table {
+    margin-bottom: 0px;
+    border-collapse: separate !important;
+    border-spacing: 0 1em !important;
+  }
+
+  .availability-table tr.odd {
+    background: transparent;
+  }
+
+  .availability-table td {
+    border-top: none !important;
+    background-color: #ffdd55;
+  }
+
+.table-responsive
+  %table.table.table-condensed.availability-table{data: {is_daily: is_daily}}
+    %thead
+      %th
+      %th All Day
+      - ticks.each do |tick|
+        %th= tick[1]
+      - if can?(:edit, operatable)
+        %th
+
+    %tbody
+      - row_data.each do |row|
+        %tr{data: {date_value: row[:id]}}
+          %td
+            = row[:label]
+          %td
+            = check_box_tag "all_day"
+          - ticks.each do |tick|
+            %td
+          - if can?(:edit, operatable)
+            %td
+              = button_tag "New"
+              = button_tag "Clear All"

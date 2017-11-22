@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe OperatingHours, type: :model do
+RSpec.describe OperatingHour, type: :model do
   it "requires a day of the week" do
     hours = build :operating_hours, day_of_week: nil
     expect(hours.valid?).to be_falsey
@@ -19,7 +19,7 @@ RSpec.describe OperatingHours, type: :model do
     hours_3 = create :operating_hours, day_of_week: 3
     hours_0 = create :operating_hours, day_of_week: 0
     
-    expect(OperatingHours.all.to_a).to eql [hours_0, hours_1, hours_3, hours_5]
+    expect(OperatingHour.all.to_a).to eql [hours_0, hours_1, hours_3, hours_5]
   end
   
   it "allows overnight hours up until 12:59am" do
@@ -59,20 +59,20 @@ RSpec.describe OperatingHours, type: :model do
   end
   
   it "defines START_OF_DAY as string representation of 01:00 am" do
-    expect(OperatingHours::START_OF_DAY).to be_a String
-    expect(Time.zone.parse(OperatingHours::START_OF_DAY).hour).to eq 1
-    expect(Time.zone.parse(OperatingHours::START_OF_DAY).min).to eq 0
+    expect(OperatingHour::START_OF_DAY).to be_a String
+    expect(Time.zone.parse(OperatingHour::START_OF_DAY).hour).to eq 1
+    expect(Time.zone.parse(OperatingHour::START_OF_DAY).min).to eq 0
   end
   
   it "defines END_OF_DAY as string representation of 00:59 am" do
-    expect(OperatingHours::END_OF_DAY).to be_a String
-    expect(Time.zone.parse(OperatingHours::END_OF_DAY).hour).to eq 0
-    expect(Time.zone.parse(OperatingHours::END_OF_DAY).min).to eq 59
+    expect(OperatingHour::END_OF_DAY).to be_a String
+    expect(Time.zone.parse(OperatingHour::END_OF_DAY).hour).to eq 0
+    expect(Time.zone.parse(OperatingHour::END_OF_DAY).min).to eq 59
   end
 
   describe ".available_start_times" do
     before do
-      @start_times = OperatingHours.available_start_times
+      @start_times = OperatingHour.available_start_times
     end
       
     it "returns an array" do
@@ -92,7 +92,7 @@ RSpec.describe OperatingHours, type: :model do
     end
   
     it "can accept an optional interval argument" do
-      times = OperatingHours.available_start_times(interval: 1.hour)
+      times = OperatingHour.available_start_times(interval: 1.hour)
       expect(Time.zone.parse(times.second) - Time.zone.parse(times.first)).to eq 1.hour
     end
         
@@ -103,7 +103,7 @@ RSpec.describe OperatingHours, type: :model do
   
   describe ".available_end_times" do
     before do
-      @end_times = OperatingHours.available_end_times
+      @end_times = OperatingHour.available_end_times
     end
       
     it "returns an array" do
@@ -123,7 +123,7 @@ RSpec.describe OperatingHours, type: :model do
     end
   
     it "can accept an optional interval argument" do
-      times = OperatingHours.available_end_times(interval: 1.hour)
+      times = OperatingHour.available_end_times(interval: 1.hour)
       expect(Time.zone.parse(times.second) - Time.zone.parse(times.first)).to eq 1.hour
     end
         

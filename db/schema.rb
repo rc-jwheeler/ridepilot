@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171108204027) do
+ActiveRecord::Schema.define(version: 20171122183659) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -239,6 +239,16 @@ ActiveRecord::Schema.define(version: 20171108204027) do
   add_index "customers_providers", ["customer_id", "provider_id"], :name => "index_customers_providers_on_customer_id_and_provider_id"
   add_index "customers_providers", ["customer_id"], :name => "index_customers_providers_on_customer_id"
   add_index "customers_providers", ["provider_id"], :name => "index_customers_providers_on_provider_id"
+
+  create_table "daily_operating_hours", force: true do |t|
+    t.date     "date"
+    t.time     "start_time"
+    t.time     "end_time"
+    t.integer  "operatable_id"
+    t.string   "operatable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "device_pool_drivers", force: true do |t|
     t.string   "status"
@@ -527,6 +537,18 @@ ActiveRecord::Schema.define(version: 20171108204027) do
 
   add_index "operating_hours", ["operatable_id", "operatable_type"], :name => "index_operating_hours_on_operatable_id_and_operatable_type"
   add_index "operating_hours", ["operatable_id"], :name => "index_operating_hours_on_operatable_id"
+
+  create_table "planned_leaves", force: true do |t|
+    t.date     "start_date"
+    t.date     "end_date"
+    t.text     "reason"
+    t.integer  "leavable_id"
+    t.string   "leavable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "planned_leaves", ["leavable_id", "leavable_type"], :name => "index_planned_leaves_on_leavable_id_and_leavable_type"
 
   create_table "provider_lookup_tables", force: true do |t|
     t.string   "caption"

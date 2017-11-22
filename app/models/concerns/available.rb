@@ -1,12 +1,14 @@
 require 'active_support/concern'
 
 # Use with `include Available`
-# Owner will be able to configure its availability
+# Owner will be able to configure its availability based on Planned Leave, Daily Operating Hours and Recurring Operating Hours
 module Available
   extend ActiveSupport::Concern
 
   included do
-    has_many :operating_hours, class_name: :OperatingHours, dependent: :destroy, as: :operatable, inverse_of: :operatable
+    has_many :operating_hours, dependent: :destroy, as: :operatable, inverse_of: :operatable
+    has_many :daily_operating_hours, dependent: :destroy, as: :operatable, inverse_of: :operatable
+    has_many :planned_leaves, dependent: :destroy, as: :leavable, inverse_of: :leavable
     
     def hours_hash
       result = {}
@@ -16,6 +18,11 @@ module Available
       result
     end
     
+    # TODO:
+    # 1. self.provider available?
+    # 2. planned_leave?
+    # 3. daily_operating_hour?
+    # 4. (recurring) operating_hour?
     def available?(day_of_week = Time.current.wday, time_of_day = Time.current.strftime('%H:%M'))
       # If no operating hours are defined, assume available
       return true unless operating_hours.any?
