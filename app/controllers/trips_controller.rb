@@ -371,25 +371,26 @@ class TripsController < ApplicationController
   def check_double_booked
     params = check_double_booked_params
     unless params[:customer_id].blank? || params[:date].blank?
-      @customer = Customer.find(params[:customer_id])
-      double_booked_trips = @customer.trips.for_date(Date.parse(params[:date]))
-        .where.not(id: params[:id]).order(:pickup_time, :appointment_time)
-      double_booked_trips_json = double_booked_trips.map do |trip|
-        {
-          id: trip.id,
-          pickup_time: trip.pickup_time.try(:to_s, :time_only),
-          pickup_address: trip.pickup_address.try(:address_text),
-          appointment_time: trip.appointment_time.try(:to_s, :time_only),
-          dropoff_address: trip.dropoff_address.try(:address_text)
-        }
+      @customer = Customer.find_by_id(params[:customer_id])
+      if @Customer
+        double_booked_trips = @customer.trips.for_date(Date.parse(params[:date]))
+          .where.not(id: params[:id]).order(:pickup_time, :appointment_time)
+
+        double_booked_trips_json = double_booked_trips.map do |trip|
+          {
+            id: trip.id,
+            pickup_time: trip.pickup_time.try(:to_s, :time_only),
+            pickup_address: trip.pickup_address.try(:address_text),
+            appointment_time: trip.appointment_time.try(:to_s, :time_only),
+            dropoff_address: trip.dropoff_address.try(:address_text)
+          }
+        end
       end
-    else
-      double_booked_trips_json = []
     end 
       
     respond_to do |format|
       format.js {
-        render json: { trips: double_booked_trips_json }
+        render json: { trips: double_booked_trips_json || [] }
       }
     end
   end
