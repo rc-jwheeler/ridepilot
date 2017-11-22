@@ -1003,7 +1003,7 @@ class ReportsController < ApplicationController
   def vehicle_report
     query_params = params[:query] || {start_date: Date.today.prev_month + 1, end_date: Date.today + 1}
     @query = Query.new(query_params)
-    @active_vehicles = Vehicle.for_provider(current_provider_id).active.default_order
+    @active_vehicles = Vehicle.where(reportable: true).for_provider(current_provider_id).active.default_order
 
     if params[:query]
       @report_params = [["Provider", current_provider.name]]
@@ -1036,7 +1036,7 @@ class ReportsController < ApplicationController
   def vehicle_monthly_service_report
     query_params = params[:query] || {start_date: Date.today.prev_month + 1, end_date: Date.today + 1}
     @query = Query.new(query_params)
-    @active_vehicles = Vehicle.for_provider(current_provider_id).active.default_order
+    @active_vehicles = Vehicle.where(reportable: true).for_provider(current_provider_id).active.default_order
 
     if params[:query]
       @report_params = [["Provider", current_provider.name]]
