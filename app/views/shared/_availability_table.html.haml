@@ -1,7 +1,7 @@
 :ruby
-  min_hour = 0
+  min_hour = 6
   start_hour = min_hour
-  max_hour = 24
+  max_hour = 22
   interval_min = 30
   tick_gap_hour = ((max_hour - min_hour) / 8.to_f).ceil
   interval_count = (max_hour - min_hour) * 60 / interval_min
@@ -73,7 +73,6 @@
 
   .availability-table td {
     border-top: none !important;
-    background-color: #ffdd55;
   }
 
 .table-responsive
@@ -98,4 +97,4 @@
           - if can?(:edit, operatable)
             %td
               = button_tag "New"
-              = button_tag "Clear All"
+              = button_tag "Clear"

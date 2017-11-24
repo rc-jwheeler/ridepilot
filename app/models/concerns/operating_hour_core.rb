@@ -56,6 +56,66 @@ module OperatingHourCore
       end_time = Time.zone.parse(END_OF_DAY) + 1.day # END_OF_DAY > midnight
       get_times_between start_time: start_time, end_time: end_time, interval: interval
     end
+
+    def operating_for_time?(time_of_day = Time.current.strftime('%H:%M'))
+      is_operating = false
+
+      first_recur_config = self.first
+      if first_recur_config.is_unavailable?
+        is_operating = false
+      elsif first_recur_config.is_24_hours?
+        is_operating = true
+      else
+        self.pluck(:start_time, :end_time).each do |op|
+          op_start_time = op[0]
+          op_end_time = op[1]
+          is_covered = if op_start_time > op_end_time
+            time_of_day >= op_start_time.strftime('%H:%M') || time_of_day <= op_end_time.strftime('%H:%M')
+          elsif op_start_time != op_end_time
+            time_of_day.between? op_start_time.strftime('%H:%M'), op_end_time.strftime('%H:%M')
+          else
+            false
+          end
+
+          if is_covered
+            is_operating = true
+            break
+          end
+        end
+      end
+
+      is_operating
+    end
+
+    def operating_between_time?(start_time = Time.current.strftime('%H:%M'), end_time = Time.current.strftime('%H:%M'))
+      is_operating = false
+
+      first_recur_config = self.first
+      if first_recur_config.is_unavailable?
+        is_operating = false
+      elsif first_recur_config.is_24_hours?
+        is_operating = true
+      else
+        self.pluck(:start_time, :end_time).each do |op|
+          op_start_time = op[0]
+          op_end_time = op[1]
+
+          is_covered = if op_start_time != op_end_time 
+            (start_time && start_time.between?(op_start_time.strftime('%H:%M'), op_end_time.strftime('%H:%M'))) && 
+            (end_time && end_time.between?(op_start_time.strftime('%H:%M'), op_end_time.strftime('%H:%M')))
+          else
+            false
+          end
+
+          if is_covered
+            is_operating = true
+            break
+          end
+        end
+      end
+
+      is_operating
+    end
     
     private
     

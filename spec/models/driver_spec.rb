@@ -61,6 +61,7 @@ RSpec.describe Driver, type: :model do
     before do
       @driver = create :driver
       @day_of_week = 0
+      @date = Date.today.sunday
       @time_of_day = "15:30"
     end
 
@@ -70,33 +71,33 @@ RSpec.describe Driver, type: :model do
 
     it "returns false if operating hours are defined, but not for that day" do
       create :operating_hours, operatable: @driver, day_of_week: @day_of_week + 1
-      expect(@driver.available?(@day_of_week, @time_of_day)).to be_falsey
+      expect(@driver.available?(@date + 1.day, @time_of_day)).to be_falsey
     end
 
     it "returns true if the driver is available 24 hours" do
       create :operating_hours, operatable: @driver, day_of_week: @day_of_week, start_time: "00:00", end_time: "00:00"
-      expect(@driver.available?(@day_of_week, @time_of_day)).to be_truthy
+      expect(@driver.available?(@date, @time_of_day)).to be_truthy
     end
 
     it "returns false if the driver is not available that day" do
       create :operating_hours, operatable: @driver, day_of_week: @day_of_week, start_time: nil, end_time: nil
-      expect(@driver.available?(@day_of_week, @time_of_day)).to be_falsey
+      expect(@driver.available?(@date, @time_of_day)).to be_falsey
     end
 
     it "can check against regular hours" do
       hours = create :operating_hours, operatable: @driver, day_of_week: @day_of_week, start_time: "12:00", end_time: "16:00"
-      expect(@driver.available?(@day_of_week, @time_of_day)).to be_truthy
+      expect(@driver.available?(@date, @time_of_day)).to be_truthy
 
       hours.update_attributes end_time: "15:00"
-      expect(@driver.available?(@day_of_week, @time_of_day)).to be_falsey
+      expect(@driver.available?(@date, @time_of_day)).to be_falsey
     end
 
     it "can check against irregular hours" do
       hours = create :operating_hours, operatable: @driver, day_of_week: @day_of_week, start_time: "12:00", end_time: "00:30"
-      expect(@driver.available?(@day_of_week, @time_of_day)).to be_truthy
+      expect(@driver.available?(@date, @time_of_day)).to be_truthy
 
       hours.update_attributes start_time: "16:00"
-      expect(@driver.available?(@day_of_week, @time_of_day)).to be_falsey
+      expect(@driver.available?(@date, @time_of_day)).to be_falsey
     end
   end
 

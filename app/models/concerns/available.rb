@@ -8,62 +8,83 @@ module Available
   included do
     has_many :operating_hours, dependent: :destroy, as: :operatable, inverse_of: :operatable
     has_many :daily_operating_hours, dependent: :destroy, as: :operatable, inverse_of: :operatable
-    has_many :planned_leaves, dependent: :destroy, as: :leavable, inverse_of: :leavable
-    
-    def hours_hash
-      result = {}
-      self.operating_hours.each do |h|
-        result[h.day_of_week] = h
-      end
-      result
-    end
+    has_many :planned_leaves, class_name: "PlannedLeave", dependent: :destroy, as: :leavable, inverse_of: :leavable
     
     # TODO:
     # 1. self.provider available?
     # 2. planned_leave?
     # 3. daily_operating_hour?
     # 4. (recurring) operating_hour?
-    def available?(day_of_week = Time.current.wday, time_of_day = Time.current.strftime('%H:%M'))
-      # If no operating hours are defined, assume available
-      return true unless operating_hours.any?
-      
-      if hours = operating_hours.where(day_of_week: day_of_week).first
-        if hours.is_unavailable?
-          return false
-        elsif hours.is_24_hours?
-          return true
-        elsif hours.start_time > hours.end_time
-          return time_of_day >= hours.start_time.strftime('%H:%M') || time_of_day <= hours.end_time.strftime('%H:%M')
-        elsif hours.start_time != hours.end_time
-          return time_of_day.between? hours.start_time.strftime('%H:%M'), hours.end_time.strftime('%H:%M')
-        else
-          # Some edge condition...
-          false
-        end
-      else
-        # No hours defined for that day, assume unavailable
+    def available?(date = Date.current, time_of_day = Time.current.strftime('%H:%M'))
+      day_of_week = date.wday
+      # first check provider
+      if !is_provider_available?(day_of_week, time_of_day)
         false
+      else
+        # then check planned leave
+        if is_on_leave?(date)
+          false
+        else
+          # third, check daily operating hour configuration
+          daily_hours = DailyOperatingHour.for_date(date)
+          if daily_hours.any?
+            daily_hours.operating_for_time?(time_of_day)
+          else
+            # finally, check recurring operating hour configurations
+            recur_hours = OperatingHour.for_day_of_week(day_of_week)
+            if recur_hours.any?
+              recur_hours.operating_for_time?(time_of_day)
+            else
+              false
+            end
+          end
+        end 
+      end 
+    end
+
+    def available_between?(date = Time.current, start_time = Time.current.strftime('%H:%M'), end_time = Time.current.strftime('%H:%M'))
+      day_of_week = date.wday
+      # first check provider
+      if !is_provider_available?(day_of_week, time_of_day)
+        false
+      else
+        # then check planned leave
+        if is_on_leave?(date)
+          false
+        else
+          # third, check daily operating hour configuration
+          daily_hours = DailyOperatingHour.for_date(date)
+          if daily_hours.any?
+            daily_hours.operating_between_time?(start_time, end_time)
+          else
+            # finally, check recurring operating hour configurations
+            recur_hours = OperatingHour.for_day_of_week(day_of_week)
+            if recur_hours.any?
+              recur_hours.operating_between_time?(start_time, end_time)
+            else
+              false
+            end
+          end
+        end 
+      end 
+    end
+
+    private 
+
+    def is_provider_available?(day_of_week = Date.current.wday, time_of_day = Time.current.strftime('%H:%M'))
+      if self.respond_to?(:provider) && !self.provider.available?(day_of_week, time_of_day)
+        false
+      else
+        true
       end
     end
 
-    def available_between?(day_of_week = Time.current.wday, start_time = Time.current.strftime('%H:%M'), end_time = Time.current.strftime('%H:%M'))
-      # If no operating hours are defined, assume available
-      return true unless operating_hours.any?
-      
-      if hours = operating_hours.where(day_of_week: day_of_week).first
-        if hours.is_unavailable?
-          false
-        elsif hours.is_24_hours?
-          true
-        elsif hours.start_time != hours.end_time
-          (start_time && start_time.between?(hours.start_time.strftime('%H:%M'), hours.end_time.strftime('%H:%M'))) && 
-          (end_time && end_time.between?(hours.start_time.strftime('%H:%M'), hours.end_time.strftime('%H:%M')))
-        else
-          # Some edge condition...
-          false
-        end
+    def is_on_leave?(date = Date.current)
+      planned_leave = planned_leaves.leave_on_date(date)
+      # then check planned leave
+      if planned_leave.present?
+        true
       else
-        # No hours defined for that day, assume unavailable
         false
       end
     end
