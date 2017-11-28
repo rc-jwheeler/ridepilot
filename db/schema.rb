@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171124193127) do
+ActiveRecord::Schema.define(version: 20171128213438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -617,6 +617,10 @@ ActiveRecord::Schema.define(version: 20171124193127) do
     t.integer  "business_address_id"
     t.integer  "mailing_address_id"
     t.string   "admin_name"
+    t.integer  "driver_availability_min_hour",                                                                                                     default: 6
+    t.integer  "driver_availability_max_hour",                                                                                                     default: 22
+    t.integer  "driver_availability_interval_min",                                                                                                 default: 30
+    t.integer  "driver_availability_days_ahead",                                                                                                   default: 30
   end
 
   add_index "providers", ["business_address_id"], :name => "index_providers_on_business_address_id"

@@ -211,6 +211,12 @@ class ProvidersController < ApplicationController
     redirect_to general_provider_path(@provider, anchor: "run_fields_settings")
   end
 
+  def change_driver_availability_settings
+    @provider.update(driver_availability_params)
+
+    redirect_to drivers_provider_path(@provider)
+  end
+
   def inactivate
     @provider = Provider.find(params[:id])
     authorize! :edit, @provider
@@ -313,6 +319,15 @@ class ProvidersController < ApplicationController
         :notes
       ]
     )
+  end
+
+  def driver_availability_params
+    params.require(:provider).permit(
+      :driver_availability_min_hour,
+      :driver_availability_max_hour,
+      :driver_availability_interval_min,
+      :driver_availability_days_ahead
+      )
   end
 
   def reimbursement_params

@@ -5,7 +5,7 @@ class OperatingHoursController < ApplicationController
 
   def new
     @date_flag = params[:date_flag]
-    @available_times = current_provider.operating_hours.for_day_of_week(@date_flag).get_available_times
+    @available_times = current_provider.operating_hours.for_day_of_week(@date_flag).get_available_times(interval: (current_provider.driver_availability_interval_min || 30).minutes)
     @operating_hour = @operatable.operating_hours.new(day_of_week: @date_flag)
   end
 

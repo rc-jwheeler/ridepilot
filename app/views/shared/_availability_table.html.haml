@@ -1,9 +1,9 @@
 :ruby
   # basics
-  min_hour = 6
-  max_hour = 22
-  interval_min = 30
-  days_ahead = 30
+  min_hour = current_provider.driver_availability_min_hour || 6
+  max_hour = current_provider.driver_availability_max_hour || 22
+  interval_min = current_provider.driver_availability_interval_min || 30
+  days_ahead = current_provider.driver_availability_days_ahead || 30
 
   # tick gaps
   tick_gap_hour = ((max_hour - min_hour) / 8.to_f).ceil

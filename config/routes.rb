@@ -114,6 +114,7 @@ Rails.application.routes.draw do
         post :change_advance_day_scheduling
         post :change_eligible_age
         post :change_fields_required_for_run_completion
+        post :change_driver_availability_settings
         post :save_region
         post :save_viewport
         patch :save_operating_hours

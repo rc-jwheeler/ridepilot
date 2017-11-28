@@ -414,6 +414,12 @@ en:
   last_day_of_leave: "Last Day of Leave"
   reason_leave: "Reason"
   new_planned_leave_link_text: "New"
+  driver_availability_settings: "Driver Availability Settings"
+  driver_availability_min_hour: "Availability Chart Start Hour"
+  driver_availability_max_hour: "Availability Chart End Hour"
+  driver_availability_interval_min: "Availability Chart Interval (min)"
+  driver_availability_days_ahead: "Days Ahead to Forecast Availability"
+  submit_driver_availability_settings: "Submit"
 
   # Vehicle compliances
   legal_vehicle_compliances_heading: "Legal Requirements"
