@@ -284,6 +284,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :planned_leaves, except: [:index, :show]
+
     resources :cab_trips, :only => [:index] do
       collection do
         get :edit_multiple

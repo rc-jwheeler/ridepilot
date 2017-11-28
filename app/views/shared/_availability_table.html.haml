@@ -56,8 +56,10 @@
   else
     start_day = Date.today
     daily_hours = operatable.daily_operating_hours.pluck(:id, :date, :is_all_day, :is_unavailable, :start_time, :end_time)
+    leave_days = operatable.planned_leaves.current.pluck(:start_date, :end_date)
     days_ahead.times do
       day_of_week = start_day.wday
+      is_on_leave = leave_days.select{|x| x[0] <= start_day && x[1] >= start_day}.any?
       
       daily_configs = daily_hours.select{|x| x[1] == start_day }
       if daily_configs.any?
@@ -80,6 +82,7 @@
         label: start_day.strftime('%a %m/%d'),
         is_all_day: is_all_day,
         is_provider_unavailable: provider_unavailable_wdays.include?(day_of_week),
+        is_on_leave: is_on_leave,
         is_unavailable: is_unavailable,
         time_ranges: time_ranges || [] 
       }
@@ -114,6 +117,10 @@
     background-color: lightgray;
   }
 
+  .is_on_leave {
+    background-color: #ffe664;
+  }
+
   .is_filled {
     background-color: #3eb76a;
   }
@@ -139,7 +146,9 @@
 
       - row_data.each do |row|
         %tr{data: {date_value: row[:id]}}
-          - is_disabled = row[:is_provider_unavailable]
+          - is_provider_unavailable = row[:is_provider_unavailable]
+          - is_on_leave = row[:is_on_leave]
+          - is_disabled = is_provider_unavailable || is_on_leave
           - is_all_day = row[:is_all_day]
           - is_unavailable = row[:is_unavailable]
           - time_ranges = row[:time_ranges]
@@ -153,11 +162,11 @@
               = check_box_tag "unavailable", "is_unavailable", is_unavailable, disabled: is_disabled, class: "is_unavailable"
 
           - ticks.each do |tick|
-            - class_name = is_disabled ? "is_disabled" : (is_all_day ? "is_all_day_filled" : "")
+            - class_name = is_provider_unavailable ? "is_disabled" : (is_on_leave ? "is_on_leave" : (is_all_day ? "is_all_day_filled" : ""))
             - if class_name.blank?
               - is_filled = time_ranges.select{|x| x[0] <= tick[0] && x[1] > tick[0]}.any?
               - class_name = "is_filled" if is_filled
-            %td.hour_cell{class: class_name || "", data: {time_flag: tick[0]}}
+            %td.hour_cell{class: class_name || "", data: {time_flag: tick[0]}, title: is_provider_unavailable ? "Provider not available" : (is_on_leave ? "Planned Leave" : "")}
           - if can?(:edit, operatable)
             %td.pull-right
               - unless is_disabled

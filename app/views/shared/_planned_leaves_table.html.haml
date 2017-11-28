@@ -1,25 +1,20 @@
-.table-responsive
+:css
+  #planned_leave_table tr.odd {
+    background: transparent;
+  }
+
+.table-responsive#planned_leave_table
   .pull-right
     - if can?(:edit, leavable)
-      = link_to "New", nil
+      = link_to translate_helper(:new_planned_leave_link_text), new_planned_leave_path(leavable_id: leavable.id, leavable_type: leavable.class.name), remote: true, class: 'btn action-button'
   %table.table.table-condensed
     %thead
-      %th First Day of Leave
-      %th Last Day of Leave
-      %th Reason
+      %th= translate_helper(:first_day_of_leave)
+      %th= translate_helper(:last_day_of_leave)
+      %th= translate_helper(:reason_leave)
       - if can?(:edit, leavable)
-        %th Action
+        %th
 
     %tbody
-      - leavable.planned_leaves.each do |leave|
-        %tr
-          %td
-            = leave.start_date.strftime('%a, %m/%d/%Y')
-          %td
-            = leave.end_date.strftime('%a, %m/%d/%Y')
-          %td
-            = leave.reason
-          - if can?(:edit, leavable)
-            %td
-              = button_tag "Edit"
-              = button_tag "X"
+      - leavable.planned_leaves.current.each do |leave|
+        = render 'shared/planned_leave_row', leave: leave, leavable: leavable

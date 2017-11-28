@@ -399,6 +399,22 @@ en:
     one: "1 error prohibited this requirement from being saved"
     other: "%{count} errors prohibited this requirement from being saved"
 
+  # Driver availability
+  operating_hour_form_new_heading: "New"
+  daily_operating_hour_form_new_heading: "New"
+  planned_leave_form_new_heading: "New"
+  planned_leave_start_date: "Start Date"
+  planned_leave_end_date: "End Date"
+  planned_leave_form_reason: "Reason"
+  planned_leave_form_edit_heading: "Edit"
+  planned_leave_form_error:
+    one: "1 error prohibited this planned leave from being saved"
+    other: "%{count} errors prohibited this planned leave from being saved"
+  first_day_of_leave: "First Day of Leave"
+  last_day_of_leave: "Last Day of Leave"
+  reason_leave: "Reason"
+  new_planned_leave_link_text: "New"
+
   # Vehicle compliances
   legal_vehicle_compliances_heading: "Legal Requirements"
   vehicle_requirement_template_field_label: 'Type'
