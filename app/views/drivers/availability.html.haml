@@ -16,7 +16,7 @@
         %span{style: 'font-size: small; color: red;'}= @driver.active_status_text
   .col-sm-12.col-md-6
     .pull-right
-      = link_to translate_helper("back"), @driver, class: "btn action-button"
+      = link_to translate_helper("back"), :back, class: "btn action-button"
 
 .row
   .col-sm-12
@@ -26,6 +26,7 @@
   .col-sm-12
     = render 'planned_leaves_panel'
 
+= render 'shared/modal_dialog', modal_id: "modal-dialog" 
 
 :javascript
   $(function() {

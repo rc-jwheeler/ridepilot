@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171122183659) do
+ActiveRecord::Schema.define(version: 20171124193127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -248,6 +248,8 @@ ActiveRecord::Schema.define(version: 20171122183659) do
     t.string   "operatable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_all_day",      default: false
+    t.boolean  "is_unavailable",  default: false
   end
 
   create_table "device_pool_drivers", force: true do |t|
@@ -533,6 +535,8 @@ ActiveRecord::Schema.define(version: 20171122183659) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "operatable_type"
+    t.boolean  "is_all_day",      default: false
+    t.boolean  "is_unavailable",  default: false
   end
 
   add_index "operating_hours", ["operatable_id", "operatable_type"], :name => "index_operating_hours_on_operatable_id_and_operatable_type"

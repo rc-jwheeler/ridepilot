@@ -26,12 +26,12 @@ module Available
           false
         else
           # third, check daily operating hour configuration
-          daily_hours = DailyOperatingHour.for_date(date)
+          daily_hours = daily_operating_hours.for_date(date)
           if daily_hours.any?
             daily_hours.operating_for_time?(time_of_day)
           else
             # finally, check recurring operating hour configurations
-            recur_hours = OperatingHour.for_day_of_week(day_of_week)
+            recur_hours = operating_hours.for_day_of_week(day_of_week)
             if recur_hours.any?
               recur_hours.operating_for_time?(time_of_day)
             else
@@ -53,12 +53,12 @@ module Available
           false
         else
           # third, check daily operating hour configuration
-          daily_hours = DailyOperatingHour.for_date(date)
+          daily_hours = daily_operating_hours.for_date(date)
           if daily_hours.any?
             daily_hours.operating_between_time?(start_time, end_time)
           else
             # finally, check recurring operating hour configurations
-            recur_hours = OperatingHour.for_day_of_week(day_of_week)
+            recur_hours = operating_hours.for_day_of_week(day_of_week)
             if recur_hours.any?
               recur_hours.operating_between_time?(start_time, end_time)
             else

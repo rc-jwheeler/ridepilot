@@ -16,12 +16,12 @@
     %table#drivers_table.table.table-striped.table-bordered
       %thead
         %tr
-          %th.col-sm-4= translate_helper("driver_form_name")
-          %th.col-sm-2= translate_helper("driver_form_active")
-          %th.col-sm-2= translate_helper("paid")
-          %th.col-sm-2= translate_helper("driver_form_available")
-          %th.col-sm-2= translate_helper("driver_overdue_events")
-          %th.col-sm-2= translate_helper("driver_completed_run_hours")
+          %th.col-sm-2= translate_helper("driver_form_name")
+          %th{style: "width: 100px;"}= translate_helper("paid")
+          %th.col-sm-3= translate_helper("driver_form_active")
+          %th.col-sm-4= translate_helper("driver_form_available")
+          %th= translate_helper("driver_overdue_events")
+          %th= translate_helper("driver_completed_run_hours")
       %tbody
         = render partial: 'driver', collection: @drivers
 

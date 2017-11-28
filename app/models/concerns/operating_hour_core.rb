@@ -12,36 +12,40 @@ module OperatingHourCore
     validates_presence_of :operatable
     validate :enforce_hour_sanity
 
+    scope :all_day, -> { where(is_all_day: true) } 
+    scope :unavailable, -> { where(is_unavailable: true) } 
+    scope :regular, -> { where.not("is_all_day = ? or is_unavailable = ?", true, true) } 
+
     # Notes:
     # - start_time and end_time should be saved as strings, and w/o TZ info
-    # - start_time == 00:00 and end_time == 00:00 represents 24-hours
-    # - If unavailable, then both times should be nil.
 
     def make_unavailable
+      self.is_all_day = false
+      self.is_unavailable = true
       self.start_time = nil
       self.end_time = nil
     end
     
-    def is_unavailable?
-      self.start_time.nil? and self.end_time.nil?
-    end
-    
-    def make_24_hours
+    def make_all_day
+      self.is_all_day = true
+      self.is_unavailable = false
       self.start_time = '00:00'
       self.end_time = '00:00'
     end
-    
-    def is_24_hours?
-      start_time.try(:to_s, :time_utc) == '00:00:00' and end_time.try(:to_s, :time_utc) == '00:00:00'
+
+    def make_regular_hours(start_time, end_time)
+      self.is_all_day = false
+      self.is_unavailable = false
+      self.start_time = start_time
+      self.end_time = end_time
     end
     
     def is_regular_hours?
-      !is_unavailable? and !is_24_hours?
+      !is_unavailable? && !is_all_day?
     end
     
   end
 
-  
   module ClassMethods  
     # Create an array of start times in UTC format
     def available_start_times(interval: 30.minutes)
@@ -56,6 +60,38 @@ module OperatingHourCore
       end_time = Time.zone.parse(END_OF_DAY) + 1.day # END_OF_DAY > midnight
       get_times_between start_time: start_time, end_time: end_time, interval: interval
     end
+    
+    def get_times_between(start_time:, end_time:, interval: 30.minutes)
+      # We only need the time as a string, but we'll use some temporary Time
+      # objects to help us do some simple time math. The dates returned are
+      # irrelevant
+      times =[]
+      t = start_time
+      while t < end_time
+        times << t.to_s(:time_utc)
+        t += interval
+      end
+      times
+    end
+
+    def get_available_times(interval: 30.minutes)
+      first_recur_config = self.first
+      if first_recur_config.is_unavailable?
+        []
+      elsif first_recur_config.is_all_day?
+        from_time = Time.zone.parse("00:00:00")
+        to_time = from_time.at_end_of_day
+        get_times_between(start_time: from_time, end_time: to_time, interval: interval)
+      else
+        from_time = self.regular.minimum(:start_time)
+        to_time = self.regular.maximum(:end_time)
+        if from_time && to_time
+          get_times_between(start_time: from_time, end_time: to_time, interval: interval)
+        else
+          []
+        end
+      end
+    end
 
     def operating_for_time?(time_of_day = Time.current.strftime('%H:%M'))
       is_operating = false
@@ -63,7 +99,7 @@ module OperatingHourCore
       first_recur_config = self.first
       if first_recur_config.is_unavailable?
         is_operating = false
-      elsif first_recur_config.is_24_hours?
+      elsif first_recur_config.is_all_day?
         is_operating = true
       else
         self.pluck(:start_time, :end_time).each do |op|
@@ -93,7 +129,7 @@ module OperatingHourCore
       first_recur_config = self.first
       if first_recur_config.is_unavailable?
         is_operating = false
-      elsif first_recur_config.is_24_hours?
+      elsif first_recur_config.is_all_day?
         is_operating = true
       else
         self.pluck(:start_time, :end_time).each do |op|
@@ -115,21 +151,6 @@ module OperatingHourCore
       end
 
       is_operating
-    end
-    
-    private
-    
-    def get_times_between(start_time:, end_time:, interval: 30.minutes)
-      # We only need the time as a string, but we'll use some temporary Time
-      # objects to help us do some simple time math. The dates returned are
-      # irrelevant
-      times =[]
-      t = start_time
-      while t < end_time
-        times << t.to_s(:time_utc)
-        t += interval
-      end
-      times
     end
   end
 

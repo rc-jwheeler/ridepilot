@@ -41,7 +41,7 @@ RSpec.describe OperatingHour, type: :model do
   it "can be available 24 hours" do
     hours = build :operating_hours, start_time: "00:00", end_time: "00:00"
     expect(hours.valid?).to be_truthy
-    expect(hours.is_24_hours?).to be_truthy
+    expect(hours.is_all_day?).to be_truthy
   end
   
   it "can make itself unavailable" do
@@ -53,9 +53,9 @@ RSpec.describe OperatingHour, type: :model do
   
   it "can make itself available 24 hours" do
     hours = build :operating_hours
-    expect(hours.is_24_hours?).to be_falsey
-    hours.make_24_hours
-    expect(hours.is_24_hours?).to be_truthy
+    expect(hours.is_all_day?).to be_falsey
+    hours.make_all_day
+    expect(hours.is_all_day?).to be_truthy
   end
   
   it "defines START_OF_DAY as string representation of 01:00 am" do

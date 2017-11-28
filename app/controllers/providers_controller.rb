@@ -320,7 +320,7 @@ class ProvidersController < ApplicationController
   end
 
   def create_or_update_hours!
-    OperatingHoursProcessor.new(@provider, {
+    ProviderOperatingHoursProcessor.new(@provider, {
       hours: params[:hours],
       start_hour: params[:start_hour],
       end_hour: params[:end_hour]

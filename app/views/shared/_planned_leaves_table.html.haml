@@ -1,0 +1,25 @@
+.table-responsive
+  .pull-right
+    - if can?(:edit, leavable)
+      = link_to "New", nil
+  %table.table.table-condensed
+    %thead
+      %th First Day of Leave
+      %th Last Day of Leave
+      %th Reason
+      - if can?(:edit, leavable)
+        %th Action
+
+    %tbody
+      - leavable.planned_leaves.each do |leave|
+        %tr
+          %td
+            = leave.start_date.strftime('%a, %m/%d/%Y')
+          %td
+            = leave.end_date.strftime('%a, %m/%d/%Y')
+          %td
+            = leave.reason
+          - if can?(:edit, leavable)
+            %td
+              = button_tag "Edit"
+              = button_tag "X"

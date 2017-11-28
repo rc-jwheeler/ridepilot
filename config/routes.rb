@@ -270,6 +270,20 @@ Rails.application.routes.draw do
       end
     end
 
+
+    resources :operating_hours, only: [:new] do 
+      collection do 
+        post :add 
+        delete :remove
+      end
+    end
+    resources :daily_operating_hours, only: [:new] do 
+      collection do 
+        post :add 
+        delete :remove
+      end
+    end
+
     resources :cab_trips, :only => [:index] do
       collection do
         get :edit_multiple
