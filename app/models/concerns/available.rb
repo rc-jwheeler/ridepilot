@@ -10,7 +10,6 @@ module Available
     has_many :daily_operating_hours, dependent: :destroy, as: :operatable, inverse_of: :operatable
     has_many :planned_leaves, class_name: "PlannedLeave", dependent: :destroy, as: :leavable, inverse_of: :leavable
     
-    # TODO:
     # 1. self.provider available?
     # 2. planned_leave?
     # 3. daily_operating_hour?

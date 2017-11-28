@@ -2,28 +2,28 @@ require 'rails_helper'
 
 RSpec.describe OperatingHour, type: :model do
   it "requires a day of the week" do
-    hours = build :operating_hours, day_of_week: nil
+    hours = build :operating_hour, day_of_week: nil
     expect(hours.valid?).to be_falsey
     expect(hours.errors.keys).to include :day_of_week
   end
 
   it "requires a operatable object" do
-    hours = build :operating_hours, operatable: nil
+    hours = build :operating_hour, operatable: nil
     expect(hours.valid?).to be_falsey
     expect(hours.errors.keys).to include :operatable
   end
   
   it "orders records by day_of_week" do
-    hours_5 = create :operating_hours, day_of_week: 5
-    hours_1 = create :operating_hours, day_of_week: 1
-    hours_3 = create :operating_hours, day_of_week: 3
-    hours_0 = create :operating_hours, day_of_week: 0
+    hours_5 = create :operating_hour, day_of_week: 5
+    hours_1 = create :operating_hour, day_of_week: 1
+    hours_3 = create :operating_hour, day_of_week: 3
+    hours_0 = create :operating_hour, day_of_week: 0
     
     expect(OperatingHour.all.to_a).to eql [hours_0, hours_1, hours_3, hours_5]
   end
   
   it "allows overnight hours up until 12:59am" do
-    hours = build :operating_hours, start_time: "01:00", end_time: "00:59"
+    hours = build :operating_hour, start_time: "01:00", end_time: "00:59"
     expect(hours.valid?).to be_truthy
     expect(hours.is_regular_hours?).to be_truthy
 
@@ -33,26 +33,26 @@ RSpec.describe OperatingHour, type: :model do
   end
   
   it "can be unavailable" do
-    hours = build :operating_hours, start_time: nil, end_time: nil
+    hours = build :operating_hour, is_unavailable: true
     expect(hours.valid?).to be_truthy
     expect(hours.is_unavailable?).to be_truthy
   end
   
   it "can be available 24 hours" do
-    hours = build :operating_hours, start_time: "00:00", end_time: "00:00"
+    hours = build :operating_hour, is_all_day: true
     expect(hours.valid?).to be_truthy
     expect(hours.is_all_day?).to be_truthy
   end
   
   it "can make itself unavailable" do
-    hours = build :operating_hours
+    hours = build :operating_hour
     expect(hours.is_unavailable?).to be_falsey
     hours.make_unavailable
     expect(hours.is_unavailable?).to be_truthy
   end
   
   it "can make itself available 24 hours" do
-    hours = build :operating_hours
+    hours = build :operating_hour
     expect(hours.is_all_day?).to be_falsey
     hours.make_all_day
     expect(hours.is_all_day?).to be_truthy
