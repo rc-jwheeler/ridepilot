@@ -1,5 +1,5 @@
 :css
-  #planned_leave_table tr.odd {
+  #planned_leave_table table tr.odd {
     background: transparent;
   }
 
@@ -18,3 +18,12 @@
     %tbody
       - leavable.planned_leaves.current.each do |leave|
         = render 'shared/planned_leave_row', leave: leave, leavable: leavable
+
+:javascript
+  $(function() {
+    // fixed table header
+    $('#planned_leave_table table').floatThead({
+      position: 'fixed'
+    });
+
+  });

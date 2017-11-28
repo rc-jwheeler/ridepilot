@@ -41,6 +41,7 @@
 //= require jquery.sumoselect
 //= require bootstrap-editable
 //= require bootstrap-editable-rails
+//= require jquery.floatThead
 //= require_self
 
 function ISODateFormatToDateObject(str) {

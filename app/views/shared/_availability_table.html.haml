@@ -249,6 +249,11 @@
       });
     }
 
+    // fixed table header
+    $('table.' + container_class).floatThead({
+      position: 'fixed'
+    });
+
     // change All Day checkbox
     $('table.' + container_class + ' input[type=checkbox].is_all_day').change(function() {
       var is_all_day = $(this).is(':checked');
