@@ -202,6 +202,7 @@ Rails.application.routes.draw do
         get :delete_photo
         post :inactivate
         post :reactivate
+        get :availability
       end
 
       resources :documents, except: [:index, :show]
@@ -266,6 +267,20 @@ Rails.application.routes.draw do
         get :cancel_run
         get :run_trips
         get :load_trips
+      end
+    end
+
+
+    resources :operating_hours, only: [:new] do 
+      collection do 
+        post :add 
+        delete :remove
+      end
+    end
+    resources :daily_operating_hours, only: [:new] do 
+      collection do 
+        post :add 
+        delete :remove
       end
     end
 

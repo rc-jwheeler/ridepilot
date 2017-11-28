@@ -1,0 +1,274 @@
+:ruby
+  # basics
+  min_hour = 6
+  max_hour = 22
+  interval_min = 30
+  days_ahead = 30
+
+  # tick gaps
+  tick_gap_hour = ((max_hour - min_hour) / 8.to_f).ceil
+  interval_count = (max_hour - min_hour) * 60 / interval_min
+
+  # get hour tick lines
+  start_hour = min_hour
+  ticks = []
+  while start_hour <= max_hour do
+    tick = [start_hour]
+    if (start_hour - min_hour) % tick_gap_hour == 0
+      if start_hour == 0 || start_hour == 24
+        tick << "12am"
+      elsif start_hour == 12
+        tick << "12pm"
+      else
+        tick << (start_hour < 12 ? "#{start_hour.to_i}am" : "#{start_hour.to_i - 12}pm")
+      end 
+    else
+      tick << ""
+    end
+
+    start_hour += interval_min.to_f / 60
+
+    ticks << tick
+  end
+
+  # get row labels
+  row_data = []
+  provider_unavailable_wdays = current_provider.operating_hours.unavailable.pluck(:day_of_week)
+  recurring_hours = operatable.operating_hours.pluck(:id, :day_of_week, :is_all_day, :is_unavailable, :start_time, :end_time)
+  
+  if !is_daily
+    Date::DAYNAMES.each_with_index do |day_name, day_of_week|
+      recur_configs = recurring_hours.select{|x| x[1] == day_of_week }
+      is_all_day = recur_configs.select{|x| x[2] == true }.any?
+      is_unavailable = recur_configs.select{|x| x[3] == true }.any?
+      if !is_unavailable && !is_all_day
+        time_ranges = recur_configs.map{|x| [(x[4] - x[4].at_beginning_of_day) / 3600.0, (x[5] - x[5].at_beginning_of_day) / 3600.0]}
+      end
+      row_data << {
+        id: day_of_week,
+        label: day_name,
+        is_all_day: is_all_day,
+        is_provider_unavailable: provider_unavailable_wdays.include?(day_of_week),
+        is_unavailable: is_unavailable,
+        time_ranges: time_ranges || []
+      }
+    end
+  else
+    start_day = Date.today
+    daily_hours = operatable.daily_operating_hours.pluck(:id, :date, :is_all_day, :is_unavailable, :start_time, :end_time)
+    days_ahead.times do
+      day_of_week = start_day.wday
+      
+      daily_configs = daily_hours.select{|x| x[1] == start_day }
+      if daily_configs.any?
+        is_all_day = daily_configs.select{|x| x[2] == true }.any?
+        is_unavailable = daily_configs.select{|x| x[3] == true }.any?
+        if !is_unavailable && !is_all_day
+          time_ranges = daily_configs.map{|x| [(x[4] - x[4].at_beginning_of_day) / 3600.0, (x[5] - x[5].at_beginning_of_day) / 3600.0]}
+        end
+      else
+        recur_configs = recurring_hours.select{|x| x[1] == day_of_week }
+        is_all_day = recur_configs.select{|x| x[2] == true }.any?
+        is_unavailable = recur_configs.select{|x| x[3] == true }.any?
+        if !is_unavailable && !is_all_day
+          time_ranges = recur_configs.map{|x| [(x[4] - x[4].at_beginning_of_day) / 3600.0, (x[5] - x[5].at_beginning_of_day) / 3600.0]}
+        end
+      end
+
+      row_data << {
+        id: start_day,
+        label: start_day.strftime('%a %m/%d'),
+        is_all_day: is_all_day,
+        is_provider_unavailable: provider_unavailable_wdays.include?(day_of_week),
+        is_unavailable: is_unavailable,
+        time_ranges: time_ranges || [] 
+      }
+      start_day += 1.day
+    end
+  end
+
+:css
+  .availability-table {
+    margin-bottom: 0px;
+    border-collapse: separate !important;
+    border-spacing: 0 1em !important;
+  }
+
+  .availability-table tr.odd {
+    background: transparent;
+  }
+
+  .availability-table td {
+    border-top: none !important;
+  }
+
+  .availability-table td.disabled {
+    color: lightgray;
+  }
+
+  .is_disabled {
+    background-color: lightgray;
+  }
+
+  .is_filled {
+    background-color: #3eb76a;
+  }
+
+  .is_all_day_filled {
+    background-color: #1e5d35;
+  }
+
+
+- table_css_class = is_daily ? "daily_availability" : "recur_availability"
+.table-responsive
+  %table.table.table-condensed.availability-table{class: table_css_class}
+    %thead
+      %th
+      %th All Day
+      %th Unavailable
+      - ticks.each do |tick|
+        %th= tick[1]
+      - if can?(:edit, operatable)
+        %th
+
+    %tbody
+
+      - row_data.each do |row|
+        %tr{data: {date_value: row[:id]}}
+          - is_disabled = row[:is_provider_unavailable]
+          - is_all_day = row[:is_all_day]
+          - is_unavailable = row[:is_unavailable]
+          - time_ranges = row[:time_ranges]
+          %td{class: is_disabled ? "disabled" : ""}
+            = row[:label]
+          %td
+            - unless is_disabled
+              = check_box_tag "all_day", "is_all_day", is_all_day, disabled: is_disabled, class: "is_all_day"
+          %td
+            - unless is_disabled
+              = check_box_tag "unavailable", "is_unavailable", is_unavailable, disabled: is_disabled, class: "is_unavailable"
+
+          - ticks.each do |tick|
+            - class_name = is_disabled ? "is_disabled" : (is_all_day ? "is_all_day_filled" : "")
+            - if class_name.blank?
+              - is_filled = time_ranges.select{|x| x[0] <= tick[0] && x[1] > tick[0]}.any?
+              - class_name = "is_filled" if is_filled
+            %td.hour_cell{class: class_name || "", data: {time_flag: tick[0]}}
+          - if can?(:edit, operatable)
+            %td.pull-right
+              - unless is_disabled
+                = button_tag "New", disabled: is_disabled, class: 'new_hour'
+                = button_tag is_daily ? "Reset" : "Clear", disabled: is_disabled, class: 'clear_hours'
+
+:javascript
+  $(function() {
+    var operatable_id = #{operatable.id};
+    var operatable_type = "#{operatable.class.name}";
+    var container_class = "#{table_css_class}";
+    var is_daily = #{is_daily || false};
+
+    var new_hour_url = "#{is_daily ? new_daily_operating_hour_path : new_operating_hour_path}";
+    var add_url = "#{is_daily ? add_daily_operating_hours_path : add_operating_hours_path}";
+    var remove_url = "#{is_daily ? remove_daily_operating_hours_path : remove_operating_hours_path}";
+    var clear_confirmation_msg = "#{is_daily ? 'Are you sure to reset to be using recurring settings?' : 'Are you sure to clear the settings?'}"
+
+    function add_segment(date, start_time, end_time) {
+      $.ajax({
+        url: add_url,
+        method: 'post',
+        data: {
+          date_flag: date,
+          operatable_id: operatable_id,
+          operatable_type: operatable_type,
+          is_all_day: false,
+          start_time: start_time,
+          end_time: end_time
+        }
+      });
+    }
+
+    function mark_all_day(date) {
+      $.ajax({
+        url: add_url,
+        method: 'post',
+        data: {
+          date_flag: date,
+          operatable_id: operatable_id,
+          operatable_type: operatable_type,
+          is_all_day: true
+        }
+      });
+    }
+
+    function mark_unavailable(date) {
+      $.ajax({
+        url: add_url,
+        method: 'post',
+        data: {
+          date_flag: date,
+          operatable_id: operatable_id,
+          operatable_type: operatable_type,
+          is_unavailable: true
+        }
+      });
+    }
+
+    function clear_hours(date) {
+      $.ajax({
+        url: remove_url,
+        method: 'delete',
+        data: {
+          date_flag: date,
+          operatable_id: operatable_id,
+          operatable_type: operatable_type
+        }
+      });
+    }
+
+    function add_new_hour(date) {
+      $.ajax({
+        url: new_hour_url,
+        data: {
+          date_flag: date,
+          operatable_id: operatable_id,
+          operatable_type: operatable_type
+        }
+      });
+    }
+
+    // change All Day checkbox
+    $('table.' + container_class + ' input[type=checkbox].is_all_day').change(function() {
+      var is_all_day = $(this).is(':checked');
+      var date = $(this).parents('tr').data('date-value');
+      if(is_all_day) {
+        mark_all_day(date);
+      }
+    });
+
+    // change Unavailable checkbox
+    $('table.' + container_class + ' input[type=checkbox].is_unavailable').change(function() {
+      var is_unavaialble = $(this).is(':checked');
+      var date = $(this).parents('tr').data('date-value');
+      if(is_unavaialble) {
+        mark_unavailable(date);
+      } else {
+        clear_hours(date);
+      }
+    });
+
+    // Clear Hours
+    $('table.' + container_class + ' button.clear_hours').click(function() {
+      var date = $(this).parents('tr').data('date-value');
+      bootbox.confirm(clear_confirmation_msg, function(result) {
+        if(result) {
+          clear_hours(date);
+        }
+      });
+    });
+
+    // Add new Hour
+    $('table.' + container_class + ' button.new_hour').click(function() {
+      var date = $(this).parents('tr').data('date-value');
+      add_new_hour(date);
+    });
+  });

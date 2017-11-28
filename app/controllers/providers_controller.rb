@@ -234,8 +234,8 @@ class ProvidersController < ApplicationController
   def general
     @hours = @provider.hours_hash
 
-    @start_hours = OperatingHours.available_start_times
-    @end_hours = OperatingHours.available_end_times
+    @start_hours = OperatingHour.available_start_times
+    @end_hours = OperatingHour.available_end_times
 
     array = (0..19).zip(0..19).map()
     @zoom_choices = array.inject({}) do |memo, values|
@@ -320,7 +320,7 @@ class ProvidersController < ApplicationController
   end
 
   def create_or_update_hours!
-    OperatingHoursProcessor.new(@provider, {
+    ProviderOperatingHoursProcessor.new(@provider, {
       hours: params[:hours],
       start_hour: params[:start_hour],
       end_hour: params[:end_hour]

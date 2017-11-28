@@ -6,8 +6,9 @@
       - if @driver.inactivated?
         %span{style: 'font-size: small; color: red;'}= @driver.active_status_text
   .col-sm-12.col-md-6
-    - if can? :manage, @driver
-      .pull-right
+    .pull-right
+      = link_to translate_helper("driver_availability_link_title"), availability_driver_path(@driver), class: "btn action-button"
+      - if can? :manage, @driver
         = link_to translate_helper("driver_documents_add_link_title"), new_driver_document_path(@driver), class: "btn action-button"
         = link_to translate_helper("delete_driver_button"), @driver, method: :delete, data: { confirm: translate_helper("delete_driver_confirm") }, class: "btn action-button  btn-danger"  if can?(:delete, @driver)
         = link_to translate_helper("delete_photo"), delete_photo_driver_path(@driver), data: { confirm: translate_helper("delete_photo_confirm") }, class: "btn action-button btn-danger" if !@driver.new_record? && @driver.photo.present?

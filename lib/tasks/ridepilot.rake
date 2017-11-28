@@ -366,4 +366,17 @@ namespace :ridepilot do
     RepeatingTrip.where(attendant_count: nil).update_all(attendant_count: 0)
     RepeatingTrip.where(service_animal_space_count: nil).update_all(service_animal_space_count: 0)
   end
+
+  desc 'Migrate operating hours to update values for is_unavailable and is_all_day fields'
+  task :migrate_operating_hours => :environment do
+    OperatingHour.where("start_time is NULL and end_time is NULL and is_all_day = ?", true).update_all(is_unavailable: true)
+    
+    all_day_ids = []
+    OperatingHour.where.not(is_unavailable: true).pluck(:id, :start_time, :end_time).each do |config|
+      if config[1].try(:to_s, :time_utc) == '00:00:00' and config[2].try(:to_s, :time_utc) == '00:00:00'
+        all_day_ids << config[0]
+      end
+    end
+    OperatingHour.where(id: all_day_ids).update_all(is_all_day: true)
+  end
 end

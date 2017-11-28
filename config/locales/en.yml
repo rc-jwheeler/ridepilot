@@ -321,6 +321,10 @@ en:
   inactivated_end_date: 'End Date'
   active_status_change_reason: 'Reason'
   inactivated_end_date_earlier_than_start_date: 'End Date should be no earlier than Start Date'
+  driver_availability_link_title: 'Show Availability'
+  driver_form_recurring_availability_heading: "Recurring Availability"
+  driver_form_daily_availability_heading: "Daily Availability"
+  driver_form_planned_leaves_heading: "Planned Leaves"
 
   # emergency contact
   driver_form_emergency_contact_heading: 'Emergency Contact'
