@@ -44,7 +44,7 @@ module Available
     def available_between?(date = Time.current, start_time = Time.current.strftime('%H:%M'), end_time = Time.current.strftime('%H:%M'))
       day_of_week = date.wday
       # first check provider
-      if !is_provider_available?(day_of_week, time_of_day)
+      if !is_provider_available?(day_of_week, start_time) || !is_provider_available?(day_of_week, end_time)
         false
       else
         # then check planned leave
