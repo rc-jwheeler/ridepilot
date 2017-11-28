@@ -369,7 +369,7 @@ namespace :ridepilot do
 
   desc 'Migrate operating hours to update values for is_unavailable and is_all_day fields'
   task :migrate_operating_hours => :environment do
-    OperatingHour.where("start_time is NULL and end_time is NULL and is_all_day = ?", true).update_all(is_unavailable: true)
+    OperatingHour.where("start_time is NULL and end_time is NULL and is_all_day = ?", false).update_all(is_unavailable: true)
     
     all_day_ids = []
     OperatingHour.where.not(is_unavailable: true).pluck(:id, :start_time, :end_time).each do |config|
