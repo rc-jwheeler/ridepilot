@@ -420,6 +420,7 @@ en:
   driver_availability_interval_min: "Availability Chart Interval (min)"
   driver_availability_days_ahead: "Days Ahead to Forecast Availability"
   submit_driver_availability_settings: "Submit"
+  driver_availability_forecast_link_text: "Availability Forecast"
 
   # Vehicle compliances
   legal_vehicle_compliances_heading: "Legal Requirements"
