@@ -12,16 +12,11 @@
   # get hour tick lines
   start_hour = min_hour
   ticks = []
-  while start_hour <= max_hour do
+
+  while start_hour < max_hour do
     tick = [start_hour]
     if (start_hour - min_hour) % tick_gap_hour == 0
-      if start_hour == 0 || start_hour == 24
-        tick << "12am"
-      elsif start_hour == 12
-        tick << "12pm"
-      else
-        tick << (start_hour < 12 ? "#{start_hour.to_i}am" : "#{start_hour.to_i - 12}pm")
-      end 
+      tick << format_hour_label(start_hour) 
     else
       tick << ""
     end
@@ -30,6 +25,8 @@
 
     ticks << tick
   end
+
+  max_hour_label = format_hour_label(max_hour) 
 
   # get row labels
   row_data = []
@@ -129,6 +126,12 @@
     background-color: #1e5d35;
   }
 
+  .hour_tick_label {
+    display: inline-block;
+    padding: 0px;
+    margin: 0px 0px 0px -5px;
+  }
+
 
 - table_css_class = is_daily ? "daily_availability" : "recur_availability"
 .table-responsive
@@ -137,8 +140,15 @@
       %th
       %th All Day
       %th Unavailable
-      - ticks.each do |tick|
-        %th= tick[1]
+      - tick_count = ticks.size
+      %th{colspan: tick_count}
+        %div{style: 'width: 100%; white-space:nowrap;'}
+          - label_tick_count = ticks.select{|x| !x[1].blank?}.size
+          - ticks.each_with_index do |tick, index|
+            - next if tick[1].blank?
+            %span.hour_tick_label{style: "width: #{100/label_tick_count.to_f}%;"}= tick[1]
+          %span.hour_tick_label= max_hour_label
+      
       - if can?(:edit, operatable)
         %th
 

@@ -1,17 +1,7 @@
 :ruby 
   hours = []
   (0..24).each do |hour|
-    label = if hour == 0 || hour == 24
-      "12am"
-    elsif hour < 12
-      "#{hour}am"
-    elsif hour == 12
-      "12pm"
-    else
-      "#{hour-12}pm"
-    end
-
-    hours << [label, hour]
+    hours << [format_hour_label(hour), hour]
   end
 %h2.section-header#driver_availability_settings= translate_helper("driver_availability_settings")
 - if can? :edit, @provider
