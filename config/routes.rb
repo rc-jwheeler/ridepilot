@@ -199,6 +199,10 @@ Rails.application.routes.draw do
     end
 
     resources :drivers do
+      collection do 
+        get :availability_forecast
+      end
+      
       member do
         get :delete_photo
         post :inactivate

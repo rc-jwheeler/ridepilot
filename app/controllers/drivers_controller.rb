@@ -186,6 +186,9 @@ class DriversController < ApplicationController
     @driver = Driver.find_by_id(params[:id])
   end
 
+  def availability_forecast
+  end
+
   private
   
   def prep_edit(readonly: false)

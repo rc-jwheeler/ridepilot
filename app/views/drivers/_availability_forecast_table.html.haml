@@ -1,0 +1,41 @@
+:ruby
+  days_ahead = current_provider.driver_availability_days_ahead || 30
+
+:css
+  #driver_availability_forecast_table
+.table-responsive
+  %table.table.table-condensed#driver_availability_forecast_table
+    %thead
+      %tr
+        %th{rowspan: 2} Date
+        %th{colspan: 3} Runs
+        %th{colspan: 4} Drivers
+      %tr
+        %th Tot.
+        %th As.
+        %th Un.
+        %th Tot.
+        %th As.
+        %th Un.
+        %th Ab.
+    %tbody
+      - start_day = Date.today
+      - days_ahead.times do
+        - day_of_week = start_day.wday
+        - total_runs = Run.for_provider(current_provider_id).for_date(start_day)
+        - total_drivers = Driver.for_provider(current_provider_id).active_for_date(start_day)
+        - total_driver_count = total_drivers.size
+        - total_assigned_driver_count = total_runs.where.not(driver_id: nil).pluck(:driver_id).uniq.size
+        %tr
+          %td= start_day.strftime('%a %m/%d')
+          %td= total_runs.size
+          %td= total_runs.where.not(driver_id: nil).size
+          %td= total_runs.where(driver_id: nil).size
+          %td= total_driver_count
+          %td= total_assigned_driver_count
+          %td= total_driver_count - total_assigned_driver_count
+          %td= PlannedLeave.leave_on_date(start_day).where(leavable_type: 'Driver', leavable_id: total_drivers.pluck(:id)).pluck(:leavable_id).uniq.size
+
+        - start_day += 1.day
+
+
