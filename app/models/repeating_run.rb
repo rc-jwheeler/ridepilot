@@ -128,8 +128,10 @@ class RepeatingRun < ActiveRecord::Base
           )
 
           # unassign unavailable driver
-          run.driver = nil if run.driver && !run.driver.available_between?(run.date, run.scheduled_start_time.strftime('%H:%M'), run.scheduled_end_time.strftime('%H:%M'))
-          
+          if run.driver && run.scheduled_start_time && run.scheduled_end_time
+            run.driver = nil if !run.driver.available_between?(run.date, run.scheduled_start_time.strftime('%H:%M'), run.scheduled_end_time.strftime('%H:%M'))
+          end
+
           run.save(validate: false) #allow invalid run exist
 
           TrackerActionLog.create_run(run, nil)
