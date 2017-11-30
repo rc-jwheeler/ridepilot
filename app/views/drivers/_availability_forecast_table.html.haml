@@ -52,15 +52,32 @@
     background-color: lightgray;
   }
 
-  .driver_availability_forecast_table tr.lack_driver td.number_cell {
+  .driver_availability_forecast_table tr.lack_driver td.number_cell, div.lack_drivers {
     background-color: #f16969;
     color: white;
   }
 
-  .driver_availability_forecast_table tr.has_unassigned_run td.number_cell {
+  .driver_availability_forecast_table tr.has_unassigned_run td.number_cell, div.has_unassigned_run {
     background-color: yellow;
   }
 
+  .driver_availability_forecast_table tr.in_view td{
+    border-bottom: 2px solid black !important;
+  }
+
+  .driver_availability_forecast_table tr:not(.is_disabled) td {
+    cursor: pointer;
+  }
+
+  .driver_availability_forecast_table tr.in_view td,
+  .driver_availability_forecast_table tr:not(.is_disabled):hover td{
+    font-style: italic !important;
+    font-weight: bold !important;
+    font-size: larger;
+  }
+
+%h4
+  = translate_helper("driver_availability_forecast")
 .table-responsive
   %table.table.table-condensed.driver_availability_forecast_table
     %thead
@@ -100,8 +117,8 @@
 
           - class_name = lack_driver ? "lack_driver" : (has_unassigned_run ? "has_unassigned_run" : "")
           - tooltip = lack_driver ? "Not enough drivers" : (has_unassigned_run ? "Has run(s) without driver" : "")
-          %tr{class: class_name, title: tooltip}
-            %td{class: is_live ? "is_live" : "out_of_live"}= start_day.strftime('%a %m/%d')
+          %tr{class: class_name, title: tooltip, data: {date_value: start_day}}
+            %td.date_cell{class: is_live ? "is_live" : "out_of_live"}= start_day.strftime('%a %m/%d')
             %td.number_cell.run_cell= runs_group_count[start_day].to_i
             %td.number_cell.run_cell= total_assigned_run_count
             %td.number_cell.run_cell= total_unassigned_run_count
@@ -117,5 +134,15 @@
   $(function() {
     $('.driver_availability_forecast_table').floatThead({
       position: 'fixed'
+    });
+
+    $('.driver_availability_forecast_table tr:not(.is_disabled) td').click(function(){
+      // load day view
+      $.ajax({
+        url: "#{daily_availability_forecast_drivers_path}",
+        data: {
+          date: $(this).parents('tr').data('date-value')
+        }
+      });
     });
   });

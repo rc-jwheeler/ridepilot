@@ -10,8 +10,10 @@ class PlannedLeavesController < ApplicationController
   def create
     @planned_leave = new_planned_leave
     @planned_leave.assign_attributes(planned_leave_params)
-    
+
     if @planned_leave.save
+      unassign_unavailable_drivers
+
       respond_to do |format|
         format.html { redirect_to @planned_leave, notice: 'Planned leave was successfully created.' }
         format.js
@@ -30,6 +32,8 @@ class PlannedLeavesController < ApplicationController
     @planned_leave.assign_attributes(planned_leave_params)
     
     if @planned_leave.save
+      unassign_unavailable_drivers
+
       respond_to do |format|
         format.html { redirect_to @planned_leave, notice: 'Planned leave was successfully updated.' }
         format.js
@@ -60,5 +64,15 @@ class PlannedLeavesController < ApplicationController
 
   def load_leavable
     @leavable = new_planned_leave.leavable
+  end
+
+  def unassign_unavailable_drivers
+    if @planned_leave.leavable_type == 'Driver' && @planned_leave.start_date <= (Date.today + current_provider.get_advance_day_scheduling.day)
+      # unassign this driver from future runs within leave range
+      Run.for_provider(current_provider_id)
+        .for_date_range(@planned_leave.start_date, @planned_leave.end_date + 1.day)
+        .where(driver_id: @planned_leave.leavable_id)
+        .update_all(driver_id: nil)
+    end
   end
 end

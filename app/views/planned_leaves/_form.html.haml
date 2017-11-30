@@ -1,4 +1,6 @@
 = form_for @planned_leave, remote: true do |f|
+  .alert.alert-warning
+    %span{style: 'font-size: large;'}= translate_helper(:planned_leave_unassign_driver_warning)
   %input{type: 'hidden', name: 'leavable_id', value: leavable.id}
   %input{type: 'hidden', name: 'leavable_type', value: leavable.class.name}
   - if @planned_leave.errors.any?

@@ -201,6 +201,7 @@ Rails.application.routes.draw do
     resources :drivers do
       collection do 
         get :availability_forecast
+        get :daily_availability_forecast
       end
       
       member do

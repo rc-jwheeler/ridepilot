@@ -134,8 +134,9 @@
 
 
 - table_css_class = is_daily ? "daily_availability" : "recur_availability"
+- table_id = is_daily ? "daily_availability_table" : "recur_availability_table"
 .table-responsive
-  %table.table.table-condensed.availability-table{class: table_css_class}
+  %table.table.table-condensed.availability-table{class: table_css_class, id: table_id}
     %thead
       %th
       %th All Day

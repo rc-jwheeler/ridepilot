@@ -400,13 +400,13 @@ en:
     other: "%{count} errors prohibited this requirement from being saved"
 
   # Driver availability
-  operating_hour_form_new_heading: "New"
-  daily_operating_hour_form_new_heading: "New"
-  planned_leave_form_new_heading: "New"
+  operating_hour_form_new_heading: "New Hours"
+  daily_operating_hour_form_new_heading: "New Hours"
+  planned_leave_form_new_heading: "New Planned Leave"
   planned_leave_start_date: "Start Date"
   planned_leave_end_date: "End Date"
   planned_leave_form_reason: "Reason"
-  planned_leave_form_edit_heading: "Edit"
+  planned_leave_form_edit_heading: "Edit Planned Leave"
   planned_leave_form_error:
     one: "1 error prohibited this planned leave from being saved"
     other: "%{count} errors prohibited this planned leave from being saved"
@@ -421,6 +421,8 @@ en:
   driver_availability_days_ahead: "Days Ahead to Forecast Availability"
   submit_driver_availability_settings: "Submit"
   driver_availability_forecast_link_text: "Availability Forecast"
+  driver_availability_forecast: "Driver Availability Forecast"
+  planned_leave_unassign_driver_warning: "Planned leave within live scheduling window would remove the driver from assigned runs."
 
   # Vehicle compliances
   legal_vehicle_compliances_heading: "Legal Requirements"

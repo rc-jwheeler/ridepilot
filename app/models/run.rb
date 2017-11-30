@@ -382,7 +382,7 @@ class Run < ActiveRecord::Base
   end
   
   def daily_driver_availability
-    if Run.other_overlapped_runs(self).pluck(:driver_id).include?(self.driver.id)
+    if Run.other_overlapped_runs(self).pluck(:driver_id).include?(self.driver_id)
       errors.add(:driver_id, TranslationEngine.translate_text(:assigned_to_other_overlapping_run))
     end
   end

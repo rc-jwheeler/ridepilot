@@ -189,6 +189,10 @@ class DriversController < ApplicationController
   def availability_forecast
   end
 
+  def daily_availability_forecast
+    @date = Date.parse params[:date]
+  end
+
   private
   
   def prep_edit(readonly: false)

@@ -126,6 +126,9 @@ class RepeatingRun < ActiveRecord::Base
                 "date" => date
               } )
           )
+
+          # unassign unavailable driver
+          run.driver = nil if run.driver && !run.driver.available_between?(run.date, run.scheduled_start_time.strftime('%H:%M'), run.scheduled_end_time.strftime('%H:%M'))
           
           run.save(validate: false) #allow invalid run exist
 
