@@ -99,7 +99,7 @@
         - is_provider_unavailable = provider_unavailable_wdays.include?(day_of_week)
         - is_live = start_day <= (Date.today + live_days_ahead.day)
         - if is_provider_unavailable
-          %tr.is_disabled{title: "Provider not available"}
+          %tr.is_disabled{title: "Provider not operating"}
             %td.disabled{class: is_live ? "is_live" : "out_of_live"}= start_day.strftime('%a %m/%d')
             %td.number_cell{colspan: 7}
         - else

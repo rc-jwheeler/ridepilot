@@ -177,7 +177,7 @@
             - if class_name.blank?
               - is_filled = time_ranges.select{|x| x[0] <= tick[0] && x[1] > tick[0]}.any?
               - class_name = "is_filled" if is_filled
-            %td.hour_cell{class: class_name || "", data: {time_flag: tick[0]}, title: is_provider_unavailable ? "Provider not available" : (is_on_leave ? "Planned Leave" : "")}
+            %td.hour_cell{class: class_name || "", data: {time_flag: tick[0]}, title: is_provider_unavailable ? "Provider not operating" : (is_on_leave ? "Planned Leave" : "")}
           - if can?(:edit, operatable)
             %td.pull-right
               - unless is_disabled
