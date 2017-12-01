@@ -133,7 +133,9 @@
 :javascript
   $(function() {
     $('.driver_availability_forecast_table').floatThead({
-      position: 'fixed'
+      scrollContainer: function($table){
+        return $table.closest('.table-responsive');
+      }
     });
 
     $('.driver_availability_forecast_table tr:not(.is_disabled) td').click(function(){

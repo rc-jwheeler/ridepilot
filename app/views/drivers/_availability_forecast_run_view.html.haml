@@ -103,7 +103,9 @@
     $(function() {
       // fixed table header
       $('#run_availability_table').floatThead({
-        position: 'fixed'
+        scrollContainer: function($table){
+          return $table.closest('.table-responsive');
+        }
       });
 
       setTimeout(function() {

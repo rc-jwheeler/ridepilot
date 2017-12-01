@@ -23,7 +23,9 @@
   $(function() {
     // fixed table header
     $('#planned_leave_table table').floatThead({
-      position: 'fixed'
+      scrollContainer: function($table){
+        return $table.closest('.table-responsive');
+      }
     });
 
   });
