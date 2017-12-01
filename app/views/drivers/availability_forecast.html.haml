@@ -5,9 +5,9 @@
 
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'drivers'
 .col-sm-12
-  .col-sm-6
+  .col-sm-4
     = render 'availability_forecast_table'
-  .col-sm-6
+  .col-sm-8
     = render 'daily_availability_summary_view', date: Date.today
 
 :javascript

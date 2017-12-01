@@ -305,14 +305,4 @@ module ApplicationHelper
     parts.join("\n")
   end
 
-  def format_hour_label(hour)
-    if hour == 0 || hour == 24
-      "12am"
-    elsif hour == 12
-      "12pm"
-    else
-      hour < 12 ? "#{hour.to_i}am" : "#{hour.to_i - 12}pm"
-    end 
-  end
-
 end
