@@ -193,6 +193,12 @@ class DriversController < ApplicationController
     @date = Date.parse params[:date]
   end
 
+  def assign_runs
+  end
+
+  def unassign_runs
+  end
+
   private
   
   def prep_edit(readonly: false)

@@ -209,6 +209,8 @@ Rails.application.routes.draw do
         post :inactivate
         post :reactivate
         get :availability
+        patch :assign_runs
+        patch :unassign_runs
       end
 
       resources :documents, except: [:index, :show]
@@ -246,6 +248,8 @@ Rails.application.routes.draw do
         get :request_uncompletion
         patch :uncomplete
         patch :complete
+        patch :assign_driver
+        patch :unassign_driver
       end
     end
 

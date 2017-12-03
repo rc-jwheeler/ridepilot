@@ -216,6 +216,12 @@ class RunsController < ApplicationController
 
     redirect_to run_path(@run)
   end
+
+  def assign_driver
+  end
+
+  def unassign_driver
+  end
   
   private
   

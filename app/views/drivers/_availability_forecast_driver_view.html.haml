@@ -98,6 +98,15 @@
     margin: 0px 0px 0px -5px;
   }
 
+  .driver-availability-table a.link_disabled {
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .driver-availability-table a.link_disabled i {
+    color: lightgrey !important;
+  }
+
 
 .panel.panel-primary.availability_forecast_driver_view_panel
   .panel-heading
@@ -109,7 +118,7 @@
       - if @total_on_leave_driver_count && @total_on_leave_driver_count > 0
         = ", and #{@total_on_leave_driver_count} Other(s) Absent"
   .panel-body.form-horizontal{style: 'padding:0px;'}
-    .table-responsive
+    .table-responsive{style: 'overflow: visible;'}
       - if @total_available_drivers.any?
         %table.table.table-condensed.driver-availability-table#driver_availability_table
           %thead
@@ -134,9 +143,10 @@
                 - runs = r[:runs]
                 - time_ranges = r[:time_ranges]
                 - last_run_name = nil
-
+                - has_run = false
                 - ticks.each do |tick|
                   - run = runs.select{|r| !(r[:end_time_diff] <= tick[0]) && !(r[:start_time_diff] >= tick[0])}.first
+                  - has_run = true if run
                   - class_name = run ? 'is_run_filled' : ""
                   - if class_name.blank?
                     - class_name = 'is_filled' if time_ranges.select{|r| tick[0] >= r[0] && tick[0] <= r[1]}
@@ -145,11 +155,24 @@
                     - last_run_name = run_name
                     - class_name += " name_cell"
                   
-                  %td.chart_cell{style: "white-space: nowrap !important; color: white;", class: class_name || "", data: {time_flag: tick[0], run_name: run_name}}
+                  %td.chart_cell{style: "white-space: nowrap !important; color: white;", class: class_name || "", data: {time_flag: tick[0], run_name: run_name, run_id: run && run[:id], run_start_time: run && run[:start_time_diff], run_end_time: run && run[:end_time_diff]}}
                 - if can?(:edit, Run)
                   %td.pull-right
-                    = button_tag 'x'
-                    = button_tag 'Assign'
+                    = link_to unassign_runs_driver_path(r[:id]), method: 'patch', remote: true, class: has_run ? "" : "link_disabled",  data: {confirm: 'Are you sure to unassign this driver from the run(s)?'} do 
+                      %i.fa.fa-remove{style: 'color: red;'}
+                    .dropdown{style: 'display: inline-block !important;'}
+                      %button{type: 'button', data: {toggle: 'dropdown'}}
+                        Assign
+                        %span.caret
+                      %ul.dropdown-menu.pull-right
+                        - runs_to_assign = []
+                        - @drivers_available_for_runs.each do |run_id, drivers|
+                          - run_covered = drivers.select{|driver_data| driver_data[:id] == r[:id]}.any?
+                          - runs_to_assign << {id: run_id, name: drivers[0][:run_name]} if run_covered
+                        - runs_to_assign.each do |r|
+                          %li
+                            %a{href:'#', data: {run_id: r[:id]}}
+                              = r[:name]
 
 - if @total_available_drivers.any?
   :javascript
