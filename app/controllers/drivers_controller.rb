@@ -187,9 +187,18 @@ class DriversController < ApplicationController
   end
 
   def availability_forecast
+    @default_date = if params[:date]
+      Date.parse params[:date]
+    elsif session[:date]
+      Date.parse session[:date]
+    else
+      Date.today
+    end
+        
   end
 
   def daily_availability_forecast
+    session[:date] = params[:date]
     @date = Date.parse params[:date]
   end
 
@@ -197,6 +206,12 @@ class DriversController < ApplicationController
   end
 
   def unassign_runs
+    if @driver
+      @runs = Run.where(id: (params[:run_ids] || "").split(','))
+      if @runs.any?
+        @runs.update_all(driver_id: nil)
+      end
+    end
   end
 
   private

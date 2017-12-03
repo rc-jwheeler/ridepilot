@@ -221,6 +221,10 @@ class RunsController < ApplicationController
   end
 
   def unassign_driver
+    if @run
+      @run.driver_id = nil
+      @run.save(validate: false)
+    end
   end
   
   private

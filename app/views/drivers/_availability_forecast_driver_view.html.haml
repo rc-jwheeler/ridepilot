@@ -141,6 +141,7 @@
                 %td{style: 'width: 100px !important; white-space: normal !important;'}
                   = link_to r[:name], driver_path(r[:id]), target: '_blank'
                 - runs = r[:runs]
+                - run_ids = runs.collect{|x| x[:id]}
                 - time_ranges = r[:time_ranges]
                 - last_run_name = nil
                 - has_run = false
@@ -158,7 +159,7 @@
                   %td.chart_cell{style: "white-space: nowrap !important; color: white;", class: class_name || "", data: {time_flag: tick[0], run_name: run_name, run_id: run && run[:id], run_start_time: run && run[:start_time_diff], run_end_time: run && run[:end_time_diff]}}
                 - if can?(:edit, Run)
                   %td.pull-right
-                    = link_to unassign_runs_driver_path(r[:id]), method: 'patch', remote: true, class: has_run ? "" : "link_disabled",  data: {confirm: 'Are you sure to unassign this driver from the run(s)?'} do 
+                    = link_to unassign_runs_driver_path(r[:id], run_ids: run_ids.join(',')), method: 'patch', remote: true, class: has_run ? "" : "link_disabled",  data: {confirm: 'Are you sure to unassign this driver from the run(s)?'} do 
                       %i.fa.fa-remove{style: 'color: red;'}
                     .dropdown{style: 'display: inline-block !important;'}
                       %button{type: 'button', data: {toggle: 'dropdown'}}
