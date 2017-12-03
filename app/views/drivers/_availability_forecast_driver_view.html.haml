@@ -138,7 +138,7 @@
           %tbody
             - row_data.each do |r|
               %tr{data: {id: r[:id]}}
-                %td
+                %td{style: 'width: 100px !important; white-space: normal !important;'}
                   = link_to r[:name], driver_path(r[:id]), target: '_blank'
                 - runs = r[:runs]
                 - time_ranges = r[:time_ranges]
@@ -164,7 +164,7 @@
                       %button{type: 'button', data: {toggle: 'dropdown'}}
                         Assign
                         %span.caret
-                      %ul.dropdown-menu.pull-right
+                      %ul.dropdown-menu.pull-right{style: 'z-index: 10000;'}
                         - runs_to_assign = []
                         - @drivers_available_for_runs.each do |run_id, drivers|
                           - run_covered = drivers.select{|driver_data| driver_data[:id] == r[:id]}.any?
