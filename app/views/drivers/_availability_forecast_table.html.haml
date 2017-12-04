@@ -16,6 +16,7 @@
 
   # drivers
   drivers = Driver.for_provider(current_provider_id)
+  assigned_drivers_group_count = assigned_runs.group(:date).count("distinct driver_id")
 
   available_operating_hours = OperatingHour.where(is_unavailable: false).joins("inner join drivers on drivers.id = operating_hours.operatable_id and operating_hours.operatable_type = 'Driver'")
 
@@ -108,7 +109,8 @@
           - total_on_leave_driver_ids = on_leave_drivers.leave_on_date(start_day).where(leavable_id: driver_ids).pluck(:leavable_id).uniq
           - total_available_driver_ids = (available_operating_hours.for_day_of_week(day_of_week).where(operatable_id: driver_ids).pluck(:operatable_id) + available_daily_operating_hours.for_date(start_day).where(operatable_id: driver_ids).pluck(:operatable_id) - unavailable_daily_operating_hours.for_date(start_day).where(operatable_id: driver_ids).pluck(:operatable_id)).uniq - total_on_leave_driver_ids
 
-          - total_assigned_run_count = total_assigned_driver_count = assigned_runs_group_count[start_day].to_i
+          - total_assigned_run_count = assigned_runs_group_count[start_day].to_i
+          - total_assigned_driver_count = assigned_drivers_group_count[start_day].to_i
           - total_unassigned_run_count = unassigned_runs_group_count[start_day].to_i
           - total_available_driver_count = total_available_driver_ids.size
           - total_unassigned_available_driver_count = total_available_driver_count - total_assigned_driver_count

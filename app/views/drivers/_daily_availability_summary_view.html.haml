@@ -23,7 +23,8 @@
 
   @total_available_drivers = Driver.where(id: @total_available_driver_ids).default_order
 
-  @total_assigned_run_count = @total_assigned_driver_count = @total_assigned_runs.size
+  @total_assigned_run_count = @total_assigned_runs.size
+  @total_assigned_driver_count = @total_assigned_runs.pluck(:driver_id).uniq.size
   @total_unassigned_run_count = @runs.where(driver_id: nil).size
   has_unassigned_run = @total_unassigned_run_count > 0
 
