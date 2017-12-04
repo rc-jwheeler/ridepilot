@@ -1,7 +1,7 @@
 :ruby
   day_of_week = date.wday
 
-  @runs = Run.for_provider(current_provider_id).for_date(date)
+  @runs = Run.for_provider(current_provider_id).for_date(date).reorder("lower(name)")
   @total_assigned_runs = @runs.where.not(driver_id: nil)
   
   drivers = Driver.for_provider(current_provider_id)
