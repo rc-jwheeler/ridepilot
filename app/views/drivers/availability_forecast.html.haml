@@ -1,7 +1,14 @@
-
 :css
   .panel-expand-collapse {
     cursor: pointer;
+  }
+
+  #main {
+    z-index: 11000 !important;
+  }
+
+  .modal {
+    z-index: 12000 !important;
   }
 
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'drivers'
