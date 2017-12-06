@@ -12,7 +12,7 @@ class RunsController < ApplicationController
   def index
     Date.beginning_of_week= :sunday
 
-    @runs = Run.for_provider(current_provider_id).includes(:driver, :vehicle).order(:date)
+    @runs = Run.for_provider(current_provider_id).includes(:driver, :vehicle).reorder(nil).default_order
     filter_runs
     
     @drivers = Driver.where(:provider_id=>current_provider_id).default_order

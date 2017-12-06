@@ -52,6 +52,8 @@ class RepeatingRun < ActiveRecord::Base
   # Not the parent repeating run of the passed daily run
   scope :not_the_parent_of, -> (daily_run) { where.not(id: daily_run.repeating_run_id) }
 
+  scope :default_order, -> { order(:scheduled_start_time_string, :scheduled_end_time_string, :name) }
+
   schedules_occurrences_with with_attributes: -> (run) {
       {
         repeat:        1,

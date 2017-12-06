@@ -6,7 +6,7 @@
     max_hour = current_provider.driver_availability_max_hour || 22
     max_hour_label = format_hour_label(max_hour) 
 
-    row_data = @runs.map{|r| {
+    row_data = @runs.reorder(nil).default_order.map{|r| {
       id: r.id,
       name: r.name,
       date: r.date,
