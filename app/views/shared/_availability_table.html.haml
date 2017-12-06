@@ -255,6 +255,8 @@
       var date = $(this).parents('tr').data('date-value');
       if(is_all_day) {
         mark_all_day(date);
+      } else {
+        mark_unavailable(date);
       }
     });
 
