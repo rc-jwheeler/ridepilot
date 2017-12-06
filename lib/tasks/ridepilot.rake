@@ -382,13 +382,13 @@ namespace :ridepilot do
 
   desc 'Update runs scheduled time string'
   task :migrate_runs_scheduled_time_string => :environment do
-    Run.unscoped.find_each do |r|
+    Run.unscoped.where('scheduled_start_time_string is NULL or scheduled_end_time_string is NULL').find_each do |r|
       r.scheduled_start_time_string = r.scheduled_start_time.try(:to_s, :time_utc)
       r.scheduled_end_time_string = r.scheduled_end_time.try(:to_s, :time_utc)
       r.save(validate: false)
     end
 
-    RepeatingRun.unscoped.find_each do |r|
+    RepeatingRun.unscoped.where('scheduled_start_time_string is NULL or scheduled_end_time_string is NULL').find_each do |r|
       r.scheduled_start_time_string = r.scheduled_start_time.try(:to_s, :time_utc)
       r.scheduled_end_time_string = r.scheduled_end_time.try(:to_s, :time_utc)
       r.save(validate: false)
