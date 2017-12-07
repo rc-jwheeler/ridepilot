@@ -147,9 +147,12 @@
           - ticks.each do |tick|
             - class_name = is_provider_unavailable ? "is_disabled" : (is_on_leave ? "is_on_leave" : (is_all_day ? "is_all_day_filled" : ""))
             - if class_name.blank?
-              - is_filled = time_ranges.select{|x| x[0] <= tick[0] && x[1] > tick[0]}.any?
+              - hour_block = time_ranges.select{|x| x[0] <= tick[0] && x[1] > tick[0]}.first
+              - is_filled = hour_block.present?
               - class_name = "is_filled" if is_filled
-            %td.hour_cell{style: "white-space: nowrap !important; color: white;", class: class_name || "", data: {time_flag: tick[0]}, title: is_provider_unavailable ? "Provider not operating" : (is_on_leave ? "Planned Leave" : "")}
+            - title = is_provider_unavailable ? "Provider not operating" : (is_on_leave ? "Planned Leave" : "")
+            - title = is_all_day ? "All day" : "" if title.blank?
+            %td.hour_cell{style: "white-space: nowrap !important; color: white;", class: class_name || "", data: {time_flag: tick[0]}, title: title}
           - if can?(:edit, operatable)
             %td{style: 'width: 100px !important; white-space: normal !important;'}
               - unless is_disabled
