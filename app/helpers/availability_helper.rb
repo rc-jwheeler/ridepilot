@@ -43,11 +43,11 @@ module AvailabilityHelper
     end 
   end
 
-  def hour_tooltip(is_provider_unavailable, is_on_leave, is_all_day, start_hour, end_hour)
-    if is_provider_unavailable
-      "Provider not operating"
-    elsif is_on_leave
+  def hour_tooltip(is_on_leave, is_provider_unavailable, is_all_day, start_hour, end_hour)
+    if is_on_leave
       "Planned Leave"
+    elsif is_provider_unavailable
+      "Provider not operating"
     elsif is_all_day
       "All day"
     elsif start_hour && end_hour
