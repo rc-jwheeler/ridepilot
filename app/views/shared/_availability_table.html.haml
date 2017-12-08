@@ -150,8 +150,7 @@
               - hour_block = time_ranges.select{|x| x[0] <= tick[0] && x[1] > tick[0]}.first
               - is_filled = hour_block.present?
               - class_name = "is_filled" if is_filled
-            - title = is_provider_unavailable ? "Provider not operating" : (is_on_leave ? "Planned Leave" : "")
-            - title = is_all_day ? "All day" : "" if title.blank?
+            - title = hour_tooltip(is_provider_unavailable, is_on_leave, is_all_day, hour_block.try(:[], 0), hour_block.try(:[], 1))
             %td.hour_cell{style: "white-space: nowrap !important; color: white;", class: class_name || "", data: {time_flag: tick[0]}, title: title}
           - if can?(:edit, operatable)
             %td{style: 'width: 100px !important; white-space: normal !important;'}
