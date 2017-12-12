@@ -14,7 +14,7 @@
 %hr
 .col-sm-12.dispatch-main{style: 'padding: 0px; margin-bottom: 230px;'}
   = render 'runs_panel'
-.col-sm-12#unassigned_trips_container
+.col-sm-12#unassigned_trips_container{style: 'z-index: 10000 !important;'}
   = render 'unassigned_trips_panel'
 
 = render 'trips/trip_result_reason_dialog'
@@ -231,7 +231,13 @@
       }
     });
 
-    $('#unassigned_trips_table').bootstrapTable();
+    //$('#unassigned_trips_table').bootstrapTable();
+    // fixed table header
+    $('#unassigned_trips_table').floatThead({ 
+      scrollContainer: function($table){
+        return $table.closest('.panel-body');
+      }
+    });
   }
 
   function change_trips_trip_result(trip_ids, result_id, reason) {
