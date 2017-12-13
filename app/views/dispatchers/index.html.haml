@@ -12,10 +12,11 @@
     = link_to translate_helper(:recurring_scheduling), recurring_dispatchers_path, class: 'btn action-button'
   = render :partial => 'filters'
 %hr
-.col-sm-12.dispatch-main{style: 'padding: 0px; margin-bottom: 230px;'}
-  = render 'runs_panel'
-.col-sm-12#unassigned_trips_container{style: 'z-index: 10000 !important;'}
-  = render 'unassigned_trips_panel'
+#dispatch_runs_trips{style: 'padding: 0px;'}
+  .col-sm-12.dispatch-main#dispatch_runs_container{style: 'padding: 0px;'}
+    = render 'runs_panel'
+  .col-sm-12#unassigned_trips_container{style: 'padding: 0px;'}
+    = render 'unassigned_trips_panel'
 
 = render 'trips/trip_result_reason_dialog'
 
@@ -418,8 +419,6 @@
           loaded_run_ids.splice(run_id_index, 1);
           localStorage.setItem('dispatch_loaded_run_ids', loaded_run_ids.join(','))
         }
-
-        console.log(loaded_run_ids);
       }
     });
 
@@ -513,5 +512,9 @@
         localStorage.setItem('dispatch_run_panel_' + $(this).data('run-id') + '_height', $(this).find('.panel-body').height());
       });
     });
+
+    $('#dispatch_runs_trips').height(800).split({
+      position: '80%'
+    })
   });
   
