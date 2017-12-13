@@ -25,6 +25,8 @@
   var run_ids = #{@runs.pluck(:id) || []};
   var target_run_id = #{params[:run_id].try(:to_i) || nil.to_json};
   var dropping_to_trips = false;
+  var splitter;
+
   // Local Storages
   // dispatch_loaded_run_ids = [] (list of run panels that are open)
   // dispatch_runs_panel_collapsed: 1/0 (0 if the runs panel is collapsed)
@@ -147,7 +149,7 @@
 
         var prev_height = parseInt(localStorage.getItem('dispatch_run_panel_' + run_id + '_height'));
         if(prev_height > 0) {
-          $("#run_trips_panel_" + run_id + " .panel-body").height(prev_height);
+          //$("#run_trips_panel_" + run_id + " .panel-body").height(prev_height);
         }
 
         var was_collapsed = localStorage.getItem('dispatch_run_panel_' + run_id + '_collapsed');
@@ -172,7 +174,7 @@
   function load_runs_panel() {
     var prev_height = parseInt(localStorage.getItem('dispatch_runs_panel_height'));
     if(prev_height > 0) {
-      $('#runs_panel .panel-body').height(prev_height);
+      //$('#runs_panel .panel-body').height(prev_height);
     }
 
     var was_collapsed = localStorage.getItem('dispatch_runs_panel_collapsed');
@@ -209,7 +211,7 @@
   function load_unassigned_trips_panel() {
     var prev_height = parseInt(localStorage.getItem('dispatch_unassigned_trips_height'));
     if(prev_height > 0) {
-      $('#unassigned_trips_panel .panel-body').height(prev_height);
+      //$('#unassigned_trips_panel .panel-body').height(prev_height);
     }
 
     var was_collapsed = localStorage.getItem('dispatch_unassigned_trips_collapsed');
@@ -256,11 +258,11 @@
 
     //$('#unassigned_trips_table').bootstrapTable();
     // fixed table header
-    $('#unassigned_trips_table').floatThead({ 
-      scrollContainer: function($table){
-        return $table.closest('.panel-body');
-      }
-    });
+    //$('#unassigned_trips_table').floatThead({ 
+    //  scrollContainer: function($table){
+    //    return $table.closest('.panel-body');
+    //  }
+    //});
   }
 
   function change_trips_trip_result(trip_ids, result_id, reason) {
@@ -275,8 +277,24 @@
     });
   }
 
+  function update_splitter_position() {
+    if(!splitter) {
+      return;
+    }
+
+    var new_height = $('#unassigned_trips_container').position().top;
+    splitter.position(new_height - $('.hsplitter').height()/2);
+  }
+
   // page main entry point
   $(function() {  
+    // init the splitter between Runs section and Trips section
+    var splitter_height = $(document).outerHeight() - 150;
+    splitter = $('#dispatch_runs_trips').height(splitter_height).split({
+      position: splitter_height - 200,
+      limit: 40
+    });
+
     // Initialize a helper object with the trip result reason modal, and a list of cancellation codes.
     var trh = new TripResultHelper(
       "#tripResultReasonDialog",
@@ -400,6 +418,17 @@
 
       if(panel.attr('id') == 'unassigned_trips_panel') {
         localStorage.setItem('dispatch_unassigned_trips_collapsed', (is_collapsed ? '0' : '1'));
+        if(is_collapsed) {
+          if(splitter) {
+            splitter.prev_trips_height = $('#unassigned_trips_container').height();
+          }
+          $('#unassigned_trips_container').height(panel.find('.panel-heading').outerHeight());
+        } else {
+          if(splitter.prev_trips_height) {
+            $('#unassigned_trips_container').height(splitter.prev_trips_height);
+          }
+        }
+        update_splitter_position();
       }
     });
 
@@ -513,8 +542,5 @@
       });
     });
 
-    $('#dispatch_runs_trips').height(800).split({
-      position: '80%'
-    })
   });
   
