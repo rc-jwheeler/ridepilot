@@ -39,6 +39,17 @@ class Address < ActiveRecord::Base
     RGeo::Geographic.spherical_factory(srid: 4326).point(lon.to_f, lat.to_f) if lat.present? && lon.present?
   end
 
+  def as_json
+    addr_data = self.attributes
+    addr_data[:label] = self.address_text
+
+    addr_data[:coded_by_lat_lng] = self.coded_by_lat_lng?
+    addr_data[:latitude] = self.latitude
+    addr_data[:longitude] = self.longitude
+
+    addr_data
+  end
+
   def trips
     trips_from + trips_to
   end
