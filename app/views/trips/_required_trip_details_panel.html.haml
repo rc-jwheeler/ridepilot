@@ -58,7 +58,8 @@
             = text_field_tag "pickup_address", (!is_pickup_latlng && @trip.pickup_address.try(:one_line_text)) || params[:pickup_address], class: "form-control trip-address-picker", style: "width: 100%;"
 
           .pull-right
-            %input.latlng_address_switch{type: 'checkbox', checked: ("true" if is_pickup_latlng)}
+            %label.pull-right
+              %input.latlng_address_switch{type: 'checkbox', checked: ("true" if is_pickup_latlng)}
               Lat/Lon
           - if edit_mode != :show  
             = f.hidden_field :pickup_address_id, class: 'trip_pickup_address_id'
@@ -78,7 +79,8 @@
             = text_field_tag "dropoff_address", (!is_dropoff_latlng && @trip.dropoff_address.try(:one_line_text)) || params[:dropoff_address], class: "form-control trip-address-picker", style: "width: 100%;"
 
           .pull-right
-            %input.latlng_address_switch{type: 'checkbox', checked: ("true" if is_dropoff_latlng)}
+            %label.pull-right
+              %input.latlng_address_switch{type: 'checkbox', checked: ("true" if is_dropoff_latlng)}
               Lat/Lon
 
           - if edit_mode != :show
@@ -91,6 +93,8 @@
       .col-sm-9
         = f.select :trip_purpose_id, @trip_purposes.map { |tp| [tp.name, tp.id] }, {:include_blank => true}, {class: 'form-control trip_purpose_id'}
 
+= render 'addresses/latlng_address_switch_js'
+
 :javascript
   $(function() {
     // initialize place picker
@@ -99,15 +103,4 @@
       ".trip-address-picker",
       geocoder_bounds
     );
-
-    $('.latlng_address_switch').change(function() {
-      var address_container = $(this).parents('.address_container');
-      if($(this).is(":checked")) {
-        address_container.find('.address_fields').hide();
-        address_container.find('.latlng_fields').show();
-      } else {
-        address_container.find('.latlng_fields').hide();
-        address_container.find('.address_fields').show();
-      }
-    });
   });

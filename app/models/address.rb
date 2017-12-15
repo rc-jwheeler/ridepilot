@@ -124,7 +124,7 @@ class Address < ActiveRecord::Base
   end
 
   def coded_by_lat_lng?
-    [address, city, state, zip].compact.blank? && geocoded?
+    [address, city, state, zip].compact.join("").blank? && geocoded?
   end
 
   def json
