@@ -73,3 +73,15 @@
     }
   });
 
+  $(function() {
+    $('input[name=address_lat], input[name=address_lon]').on('input', function() {
+      $('.address_search').val('');
+      $('.address_search').change();
+    });
+
+    $('.address_search').on('input', function() {
+      $('input[name=address_lat]').val('');
+      $('input[name=address_lon]').val('');
+    });
+  });
+

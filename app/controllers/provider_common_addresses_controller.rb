@@ -178,9 +178,9 @@ class ProviderCommonAddressesController < AddressesController
 
   def process_geom
     if !params[:lat].blank? && !params[:lon].blank?
-      RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f)
+      Address.compute_geom(params[:lat], params[:lon])
     elsif !params[:address_lat].blank? && !params[:address_lon].blank?
-      RGeo::Geographic.spherical_factory(srid: 4326).point(params[:address_lon].to_f, params[:address_lat].to_f)
+      Address.compute_geom(params[:address_lat], params[:address_lon])
     else
       nil 
     end

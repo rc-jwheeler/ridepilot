@@ -63,7 +63,7 @@ class AddressesController < ApplicationController
 
 
   def validate_customer_specific
-    the_geom       = params[:lat].to_s.size > 0 ? RGeo::Geographic.spherical_factory(srid: 4326).point(params[:lon].to_f, params[:lat].to_f) : nil
+    the_geom       = params[:lat].to_s.size > 0 ? Address.compute_geom(params[:lat], params[:lon]) : nil
     prefix         = params['prefix'] || ""
     address_params = {}
 
