@@ -1,0 +1,4 @@
+- if can?(:manage, SavedCustomReport)
+  = link_to translate_helper(:save_report), show_save_form_reports_path(custom_report_id: custom_report_id), class: 'btn action-button btn-info', remote: true
+
+= render 'shared/modal_dialog', modal_id: "modal-dialog" 

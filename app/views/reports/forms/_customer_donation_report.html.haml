@@ -5,3 +5,4 @@
     = f.date_select  :before_end_date, :order => [:month,:day,:year] rescue nil
 
     = render 'reports/forms/v2_reports/common_controls', has_multiple_report_types: true, f: f
+    = render 'reports/forms/save_button', custom_report_id: @custom_report.id

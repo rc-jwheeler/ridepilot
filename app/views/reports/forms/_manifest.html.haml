@@ -15,6 +15,7 @@
       = f.select :report_format, options_for_select([['HTML', 'html'],['PDF', 'pdf']], @query.report_format || 'html')
 
     = f.submit translate_helper("run"), class: 'btn action-button', id: 'submitReport'
+    = render 'reports/forms/save_button', custom_report_id: @custom_report.id
 
 :javascript
   $(function() {

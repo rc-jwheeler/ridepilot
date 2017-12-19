@@ -97,7 +97,7 @@ end
 class ReportsController < ApplicationController
   include Reporting::ReportHelper
 
-  before_action :set_reports, except: [:get_run_list]
+  before_action :set_reports, except: [:get_run_list, :show_save_form, :save_as]
 
   def show
     @driver_query = Query.new :start_date => Date.today, :end_date => Date.today
@@ -1191,11 +1191,38 @@ class ReportsController < ApplicationController
     @all_runs = @runs_with_trips.reorder(:date, :name)  
   end
 
+  # show save form
+  def show_save_form
+    @custom_report = CustomReport.find_by_id params[:custom_report_id]
+    @new_saved_report = SavedCustomReport.new(provider: current_provider, custom_report: @custom_report)
+  end
+
+  # Save custom report params so can re-run in the future
+  def save_as
+    @new_saved_report = SavedCustomReport.new(provider: current_provider)
+    @new_saved_report.attributes = saved_custom_report_params
+    if @new_saved_report.save
+      redirect_to saved_report_path(@new_saved_report)
+    else
+      render :show_save_form
+    end
+  end
+
+  # Show saved report results
+  def saved_report
+    @saved_report = SavedCustomReport.find_by_id(params[:id])
+    @is_saved_report = true
+  end
+
   private
 
   def set_reports
     @reports = all_report_infos # get all report infos (id, name) both generic and customized reports
     @custom_report = CustomReport.find params[:id]
+  end
+
+  def saved_custom_report_params
+    params.require(:saved_custom_report).permit(:name, :custom_report_id, :date_range_type, :report_params)
   end
 
   def prep_with_cab

@@ -15,3 +15,4 @@
       = f.select :report_type, options_for_select([['Summary Report', 'summary'],['Detailed Report', 'detail']], @query.report_type || 'summary')
 
     = f.submit translate_helper("run"), class: 'btn action-button'
+    = render 'reports/forms/save_button', custom_report_id: @custom_report.id

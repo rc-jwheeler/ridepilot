@@ -9,3 +9,4 @@
       = f.select :report_type, options_for_select([['Permanent Inactive Drivers Report', 'perm_inacitve'],['Temporary Inactive Drivers Report', 'detail']], @query.report_type || 'temp_inactive')
 
     = f.submit translate_helper("run"), class: 'btn action-button'
+    = render 'reports/forms/save_button', custom_report_id: @custom_report.id
