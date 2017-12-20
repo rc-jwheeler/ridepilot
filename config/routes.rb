@@ -310,6 +310,8 @@ Rails.application.routes.draw do
 
     get "custom_reports/:id", :controller=>:reports, :action=>:show, as: :custom_report
     get "saved_reports/:id", :controller=>:reports, :action=>:saved_report, as: :saved_report
+    get "show_saved_reports/:id", :controller=>:reports, :action=>:show_saved_report, as: :show_saved_report
+    delete "delete_saved_reports/:id", :controller=>:reports, :action=>:delete_saved_report, as: :delete_saved_report
     get "reports/:action", :controller=>:reports
     get "reports/:action/:id", :controller=>:reports
     resources :reports, only: [] do 
