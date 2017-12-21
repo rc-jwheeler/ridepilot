@@ -1,6 +1,6 @@
 :ruby
   report = nil if local_assigns[:report].nil?
-  report_name = @is_generic_report || @is_saved_report ? report.name : report.display_name
+  report_name = @is_generic_report || @is_saved_report ? report.name : report.display_name if report
 
 .row.info-header{style: 'margin-top: 10px;'}
   .col-sm-12
