@@ -4,7 +4,7 @@ FactoryGirl.define do
     custom_report 
     provider 
     date_range_type 1
-    params "MyText"
+    report_params "MyText"
   end
 
 end
