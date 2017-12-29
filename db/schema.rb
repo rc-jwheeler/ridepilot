@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171216221909) do
+ActiveRecord::Schema.define(version: 20171222152038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -706,6 +706,7 @@ ActiveRecord::Schema.define(version: 20171216221909) do
     t.text     "manifest_order"
     t.string   "scheduled_start_time_string"
     t.string   "scheduled_end_time_string"
+    t.boolean  "ntd_reportable",              default: true
   end
 
   add_index "repeating_runs", ["driver_id"], :name => "index_repeating_runs_on_driver_id"
@@ -748,6 +749,7 @@ ActiveRecord::Schema.define(version: 20171216221909) do
     t.string   "dropoff_address_notes"
     t.integer  "customer_space_count"
     t.integer  "service_animal_space_count"
+    t.boolean  "ntd_reportable",                 default: true
   end
 
   add_index "repeating_trips", ["customer_id"], :name => "index_repeating_trips_on_customer_id"
@@ -894,6 +896,7 @@ ActiveRecord::Schema.define(version: 20171216221909) do
     t.text     "uncomplete_reason"
     t.string   "scheduled_start_time_string"
     t.string   "scheduled_end_time_string"
+    t.boolean  "ntd_reportable",              default: true
   end
 
   add_index "runs", ["deleted_at"], :name => "index_runs_on_deleted_at"
@@ -1036,6 +1039,7 @@ ActiveRecord::Schema.define(version: 20171216221909) do
     t.boolean  "driver_notified"
     t.integer  "customer_space_count"
     t.integer  "service_animal_space_count"
+    t.boolean  "ntd_reportable",                                                  default: true
   end
 
   add_index "trips", ["called_back_by_id"], :name => "index_trips_on_called_back_by_id"
@@ -1225,7 +1229,7 @@ ActiveRecord::Schema.define(version: 20171216221909) do
     t.datetime "updated_at"
     t.integer  "lock_version",                         default: 0
     t.integer  "default_driver_id"
-    t.boolean  "reportable"
+    t.boolean  "reportable",                           default: true
     t.text     "insurance_coverage_details"
     t.string   "ownership"
     t.string   "responsible_party"
@@ -1243,6 +1247,7 @@ ActiveRecord::Schema.define(version: 20171216221909) do
     t.text     "active_status_changed_reason"
     t.integer  "vehicle_maintenance_schedule_type_id"
     t.integer  "vehicle_type_id"
+    t.boolean  "ntd_reportable",                       default: true
   end
 
   add_index "vehicles", ["default_driver_id"], :name => "index_vehicles_on_default_driver_id"

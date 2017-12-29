@@ -141,6 +141,11 @@ gem 'wicked_pdf'
 # In-line editing
 gem 'bootstrap-editable-rails'
 
+# Excel
+#gem 'axlsx', git: "https://github.com/randym/axlsx.git"
+#gem 'axlsx_rails'
+gem 'rubyXL'
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'
