@@ -56,18 +56,8 @@ GIT
       activesupport
       ice_cube (>= 0.6.4)
 
-GIT
-  remote: https://github.com/randym/axlsx.git
-  revision: c8ac844572b25fda358cc01d2104720c4c42f450
-  specs:
-    axlsx (2.1.0.pre)
-      htmlentities (~> 4.3.4)
-      mimemagic (~> 0.3)
-      nokogiri (>= 1.6.6)
-      rubyzip (>= 1.2.1)
-
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     CFPropertyList (2.3.1)
     actionmailer (4.1.13)
@@ -111,9 +101,6 @@ GEM
       jmespath (~> 1.0)
     aws-sdk-resources (2.1.14)
       aws-sdk-core (= 2.1.14)
-    axlsx_rails (0.5.1)
-      actionpack (>= 3.1)
-      axlsx (>= 2.0.1)
     bcrypt (3.1.10)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
@@ -310,7 +297,6 @@ GEM
       haml (~> 4.0.0)
       nokogiri (~> 1.6.0)
       ruby_parser (~> 3.5)
-    htmlentities (4.3.4)
     i18n (0.7.0)
     i18n-active_record (0.0.2)
       i18n (>= 0.5.0)
@@ -462,6 +448,9 @@ GEM
       rspec-mocks (~> 3.3.0)
       rspec-support (~> 3.3.0)
     rspec-support (3.3.0)
+    rubyXL (3.3.26)
+      nokogiri (>= 1.4.4)
+      rubyzip (>= 1.1.6)
     ruby_parser (3.7.1)
       sexp_processor (~> 4.1)
     rubyzip (1.2.1)
@@ -538,8 +527,6 @@ DEPENDENCIES
   activerecord-postgis-adapter (~> 2.2.1)
   attribute_normalizer (~> 1.2.0)
   aws-sdk (~> 2.1.8)
-  axlsx!
-  axlsx_rails
   better_errors
   binding_of_caller
   bootstrap-editable-rails
@@ -588,6 +575,7 @@ DEPENDENCIES
   reporting!
   rgeo
   rspec-rails (~> 3.2)
+  rubyXL
   sass-rails (~> 4.0.3)
   schedule_atts!
   sdoc (~> 0.4.0)

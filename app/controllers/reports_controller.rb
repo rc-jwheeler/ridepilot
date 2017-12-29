@@ -1197,7 +1197,8 @@ class ReportsController < ApplicationController
     @query = Query.new(query_params)
 
     if params[:query]
-      @report_params = [["Provider", current_provider.name]]
+      @excel_file_name = "NTD_#{@query.ntd_year}_#{@query.ntd_month}"
+      @workbook = NtdReport.new(@query.ntd_year, @query.ntd_month).export!
     end
 
     apply_v2_response
@@ -1365,8 +1366,11 @@ class ReportsController < ApplicationController
       end
 
       format.xlsx do 
-        headers['Content-Disposition'] = "attachment;filename=#{@custom_report.name}.xlsx"
-        render template: "reports/#{@custom_report.name}/excel.xlsx.axlsx"
+        send_data( @workbook.stream.read, {
+          :disposition => 'attachment',
+          :type => 'application/excel',
+          :filename => "#{@excel_file_name || @custom_report.name}.xlsx"
+        })
       end
 
       format.pdf do

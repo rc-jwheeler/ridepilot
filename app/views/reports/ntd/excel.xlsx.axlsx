@@ -1,4 +1,0 @@
-wb = xlsx_package.workbook
-wb.add_worksheet(name: "Provider") do |sheet|
-  sheet.add_row [current_provider.name]
-end

@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 ruby '2.2.1'
 
@@ -142,8 +142,9 @@ gem 'wicked_pdf'
 gem 'bootstrap-editable-rails'
 
 # Excel
-gem 'axlsx', git: "https://github.com/randym/axlsx.git"
-gem 'axlsx_rails'
+#gem 'axlsx', git: "https://github.com/randym/axlsx.git"
+#gem 'axlsx_rails'
+gem 'rubyXL'
 
 group :integration, :qa, :production do 
   gem 'rails_12factor'
