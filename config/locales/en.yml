@@ -1159,6 +1159,7 @@ en:
   total_mileage: "Total Mileage"
   
   #runs
+  run_label: "Run"
   run_form_error_message:
     one: "%{count} error prohibited this run from being saved:"
     other: "%{count} errors prohibited this run from being saved:"
