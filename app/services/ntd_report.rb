@@ -119,6 +119,10 @@ class NtdReport
     @revenue_miles_sat = sum_monthly_revenue_miles @sat_runs
     @revenue_miles_sun = sum_monthly_revenue_miles @sun_runs
 
+    @passenger_miles_weekday = sum_monthly_passenger_miles @weekday_runs
+    @passenger_miles_sat = sum_monthly_passenger_miles @sat_runs
+    @passenger_miles_sun = sum_monthly_passenger_miles @sun_runs
+
     @total_hours_weekday = sum_monthly_total_hours @weekday_runs
     @total_hours_sat = sum_monthly_total_hours @sat_runs
     @total_hours_sun = sum_monthly_total_hours @sun_runs
@@ -146,6 +150,12 @@ class NtdReport
       @worksheet[40][m + 4].change_value(revenue_miles_sun) unless revenue_miles_sun.nil?
 
       # Passenger Miles (Ops Research)
+      passenger_miles_weekday = @passenger_miles_weekday[m.to_f]
+      @worksheet[43][m + 4].change_value(passenger_miles_weekday) unless passenger_miles_weekday.nil?
+      passenger_miles_sat = @passenger_miles_sat[m.to_f]
+      @worksheet[44][m + 4].change_value(passenger_miles_sat) unless passenger_miles_sat.nil?
+      passenger_miles_sun = @passenger_miles_sun[m.to_f]
+      @worksheet[45][m + 4].change_value(passenger_miles_sun) unless passenger_miles_sun.nil?
 
       # Total Actual Hours
       total_hours_weekday = @total_hours_weekday[m.to_f]
@@ -209,6 +219,10 @@ class NtdReport
 
   def sum_monthly_total_miles(runs)
     runs.joins(:run_distance).group("extract(month from date)").sum("total_dist")
+  end
+
+  def sum_monthly_passenger_miles(runs)
+    runs.joins(:run_distance).group("extract(month from date)").sum("passenger_miles")
   end
 
   def sum_monthly_total_hours(runs)
