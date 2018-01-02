@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171222152038) do
+ActiveRecord::Schema.define(version: 20180102200133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1173,6 +1173,17 @@ ActiveRecord::Schema.define(version: 20171222152038) do
   end
 
   add_index "vehicle_maintenance_schedules", ["vehicle_maintenance_schedule_type_id"], :name => "index_vehicle_maintenance_schedule_type_id"
+
+  create_table "vehicle_monthly_trackings", force: true do |t|
+    t.integer  "provider_id"
+    t.integer  "year"
+    t.integer  "month"
+    t.integer  "max_available_count"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "vehicle_monthly_trackings", ["provider_id"], :name => "index_vehicle_monthly_trackings_on_provider_id"
 
   create_table "vehicle_requirement_templates", force: true do |t|
     t.integer  "provider_id"

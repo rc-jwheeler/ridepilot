@@ -1202,7 +1202,7 @@ class ReportsController < ApplicationController
 
     if params[:query]
       @excel_file_name = "NTD_#{@query.ntd_year}_#{@query.ntd_month}"
-      @workbook = NtdReport.new(@query.ntd_year, @query.ntd_month).export!
+      @workbook = NtdReport.new(current_provider, @query.ntd_year, @query.ntd_month).export!
     end
 
     apply_v2_response
