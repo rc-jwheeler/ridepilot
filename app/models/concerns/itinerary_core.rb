@@ -16,14 +16,36 @@ module ItineraryCore
       @trip_id ||= trip.id
     end
 
-    def prev
-      #TODO
-      @prev 
+    def prev=(prev_itin)
+      @prev = prev_itin
+    end
+
+    def prev 
+      @prev
+    end
+
+    def next=(next_itin)
+      @next = next_itin
     end
 
     def next
-      #TODO
       @next
+    end
+
+    def is_begin_run?
+      leg_flag == 0
+    end
+
+    def is_end_run?
+      leg_flag == 3
+    end
+
+    def is_pickup?
+      leg_flag == 1
+    end
+
+    def is_dropoff?
+      leg_flag == 2
     end
 
     def ordinal 
@@ -80,14 +102,24 @@ module ItineraryCore
 
     def eta 
       # previous leg depart_time + travel_time
-      @eta ||= @prev.depart_time + @prev.travel_time.minutes if @prev && @prev.depart_time && @prev.travel_time
+      if @prev && @prev.depart_time && @prev.travel_time
+        @prev.depart_time + @prev.travel_time.minutes 
+      else
+        time
+      end
     end
 
     # in minutes
     def wait_time
       if trip && !trip.early_pickup_allowed && time
         eta_time = eta 
-        ((time.to_i - eta.to_i) / 60.to_f).to_i if time > eta_time
+        if time > eta_time
+          ((time.to_i - eta.to_i) / 60.to_f).to_i 
+        else
+          0
+        end
+      else
+        0
       end
     end
 
@@ -95,14 +127,16 @@ module ItineraryCore
     def process_time
       if trip
         leg_flag == 1 ? trip.passenger_load_min : trip.passenger_unload_min
+      else 
+        0
       end
     end
 
     def depart_time
-      eta + process_time.minutes if eta && process_time
+      eta + process_time.to_i.minutes
     end
 
-    def travel_time
+    def calculate_travel_time!
       if address && to_address && address.geocoded? && to_address.geocoded?
         params = {
           from_lat: address.latitude, 
@@ -114,6 +148,10 @@ module ItineraryCore
 
         @travel_time ||= TripDistanceDurationProxy.new(ENV['TRIP_PLANNER_TYPE'], params).get_drive_time.to_f
       end
+    end
+
+    def travel_time
+      @travel_time 
     end
 
     def clear_cache!

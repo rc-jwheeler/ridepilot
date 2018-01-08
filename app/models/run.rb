@@ -162,15 +162,13 @@ class Run < ActiveRecord::Base
     end
 
     # create itineraries
-    Itinerary.transaction do 
-      from_garage_address = self.from_garage_address || self.vehicle.try(:garage_address)
-      to_garage_address = self.to_garage_address || self.vehicle.try(:garage_address)
-      build_itinerary(self.scheduled_start_time, from_garage_address, nil, 0).save
+    Itinerary.transaction do
+      build_begin_run_itinerary.save
       self.trips.each do |trip|
         build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1).save
         build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 2).save
       end
-      build_itinerary(self.scheduled_end_time, to_garage_address, nil, 3).save
+      build_end_run_itinerary.save
     end
   end
 
@@ -258,13 +256,10 @@ class Run < ActiveRecord::Base
     itins = itins.revenue if revenue_only
 
     if itins.empty?
-      # build itineraries from trips
-      from_garage_address = self.from_garage_address || self.vehicle.try(:garage_address)
-      to_garage_address = self.to_garage_address || self.vehicle.try(:garage_address)
-
       # begin run
-      itins << build_itinerary(self.scheduled_start_time, from_garage_address, nil, 0) unless revenue_only
+      itins << build_begin_run_itinerary unless revenue_only
 
+      # trip related revenue itineraries
       self.trips.each do |trip|
         itins << build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1)
 
@@ -274,7 +269,7 @@ class Run < ActiveRecord::Base
       end
 
       # end run
-      itins << build_itinerary(self.scheduled_end_time, to_garage_address, nil, 3) unless revenue_only
+      itins << build_end_run_itinerary unless revenue_only
     end
 
     if self.manifest_order.blank?
@@ -284,6 +279,16 @@ class Run < ActiveRecord::Base
     end
 
     itins
+  end
+
+  def build_begin_run_itinerary
+    from_garage_address = self.from_garage_address || self.vehicle.try(:garage_address)
+    build_itinerary(self.scheduled_start_time, from_garage_address, nil, 0)
+  end
+
+  def build_end_run_itinerary
+    to_garage_address = self.to_garage_address || self.vehicle.try(:garage_address)
+    build_itinerary(self.scheduled_end_time, to_garage_address, nil, 3)
   end
 
   # scheduled_time, address, trip, flag

@@ -28,15 +28,37 @@ class OtpDistanceDurationService < AbstractDistanceDurationService
 
   # in seconds
   def parse_drive_time(response)
-    itinerary = response['itineraries'].try(:first) if response
+    itinerary = get_itinerary(response)
     
-    itinerary['duration'] rescue nil
+    extract_duration(itinerary)
   end
 
   # in miles
   def parse_drive_distance(response)
-    itinerary = response['itineraries'].try(:first) if response
+    itinerary = get_itinerary(response)
     
+    extract_distance(itinerary)
+  end
+
+  def parse_driver_dist_and_duration(response)
+    itinerary = get_itinerary(response)
+
+    {
+      distance: extract_distance(itinerary),
+      duration: extract_duration(itinerary)
+    }
+
+  end
+
+  def get_itinerary(response)
+    response['itineraries'].try(:first) if response
+  end
+
+  def extract_duration(itinerary)
+    itinerary['duration'] rescue nil
+  end
+
+  def extract_distance(itinerary)
     itinerary['legs'].first['distance'] * METERS_TO_MILES rescue nil
   end
 
