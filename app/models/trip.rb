@@ -17,6 +17,7 @@ class Trip < ActiveRecord::Base
   belongs_to :repeating_trip
   has_one    :donation
   has_many   :ridership_mobilities, class_name: "TripRidershipMobility", foreign_key: :host_id, dependent: :destroy
+  has_many   :itineraries, dependent: :destroy
 
   delegate :label, to: :run, prefix: :run, allow_nil: true
   delegate :code, :name, to: :trip_result, prefix: :trip_result, allow_nil: true
@@ -241,14 +242,6 @@ class Trip < ActiveRecord::Base
     (is_return? && outbound_trip) || (is_outbound? && return_trip)
   end
 
-  def is_return?
-    direction.try(:to_sym) == :return
-  end
-
-  def is_outbound?
-    direction.try(:to_sym) == :outbound
-  end
-
   def update_drive_distance!
     from_lat = pickup_address.try(:latitude)
     from_lon = pickup_address.try(:longitude)
@@ -257,7 +250,15 @@ class Trip < ActiveRecord::Base
 
     return unless from_lat && from_lon && to_lat && to_lon
 
-    self.drive_distance = TripPlanner.new(from_lat, from_lon, to_lat, to_lon, pickup_time).get_drive_distance
+    params = {
+      from_lat: from_lat, 
+      from_lon: from_lon, 
+      to_lat: to_lat, 
+      to_lon: to_lon, 
+      trip_datetime: pickup_time
+    }
+    distance_calculator = TripDistanceDurationProxy.new(ENV['TRIP_PLANNER_TYPE'], params)
+    self.drive_distance = distance_calculator.get_drive_distance
     self.save
   end
 
@@ -347,8 +348,10 @@ class Trip < ActiveRecord::Base
 
   def unschedule_trip
     if self.run.present?
+      prev_run = self.run
       self.run = nil
       self.save(validate: false)
+      prev_run.delete_trip_manifest!(self.id)
     elsif provider && provider.cab_enabled? && self.cab
       self.cab = false
       self.save(validate: false)
@@ -376,6 +379,7 @@ class Trip < ActiveRecord::Base
           if self.run.present?
             run = self.run
             self.run = nil
+            run.delete_trip_manifest!(self.id)
             #TrackerActionLog.trips_removed_from_run(run, [self], user)
           elsif self.cab
             self.cab = false

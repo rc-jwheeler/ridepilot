@@ -20,6 +20,7 @@ class Run < ActiveRecord::Base
   ].freeze
 
   has_many :trips, -> { order(:pickup_time) }, :dependent => :nullify
+  has_many :itineraries, :dependent => :destroy
   belongs_to :repeating_run
 
   has_one :run_distance
@@ -159,6 +160,18 @@ class Run < ActiveRecord::Base
       self.manifest_order = run_manifest_order 
       self.save(validate: false)
     end
+
+    # create itineraries
+    Itinerary.transaction do 
+      from_garage_address = self.from_garage_address || self.vehicle.try(:garage_address)
+      to_garage_address = self.to_garage_address || self.vehicle.try(:garage_address)
+      build_itinerary(self.scheduled_start_time, from_garage_address, nil, 0).save
+      self.trips.each do |trip|
+        build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1).save
+        build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 2).save
+      end
+      build_itinerary(self.scheduled_end_time, to_garage_address, nil, 3).save
+    end
   end
 
   # "Cancels" a run: removes any trips from that run
@@ -168,65 +181,66 @@ class Run < ActiveRecord::Base
     self.save(validate: false)
     
     trips.clear # Doesn't actually destroy the records, just removes the association
+    itineraries.delete_all
   end
   
   # Cancels all runs in the collection, returning the count of trips removed from runs
   def self.cancel_all
     self.update_all(manifest_order: nil)
 
-    Trip.where(run_id: self.all.pluck(:id)).update_all(run_id: nil)
+    run_ids = self.all.pluck(:id)
+    Trip.where(run_id: run_ids).update_all(run_id: nil)
+    Itinerary.where(run_id: run_ids).delete_all
   end
 
   def add_trip_manifest!(trip_id)
-    unless self.manifest_order.blank? 
-      # remove it first in case same trip record was left previously
-      delete_trip_manifest!(trip_id)
+    # remove it first in case same trip record was left previously
+    delete_trip_manifest!(trip_id)
 
-      #scan from the beginning to injert based on scheduled_pickup_time
-      unless self.manifest_order.blank?
-        trip = Trip.find_by_id trip_id
-        if trip
-          trip_pickup_time = trip.pickup_time
-          trip_appt_time = trip.appointment_time
-          pickup_index = nil 
-          appt_index = nil
+    #scan from the beginning to injert based on scheduled_pickup_time
+    trip = Trip.find_by_id trip_id
+    if trip
+      trip_pickup_time = trip.pickup_time
+      trip_appt_time = trip.appointment_time
+      pickup_index = nil 
+      appt_index = nil
 
-          self.manifest_order.each_with_index do |leg_name, index|
-            leg_name_parts = leg_name.split('_')
-            leg_trip_id = leg_name_parts[1]
-            is_pickup = leg_name_parts[3] == '1'
-            a_trip = Trip.find_by_id leg_trip_id
-            if a_trip 
-              action_time = is_pickup ? a_trip.pickup_time : a_trip.appointment_time
-              next unless action_time
+      self.manifest_order.each_with_index do |leg_name, index|
+        leg_name_parts = leg_name.split('_')
+        leg_trip_id = leg_name_parts[1]
+        is_pickup = leg_name_parts[3] == '1'
+        a_trip = Trip.find_by_id leg_trip_id
+        if a_trip 
+          action_time = is_pickup ? a_trip.pickup_time : a_trip.appointment_time
+          next unless action_time
 
-              pickup_index = index if !pickup_index && action_time.to_s(:time_utc) > trip_pickup_time.to_s(:time_utc)
+          pickup_index = index if !pickup_index && action_time.to_s(:time_utc) > trip_pickup_time.to_s(:time_utc)
 
-              if !appt_index
-                if trip_appt_time
-                  appt_index = index if action_time.to_s(:time_utc) > trip_appt_time.to_s(:time_utc)
-                  appt_index += 1 if pickup_index && pickup_index == appt_index
-                else
-                  appt_index = pickup_index + 1 if pickup_index
-                end
-              end
-
-              break if pickup_index && appt_index
+          if !appt_index
+            if trip_appt_time
+              appt_index = index if action_time.to_s(:time_utc) > trip_appt_time.to_s(:time_utc)
+              appt_index += 1 if pickup_index && pickup_index == appt_index
+            else
+              appt_index = pickup_index + 1 if pickup_index
             end
           end
-          
-          unless pickup_index
-            pickup_index = manifest_order.size 
-            appt_index = pickup_index + 1
-          end
 
-          # Injert at certain index
-          self.manifest_order.insert pickup_index, "trip_#{trip_id}_leg_1" if pickup_index && pickup_index <= self.manifest_order.size
-          self.manifest_order.insert appt_index, "trip_#{trip_id}_leg_2" if appt_index && appt_index <= self.manifest_order.size
-          self.save(validate: false)
+          break if pickup_index && appt_index
         end
       end
+      
+      unless pickup_index
+        pickup_index = manifest_order.size 
+        appt_index = pickup_index + 1
+      end
+
+      # Injert at certain index
+      self.manifest_order.insert pickup_index, "trip_#{trip_id}_leg_1" if pickup_index && pickup_index <= self.manifest_order.size
+      self.manifest_order.insert appt_index, "trip_#{trip_id}_leg_2" if appt_index && appt_index <= self.manifest_order.size
+      self.save(validate: false)
     end
+
+    add_trip_itineraries!(trip_id)
   end
 
   def delete_trip_manifest!(trip_id)
@@ -235,6 +249,58 @@ class Run < ActiveRecord::Base
       self.manifest_order.delete "trip_#{trip_id}_leg_2"
       self.save(validate: false)
     end
+
+    remove_trip_itineraries!(trip_id)
+  end
+
+  def sorted_itineraries(revenue_only = false)
+    itins = itineraries
+    itins = itins.revenue if revenue_only
+
+    if itins.empty?
+      # build itineraries from trips
+      from_garage_address = self.from_garage_address || self.vehicle.try(:garage_address)
+      to_garage_address = self.to_garage_address || self.vehicle.try(:garage_address)
+
+      # begin run
+      itins << build_itinerary(self.scheduled_start_time, from_garage_address, nil, 0) unless revenue_only
+
+      self.trips.each do |trip|
+        itins << build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1)
+
+        if !TripResult::CANCEL_CODES_BUT_KEEP_RUN.include?(trip.trip_result.try(:code))
+          itins << build_itinerary(trip.appointment_time, trip.dropoff_address, trip.id, 2)
+        end
+      end
+
+      # end run
+      itins << build_itinerary(self.scheduled_end_time, to_garage_address, nil, 3) unless revenue_only
+    end
+
+    if self.manifest_order.blank?
+      itins = itins.sort_by { |itin| [itin.time_diff, itin.leg_flag] }
+    else
+      itins = itins.sort_by{|itin| manifest_order.index(itin.itin_id)}
+    end
+
+    itins
+  end
+
+  # scheduled_time, address, trip, flag
+  def build_itinerary(scheduled_time, address, trip_id, leg_flag)
+    Itinerary.new(time: scheduled_time, address: address, run: self, trip_id: trip_id, leg_flag: leg_flag)
+  end
+
+  def add_trip_itineraries!(trip_id)
+    trip = Trip.find_by_id(trip_id) 
+    if trip 
+      build_itinerary(trip.pickup_time, trip.pickup_address, trip_id, 1).save
+      build_itinerary(trip.appointment_time, trip.dropoff_address, trip_id, 2).save
+    end
+  end
+
+  def remove_trip_itineraries!(trip_id)
+    self.itineraries.where(trip_id: trip_id).delete_all
   end
 
   def as_calendar_json

@@ -10,6 +10,7 @@ class RepeatingTrip < ActiveRecord::Base
   has_many :trips # Child trips created by this repeating trip's scheduler
 
   has_many :ridership_mobilities, class_name: "RepeatingTripRidershipMobility", foreign_key: :host_id, dependent: :destroy
+  has_many :repeating_itineraries, dependent: :destroy
 
   schedules_occurrences_with with_attributes: -> (trip) {
       {

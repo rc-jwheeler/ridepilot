@@ -1,14 +1,16 @@
 require 'json'
 require 'net/http'
 
-class RunDistanceCalculator
+class RunStatsCalculator
   attr_reader :run
 
   def initialize(run_id)
     @run = Run.find_by_id(run_id)
   end
 
-  def process
+  # calculate run distances
+  #    total, revenue, non-revenue, deadhead, passenger miles
+  def process_distance
     return unless @run && @run.complete?
 
     itins = get_itineraries(@run)
@@ -63,7 +65,54 @@ class RunDistanceCalculator
     run_distance.save
   end
 
-  
+  # calculate ETA for each itinerary
+  def process_eta
+    return unless @run
+
+    itins = get_itineraries(@run)
+
+    return if itins.empty?
+
+    from_address = @run.from_garage_address || @run.vehicle.try(:garage_address)
+    to_address = itins[0][:address]
+    time = @run.scheduled_start_time
+    
+    deadhead_from_garage = build_itinerary(from_address, to_address, time)
+
+    itin_count = itins.size
+    itins.each_with_index do |itin, index|
+      next if index < 1
+
+      from_address = itins[index - 1][:address]
+      to_address = itin[:address]
+      time = itin[:time]
+
+      dist = get_drive_distance(from_address, to_address, time)
+      if itin[:capacity] > 0
+        revenuse_miles += dist 
+        passenger_miles += dist * itin[:capacity].to_f
+      else
+        non_revenue_miles += dist
+      end         
+    end
+
+    last_stop = itins.last
+    from_address = last_stop[:address]
+    to_address = @run.to_garage_address || @run.vehicle.try(:garage_address)
+    time = last_stop[:time]
+    deadhead_to_garage = get_drive_distance(from_address, to_address, time)
+
+    total_dist = deadhead_from_garage + revenuse_miles + non_revenue_miles + deadhead_to_garage
+
+    run_distance = @run.run_distance || RunDistance.new(run: @run)
+    run_distance.total_dist = total_dist
+    run_distance.revenue_miles = revenuse_miles
+    run_distance.non_revenue_miles = non_revenue_miles
+    run_distance.deadhead_from_garage = deadhead_from_garage
+    run_distance.deadhead_to_garage = deadhead_to_garage
+    run_distance.passenger_miles = passenger_miles
+    run_distance.save
+  end
 
   def get_itineraries(run)
     return [] unless run
@@ -134,7 +183,15 @@ class RunDistanceCalculator
 
     return 0 unless from_lat && from_lon && to_lat && to_lon
 
-    TripPlanner.new(from_lat, from_lon, to_lat, to_lon, time).get_drive_distance.to_f
+    params = {
+      from_lat: from_lat, 
+      from_lon: from_lon, 
+      to_lat: to_lat, 
+      to_lon: to_lon, 
+      trip_datetime: time
+    }
+    distance_calculator = TripDistanceDurationProxy.new(ENV['TRIP_PLANNER_TYPE'], params)
+    distance_calculator.get_drive_distance.to_f
   end
 
   def time_portion(time)

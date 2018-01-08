@@ -373,6 +373,22 @@ class Customer < ActiveRecord::Base
 
   def set_defaults
     self.active = true if self.active.nil?
+
+    if self.passenger_load_min.nil?
+      if self.provider
+        self.passenger_load_min = self.provider.passenger_load_min
+      else
+        self.passenger_load_min = Provider::DEFAULT_PASSENGER_LOAD_MIN
+      end
+    end
+    
+    if self.passenger_unload_min.nil?
+      if self.provider
+        self.passenger_unload_min = self.provider.passenger_unload_min
+      else
+        self.passenger_unload_min = Provider::DEFAULT_PASSENGER_UNLOAD_MIN
+      end
+    end
   end
 
   def ada_changed

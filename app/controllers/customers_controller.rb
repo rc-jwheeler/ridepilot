@@ -346,6 +346,8 @@ class CustomersController < ApplicationController
       :comments,
       :travel_trainings,
       :funding_authorization_numbers,
+      :passenger_load_min,
+      :passenger_unload_min,
       photo_attributes: [:image],
       :address_attributes => [
         :address,
