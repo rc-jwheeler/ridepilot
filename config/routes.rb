@@ -115,6 +115,7 @@ Rails.application.routes.draw do
         post :change_eligible_age
         post :change_fields_required_for_run_completion
         post :change_driver_availability_settings
+        post :change_eta_related_settings
         post :save_region
         post :save_viewport
         patch :save_operating_hours
