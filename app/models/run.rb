@@ -255,6 +255,9 @@ class Run < ActiveRecord::Base
     itins = itineraries
     itins = itins.revenue if revenue_only
 
+    manifest_order.insert(0, "run_begin") if manifest_order.first != 'run_begin'
+    manifest_order << "run_end" if manifest_order.last != 'run_end'
+
     if itins.empty?
       # begin run
       itins << build_begin_run_itinerary unless revenue_only
