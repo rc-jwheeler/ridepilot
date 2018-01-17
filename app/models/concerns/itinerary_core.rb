@@ -100,13 +100,15 @@ module ItineraryCore
       end
     end
 
-    def eta 
+    def calculate_eta! 
       # previous leg depart_time + travel_time
-      if @prev && @prev.depart_time && @prev.travel_time
+      self.eta = if @prev && @prev.depart_time && @prev.travel_time
         @prev.depart_time + @prev.travel_time.minutes 
       else
         time
       end
+
+      self.save(validate: false)
     end
 
     # in minutes
@@ -146,16 +148,10 @@ module ItineraryCore
           trip_datetime: eta || time
         }
 
-        @travel_time ||= TripDistanceDurationProxy.new(ENV['TRIP_PLANNER_TYPE'], params).get_drive_time.to_f
+        self.travel_time = TripDistanceDurationProxy.new(ENV['TRIP_PLANNER_TYPE'], params).get_drive_time.to_f
+
+        self.calculate_eta!
       end
-    end
-
-    def travel_time
-      @travel_time 
-    end
-
-    def clear_cache!
-      @prev = @next = @ordinal = @to_address = @eta = @travel_time = nil
     end
 
     def time_portion(time)

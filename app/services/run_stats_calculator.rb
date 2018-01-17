@@ -100,6 +100,8 @@ class RunStatsCalculator
         travel_time: itin.travel_time    
       }
     end
+
+    eta_info
   end
 
   def append_capacity_to_itineraries(itins = [])

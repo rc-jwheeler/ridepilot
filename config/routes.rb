@@ -264,6 +264,7 @@ Rails.application.routes.draw do
         get :cancel_run
         get :run_trips
         get :load_trips
+        get :eta
       end
     end
 

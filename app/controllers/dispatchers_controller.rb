@@ -173,6 +173,14 @@ class DispatchersController < ApplicationController
       #TrackerActionLog.rearrange_trip_itineraries(@run, current_user)
     end
   end
+
+  def eta
+    @run = Run.find_by_id params[:run_id]
+
+    if @run
+      @eta_info = RunStatsCalculator.new(@run.id).process_eta
+    end
+  end
   
   private
 
