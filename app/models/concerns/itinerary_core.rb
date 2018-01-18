@@ -103,7 +103,7 @@ module ItineraryCore
     def calculate_eta! 
       # previous leg depart_time + travel_time
       self.eta = if @prev && @prev.depart_time && @prev.travel_time
-        @prev.depart_time + @prev.travel_time.minutes 
+        @prev.depart_time + @prev.travel_time.seconds 
       else
         time
       end
@@ -135,7 +135,7 @@ module ItineraryCore
     end
 
     def depart_time
-      eta + process_time.to_i.minutes
+      (eta + process_time.to_i.minutes) if eta
     end
 
     def calculate_travel_time!

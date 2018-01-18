@@ -73,8 +73,16 @@ class RunStatsCalculator
 
     return if itins.empty?
 
-    itins.insert(0, @run.build_begin_run_itinerary.save) unless itins.first.is_begin_run? 
-    itins << @run.build_end_run_itinerary.save unless itins.last.is_end_run? 
+    unless itins.first.is_begin_run?
+      run_begin_itin = @run.build_begin_run_itinerary
+      run_begin_itin.save
+      itins.insert(0, run_begin_itin)  
+    end
+    unless itins.last.is_end_run? 
+      run_end_itin = @run.build_end_run_itinerary
+      run_end_itin.save
+      itins << run_end_itin
+    end
 
     eta_info = {}
     itin_count = itins.size
@@ -89,8 +97,9 @@ class RunStatsCalculator
 
       if index < (itin_count - 1)
         itin.calculate_travel_time! 
+      else
+        itin.calculate_eta! 
       end
-
       eta_info[itin.itin_id] = {
         scheduled_time: itin.time,
         eta: itin.eta,

@@ -203,7 +203,8 @@ class Run < ActiveRecord::Base
       pickup_index = nil 
       appt_index = nil
 
-      self.manifest_order.each_with_index do |leg_name, index|
+      manifest_order_array = self.manifest_order
+      manifest_order_array.each_with_index do |leg_name, index|
         leg_name_parts = leg_name.split('_')
         leg_trip_id = leg_name_parts[1]
         is_pickup = leg_name_parts[3] == '1'
@@ -226,15 +227,20 @@ class Run < ActiveRecord::Base
           break if pickup_index && appt_index
         end
       end
-      
+
       unless pickup_index
-        pickup_index = manifest_order.size 
+        pickup_index = manifest_order_array.size 
         appt_index = pickup_index + 1
+      else 
+        unless appt_index
+          appt_index = manifest_order_array.size + 1
+        end
       end
 
       # Injert at certain index
-      self.manifest_order.insert pickup_index, "trip_#{trip_id}_leg_1" if pickup_index && pickup_index <= self.manifest_order.size
-      self.manifest_order.insert appt_index, "trip_#{trip_id}_leg_2" if appt_index && appt_index <= self.manifest_order.size
+      manifest_order_array.insert pickup_index, "trip_#{trip_id}_leg_1" if pickup_index && pickup_index <= manifest_order_array.size
+      manifest_order_array.insert appt_index, "trip_#{trip_id}_leg_2" if appt_index && appt_index <= manifest_order_array.size
+      self.manifest_order = manifest_order_array
       self.save(validate: false)
     end
 
@@ -275,10 +281,10 @@ class Run < ActiveRecord::Base
       itins << build_end_run_itinerary unless revenue_only
     end
 
-    if self.manifest_order.blank?
+    if manifest_order.blank?
       itins = itins.sort_by { |itin| [itin.time_diff, itin.leg_flag] }
     else
-      itins = itins.sort_by{|itin| manifest_order.index(itin.itin_id)}
+      itins = itins.sort_by{|itin| manifest_order.index(itin.itin_id).to_i}
     end
 
     itins
