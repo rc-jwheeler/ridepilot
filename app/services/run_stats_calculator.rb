@@ -13,7 +13,8 @@ class RunStatsCalculator
   def process_distance
     return unless @run && @run.complete?
 
-    itins = get_itineraries(@run)
+    itins = @run.sorted_itineraries(true)
+    itins = append_capacity_to_itineraries(itins)
 
     return if itins.empty?
 
@@ -25,32 +26,31 @@ class RunStatsCalculator
     passenger_miles = 0
 
     from_address = @run.from_garage_address || @run.vehicle.try(:garage_address)
-    to_address = itins[0][:address]
+    to_address = itins.first.address
     time = @run.scheduled_start_time
     
     deadhead_from_garage = get_drive_distance(from_address, to_address, time)
 
-    itin_count = itins.size
     itins.each_with_index do |itin, index|
       next if index < 1
 
-      from_address = itins[index - 1][:address]
-      to_address = itin[:address]
-      time = itin[:time]
+      from_address = itins[index - 1].address
+      to_address = itin.address
+      time = itin.time
 
       dist = get_drive_distance(from_address, to_address, time)
-      if itin[:capacity] > 0
+      if itin.capacity.to_f > 0
         revenuse_miles += dist 
-        passenger_miles += dist * itin[:capacity].to_f
+        passenger_miles += dist * itin.capacity.to_f
       else
         non_revenue_miles += dist
       end         
     end
 
     last_stop = itins.last
-    from_address = last_stop[:address]
+    from_address = last_stop.address
     to_address = @run.to_garage_address || @run.vehicle.try(:garage_address)
-    time = last_stop[:time]
+    time = last_stop.time
     deadhead_to_garage = get_drive_distance(from_address, to_address, time)
 
     total_dist = deadhead_from_garage + revenuse_miles + non_revenue_miles + deadhead_to_garage
@@ -69,105 +69,64 @@ class RunStatsCalculator
   def process_eta
     return unless @run
 
-    itins = get_itineraries(@run)
+    itins = @run.sorted_itineraries
 
     return if itins.empty?
 
-    from_address = @run.from_garage_address || @run.vehicle.try(:garage_address)
-    to_address = itins[0][:address]
-    time = @run.scheduled_start_time
-    
-    deadhead_from_garage = build_itinerary(from_address, to_address, time)
+    unless itins.first.is_begin_run?
+      run_begin_itin = @run.build_begin_run_itinerary
+      run_begin_itin.save
+      itins.insert(0, run_begin_itin)  
+    end
+    unless itins.last.is_end_run? 
+      run_end_itin = @run.build_end_run_itinerary
+      run_end_itin.save
+      itins << run_end_itin
+    end
 
+    eta_info = {}
     itin_count = itins.size
     itins.each_with_index do |itin, index|
-      next if index < 1
+      if index < (itin_count - 1)
+        itin.next = itins[index + 1]
+      end
 
-      from_address = itins[index - 1][:address]
-      to_address = itin[:address]
-      time = itin[:time]
+      if index > 0
+        itin.prev = itins[index - 1]    
+      end  
 
-      dist = get_drive_distance(from_address, to_address, time)
-      if itin[:capacity] > 0
-        revenuse_miles += dist 
-        passenger_miles += dist * itin[:capacity].to_f
+      if index < (itin_count - 1)
+        itin.calculate_travel_time! 
       else
-        non_revenue_miles += dist
-      end         
+        itin.calculate_eta! 
+      end
+      eta_info[itin.itin_id] = {
+        scheduled_time: itin.time,
+        eta: itin.eta,
+        wait_time: itin.wait_time,
+        process_time: itin.process_time,
+        depart_time: itin.depart_time,
+        travel_time: itin.travel_time    
+      }
     end
 
-    last_stop = itins.last
-    from_address = last_stop[:address]
-    to_address = @run.to_garage_address || @run.vehicle.try(:garage_address)
-    time = last_stop[:time]
-    deadhead_to_garage = get_drive_distance(from_address, to_address, time)
-
-    total_dist = deadhead_from_garage + revenuse_miles + non_revenue_miles + deadhead_to_garage
-
-    run_distance = @run.run_distance || RunDistance.new(run: @run)
-    run_distance.total_dist = total_dist
-    run_distance.revenue_miles = revenuse_miles
-    run_distance.non_revenue_miles = non_revenue_miles
-    run_distance.deadhead_from_garage = deadhead_from_garage
-    run_distance.deadhead_to_garage = deadhead_to_garage
-    run_distance.passenger_miles = passenger_miles
-    run_distance.save
+    eta_info
   end
 
-  def get_itineraries(run)
-    return [] unless run
-
-    itins = []
-
-    manifest_order = run.manifest_order
-
-    run.trips.each do |trip|
-      trip_data = {
-        trip: trip
-      }
-      
-      pickup_sort_key = time_portion(trip.pickup_time)
-      itin_id = "trip_#{trip.id}_leg_1"
-      itins << trip_data.merge(
-        id: itin_id,
-        ordinal: (manifest_order.try(:index, itin_id) || -1),
-        leg_flag: 1,
-        time: trip.pickup_time,
-        sort_key: pickup_sort_key,
-        address: trip.pickup_address
-      )
-
-      if !TripResult::CANCEL_CODES_BUT_KEEP_RUN.include?(trip.trip_result.try(:code))
-        dropoff_sort_key = trip.appointment_time ? time_portion(trip.appointment_time) : time_portion(trip.pickup_time)
-        do_itin_id = "trip_#{trip.id}_leg_2"
-        itins << trip_data.merge(
-          id: do_itin_id,
-          ordinal: (manifest_order.try(:index, do_itin_id) || -1),
-          leg_flag: 2,
-          time: trip.appointment_time,
-          sort_key: dropoff_sort_key,
-          address: trip.dropoff_address
-        )
-      end
-    end
-
-    itins = if manifest_order && manifest_order.any?
-      itins.sort_by { |itin| [itin[:ordinal] >= 0 ? 0 : 1, itin[:ordinal], itin[:sort_key], itin[:leg_flag]] }
-    else
-      itins.sort_by { |itin| [itin[:sort_key], itin[:leg_flag]] }
-    end
-
+  def append_capacity_to_itineraries(itins = [])
     # calculate occupancy
     occupancy = 0
     delta = 0
     itins.each do |itin|
-      trip = itin[:trip]
       occupancy += delta
-      itin[:capacity] = occupancy
+      itin.capacity = occupancy
 
-      if itin[:leg_flag] == 1
+      trip = itin.trip
+      next unless trip
+
+      if itin.leg_flag. == 1
         delta = trip.trip_size unless TripResult::NON_DISPATCHABLE_CODES.include?(trip.trip_result.try(:code))
-      elsif itin[:leg_flag] == 2
+      elsif itin.leg_flag == 2
         delta = -1 * trip.trip_size
       end
     end
@@ -176,12 +135,20 @@ class RunStatsCalculator
   end
 
   def get_drive_distance(from_addr, to_addr, time = DateTime.now)
+    calculator = get_dist_duration_calculator(from_addr, to_addr, time)
+    calculator.get_drive_distance.to_f
+  end
+
+  def get_drive_duration(from_addr, to_addr, time = DateTime.now)
+    calculator = get_dist_duration_calculator(from_addr, to_addr, time)
+    calculator.get_drive_time.to_f
+  end
+
+  def get_dist_duration_calculator(from_addr, to_addr, time = DateTime.now)
     from_lat = from_addr.try(:latitude)
     from_lon = from_addr.try(:longitude)
     to_lat = to_addr.try(:latitude)
     to_lon = to_addr.try(:longitude)
-
-    return 0 unless from_lat && from_lon && to_lat && to_lon
 
     params = {
       from_lat: from_lat, 
@@ -190,8 +157,8 @@ class RunStatsCalculator
       to_lon: to_lon, 
       trip_datetime: time
     }
-    distance_calculator = TripDistanceDurationProxy.new(ENV['TRIP_PLANNER_TYPE'], params)
-    distance_calculator.get_drive_distance.to_f
+    
+    TripDistanceDurationProxy.new(ENV['TRIP_PLANNER_TYPE'], params)
   end
 
   def time_portion(time)

@@ -12,7 +12,7 @@
 #dispatch_runs_trips.col-sm-12{style: 'padding: 0px;'}
   .col-sm-12.dispatch-main#dispatch_runs_container{style: 'padding: 0px;'}
     = render 'runs_panel'
-  .col-sm-12#unassigned_trips_container{style: 'padding: 0px;'}
+  .col-sm-12#unassigned_trips_container{style: 'padding: 0px; overflow: hidden;'}
     = render 'unassigned_trips_panel'
 
 :javascript
@@ -185,6 +185,11 @@
     }
   }
 
+  //update trips table container height so fixedHeader works
+  function update_trips_panel_height() {
+    $('#unassigned_trips_panel .panel-body').height($('#unassigned_trips_container').outerHeight() - $('#unassigned_trips_panel .panel-heading').outerHeight());
+  }
+
   // configure to be draggable
   function configure_unassigned_trips_table() {
     $('#unassigned_trips_table tbody tr td').draggable({
@@ -219,6 +224,15 @@
         
       }
     });
+
+    // fixed table header
+    $('#unassigned_trips_table').floatThead({ 
+      scrollContainer: function($table){
+       return $table.closest('.panel-body');
+      }
+    });
+
+    update_trips_panel_height();
   }
 
   // window height changes, then need to update splitter position and container height
@@ -257,7 +271,6 @@
   $(function() {  
      // init the splitter between Runs section and Trips section
     var splitter_height = $(window).outerHeight() - 200;
-    console.log(splitter_height);
     splitter = $('#dispatch_runs_trips').height(splitter_height).split({
       position: '80%',
       limit: 40,
@@ -278,6 +291,9 @@
         }
         
         localStorage.setItem('dispatch_unassigned_trips_collapsed', (is_collapsed ? '0' : '1')); 
+
+        //update trips table container height so fixedHeader works
+        update_trips_panel_height();
       }
     });
 
@@ -324,6 +340,9 @@
           $('#unassigned_trips_container').height(200);
         }
         update_splitter_position();
+        setTimeout(function() {
+          update_trips_panel_height();
+        }, 500);
       }
     });
 

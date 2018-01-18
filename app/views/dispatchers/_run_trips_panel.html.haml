@@ -4,6 +4,10 @@
       - unless run.complete?
         = render 'trip_result_dropdown'
         = render 'unschedule_trip_dropdown'
+        - if run.date.today? || run.date.future?
+          %span.dispatch-action
+            = link_to eta_dispatchers_path(run_id: run.id), title: 'Recalculate ETA', style: 'color: white;', remote: true do 
+              %i.fa.fa-clock-o
         - if can?(:cancel, run)  
           %span.dispatch-action
             = link_to cancel_run_dispatchers_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 

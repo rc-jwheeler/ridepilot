@@ -1,4 +1,4 @@
-class GoogleDistanceDurationService < DistanceDurationService
+class GoogleDistanceDurationService < AbstractDistanceDurationService
   TRIP_PLANNER_URL = ENV['GOOGLE_TRIP_PLANNER_URL']
   TRIP_PLANNER_KEY = ENV['GOOGLE_API_KEY']
 
@@ -29,15 +29,37 @@ class GoogleDistanceDurationService < DistanceDurationService
 
   # in seconds
   def parse_drive_time(response)
-    itinerary = response['elements'].try(:first) if response
+    itinerary = get_itinerary(response)
     
-    itinerary['duration_in_traffic'].try(:[], 'value') || itinerary['elements']['duration']['value'] rescue nil
+    extract_duration(itinerary)
   end
 
   # in miles
   def parse_drive_distance(response)
-    itinerary = response['elements'].try(:first) if response
+    itinerary = get_itinerary(response)
     
+    extract_distance(itinerary)
+  end
+
+  def parse_driver_dist_and_duration(response)
+    itinerary = get_itinerary(response)
+
+    {
+      distance: extract_distance(itinerary),
+      duration: extract_duration(itinerary)
+    }
+
+  end
+
+  def get_itinerary(response)
+    response['elements'].try(:first) if response
+  end
+
+  def extract_duration(itinerary)
+    itinerary['duration_in_traffic'].try(:[], 'value') || itinerary['elements']['duration']['value'] rescue nil
+  end
+
+  def extract_distance(itinerary)
     itinerary['distance']['value'] * METERS_TO_MILES rescue nil
   end
 

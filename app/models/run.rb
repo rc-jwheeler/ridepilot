@@ -162,15 +162,13 @@ class Run < ActiveRecord::Base
     end
 
     # create itineraries
-    Itinerary.transaction do 
-      from_garage_address = self.from_garage_address || self.vehicle.try(:garage_address)
-      to_garage_address = self.to_garage_address || self.vehicle.try(:garage_address)
-      build_itinerary(self.scheduled_start_time, from_garage_address, nil, 0).save
+    Itinerary.transaction do
+      build_begin_run_itinerary.save
       self.trips.each do |trip|
         build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1).save
         build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 2).save
       end
-      build_itinerary(self.scheduled_end_time, to_garage_address, nil, 3).save
+      build_end_run_itinerary.save
     end
   end
 
@@ -205,7 +203,8 @@ class Run < ActiveRecord::Base
       pickup_index = nil 
       appt_index = nil
 
-      self.manifest_order.each_with_index do |leg_name, index|
+      manifest_order_array = self.manifest_order
+      manifest_order_array.each_with_index do |leg_name, index|
         leg_name_parts = leg_name.split('_')
         leg_trip_id = leg_name_parts[1]
         is_pickup = leg_name_parts[3] == '1'
@@ -228,15 +227,20 @@ class Run < ActiveRecord::Base
           break if pickup_index && appt_index
         end
       end
-      
+
       unless pickup_index
-        pickup_index = manifest_order.size 
+        pickup_index = manifest_order_array.size 
         appt_index = pickup_index + 1
+      else 
+        unless appt_index
+          appt_index = manifest_order_array.size + 1
+        end
       end
 
       # Injert at certain index
-      self.manifest_order.insert pickup_index, "trip_#{trip_id}_leg_1" if pickup_index && pickup_index <= self.manifest_order.size
-      self.manifest_order.insert appt_index, "trip_#{trip_id}_leg_2" if appt_index && appt_index <= self.manifest_order.size
+      manifest_order_array.insert pickup_index, "trip_#{trip_id}_leg_1" if pickup_index && pickup_index <= manifest_order_array.size
+      manifest_order_array.insert appt_index, "trip_#{trip_id}_leg_2" if appt_index && appt_index <= manifest_order_array.size
+      self.manifest_order = manifest_order_array
       self.save(validate: false)
     end
 
@@ -257,14 +261,14 @@ class Run < ActiveRecord::Base
     itins = itineraries
     itins = itins.revenue if revenue_only
 
+    manifest_order.insert(0, "run_begin") if manifest_order.first != 'run_begin'
+    manifest_order << "run_end" if manifest_order.last != 'run_end'
+
     if itins.empty?
-      # build itineraries from trips
-      from_garage_address = self.from_garage_address || self.vehicle.try(:garage_address)
-      to_garage_address = self.to_garage_address || self.vehicle.try(:garage_address)
-
       # begin run
-      itins << build_itinerary(self.scheduled_start_time, from_garage_address, nil, 0) unless revenue_only
+      itins << build_begin_run_itinerary unless revenue_only
 
+      # trip related revenue itineraries
       self.trips.each do |trip|
         itins << build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1)
 
@@ -274,16 +278,26 @@ class Run < ActiveRecord::Base
       end
 
       # end run
-      itins << build_itinerary(self.scheduled_end_time, to_garage_address, nil, 3) unless revenue_only
+      itins << build_end_run_itinerary unless revenue_only
     end
 
-    if self.manifest_order.blank?
+    if manifest_order.blank?
       itins = itins.sort_by { |itin| [itin.time_diff, itin.leg_flag] }
     else
-      itins = itins.sort_by{|itin| manifest_order.index(itin.itin_id)}
+      itins = itins.sort_by{|itin| manifest_order.index(itin.itin_id).to_i}
     end
 
     itins
+  end
+
+  def build_begin_run_itinerary
+    from_garage_address = self.from_garage_address || self.vehicle.try(:garage_address)
+    build_itinerary(self.scheduled_start_time, from_garage_address, nil, 0)
+  end
+
+  def build_end_run_itinerary
+    to_garage_address = self.to_garage_address || self.vehicle.try(:garage_address)
+    build_itinerary(self.scheduled_end_time, to_garage_address, nil, 3)
   end
 
   # scheduled_time, address, trip, flag
