@@ -20,7 +20,7 @@
 #dispatch_runs_trips.col-sm-12{style: 'padding: 0px;'}
   .col-sm-12.dispatch-main#dispatch_runs_container{style: 'padding: 0px;'}
     = render 'runs_panel'
-  .col-sm-12#unassigned_trips_container{style: 'padding: 0px;'}
+  .col-sm-12#unassigned_trips_container{style: 'padding: 0px; overflow: hidden;'}
     = render 'unassigned_trips_panel'
 
 = render 'trips/trip_result_reason_dialog'
@@ -226,6 +226,11 @@
     }
   }
 
+  //update trips table container height so fixedHeader works
+  function update_trips_panel_height() {
+    $('#unassigned_trips_panel .panel-body').height($('#unassigned_trips_container').outerHeight() - $('#unassigned_trips_panel .panel-heading').outerHeight());
+  }
+
   // configure to be draggable
   function configure_unassigned_trips_table() {
     $('#unassigned_trips_table tbody tr td').draggable({
@@ -263,11 +268,11 @@
 
     //$('#unassigned_trips_table').bootstrapTable();
     // fixed table header
-    //$('#unassigned_trips_table').floatThead({ 
-    //  scrollContainer: function($table){
-    //    return $table.closest('.panel-body');
-    //  }
-    //});
+    $('#unassigned_trips_table').floatThead({ 
+      scrollContainer: function($table){
+       return $table.closest('.panel-body');
+      }
+    });
   }
 
   function change_trips_trip_result(trip_ids, result_id, reason) {
@@ -318,7 +323,6 @@
   $(function() {  
     // init the splitter between Runs section and Trips section
     var splitter_height = $(window).outerHeight() - 200;
-    console.log(splitter_height);
     splitter = $('#dispatch_runs_trips').height(splitter_height).split({
       position: '80%',
       limit: 40,
@@ -339,6 +343,7 @@
         }
         
         localStorage.setItem('dispatch_unassigned_trips_collapsed', (is_collapsed ? '0' : '1')); 
+        update_trips_panel_height();
       }
     });
 
@@ -470,6 +475,9 @@
           $('#unassigned_trips_container').height(200);
         }
         update_splitter_position();
+        setTimeout(function() {
+          update_trips_panel_height();
+        }, 500);
       }
     });
 
