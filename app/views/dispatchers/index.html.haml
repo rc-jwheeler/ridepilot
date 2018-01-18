@@ -116,15 +116,23 @@
     panel.find('.floatThead-wrapper').show();
   }
 
-  function reverse_collapse_panel(panel) {
-    panel.find('.panel-body').slideUp();
+  function reverse_collapse_panel(panel, callback) {
+    panel.find('.panel-body').slideUp(100, function() {
+      if(callback) {
+        callback();
+      }
+    });
     panel.find('.panel-expand-collapse-reverse').addClass('panel-collapsed');
     panel.find('.panel-expand-collapse-reverse i').removeClass('fa-chevron-down').addClass('fa-chevron-up'); 
     panel.find('.floatThead-wrapper').hide();
   }
 
-  function reverse_expand_panel(panel) {
-    panel.find('.panel-body').slideDown();
+  function reverse_expand_panel(panel, callback) {
+    panel.find('.panel-body').slideDown(100, function() {
+      if(callback) {
+        callback();
+      }
+    });
     panel.find('.panel-expand-collapse-reverse').removeClass('panel-collapsed');
     panel.find('.panel-expand-collapse-reverse i').removeClass('fa-chevron-up').addClass('fa-chevron-down'); 
     panel.find('.floatThead-wrapper').show();
@@ -228,7 +236,8 @@
 
   //update trips table container height so fixedHeader works
   function update_trips_panel_height() {
-    $('#unassigned_trips_panel .panel-body').height($('#unassigned_trips_container').outerHeight() - $('#unassigned_trips_panel .panel-heading').outerHeight());
+    var new_height = $('#unassigned_trips_container').outerHeight() - $('#unassigned_trips_panel .panel-heading').outerHeight();
+    $('#unassigned_trips_panel .panel-body').height(new_height);
   }
 
   // configure to be draggable
@@ -326,6 +335,10 @@
     splitter = $('#dispatch_runs_trips').height(splitter_height).split({
       position: '80%',
       limit: 40,
+      onDragEnd: function() {
+        console.log('ended');
+        update_trips_panel_height();
+      },
       onDrag: function(e) {
         var collapseButton = $('#unassigned_trips_container').find('.panel-expand-collapse-reverse');
         var panel = $('#unassigned_trips_panel');
@@ -333,7 +346,9 @@
         if($('#unassigned_trips_container').height() > 40) {
           if(collapseButton.hasClass('panel-collapsed')) {
             is_collapsed = false;
-            reverse_expand_panel(panel);
+            reverse_expand_panel(panel, function() {
+              update_trips_panel_height();
+            });
           }
         } else if($('#unassigned_trips_container').height() <= 40) {
           if(!collapseButton.hasClass('panel-collapsed')) {
