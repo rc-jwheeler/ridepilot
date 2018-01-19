@@ -56,7 +56,7 @@ class GoogleDistanceDurationService < AbstractDistanceDurationService
   end
 
   def extract_duration(itinerary)
-    itinerary['duration_in_traffic'].try(:[], 'value') || itinerary['elements']['duration']['value'] rescue nil
+    itinerary['duration_in_traffic'].try(:[], 'value') || itinerary['duration'].try(:[], 'value') rescue nil
   end
 
   def extract_distance(itinerary)
