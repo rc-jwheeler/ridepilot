@@ -39,7 +39,7 @@
 
       :javascript
         $(document).ready(function() {
-          var reasonNeededCodes = #{TripResult.reason_needed_result_ids.map(&:to_s)};
+          var reasonNeededCodes = #{TripResult.reason_needed_result_ids.map(&:to_s).to_json.html_safe};
           $('#trip_trip_result_id').change(function() {
             if (reasonNeededCodes.indexOf($(this).val()) >= 0) {
               $('.result_reason').show();

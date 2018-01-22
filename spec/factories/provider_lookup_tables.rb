@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :provider_lookup_table do
     caption "MyString"
 name "MyString"
