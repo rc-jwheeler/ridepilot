@@ -25,7 +25,8 @@ class NtdReport
     process_year_month_headers
     process_operations
     process_miles_and_hours
-
+    
+    @workbook.calc_pr.full_calc_on_load = true
     @workbook
   end
 
