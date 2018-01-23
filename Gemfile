@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 ruby '2.2.2'
 
-gem 'rails', '4.1.16'
+gem 'rails', '4.2.10'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
@@ -38,7 +38,7 @@ gem 'devise_account_expireable'
 
 # gem 'devise_security_extension', '~> 0.9.2'
 # Use specific commit to fix password_salt error, until new version released
-gem 'devise_security_extension'
+gem 'devise_security_extension', :git => 'git://github.com/phatworx/devise_security_extension.git'
 
 # RADAR v3.x will support ActiveRecord 4.2
 gem 'rgeo'
@@ -146,6 +146,8 @@ gem 'bootstrap-editable-rails'
 #gem 'axlsx_rails'
 gem 'rubyXL'
 
+gem 'responders', '~> 2.0'
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'
@@ -161,6 +163,7 @@ group :development do
   gem "spring-commands-rspec"
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'web-console', '~> 2.0'
 end
 
 group :production do

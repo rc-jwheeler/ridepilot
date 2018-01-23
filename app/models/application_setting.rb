@@ -2,7 +2,7 @@
 # database, but are also cached in tmp/cache. You can destroy
 # them all using `ApplicationSetting.delete_all`, but you'll
 # also want to `rake tmp:clear` to get rid of the cached values
-class ApplicationSetting < RailsSettings::CachedSettings
+class ApplicationSetting < RailsSettings::Base
   def self.update_settings(params)
     transaction do
       self['devise.password_archiving_count'] = params['devise.password_archiving_count'].to_i if params.has_key? "devise.password_archiving_count"
