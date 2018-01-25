@@ -26,7 +26,6 @@ class Trip < ActiveRecord::Base
   validate :driver_is_valid_for_vehicle
   validate :completable_until_trip_appointment_day
   validate :provider_availability
-  validate :return_trip_later_than_outbound_trip
   validate :within_advance_day_scheduling
   validate :customer_active
   validate :fit_run_schedule
@@ -241,10 +240,6 @@ class Trip < ActiveRecord::Base
     repeating_trip
   end
 
-  def is_linked?
-    (is_return? && outbound_trip) || (is_outbound? && return_trip)
-  end
-
   def update_drive_distance!
     from_lat = pickup_address.try(:latitude)
     from_lon = pickup_address.try(:longitude)
@@ -414,16 +409,6 @@ class Trip < ActiveRecord::Base
   def provider_availability
     if pickup_time && provider && !provider.available?(pickup_time.wday, pickup_time.strftime('%H:%M'))
       errors.add(:base, TranslationEngine.translate_text(:provider_not_available_for_trip))
-    end
-  end
-
-  def return_trip_later_than_outbound_trip
-    if is_linked?
-      if is_outbound? && appointment_time
-        errors.add(:base, TranslationEngine.translate_text(:outbound_trip_dropoff_time_no_later_than_return_trip_pickup_time)) if appointment_time > return_trip.pickup_time
-      elsif is_return? && pickup_time && outbound_trip.appointment_time
-        errors.add(:base, TranslationEngine.translate_text(:return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time)) if pickup_time < outbound_trip.appointment_time
-      end
     end
   end
 

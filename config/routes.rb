@@ -92,6 +92,10 @@ Rails.application.routes.draw do
       collection do
         get :clone_from_daily_trip
       end
+
+      member do
+        get :return
+      end
     end
     resources :repeating_runs
 

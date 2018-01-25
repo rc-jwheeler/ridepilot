@@ -284,7 +284,6 @@ class TripsController < ApplicationController
       @trip = @trip.clone_for_return!
     end
 
-    @outbound_trip_id = params[:trip_id]
     prep_view
 
     respond_to do |format|
@@ -313,11 +312,8 @@ class TripsController < ApplicationController
     process_address
     authorize! :manage, @trip
 
-    if @trip.is_return? && params[:trip][:outbound_trip_id].present?
-      @trip.outbound_trip = Trip.find_by_id(params[:trip][:outbound_trip_id])
-      if @trip.outbound_trip.try(:is_stand_by)
-        @trip.is_stand_by = true
-      end
+    if @trip.is_return? && @trip.outbound_trip.try(:is_stand_by)
+      @trip.is_stand_by = true
     end
 
     if params[:run_id].present?

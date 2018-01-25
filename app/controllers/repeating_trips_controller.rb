@@ -132,6 +132,19 @@ class RepeatingTripsController < ApplicationController
     end
   end
 
+  def return
+    @is_return = true
+    @trip = @trip.clone_for_return!
+
+    prep_view
+
+    respond_to do |format|
+      format.html { render action: :new }
+      format.xml  { render :xml => @trip }
+      format.js   { @remote = true; render :json => {:form => render_to_string(:partial => 'form') }, :content_type => "text/json" }
+    end
+  end
+
   private
 
   def set_trip
@@ -170,6 +183,8 @@ class RepeatingTripsController < ApplicationController
       :passenger_load_min,
       :passenger_unload_min,
       :early_pickup_allowed,
+      :direction,
+      :linking_trip_id,
       customer_attributes: [:id]
     )
   end

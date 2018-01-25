@@ -14,7 +14,6 @@ module TripCore
     belongs_to :service_level, -> { with_deleted }
     belongs_to :trip_purpose, -> { with_deleted }
 
-
     delegate :name, to: :service_level, prefix: :service_level, allow_nil: true
     delegate :name, to: :customer, prefix: :customer, allow_nil: true
     delegate :name, to: :trip_purpose, prefix: :trip_purpose, allow_nil: true
@@ -26,6 +25,7 @@ module TripCore
     validates :pickup_address, associated: true, presence: true
     validates :trip_purpose_id, presence: true
     validates_datetime :pickup_time, presence: true
+    validate :return_trip_later_than_outbound_trip
 
     validates_datetime :appointment_time, allow_nil: true, on_or_after: :pickup_time, on_or_after_message: "should be no earlier than pickup time", unless: :no_appointment_time?
 
@@ -67,6 +67,10 @@ module TripCore
     direction.try(:to_sym) == :outbound
   end
 
+  def is_linked?
+    (is_return? && outbound_trip) || (is_outbound? && return_trip)
+  end
+
   module ClassMethods
   end
 
@@ -100,6 +104,16 @@ module TripCore
 
     if self.early_pickup_allowed.nil?
       self.early_pickup_allowed = self.is_outbound? 
+    end
+  end
+
+  def return_trip_later_than_outbound_trip
+    if is_linked?
+      if is_outbound? && appointment_time
+        errors.add(:base, TranslationEngine.translate_text(:outbound_trip_dropoff_time_no_later_than_return_trip_pickup_time)) if appointment_time > return_trip.pickup_time
+      elsif is_return? && pickup_time && outbound_trip.appointment_time
+        errors.add(:base, TranslationEngine.translate_text(:return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time)) if pickup_time < outbound_trip.appointment_time
+      end
     end
   end
 end

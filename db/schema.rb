@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180124003730) do
+ActiveRecord::Schema.define(version: 20180125210854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -796,12 +796,14 @@ ActiveRecord::Schema.define(version: 20180124003730) do
     t.integer  "passenger_load_min"
     t.integer  "passenger_unload_min"
     t.boolean  "early_pickup_allowed"
+    t.integer  "linking_trip_id"
   end
 
   add_index "repeating_trips", ["customer_id"], :name => "index_repeating_trips_on_customer_id"
   add_index "repeating_trips", ["driver_id"], :name => "index_repeating_trips_on_driver_id"
   add_index "repeating_trips", ["dropoff_address_id"], :name => "index_repeating_trips_on_dropoff_address_id"
   add_index "repeating_trips", ["funding_source_id"], :name => "index_repeating_trips_on_funding_source_id"
+  add_index "repeating_trips", ["linking_trip_id"], :name => "index_repeating_trips_on_linking_trip_id"
   add_index "repeating_trips", ["mobility_id"], :name => "index_repeating_trips_on_mobility_id"
   add_index "repeating_trips", ["pickup_address_id"], :name => "index_repeating_trips_on_pickup_address_id"
   add_index "repeating_trips", ["provider_id"], :name => "index_repeating_trips_on_provider_id"
