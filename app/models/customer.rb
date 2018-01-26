@@ -153,10 +153,7 @@ class Customer < ActiveRecord::Base
     if term[0].match /\d/ #by phone number
       query = term.gsub("-", "")
       query = query[1..-1] if query.start_with? "1"
-      return Customer.where([
-      "regexp_replace(phone_number_1, '[^0-9]', '') = ? or
-      regexp_replace(phone_number_2, '[^0-9]', '') = ?
-      ", query, query])
+      return Customer.where("phone_number_1 LIKE '%' || ? || '%'  OR phone_number_2 LIKE '%' || ? || '%' ", query, query)
     else
       if term.match /^[a-z]+$/i
         #a single word, either a first or a last name
