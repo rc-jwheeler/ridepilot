@@ -29,6 +29,9 @@ class TripsController < ApplicationController
       flash.now[:alert] = nil
     end
 
+    runs = get_eligible_runs(trip_sessions)
+    @run_listings = runs.pluck(:name, :id) + [[TranslationEngine.translate_text(:unscheduled), -1]]
+
     respond_to do |format|
       format.html
       format.xml  { render :xml => @trips }
@@ -453,6 +456,12 @@ class TripsController < ApplicationController
     end
   end
 
+  def update_run_filters
+    filters_hash = params[:trip_filters].try(:symbolize_keys) || {}
+    runs = get_eligible_runs(filters_hash)
+    @run_listings = runs.pluck(:name, :id) + [[TranslationEngine.translate_text(:unscheduled), -1]]
+  end
+
   private
 
   def trip_params
@@ -553,6 +562,11 @@ class TripsController < ApplicationController
       status_id: session[:trips_status_id],
       days_of_week: session[:trips_days_of_week]
     }
+  end
+
+  def get_eligible_runs(filter_params)
+    runs = Run.for_provider(current_provider_id).reorder(nil).default_order
+    runs = RunFilter.new(runs,filter_params).filter!
   end
   
   def check_double_booked_params

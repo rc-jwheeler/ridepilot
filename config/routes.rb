@@ -85,6 +85,7 @@ Rails.application.routes.draw do
         get :customer_trip_summary
         post :check_double_booked
         get :report
+        get :update_run_filters
       end
     end
 
