@@ -113,12 +113,12 @@ RSpec.describe TripFilter do
       @non_scheduled_trip = create(:trip, pickup_time: base_pickup_time)
     end
 
-    it "should return scheduled trips when scheduled status is specified" do 
-      expect(TripFilter.new(Trip.all, {status_id: 1}).filter!).to eq([@scheduled_trip])
+    it "should return trips for specific run" do 
+      expect(TripFilter.new(Trip.all, {status_id: @scheduled_run.id}).filter!).to eq([@scheduled_trip])
     end
 
     it "should return non-scheduled trips when non-scheduled status is specified" do 
-      expect(TripFilter.new(Trip.all, {status_id: 2}).filter!).to eq([@non_scheduled_trip])
+      expect(TripFilter.new(Trip.all, {status_id: -1}).filter!).to eq([@non_scheduled_trip])
     end
   end
 
