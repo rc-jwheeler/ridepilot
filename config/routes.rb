@@ -246,6 +246,8 @@ Rails.application.routes.draw do
         patch :cancel_multiple
         delete :delete_multiple
         get :check_driver_vehicle_availability
+        get :reload_drivers
+        get :reload_vehicles
       end
 
       member do

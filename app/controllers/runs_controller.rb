@@ -51,6 +51,7 @@ class RunsController < ApplicationController
   end
 
   def show
+    @readonly = true
     setup_run
   end
 
@@ -252,12 +253,54 @@ class RunsController < ApplicationController
       @run.save(validate: false)
     end
   end
+
+  def reload_drivers
+    @drivers = Driver.active.where(:provider_id=>current_provider_id).default_order
+    date = Date.parse(params[:date]) rescue nil
+    from_time = DateTime.parse(params[:date] + " " + params[:from_time]) rescue nil
+    to_time = DateTime.parse(params[:date] + " " + params[:to_time]) rescue nil
+    exclude_inactive_drivers(date, from_time, to_time)
+  end
+
+  def reload_vehicles
+    @vehicles = Vehicle.active.where(:provider_id=>current_provider_id).default_order
+    date = Date.parse(params[:date]) rescue nil
+    exclude_inactive_vehicles(date)
+  end
   
   private
   
   def setup_run
     @drivers = Driver.active.where(:provider_id=>@run.provider_id).default_order
+
     @vehicles = Vehicle.active.where(:provider_id=>@run.provider_id).default_order
+
+    unless @readonly
+      exclude_inactive_drivers(@run.date, @run.scheduled_start_time, @run.scheduled_end_time)
+      exclude_inactive_vehicles(@run.date)
+    end
+  end
+
+  def exclude_inactive_drivers(date, from_time, to_time)
+    if date
+      @drivers = @drivers.active_for_date(date)
+      # exclude unavailable drivers for run time range
+      if from_time && to_time
+        driver_ids = []
+        from_time_str = from_time.strftime('%H:%M')
+        to_time_str = to_time.strftime('%H:%M')
+        @drivers.each do |driver|
+          driver_ids << driver.id if driver.available_between?(date, from_time_str, to_time_str) 
+        end
+        @drivers = @drivers.where(id: driver_ids)
+      end
+    end
+  end
+
+  def exclude_inactive_vehicles(date)
+    if date
+      @vehicles = @vehicles.active_for_date(date)
+    end
   end
 
   def date_range(run)

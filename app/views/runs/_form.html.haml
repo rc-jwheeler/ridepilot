@@ -58,6 +58,39 @@
   = render 'unavailable_driver_vehicle_warning_dialog'
   :javascript
     $(function() {
+      function reload_vehicles() {
+        $.ajax({
+          url: "#{reload_vehicles_runs_path}",
+          data: {
+            date: $('#run_date').val()
+          }
+        });
+      }
+
+      function reload_drivers() {
+        $.ajax({
+          url: "#{reload_drivers_runs_path}",
+          data: {
+            date: $('#run_date').val(),
+            from_time: $('#run_scheduled_start_time').val(),
+            to_time: $('#run_scheduled_end_time').val()
+          }
+        });
+      }
+
+      $('#run_date').on('change', function() {
+        reload_vehicles();
+        reload_drivers();
+      });
+
+      $('input.time_field_hour, input.time_field_minute').on('change', function() {
+        reload_drivers();
+      });
+
+      $(document).on('click', 'button.am-pm', function() {
+        reload_drivers();
+      });
+
       var original_run_date = $('#run_date').val();
       var check_driver_vehicle_availability_fn = function() {
         var driver_id = $('#run_driver_id').val();
