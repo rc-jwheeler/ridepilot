@@ -25,7 +25,6 @@
 //= require jquery.colorPicker
 //= require idletimeout
 //= require constants
-//= require fullcalendar
 //= require moment
 //= require handlebars
 //= require jquery.geocomplete

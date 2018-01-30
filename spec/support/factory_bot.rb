@@ -1,7 +1,7 @@
 RSpec.configure do |config|
   config.before(:suite) do
     begin
-      FactoryGirl.lint
+      FactoryBot.lint
     ensure
       DatabaseCleaner.clean
     end

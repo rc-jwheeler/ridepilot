@@ -1,17 +1,17 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
-ruby '2.2.1'
+ruby '2.2.2'
 
-gem 'rails', '~> 4.1.0'
+gem 'rails', '4.2.10'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.3'
+gem 'sass-rails'
 
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier'
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer',  platforms: :ruby
@@ -29,48 +29,48 @@ gem 'translation_engine', github: 'camsys/translation_engine'
 # gem 'jbuilder', '~> 2.0'
 
 # bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'sdoc', group: :doc
 
-gem 'pg'
-gem 'cancancan', '~> 1.10.1'
-gem 'devise', '~> 3.4.1'
-gem 'devise_account_expireable', '~> 0.0.2'
+gem 'pg', '~> 0.11'
+gem 'cancancan'
+gem 'devise'
+gem 'devise_account_expireable'
 
 # gem 'devise_security_extension', '~> 0.9.2'
 # Use specific commit to fix password_salt error, until new version released
-gem 'devise_security_extension', :git => 'git://github.com/phatworx/devise_security_extension.git', :ref => '2132a72d'
+gem 'devise_security_extension', :git => 'git://github.com/phatworx/devise_security_extension.git'
 
 # RADAR v3.x will support ActiveRecord 4.2
 gem 'rgeo'
-gem 'activerecord-postgis-adapter', '~> 2.2.1'
+gem 'activerecord-postgis-adapter'
 
 # Manage app-specific cron tasks using a Ruby DSL, see config/schedule.rb
-gem 'whenever', '~> 0.9.4', :require => false
+gem 'whenever', :require => false
 
 # RADAR current version is 0.13.0, but schedule_atts requires > 0.7.0 
 gem 'ice_cube', '~> 0.6.8'
 
 # Fork with Rails 4.x compatibility
-gem 'jc-validates_timeliness', '~> 3.1.1'
+gem 'jc-validates_timeliness'
 
 # For attachment processing. Using Fog for storage so that we can use
 # AWS SDK v2 separately for other tasks.
-gem 'paperclip', '~> 4.3.0'
-gem 'fog', '~> 1.32.0'
-gem 'remotipart', '~> 1.2' # allows remote multipart (file upload) forms
+gem 'paperclip'
+gem 'fog'
+gem 'remotipart' # allows remote multipart (file upload) forms
 
-gem 'will_paginate', '~> 3.0.7'
-gem 'attribute_normalizer', '~> 1.2.0'
+gem 'will_paginate'
+gem 'attribute_normalizer'
 
 # For Address Uploading
 # Note: not used by Paperclip internally per
 # https://github.com/thoughtbot/paperclip/issues/1764
-gem 'aws-sdk', '~> 2.1.8'
+gem 'aws-sdk'
 
 # For change tracking and auditing
-gem 'paper_trail', '~> 4.0.0.rc'
+gem 'paper_trail'
 
-gem 'rails-jquery-autocomplete', '~> 1.0.0'
+gem 'rails-jquery-autocomplete'
 # needed for trip address picker
 gem 'twitter-typeahead-rails', github: 'camsys/twitter-typeahead-rails'
 gem 'handlebars_assets'
@@ -85,25 +85,25 @@ gem 'haml'
 gem 'figaro'
 
 # datatables
-gem 'jquery-datatables-rails', '~> 3.3.0'
+gem 'jquery-datatables-rails'
 
 # bootstrap
-gem 'bootstrap-sass', '~> 3.3.5'
+gem 'bootstrap-sass'
 
 # soft-delete
-gem "paranoia", "~> 2.0"
+gem "paranoia"
 
 # Manage application-level settings
-gem 'rails-settings-cached', '~> 0.4.1'
+gem 'rails-settings-cached'
 
 # Use redis as the cache_store for Rails
-gem 'redis-rails', '~> 4.0.0'
+gem 'redis-rails'
 
 # font-awesome icons
 gem "font-awesome-rails"
 
 # jQuery full calendar plugin with resource views
-gem 'rails-fullcalendar-resourceviews', '~> 1.6.5.7', github: 'xudongcamsys/rails-fullcalendar-resourceviews'
+#gem 'rails-fullcalendar-resourceviews', '~> 1.6.5.7', github: 'xudongcamsys/rails-fullcalendar-resourceviews'
 
 # overcome IE9 4096 per stylesheet limit
 gem 'css_splitter'
@@ -112,7 +112,7 @@ gem 'css_splitter'
 gem 'sidekiq'
 
 # Form helper for accepts_nested_attributes_for
-gem 'nested_form', '~> 0.3.2'
+gem 'nested_form'
 
 # reporting engine
 gem 'reporting', :github => 'camsys/reporting', :branch => 'master'
@@ -146,6 +146,8 @@ gem 'bootstrap-editable-rails'
 #gem 'axlsx_rails'
 gem 'rubyXL'
 
+gem 'responders', '~> 2.0'
+
 group :integration, :qa, :production do 
   gem 'rails_12factor'
   gem 'unicorn'
@@ -161,20 +163,21 @@ group :development do
   gem "spring-commands-rspec"
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'web-console', '~> 2.0'
 end
 
 group :production do
-  gem 'exception_notification', '~> 4.0'
+  gem 'exception_notification'
 end
 
 group :test, :development do
   gem 'byebug'
-  gem 'rspec-rails', '~> 3.2'
-  gem 'capybara', '~> 2.4'
-  gem 'factory_girl_rails', '~> 4.5'
-  gem 'database_cleaner', '~> 1.4'
-  gem 'faker', '~> 1.4'
-  gem 'timecop', '~> 0.8'
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem 'factory_bot_rails'
+  gem 'database_cleaner'
+  gem 'faker'
+  gem 'timecop'
 end
 
 group :test do 
