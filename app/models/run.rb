@@ -354,9 +354,10 @@ class Run < ActiveRecord::Base
       time = (itin[0] - itin[0].beginning_of_day) / 3600.0
       eta = (itin[1] - itin[1].beginning_of_day) / 3600.0
       is_late = eta > time
+      slack_time = ((eta - time) * 60)
       slack_info << {
         time_point: (is_late ? eta : time),
-        slack_time: ((eta - time) * 60).to_i,
+        slack_time: (slack_time > 0 ? slack_time.ceil : slack_time.floor),
         leg_flag: itin[2],
         trip_id: itin[3],
         customer: itin[4]
