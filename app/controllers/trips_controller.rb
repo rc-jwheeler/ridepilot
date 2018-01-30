@@ -29,6 +29,9 @@ class TripsController < ApplicationController
       flash.now[:alert] = nil
     end
 
+    runs = get_eligible_runs(trip_sessions)
+    @run_listings = runs.pluck(:name, :id) + [[TranslationEngine.translate_text(:unscheduled), -1]]
+
     respond_to do |format|
       format.html
       format.xml  { render :xml => @trips }
@@ -284,7 +287,6 @@ class TripsController < ApplicationController
       @trip = @trip.clone_for_return!
     end
 
-    @outbound_trip_id = params[:trip_id]
     prep_view
 
     respond_to do |format|
@@ -313,11 +315,8 @@ class TripsController < ApplicationController
     process_address
     authorize! :manage, @trip
 
-    if @trip.is_return? && params[:trip][:outbound_trip_id].present?
-      @trip.outbound_trip = Trip.find_by_id(params[:trip][:outbound_trip_id])
-      if @trip.outbound_trip.try(:is_stand_by)
-        @trip.is_stand_by = true
-      end
+    if @trip.is_return? && @trip.outbound_trip.try(:is_stand_by)
+      @trip.is_stand_by = true
     end
 
     if params[:run_id].present?
@@ -340,6 +339,7 @@ class TripsController < ApplicationController
 
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
+        @trip.run.add_trip_manifest!(@trip.id) if @trip.run
         @trip.post_process_trip_result_changed!(current_user)
         @trip.update_donation current_user, params[:customer_donation].to_f if params[:customer_donation].present?
         TripDistanceCalculationWorker.perform_async(@trip.id) #sidekiq needs to run
@@ -443,6 +443,7 @@ class TripsController < ApplicationController
   def destroy
     @trip = Trip.find(params[:id])
     run = @trip.run 
+    run.delete_trip_manifest!(@trip.id) if run
     @trip.destroy
     #if run 
     #  TrackerActionLog.trips_removed_from_run(run, [@trip], current_user)
@@ -453,6 +454,12 @@ class TripsController < ApplicationController
       format.xml  { head :ok }
       format.js   { render :json => {:status => "success"}, :content_type => "text/json" }
     end
+  end
+
+  def update_run_filters
+    filters_hash = params[:trip_filters].try(:symbolize_keys) || {}
+    runs = get_eligible_runs(filters_hash)
+    @run_listings = runs.pluck(:name, :id) + [[TranslationEngine.translate_text(:unscheduled), -1]]
   end
 
   private
@@ -555,6 +562,11 @@ class TripsController < ApplicationController
       status_id: session[:trips_status_id],
       days_of_week: session[:trips_days_of_week]
     }
+  end
+
+  def get_eligible_runs(filter_params)
+    runs = Run.for_provider(current_provider_id).reorder(nil).default_order
+    runs = RunFilter.new(runs,filter_params).filter!
   end
   
   def check_double_booked_params

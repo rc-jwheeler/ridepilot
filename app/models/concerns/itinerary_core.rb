@@ -12,6 +12,15 @@ module ItineraryCore
     scope :revenue, -> { where.not(trip: nil) }
     scope :deadhead, -> { where(trip: nil) }
 
+    scope :run_begin, -> { where(trip: nil, leg_flag: 0) }
+    scope :pickup, -> { where.not(trip: nil).where(leg_flag: 1) }
+    scope :dropoff, -> { where.not(trip: nil).where(leg_flag: 2) }
+    scope :run_end, ->{ where(trip: nil, leg_flag: 3) }
+
+    def self.clear_times!
+      self.where.not("eta is NULL AND travel_time is NULL AND depart_time is NULL").update_all(eta: nil, travel_time: nil, depart_time: nil)
+    end
+
     def trip_id
       @trip_id ||= trip.id
     end
@@ -108,7 +117,18 @@ module ItineraryCore
         time
       end
 
+      update_depart_time
+
       self.save(validate: false)
+    end
+
+    def update_depart_time
+      new_time = (self.eta + process_time.to_i.minutes) if self.eta
+      self.depart_time = if trip && !trip.early_pickup_allowed
+        new_time > time ? new_time : time
+      else
+        new_time
+      end
     end
 
     # in minutes
@@ -134,10 +154,6 @@ module ItineraryCore
       end
     end
 
-    def depart_time
-      (eta + process_time.to_i.minutes) if eta
-    end
-
     def calculate_travel_time!
       if address && to_address && address.geocoded? && to_address.geocoded?
         params = {
@@ -149,8 +165,6 @@ module ItineraryCore
         }
 
         self.travel_time = TripDistanceDurationProxy.new(ENV['TRIP_PLANNER_TYPE'], params).get_drive_time.to_f
-
-        self.calculate_eta!
       end
     end
 

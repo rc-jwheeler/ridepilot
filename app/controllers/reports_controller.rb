@@ -749,7 +749,7 @@ class ReportsController < ApplicationController
       @runs.each do |run|
         @data_by_date[run.date] = [] unless @data_by_date.has_key?(run.date)
         day_data = @data_by_date[run.date]
-        day_data << [run.name, run.incomplete_reason.join("; ")]
+        day_data << [run.name, run.id, run.incomplete_reason.join("; ")]
       end
 
       @run_dates = @data_by_date.keys.sort
@@ -1152,6 +1152,9 @@ class ReportsController < ApplicationController
       @total_attendant_count = run_trips.sum("attendant_count")
       @total_service_animal_count = run_trips.sum("service_animal_space_count")
       @total_passengers_count = @total_customer_count + @total_guest_count + @total_attendant_count + @total_service_animal_count
+
+      # Trips by funding source
+      @trip_count_by_funding_source = run_trips.group("trips.funding_source_id").count
 
       if query_params[:report_type] == 'summary'
         @is_summary_report = true

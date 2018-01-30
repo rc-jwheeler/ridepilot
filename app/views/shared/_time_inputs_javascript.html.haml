@@ -2,7 +2,7 @@
   $(function() {
     function update_time(time_field) {
       var hour = time_field.find('.time_field_hour').val().trim();
-      var min = time_field.find('.time_field_minute').val().trim();
+      var min = time_field.find('.time_field_minute').val().trim() || "00";
       var am_pm = time_field.find('.am-pm').text().trim();
 
       if(hour && parseInt(hour) > 12) {

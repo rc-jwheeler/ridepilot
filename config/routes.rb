@@ -85,12 +85,17 @@ Rails.application.routes.draw do
         get :customer_trip_summary
         post :check_double_booked
         get :report
+        get :update_run_filters
       end
     end
 
     resources :repeating_trips do
       collection do
         get :clone_from_daily_trip
+      end
+
+      member do
+        get :return
       end
     end
     resources :repeating_runs
@@ -241,16 +246,20 @@ Rails.application.routes.draw do
         patch :cancel_multiple
         delete :delete_multiple
         get :check_driver_vehicle_availability
+        get :reload_drivers
+        get :reload_vehicles
       end
 
       member do
         get :append_trips
-        get :request_completion
+        get :request_change_locations
+        patch :update_locations
         get :request_uncompletion
         patch :uncomplete
-        patch :complete
+        get :complete
         patch :assign_driver
         patch :unassign_driver
+        get :update_slack_chart
       end
     end
 

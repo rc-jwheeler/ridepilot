@@ -169,6 +169,7 @@ class DispatchersController < ApplicationController
       new_order = params[:manifest_order].split(',').uniq
       @run.manifest_order = new_order 
       @run.save(validate: false)
+      @run.itineraries.clear_times! #clear itins times
 
       #TrackerActionLog.rearrange_trip_itineraries(@run, current_user)
     end
@@ -180,6 +181,10 @@ class DispatchersController < ApplicationController
     if @run
       @eta_info = RunStatsCalculator.new(@run.id).process_eta
     end
+  end
+
+  def update_slack_chart
+    @run = Run.find_by_id params[:run_id]
   end
   
   private

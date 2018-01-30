@@ -33,6 +33,9 @@ class Run < ActiveRecord::Base
   accepts_nested_attributes_for :trips
 
   before_validation :fix_dates
+  before_update :check_vehicle_change
+  before_update :check_manifest_change
+  after_update :apply_manifest_changes
 
   validate                  :name_uniqueness
   normalize_attribute :name, :with => [ :strip ]
@@ -166,17 +169,22 @@ class Run < ActiveRecord::Base
       build_begin_run_itinerary.save
       self.trips.each do |trip|
         build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1).save
-        build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 2).save
+        build_itinerary(trip.appointment_time, trip.dropoff_address, trip.id, 2).save
       end
       build_end_run_itinerary.save
     end
   end
 
-  # "Cancels" a run: removes any trips from that run
+  # "Cancels" a run: mark as cancelled and unschedule everything
   def cancel!
     self.cancelled = true
+    unschedule!
+  end
+
+  # unschedule trips
+  def unschedule!(auto_save = true)
     self.manifest_order = nil
-    self.save(validate: false)
+    self.save(validate: false) if auto_save
     
     trips.clear # Doesn't actually destroy the records, just removes the association
     itineraries.delete_all
@@ -228,12 +236,15 @@ class Run < ActiveRecord::Base
         end
       end
 
+      is_run_end_included = manifest_order_array.last == 'run_end'
+      last_itin_spot = is_run_end_included ? (manifest_order_array.size - 1) : manifest_order_array.size
+
       unless pickup_index
-        pickup_index = manifest_order_array.size 
-        appt_index = pickup_index + 1
+        pickup_index = last_itin_spot
+        appt_index = last_itin_spot + 1
       else 
         unless appt_index
-          appt_index = manifest_order_array.size + 1
+          appt_index = last_itin_spot + 1
         end
       end
 
@@ -261,9 +272,6 @@ class Run < ActiveRecord::Base
     itins = itineraries
     itins = itins.revenue if revenue_only
 
-    manifest_order.insert(0, "run_begin") if manifest_order.first != 'run_begin'
-    manifest_order << "run_end" if manifest_order.last != 'run_end'
-
     if itins.empty?
       # begin run
       itins << build_begin_run_itinerary unless revenue_only
@@ -284,6 +292,9 @@ class Run < ActiveRecord::Base
     if manifest_order.blank?
       itins = itins.sort_by { |itin| [itin.time_diff, itin.leg_flag] }
     else
+      manifest_order.insert(0, "run_begin") if manifest_order.first != 'run_begin'
+      manifest_order << "run_end" if manifest_order.last != 'run_end'
+
       itins = itins.sort_by{|itin| manifest_order.index(itin.itin_id).to_i}
     end
 
@@ -306,15 +317,22 @@ class Run < ActiveRecord::Base
   end
 
   def add_trip_itineraries!(trip_id)
-    trip = Trip.find_by_id(trip_id) 
-    if trip 
-      build_itinerary(trip.pickup_time, trip.pickup_address, trip_id, 1).save
-      build_itinerary(trip.appointment_time, trip.dropoff_address, trip_id, 2).save
+    if self.itineraries.where(trip_id: trip_id).empty?
+      trip = Trip.find_by_id(trip_id) 
+      if trip 
+        build_itinerary(trip.pickup_time, trip.pickup_address, trip_id, 1).save
+        build_itinerary(trip.appointment_time, trip.dropoff_address, trip_id, 2).save
+        self.itineraries.clear_times! #clear other itins times
+      end
     end
   end
 
   def remove_trip_itineraries!(trip_id)
-    self.itineraries.where(trip_id: trip_id).delete_all
+    trip_itins = self.itineraries.where(trip_id: trip_id)
+    if trip_itins.any?
+      self.itineraries.where(trip_id: trip_id).delete_all
+      self.itineraries.clear_times! #clear other itins times
+    end
   end
 
   def as_calendar_json
@@ -326,6 +344,27 @@ class Run < ActiveRecord::Base
       resource: date.to_date.to_s(:js),
       className: valid_as_daily_run? ? 'valid' : 'invalid'
     }
+  end
+
+  def manifest_slack_travel_times
+    slack_info = []
+    itineraries.where.not(time: nil).where.not(eta: nil)
+      .includes(trip: :customer).references(trip: :customer)
+      .pluck(:time, :eta, :leg_flag, :trip_id, "customers.first_name || '' || customers.last_name").each do |itin|
+      time = (itin[0] - itin[0].beginning_of_day) / 3600.0
+      eta = (itin[1] - itin[1].beginning_of_day) / 3600.0
+      is_late = eta > time
+      slack_time = ((eta - time) * 60)
+      slack_info << {
+        time_point: (is_late ? eta : time),
+        slack_time: (slack_time > 0 ? slack_time.ceil : slack_time.floor),
+        leg_flag: itin[2],
+        trip_id: itin[3],
+        customer: itin[4]
+      }
+    end
+
+    slack_info.sort_by{|x| x[:time_point]}
   end
 
   def self.fake_cab_run
@@ -350,7 +389,58 @@ class Run < ActiveRecord::Base
   end
 
   def completable?
-    vehicle.present? && start_odometer.present? && end_odometer.present? && start_odometer < end_odometer && trips.incomplete.empty? && check_provider_fields_required_for_run_completion
+    start_odometer.present? && end_odometer.present? && start_odometer < end_odometer &&
+    vehicle_id.present?  && driver_id.present?
+    (from_garage_address || vehicle.try(:garage_address)) &&
+    (to_garage_address || vehicle.try(:garage_address)) &&
+    trips.incomplete.empty?  &&
+    check_provider_fields_required_for_run_completion 
+  end
+
+  # lists incomplete reason
+  def incomplete_reason
+    return [] if complete?
+
+    reasons = []
+
+    unless driver_id
+      reasons << "Driver not assigned"
+    end
+    unless vehicle_id
+      reasons << "Vehicle not assigned"
+    end
+    unless start_odometer
+      reasons << "Missing beginning mileage"
+    end
+    unless end_odometer
+      reasons << "Missing ending mileage"
+    end
+
+    (provider.fields_required_for_run_completion & Run::FIELDS_FOR_COMPLETION.map(&:to_s)).each do |extra_field|
+      if extra_field == "paid" && self.send(extra_field).nil?
+        reasons << "Paid field is not specified"
+      elsif extra_field == "unpaid_driver_break_time" && self.send(extra_field).nil?
+        reasons << "Driver Unpaid Break Time field is not specified"
+      end
+    end
+
+    if trips.incomplete.any?
+      reasons << "Has #{trips.incomplete.count} pending trip(s)"
+    end
+
+    unless (from_garage_address || vehicle.try(:garage_address))
+      reasons << "Missing start location"
+    end
+
+    unless (to_garage_address || vehicle.try(:garage_address)) 
+      reasons << "Missing end location"
+    end
+
+    if reasons.empty?
+      reasons << "No missing data, please go to run details page to complete it"
+    end
+
+    reasons
   end
 
   def set_complete!(user = nil)
@@ -391,10 +481,22 @@ class Run < ActiveRecord::Base
     sum("extract(epoch from (#{query_str}))") / 3600.0
   end
 
+  def duration_in_hours
+    actual_start_time && actual_end_time ? hours_operated : hours_scheduled
+  end
+
   # Returns length in hours for an individual run. Use scheduled hours
   def hours_scheduled
     seconds = scheduled_end_time - scheduled_start_time
     seconds / 3600.0
+  end
+
+  # Returns length in hours for an individual run. Use scheduled hours
+  def hours_operated
+    if actual_start_time && actual_end_time
+      seconds = actual_end_time - actual_start_time
+      seconds / 3600.0
+    end
   end
 
   # sum up number_of_passengers in each tracking type from completed trips
@@ -414,44 +516,6 @@ class Run < ActiveRecord::Base
     r = self.clone
     r.repeating_run = nil
     r.valid?
-  end
-
-  # lists incomplete reason
-  def incomplete_reason
-    return [] if complete?
-
-    reasons = []
-
-    unless driver_id
-      reasons << "Driver not assigned"
-    end
-    unless vehicle_id
-      reasons << "Vehicle not assigned"
-    end
-    unless start_odometer
-      reasons << "Missing beginning mileage"
-    end
-    unless end_odometer
-      reasons << "Missing ending mileage"
-    end
-
-    (provider.fields_required_for_run_completion & Run::FIELDS_FOR_COMPLETION.map(&:to_s)).each do |extra_field|
-      if extra_field == "paid" && self.send(extra_field).nil?
-        reasons << "Paid field is not specified"
-      elsif extra_field == "unpaid_driver_break_time" && self.send(extra_field).nil?
-        reasons << "Driver Unpaid Break Time field is not specified"
-      end
-    end
-
-    if trips.incomplete.any?
-      reasons << "Has #{trips.incomplete.count} pending trip(s)"
-    end
-
-    if reasons.empty?
-      reasons << "No missing data, please go to run details page to complete it"
-    end
-
-    reasons
   end
 
   private
@@ -589,6 +653,40 @@ class Run < ActiveRecord::Base
   # Returns true if run was generated by a parent repeating run
   def child_run?
     repeating_run.present?
+  end
+
+  def check_vehicle_change
+    if self.changes.include?(:vehicle_id)
+      self.from_garage_address = self.vehicle.try(:garage_address).try(:dup) 
+      self.to_garage_address = self.vehicle.try(:garage_address).try(:dup) 
+    end
+
+    true
+  end
+
+  def check_manifest_change
+    if self.changes.include?(:date)
+      @unschedule_trips = true
+    else
+      if (self.changes.keys & ["scheduled_start_time", "scheduled_end_time", "from_garage_address_id", "to_garage_address_id"]).any?
+        @clear_manifest_times = true
+      end
+    end
+
+    true
+  end  
+
+  def apply_manifest_changes
+    if @unschedule_trips
+      # TODO
+      self.unschedule!(false)
+    elsif @clear_manifest_times
+      self.itineraries.clear_times!
+      self.itineraries.run_begin.update_all(time: self.scheduled_start_time, address_id: self.from_garage_address.try(:id) || self.vehicle.try(:garage_address).try(:id))
+      self.itineraries.run_end.update_all(time: self.scheduled_end_time, address_id: self.to_garage_address.try(:id) || self.vehicle.try(:garage_address).try(:id))
+    end
+
+    true
   end
   
 end

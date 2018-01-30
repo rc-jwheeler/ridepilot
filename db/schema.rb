@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180123045647) do
+ActiveRecord::Schema.define(version: 20180125210854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -489,6 +489,7 @@ ActiveRecord::Schema.define(version: 20180123045647) do
     t.integer  "leg_flag"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "depart_time"
   end
 
   add_index "itineraries", ["address_id"], name: "index_itineraries_on_address_id", using: :btree
@@ -710,6 +711,7 @@ ActiveRecord::Schema.define(version: 20180123045647) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "wday"
+    t.datetime "depart_time"
   end
 
   add_index "repeating_itineraries", ["address_id"], name: "index_repeating_itineraries_on_address_id", using: :btree
@@ -793,12 +795,15 @@ ActiveRecord::Schema.define(version: 20180123045647) do
     t.boolean  "ntd_reportable",                             default: true
     t.integer  "passenger_load_min"
     t.integer  "passenger_unload_min"
-    t.integer  "early_pickup_allowed"
+    t.boolean  "early_pickup_allowed"
+    t.integer  "linking_trip_id"
   end
+
 
   add_index "repeating_trips", ["customer_id"], name: "index_repeating_trips_on_customer_id", using: :btree
   add_index "repeating_trips", ["driver_id"], name: "index_repeating_trips_on_driver_id", using: :btree
   add_index "repeating_trips", ["dropoff_address_id"], name: "index_repeating_trips_on_dropoff_address_id", using: :btree
+  add_index "repeating_trips", ["linking_trip_id"], :name => "index_repeating_trips_on_linking_trip_id", using: :btree
   add_index "repeating_trips", ["funding_source_id"], name: "index_repeating_trips_on_funding_source_id", using: :btree
   add_index "repeating_trips", ["mobility_id"], name: "index_repeating_trips_on_mobility_id", using: :btree
   add_index "repeating_trips", ["pickup_address_id"], name: "index_repeating_trips_on_pickup_address_id", using: :btree
@@ -1092,7 +1097,7 @@ ActiveRecord::Schema.define(version: 20180123045647) do
     t.boolean  "ntd_reportable",                                                              default: true
     t.integer  "passenger_load_min"
     t.integer  "passenger_unload_min"
-    t.integer  "early_pickup_allowed"
+    t.boolean  "early_pickup_allowed"
   end
 
   add_index "trips", ["called_back_by_id"], name: "index_trips_on_called_back_by_id", using: :btree

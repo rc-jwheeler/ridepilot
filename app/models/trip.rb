@@ -26,10 +26,12 @@ class Trip < ActiveRecord::Base
   validate :driver_is_valid_for_vehicle
   validate :completable_until_trip_appointment_day
   validate :provider_availability
-  validate :return_trip_later_than_outbound_trip
   validate :within_advance_day_scheduling
   validate :customer_active
   validate :fit_run_schedule
+
+  before_update :check_eta_settings_change
+  after_update :apply_eta_settings_change
 
   scope :after,              -> (pickup_time) { where('pickup_time > ?', pickup_time.utc) }
   scope :after_today,        -> { where('pickup_time > ?', Date.today.end_of_day) }
@@ -238,10 +240,6 @@ class Trip < ActiveRecord::Base
     repeating_trip
   end
 
-  def is_linked?
-    (is_return? && outbound_trip) || (is_outbound? && return_trip)
-  end
-
   def update_drive_distance!
     from_lat = pickup_address.try(:latitude)
     from_lon = pickup_address.try(:longitude)
@@ -414,16 +412,6 @@ class Trip < ActiveRecord::Base
     end
   end
 
-  def return_trip_later_than_outbound_trip
-    if is_linked?
-      if is_outbound? && appointment_time
-        errors.add(:base, TranslationEngine.translate_text(:outbound_trip_dropoff_time_no_later_than_return_trip_pickup_time)) if appointment_time > return_trip.pickup_time
-      elsif is_return? && pickup_time && outbound_trip.appointment_time
-        errors.add(:base, TranslationEngine.translate_text(:return_trip_pickup_time_no_earlier_than_outbound_trip_dropoff_time)) if pickup_time < outbound_trip.appointment_time
-      end
-    end
-  end
-
   # Formats a variety of inputs as a Time object, and catches errors.
   # If a time string (e.g. "10:00 AM") is sent along with a date param, will
   # create the time at the given date. Defaults to today.
@@ -468,5 +456,17 @@ class Trip < ActiveRecord::Base
 
   def time_portion(time)
     (time - time.beginning_of_day) if time
+  end
+
+  def check_eta_settings_change
+    @clear_itineraries_times = ( self.changes.keys & ["passenger_load_min", "passenger_unload_min", "early_pickup_allowed"] ).any?
+    true
+  end
+
+  def apply_eta_settings_change
+    if self.run
+      self.run.itineraries.clear_times! if @clear_itineraries_times
+    end
+    true
   end
 end
