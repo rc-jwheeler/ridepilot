@@ -181,6 +181,66 @@ module DispatchHelper
     end
   end
 
+  def slack_color(slack_time)
+    return unless slack_time
+
+    very_early_threshold = current_provider.very_early_arrival_threshold_min || 15 
+    early_threshold = current_provider.early_arrival_threshold_min || 5 
+    late_threshold = current_provider.late_arrival_threshold_min || 5 
+    very_late_threshold = current_provider.very_late_arrival_threshold_min || 15 
+
+    if slack_time > 0
+      if  very_late_threshold <= slack_time
+        "#8a6d3b"
+      elsif late_threshold <= slack_time
+        "#fcf8e3"
+      else
+        "#aaafaa"
+      end
+    else
+      slack_time = slack_time * -1
+      if  very_early_threshold <= slack_time
+        "#3c763d"
+      elsif early_threshold <= slack_time
+        "#dff0d8"
+      else
+        "#aaafaa"
+      end
+    end
+       
+  end
+
+  def format_slack_tooltip(itin)
+    return unless itin 
+
+    tooltip = ""
+    if itin[:leg_flag] == 0
+      tooltip += "leaving garage "
+    elsif itin[:leg_flag] == 1
+      tooltip += "pick up "
+    elsif itin[:leg_flag] == 2
+      tooltip += "drop off "
+    elsif itin[:leg_flag] == 3
+      tooltip += "going back to garage "
+    end
+
+    unless itin[:customer].blank?
+      tooltip += itin[:customer]
+    end
+
+    slack_time = itin[:slack_time]
+    if slack_time < 0
+      tooltip += " (#{slack_time * -1} minutes early)"
+    elsif slack_time > 0
+      tooltip += " (#{slack_time} minutes late)"
+    else
+      tooltip += " (on time)"
+    end
+
+    tooltip
+
+  end
+
   private
 
   def time_portion(time)

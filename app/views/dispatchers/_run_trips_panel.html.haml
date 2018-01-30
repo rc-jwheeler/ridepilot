@@ -43,6 +43,7 @@
       %span.run_summary{style: 'font-size: small;'}
         = simple_format run_summary(run)
   .panel-body.vertical-resizable-panel
+    = render 'dispatchers/slack_chart', run: run if run && run.date.today? || run.date.future?
     = render 'dispatchers/run_manifest_table', run: run, trips: run.trips
 
 - unless run.complete?

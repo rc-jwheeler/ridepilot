@@ -346,6 +346,26 @@ class Run < ActiveRecord::Base
     }
   end
 
+  def manifest_slack_travel_times
+    slack_info = []
+    itineraries.where.not(time: nil).where.not(eta: nil)
+      .includes(trip: :customer).references(trip: :customer)
+      .pluck(:time, :eta, :leg_flag, :trip_id, "customers.first_name || '' || customers.last_name").each do |itin|
+      time = (itin[0] - itin[0].beginning_of_day) / 3600.0
+      eta = (itin[1] - itin[1].beginning_of_day) / 3600.0
+      is_late = eta > time
+      slack_info << {
+        time_point: (is_late ? eta : time),
+        slack_time: ((eta - time) * 60).to_i,
+        leg_flag: itin[2],
+        trip_id: itin[3],
+        customer: itin[4]
+      }
+    end
+
+    slack_info.sort_by{|x| x[:time_point]}
+  end
+
   def self.fake_cab_run
     Run.new name: 'Cab', id: Run::CAB_RUN_ID
   end

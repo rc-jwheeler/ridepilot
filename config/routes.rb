@@ -259,6 +259,7 @@ Rails.application.routes.draw do
         get :complete
         patch :assign_driver
         patch :unassign_driver
+        get :update_slack_chart
       end
     end
 

@@ -182,6 +182,10 @@ class DispatchersController < ApplicationController
       @eta_info = RunStatsCalculator.new(@run.id).process_eta
     end
   end
+
+  def update_slack_chart
+    @run = Run.find_by_id params[:run_id]
+  end
   
   private
 
