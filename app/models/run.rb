@@ -1,4 +1,4 @@
-class Run < ActiveRecord::Base
+class Run < ApplicationRecord
   include RequiredFieldValidatorModule
   include RunCore
   include PublicActivity::Common

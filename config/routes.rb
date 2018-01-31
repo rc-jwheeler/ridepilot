@@ -7,8 +7,8 @@ Rails.application.routes.draw do
 
     root :to => "dispatchers#index"
 
-    get "admin", :controller => :home, :action => :index
-    get "schedule_recurring", :controller => :home, :action => :schedule_recurring
+    get "admin", to: "home#index"
+    get "schedule_recurring", to: "home#schedule_recurring"
 
     devise_for :users
 
@@ -319,10 +319,10 @@ Rails.application.routes.draw do
       match "v1/device_pool_drivers/:id" => "v1/device_pool_drivers#update", :as => "v1_device_pool_driver"
     end
 
-    get "custom_reports/:id", :controller=>:reports, :action=>:show, as: :custom_report
-    get "saved_reports/:id", :controller=>:reports, :action=>:saved_report, as: :saved_report
-    get "show_saved_reports/:id", :controller=>:reports, :action=>:show_saved_report, as: :show_saved_report
-    delete "delete_saved_reports/:id", :controller=>:reports, :action=>:delete_saved_report, as: :delete_saved_report
+    get "custom_reports/:id", to: "reports#show", as: :custom_report
+    get "saved_reports/:id", to: "reports#saved_report", as: :saved_report
+    get "show_saved_reports/:id", to: "reports#show_saved_report", as: :show_saved_report
+    delete "delete_saved_reports/:id", to: "reports#delete_saved_report", as: :delete_saved_report
     get "reports/:action", :controller=>:reports
     get "reports/:action/:id", :controller=>:reports
     resources :reports, only: [] do 
@@ -359,12 +359,12 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      match "authenticate_customer", :controller => :customers, :action => :show, :via => [:get, :options]
-      match "authenticate_provider", :controller => :providers, :action => :show, :via => [:get, :options]
-      match "trip_purposes", :controller => :trip_purposes, :action => :index, :via => [:get, :options]
-      match "create_trip", :controller => :trips, :action => :create, :via => [:post, :options]
-      match "cancel_trip", :controller => :trips, :action => :destroy, :via => [:delete, :options]
-      match "trip_status", :controller => :trips, :action => :show, :via => [:get, :options]
+      match "authenticate_customer", to: "customers#show", :via => [:get, :options]
+      match "authenticate_provider", to: "providers#show", :via => [:get, :options]
+      match "trip_purposes", to: "trip_purposes#index", :via => [:get, :options]
+      match "create_trip", to: "trips#create", :via => [:post, :options]
+      match "cancel_trip", to: "trips#destroy", :via => [:delete, :options]
+      match "trip_status", to: "trips#show", :via => [:get, :options]
     end
   end
 end

@@ -20,8 +20,8 @@ class ApplicationSetting < RailsSettings::Base
   end
   
   def self.apply!
-    Devise.expire_password_after    = self.all['devise.expire_password_after']
-    Devise.password_archiving_count = self.all['devise.password_archiving_count']
+    Devise.expire_password_after    = self['devise.expire_password_after']
+    Devise.password_archiving_count = self['devise.password_archiving_count']
     return true
   end
 end

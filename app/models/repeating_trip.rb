@@ -1,4 +1,4 @@
-class RepeatingTrip < ActiveRecord::Base
+class RepeatingTrip < ApplicationRecord
   include RequiredFieldValidatorModule
   include RecurringRideCoordinatorScheduler
   include RecurringRideCoordinator

@@ -6,7 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-ActiveRecord::Base.transaction do
+ApplicationRecord.transaction do
   puts "Seeding..."
 
   puts "Creating first provider and system admin..."

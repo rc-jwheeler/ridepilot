@@ -1,4 +1,4 @@
-class Trip < ActiveRecord::Base
+class Trip < ApplicationRecord
   include RequiredFieldValidatorModule
   include TripCore
   include PublicActivity::Common

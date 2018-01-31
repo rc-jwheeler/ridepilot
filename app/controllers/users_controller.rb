@@ -3,7 +3,7 @@ require 'new_user_mailer'
 class UsersController < ApplicationController
   load_and_authorize_resource :provider, only: [:new_user, :create_user]
   before_action :set_user, only: [:show, :edit, :update, :reset_password]
-  skip_before_filter :authenticate_user!, only: [:new_user, :create_user, :get_verification_question, :answer_verification_question]
+  skip_before_action :authenticate_user!, only: [:new_user, :create_user, :get_verification_question, :answer_verification_question], raise: false
 
   def new_user
     authorize! :edit, @provider

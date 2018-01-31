@@ -14,7 +14,7 @@ RSpec.describe "V1::device_pool_drivers" do
       
       it "raises routing error" do
         expect {
-          post v1_device_pool_drivers_url(:format => "json", :protocol => "http", :host => 'localhost'), { :user => { :email => user.email, :password => "Password#1" } }
+          post v1_device_pool_drivers_url(:format => "json", :protocol => "http", :host => 'localhost'), params: { :user => { :email => user.email, :password => "Password#1" } }
         }.to raise_error(ActionController::RoutingError)        
       end
     end
@@ -47,7 +47,7 @@ RSpec.describe "V1::device_pool_drivers" do
         create :role, :level => 0, :user => user
         @device_pool_driver = create :device_pool_driver, :driver => create(:driver, :user => @user)
           
-        post v1_device_pool_drivers_url(:format => "json", :protocol => "https", :host => 'localhost'), { :user => { :email => user.email, :password => "wrong" } }
+        post v1_device_pool_drivers_url(:format => "json", :protocol => "https", :host => 'localhost'), params: { :user => { :email => user.email, :password => "wrong" } }
       end
 
       it "returns 401" do
@@ -70,7 +70,7 @@ RSpec.describe "V1::device_pool_drivers" do
         
         @device_pool_driver = create :device_pool_driver, :driver => create(:driver, :user => @user)
 
-        post v1_device_pool_drivers_url(:format => "json", :protocol => "https", :host => 'localhost'), { :user => { :email => current_user.email, :password => "Password#1" } }
+        post v1_device_pool_drivers_url(:format => "json", :protocol => "https", :host => 'localhost'), params: { :user => { :email => current_user.email, :password => "Password#1" } }
       end
 
       it "returns 401" do
@@ -91,7 +91,7 @@ RSpec.describe "V1::device_pool_drivers" do
         
         @device_pool_driver = create :device_pool_driver, :driver => create(:driver, :user => @user)
 
-        post v1_device_pool_drivers_url(:format => "json", :protocol => "https", :host => 'localhost'), { :user => { :email => user.email.upcase, :password => "Password#1" } }
+        post v1_device_pool_drivers_url(:format => "json", :protocol => "https", :host => 'localhost'), params: { :user => { :email => user.email.upcase, :password => "Password#1" } }
       end
 
       it "returns 200" do
@@ -108,7 +108,7 @@ RSpec.describe "V1::device_pool_drivers" do
         
         @device_pool_driver = create :device_pool_driver, :driver => create(:driver, :user => @user)
 
-        post v1_device_pool_drivers_url(:format => "json", :protocol => "https", :host => 'localhost'), { :user => { :email => user.email, :password => "Password#1" } }
+        post v1_device_pool_drivers_url(:format => "json", :protocol => "https", :host => 'localhost'), params: { :user => { :email => user.email, :password => "Password#1" } }
       end
 
       it "returns 200" do
@@ -133,7 +133,7 @@ RSpec.describe "V1::device_pool_drivers" do
       
       it "raises routing error" do
         expect {
-          post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "http"), { :user => { :email => user.email, :password => "Password#1" }, :device_pool_driver => { :status => "XXX" } }
+          post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "http"), params: { :user => { :email => user.email, :password => "Password#1" }, :device_pool_driver => { :status => "XXX" } }
         }.to raise_error(ActionController::RoutingError)        
       end
     end
@@ -165,7 +165,7 @@ RSpec.describe "V1::device_pool_drivers" do
         
         @device_pool_driver = create :device_pool_driver, :driver => create(:driver, :user => @user)
                 
-        post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "https"), { :user => { :email => user.email, :password => "wrong" } }
+        post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "https"), params: { :user => { :email => user.email, :password => "wrong" } }
       end
       
       it "returns 401" do
@@ -188,7 +188,7 @@ RSpec.describe "V1::device_pool_drivers" do
         
         @device_pool_driver = create :device_pool_driver, :driver => create(:driver, :user => @user)
 
-        post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "https"), { :user => { :email => current_user.email, :password => "Password#1" } }
+        post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "https"), params: { :user => { :email => current_user.email, :password => "Password#1" } }
       end
 
       it "returns 401" do
@@ -208,7 +208,7 @@ RSpec.describe "V1::device_pool_drivers" do
         create :role, :level => 0, :user => user
         @device_pool_driver = create :device_pool_driver, :driver => create(:driver, :user => @user)
         
-        post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "https"), { :user => { :email => user.email, :password => "Password#1" }, :device_pool_driver => { :status => "break", :lat => "45.5", :lng => "-122.6" } }
+        post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "https"), params: { :user => { :email => user.email, :password => "Password#1" }, :device_pool_driver => { :status => "break", :lat => "45.5", :lng => "-122.6" } }
       end
       
       it "returns 200" do
@@ -228,7 +228,7 @@ RSpec.describe "V1::device_pool_drivers" do
         create :role, :level => 0, :user => user
         @device_pool_driver = create :device_pool_driver, :driver => create(:driver, :user => @user), :lat => 45.5, :lng => -122.6
         
-        post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "https"), { :user => { :email => user.email, :password => "Password#1" }, :device_pool_driver => { :status => "break", :lat => "", :lng => "" } }
+        post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "https"), params: { :user => { :email => user.email, :password => "Password#1" }, :device_pool_driver => { :status => "break", :lat => "", :lng => "" } }
       end
       
       it "returns 200" do
@@ -249,7 +249,7 @@ RSpec.describe "V1::device_pool_drivers" do
         create :role, :level => 0, :user => user
         @device_pool_driver = create :device_pool_driver, :driver => create(:driver, :user => @user)
                 
-        post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "https"), { :user => { :email => user.email, :password => "Password#1" }, :device_pool_driver => { :status => "XXX" } }
+        post v1_device_pool_driver_url(device_pool_driver.id, :host => "localhost", :format => "json", :protocol => "https"), params: { :user => { :email => user.email, :password => "Password#1" }, :device_pool_driver => { :status => "XXX" } }
       end
       
       it "returns 400" do
@@ -270,7 +270,7 @@ RSpec.describe "V1::device_pool_drivers" do
         create :role, :level => 0, :user => user
         @device_pool_driver = create :device_pool_driver, :driver => create(:driver, :user => @user)
         
-        post v1_device_pool_driver_url(0, :format => "json", :protocol => "https", :host => 'localhost'), { :user => { :email => user.email, :password => "Password#1" }, :device_pool_driver => { :status => DevicePoolDriver::Statuses.first } }
+        post v1_device_pool_driver_url(0, :format => "json", :protocol => "https", :host => 'localhost'), params: { :user => { :email => user.email, :password => "Password#1" }, :device_pool_driver => { :status => DevicePoolDriver::Statuses.first } }
       end
       
       it "returns 404" do

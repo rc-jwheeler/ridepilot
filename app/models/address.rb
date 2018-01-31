@@ -1,4 +1,4 @@
-class Address < ActiveRecord::Base
+class Address < ApplicationRecord
   acts_as_paranoid # soft delete
   
   belongs_to :provider, -> { with_deleted }

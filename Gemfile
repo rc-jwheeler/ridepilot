@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
-ruby '2.2.2'
+ruby '2.4.2'
 
-gem 'rails', '4.2.10'
+gem 'rails', '5.0.6'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
@@ -19,8 +19,8 @@ gem 'therubyracer',  platforms: :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
-gem 'translation_engine', github: 'camsys/translation_engine'
-#gem 'translation_engine', path: '~/code/translation_engine'
+gem 'translation_engine', github: 'camsys/translation_engine', branch: 'rails_5'
+#gem 'translation_engine', path: '~/translation_engine'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 # gem 'turbolinks'
@@ -36,12 +36,12 @@ gem 'cancancan'
 gem 'devise'
 gem 'devise_account_expireable'
 
-# gem 'devise_security_extension', '~> 0.9.2'
-# Use specific commit to fix password_salt error, until new version released
-gem 'devise_security_extension', :git => 'git://github.com/phatworx/devise_security_extension.git'
+gem 'devise_security_extension', github: 'camsys/devise_security_extension'
+#gem 'devise_security_extension', path: '~/devise_security_extension'
 
 # RADAR v3.x will support ActiveRecord 4.2
 gem 'rgeo'
+gem "rgeo-proj4"
 gem 'activerecord-postgis-adapter'
 
 # Manage app-specific cron tasks using a Ruby DSL, see config/schedule.rb
@@ -56,7 +56,7 @@ gem 'jc-validates_timeliness'
 # For attachment processing. Using Fog for storage so that we can use
 # AWS SDK v2 separately for other tasks.
 gem 'paperclip'
-gem 'fog'
+gem 'fog-aws'
 gem 'remotipart' # allows remote multipart (file upload) forms
 
 gem 'will_paginate'
@@ -115,7 +115,8 @@ gem 'sidekiq'
 gem 'nested_form'
 
 # reporting engine
-gem 'reporting', :github => 'camsys/reporting', :branch => 'master'
+gem 'reporting', github: 'camsys/reporting', branch: 'rails_5'
+#gem 'reporting', path: '~/reporting'
 
 # styling
 gem 'bootstrap-kaminari-views'
@@ -173,6 +174,7 @@ end
 group :test, :development do
   gem 'byebug'
   gem 'rspec-rails'
+  gem 'rails-controller-testing'
   gem 'capybara'
   gem 'factory_bot_rails'
   gem 'database_cleaner'

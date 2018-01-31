@@ -1,5 +1,5 @@
 class API::ApiController < ActionController::Base
-  skip_before_action :authenticate_user!, :verify_authenticity_token
+  skip_before_action :authenticate_user!, :verify_authenticity_token, raise: false
   before_action :cors_preflight_check, :authenticate_user_from_token!
   after_action :cors_set_access_control_headers
 

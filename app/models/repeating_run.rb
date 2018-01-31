@@ -1,7 +1,7 @@
 # This is a 'dumb' model. It is managed by a Run instance, which creates a 
 # repeating instance of itself when instructed to. Validation is nonexistent 
 # since all data should already have been vetted by the Run instance.
-class RepeatingRun < ActiveRecord::Base
+class RepeatingRun < ApplicationRecord
   include RunCore
   include RequiredFieldValidatorModule
   include RecurringRideCoordinator

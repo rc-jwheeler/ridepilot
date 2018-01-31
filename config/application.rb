@@ -12,7 +12,7 @@ module Ridepilot
 
       ActiveSupport.on_load(:active_record) do
         if url = ENV['DATABASE_URL']
-          ActiveRecord::Base.connection_pool.disconnect!
+          ApplicationRecord.connection_pool.disconnect!
           parsed_url = URI.parse(url)
           config =  {
             adapter:             'postgis',
@@ -42,7 +42,10 @@ module Ridepilot
     config.i18n.enforce_available_locales = false
     config.i18n.default_locale = :en
 
-    config.active_record.raise_in_transactional_callbacks = true
+    config.action_controller.per_form_csrf_tokens = true
+
+    # become time zone aware
+    config.active_record.time_zone_aware_types = [:datetime, :time]
 
     config.generators do |g|
       g.test_framework :rspec, fixture: false

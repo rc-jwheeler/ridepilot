@@ -1,4 +1,4 @@
-class Itinerary < ActiveRecord::Base
+class Itinerary < ApplicationRecord
   include ItineraryCore
   
   belongs_to :trip 
