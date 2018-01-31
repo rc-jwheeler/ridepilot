@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 ruby '2.2.2'
 
@@ -133,7 +133,7 @@ gem 'public_activity'
 #gem 'twitter-typeahead-rails'
 
 # new relic for app monitoring
-gem 'newrelic_rpm'
+#gem 'newrelic_rpm'
 
 # Printing
 gem 'wicked_pdf'
