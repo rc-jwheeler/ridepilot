@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/camsys/devise_security_extension.git
+  remote: https://github.com/camsys/devise_security_extension.git
   revision: 1b90eb8d19e104759a031c0a91e3c3bfef606810
   specs:
     devise_security_extension (0.10.0)
@@ -7,7 +7,7 @@ GIT
       railties (>= 3.2.6, < 6.0)
 
 GIT
-  remote: git://github.com/camsys/reporting.git
+  remote: https://github.com/camsys/reporting.git
   revision: c180afd632b49b46c1229c93c9217867654b0d81
   branch: rails_5
   specs:
@@ -20,7 +20,7 @@ GIT
       sass-rails
 
 GIT
-  remote: git://github.com/camsys/translation_engine.git
+  remote: https://github.com/camsys/translation_engine.git
   revision: f93ecfa0648472060c19008c1ee87ab1dc1eeeef
   branch: rails_5
   specs:
@@ -33,7 +33,7 @@ GIT
       simple_form
 
 GIT
-  remote: git://github.com/camsys/twitter-typeahead-rails.git
+  remote: https://github.com/camsys/twitter-typeahead-rails.git
   revision: b9e407f9a4224f0840b60a523a2df42eeca7dfe7
   specs:
     twitter-typeahead-rails (0.10.2)
@@ -42,7 +42,7 @@ GIT
       railties (>= 3.1)
 
 GIT
-  remote: git://github.com/zpearce/Schedule-Attributes.git
+  remote: https://github.com/zpearce/Schedule-Attributes.git
   revision: babf55d9b5cd8f56456e1e2a33916e809f7c4e28
   specs:
     schedule_atts (0.0.1)

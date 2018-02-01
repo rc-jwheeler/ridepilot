@@ -134,7 +134,7 @@ class Customer < ApplicationRecord
       end
       
       # reload the trips array so we don't destroy the still-attached dependents
-      self.trips(true)
+      self.trips.reload
       
       self.destroy
       self.class.find other_customer_id

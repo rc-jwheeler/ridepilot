@@ -11,6 +11,6 @@ class HomeController < ApplicationController
       Run.today_and_future.batch_update_recurring_trip_assignment!
     end
 
-    redirect_to :back 
+    redirect_back(fallback_location: admin_path)
   end
 end

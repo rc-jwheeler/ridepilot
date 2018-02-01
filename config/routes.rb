@@ -323,8 +323,21 @@ Rails.application.routes.draw do
     get "saved_reports/:id", to: "reports#saved_report", as: :saved_report
     get "show_saved_reports/:id", to: "reports#show_saved_report", as: :show_saved_report
     delete "delete_saved_reports/:id", to: "reports#delete_saved_report", as: :delete_saved_report
-    get "reports/:action", :controller=>:reports
-    get "reports/:action/:id", :controller=>:reports
+
+    namespace 'reports' do
+      ["age_and_ethnicity", "cab", "cancellations_report", "cctc_summary_report", "customer_donation_report", 
+      "customer_receiving_trips_in_range", "customers_report", "daily_manifest", "daily_manifest_by_half_hour", 
+      "daily_manifest_by_half_hour_with_cab", "daily_manifest_with_cab", "daily_trips", "donations", 
+      "driver_compliances_report", "driver_manifest", "driver_monthly_service_report", "driver_report", 
+      "export_trips_in_range",  "inactive_driver_status_report", "ineligible_customer_status_report", "manifest", 
+      "missing_data_report", "monthlies", "ntd", "provider_common_location_report", "provider_service_productivity_report", 
+      "service_summary", "show_runs_for_verification", "show_trips_for_verification", "update_runs_for_verification", 
+      "update_trips_for_verification", "vehicle_monthly_service_report", "vehicle_report", "vehicles_monthly"].each do |action|
+        #get action, action: action
+        get "#{action}/:id", action: action
+      end
+    end
+
     resources :reports, only: [] do 
       collection do 
         get :get_run_list

@@ -1247,7 +1247,7 @@ class ReportsController < ApplicationController
       redirect_to custom_report_path(custom_report)
     else
       flash[:error] = "Failed to delete #{saved_report.name}."
-      redirect_to :back
+      redirect_back(fallback_location: saved_report_path(@saved_report))
     end
   end
 

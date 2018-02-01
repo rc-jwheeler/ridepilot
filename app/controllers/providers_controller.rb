@@ -14,11 +14,11 @@ class ProvidersController < ApplicationController
 
     is_business_address_blank = check_blank_address("business")
     if is_business_address_blank
-      new_attrs.except!(:business_address_attributes)
+      new_attrs.except(:business_address_attributes)
     end
     is_mailing_address_blank = check_blank_address("mailing")
     if is_mailing_address_blank
-      new_attrs.except!(:mailing_address_attributes)
+      new_attrs.except(:mailing_address_attributes)
     end
 
     @provider.attributes = new_attrs
@@ -48,14 +48,14 @@ class ProvidersController < ApplicationController
     if is_business_address_blank
       prev_business_address = @provider.business_address
       @provider.business_address_id = nil
-      new_attrs.except!(:business_address_attributes)
+      new_attrs.except(:business_address_attributes)
     end
 
     is_mailing_address_blank = check_blank_address("mailing")
     if is_mailing_address_blank
       prev_mailing_address = @provider.mailing_address
       @provider.mailing_address_id = nil
-      new_attrs.except!(:mailing_address_attributes)
+      new_attrs.except(:mailing_address_attributes)
     end
 
     @provider.attributes = new_attrs
@@ -93,7 +93,8 @@ class ProvidersController < ApplicationController
   def save_operating_hours
     errors = create_or_update_hours!
     if errors
-      redirect_to :back, flash: {alert: 'There is error updating operating hours. Please make sure From Time is earlier than To Time.'}
+      flash[:alert] = 'There is error updating operating hours. Please make sure From Time is earlier than To Time.'
+      redirect_back(fallback_location: general_provider_path(@provider, anchor: "hour_settings"))
     else
       redirect_to general_provider_path(@provider, anchor: "hour_settings")
     end

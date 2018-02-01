@@ -2,6 +2,11 @@ source 'https://rubygems.org'
 
 ruby '2.4.2'
 
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
 gem 'rails', '5.0.6'
 
 # Use SCSS for stylesheets
@@ -77,7 +82,7 @@ gem 'handlebars_assets'
 
 # RADAR Not updated since 2011, used by RecurringTrip model
 # TODO could recurring_select gem replace this?
-gem 'schedule_atts', :git => 'git://github.com/zpearce/Schedule-Attributes.git'
+gem 'schedule_atts', github: 'zpearce/Schedule-Attributes'
 
 gem 'haml'
 
@@ -143,7 +148,7 @@ gem 'wicked_pdf'
 gem 'bootstrap-editable-rails'
 
 # Excel
-#gem 'axlsx', git: "https://github.com/randym/axlsx.git"
+#gem 'axlsx', github: "randym/axlsx"
 #gem 'axlsx_rails'
 gem 'rubyXL'
 
