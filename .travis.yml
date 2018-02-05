@@ -8,25 +8,25 @@ language: ruby
 cache: bundler
 bundler_args: "--without development"
 rvm:
-- 2.2.1
+- 2.4.2
 before_install:
   - gem install bundler
 before_script:
 - cp config/database.yml.travis config/database.yml
 - psql -U postgres -c "create extension postgis"
 script:
-- bundle exec /usr/bin/env RAILS_ENV=test rake db:test:prepare
+- bundle exec /usr/bin/env RAILS_ENV=test rails db:test:prepare
 - bundle exec /usr/bin/env RAILS_ENV=test rspec
 services:
   - redis-server
 branches:
   only:
-  - develop
+  - rails.5.0.6
 # deploy:
 #   provider: heroku
 #   api_key:
 #     secure: QANHV36CXtg5z3rjzL/gC4rwm+EaSpu5Qo72f9rg8B0JaDA5reRMJ3LLZCHj+oVwRIQcgwZZJJ9XKCU19GYk5L3C7hmO17m70SX+5vdtwAxNx3doUR6C6/JxjdLTLYL9uaiQC8fWbLttio0/tWAdfTjQfSXzt9k3YlnTwIO8DwJffS+ssq7I+aLguc0CEgj9pBW1Yyu1qx8xVgYW9pvfO1ZXPZjLO7BhAH8gHDZBizaFkP8OLG7OXrok6OGT2fIIIhxQ/Dccnzri4SvAQ5faP6WnPX2B9BseXzJhQTL26ErDux3hyyC4d1sv6ayo/BWbpsMzA44fCr11gJOQP4mCYnXwsqQTQqsHkcoS+MWAyN2rBewv5zTgnS9qnj+G3QXMc+lJ5GpQIOLw9cCPtzu7MeNt8WaskzISxONGVLRiMkWuGSWy7Eun6EgteTDRF7GN6jWT2yZ0LmhPnkJQk8ihB3gEjqe0rejFXVqAy/bM3BrmqV27QNFvcIRlCpXQvE0SZLm5XetICay6rgvpYczGM0FYX2eZ+tam7YvRa0NE9rSg5wWR8mMPDTTO1t7MoN4kabztKkcmsDhfxiUyCM5ducnoq2V+KpSJG2laGkb57WLSro09ZfsuL8t0rjnzOaxXq5fo/OKAjfCrFbVIW+r+alGJmKyt4aI3xYgXXQJYw+U=
-#   run: rake db:migrate ridepilot:load_locales
+#   run: rails db:migrate ridepilot:load_locales
 #   app: ridepilot-int
 #   strategy: api
 #   on:

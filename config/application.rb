@@ -36,7 +36,7 @@ module Ridepilot
     config.autoload_paths += %W(#{config.root}/app/services/distance_duration_services)
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
-    # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
+    # Run "rails -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'Mountain Time (US & Canada)'
 
     config.i18n.enforce_available_locales = false

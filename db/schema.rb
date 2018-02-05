@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -31,20 +30,18 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.string   "recipient_type", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
+    t.index ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
+    t.index ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
   end
-
-  add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
-  add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
-  add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
 
   create_table "ada_questions", force: :cascade do |t|
     t.integer  "provider_id"
     t.string   "name",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["provider_id"], name: "index_ada_questions_on_provider_id", using: :btree
   end
-
-  add_index "ada_questions", ["provider_id"], name: "index_ada_questions_on_provider_id", using: :btree
 
   create_table "address_groups", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -58,9 +55,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "last_upload_summary"
+    t.index ["provider_id"], name: "index_address_upload_flags_on_provider_id", using: :btree
   end
-
-  add_index "address_upload_flags", ["provider_id"], name: "index_address_upload_flags_on_provider_id", using: :btree
 
   create_table "addresses", force: :cascade do |t|
     t.string    "name",                 limit: 255
@@ -86,24 +82,22 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.boolean   "is_user_associated"
     t.string    "type",                 limit: 255
     t.integer   "address_group_id"
+    t.index ["address_group_id"], name: "index_addresses_on_address_group_id", using: :btree
+    t.index ["customer_id"], name: "index_addresses_on_customer_id", using: :btree
+    t.index ["deleted_at"], name: "index_addresses_on_deleted_at", using: :btree
+    t.index ["provider_id"], name: "index_addresses_on_provider_id", using: :btree
+    t.index ["the_geom"], name: "index_addresses_on_the_geom", using: :gist
+    t.index ["trip_purpose_id"], name: "index_addresses_on_trip_purpose_id", using: :btree
   end
-
-  add_index "addresses", ["address_group_id"], name: "index_addresses_on_address_group_id", using: :btree
-  add_index "addresses", ["customer_id"], name: "index_addresses_on_customer_id", using: :btree
-  add_index "addresses", ["deleted_at"], name: "index_addresses_on_deleted_at", using: :btree
-  add_index "addresses", ["provider_id"], name: "index_addresses_on_provider_id", using: :btree
-  add_index "addresses", ["the_geom"], name: "index_addresses_on_the_geom", using: :gist
-  add_index "addresses", ["trip_purpose_id"], name: "index_addresses_on_trip_purpose_id", using: :btree
 
   create_table "addresses_customers_old", force: :cascade do |t|
     t.integer  "customer_id"
     t.integer  "address_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["address_id"], name: "index_addresses_customers_old_on_address_id", using: :btree
+    t.index ["customer_id"], name: "index_addresses_customers_old_on_customer_id", using: :btree
   end
-
-  add_index "addresses_customers_old", ["address_id"], name: "index_addresses_customers_old_on_address_id", using: :btree
-  add_index "addresses_customers_old", ["customer_id"], name: "index_addresses_customers_old_on_customer_id", using: :btree
 
   create_table "booking_users", force: :cascade do |t|
     t.integer  "user_id"
@@ -111,10 +105,9 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.string   "url",        limit: 255
-    t.uuid     "token",                  default: "uuid_generate_v4()"
+    t.uuid     "token",                  default: -> { "uuid_generate_v4()" }
+    t.index ["user_id"], name: "index_booking_users_on_user_id", using: :btree
   end
-
-  add_index "booking_users", ["user_id"], name: "index_booking_users_on_user_id", using: :btree
 
   create_table "boolean_lookup", force: :cascade do |t|
     t.string "name", limit: 16
@@ -128,10 +121,9 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "type",             limit: 255
+    t.index ["capacity_type_id"], name: "index_capacities_on_capacity_type_id", using: :btree
+    t.index ["host_id"], name: "index_capacities_on_host_id", using: :btree
   end
-
-  add_index "capacities", ["capacity_type_id"], name: "index_capacities_on_capacity_type_id", using: :btree
-  add_index "capacities", ["host_id"], name: "index_capacities_on_host_id", using: :btree
 
   create_table "capacity_types", force: :cascade do |t|
     t.string   "name",        limit: 255
@@ -139,9 +131,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["provider_id"], name: "index_capacity_types_on_provider_id", using: :btree
   end
-
-  add_index "capacity_types", ["provider_id"], name: "index_capacity_types_on_provider_id", using: :btree
 
   create_table "custom_reports", force: :cascade do |t|
     t.string   "name",                limit: 255
@@ -158,10 +149,9 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.boolean  "answer"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["ada_question_id"], name: "index_customer_ada_questions_on_ada_question_id", using: :btree
+    t.index ["customer_id"], name: "index_customer_ada_questions_on_customer_id", using: :btree
   end
-
-  add_index "customer_ada_questions", ["ada_question_id"], name: "index_customer_ada_questions_on_ada_question_id", using: :btree
-  add_index "customer_ada_questions", ["customer_id"], name: "index_customer_ada_questions_on_customer_id", using: :btree
 
   create_table "customer_address_types", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -176,10 +166,9 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "eligible"
+    t.index ["customer_id"], name: "index_customer_eligibilities_on_customer_id", using: :btree
+    t.index ["eligibility_id"], name: "index_customer_eligibilities_on_eligibility_id", using: :btree
   end
-
-  add_index "customer_eligibilities", ["customer_id"], name: "index_customer_eligibilities_on_customer_id", using: :btree
-  add_index "customer_eligibilities", ["eligibility_id"], name: "index_customer_eligibilities_on_eligibility_id", using: :btree
 
   create_table "customers", force: :cascade do |t|
     t.string   "first_name",                   limit: 255
@@ -224,23 +213,21 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.string   "code",                         limit: 255
     t.integer  "passenger_load_min"
     t.integer  "passenger_unload_min"
+    t.index ["address_id"], name: "index_customers_on_address_id", using: :btree
+    t.index ["default_funding_source_id"], name: "index_customers_on_default_funding_source_id", using: :btree
+    t.index ["deleted_at"], name: "index_customers_on_deleted_at", using: :btree
+    t.index ["mobility_id"], name: "index_customers_on_mobility_id", using: :btree
+    t.index ["provider_id"], name: "index_customers_on_provider_id", using: :btree
+    t.index ["service_level_id"], name: "index_customers_on_service_level_id", using: :btree
   end
-
-  add_index "customers", ["address_id"], name: "index_customers_on_address_id", using: :btree
-  add_index "customers", ["default_funding_source_id"], name: "index_customers_on_default_funding_source_id", using: :btree
-  add_index "customers", ["deleted_at"], name: "index_customers_on_deleted_at", using: :btree
-  add_index "customers", ["mobility_id"], name: "index_customers_on_mobility_id", using: :btree
-  add_index "customers", ["provider_id"], name: "index_customers_on_provider_id", using: :btree
-  add_index "customers", ["service_level_id"], name: "index_customers_on_service_level_id", using: :btree
 
   create_table "customers_providers", id: false, force: :cascade do |t|
     t.integer "provider_id"
     t.integer "customer_id"
+    t.index ["customer_id", "provider_id"], name: "index_customers_providers_on_customer_id_and_provider_id", using: :btree
+    t.index ["customer_id"], name: "index_customers_providers_on_customer_id", using: :btree
+    t.index ["provider_id"], name: "index_customers_providers_on_provider_id", using: :btree
   end
-
-  add_index "customers_providers", ["customer_id", "provider_id"], name: "index_customers_providers_on_customer_id_and_provider_id", using: :btree
-  add_index "customers_providers", ["customer_id"], name: "index_customers_providers_on_customer_id", using: :btree
-  add_index "customers_providers", ["provider_id"], name: "index_customers_providers_on_provider_id", using: :btree
 
   create_table "daily_operating_hours", force: :cascade do |t|
     t.date     "date"
@@ -264,11 +251,10 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "driver_id"
     t.datetime "posted_at"
     t.integer  "vehicle_id"
+    t.index ["device_pool_id"], name: "index_device_pool_drivers_on_device_pool_id", using: :btree
+    t.index ["driver_id"], name: "index_device_pool_drivers_on_driver_id", using: :btree
+    t.index ["vehicle_id"], name: "index_device_pool_drivers_on_vehicle_id", using: :btree
   end
-
-  add_index "device_pool_drivers", ["device_pool_id"], name: "index_device_pool_drivers_on_device_pool_id", using: :btree
-  add_index "device_pool_drivers", ["driver_id"], name: "index_device_pool_drivers_on_driver_id", using: :btree
-  add_index "device_pool_drivers", ["vehicle_id"], name: "index_device_pool_drivers_on_vehicle_id", using: :btree
 
   create_table "device_pools", force: :cascade do |t|
     t.integer  "provider_id"
@@ -277,10 +263,9 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_device_pools_on_deleted_at", using: :btree
+    t.index ["provider_id"], name: "index_device_pools_on_provider_id", using: :btree
   end
-
-  add_index "device_pools", ["deleted_at"], name: "index_device_pools_on_deleted_at", using: :btree
-  add_index "device_pools", ["provider_id"], name: "index_device_pools_on_provider_id", using: :btree
 
   create_table "document_associations", force: :cascade do |t|
     t.integer  "document_id"
@@ -288,11 +273,10 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.string   "associable_type", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["associable_id", "associable_type"], name: "index_document_associations_on_associable_id_and_associable_typ", using: :btree
+    t.index ["document_id", "associable_id", "associable_type"], name: "index_document_associations_document_id_associable", using: :btree
+    t.index ["document_id"], name: "index_document_associations_on_document_id", using: :btree
   end
-
-  add_index "document_associations", ["associable_id", "associable_type"], name: "index_document_associations_on_associable_id_and_associable_typ", using: :btree
-  add_index "document_associations", ["document_id", "associable_id", "associable_type"], name: "index_document_associations_document_id_associable", using: :btree
-  add_index "document_associations", ["document_id"], name: "index_document_associations_on_document_id", using: :btree
 
   create_table "documents", force: :cascade do |t|
     t.integer  "documentable_id"
@@ -304,9 +288,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "document_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["documentable_id", "documentable_type"], name: "index_documents_on_documentable_id_and_documentable_type", using: :btree
   end
-
-  add_index "documents", ["documentable_id", "documentable_type"], name: "index_documents_on_documentable_id_and_documentable_type", using: :btree
 
   create_table "donations", force: :cascade do |t|
     t.datetime "date"
@@ -318,11 +301,10 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "customer_id"
     t.integer  "user_id"
     t.integer  "trip_id"
+    t.index ["customer_id"], name: "index_donations_on_customer_id", using: :btree
+    t.index ["trip_id"], name: "index_donations_on_trip_id", using: :btree
+    t.index ["user_id"], name: "index_donations_on_user_id", using: :btree
   end
-
-  add_index "donations", ["customer_id"], name: "index_donations_on_customer_id", using: :btree
-  add_index "donations", ["trip_id"], name: "index_donations_on_trip_id", using: :btree
-  add_index "donations", ["user_id"], name: "index_donations_on_user_id", using: :btree
 
   create_table "driver_compliances", force: :cascade do |t|
     t.integer  "driver_id"
@@ -335,11 +317,10 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "recurring_driver_compliance_id"
     t.boolean  "legal"
     t.integer  "driver_requirement_template_id"
+    t.index ["driver_id"], name: "index_driver_compliances_on_driver_id", using: :btree
+    t.index ["driver_requirement_template_id"], name: "index_driver_compliances_on_driver_requirement_template_id", using: :btree
+    t.index ["recurring_driver_compliance_id"], name: "index_driver_compliances_on_recurring_driver_compliance_id", using: :btree
   end
-
-  add_index "driver_compliances", ["driver_id"], name: "index_driver_compliances_on_driver_id", using: :btree
-  add_index "driver_compliances", ["driver_requirement_template_id"], name: "index_driver_compliances_on_driver_requirement_template_id", using: :btree
-  add_index "driver_compliances", ["recurring_driver_compliance_id"], name: "index_driver_compliances_on_recurring_driver_compliance_id", using: :btree
 
   create_table "driver_histories", force: :cascade do |t|
     t.integer  "driver_id"
@@ -348,9 +329,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.date     "event_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["driver_id"], name: "index_driver_histories_on_driver_id", using: :btree
   end
-
-  add_index "driver_histories", ["driver_id"], name: "index_driver_histories_on_driver_id", using: :btree
 
   create_table "driver_requirement_templates", force: :cascade do |t|
     t.integer  "provider_id"
@@ -360,9 +340,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "updated_at"
     t.boolean  "reoccuring"
     t.datetime "deleted_at"
+    t.index ["provider_id"], name: "index_driver_requirement_templates_on_provider_id", using: :btree
   end
-
-  add_index "driver_requirement_templates", ["provider_id"], name: "index_driver_requirement_templates_on_provider_id", using: :btree
 
   create_table "drivers", force: :cascade do |t|
     t.boolean  "active"
@@ -382,13 +361,12 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.date     "inactivated_start_date"
     t.date     "inactivated_end_date"
     t.text     "active_status_changed_reason"
+    t.index ["address_id"], name: "index_drivers_on_address_id", using: :btree
+    t.index ["alt_address_id"], name: "index_drivers_on_alt_address_id", using: :btree
+    t.index ["deleted_at"], name: "index_drivers_on_deleted_at", using: :btree
+    t.index ["provider_id"], name: "index_drivers_on_provider_id", using: :btree
+    t.index ["user_id"], name: "index_drivers_on_user_id", using: :btree
   end
-
-  add_index "drivers", ["address_id"], name: "index_drivers_on_address_id", using: :btree
-  add_index "drivers", ["alt_address_id"], name: "index_drivers_on_alt_address_id", using: :btree
-  add_index "drivers", ["deleted_at"], name: "index_drivers_on_deleted_at", using: :btree
-  add_index "drivers", ["provider_id"], name: "index_drivers_on_provider_id", using: :btree
-  add_index "drivers", ["user_id"], name: "index_drivers_on_user_id", using: :btree
 
   create_table "eligibilities", force: :cascade do |t|
     t.string   "code",        limit: 255, null: false
@@ -413,9 +391,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_ethnicities_on_deleted_at", using: :btree
   end
-
-  add_index "ethnicities", ["deleted_at"], name: "index_ethnicities_on_deleted_at", using: :btree
 
   create_table "field_configs", force: :cascade do |t|
     t.integer  "provider_id",                             null: false
@@ -425,9 +402,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.boolean  "required",                default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["provider_id"], name: "index_field_configs_on_provider_id", using: :btree
   end
-
-  add_index "field_configs", ["provider_id"], name: "index_field_configs_on_provider_id", using: :btree
 
   create_table "funding_authorization_numbers", force: :cascade do |t|
     t.integer  "funding_source_id"
@@ -436,28 +412,25 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.text     "contact_info"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["customer_id"], name: "index_funding_authorization_numbers_on_customer_id", using: :btree
+    t.index ["funding_source_id"], name: "index_funding_authorization_numbers_on_funding_source_id", using: :btree
   end
-
-  add_index "funding_authorization_numbers", ["customer_id"], name: "index_funding_authorization_numbers_on_customer_id", using: :btree
-  add_index "funding_authorization_numbers", ["funding_source_id"], name: "index_funding_authorization_numbers_on_funding_source_id", using: :btree
 
   create_table "funding_source_visibilities", force: :cascade do |t|
     t.integer "funding_source_id"
     t.integer "provider_id"
+    t.index ["funding_source_id"], name: "index_funding_source_visibilities_on_funding_source_id", using: :btree
+    t.index ["provider_id"], name: "index_funding_source_visibilities_on_provider_id", using: :btree
   end
 
-  add_index "funding_source_visibilities", ["funding_source_id"], name: "index_funding_source_visibilities_on_funding_source_id", using: :btree
-  add_index "funding_source_visibilities", ["provider_id"], name: "index_funding_source_visibilities_on_provider_id", using: :btree
-
   create_table "funding_sources", force: :cascade do |t|
-    t.string   "name",        limit: 255
+    t.string   "name",           limit: 255
     t.datetime "deleted_at"
     t.integer  "provider_id"
     t.boolean  "ntd_reportable"
+    t.index ["deleted_at"], name: "index_funding_sources_on_deleted_at", using: :btree
+    t.index ["provider_id"], name: "index_funding_sources_on_provider_id", using: :btree
   end
-
-  add_index "funding_sources", ["deleted_at"], name: "index_funding_sources_on_deleted_at", using: :btree
-  add_index "funding_sources", ["provider_id"], name: "index_funding_sources_on_provider_id", using: :btree
 
   create_table "hidden_lookup_table_values", force: :cascade do |t|
     t.integer  "provider_id"
@@ -465,9 +438,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "value_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["provider_id"], name: "index_hidden_lookup_table_values_on_provider_id", using: :btree
   end
-
-  add_index "hidden_lookup_table_values", ["provider_id"], name: "index_hidden_lookup_table_values_on_provider_id", using: :btree
 
   create_table "images", force: :cascade do |t|
     t.integer  "imageable_id"
@@ -476,9 +448,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.string   "image_content_type", limit: 255
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
+    t.index ["imageable_id", "imageable_type"], name: "index_images_on_imageable_id_and_imageable_type", using: :btree
   end
-
-  add_index "images", ["imageable_id", "imageable_type"], name: "index_images_on_imageable_id_and_imageable_type", using: :btree
 
   create_table "itineraries", force: :cascade do |t|
     t.datetime "time"
@@ -491,11 +462,10 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "depart_time"
+    t.index ["address_id"], name: "index_itineraries_on_address_id", using: :btree
+    t.index ["run_id"], name: "index_itineraries_on_run_id", using: :btree
+    t.index ["trip_id"], name: "index_itineraries_on_trip_id", using: :btree
   end
-
-  add_index "itineraries", ["address_id"], name: "index_itineraries_on_address_id", using: :btree
-  add_index "itineraries", ["run_id"], name: "index_itineraries_on_run_id", using: :btree
-  add_index "itineraries", ["trip_id"], name: "index_itineraries_on_trip_id", using: :btree
 
   create_table "locales", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -520,9 +490,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
   create_table "mobilities", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_mobilities_on_deleted_at", using: :btree
   end
-
-  add_index "mobilities", ["deleted_at"], name: "index_mobilities_on_deleted_at", using: :btree
 
   create_table "monthlies", force: :cascade do |t|
     t.date     "start_date"
@@ -533,19 +502,17 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "updated_at"
     t.integer  "lock_version",           default: 0
     t.integer  "funding_source_id"
+    t.index ["funding_source_id"], name: "index_monthlies_on_funding_source_id", using: :btree
+    t.index ["provider_id"], name: "index_monthlies_on_provider_id", using: :btree
   end
-
-  add_index "monthlies", ["funding_source_id"], name: "index_monthlies_on_funding_source_id", using: :btree
-  add_index "monthlies", ["provider_id"], name: "index_monthlies_on_provider_id", using: :btree
 
   create_table "old_passwords", force: :cascade do |t|
     t.string   "encrypted_password",       limit: 255, null: false
     t.string   "password_archivable_type", limit: 255, null: false
     t.integer  "password_archivable_id",               null: false
     t.datetime "created_at"
+    t.index ["password_archivable_type", "password_archivable_id"], name: "index_password_archivable", using: :btree
   end
-
-  add_index "old_passwords", ["password_archivable_type", "password_archivable_id"], name: "index_password_archivable", using: :btree
 
   create_table "operating_hours", force: :cascade do |t|
     t.integer  "operatable_id"
@@ -557,10 +524,9 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.string   "operatable_type", limit: 255
     t.boolean  "is_all_day",                  default: false
     t.boolean  "is_unavailable",              default: false
+    t.index ["operatable_id", "operatable_type"], name: "index_operating_hours_on_operatable_id_and_operatable_type", using: :btree
+    t.index ["operatable_id"], name: "index_operating_hours_on_operatable_id", using: :btree
   end
-
-  add_index "operating_hours", ["operatable_id", "operatable_type"], name: "index_operating_hours_on_operatable_id_and_operatable_type", using: :btree
-  add_index "operating_hours", ["operatable_id"], name: "index_operating_hours_on_operatable_id", using: :btree
 
   create_table "planned_leaves", force: :cascade do |t|
     t.date     "start_date"
@@ -570,9 +536,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.string   "leavable_type", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["leavable_id", "leavable_type"], name: "index_planned_leaves_on_leavable_id_and_leavable_type", using: :btree
   end
-
-  add_index "planned_leaves", ["leavable_id", "leavable_type"], name: "index_planned_leaves_on_leavable_id_and_leavable_type", using: :btree
 
   create_table "provider_lookup_tables", force: :cascade do |t|
     t.string   "caption",                 limit: 255
@@ -591,10 +556,9 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.boolean  "inactive"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["custom_report_id"], name: "index_provider_reports_on_custom_report_id", using: :btree
+    t.index ["provider_id"], name: "index_provider_reports_on_provider_id", using: :btree
   end
-
-  add_index "provider_reports", ["custom_report_id"], name: "index_provider_reports_on_custom_report_id", using: :btree
-  add_index "provider_reports", ["provider_id"], name: "index_provider_reports_on_provider_id", using: :btree
 
   create_table "providers", force: :cascade do |t|
     t.string    "name",                                            limit: 255
@@ -647,11 +611,10 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer   "early_arrival_threshold_min"
     t.integer   "late_arrival_threshold_min"
     t.integer   "very_late_arrival_threshold_min"
+    t.index ["business_address_id"], name: "index_providers_on_business_address_id", using: :btree
+    t.index ["deleted_at"], name: "index_providers_on_deleted_at", using: :btree
+    t.index ["mailing_address_id"], name: "index_providers_on_mailing_address_id", using: :btree
   end
-
-  add_index "providers", ["business_address_id"], name: "index_providers_on_business_address_id", using: :btree
-  add_index "providers", ["deleted_at"], name: "index_providers_on_deleted_at", using: :btree
-  add_index "providers", ["mailing_address_id"], name: "index_providers_on_mailing_address_id", using: :btree
 
   create_table "recurring_driver_compliances", force: :cascade do |t|
     t.integer  "provider_id"
@@ -667,9 +630,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.boolean  "compliance_based_scheduling",             default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["provider_id"], name: "index_recurring_driver_compliances_on_provider_id", using: :btree
   end
-
-  add_index "recurring_driver_compliances", ["provider_id"], name: "index_recurring_driver_compliances_on_provider_id", using: :btree
 
   create_table "recurring_vehicle_maintenance_compliances", force: :cascade do |t|
     t.integer  "provider_id"
@@ -687,19 +649,17 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.boolean  "compliance_based_scheduling",             default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["provider_id"], name: "index_recurring_vehicle_maintenance_compliances_on_provider_id", using: :btree
   end
-
-  add_index "recurring_vehicle_maintenance_compliances", ["provider_id"], name: "index_recurring_vehicle_maintenance_compliances_on_provider_id", using: :btree
 
   create_table "regions", force: :cascade do |t|
     t.string    "name",       limit: 255
     t.geography "the_geom",   limit: {:srid=>4326, :type=>"st_polygon", :geographic=>true}
     t.datetime  "deleted_at"
     t.boolean   "is_primary"
+    t.index ["deleted_at"], name: "index_regions_on_deleted_at", using: :btree
+    t.index ["the_geom"], name: "index_regions_on_the_geom", using: :gist
   end
-
-  add_index "regions", ["deleted_at"], name: "index_regions_on_deleted_at", using: :btree
-  add_index "regions", ["the_geom"], name: "index_regions_on_the_geom", using: :gist
 
   create_table "repeating_itineraries", force: :cascade do |t|
     t.datetime "time"
@@ -713,11 +673,10 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "updated_at"
     t.integer  "wday"
     t.datetime "depart_time"
+    t.index ["address_id"], name: "index_repeating_itineraries_on_address_id", using: :btree
+    t.index ["repeating_run_id"], name: "index_repeating_itineraries_on_repeating_run_id", using: :btree
+    t.index ["repeating_trip_id"], name: "index_repeating_itineraries_on_repeating_trip_id", using: :btree
   end
-
-  add_index "repeating_itineraries", ["address_id"], name: "index_repeating_itineraries_on_address_id", using: :btree
-  add_index "repeating_itineraries", ["repeating_run_id"], name: "index_repeating_itineraries_on_repeating_run_id", using: :btree
-  add_index "repeating_itineraries", ["repeating_trip_id"], name: "index_repeating_itineraries_on_repeating_trip_id", using: :btree
 
   create_table "repeating_run_manifest_orders", force: :cascade do |t|
     t.integer  "repeating_run_id"
@@ -725,9 +684,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.text     "manifest_order"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["repeating_run_id"], name: "index_repeating_run_manifest_orders_on_repeating_run_id", using: :btree
   end
-
-  add_index "repeating_run_manifest_orders", ["repeating_run_id"], name: "index_repeating_run_manifest_orders_on_repeating_run_id", using: :btree
 
   create_table "repeating_runs", force: :cascade do |t|
     t.text     "schedule_yaml"
@@ -750,11 +708,10 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.text     "manifest_order"
     t.string   "scheduled_start_time_string", limit: 255
     t.string   "scheduled_end_time_string",   limit: 255
+    t.index ["driver_id"], name: "index_repeating_runs_on_driver_id", using: :btree
+    t.index ["provider_id"], name: "index_repeating_runs_on_provider_id", using: :btree
+    t.index ["vehicle_id"], name: "index_repeating_runs_on_vehicle_id", using: :btree
   end
-
-  add_index "repeating_runs", ["driver_id"], name: "index_repeating_runs_on_driver_id", using: :btree
-  add_index "repeating_runs", ["provider_id"], name: "index_repeating_runs_on_provider_id", using: :btree
-  add_index "repeating_runs", ["vehicle_id"], name: "index_repeating_runs_on_vehicle_id", using: :btree
 
   create_table "repeating_trips", force: :cascade do |t|
     t.text     "schedule_yaml"
@@ -796,20 +753,18 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "passenger_unload_min"
     t.boolean  "early_pickup_allowed"
     t.integer  "linking_trip_id"
+    t.index ["customer_id"], name: "index_repeating_trips_on_customer_id", using: :btree
+    t.index ["driver_id"], name: "index_repeating_trips_on_driver_id", using: :btree
+    t.index ["dropoff_address_id"], name: "index_repeating_trips_on_dropoff_address_id", using: :btree
+    t.index ["funding_source_id"], name: "index_repeating_trips_on_funding_source_id", using: :btree
+    t.index ["linking_trip_id"], name: "index_repeating_trips_on_linking_trip_id", using: :btree
+    t.index ["mobility_id"], name: "index_repeating_trips_on_mobility_id", using: :btree
+    t.index ["pickup_address_id"], name: "index_repeating_trips_on_pickup_address_id", using: :btree
+    t.index ["provider_id"], name: "index_repeating_trips_on_provider_id", using: :btree
+    t.index ["service_level_id"], name: "index_repeating_trips_on_service_level_id", using: :btree
+    t.index ["trip_purpose_id"], name: "index_repeating_trips_on_trip_purpose_id", using: :btree
+    t.index ["vehicle_id"], name: "index_repeating_trips_on_vehicle_id", using: :btree
   end
-
-
-  add_index "repeating_trips", ["customer_id"], name: "index_repeating_trips_on_customer_id", using: :btree
-  add_index "repeating_trips", ["driver_id"], name: "index_repeating_trips_on_driver_id", using: :btree
-  add_index "repeating_trips", ["dropoff_address_id"], name: "index_repeating_trips_on_dropoff_address_id", using: :btree
-  add_index "repeating_trips", ["linking_trip_id"], :name => "index_repeating_trips_on_linking_trip_id", using: :btree
-  add_index "repeating_trips", ["funding_source_id"], name: "index_repeating_trips_on_funding_source_id", using: :btree
-  add_index "repeating_trips", ["mobility_id"], name: "index_repeating_trips_on_mobility_id", using: :btree
-  add_index "repeating_trips", ["pickup_address_id"], name: "index_repeating_trips_on_pickup_address_id", using: :btree
-  add_index "repeating_trips", ["provider_id"], name: "index_repeating_trips_on_provider_id", using: :btree
-  add_index "repeating_trips", ["service_level_id"], name: "index_repeating_trips_on_service_level_id", using: :btree
-  add_index "repeating_trips", ["trip_purpose_id"], name: "index_repeating_trips_on_trip_purpose_id", using: :btree
-  add_index "repeating_trips", ["vehicle_id"], name: "index_repeating_trips_on_vehicle_id", using: :btree
 
   create_table "reporting_filter_fields", force: :cascade do |t|
     t.integer  "filter_group_id",                         null: false
@@ -821,11 +776,10 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "updated_at",                              null: false
     t.integer  "sort_order",                  default: 1, null: false
     t.string   "value_type",      limit: 255
+    t.index ["filter_group_id"], name: "index_reporting_filter_fields_on_filter_group_id", using: :btree
+    t.index ["filter_type_id"], name: "index_reporting_filter_fields_on_filter_type_id", using: :btree
+    t.index ["lookup_table_id"], name: "index_reporting_filter_fields_on_lookup_table_id", using: :btree
   end
-
-  add_index "reporting_filter_fields", ["filter_group_id"], name: "index_reporting_filter_fields_on_filter_group_id", using: :btree
-  add_index "reporting_filter_fields", ["filter_type_id"], name: "index_reporting_filter_fields_on_filter_type_id", using: :btree
-  add_index "reporting_filter_fields", ["lookup_table_id"], name: "index_reporting_filter_fields_on_lookup_table_id", using: :btree
 
   create_table "reporting_filter_groups", force: :cascade do |t|
     t.string   "name",       limit: 255, null: false
@@ -859,9 +813,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "sort_order"
     t.boolean  "group_by",                      default: false
     t.string   "alias_name",        limit: 255
+    t.index ["report_id"], name: "index_reporting_output_fields_on_report_id", using: :btree
   end
-
-  add_index "reporting_output_fields", ["report_id"], name: "index_reporting_output_fields_on_report_id", using: :btree
 
   create_table "reporting_reports", force: :cascade do |t|
     t.string   "name",        limit: 255,                null: false
@@ -878,10 +831,9 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "sort_order",      default: 1, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["filter_group_id"], name: "index_of_filter_group_on_specific_filter_group", using: :btree
+    t.index ["report_id"], name: "index_of_report_on_specific_filter_group", using: :btree
   end
-
-  add_index "reporting_specific_filter_groups", ["filter_group_id"], name: "index_of_filter_group_on_specific_filter_group", using: :btree
-  add_index "reporting_specific_filter_groups", ["report_id"], name: "index_of_report_on_specific_filter_group", using: :btree
 
   create_table "ridership_mobility_mappings", force: :cascade do |t|
     t.integer  "ridership_id"
@@ -891,20 +843,18 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "host_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["mobility_id"], name: "index_ridership_mobility_mappings_on_mobility_id", using: :btree
   end
-
-  add_index "ridership_mobility_mappings", ["mobility_id"], name: "index_ridership_mobility_mappings_on_mobility_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "provider_id"
     t.integer  "level"
     t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_roles_on_deleted_at", using: :btree
+    t.index ["provider_id"], name: "index_roles_on_provider_id", using: :btree
+    t.index ["user_id"], name: "index_roles_on_user_id", using: :btree
   end
-
-  add_index "roles", ["deleted_at"], name: "index_roles_on_deleted_at", using: :btree
-  add_index "roles", ["provider_id"], name: "index_roles_on_provider_id", using: :btree
-  add_index "roles", ["user_id"], name: "index_roles_on_user_id", using: :btree
 
   create_table "run_distances", force: :cascade do |t|
     t.float    "total_dist"
@@ -950,16 +900,15 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.text     "uncomplete_reason"
     t.string   "scheduled_start_time_string", limit: 255
     t.string   "scheduled_end_time_string",   limit: 255
+    t.index ["deleted_at"], name: "index_runs_on_deleted_at", using: :btree
+    t.index ["driver_id"], name: "index_runs_on_driver_id", using: :btree
+    t.index ["from_garage_address_id"], name: "index_runs_on_from_garage_address_id", using: :btree
+    t.index ["provider_id", "date"], name: "index_runs_on_provider_id_and_date", using: :btree
+    t.index ["provider_id", "scheduled_start_time"], name: "index_runs_on_provider_id_and_scheduled_start_time", using: :btree
+    t.index ["repeating_run_id"], name: "index_runs_on_repeating_run_id", using: :btree
+    t.index ["to_garage_address_id"], name: "index_runs_on_to_garage_address_id", using: :btree
+    t.index ["vehicle_id"], name: "index_runs_on_vehicle_id", using: :btree
   end
-
-  add_index "runs", ["deleted_at"], name: "index_runs_on_deleted_at", using: :btree
-  add_index "runs", ["driver_id"], name: "index_runs_on_driver_id", using: :btree
-  add_index "runs", ["from_garage_address_id"], name: "index_runs_on_from_garage_address_id", using: :btree
-  add_index "runs", ["provider_id", "date"], name: "index_runs_on_provider_id_and_date", using: :btree
-  add_index "runs", ["provider_id", "scheduled_start_time"], name: "index_runs_on_provider_id_and_scheduled_start_time", using: :btree
-  add_index "runs", ["repeating_run_id"], name: "index_runs_on_repeating_run_id", using: :btree
-  add_index "runs", ["to_garage_address_id"], name: "index_runs_on_to_garage_address_id", using: :btree
-  add_index "runs", ["vehicle_id"], name: "index_runs_on_vehicle_id", using: :btree
 
   create_table "saved_custom_reports", force: :cascade do |t|
     t.integer  "custom_report_id"
@@ -969,19 +918,17 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.text     "report_params"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["custom_report_id"], name: "index_saved_custom_reports_on_custom_report_id", using: :btree
+    t.index ["provider_id"], name: "index_saved_custom_reports_on_provider_id", using: :btree
   end
-
-  add_index "saved_custom_reports", ["custom_report_id"], name: "index_saved_custom_reports_on_custom_report_id", using: :btree
-  add_index "saved_custom_reports", ["provider_id"], name: "index_saved_custom_reports_on_provider_id", using: :btree
 
   create_table "service_levels", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_service_levels_on_deleted_at", using: :btree
   end
-
-  add_index "service_levels", ["deleted_at"], name: "index_service_levels_on_deleted_at", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",        limit: 255, null: false
@@ -990,9 +937,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.string   "thing_type", limit: 30
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true, using: :btree
   end
-
-  add_index "settings", ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true, using: :btree
 
   create_table "translation_keys", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -1020,18 +966,16 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.text     "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["customer_id"], name: "index_travel_trainings_on_customer_id", using: :btree
   end
-
-  add_index "travel_trainings", ["customer_id"], name: "index_travel_trainings_on_customer_id", using: :btree
 
   create_table "trip_purposes", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_trip_purposes_on_deleted_at", using: :btree
   end
-
-  add_index "trip_purposes", ["deleted_at"], name: "index_trip_purposes_on_deleted_at", using: :btree
 
   create_table "trip_results", force: :cascade do |t|
     t.string   "code",        limit: 255
@@ -1040,9 +984,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.string   "description", limit: 255
+    t.index ["deleted_at"], name: "index_trip_results_on_deleted_at", using: :btree
   end
-
-  add_index "trip_results", ["deleted_at"], name: "index_trip_results_on_deleted_at", using: :btree
 
   create_table "trips", force: :cascade do |t|
     t.integer  "run_id"
@@ -1059,7 +1002,7 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.string   "trip_purpose_old",                       limit: 255
     t.string   "trip_result_old",                        limit: 255,                          default: ""
     t.text     "notes"
-    t.decimal  "donation_old",                                       precision: 10, scale: 2, default: 0.0
+    t.decimal  "donation_old",                                       precision: 10, scale: 2, default: "0.0"
     t.integer  "provider_id"
     t.datetime "called_back_at"
     t.boolean  "customer_informed",                                                           default: false
@@ -1095,23 +1038,22 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "passenger_load_min"
     t.integer  "passenger_unload_min"
     t.boolean  "early_pickup_allowed"
+    t.index ["called_back_by_id"], name: "index_trips_on_called_back_by_id", using: :btree
+    t.index ["customer_id"], name: "index_trips_on_customer_id", using: :btree
+    t.index ["deleted_at"], name: "index_trips_on_deleted_at", using: :btree
+    t.index ["dropoff_address_id"], name: "index_trips_on_dropoff_address_id", using: :btree
+    t.index ["funding_source_id"], name: "index_trips_on_funding_source_id", using: :btree
+    t.index ["linking_trip_id"], name: "index_trips_on_linking_trip_id", using: :btree
+    t.index ["mobility_id"], name: "index_trips_on_mobility_id", using: :btree
+    t.index ["pickup_address_id"], name: "index_trips_on_pickup_address_id", using: :btree
+    t.index ["provider_id", "appointment_time"], name: "index_trips_on_provider_id_and_appointment_time", using: :btree
+    t.index ["provider_id", "pickup_time"], name: "index_trips_on_provider_id_and_pickup_time", using: :btree
+    t.index ["repeating_trip_id"], name: "index_trips_on_repeating_trip_id", using: :btree
+    t.index ["run_id"], name: "index_trips_on_run_id", using: :btree
+    t.index ["service_level_id"], name: "index_trips_on_service_level_id", using: :btree
+    t.index ["trip_purpose_id"], name: "index_trips_on_trip_purpose_id", using: :btree
+    t.index ["trip_result_id"], name: "index_trips_on_trip_result_id", using: :btree
   end
-
-  add_index "trips", ["called_back_by_id"], name: "index_trips_on_called_back_by_id", using: :btree
-  add_index "trips", ["customer_id"], name: "index_trips_on_customer_id", using: :btree
-  add_index "trips", ["deleted_at"], name: "index_trips_on_deleted_at", using: :btree
-  add_index "trips", ["dropoff_address_id"], name: "index_trips_on_dropoff_address_id", using: :btree
-  add_index "trips", ["funding_source_id"], name: "index_trips_on_funding_source_id", using: :btree
-  add_index "trips", ["linking_trip_id"], name: "index_trips_on_linking_trip_id", using: :btree
-  add_index "trips", ["mobility_id"], name: "index_trips_on_mobility_id", using: :btree
-  add_index "trips", ["pickup_address_id"], name: "index_trips_on_pickup_address_id", using: :btree
-  add_index "trips", ["provider_id", "appointment_time"], name: "index_trips_on_provider_id_and_appointment_time", using: :btree
-  add_index "trips", ["provider_id", "pickup_time"], name: "index_trips_on_provider_id_and_pickup_time", using: :btree
-  add_index "trips", ["repeating_trip_id"], name: "index_trips_on_repeating_trip_id", using: :btree
-  add_index "trips", ["run_id"], name: "index_trips_on_run_id", using: :btree
-  add_index "trips", ["service_level_id"], name: "index_trips_on_service_level_id", using: :btree
-  add_index "trips", ["trip_purpose_id"], name: "index_trips_on_trip_purpose_id", using: :btree
-  add_index "trips", ["trip_result_id"], name: "index_trips_on_trip_result_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "", null: false
@@ -1137,22 +1079,20 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.string   "username",               limit: 255
     t.string   "phone_number",           limit: 255
     t.integer  "address_id"
+    t.index ["address_id"], name: "index_users_on_address_id", using: :btree
+    t.index ["current_provider_id"], name: "index_users_on_current_provider_id", using: :btree
+    t.index ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["password_changed_at"], name: "index_users_on_password_changed_at", using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
-
-  add_index "users", ["address_id"], name: "index_users_on_address_id", using: :btree
-  add_index "users", ["current_provider_id"], name: "index_users_on_current_provider_id", using: :btree
-  add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["password_changed_at"], name: "index_users_on_password_changed_at", using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "vehicle_capacity_configurations", force: :cascade do |t|
     t.integer  "vehicle_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["vehicle_type_id"], name: "index_vehicle_capacity_configurations_on_vehicle_type_id", using: :btree
   end
-
-  add_index "vehicle_capacity_configurations", ["vehicle_type_id"], name: "index_vehicle_capacity_configurations_on_vehicle_type_id", using: :btree
 
   create_table "vehicle_compliances", force: :cascade do |t|
     t.integer  "vehicle_id"
@@ -1164,10 +1104,9 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.boolean  "legal"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["vehicle_id"], name: "index_vehicle_compliances_on_vehicle_id", using: :btree
+    t.index ["vehicle_requirement_template_id"], name: "index_vehicle_compliances_on_vehicle_requirement_template_id", using: :btree
   end
-
-  add_index "vehicle_compliances", ["vehicle_id"], name: "index_vehicle_compliances_on_vehicle_id", using: :btree
-  add_index "vehicle_compliances", ["vehicle_requirement_template_id"], name: "index_vehicle_compliances_on_vehicle_requirement_template_id", using: :btree
 
   create_table "vehicle_maintenance_compliance_due_types", force: :cascade do |t|
     t.string "name", limit: 16
@@ -1187,11 +1126,10 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "recurring_vehicle_maintenance_compliance_id"
     t.integer  "compliance_mileage"
     t.integer  "vehicle_maintenance_schedule_id"
+    t.index ["recurring_vehicle_maintenance_compliance_id"], name: "index_vehicle_maintenance_compliances_on_recurring_vehicle_main", using: :btree
+    t.index ["vehicle_id"], name: "index_vehicle_maintenance_compliances_on_vehicle_id", using: :btree
+    t.index ["vehicle_maintenance_schedule_id"], name: "index_compl_veh_maint_sched_id", using: :btree
   end
-
-  add_index "vehicle_maintenance_compliances", ["recurring_vehicle_maintenance_compliance_id"], name: "index_vehicle_maintenance_compliances_on_recurring_vehicle_main", using: :btree
-  add_index "vehicle_maintenance_compliances", ["vehicle_id"], name: "index_vehicle_maintenance_compliances_on_vehicle_id", using: :btree
-  add_index "vehicle_maintenance_compliances", ["vehicle_maintenance_schedule_id"], name: "index_compl_veh_maint_sched_id", using: :btree
 
   create_table "vehicle_maintenance_events", force: :cascade do |t|
     t.integer  "vehicle_id"
@@ -1206,18 +1144,16 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "lock_version",                                            default: 0
+    t.index ["vehicle_id"], name: "index_vehicle_maintenance_events_on_vehicle_id", using: :btree
   end
-
-  add_index "vehicle_maintenance_events", ["vehicle_id"], name: "index_vehicle_maintenance_events_on_vehicle_id", using: :btree
 
   create_table "vehicle_maintenance_schedule_types", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "provider_id"
+    t.index ["provider_id"], name: "index_veh_maint_sched_type_provider_id", using: :btree
   end
-
-  add_index "vehicle_maintenance_schedule_types", ["provider_id"], name: "index_veh_maint_sched_type_provider_id", using: :btree
 
   create_table "vehicle_maintenance_schedules", force: :cascade do |t|
     t.string   "name",                                 limit: 255
@@ -1225,9 +1161,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "vehicle_maintenance_schedule_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["vehicle_maintenance_schedule_type_id"], name: "index_vehicle_maintenance_schedule_type_id", using: :btree
   end
-
-  add_index "vehicle_maintenance_schedules", ["vehicle_maintenance_schedule_type_id"], name: "index_vehicle_maintenance_schedule_type_id", using: :btree
 
   create_table "vehicle_monthly_trackings", force: :cascade do |t|
     t.integer  "provider_id"
@@ -1236,9 +1171,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "max_available_count"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["provider_id"], name: "index_vehicle_monthly_trackings_on_provider_id", using: :btree
   end
-
-  add_index "vehicle_monthly_trackings", ["provider_id"], name: "index_vehicle_monthly_trackings_on_provider_id", using: :btree
 
   create_table "vehicle_requirement_templates", force: :cascade do |t|
     t.integer  "provider_id"
@@ -1248,18 +1182,16 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["provider_id"], name: "index_vehicle_requirement_templates_on_provider_id", using: :btree
   end
-
-  add_index "vehicle_requirement_templates", ["provider_id"], name: "index_vehicle_requirement_templates_on_provider_id", using: :btree
 
   create_table "vehicle_types", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.integer  "provider_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["provider_id"], name: "index_vehicle_types_on_provider_id", using: :btree
   end
-
-  add_index "vehicle_types", ["provider_id"], name: "index_vehicle_types_on_provider_id", using: :btree
 
   create_table "vehicle_warranties", force: :cascade do |t|
     t.integer  "vehicle_id"
@@ -1268,18 +1200,16 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.date     "expiration_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["vehicle_id"], name: "index_vehicle_warranties_on_vehicle_id", using: :btree
   end
-
-  add_index "vehicle_warranties", ["vehicle_id"], name: "index_vehicle_warranties_on_vehicle_id", using: :btree
 
   create_table "vehicle_warranty_templates", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.integer  "provider_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["provider_id"], name: "index_vehicle_warranty_templates_on_provider_id", using: :btree
   end
-
-  add_index "vehicle_warranty_templates", ["provider_id"], name: "index_vehicle_warranty_templates_on_provider_id", using: :btree
 
   create_table "vehicles", force: :cascade do |t|
     t.string   "name",                                 limit: 255
@@ -1313,14 +1243,13 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.text     "active_status_changed_reason"
     t.integer  "vehicle_maintenance_schedule_type_id"
     t.integer  "vehicle_type_id"
+    t.index ["default_driver_id"], name: "index_vehicles_on_default_driver_id", using: :btree
+    t.index ["deleted_at"], name: "index_vehicles_on_deleted_at", using: :btree
+    t.index ["garage_address_id"], name: "index_vehicles_on_garage_address_id", using: :btree
+    t.index ["provider_id"], name: "index_vehicles_on_provider_id", using: :btree
+    t.index ["vehicle_maintenance_schedule_type_id"], name: "index_veh_maint_sched_type_id", using: :btree
+    t.index ["vehicle_type_id"], name: "index_vehicles_on_vehicle_type_id", using: :btree
   end
-
-  add_index "vehicles", ["default_driver_id"], name: "index_vehicles_on_default_driver_id", using: :btree
-  add_index "vehicles", ["deleted_at"], name: "index_vehicles_on_deleted_at", using: :btree
-  add_index "vehicles", ["garage_address_id"], name: "index_vehicles_on_garage_address_id", using: :btree
-  add_index "vehicles", ["provider_id"], name: "index_vehicles_on_provider_id", using: :btree
-  add_index "vehicles", ["vehicle_maintenance_schedule_type_id"], name: "index_veh_maint_sched_type_id", using: :btree
-  add_index "vehicles", ["vehicle_type_id"], name: "index_vehicles_on_vehicle_type_id", using: :btree
 
   create_table "verification_questions", force: :cascade do |t|
     t.integer  "user_id"
@@ -1328,9 +1257,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.text     "answer"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["user_id"], name: "index_verification_questions_on_user_id", using: :btree
   end
-
-  add_index "verification_questions", ["user_id"], name: "index_verification_questions_on_user_id", using: :btree
 
   create_table "versions", force: :cascade do |t|
     t.string   "item_type",      limit: 255, null: false
@@ -1340,9 +1268,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.text     "object"
     t.datetime "created_at"
     t.text     "object_changes"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
   end
-
-  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
   create_table "weekday_assignments", force: :cascade do |t|
     t.integer  "repeating_trip_id"
@@ -1350,9 +1277,8 @@ ActiveRecord::Schema.define(version: 20180202203233) do
     t.integer  "wday"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["repeating_run_id"], name: "index_weekday_assignments_on_repeating_run_id", using: :btree
+    t.index ["repeating_trip_id"], name: "index_weekday_assignments_on_repeating_trip_id", using: :btree
   end
-
-  add_index "weekday_assignments", ["repeating_run_id"], name: "index_weekday_assignments_on_repeating_run_id", using: :btree
-  add_index "weekday_assignments", ["repeating_trip_id"], name: "index_weekday_assignments_on_repeating_trip_id", using: :btree
 
 end

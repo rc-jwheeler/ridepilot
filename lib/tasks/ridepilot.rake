@@ -308,7 +308,7 @@ namespace :ridepilot do
         puts "file invalid"
       end
     else
-      puts "please specifiy file path following: rake ridepilot:seed_user_data CSV_PATH=xxx"
+      puts "please specifiy file path following: rails ridepilot:seed_user_data CSV_PATH=xxx"
     end
   end
 

@@ -1,7 +1,7 @@
 # These settings are stored in the `settings` table in the
 # database, but are also cached in tmp/cache. You can destroy
 # them all using `ApplicationSetting.delete_all`, but you'll
-# also want to `rake tmp:clear` to get rid of the cached values
+# also want to `rails tmp:clear` to get rid of the cached values
 class ApplicationSetting < RailsSettings::Base
   def self.update_settings(params)
     transaction do
