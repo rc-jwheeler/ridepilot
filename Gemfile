@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 
-ruby '2.4.2'
+ruby '2.5.0'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '5.0.6'
+gem 'rails', '~> 5.1.4'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
@@ -76,14 +76,12 @@ gem 'aws-sdk-s3', '~> 1'
 gem 'paper_trail'
 
 gem 'rails-jquery-autocomplete'
+
 # needed for trip address picker
 gem 'twitter-typeahead-rails', github: 'camsys/twitter-typeahead-rails'
 gem 'handlebars_assets'
 
-# RADAR Not updated since 2011, used by RecurringTrip model
-# TODO could recurring_select gem replace this?
-#gem 'schedule_attributes', github: 'xudongcamsys/schedule_attributes'
-
+# view partial template
 gem 'haml'
 
 # ENV var management

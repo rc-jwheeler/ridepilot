@@ -82,8 +82,6 @@ class RepeatingTrip < ApplicationRecord
     outbound_trip_id = self.linking_trip_id if self.is_return? 
     if outbound_trip_id
       outbound_daily_trips = Trip.for_date_range(now, later + 1.day).where(repeating_trip_id: outbound_trip_id).pluck("date(pickup_time)", :id).to_h
-      puts "outboud trips..."
-      puts outbound_daily_trips
     end
 
     # Transaction block ensures that no DB changes will be made if there are any errors
