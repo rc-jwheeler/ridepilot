@@ -70,7 +70,7 @@ gem 'attribute_normalizer'
 # For Address Uploading
 # Note: not used by Paperclip internally per
 # https://github.com/thoughtbot/paperclip/issues/1764
-gem 'aws-sdk'
+gem 'aws-sdk-s3', '~> 1'
 
 # For change tracking and auditing
 gem 'paper_trail'
@@ -82,7 +82,7 @@ gem 'handlebars_assets'
 
 # RADAR Not updated since 2011, used by RecurringTrip model
 # TODO could recurring_select gem replace this?
-gem 'schedule_atts', github: 'zpearce/Schedule-Attributes'
+#gem 'schedule_attributes', github: 'xudongcamsys/schedule_attributes'
 
 gem 'haml'
 
