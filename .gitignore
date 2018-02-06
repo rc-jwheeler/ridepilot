@@ -5,6 +5,7 @@
 /.bundle
 /.sass-cache
 /.vagrant
+/.byebug_history
 /cookbooks
 /config/app_config.yml
 /config/database.yml
