@@ -31,10 +31,6 @@ class ApplicationController < ActionController::Base
     @provider_map.sort!{|a, b| a[0] <=> b[0] }
   end
 
-  def test_exception_notification
-    raise 'Testing, 1 2 3.'
-  end
-
   private
   
   def apply_application_settings

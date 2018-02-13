@@ -350,9 +350,6 @@ Rails.application.routes.draw do
     # reporting engine
     mount Reporting::Engine, at: "/reporting"
 
-
-    get "test_exception_notification" => "application#test_exception_notification"
-
     resources :lookup_tables, :only => [:index, :show] do
       member do
         post :add_value
