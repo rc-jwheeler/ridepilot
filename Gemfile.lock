@@ -155,6 +155,8 @@ GEM
     crass (1.0.3)
     css_splitter (0.4.6)
       sprockets (>= 2.0.0)
+    data_migrate (3.4.0)
+      rails (>= 4.0)
     database_cleaner (1.6.2)
     debug_inspector (0.0.3)
     devise (4.4.1)
@@ -302,6 +304,7 @@ GEM
       railties (>= 3.0.0)
     public_suffix (3.0.1)
     rack (2.0.4)
+    rack-cors (1.0.2)
     rack-protection (2.0.0)
       rack
     rack-test (0.8.2)
@@ -433,6 +436,10 @@ GEM
     simple_form (3.5.0)
       actionpack (> 4, < 5.2)
       activemodel (> 4, < 5.2)
+    simple_token_authentication (1.15.1)
+      actionmailer (>= 3.2.6, < 6)
+      actionpack (>= 3.2.6, < 6)
+      devise (>= 3.2, < 6)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-commands-rspec (1.0.4)
@@ -498,6 +505,7 @@ DEPENDENCIES
   capybara
   coffee-rails
   css_splitter
+  data_migrate
   database_cleaner
   devise
   devise_account_expireable
@@ -523,6 +531,7 @@ DEPENDENCIES
   pg
   phony_rails
   public_activity
+  rack-cors
   rack-timeout
   rails (~> 5.1.4)
   rails-controller-testing
@@ -542,6 +551,7 @@ DEPENDENCIES
   sdoc
   selenium-webdriver
   sidekiq
+  simple_token_authentication (~> 1.0)
   spring
   spring-commands-rspec
   therubyracer

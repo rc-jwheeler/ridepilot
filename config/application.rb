@@ -47,6 +47,20 @@ module Ridepilot
     # become time zone aware
     config.active_record.time_zone_aware_types = [:datetime, :time]
 
+    # Set default CORS settings
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*' # /http:\/\/localhost:(\d*)/
+        resource '*',
+          # headers: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept',
+          #   'Authorization', 'X-User-Token', 'X-User-Email',
+          #   'Access-Control-Request-Headers', 'Access-Control-Request-Method'
+          # ],
+          headers: :any, # fixes CORS errors on OPTIONS requests
+          methods: [:get, :post, :put, :delete, :options]
+        end
+    end
+
     config.generators do |g|
       g.test_framework :rspec, fixture: false
       g.fixture_replacement :factory_bot, dir: 'spec/factories'

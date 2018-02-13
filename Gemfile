@@ -21,7 +21,7 @@ gem 'therubyracer',  platforms: :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+#gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.0'
 # A set of Rails responders to dry up your application
@@ -68,6 +68,12 @@ gem 'devise'
 gem 'devise_account_expireable'
 gem 'devise_security_extension', github: 'camsys/devise_security_extension'
 #gem 'devise_security_extension', path: '~/devise_security_extension'
+
+### API ##############################
+# Rack Middleware for handling Cross-Origin Resource Sharing (CORS), which makes cross-origin AJAX possible.
+gem 'rack-cors', :require => 'rack/cors'
+# Token authentication
+gem 'simple_token_authentication', '~> 1.0'
 
 ### GEOSPATIAL ##############################
 
@@ -118,6 +124,8 @@ gem 'sidekiq'
 gem 'redis-rails'
 # Excel
 gem 'rubyXL'
+# Data migration
+gem 'data_migrate'
 
 
 group :integration, :qa, :production do 

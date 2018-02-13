@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   acts_as_paranoid # soft delete
+  acts_as_token_authenticatable # token authentication
   has_paper_trail
   
   has_many   :roles, dependent: :destroy
