@@ -316,11 +316,6 @@ Rails.application.routes.draw do
       end
     end
 
-    scope :via => :post, :constraints => { :format => "json" , :protocol => "https://" } do
-      match "device_pool_drivers/" => "v1/device_pool_drivers#index", :as => "v1_device_pool_drivers"
-      match "v1/device_pool_drivers/:id" => "v1/device_pool_drivers#update", :as => "v1_device_pool_driver"
-    end
-
     get "custom_reports/:id", to: "reports#show", as: :custom_report
     get "saved_reports/:id", to: "reports#saved_report", as: :saved_report
     get "show_saved_reports/:id", to: "reports#show_saved_report", as: :show_saved_report
