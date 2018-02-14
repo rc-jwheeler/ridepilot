@@ -373,5 +373,11 @@ Rails.application.routes.draw do
       match "cancel_trip", to: "trips#destroy", :via => [:delete, :options]
       match "trip_status", to: "trips#show", :via => [:get, :options]
     end
+
+    namespace :v2 do 
+      get 'touch_session' => 'base#touch_session' 
+      post 'sign_in' => 'sessions#create'
+      delete 'sign_out' => 'sessions#destroy'
+    end
   end
 end
