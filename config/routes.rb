@@ -378,6 +378,7 @@ Rails.application.routes.draw do
       get 'touch_session' => 'base#touch_session' 
       post 'sign_in' => 'sessions#create'
       delete 'sign_out' => 'sessions#destroy'
+      post 'reset_password' => 'passwords#reset'
     end
   end
 end
