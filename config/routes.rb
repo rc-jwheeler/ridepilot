@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   scope "(:locale)", locale: TranslationEngine.available_locales do
 
     mount TranslationEngine::Engine => "/translation_engine"
+    mount RidepilotCadAvl::Engine => "/ridepilot_cad_avl"
 
     root :to => "dispatchers#index"
 
