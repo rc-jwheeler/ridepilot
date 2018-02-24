@@ -14,7 +14,9 @@ class API::V2::PasswordsController < API::V2::BaseController
   
     @user.send_reset_password_instructions
     
-    render(success_response(message: "Password reset email sent to #{@user.email}."))
+    render(success_response(message: "Password reset email sent to #{@user.email}.",
+      email: @user.email
+      ))
   end
 
   protected
