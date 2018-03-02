@@ -89,8 +89,6 @@ gem 'reporting', github: 'camsys/reporting', branch: 'rails_5'
 #gem 'reporting', path: '~/reporting'
 gem 'translation_engine', github: 'camsys/translation_engine', branch: 'rails_5'
 #gem 'translation_engine', path: '~/translation_engine'
-gem 'ridepilot_cad_avl', github: 'camsys/ridepilot_cad_avl'
-#gem 'ridepilot_cad_avl', path: '~/ridepilot_cad_avl'
 
 ### OTHERS ##################################
 

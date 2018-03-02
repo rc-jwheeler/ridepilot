@@ -20,13 +20,6 @@ GIT
       sass-rails
 
 GIT
-  remote: https://github.com/camsys/ridepilot_cad_avl.git
-  revision: b9f17489bd0fc03ac6ab2fb375daee0b9981fc92
-  specs:
-    ridepilot_cad_avl (0.0.1)
-      rails (~> 5.1.4)
-
-GIT
   remote: https://github.com/camsys/translation_engine.git
   revision: f93ecfa0648472060c19008c1ee87ab1dc1eeeef
   branch: rails_5
@@ -532,7 +525,6 @@ DEPENDENCIES
   responders (~> 2.0)
   rgeo
   rgeo-proj4
-  ridepilot_cad_avl!
   rspec-rails
   rubyXL
   sass-rails
