@@ -18,8 +18,8 @@ Dependencies
 
 This application requires:
 
-- Ruby 2.2.1
-- Rails 4.1
+- Ruby 2.5
+- Rails 5.1
 - Postgresql 9.3+
 - PostGIS 2.1+
 - Imagemagick
