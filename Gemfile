@@ -117,6 +117,9 @@ gem 'redis-rails'
 # Excel
 gem 'rubyXL'
 
+group :production do
+  gem 'exception_notification'
+end
 
 group :integration, :qa, :production do 
   gem 'rails_12factor'
