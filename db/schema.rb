@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180213170123) do
+ActiveRecord::Schema.define(version: 20180309164904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -241,6 +241,11 @@ ActiveRecord::Schema.define(version: 20180213170123) do
     t.boolean "is_unavailable", default: false
   end
 
+  create_table "data_migrations", id: false, force: :cascade do |t|
+    t.string "version", null: false
+    t.index ["version"], name: "unique_data_migrations", unique: true
+  end
+
   create_table "device_pool_drivers", id: :serial, force: :cascade do |t|
     t.string "status", limit: 255
     t.float "lat"
@@ -462,6 +467,7 @@ ActiveRecord::Schema.define(version: 20180213170123) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "depart_time"
+    t.integer "status_code"
     t.index ["address_id"], name: "index_itineraries_on_address_id"
     t.index ["run_id"], name: "index_itineraries_on_run_id"
     t.index ["trip_id"], name: "index_itineraries_on_trip_id"
