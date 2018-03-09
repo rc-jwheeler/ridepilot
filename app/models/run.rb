@@ -35,6 +35,7 @@ class Run < ApplicationRecord
   before_validation :fix_dates
   before_update :check_vehicle_change
   before_update :check_manifest_change
+  after_create :add_init_run_itineraries
   after_update :apply_manifest_changes
 
   validate                  :name_uniqueness
@@ -682,7 +683,6 @@ class Run < ApplicationRecord
 
   def apply_manifest_changes
     if @unschedule_trips
-      # TODO
       self.unschedule!(false)
     elsif @clear_manifest_times
       self.itineraries.clear_times!
@@ -691,6 +691,13 @@ class Run < ApplicationRecord
     end
 
     true
+  end
+
+  def add_init_run_itineraries
+    Itinerary.transaction do
+      build_begin_run_itinerary.save
+      build_end_run_itinerary.save
+    end
   end
   
 end
