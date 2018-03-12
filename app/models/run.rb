@@ -91,16 +91,14 @@ class Run < ApplicationRecord
   
   # based on recurring dispatching, batch assign recurring trip instances to recurring run instances
   def self.batch_update_recurring_trip_assignment!
-    recurring.each do |r|
-      next unless r && r.manifest_order.empty?
-      
-      r.update_recurring_trip_assignment!
+    recurring.each do |r|      
+      r.update_recurring_trip_assignment! if r
     end
   end
 
   # based on recurring dispatching, assign recurring trip instances to recurring run instances
   def update_recurring_trip_assignment!
-    return unless self.date
+    return unless r.date && r.manifest_order.empty? && r.itineraries.empty?
 
     rr = self.repeating_run
     return unless rr.present? 
