@@ -132,7 +132,7 @@ module ItineraryCore
 
     def update_depart_time
       new_time = (self.eta + process_time.to_i.minutes) if self.eta
-      self.depart_time = if trip && !trip.early_pickup_allowed
+      self.depart_time = if trip && !trip.early_pickup_allowed && time
         new_time > time ? new_time : time
       else
         new_time
