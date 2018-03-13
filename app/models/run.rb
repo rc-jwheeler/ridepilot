@@ -274,30 +274,14 @@ class Run < ApplicationRecord
   end
 
   def sorted_itineraries(revenue_only = false)
+    reset_itineraries if self.itineraries.empty?
+
     itins = itineraries
     itins = itins.revenue if revenue_only
 
-    if itins.empty?
-      itins = []
-      # begin run
-      itins << build_begin_run_itinerary.save unless revenue_only
-
-      # trip related revenue itineraries
-      self.trips.each do |trip|
-        itins << build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1).save
-
-        if !TripResult::NON_DISPATCHABLE_CODES.include?(trip.trip_result.try(:code))
-          itins << build_itinerary(trip.appointment_time, trip.dropoff_address, trip.id, 2).save
-        end
-      end
-
-      # end run
-      itins << build_end_run_itinerary.save unless revenue_only
-    else
-      # exclude non_dispatchable legs
-      exclude_leg_ids = itins.dropoff.joins(trip: :trip_result).where(trip_results: {code: TripResult::NON_DISPATCHABLE_CODES}).pluck(:id).uniq
-      itins = itins.where.not(id: exclude_leg_ids) if exclude_leg_ids.any?
-    end
+    # exclude non_dispatchable legs
+    exclude_leg_ids = itins.dropoff.joins(trip: :trip_result).where(trip_results: {code: TripResult::NON_DISPATCHABLE_CODES}).pluck(:id).uniq
+    itins = itins.where.not(id: exclude_leg_ids) if exclude_leg_ids.any?
 
     if manifest_order.blank?
       itins = itins.sort_by { |itin| [itin.time_diff, itin.leg_flag] }
