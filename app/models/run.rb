@@ -271,6 +271,7 @@ class Run < ApplicationRecord
     itins = itins.revenue if revenue_only
 
     if itins.empty?
+      itins = []
       # begin run
       itins << build_begin_run_itinerary unless revenue_only
 
