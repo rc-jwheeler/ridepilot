@@ -163,14 +163,7 @@ class Run < ApplicationRecord
     end
 
     # create itineraries
-    Itinerary.transaction do
-      build_begin_run_itinerary.save
-      self.trips.each do |trip|
-        build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1).save
-        build_itinerary(trip.appointment_time, trip.dropoff_address, trip.id, 2).save
-      end
-      build_end_run_itinerary.save
-    end
+    reset_itineraries
   end
 
   # "Cancels" a run: mark as cancelled and unschedule everything
@@ -266,6 +259,20 @@ class Run < ApplicationRecord
     remove_trip_itineraries!(trip_id)
   end
 
+  # given assigned trips, re-create all itineraries
+  def reset_itineraries
+    self.itineraries.delete_all
+
+    Itinerary.transaction do
+      build_begin_run_itinerary.save
+      self.trips.each do |trip|
+        build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1).save
+        build_itinerary(trip.appointment_time, trip.dropoff_address, trip.id, 2).save
+      end
+      build_end_run_itinerary.save
+    end
+  end
+
   def sorted_itineraries(revenue_only = false)
     itins = itineraries
     itins = itins.revenue if revenue_only
@@ -273,19 +280,19 @@ class Run < ApplicationRecord
     if itins.empty?
       itins = []
       # begin run
-      itins << build_begin_run_itinerary unless revenue_only
+      itins << build_begin_run_itinerary.save unless revenue_only
 
       # trip related revenue itineraries
       self.trips.each do |trip|
-        itins << build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1)
+        itins << build_itinerary(trip.pickup_time, trip.pickup_address, trip.id, 1).save
 
         if !TripResult::NON_DISPATCHABLE_CODES.include?(trip.trip_result.try(:code))
-          itins << build_itinerary(trip.appointment_time, trip.dropoff_address, trip.id, 2)
+          itins << build_itinerary(trip.appointment_time, trip.dropoff_address, trip.id, 2).save
         end
       end
 
       # end run
-      itins << build_end_run_itinerary unless revenue_only
+      itins << build_end_run_itinerary.save unless revenue_only
     else
       # exclude non_dispatchable legs
       exclude_leg_ids = itins.dropoff.joins(trip: :trip_result).where(trip_results: {code: TripResult::NON_DISPATCHABLE_CODES}).pluck(:id).uniq
