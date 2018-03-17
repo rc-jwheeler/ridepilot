@@ -79,14 +79,14 @@
         reload_drivers();
       });
 
-      $('input.time_field_hour, input.time_field_minute').on('change', function() {
+      $('.scheduled_time input.time_field_hour, .scheduled_time input.time_field_minute').on('change', function() {
         // use time_out to wait for #run_scheduled_start_time value updated
         setTimeout(function() {
           reload_drivers();
         }, 10);
       });
 
-      $(document).on('click', 'button.am-pm', function() {
+      $(document).on('click', '.scheduled_time button.am-pm', function() {
         // use time_out to wait for #run_scheduled_start_time value updated
         setTimeout(function() {
           reload_drivers();
