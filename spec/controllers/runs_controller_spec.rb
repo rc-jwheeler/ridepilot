@@ -102,16 +102,6 @@ RSpec.describe RunsController, type: :controller do
         }.to change{ run.reload.name }.from("Something").to("MyString")
       end
 
-      it "accepts nested trip attributes" do        
-        run = create(:run, :provider => @current_user.current_provider)
-        trip = create(:trip, :provider => @current_user.current_provider, :run => run, :trip_result => create(:trip_result, name: "Missing"))
-        expect {
-          put :update, params: {:id => run.to_param, :run => new_attributes.merge({
-            :trips_attributes => { "0" => { :id => trip.id, :trip_result_id => create(:trip_result, name: "No Show").id }}}
-          )}
-        }.to change{ trip.reload.trip_result.name }.from("Missing").to("No Show")
-      end
-
       it "assigns the requested run as @run" do
         run = create(:run, :provider => @current_user.current_provider)
         put :update, params: {:id => run.to_param, :run => valid_attributes}
