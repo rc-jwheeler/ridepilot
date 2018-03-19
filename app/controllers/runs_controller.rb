@@ -92,17 +92,6 @@ class RunsController < ApplicationController
   def update    
     authorize! :manage, @run
     
-    # Massage trip_attributes. We're not using a nested form so that we can use
-    # the partial for AJAX requests, and as a result we need to reset the keys
-    # in the trips_attributes hash and add the trip id.
-    corrected_trip_attributes = {}
-    if params[:trips_attributes].is_a? Hash
-      params[:trips_attributes].each do |key, values|
-        corrected_trip_attributes[corrected_trip_attributes.size.to_s] = values.merge({"id" => key})
-      end
-      params[:run][:trips_attributes] = corrected_trip_attributes
-    end
-    
     @run.assign_attributes run_params 
     changes = @run.changes           
     respond_to do |format|
@@ -330,10 +319,6 @@ class RunsController < ApplicationController
       :complete, 
       :actual_start_time, 
       :actual_end_time, 
-      :trips_attributes => [
-        :id,
-        :trip_result_id
-      ],
       :from_garage_address_attributes => [
         :provider_id,
         :address,
