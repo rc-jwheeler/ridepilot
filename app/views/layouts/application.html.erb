@@ -53,7 +53,7 @@
         <% if show_scheduling? %><li class="vehicles"><%= link_to translate_helper("application_vehicles_link_text"), vehicles_path %></li><% end %>
         <% if show_scheduling? %><li class="reports"><%= link_to translate_helper("application_reports_link_text"), reporting.reports_path %></li><% end %>
         <% if current_provider.try(:cab_enabled?) %><li class="cab_trips"><%= link_to translate_helper("application_cabs_link_text"), cab_trips_path %></li><% end %>
-        <% if show_scheduling? %><li class="cad"><%= link_to translate_helper("application_cad_link_text"), vehicles_path %></li><% end %>
+        <% if show_scheduling? %><li class="cad"><%= link_to translate_helper("application_cad_link_text"), ridepilot_cad_avl.cad_avl_path %></li><% end %>
       </ul>
       <ul id="secondary-nav" class="selfclear">
         <% if can_access_admin_tab(current_user) %>
