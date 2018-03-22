@@ -37,6 +37,7 @@ class RunsController < ApplicationController
 
   def new
     @run = Run.new
+    @run.date = params[:date] unless params[:date].blank?
     @run.provider_id = current_provider_id
     setup_run
     respond_to do |format|
@@ -65,7 +66,7 @@ class RunsController < ApplicationController
 
   def create
     authorize! :manage, @run
- 
+    
     @run = Run.new(run_params)
     @run.provider = current_provider
     
