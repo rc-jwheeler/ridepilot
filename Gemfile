@@ -75,7 +75,7 @@ gem 'rack-cors', :require => 'rack/cors'
 # Token authentication
 gem 'simple_token_authentication', '~> 1.0'
 # API serializer
-gem 'fast_jsonapi', github: 'Netflix/fast_jsonapi', branch: 'dev'
+#gem 'fast_jsonapi', github: 'Netflix/fast_jsonapi', branch: 'dev'
 
 ### GEOSPATIAL ##############################
 
