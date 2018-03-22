@@ -98,7 +98,7 @@ class Run < ApplicationRecord
 
   # based on recurring dispatching, assign recurring trip instances to recurring run instances
   def update_recurring_trip_assignment!
-    return unless r.date && r.manifest_order.empty? && r.itineraries.empty?
+    return unless self.date && self.manifest_order.empty? && self.itineraries.empty?
 
     rr = self.repeating_run
     return unless rr.present? 
