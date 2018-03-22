@@ -21,7 +21,7 @@ GIT
 
 GIT
   remote: https://github.com/camsys/ridepilot_cad_avl.git
-  revision: 870d60d5715fdd2382a68ef0b4134824a18377eb
+  revision: 81689c712728bd2bda37bd7ad8d123cf4326d31b
   specs:
     ridepilot_cad_avl (0.0.1)
       fast_jsonapi
@@ -262,7 +262,7 @@ GEM
     letter_opener (1.6.0)
       launchy (~> 2.2)
     libv8 (3.16.14.19)
-    loofah (2.2.0)
+    loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.0)
@@ -351,7 +351,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     raindrops (0.19.0)
-    rake (12.3.0)
+    rake (12.3.1)
     ransack (1.8.7)
       actionpack (>= 3.0)
       activerecord (>= 3.0)
