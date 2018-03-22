@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180318155713) do
+ActiveRecord::Schema.define(version: 20180322195456) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1119,6 +1119,15 @@ ActiveRecord::Schema.define(version: 20180318155713) do
     t.index ["vehicle_requirement_template_id"], name: "index_vehicle_compliances_on_vehicle_requirement_template_id"
   end
 
+  create_table "vehicle_inspections", force: :cascade do |t|
+    t.string "description"
+    t.datetime "deleted_at"
+    t.bigint "provider_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider_id"], name: "index_vehicle_inspections_on_provider_id"
+  end
+
   create_table "vehicle_maintenance_compliance_due_types", id: :serial, force: :cascade do |t|
     t.string "name", limit: 16
     t.string "note", limit: 16
@@ -1292,4 +1301,5 @@ ActiveRecord::Schema.define(version: 20180318155713) do
     t.index ["repeating_trip_id"], name: "index_weekday_assignments_on_repeating_trip_id"
   end
 
+  add_foreign_key "vehicle_inspections", "providers"
 end
