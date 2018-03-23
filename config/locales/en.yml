@@ -712,7 +712,7 @@ en:
   application_trips_link_text: "Trips"
   application_runs_link_text: "Runs"
   application_cabs_link_text: "Cabs"
-  application_cad_link_text: "CAD"
+  application_cad_link_text: "CAD/AVL"
   application_customers_link_text: "Customers"
   application_reports_link_text: "Reports"
   application_drivers_link_text: "Drivers"

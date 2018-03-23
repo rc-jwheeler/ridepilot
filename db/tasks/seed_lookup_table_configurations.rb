@@ -44,6 +44,11 @@
     name: 'capacity_types',
     caption: 'Capacity Type',
     value_column_name: 'name'
+  },
+  {
+    name: 'vehicle_inspections',
+    caption: 'Vehicle Inspection (yes/no question)',
+    value_column_name: 'description'
   }
 ].each do | config_data|
   config = LookupTable.find_by(name: config_data[:name])
