@@ -194,7 +194,7 @@ module DispatchHelper
 
     if slack_time > 0
       if  very_late_threshold <= slack_time
-        "#8a6d3b"
+        "#ff0000"
       elsif late_threshold <= slack_time
         "#f8ecb5"
       else
@@ -205,7 +205,7 @@ module DispatchHelper
       if  very_early_threshold <= slack_time
         "#3c763d"
       elsif early_threshold <= slack_time
-        "#dff0d8"
+        "#ffff00"
       else
         "#aaafaa"
       end
