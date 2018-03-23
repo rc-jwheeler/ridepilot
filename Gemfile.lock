@@ -21,7 +21,7 @@ GIT
 
 GIT
   remote: https://github.com/camsys/ridepilot_cad_avl.git
-  revision: 81689c712728bd2bda37bd7ad8d123cf4326d31b
+  revision: 35024bc347fa6947fc70e015c3e2d226065c3322
   specs:
     ridepilot_cad_avl (0.0.1)
       fast_jsonapi
@@ -333,8 +333,8 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.0.3)
-      loofah (~> 2.0)
+    rails-html-sanitizer (1.0.4)
+      loofah (~> 2.2, >= 2.2.2)
     rails-jquery-autocomplete (1.0.3)
       rails (>= 3.2)
     rails-settings-cached (0.6.6)
