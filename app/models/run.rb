@@ -25,6 +25,9 @@ class Run < ApplicationRecord
 
   has_one :run_distance
 
+  has_many :run_vehicle_inspections, dependent: :destroy
+  has_many :vehicle_inspections, through: :run_vehicle_inspections
+
   belongs_to :from_garage_address, -> { with_deleted }, class_name: 'GarageAddress', foreign_key: 'from_garage_address_id'
   accepts_nested_attributes_for :from_garage_address, update_only: true
   belongs_to :to_garage_address, -> { with_deleted }, class_name: 'GarageAddress', foreign_key: 'to_garage_address_id'
@@ -511,6 +514,20 @@ class Run < ApplicationRecord
     r = self.clone
     r.repeating_run = nil
     r.valid?
+  end
+
+  def vehicle_inspections_as_json
+    run_inspection_data = self.run_vehicle_inspections.pluck(:vehicle_inspection_id, :checked).to_h
+    inspection_as_json = []
+    VehicleInspection.by_provider(self.provider).pluck(:id, :description).each do |v|
+      inspection_as_json << {
+        id: v[0],
+        description: v[1],
+        checked: run_inspection_data[v[0]]
+      }
+    end
+
+    inspection_as_json
   end
 
   private

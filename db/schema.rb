@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180322195456) do
+ActiveRecord::Schema.define(version: 20180323150613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -882,6 +882,16 @@ ActiveRecord::Schema.define(version: 20180322195456) do
     t.float "ntd_total_revenue_hours"
   end
 
+  create_table "run_vehicle_inspections", force: :cascade do |t|
+    t.bigint "run_id"
+    t.bigint "vehicle_inspection_id"
+    t.boolean "checked"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["run_id"], name: "index_run_vehicle_inspections_on_run_id"
+    t.index ["vehicle_inspection_id"], name: "index_run_vehicle_inspections_on_vehicle_inspection_id"
+  end
+
   create_table "runs", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
     t.date "date"
@@ -909,6 +919,7 @@ ActiveRecord::Schema.define(version: 20180322195456) do
     t.text "uncomplete_reason"
     t.string "scheduled_start_time_string", limit: 255
     t.string "scheduled_end_time_string", limit: 255
+    t.text "driver_notes"
     t.index ["deleted_at"], name: "index_runs_on_deleted_at"
     t.index ["driver_id"], name: "index_runs_on_driver_id"
     t.index ["from_garage_address_id"], name: "index_runs_on_from_garage_address_id"
@@ -1301,5 +1312,7 @@ ActiveRecord::Schema.define(version: 20180322195456) do
     t.index ["repeating_trip_id"], name: "index_weekday_assignments_on_repeating_trip_id"
   end
 
+  add_foreign_key "run_vehicle_inspections", "runs"
+  add_foreign_key "run_vehicle_inspections", "vehicle_inspections"
   add_foreign_key "vehicle_inspections", "providers"
 end
