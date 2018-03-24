@@ -224,6 +224,18 @@ class ProvidersController < ApplicationController
     redirect_to general_provider_path(@provider, anchor: "eta_related_settings")
   end
 
+  def change_fare_related_settings
+    if @provider.fare
+      @provider.fare.update(fare_related_params)
+    else
+      fare = @provider.build_fare
+      fare.update(fare_related_params)
+      @provider.save(validate: false)
+    end
+
+    redirect_to general_provider_path(@provider, anchor: "fare_related_settings")
+  end
+
   def inactivate
     @provider = Provider.find(params[:id])
     authorize! :edit, @provider
@@ -345,6 +357,14 @@ class ProvidersController < ApplicationController
       :early_arrival_threshold_min,
       :late_arrival_threshold_min,
       :very_late_arrival_threshold_min
+      )
+  end
+
+  def fare_related_params
+    params.require(:fare).permit(
+      :fare_type,
+      :pre_trip,
+      :fixed_fare
       )
   end
 

@@ -19,6 +19,8 @@ class Trip < ApplicationRecord
   has_many   :ridership_mobilities, class_name: "TripRidershipMobility", foreign_key: :host_id, dependent: :destroy
   has_many   :itineraries, dependent: :destroy
 
+  belongs_to :fare
+
   delegate :label, to: :run, prefix: :run, allow_nil: true
   delegate :code, :name, to: :trip_result, prefix: :trip_result, allow_nil: true
 
@@ -32,6 +34,8 @@ class Trip < ApplicationRecord
 
   before_update :check_eta_settings_change
   after_update :apply_eta_settings_change
+
+  before_create :find_fare_settings
 
   scope :after,              -> (pickup_time) { where('pickup_time > ?', pickup_time.utc) }
   scope :after_today,        -> { where('pickup_time > ?', Date.today.end_of_day) }
@@ -478,5 +482,11 @@ class Trip < ApplicationRecord
       self.run.itineraries.clear_times! if @clear_itineraries_times
     end
     true
+  end
+
+  def find_fare_settings
+    if self.provider && self.provider.fare 
+      self.fare = self.provider.fare.dup
+    end
   end
 end

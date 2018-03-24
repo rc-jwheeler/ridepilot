@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180323150613) do
+ActiveRecord::Schema.define(version: 20180324174113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -399,6 +399,14 @@ ActiveRecord::Schema.define(version: 20180323150613) do
     t.index ["deleted_at"], name: "index_ethnicities_on_deleted_at"
   end
 
+  create_table "fares", force: :cascade do |t|
+    t.integer "fare_type"
+    t.boolean "pre_trip"
+    t.boolean "fixed_fare"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "field_configs", id: :serial, force: :cascade do |t|
     t.integer "provider_id", null: false
     t.string "table_name", limit: 255, null: false
@@ -620,8 +628,10 @@ ActiveRecord::Schema.define(version: 20180323150613) do
     t.integer "early_arrival_threshold_min"
     t.integer "late_arrival_threshold_min"
     t.integer "very_late_arrival_threshold_min"
+    t.bigint "fare_id"
     t.index ["business_address_id"], name: "index_providers_on_business_address_id"
     t.index ["deleted_at"], name: "index_providers_on_deleted_at"
+    t.index ["fare_id"], name: "index_providers_on_fare_id"
     t.index ["mailing_address_id"], name: "index_providers_on_mailing_address_id"
   end
 
@@ -1058,10 +1068,13 @@ ActiveRecord::Schema.define(version: 20180323150613) do
     t.integer "passenger_load_min"
     t.integer "passenger_unload_min"
     t.boolean "early_pickup_allowed"
+    t.bigint "fare_id"
+    t.float "fare_amount"
     t.index ["called_back_by_id"], name: "index_trips_on_called_back_by_id"
     t.index ["customer_id"], name: "index_trips_on_customer_id"
     t.index ["deleted_at"], name: "index_trips_on_deleted_at"
     t.index ["dropoff_address_id"], name: "index_trips_on_dropoff_address_id"
+    t.index ["fare_id"], name: "index_trips_on_fare_id"
     t.index ["funding_source_id"], name: "index_trips_on_funding_source_id"
     t.index ["linking_trip_id"], name: "index_trips_on_linking_trip_id"
     t.index ["mobility_id"], name: "index_trips_on_mobility_id"
