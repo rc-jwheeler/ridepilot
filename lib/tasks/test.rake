@@ -6,6 +6,7 @@ namespace :db do
         Rake::Task["db:drop"].invoke
         Rake::Task["db:create"].invoke
         Rake::Task["db:schema:load"].invoke
+        Rake::Task["sql:create_gps_locations_partition"].invoke
         Rake::Task["ridepilot:load_locales"].invoke
       else
         system("rails db:test:prepare RAILS_ENV=test")

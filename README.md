@@ -38,6 +38,7 @@ Set up development environment
     - Copy `config/database.yml.example.pg` to `config/database.yml` and update the values for specific environment (at least __development__ and __test__).
 
     - `rails db:setup`
+    - 'rails sql:create_gps_locations_partition'
 
 4. Testing
     - set up test database if not yet
