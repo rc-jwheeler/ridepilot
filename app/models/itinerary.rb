@@ -13,4 +13,23 @@ class Itinerary < ApplicationRecord
   STATUS_IN_PROGRESS = 1
   STATUS_COMPLETED = 2
   STATUS_OTHER = 3
+
+  # get associated fare info from trip
+  def fare
+    trip = self.trip
+    if trip 
+      trip_fare = trip.fare || trip.provider.fare
+      if trip_fare && !trip_fare.is_free? && (
+          (trip_fare.pre_trip && self.is_pickup?) ||
+          (!trip_fare.pre_trip && self.is_dropoff?)
+        )
+
+        trip_fare
+      else
+        nil
+      end
+    else 
+      nil
+    end
+  end
 end
