@@ -1287,6 +1287,7 @@ en:
   medicaid_eligible: "Medicaid Eligible"
   customer_private_notes: "Customer Private Notes"
   trip_donation: "Donation"
+  trip_payment: "Payment"
   trip_service_level: "Service Level"
   trip_mobility_requirements: "Mobility Req."
   trip_mobility_notes: "Mobility notes"
