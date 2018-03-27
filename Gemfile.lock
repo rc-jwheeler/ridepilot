@@ -21,7 +21,7 @@ GIT
 
 GIT
   remote: https://github.com/camsys/ridepilot_cad_avl.git
-  revision: 4f46fb1307d743b882a2d750dc4f19abeb0ad57a
+  revision: b9ab128b0e7c0fe0073ca25048e47504d877719c
   specs:
     ridepilot_cad_avl (0.0.1)
       fast_jsonapi
@@ -311,7 +311,7 @@ GEM
     rack-cors (1.0.2)
     rack-protection (2.0.0)
       rack
-    rack-test (0.8.3)
+    rack-test (1.0.0)
       rack (>= 1.0, < 3)
     rack-timeout (0.4.2)
     rails (5.1.5)
