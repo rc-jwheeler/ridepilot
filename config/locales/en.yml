@@ -912,7 +912,6 @@ en:
   fare_related_settings: "Fare Configurations"
   fare_type: "Type"
   pre_or_post_trip: "Record during pre-trip or post-trip?"
-  fixed_fare: "Previously specified for trip?"
   update_fare_related_settings: "Update"
 
   # ETA

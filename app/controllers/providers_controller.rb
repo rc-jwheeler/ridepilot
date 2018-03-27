@@ -363,8 +363,7 @@ class ProvidersController < ApplicationController
   def fare_related_params
     params.require(:fare).permit(
       :fare_type,
-      :pre_trip,
-      :fixed_fare
+      :pre_trip
       )
   end
 

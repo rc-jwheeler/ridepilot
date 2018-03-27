@@ -10,9 +10,6 @@
         %li{style: (fare.is_free? ? "display: none;" : "") }
           = label_tag translate_helper("pre_or_post_trip")
           = select_tag "pre_or_post_trip", options_for_select( [["Pre-trip", true], ["Post-trip", false]], fare.pre_trip), name: "fare[pre_trip]"
-        %li{style: (fare.is_free? ? "display: none;" : "") }
-          = label_tag translate_helper("fixed_fare")
-          = select_tag "fixed_fare", options_for_select( [["Yes", true], ["No", false]], fare.fixed_fare), name: "fare[fixed_fare]"
       .actions
         = submit_tag translate_helper("update_fare_related_settings"), class: 'btn action-button'
 %hr
@@ -22,10 +19,8 @@
     $('#fare_type').on('change', function() {
       if($(this).val() == 'free') {
         $('#pre_or_post_trip').parents('li').hide();
-        $('#fixed_fare').parents('li').hide();
       } else {
         $('#pre_or_post_trip').parents('li').show();
-        $('#fixed_fare').parents('li').show();
       }
     });
   });

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180324174113) do
+ActiveRecord::Schema.define(version: 20180327010525) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -402,7 +402,6 @@ ActiveRecord::Schema.define(version: 20180324174113) do
   create_table "fares", force: :cascade do |t|
     t.integer "fare_type"
     t.boolean "pre_trip"
-    t.boolean "fixed_fare"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -443,6 +442,30 @@ ActiveRecord::Schema.define(version: 20180324174113) do
     t.boolean "ntd_reportable"
     t.index ["deleted_at"], name: "index_funding_sources_on_deleted_at"
     t.index ["provider_id"], name: "index_funding_sources_on_provider_id"
+  end
+
+  create_table "gps_location_partitions", force: :cascade do |t|
+    t.integer "provider_id"
+    t.integer "year"
+    t.integer "month"
+    t.string "table_name"
+  end
+
+  create_table "gps_locations", force: :cascade do |t|
+    t.float "lat"
+    t.float "lng"
+    t.float "bearing"
+    t.float "speed"
+    t.datetime "log_time"
+    t.integer "accuracy"
+    t.bigint "provider_id"
+    t.bigint "run_id"
+    t.integer "itinerary_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider_id", "log_time"], name: "index_gps_locations_on_provider_id_and_log_time"
+    t.index ["provider_id"], name: "index_gps_locations_on_provider_id"
+    t.index ["run_id"], name: "index_gps_locations_on_run_id"
   end
 
   create_table "hidden_lookup_table_values", id: :serial, force: :cascade do |t|
@@ -1325,6 +1348,8 @@ ActiveRecord::Schema.define(version: 20180324174113) do
     t.index ["repeating_trip_id"], name: "index_weekday_assignments_on_repeating_trip_id"
   end
 
+  add_foreign_key "gps_locations", "providers"
+  add_foreign_key "gps_locations", "runs"
   add_foreign_key "run_vehicle_inspections", "runs"
   add_foreign_key "run_vehicle_inspections", "vehicle_inspections"
   add_foreign_key "vehicle_inspections", "providers"
