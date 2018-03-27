@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180327010525) do
+ActiveRecord::Schema.define(version: 20180327164006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1093,6 +1093,7 @@ ActiveRecord::Schema.define(version: 20180327010525) do
     t.boolean "early_pickup_allowed"
     t.bigint "fare_id"
     t.float "fare_amount"
+    t.datetime "fare_collected_time"
     t.index ["called_back_by_id"], name: "index_trips_on_called_back_by_id"
     t.index ["customer_id"], name: "index_trips_on_customer_id"
     t.index ["deleted_at"], name: "index_trips_on_deleted_at"
