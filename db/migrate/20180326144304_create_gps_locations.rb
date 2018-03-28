@@ -27,6 +27,7 @@ class CreateGpsLocations < ActiveRecord::Migration[5.1]
   end
 
   def down
+    GpsLocationPartition.destroy_all
     Rake::Task["sql:drop_gps_locations_partition"].invoke
 
     remove_index :gps_locations, [:provider_id, :log_time]

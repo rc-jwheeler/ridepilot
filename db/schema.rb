@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180327164006) do
+ActiveRecord::Schema.define(version: 20180328194209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -452,8 +452,8 @@ ActiveRecord::Schema.define(version: 20180327164006) do
   end
 
   create_table "gps_locations", force: :cascade do |t|
-    t.float "lat"
-    t.float "lng"
+    t.float "latitude"
+    t.float "longitude"
     t.float "bearing"
     t.float "speed"
     t.datetime "log_time"
@@ -461,8 +461,6 @@ ActiveRecord::Schema.define(version: 20180327164006) do
     t.bigint "provider_id"
     t.bigint "run_id"
     t.integer "itinerary_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["provider_id", "log_time"], name: "index_gps_locations_on_provider_id_and_log_time"
     t.index ["provider_id"], name: "index_gps_locations_on_provider_id"
     t.index ["run_id"], name: "index_gps_locations_on_run_id"

@@ -86,8 +86,6 @@ namespace :sql do
   end
 
   task drop_gps_locations_partition: :environment do 
-    GpsLocationPartition.destroy_all
-
     partition_sql = <<-SQL
       DROP TRIGGER IF EXISTS gps_locations_view_insert_trigger ON gps_locations_view;
       DROP FUNCTION IF EXISTS gps_locations_view_insert_trigger_procedure();
