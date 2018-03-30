@@ -7,7 +7,7 @@ module ItineraryCore
   included do
     #belongs_to :trip
     #belongs_to :run
-    belongs_to :address
+    belongs_to :address, -> { with_deleted }
 
     scope :revenue, -> { where.not(trip: nil) }
     scope :deadhead, -> { where(trip: nil) }
