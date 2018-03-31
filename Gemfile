@@ -129,6 +129,9 @@ gem 'rubyXL'
 # Data migration
 gem 'data_migrate'
 
+group :production do
+  gem 'exception_notification'
+end
 
 group :integration, :qa, :production do 
   gem 'rails_12factor'
