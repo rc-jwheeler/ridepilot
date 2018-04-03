@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require './app/controllers/concerns/json_response_helper.rb'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -60,6 +61,9 @@ module Ridepilot
           methods: [:get, :post, :put, :delete, :options]
         end
     end
+
+    # Sends back appropriate JSON 400 response if a bad JSON request is sent.
+    config.middleware.insert_before Rack::Head, JsonResponseHelper::CatchJsonParseErrors
 
     config.generators do |g|
       g.test_framework :rspec, fixture: false
