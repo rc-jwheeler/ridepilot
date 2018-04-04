@@ -911,7 +911,7 @@ en:
   # Fare
   fare_related_settings: "Fare Configurations"
   fare_type: "Type"
-  pre_or_post_trip: "Record during pre-trip or post-trip?"
+  pre_or_post_trip: "Collect during pre-trip or post-trip?"
   update_fare_related_settings: "Update"
 
   # ETA
