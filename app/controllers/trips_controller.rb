@@ -503,7 +503,12 @@ class TripsController < ApplicationController
       :passenger_unload_min,
       :early_pickup_allowed,
       :fare_amount,
-      customer_attributes: [:id]
+      customer_attributes: [:id],
+      fare_attributes: [
+        :id,
+        :fare_type,
+        :pre_trip
+      ]
     )
   end
 

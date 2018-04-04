@@ -20,6 +20,7 @@ class Trip < ApplicationRecord
   has_many   :itineraries, dependent: :destroy
 
   belongs_to :fare
+  accepts_nested_attributes_for :fare
 
   delegate :label, to: :run, prefix: :run, allow_nil: true
   delegate :code, :name, to: :trip_result, prefix: :trip_result, allow_nil: true
