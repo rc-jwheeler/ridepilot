@@ -17,6 +17,7 @@
 /db/legacy
 /log/*.log
 /public/system
+/public/cad_avl_data_archives
 /tmp
 # Ignore application configuration
 /config/application.yml
