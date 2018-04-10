@@ -21,7 +21,7 @@ GIT
 
 GIT
   remote: https://github.com/camsys/ridepilot_cad_avl.git
-  revision: 9b009b1cb15317f3f7cd2a0a1c94a5a15a00d2c0
+  revision: 4743a7950f04f1386dd59181750364e0c5bc16c0
   specs:
     ridepilot_cad_avl (0.0.2)
       fast_jsonapi
@@ -154,7 +154,7 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
     connection_pool (2.2.1)
-    crass (1.0.3)
+    crass (1.0.4)
     css_splitter (0.4.6)
       sprockets (>= 2.0.0)
     data_migrate (3.4.0)
