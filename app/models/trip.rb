@@ -209,6 +209,10 @@ class Trip < ApplicationRecord
     cloned_trip.outbound_trip = nil
     cloned_trip.direction = :outbound
 
+    cloned_trip.fare = self.fare.try(:dup) || self.provider.try(:fare).try(:dup)
+    cloned_trip.fare_amount = nil 
+    cloned_trip.fare_collected_time = nil
+
     cloned_trip.ridership_mobilities = self.ridership_mobilities.has_capacity.collect{|m| m.dup}
 
     cloned_trip
@@ -233,6 +237,10 @@ class Trip < ApplicationRecord
     return_trip.drive_distance = nil
     return_trip.trip_result = nil
     return_trip.result_reason = nil
+
+    return_trip.fare = self.fare.try(:dup) || self.provider.try(:fare).try(:dup)
+    return_trip.fare_amount = nil 
+    return_trip.fare_collected_time = nil
 
     return_trip.ridership_mobilities = self.ridership_mobilities.has_capacity.collect{|m| m.dup}
 
@@ -486,8 +494,12 @@ class Trip < ApplicationRecord
   end
 
   def find_fare_settings
-    if self.provider && self.provider.fare 
-      self.fare = self.provider.fare.dup
+    unless self.fare
+      if self.provider && self.provider.fare 
+        self.fare = self.provider.fare.dup
+      end
     end
+
+    true
   end
 end
