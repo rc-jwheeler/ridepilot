@@ -107,7 +107,7 @@ module ItineraryCore
       when 0 
         "run_begin"
       when 1..2 # Pickup or dropoff
-        "trip_#{trip_id}_leg_#{leg_flag}"
+        "trip_#{trip.try(:id)}_leg_#{leg_flag}"
       when 3 
         "run_end"
       end
