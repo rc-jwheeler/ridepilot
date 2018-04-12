@@ -102,7 +102,9 @@ class Run < ApplicationRecord
 
   # based on recurring dispatching, assign recurring trip instances to recurring run instances
   def update_recurring_trip_assignment!
-    return unless self.date && self.manifest_order.empty? && self.itineraries.empty?
+    return unless self.date && 
+      (self.manifest_order.blank? || (self.manifest_order - ["run_begin","run_end"]).empty?) && 
+      self.itineraries.revenue.empty?
 
     rr = self.repeating_run
     return unless rr.present? 
@@ -156,6 +158,8 @@ class Run < ApplicationRecord
             # assign trip to run
             trip.run = self
             trip.save(validate: false)
+
+            self.add_trip_manifest!(trip.id)
           end
         end
       end

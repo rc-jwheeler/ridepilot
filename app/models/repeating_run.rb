@@ -230,6 +230,7 @@ class RepeatingRun < ApplicationRecord
     itins = itins.revenue if revenue_only
 
     if itins.empty?
+      itins = []
       # build itineraries from trips
       #from_garage_address = self.from_garage_address || self.vehicle.try(:garage_address)
       #to_garage_address = self.to_garage_address || self.vehicle.try(:garage_address)
