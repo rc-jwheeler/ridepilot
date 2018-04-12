@@ -451,12 +451,13 @@ class Trip < ApplicationRecord
   end
 
   def fit_run_schedule
-    if run 
+    if run && !self.run_disrupted_by_trip_changes?
       run_start_time = run.scheduled_start_time
       run_end_time = run.scheduled_end_time
 
       if run_start_time && run_end_time && pickup_time
         is_valid = (time_portion(self.pickup_time) >= time_portion(run_start_time)) && 
+        (time_portion(self.pickup_time) < time_portion(run_end_time)) && 
         (self.appointment_time.nil? || time_portion(self.appointment_time) <= time_portion(run_end_time))
 
         errors.add(:base, TranslationEngine.translate_text(:not_fit_in_run_schedule)) unless is_valid
