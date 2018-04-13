@@ -21,7 +21,7 @@ GIT
 
 GIT
   remote: https://github.com/camsys/ridepilot_cad_avl.git
-  revision: da1271dfa8138dfd2f2adcc293faabe3df9ce68f
+  revision: b0778df5a5e861670602c2f0588c4df0d234f014
   specs:
     ridepilot_cad_avl (0.0.2)
       fast_jsonapi
