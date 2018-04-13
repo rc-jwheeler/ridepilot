@@ -20,39 +20,14 @@ module DispatchHelper
       end
     end
 
-    # system mobility capacity configurations
-    mobility_capacities = {}
-    MobilityCapacity.has_capacity.each do |c|
-      mobility_capacities[[c.host_id, c.capacity_type_id]] = c.capacity
-    end
-
-    capacity_type_ids = CapacityType.by_provider(current_provider).pluck(:id)
-
-    # trips capacities
-    trip_table_name = is_recurring ? "repeating_trips" : "trips"
-    trip_capacities = {}
-    trips.joins(:ridership_mobilities)
-      .where("ridership_mobility_mappings.capacity > 0")
-      .group("#{trip_table_name}.id", "ridership_mobility_mappings.mobility_id")
-      .sum("ridership_mobility_mappings.capacity").each do |k, capacity|
-      trip_id = k[0]
-      trip_capacities[trip_id] = {} unless trip_capacities.has_key?(trip_id)
-      trip_capacity = trip_capacities[trip_id]
-      mobility_id = k[1]
-
-      capacity_type_ids.each do |c_id|
-        val = trip_capacity[c_id] || 0
-        val += capacity * mobility_capacities[[mobility_id, c_id]].to_i
-
-        trip_capacity[c_id] = val
-      end
-    end
+    trips_table_name = is_recurring ? "repeating_trips" : "trips"
+    trip_capacities = get_trip_capacities(trips, trips_table_name)
 
     # add itinerary specific data
     itins = is_recurring ? run.sorted_itineraries(true, recurring_dispatch_wday) : run.sorted_itineraries(true)
     # default occupancy by capacity type
     occupancy = {}
-    capacity_type_ids.each do |c_id|
+    CapacityType.by_provider(current_provider).pluck(:id).each do |c_id|
       occupancy[c_id] = 0
     end
 
@@ -108,6 +83,83 @@ module DispatchHelper
     end
 
     itins
+  end
+
+  def get_trip_capacities(trips, trip_table_name = "trips")
+    # system mobility capacity configurations
+    mobility_capacities = {}
+    MobilityCapacity.has_capacity.each do |c|
+      mobility_capacities[[c.host_id, c.capacity_type_id]] = c.capacity
+    end
+
+    capacity_type_ids = CapacityType.by_provider(current_provider).pluck(:id)
+
+    # trips capacities
+    trip_capacities = {}
+    trips.joins(:ridership_mobilities)
+      .where("ridership_mobility_mappings.capacity > 0")
+      .group("#{trip_table_name}.id", "ridership_mobility_mappings.mobility_id")
+      .sum("ridership_mobility_mappings.capacity").each do |k, capacity|
+
+      trip_id = k[0]
+      trip_capacities[trip_id] = {} unless trip_capacities.has_key?(trip_id)
+      trip_capacity = trip_capacities[trip_id]
+      mobility_id = k[1]
+
+      capacity_type_ids.each do |c_id|
+        val = trip_capacity[c_id] || 0
+        val += capacity * mobility_capacities[[mobility_id, c_id]].to_i
+
+        trip_capacity[c_id] = val
+      end
+    end
+
+    trip_capacities
+  end
+
+  def get_itin_occupancy(run, itin_id)
+    return unless run && itin_id
+
+    trip_capacities = get_trip_capacities(run.trips)
+
+    # default occupancy by capacity type
+    occupancy = {}
+    CapacityType.by_provider(current_provider).pluck(:id).each do |c_id|
+      occupancy[c_id] = 0
+    end
+
+    # the occupancy change in each itinerary
+    delta = nil
+    # PickUp: add (delta_unit = 1), DropOff: subtract (delta_unit = -1)
+    delta_unit = 1 
+    itin_occupancy = nil
+    run.sorted_itineraries(true).each do |itin|
+      trip = itin.trip
+
+      # calculate latest occupancy based on the change in previous leg
+      if delta && !delta.blank?
+        occupancy.merge!(delta) { |k, a_value, b_value| a_value + delta_unit * b_value }
+      end
+      # save occupancy snapshot
+      if itin.itin_id == itin_id
+        itin_occupancy = occupancy.dup 
+        break
+      end
+
+      # log the occupancy change in this leg for occupancy calculation in next leg
+      if TripResult::NON_DISPATCHABLE_CODES.include?(trip.try(:trip_result).try(:code))
+        delta = nil
+        delta_unit = 0
+      elsif itin.leg_flag == 1
+        delta = trip_capacities[trip.id]
+        delta_unit = 1
+      elsif itin.leg_flag == 2
+        delta = trip_capacities[trip.id]
+        delta_unit = -1
+      end
+    end
+
+    itin_occupancy
   end
 
   def run_summary(run)
