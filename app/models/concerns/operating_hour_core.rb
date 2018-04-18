@@ -11,6 +11,8 @@ module OperatingHourCore
     validates_presence_of :operatable
     validate :enforce_hour_sanity
 
+    after_initialize :set_defaults
+
     scope :all_day, -> { where(is_all_day: true) } 
     scope :unavailable, -> { where(is_unavailable: true) } 
     scope :regular, -> { where.not("is_all_day = ? or is_unavailable = ?", true, true) } 
@@ -166,6 +168,12 @@ module OperatingHourCore
   end
 
   private
+
+  def set_defaults
+    if self.end_time && self.start_time && self.end_time < self.start_time
+      self.end_time += 1.day
+    end
+  end
 
   def enforce_hour_sanity
     if is_regular_hours? && (start_time == end_time || (start_time > end_time && end_time.try(:to_s, :time_utc) != START_OF_DAY))
