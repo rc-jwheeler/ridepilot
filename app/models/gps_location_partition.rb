@@ -22,10 +22,13 @@ class GpsLocationPartition < ApplicationRecord
 
     # delete index and table
     index_name = self.table_name + "_provider_logtime_idx"
-    sql = " DROP INDEX IF EXISTS #{index_name};"
-    sql += " DROP TABLE IF EXISTS #{self.table_name}";
+
+    partition_sql = <<-SQL
+      DROP INDEX IF EXISTS #{index_name};
+      DROP TABLE IF EXISTS #{self.table_name};
+    SQL
       
-    ActiveRecord::Base.connection.execute sql
+    ActiveRecord::Base.connection.execute partition_sql
 
     true
   end
