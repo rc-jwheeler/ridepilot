@@ -134,7 +134,11 @@ module DispatchHelper
     delta_unit = 1 
     itin_occupancy = nil
     run.sorted_itineraries(true).each do |itin|
-      trip = itin.trip
+      # in real_time tracking, occupany gets updated when itinnerary finished
+      if itin.itin_id == itin_id && !itin.finish_time
+        itin_occupancy = occupancy.dup 
+        break
+      end
 
       # calculate latest occupancy based on the change in previous leg
       if delta && !delta.blank?
@@ -146,6 +150,7 @@ module DispatchHelper
         break
       end
 
+      trip = itin.trip
       # log the occupancy change in this leg for occupancy calculation in next leg
       if TripResult::NON_DISPATCHABLE_CODES.include?(trip.try(:trip_result).try(:code))
         delta = nil
