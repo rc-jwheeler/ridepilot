@@ -133,21 +133,29 @@ module DispatchHelper
     # PickUp: add (delta_unit = 1), DropOff: subtract (delta_unit = -1)
     delta_unit = 1 
     itin_occupancy = nil
+    finished_itin_matched = false
     run.sorted_itineraries(true).each do |itin|
-      # in real_time tracking, occupany gets updated when itinnerary finished
-      if itin.itin_id == itin_id && !itin.finish_time
-        itin_occupancy = occupancy.dup 
-        break
-      end
-
       # calculate latest occupancy based on the change in previous leg
       if delta && !delta.blank?
         occupancy.merge!(delta) { |k, a_value, b_value| a_value + delta_unit * b_value }
       end
-      # save occupancy snapshot
-      if itin.itin_id == itin_id
-        itin_occupancy = occupancy.dup 
-        break
+
+      # return updated occupancy for the match itin that is finished
+      if finished_itin_matched
+        itin_occupancy = occupancy.dup
+        break 
+      end
+
+      # if itin match found
+      if itin.itin_id == itin_id 
+        # if not finished, then return current occupancy
+        if !itin.finish_time
+          itin_occupancy = occupancy.dup 
+          break
+        else 
+          # if finished, flag it, return next itin's occupancy
+          finished_itin_matched = true
+        end
       end
 
       trip = itin.trip
