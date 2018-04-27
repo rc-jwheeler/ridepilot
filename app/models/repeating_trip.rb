@@ -19,7 +19,7 @@ class RepeatingTrip < ApplicationRecord
       {
         repeat:        1,
         interval_unit: "week", 
-        start_date:    trip.pickup_time.to_date.to_s,
+        start_date:    (trip.start_date.try(:to_date) || Date.today).to_s,
         interval:      trip.repetition_interval, 
         monday:        trip.repeats_mondays    ? 1 : 0,
         tuesday:       trip.repeats_tuesdays   ? 1 : 0,
