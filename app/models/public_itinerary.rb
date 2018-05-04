@@ -1,0 +1,2 @@
+class PublicItinerary < ApplicationRecord
+end

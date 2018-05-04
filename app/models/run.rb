@@ -21,6 +21,8 @@ class Run < ApplicationRecord
 
   has_many :trips, -> { order(:pickup_time) }, :dependent => :nullify
   has_many :itineraries, :dependent => :destroy
+  has_many :public_itineraries, -> { order(:sequence) }, :dependent => :destroy
+
   belongs_to :repeating_run
 
   has_one :run_distance
@@ -172,6 +174,21 @@ class Run < ApplicationRecord
 
     # create itineraries
     reset_itineraries
+
+    # publish manifest
+    self.publish_manifest!
+  end
+
+  # make manifest public
+  def publish_manifest!
+    self.public_itineraries.clear 
+    self.sorted_itineraries.each_with_index do |itin, idx|
+      self.public_itineraries.new(itinerary: itin, sequence: idx, eta: itin.eta).save
+    end
+
+    # update publish time
+    self.manifest_published = DateTime.now
+    self.save(validate: false)
   end
 
   # "Cancels" a run: mark as cancelled and unschedule everything

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180328194209) do
+ActiveRecord::Schema.define(version: 20180504194927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -656,6 +656,17 @@ ActiveRecord::Schema.define(version: 20180328194209) do
     t.index ["mailing_address_id"], name: "index_providers_on_mailing_address_id"
   end
 
+  create_table "public_itineraries", force: :cascade do |t|
+    t.bigint "run_id"
+    t.bigint "itinerary_id"
+    t.datetime "eta"
+    t.integer "sequence"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["itinerary_id"], name: "index_public_itineraries_on_itinerary_id"
+    t.index ["run_id"], name: "index_public_itineraries_on_run_id"
+  end
+
   create_table "recurring_driver_compliances", id: :serial, force: :cascade do |t|
     t.integer "provider_id"
     t.string "event_name", limit: 255
@@ -951,6 +962,7 @@ ActiveRecord::Schema.define(version: 20180328194209) do
     t.string "scheduled_start_time_string", limit: 255
     t.string "scheduled_end_time_string", limit: 255
     t.text "driver_notes"
+    t.datetime "manifest_published_at"
     t.index ["deleted_at"], name: "index_runs_on_deleted_at"
     t.index ["driver_id"], name: "index_runs_on_driver_id"
     t.index ["from_garage_address_id"], name: "index_runs_on_from_garage_address_id"
