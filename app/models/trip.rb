@@ -489,7 +489,12 @@ class Trip < ApplicationRecord
 
   def apply_eta_settings_change
     if self.run
-      self.run.itineraries.clear_times! if @clear_itineraries_times
+      if @clear_itineraries_times
+        self.run.manifest_changed = true 
+        self.run.save(validate: false)
+        
+        self.run.itineraries.clear_times!
+      end 
     end
     true
   end

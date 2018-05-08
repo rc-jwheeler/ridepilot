@@ -167,16 +167,19 @@ class Run < ApplicationRecord
       end
     end
 
+    self.manifest_changed = true
+
     if run_manifest_order.any?
       self.manifest_order = run_manifest_order 
-      self.save(validate: false)
     end
+
+    self.save(validate: false) if self.changed?
 
     # create itineraries
     reset_itineraries
 
     # publish manifest
-    self.publish_manifest!
+    self.publish_manifest! if self.manifest_publishable?
   end
 
   # make manifest public
@@ -187,8 +190,34 @@ class Run < ApplicationRecord
     end
 
     # update publish time
-    self.manifest_published = DateTime.now
+    self.manifest_published_at = DateTime.now
+    self.manifest_changed = false
     self.save(validate: false)
+  end
+
+  def manifest_publishable?
+    self.driver && # has driver
+      self.vehicle &&  # has vehicle
+      (
+        (self.from_garage_address && self.to_garage_address) || # has start & end locations
+        self.vehicle.garage_address # or vehicle has garage address
+      )  
+  end
+
+  def manifest_unpublishable_reasons
+    reasons = []
+    unless self.driver 
+      reasons << "no driver"
+    end
+    unless self.vehicle 
+      reasons << "no vehicle"
+    end
+
+    unless ((self.from_garage_address && self.to_garage_address) || self.vehicle.garage_address )
+      reasons << "no run start/end location(s)"
+    end
+
+    reasons
   end
 
   # "Cancels" a run: mark as cancelled and unschedule everything
@@ -203,16 +232,17 @@ class Run < ApplicationRecord
     self.save(validate: false) if auto_save
     
     trips.clear # Doesn't actually destroy the records, just removes the association
-    itineraries.delete_all
+    itineraries.destroy_all
   end
   
   # Cancels all runs in the collection, returning the count of trips removed from runs
   def self.cancel_all
-    self.update_all(manifest_order: nil)
+    cancelable_runs = self.where(actual_start_time: nil)
+    cancelable_runs.update_all(manifest_order: nil)
 
-    run_ids = self.all.pluck(:id)
+    run_ids = cancelable_runs.pluck(:id)
     Trip.where(run_id: run_ids).update_all(run_id: nil)
-    Itinerary.where(run_id: run_ids).delete_all
+    Itinerary.where(run_id: run_ids).destroy_all
   end
 
   def add_trip_manifest!(trip_id)
@@ -227,14 +257,21 @@ class Run < ApplicationRecord
       pickup_index = nil 
       appt_index = nil
 
+      finished_itin_data = self.itineraries.revenue.finished.pluck(:trip_id, :leg_flag)
       manifest_order_array = self.manifest_order
       manifest_order_array.each_with_index do |leg_name, index|
         leg_name_parts = leg_name.split('_')
         leg_trip_id = leg_name_parts[1]
-        is_pickup = leg_name_parts[3] == '1'
+        leg_flag = leg_name_parts[3].to_i
+        is_pickup = leg_flag == 1
+
+        # move to next if current itin is finished
+        next if  finished_itin_data.include?([leg_trip_id, leg_flag])
+
         a_trip = Trip.find_by_id leg_trip_id
         if a_trip 
           action_time = is_pickup ? a_trip.pickup_time : a_trip.appointment_time
+          
           next unless action_time
 
           pickup_index = index if !pickup_index && action_time.to_s(:time_utc) > trip_pickup_time.to_s(:time_utc)
@@ -276,9 +313,16 @@ class Run < ApplicationRecord
 
   def delete_trip_manifest!(trip_id)
     unless self.manifest_order.blank? 
-      self.manifest_order.delete "trip_#{trip_id}_leg_1"
-      self.manifest_order.delete "trip_#{trip_id}_leg_2"
-      self.save(validate: false)
+      unfinished_trip_itin_flags = self.itineraries.where(trip_id: trip_id).where(finish_time: nil).pluck(:leg_flag)
+      if unfinished_trip_itin_flags.include?(1)
+        self.manifest_order.delete "trip_#{trip_id}_leg_1"
+      end
+
+      if unfinished_trip_itin_flags.include?(2)
+        self.manifest_order.delete "trip_#{trip_id}_leg_2"
+      end
+
+      self.save(validate: false) if self.changed?
     end
 
     remove_trip_itineraries!(trip_id)
@@ -286,7 +330,7 @@ class Run < ApplicationRecord
 
   # given assigned trips, re-create all itineraries
   def reset_itineraries
-    self.itineraries.delete_all
+    self.itineraries.destroy_all
 
     Itinerary.transaction do
       build_begin_run_itinerary.save
@@ -347,9 +391,9 @@ class Run < ApplicationRecord
   end
 
   def remove_trip_itineraries!(trip_id)
-    trip_itins = self.itineraries.where(trip_id: trip_id)
+    trip_itins = self.itineraries.where(finish_time: nil).where(trip_id: trip_id)
     if trip_itins.any?
-      self.itineraries.where(trip_id: trip_id).delete_all
+      trip_itins.destroy_all
       self.itineraries.clear_times! #clear other itins times
     end
   end
@@ -399,7 +443,6 @@ class Run < ApplicationRecord
   end
 
   def self.update_prior_run_complete_status!
-    
     Run.prior_to(Date.today).where(provider: Provider.active.pluck(:id)).incomplete.each do |r|
       if r.completable?
         r.set_complete!
@@ -705,6 +748,8 @@ class Run < ApplicationRecord
         @clear_manifest_times = true
       end
     end
+
+    self.manifest_changed = true if @unschedule_trips || @clear_manifest_times || self.changes.include?('manifest_order')
 
     true
   end  

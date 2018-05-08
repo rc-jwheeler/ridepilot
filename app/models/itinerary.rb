@@ -1,8 +1,13 @@
 class Itinerary < ApplicationRecord
   include ItineraryCore
+
+  acts_as_paranoid # soft delete
   
   belongs_to :trip 
   belongs_to :run
+  has_one :public_itinerary
+
+  scope :finished, -> { where.not(finish_time: nil) }
 
   # STATUS CODE
   # 0 - Pending

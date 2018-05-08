@@ -274,6 +274,7 @@ Rails.application.routes.draw do
         post :schedule_multiple
         post :batch_change_same_run_trip_result
         post :update_run_manifest_order
+        put  :publish_manifest
         get :cancel_run
         get :run_trips
         get :load_trips

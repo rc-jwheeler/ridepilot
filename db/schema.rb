@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180504194927) do
+ActiveRecord::Schema.define(version: 20180508160025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -500,6 +500,7 @@ ActiveRecord::Schema.define(version: 20180504194927) do
     t.datetime "departure_time"
     t.datetime "arrival_time"
     t.datetime "finish_time"
+    t.datetime "deleted_at"
     t.index ["address_id"], name: "index_itineraries_on_address_id"
     t.index ["run_id"], name: "index_itineraries_on_run_id"
     t.index ["trip_id"], name: "index_itineraries_on_trip_id"
@@ -963,6 +964,7 @@ ActiveRecord::Schema.define(version: 20180504194927) do
     t.string "scheduled_end_time_string", limit: 255
     t.text "driver_notes"
     t.datetime "manifest_published_at"
+    t.boolean "manifest_changed"
     t.index ["deleted_at"], name: "index_runs_on_deleted_at"
     t.index ["driver_id"], name: "index_runs_on_driver_id"
     t.index ["from_garage_address_id"], name: "index_runs_on_from_garage_address_id"
