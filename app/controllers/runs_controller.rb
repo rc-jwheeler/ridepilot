@@ -72,6 +72,12 @@ class RunsController < ApplicationController
     
     respond_to do |format|
       if @run.is_all_valid?(current_provider_id) && @run.save
+        if @run.vehicle && @run.vehicle.garage_address 
+          @run.from_garage_address = @run.vehicle.garage_address.dup
+          @run.to_garage_address = @run.vehicle.garage_address.dup
+          @run.save(validate: false)
+        end
+
         TrackerActionLog.create_run(@run, current_user)
         format.html { 
           if params[:from_dispatch] == 'true'
@@ -94,9 +100,17 @@ class RunsController < ApplicationController
     authorize! :manage, @run
     
     @run.assign_attributes run_params 
-    changes = @run.changes           
+    changes = @run.changes   
+
     respond_to do |format|
       if @run.is_all_valid?(current_provider_id) && @run.save
+        # update start&end location with vehicle garage
+        if params[:use_vehicle_garage] == 'true' && @run.vehicle && @run.vehicle.garage_address 
+          @run.from_garage_address = @run.vehicle.garage_address.dup
+          @run.to_garage_address = @run.vehicle.garage_address.dup
+          @run.save(validate: false)
+        end
+
         TrackerActionLog.update_run(@run, current_user, changes)
         format.html { 
           if params[:from_dispatch] == 'true'
