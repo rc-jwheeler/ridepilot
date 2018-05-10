@@ -21,9 +21,9 @@ GIT
 
 GIT
   remote: https://github.com/camsys/ridepilot_cad_avl.git
-  revision: 718b68290e2c4cc89eb5b90b1ca2bf7d59a91b4a
+  revision: a7153d83a02d4e1c0557f5e48af816f3d8216137
   specs:
-    ridepilot_cad_avl (0.0.4)
+    ridepilot_cad_avl (0.0.5)
       fast_jsonapi
       pg
       rails (~> 5.1.4)
@@ -282,7 +282,7 @@ GEM
       railties (>= 3.1)
     multi_json (1.13.1)
     nested_form (0.3.2)
-    nio4r (2.3.0)
+    nio4r (2.3.1)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     orm_adapter (0.5.0)
