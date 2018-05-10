@@ -115,7 +115,11 @@ module ItineraryCore
 
     def calculate_eta! 
       # previous leg depart_time + travel_time
-      self.eta = if @prev && @prev.depart_time && @prev.travel_time
+      self.eta = if @prev && @prev.departure_time && @prev.travel_time
+        # actual departure time
+        @prev.departure_time + @prev.travel_time.seconds 
+      elsif @prev && @prev.depart_time && @prev.travel_time
+        # estimated departure time
         @prev.depart_time + @prev.travel_time.seconds 
       else
         time

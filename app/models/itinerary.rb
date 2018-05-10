@@ -1,8 +1,13 @@
 class Itinerary < ApplicationRecord
   include ItineraryCore
+
+  acts_as_paranoid # soft delete
   
   belongs_to :trip 
   belongs_to :run
+  has_one :public_itinerary
+
+  scope :finished, -> { where.not(finish_time: nil) }
 
   # STATUS CODE
   # 0 - Pending
@@ -31,5 +36,13 @@ class Itinerary < ApplicationRecord
     else 
       nil
     end
+  end
+
+  def copyAvlDataFrom!(a_itin)
+    self.status_code = a_itin.status_code
+    self.departure_time = a_itin.departure_time
+    self.arrival_time = a_itin.arrival_time
+    self.finish_time = a_itin.finish_time
+    self.save(validate: false)
   end
 end

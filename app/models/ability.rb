@@ -1,6 +1,18 @@
 class Ability
   include CanCan::Ability
 
+  def cannot_cancel_or_destroy_started_run 
+    cannot [:cancel, :destroy], Run do |r|
+      r.actual_start_time
+    end
+  end
+
+  def cannot_destroy_completed_trip 
+    cannot :destroy, Trip do |t|
+      t.trip_result.try(:code) == 'COMP'
+    end
+  end
+
   def initialize(user)
     can_manage_all = false
 
@@ -21,6 +33,8 @@ class Ability
       if role.system_admin?
         can_manage_all = true
         can :manage, :all
+        cannot_cancel_or_destroy_started_run
+        cannot_destroy_completed_trip
         break
       end
     end
@@ -65,7 +79,9 @@ class Ability
       can :manage,  RepeatingTrip, :provider_id => provider.id
       can :manage,  Trip, :provider_id => provider.id 
       can action,  RepeatingRun, :provider_id => provider.id
-      can action,  Run, :provider_id => provider.id 
+      can action,  Run, :provider_id => provider.id
+      cannot_cancel_or_destroy_started_run
+      cannot_destroy_completed_trip
     end
     can action,  Vehicle, :provider_id => provider.id
     

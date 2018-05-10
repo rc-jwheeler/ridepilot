@@ -1,5 +1,6 @@
 module DispatchHelper
 
+  # used in dispatch screen for internal manifest display
   def get_itineraries(run, is_recurring = false, recurring_dispatch_wday = nil)
     return [] unless run
 
@@ -85,6 +86,90 @@ module DispatchHelper
     itins
   end
 
+  # use public_itinerary data and get associated occupancy etc
+  # used in manifest report
+  def get_public_itineraries(run)
+    return [] unless run
+
+    itins = []
+    
+    # fetch public itinerary and associated trips
+    public_itins = run.public_itineraries
+    trips = Trip.unscoped.where(id: public_itins.joins(:itinerary).pluck(:trip_id).uniq)
+
+    # vehicle capacity
+    if run.vehicle && run.vehicle.vehicle_type
+      vehicle_capacities = []
+      run.vehicle.vehicle_type.vehicle_capacity_configurations.each do |config|
+        vehicle_capacities << config.vehicle_capacities.pluck(:capacity_type_id, :capacity).to_h
+      end
+    end
+
+    trip_capacities = get_trip_capacities(trips)
+
+    # default occupancy by capacity type
+    occupancy = {}
+    CapacityType.by_provider(current_provider).pluck(:id).each do |c_id|
+      occupancy[c_id] = 0
+    end
+
+    # the occupancy change in each itinerary
+    delta = nil
+    # PickUp: add (delta_unit = 1), DropOff: subtract (delta_unit = -1)
+    delta_unit = 1 
+    
+    public_itins.each do |public_itin|
+      itin = public_itin.itinerary
+      trip = itin.trip
+
+      # calculate latest occupancy based on the change in previous leg
+      if delta && !delta.blank?
+        occupancy.merge!(delta) { |k, a_value, b_value| a_value + delta_unit * b_value }
+      end
+      # save occupancy snapshot
+      itin.capacity = occupancy.dup
+
+      # check if trip capacity > vehicle capacity
+      itin.capacity_warning = false
+      if vehicle_capacities && vehicle_capacities.any?
+        has_enough_capacity = false
+        vehicle_capacities.each do |cap_data|
+          capacity_met = true
+          occupancy.each do |c_id, val|
+            if cap_data[c_id].to_i < val
+              capacity_met = false
+              break 
+            end
+          end
+
+          if capacity_met
+            has_enough_capacity = true
+            break
+          end
+        end
+        itin.capacity_warning = true if !has_enough_capacity
+      else 
+        itin.capacity_warning = true
+      end
+
+      # log the occupancy change in this leg for occupancy calculation in next leg
+      if TripResult::NON_DISPATCHABLE_CODES.include?(trip.try(:trip_result).try(:code))
+        delta = nil
+        delta_unit = 0
+      elsif itin.leg_flag == 1
+        delta = trip_capacities[trip.id]
+        delta_unit = 1
+      elsif itin.leg_flag == 2
+        delta = trip_capacities[trip.id]
+        delta_unit = -1
+      end
+
+      itins << itin
+    end
+
+    itins
+  end
+
   def get_trip_capacities(trips, trip_table_name = "trips")
     # system mobility capacity configurations
     mobility_capacities = {}
@@ -117,10 +202,15 @@ module DispatchHelper
     trip_capacities
   end
 
+  # used in CAD
   def get_itin_occupancy(run, itin_id)
     return unless run && itin_id
 
-    trip_capacities = get_trip_capacities(run.trips)
+    # fetch public itinerary and associated trips
+    public_itins = run.public_itineraries
+    trips = Trip.unscoped.where(id: public_itins.joins(:itinerary).pluck(:trip_id).uniq)
+
+    trip_capacities = get_trip_capacities(trips)
 
     # default occupancy by capacity type
     occupancy = {}
@@ -134,7 +224,8 @@ module DispatchHelper
     delta_unit = 1 
     itin_occupancy = nil
     finished_itin_matched = false
-    run.sorted_itineraries(true).each do |itin|
+    public_itins.each do |public_itin|
+      itin = public_itin.itinerary
       # calculate latest occupancy based on the change in previous leg
       if delta && !delta.blank?
         occupancy.merge!(delta) { |k, a_value, b_value| a_value + delta_unit * b_value }

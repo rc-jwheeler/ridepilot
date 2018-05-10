@@ -1246,6 +1246,7 @@ en:
   complete_run_dialog_title: "Complete Run"
   uncomplete_run_dialog_title: "Set Run as Incomplete"
   uncomplete_reason: "Reason"
+  use_vehicle_garage: "Vehicle garage as start & end?"
   
   #shared
   generic_error_message:

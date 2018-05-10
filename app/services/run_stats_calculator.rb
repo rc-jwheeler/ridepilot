@@ -130,6 +130,8 @@ class RunStatsCalculator
     eta_info = {}
     itin_count = itins.size
     itins.each_with_index do |itin, index|
+      next if itin.arrival_time
+      
       if index < (itin_count - 1)
         itin.next = itins[index + 1]
       end

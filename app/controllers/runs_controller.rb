@@ -72,6 +72,12 @@ class RunsController < ApplicationController
     
     respond_to do |format|
       if @run.is_all_valid?(current_provider_id) && @run.save
+        if @run.vehicle && @run.vehicle.garage_address 
+          @run.from_garage_address = @run.vehicle.garage_address.dup
+          @run.to_garage_address = @run.vehicle.garage_address.dup
+          @run.save(validate: false)
+        end
+
         TrackerActionLog.create_run(@run, current_user)
         format.html { 
           if params[:from_dispatch] == 'true'
@@ -94,9 +100,17 @@ class RunsController < ApplicationController
     authorize! :manage, @run
     
     @run.assign_attributes run_params 
-    changes = @run.changes           
+    changes = @run.changes   
+
     respond_to do |format|
       if @run.is_all_valid?(current_provider_id) && @run.save
+        # update start&end location with vehicle garage
+        if params[:use_vehicle_garage] == 'true' && @run.vehicle && @run.vehicle.garage_address 
+          @run.from_garage_address = @run.vehicle.garage_address.dup
+          @run.to_garage_address = @run.vehicle.garage_address.dup
+          @run.save(validate: false)
+        end
+
         TrackerActionLog.update_run(@run, current_user, changes)
         format.html { 
           if params[:from_dispatch] == 'true'
@@ -137,7 +151,7 @@ class RunsController < ApplicationController
   
   # Cancels multiple runs by id, removing associations with any trips on those runs
   def cancel_multiple
-    @runs = Run.where(id: cancel_multiple_params[:run_ids].split(',').map(&:to_i))
+    @runs = Run.where(actual_start_time: nil).where(id: cancel_multiple_params[:run_ids].split(',').map(&:to_i))
     trips_removed = @runs.joins(:trips).size
     @runs.cancel_all
     
@@ -146,17 +160,17 @@ class RunsController < ApplicationController
     end
     
     respond_to do |format|
-      format.html { redirect_to(runs_path, notice: "#{trips_removed} trips successfully unscheduled from #{@runs.count} runs.")}
+      format.html { redirect_to(runs_path, notice: "#{trips_removed} trips successfully unscheduled from #{@runs.count} runs. (Started runs cannot be unscheduled.)")}
     end
   end
   
   # Destroys multiple runs by id, deleting them from the database
   def delete_multiple
-    @runs = Run.where(id: delete_multiple_params[:run_ids].split(',').map(&:to_i))
+    @runs = Run.where(actual_start_time: nil).where(id: delete_multiple_params[:run_ids].split(',').map(&:to_i))
     runs_destroyed = can?(:delete, Run) ? @runs.destroy_all : Run.none
     if runs_destroyed
       respond_to do |format|
-        format.html { redirect_to(runs_path, notice: "#{runs_destroyed.count} runs successfully deleted.") }
+        format.html { redirect_to(runs_path, notice: "#{runs_destroyed.count} runs successfully deleted. (Started runs cannot be deleted.)") }
       end
     end
   end
