@@ -1,3 +1,10 @@
+:css
+  .link_disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    text-decoration: none;
+  }
+
 .panel.panel-success.run_trips_panel{id: "run_trips_panel_#{run.id}", data: {run_id: run.id}}
   .panel-heading
     .pull-right{style: 'padding-right: 0px;'}
@@ -6,11 +13,11 @@
         = render 'unschedule_trip_dropdown'
         %span.dispatch-action.publish_manifest{style: (run.manifest_changed ? "" : "display: none;")}
           = link_to publish_manifest_dispatchers_path(run_id: run.id), title: 'Publish Manifest', method: :put, data: {confirm: "Are you sure to publish the manifest?"}, remote: true do 
-            %i.fa.fa-cloud-upload{style: 'color: red;'}
+            %i.fa.fa-cloud-upload.publish_manifest_icon{style: 'color: red;'}
         - if run.date.today? || run.date.future?
-          %span.dispatch-action
+          %span.dispatch-action.calculate_eta
             = link_to eta_dispatchers_path(run_id: run.id), title: 'Recalculate ETA', style: 'color: white;', remote: true do 
-              %i.fa.fa-clock-o
+              %i.fa.fa-clock-o.eta_icon
         - if can?(:cancel, run)  
           %span.dispatch-action
             = link_to cancel_run_dispatchers_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: 'Are you sure to cancel this run?'} do 
@@ -52,16 +59,25 @@
 
 - unless run.complete?
   - unpublishable_reasons = run.manifest_unpublishable_reasons
-  - if unpublishable_reasons.any?
-    :javascript 
-      // show manifest unpublishable reason
-      var unpublishable_reasons = "#{unpublishable_reasons.join(', ')}";
 
-      $("#run_trips_panel_#{run.id}").on("click", ".publish_manifest a", function(e){ 
+  :javascript 
+    // show manifest unpublishable reason
+    var unpublishable_reasons = "#{unpublishable_reasons.join(', ')}";
+    $("#run_trips_panel_#{run.id}").on("click", ".publish_manifest a", function(e){ 
+      if(unpublishable_reasons.trim()) {
         e.preventDefault(); 
         show_alert_dialog("Manifest can not be published due to: " + unpublishable_reasons);
         return false; 
-      });
+      } else {
+        $(this).find('.publish_manifest_icon').toggleClass('fa-spin');
+        $(this).parents(".dispatch-action").toggleClass('link_disabled');
+      }
+    });
+
+    $("#run_trips_panel_#{run.id}").on("click", ".calculate_eta a", function(e){ 
+      $(this).find('.eta_icon').toggleClass('fa-spin');
+      $(this).parents(".dispatch-action").toggleClass('link_disabled');
+    });
 
   :javascript
     $("#run_trips_panel_#{run.id}").droppable({
