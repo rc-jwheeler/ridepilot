@@ -128,6 +128,10 @@ class DispatchersController < ApplicationController
 
   def publish_manifest
     @run = Run.find_by_id params[:run_id]
+
+    # requires eta
+    calculate_eta
+
     @run.publish_manifest!
   end
 
@@ -214,9 +218,7 @@ class DispatchersController < ApplicationController
   def eta
     @run = Run.find_by_id params[:run_id]
 
-    if @run
-      @eta_info = RunStatsCalculator.new(@run.id).process_eta
-    end
+    calculate_eta
   end
 
   def update_slack_chart
@@ -304,6 +306,12 @@ class DispatchersController < ApplicationController
           end
         end
       end
+    end
+  end
+
+  def calculate_eta
+    if @run
+      @eta_info = RunStatsCalculator.new(@run.id).process_eta
     end
   end
 

@@ -184,9 +184,41 @@ class Run < ApplicationRecord
 
   # make manifest public
   def publish_manifest!
-    self.public_itineraries.clear 
-    self.sorted_itineraries.each_with_index do |itin, idx|
-      self.public_itineraries.new(itinerary: itin, sequence: idx, eta: itin.eta).save
+    old_public_itins = self.public_itineraries
+    finished_itins = old_public_itins.finished
+    non_finished_itins = old_public_itins.non_finished
+
+    last_finished_itin = finished_itins.last.try(:itinerary)
+    new_itins = self.sorted_itineraries
+    last_finished_itin_idx = new_itins.index(last_finished_itin) || -1
+
+    first_non_finished_public_itin = non_finished_itins.first
+    first_non_finished_itin = first_non_finished_public_itin.try(:itinerary)
+    first_non_finished_itin_eta = first_non_finished_public_itin.try(:eta)
+
+    # keep finished ones
+    self.public_itineraries = finished_itins
+    public_itin_count = finished_itins.size
+
+    # process non-finished ones
+    first_non_finished_internal_itin = nil
+    self.sorted_itineraries[last_finished_itin_idx+1..-1].each do |itin|
+      next if itin.finish_time
+      itin_eta = itin.eta 
+
+      # check if active itin has changed, e.g., dispatcher moved a new trip before current active itin
+      # if not changed, need to copy departure_time etc to new itin
+      if !first_non_finished_internal_itin
+        first_non_finished_internal_itin = itin
+        # check if first_non_finished_itin departed or not
+        if first_non_finished_itin && first_non_finished_itin.departure_time && itin.itin_id == first_non_finished_itin.itin_id
+          itin.copyAvlDataFrom!(first_non_finished_itin)
+          itin_eta = first_non_finished_itin_eta
+        end
+      end
+
+      self.public_itineraries.new(run: self, itinerary: itin, sequence: public_itin_count, eta: itin_eta).save
+      public_itin_count += 1
     end
 
     # update publish time
