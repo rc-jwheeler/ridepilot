@@ -179,7 +179,10 @@ class Run < ApplicationRecord
     reset_itineraries
 
     # publish manifest
-    self.publish_manifest! if self.manifest_publishable?
+    if self.manifest_publishable?
+      RunStatsCalculator.new(self.id).process_eta
+      self.publish_manifest!
+    end
   end
 
   # make manifest public

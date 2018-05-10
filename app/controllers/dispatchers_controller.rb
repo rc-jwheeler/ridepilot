@@ -130,7 +130,9 @@ class DispatchersController < ApplicationController
     @run = Run.find_by_id params[:run_id]
 
     # requires eta
-    calculate_eta
+    if @run.itineraries.where(eta: nil).any?
+      calculate_eta
+    end
 
     @run.publish_manifest!
   end
