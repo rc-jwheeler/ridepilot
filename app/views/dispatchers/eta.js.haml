@@ -1,3 +1,3 @@
-= render 'update_eta'
+= render 'update_eta' if @eta_info
 $("#run_trips_panel_#{@run.id} .eta_icon").toggleClass('fa-spin');
 $("#run_trips_panel_#{@run.id} .calculate_eta").toggleClass('link_disabled');
