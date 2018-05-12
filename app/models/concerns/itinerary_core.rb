@@ -53,6 +53,19 @@ module ItineraryCore
       leg_flag == 2
     end
 
+    def label
+      case leg_flag
+      when 0
+        "Start"
+      when 3
+        "End"
+      when 1
+        "Pick up #{self.trip.try(:customer).try(:name)}"
+      when 2
+        "Drop off #{self.trip.try(:customer).try(:name)}"
+      end
+    end
+
     def ordinal 
       @ordinal ||= case leg_flag 
       when 0
