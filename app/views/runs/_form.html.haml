@@ -58,7 +58,8 @@
         $.ajax({
           url: "#{reload_vehicles_runs_path}",
           data: {
-            date: $('#run_date').val()
+            date: $('#run_date').val(),
+            vehicle_id: $('#run_vehicle_id').val()
           }
         });
       }
@@ -69,7 +70,8 @@
           data: {
             date: $('#run_date').val(),
             from_time: $('#run_scheduled_start_time').val(),
-            to_time: $('#run_scheduled_end_time').val()
+            to_time: $('#run_scheduled_end_time').val(),
+            driver_id: $('#run_driver_id').val()
           }
         });
       }
