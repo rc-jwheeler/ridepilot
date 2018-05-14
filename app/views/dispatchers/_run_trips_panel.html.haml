@@ -68,10 +68,14 @@
         e.preventDefault(); 
         show_alert_dialog("Manifest can not be published due to: " + unpublishable_reasons);
         return false; 
-      } else {
-        $(this).find('.publish_manifest_icon').toggleClass('fa-spin');
-        $(this).parents(".dispatch-action").toggleClass('link_disabled');
       }
+    });
+
+    $('.publish_manifest').on('confirm:complete', function (e, confirmed) {
+      if (confirmed) {
+         $(this).find('.publish_manifest_icon').toggleClass('fa-spin');
+          $(this).parents(".dispatch-action").toggleClass('link_disabled');
+      } 
     });
 
     $("#run_trips_panel_#{run.id}").on("click", ".calculate_eta a", function(e){ 
