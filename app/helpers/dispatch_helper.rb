@@ -88,13 +88,18 @@ module DispatchHelper
 
   # use public_itinerary data and get associated occupancy etc
   # used in manifest report
-  def get_public_itineraries(run)
+  def get_public_itineraries(run, trip_only = false)
     return [] unless run
 
     itins = []
     
     # fetch public itinerary and associated trips
     public_itins = run.public_itineraries
+    exclude_leg_ids = Itinerary.where(id: public_itins.pluck(:itinerary_id)).dropoff
+      .joins(trip: :trip_result).where(trip_results: {
+        code: TripResult::NON_DISPATCHABLE_CODES
+        }).pluck(:id).uniq
+    public_itins = public_itins.joins(:itinerary).where.not(itineraries: {id: exclude_leg_ids})
     trips = Trip.unscoped.where(id: public_itins.joins(:itinerary).pluck(:trip_id).uniq)
 
     # vehicle capacity
@@ -121,6 +126,8 @@ module DispatchHelper
     public_itins.each do |public_itin|
       itin = public_itin.itinerary
       trip = itin.trip
+
+      next if trip_only && !trip
 
       # calculate latest occupancy based on the change in previous leg
       if delta && !delta.blank?
