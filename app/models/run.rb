@@ -214,9 +214,15 @@ class Run < ApplicationRecord
       if !first_non_finished_internal_itin
         first_non_finished_internal_itin = itin
         # check if first_non_finished_itin departed or not
-        if first_non_finished_itin && first_non_finished_itin.departure_time && itin.itin_id == first_non_finished_itin.itin_id
-          itin.copyAvlDataFrom!(first_non_finished_itin)
-          itin_eta = first_non_finished_itin_eta
+        if first_non_finished_itin && first_non_finished_itin.departure_time
+          if itin.itin_id == first_non_finished_itin.itin_id
+            itin.copyAvlDataFrom!(first_non_finished_itin)
+            itin_eta = first_non_finished_itin_eta
+          else
+            # means previous active itin is not active, new itin is inserted before it
+            # therefore, need to clear previous active itin's departure_time 
+            first_non_finished_itin.reset!
+          end
         end
       end
 

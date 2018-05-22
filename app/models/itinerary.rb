@@ -45,4 +45,12 @@ class Itinerary < ApplicationRecord
     self.finish_time = a_itin.finish_time
     self.save(validate: false)
   end
+
+  def reset!
+    self.status_code = nil
+    self.departure_time = nil
+    self.arrival_time = nil
+    self.finish_time = nil
+    self.save(validate: false)
+  end
 end
