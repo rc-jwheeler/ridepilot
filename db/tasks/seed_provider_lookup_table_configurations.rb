@@ -18,6 +18,16 @@
     name: 'vehicle_inspections',
     caption: 'Vehicle Inspection (yes/no question)',
     value_column_name: 'description'
+  },
+  {
+    name: 'dispatcher_message_templates',
+    caption: 'Common Dispatcher Message',
+    value_column_name: 'message'
+  },
+  {
+    name: 'driver_message_templates',
+    caption: 'Common Driver Message',
+    value_column_name: 'message'
   }
 ].each do | config_data|
   config = ProviderLookupTable.find_by(name: config_data[:name])

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180508160025) do
+ActiveRecord::Schema.define(version: 20180524144222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -524,6 +524,15 @@ ActiveRecord::Schema.define(version: 20180508160025) do
     t.string "model_name_str", limit: 255
     t.string "code_column_name", limit: 255
     t.string "description_column_name", limit: 255
+  end
+
+  create_table "message_templates", force: :cascade do |t|
+    t.text "message"
+    t.bigint "provider_id"
+    t.string "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider_id"], name: "index_message_templates_on_provider_id"
   end
 
   create_table "mobilities", id: :serial, force: :cascade do |t|
@@ -1363,6 +1372,7 @@ ActiveRecord::Schema.define(version: 20180508160025) do
 
   add_foreign_key "gps_locations", "providers"
   add_foreign_key "gps_locations", "runs"
+  add_foreign_key "message_templates", "providers"
   add_foreign_key "run_vehicle_inspections", "runs"
   add_foreign_key "run_vehicle_inspections", "vehicle_inspections"
   add_foreign_key "vehicle_inspections", "providers"
