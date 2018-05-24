@@ -1,5 +1,6 @@
 class EtaUpdateWorker
   include Sidekiq::Worker
+  sidekiq_options queue: 'critical'
 
   def perform(itin_id, new_eta_str)
     return unless itin_id && new_eta_str
