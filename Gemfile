@@ -152,6 +152,7 @@ group :test, :development do
 end
 
 group :development do
+  gem 'puma', '~> 3.7'
   # preview mail in dev
   gem "letter_opener"
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
