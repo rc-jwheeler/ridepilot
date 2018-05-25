@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180524144222) do
+ActiveRecord::Schema.define(version: 20180524184400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -533,6 +533,20 @@ ActiveRecord::Schema.define(version: 20180524144222) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["provider_id"], name: "index_message_templates_on_provider_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.bigint "provider_id"
+    t.string "type"
+    t.text "body"
+    t.integer "sender_id"
+    t.integer "reader_id"
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider_id"], name: "index_messages_on_provider_id"
+    t.index ["reader_id"], name: "index_messages_on_reader_id", unique: true
+    t.index ["sender_id"], name: "index_messages_on_sender_id", unique: true
   end
 
   create_table "mobilities", id: :serial, force: :cascade do |t|

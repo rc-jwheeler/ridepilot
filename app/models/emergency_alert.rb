@@ -1,0 +1,2 @@
+class EmergencyAlert < Message
+end
