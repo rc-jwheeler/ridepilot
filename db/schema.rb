@@ -545,8 +545,8 @@ ActiveRecord::Schema.define(version: 20180524184400) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["provider_id"], name: "index_messages_on_provider_id"
-    t.index ["reader_id"], name: "index_messages_on_reader_id", unique: true
-    t.index ["sender_id"], name: "index_messages_on_sender_id", unique: true
+    t.index ["reader_id"], name: "index_messages_on_reader_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
   create_table "mobilities", id: :serial, force: :cascade do |t|

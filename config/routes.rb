@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
     mount TranslationEngine::Engine => "/translation_engine"
     mount RidepilotCadAvl::Engine => "/ridepilot_cad_avl"
+    mount ActionCable.server => '/cable'
 
     root :to => "dispatchers#index"
 

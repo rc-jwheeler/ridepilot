@@ -43,6 +43,7 @@
 //= require jquery.floatThead
 //= require jquery.splitter
 //= require OverlappingMarkerSpiderfier
+//= require cable
 //= require_self
 
 function ISODateFormatToDateObject(str) {

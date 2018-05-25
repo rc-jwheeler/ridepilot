@@ -7,6 +7,7 @@
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= split_stylesheet_link_tag "v1_theme", :media => "all" %>
   <%= render 'shared/google_maps/google_map_api' %>
+  <%= action_cable_meta_tag %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
   <%= yield :head %>
@@ -86,6 +87,8 @@
 
   <% if current_user %>
     <%= javascript_tag do %>
+      var current_provider_id = <%= current_provider_id %>;
+      var current_user_id = <%= current_user.id %>;
       $(document).ready(function(){
         idleTimer = new IdleTimer();
         idleTimer.start();

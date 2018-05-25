@@ -11,7 +11,7 @@ class CreateMessages < ActiveRecord::Migration[5.1]
       t.timestamps
     end
 
-    add_index :messages, :sender_id,                :unique => true
-    add_index :messages, :reader_id,                :unique => true
+    add_index :messages, :sender_id           
+    add_index :messages, :reader_id               
   end
 end
