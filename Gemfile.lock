@@ -21,9 +21,9 @@ GIT
 
 GIT
   remote: https://github.com/camsys/ridepilot_cad_avl.git
-  revision: 2593fe0f8cbdee72412fb35f38820842fbd6ea63
+  revision: 5db47e6cd9aaea1ea50f1601836cf2078ff3c4cb
   specs:
-    ridepilot_cad_avl (0.0.5)
+    ridepilot_cad_avl (0.0.6)
       fast_jsonapi
       pg
       rails (~> 5.1.4)
@@ -185,7 +185,7 @@ GEM
       railties (>= 3.0.0)
     faker (1.8.7)
       i18n (>= 0.7)
-    fast_jsonapi (1.1.1)
+    fast_jsonapi (1.2)
       activesupport (>= 4.2)
     ffi (1.9.21)
     figaro (1.1.1)
