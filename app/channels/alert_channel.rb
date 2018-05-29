@@ -20,7 +20,7 @@ class AlertChannel < ApplicationCable::Channel
         alert.read_at = DateTime.now
         alert.save(validate: false)
 
-        EmergencyAlertDismissWorker.perform_async(alert.id, alert.provider_id)
+        EmergencyAlertDismissWorker.perform_async(alert.id)
       end
     end
   end
