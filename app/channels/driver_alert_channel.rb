@@ -1,6 +1,6 @@
 class DriverAlertChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "driver_alert_channel_#{params[:driver_user_id]}"
+    stream_from "driver_alert_channel_#{params[:provider_id]}_#{params[:driver_id]}"
   end
 
   def unsubscribed

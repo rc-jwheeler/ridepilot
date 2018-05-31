@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180524184400) do
+ActiveRecord::Schema.define(version: 20180529214015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -544,6 +544,8 @@ ActiveRecord::Schema.define(version: 20180524184400) do
     t.datetime "read_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "driver_id"
+    t.index ["driver_id"], name: "index_messages_on_driver_id"
     t.index ["provider_id"], name: "index_messages_on_provider_id"
     t.index ["reader_id"], name: "index_messages_on_reader_id"
     t.index ["sender_id"], name: "index_messages_on_sender_id"
@@ -1387,6 +1389,7 @@ ActiveRecord::Schema.define(version: 20180524184400) do
   add_foreign_key "gps_locations", "providers"
   add_foreign_key "gps_locations", "runs"
   add_foreign_key "message_templates", "providers"
+  add_foreign_key "messages", "drivers"
   add_foreign_key "run_vehicle_inspections", "runs"
   add_foreign_key "run_vehicle_inspections", "vehicle_inspections"
   add_foreign_key "vehicle_inspections", "providers"

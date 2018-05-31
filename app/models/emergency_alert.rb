@@ -13,6 +13,6 @@ class EmergencyAlert < Message
   end
 
   def broadcast_alert
-    EmergencyAlertWorker.perform_async(self.id, self.provider_id, self.body)
+    EmergencyAlertWorker.perform_async(self.id)
   end
 end
