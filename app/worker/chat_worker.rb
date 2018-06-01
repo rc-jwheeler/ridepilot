@@ -10,7 +10,8 @@ class ChatWorker
         sender_id: message.sender_id, 
         sender_name: message.sender.try(:display_name),
         message: message.body, 
-        action: 'CreateMessage'
+        action: 'CreateMessage',
+        id: message.id
       }
     end
   end
