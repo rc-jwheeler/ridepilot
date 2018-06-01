@@ -43,6 +43,7 @@
 //= require jquery.floatThead
 //= require jquery.splitter
 //= require OverlappingMarkerSpiderfier
+//= require bootstrap-toggle
 //= require cable
 //= require_self
 
