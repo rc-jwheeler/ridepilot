@@ -42,6 +42,7 @@
 //= require bootstrap-editable-rails
 //= require jquery.floatThead
 //= require jquery.splitter
+//= require jquery.timeago
 //= require OverlappingMarkerSpiderfier
 //= require bootstrap-toggle
 //= require cable
