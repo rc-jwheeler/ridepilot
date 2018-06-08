@@ -186,7 +186,7 @@ class Run < ApplicationRecord
   end
 
   # make manifest public
-  def publish_manifest!
+  def publish_manifest!(notify_driver = false)
     old_public_itins = self.public_itineraries
     finished_itins = old_public_itins.finished
     non_finished_itins = old_public_itins.non_finished
@@ -234,6 +234,10 @@ class Run < ApplicationRecord
     self.manifest_published_at = DateTime.now
     self.manifest_changed = false
     self.save(validate: false)
+
+    if notify_driver
+      ManifestNotificationWorker.perform_async(self.id)
+    end
   end
 
   def manifest_publishable?
