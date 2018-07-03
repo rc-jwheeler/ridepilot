@@ -8,7 +8,6 @@ class ChatAlertDismissWorker
     if receipt
       ActionCable.server.broadcast "chat_alert_channel_#{receipt.run_id}", {
         action: 'DismissChatAlert',
-        dismiss: true,
         message_id: receipt.message_id,
         read_by_id: receipt.read_by_id,
         id: receipt_id
