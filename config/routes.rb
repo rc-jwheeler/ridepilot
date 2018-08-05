@@ -11,8 +11,6 @@ Rails.application.routes.draw do
 
     get "admin", to: "home#index"
     get "schedule_recurring", to: "home#schedule_recurring"
-    get "ntd_funding_sources", to: "home#ntd_funding_sources"
-    post "update_ntd_funding_sources", to: "home#update_ntd_funding_sources"
 
     devise_for :users
 
@@ -317,6 +315,19 @@ Rails.application.routes.draw do
       collection do
         get :edit_multiple
         put :update_multiple
+      end
+    end
+
+    resources :vehicle_inspections, only: [] do 
+      member do 
+        patch :mark_flagged
+        patch :mark_mechnical
+      end
+    end
+
+    resources :funding_sources, only: [] do 
+      member do 
+        patch :mark_ntd_reportable
       end
     end
 
