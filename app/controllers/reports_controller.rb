@@ -1221,9 +1221,8 @@ class ReportsController < ApplicationController
     @active_vehicles = Vehicle.for_provider(current_provider_id).active.default_order
     
     if params[:query]
-      @report_params = [["Provider", current_provider.name]]
+      @report_params = []
       @report_params << ["Date Range", "#{@query.start_date.strftime('%m/%d/%Y')} - #{@query.before_end_date.strftime('%m/%d/%Y')}"]
-      @report_params << ["Vehicle", Vehicle.find_by_id(@query.vehicle_id).try(:name)] if @query.vehicle_id
       @report_params << ["Inspection Type", @query.run_inspection_type.titleize] if @query.run_inspection_type
 
       # get failed inspections
@@ -1233,10 +1232,14 @@ class ReportsController < ApplicationController
                       .where(checked: false)
                       .order("lower(vehicles.name)", "runs.date", "runs.scheduled_start_time_string", "vehicle_inspections.description")
       
-      @inspections = @inspections. where("runs.vehicle_id": @query.vehicle_id) if @query.vehicle_id
+      @inspections = @inspections.where("runs.vehicle_id": @query.vehicle_id) if @query.vehicle_id
 
       # TODO: filter by inspection question type (flaggable or mechanical)
-
+      if @query.run_inspection_type == 'flagged'
+        @inspections = @inspections.where("vehicle_inspections.flagged": true) 
+      elsif @query.run_inspection_type == 'mechanical'
+        @inspections = @inspections.where("vehicle_inspections.mechanical": true) 
+      end
 
       # get notes provided by driver
       run_ids = @inspections.pluck(:run_id).uniq
