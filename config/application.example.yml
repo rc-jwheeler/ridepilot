@@ -19,4 +19,5 @@ GOOGLE_TRIP_PLANNER_URL: "https://maps.googleapis.com/maps/api/distancematrix/js
 # Map display, CAD etc
 GOOGLE_API_KEY:               
 GOOGLE_ROAD_API_KEY:  # it's same as GOOGLE_API_KEY with new google API policy
-GOOGLE_ROAD_POINT_LIMIT: # default 100       
+GOOGLE_ROAD_POINT_LIMIT: # default 100      
+GOOGLE_DIRECTIONS_WAYPOINT_LIMIT: # default 25 
