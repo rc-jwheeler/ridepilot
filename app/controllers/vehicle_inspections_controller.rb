@@ -14,11 +14,11 @@ class VehicleInspectionsController < ApplicationController
     render json: {}
   end
 
-  def mark_mechnical
+  def mark_mechanical
     if params[:vehicle_inspection]
       insp = VehicleInspection.find_by_id(params[:id])
       if insp
-        insp.mechnical = params[:vehicle_inspection][:mechnical]
+        insp.mechanical = params[:vehicle_inspection][:mechanical]
         insp.save(validate: false)
       end
     end

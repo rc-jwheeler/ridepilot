@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180805183603) do
+ActiveRecord::Schema.define(version: 20180818025821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1223,7 +1223,7 @@ ActiveRecord::Schema.define(version: 20180805183603) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "flagged"
-    t.boolean "mechnical"
+    t.boolean "mechanical"
     t.index ["provider_id"], name: "index_vehicle_inspections_on_provider_id"
   end
 
