@@ -321,7 +321,7 @@ Rails.application.routes.draw do
     resources :vehicle_inspections, only: [] do 
       member do 
         patch :mark_flagged
-        patch :mark_mechnical
+        patch :mark_mechanical
       end
     end
 
