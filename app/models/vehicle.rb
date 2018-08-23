@@ -46,7 +46,7 @@ class Vehicle < ApplicationRecord
   
   scope :for_provider,  -> (provider_id) { where(provider_id: provider_id) }
   scope :reportable,    -> { where(reportable: true) }
-  scope :default_order, -> { order("lower(name)") }
+  scope :default_order, -> { order(Arel.sql("lower(name)")) }
 
   after_initialize :set_defaults
 

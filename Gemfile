@@ -9,7 +9,7 @@ end
 
 ### DEFAULT RAILS GEMS ####################
 
-gem 'rails', '~> 5.1.4'
+gem 'rails', '~> 5.2.1'
 # Use SCSS for stylesheets
 gem 'sass-rails'
 # Use Uglifier as compressor for JavaScript assets
@@ -97,7 +97,7 @@ gem 'reporting', github: 'camsys/reporting', branch: 'rails_5'
 #gem 'reporting', path: '~/reporting'
 gem 'translation_engine', github: 'camsys/translation_engine', branch: 'rails_5'
 #gem 'translation_engine', path: '~/translation_engine'
-gem 'ridepilot_cad_avl', github: 'camsys/ridepilot_cad_avl'
+gem 'ridepilot_cad_avl', github: 'camsys/ridepilot_cad_avl', branch: 'rails5.2'
 #gem 'ridepilot_cad_avl', path: '~/ridepilot_cad_avl'
 
 ### OTHERS ##################################

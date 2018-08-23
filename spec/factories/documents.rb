@@ -12,10 +12,10 @@ FactoryBot.define do
     association :documentable, factory: :driver
     
     trait :no_attachment do
-      document_file_name nil
-      document_content_type nil
-      document_file_size nil
-      document_updated_at nil
+      document_file_name { nil }
+      document_content_type { nil }
+      document_file_size { nil }
+      document_updated_at { nil }
     end
     
     factory :vehicle_document do
