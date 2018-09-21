@@ -20,3 +20,9 @@
           = f.label :paid, translate_helper("paid")
         .col-sm-9
           = f.select :paid, [[translate_helper("yes"), "true"], [translate_helper("no"), "false"]], {:selected => @run.paid.to_s }, class: 'form-control'
+    - if edit_mode == :show && !@is_repeating_run && !@run.driver_notes.blank?
+      .form-group.col-sm-12
+        .col-sm-3
+          = f.label :driver_notes, translate_helper("driver_notes")
+        .col-sm-9
+          = @run.driver_notes
