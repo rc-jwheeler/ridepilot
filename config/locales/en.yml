@@ -326,6 +326,7 @@ en:
   driver_form_recurring_availability_heading: "Recurring Availability"
   driver_form_daily_availability_heading: "Daily Availability"
   driver_form_planned_leaves_heading: "Planned Leaves"
+  driver_notes: "Driver Notes"
 
   # emergency contact
   driver_form_emergency_contact_heading: 'Emergency Contact'
