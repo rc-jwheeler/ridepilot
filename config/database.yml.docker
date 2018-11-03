@@ -1,10 +1,21 @@
 default: &default  
   adapter: postgis  
-  encoding: unicode  
+  encoding: unicode 
+  host: db 
+  database: ridepilot
   username: postgres  
   password:  
   pool: 5  
-  host: db 
-production:  
-  <<: *default  
+  port: 5432
+
+development:
+  <<: *default
+  database: ridepilot
+
+test:
+  <<: *default
+  database: ridepilot_test
+ 
+production:
+  <<: *default
   database: ridepilot
