@@ -1,0 +1,45 @@
+version: '3'
+volumes:  
+  postgres_data: {} 
+  redis:
+services:
+  db:    
+    image: mdillon/postgis:9.4
+    volumes:      
+      - postgres_data:/var/lib/postgresql/data 
+
+  redis:
+    image: 'redis:4.0-alpine'
+    volumes:
+      - 'redis:/data' 
+
+  app:    
+    build:      
+      context: .      
+      dockerfile: ./docker/app/Dockerfile    
+    depends_on:      
+      - db  
+      - redis
+    ports:
+      - 3000:3000
+
+  web:    
+    build:      
+      context: .      
+      dockerfile: ./docker/web/Dockerfile    
+    depends_on:      
+      - app    
+    ports:      
+      - 80:80
+
+  sidekiq:
+    depends_on:
+      - db
+      - redis
+    build: 
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    volumes:
+      - .:/var/www/ridepilot
+  

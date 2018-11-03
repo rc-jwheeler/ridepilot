@@ -1,0 +1,10 @@
+default: &default  
+  adapter: postgis  
+  encoding: unicode  
+  username: postgres  
+  password:  
+  pool: 5  
+  host: db 
+production:  
+  <<: *default  
+  database: ridepilot

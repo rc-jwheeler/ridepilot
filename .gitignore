@@ -11,6 +11,7 @@
 /config/database.yml
 /config/prod_deploy.rb
 /config/uat_deploy.rb
+/config/database.yml.local
 /config/unicorn.production.rb
 /db/*.sqlite3
 /db/*.sqlite3-journal
@@ -23,3 +24,4 @@
 /config/application.yml
 /railsbox
 /.byebug_history
+/dump.rdb
