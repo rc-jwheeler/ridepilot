@@ -1,0 +1,22 @@
+// Ridepilot default sass/scss lib. 
+// list all Ridepilot specific configurable variables and mixins definitions only. No styles.
+// this doesn't include bootstrap variables or mixins
+
+$brand-color: #6c7b91;
+
+$white: #fff;
+
+$black: #3f4d55;
+
+$gray-1: #728090;
+
+$gray-2: #b0bbc7;
+
+$gray-3: #cdd5df;
+
+$gray-4: #eef1f4;
+
+
+body {
+	color: $black;
+}
