@@ -10,6 +10,8 @@ class FundingSource < ApplicationRecord
   scope :provider_specific,   ->(provider_id) { where(provider_id: provider_id) }
   scope :ntd_reportable,      -> { where(ntd_reportable: true) }
 
+  SHOW_ALL_ID = -1
+
   def self.by_provider(provider)
     hidden_ids = HiddenLookupTableValue.hidden_ids self.table_name, provider.try(:id)
     where.not(id: hidden_ids).where("provider_id is NULL or provider_id = ?", provider.try(:id))

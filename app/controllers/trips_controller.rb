@@ -35,6 +35,8 @@ class TripsController < ApplicationController
     @run_listings += [[TranslationEngine.translate_text(:cab), -1]] if cab_enabled
     @run_listings += [[TranslationEngine.translate_text(:unscheduled), -2]]
 
+    @funding_sources = FundingSource.by_provider(current_provider).pluck(:name, :id) 
+
     respond_to do |format|
       format.html
       format.xml  { render :xml => @trips }
@@ -477,6 +479,8 @@ class TripsController < ApplicationController
     @run_listings = runs.pluck(:name, :id) 
     @run_listings += [[TranslationEngine.translate_text(:cab), -1]] if current_provider.try(:cab_enabled?)
     @run_listings += [[TranslationEngine.translate_text(:unscheduled), -2]]
+
+    @funding_sources = FundingSource.by_provider(current_provider).pluck(:name, :id) 
   end
 
   private
@@ -582,6 +586,7 @@ class TripsController < ApplicationController
       customer_id: session[:trips_customer_id],
       trip_result_id: session[:trips_trip_result_id],
       status_id: session[:trips_status_id],
+      funding_source_id: session[:trips_funding_source_id],
       days_of_week: session[:trips_days_of_week]
     }
   end
