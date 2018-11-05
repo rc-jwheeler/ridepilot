@@ -1,8 +1,7 @@
-// Ridepilot default sass/scss lib. 
-// list all Ridepilot specific configurable variables and mixins definitions only. No styles.
-// this doesn't include bootstrap variables or mixins
+// ---------------------
+// Variables
 
-$brand-color: #6c7b91;
+$brand-color: #073f92;
 
 $white: #fff;
 
@@ -17,6 +16,81 @@ $gray-3: #cdd5df;
 $gray-4: #eef1f4;
 
 
+// ---------------------
+// Mixins
+
+@mixin barlow {
+  font-family: 'Barlow', sans-serif;
+}
+
+@mixin gradient-t-b($color, $color2: $color, $transparency2: 0) {
+	background: -moz-linear-gradient(top, rgba($color,1) 0%, rgba($color2,$transparency2) 100%); 
+	background: -webkit-linear-gradient(top, rgba($color,1) 0%,rgba($color2,$transparency2) 100%); 
+	background: linear-gradient(to bottom, rgba($color,1) 0%,rgba($color2,$transparency2) 100%); 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$color}', endColorstr='#{$color2}',GradientType=0 );
+}
+
+@mixin gradient-l-r($color, $color2: $color, $transparency2: 0) {
+	background: -moz-linear-gradient(left, rgba($color,1) 0%, rgba($color2,$transparency2) 100%); 
+	background: -webkit-linear-gradient(left, rgba($color,1) 0%,rgba($color2,$transparency2) 100%); 
+	background: linear-gradient(to right, rgba($color,1) 0%,rgba($color2,$transparency2) 100%); 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$color}', endColorstr='#{$color2}',GradientType=1 );
+}
+
+
+// ---------------------
+
+
+html {
+  min-height: 100vh
+}
+
 body {
 	color: $black;
+	@include barlow;
+	@include gradient-t-b($gray-3);
+	min-height: 100vh;
 }
+
+#header {
+	@include gradient-l-r($brand-color, $white, 1);
+	padding: 2em 3em;
+	a#logo {
+		@include barlow;
+		font-weight: 800;
+		font-size: 28px;
+		color: $white;
+		transition: color .25s ease-in-out;
+		text-decoration: none;
+		&:hover {
+			color: $gray-3;
+		}
+	}
+}
+
+#login-area {
+	color: $brand-color;
+	font-weight: 600;
+	a {
+		color: currentColor;
+	}
+}
+
+.main-wrapper {
+	padding: 0 3em;
+}
+
+#crossbar {
+	background: transparent;
+	padding: 2em 3em 0 3em;
+}
+
+#main {
+	background-color: $white;
+}
+
+
+
+
+
+

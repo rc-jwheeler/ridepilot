@@ -155,29 +155,29 @@ button {width: auto; overflow: visible;}
  * Structure
  *
  */
-#header {
-  padding: 20px 20px 10px;
-  background: #0d4680;
-  color: #ddd;
-}
-#header a#logo:link,
-#header a#logo:visited {
-  font-family: Georgia,serif;
-  font-size: 28px;
-  text-decoration: none;
-  color: #ffffcc;
-}
-#header a#logo:hover,
-#header a#logo:active {
-  color: #fff;
-}
+// #header {
+//   padding: 20px 20px 10px;
+//   background: #0d4680;
+//   color: #ddd;
+// }
+// #header a#logo:link,
+// #header a#logo:visited {
+//   font-family: Georgia,serif;
+//   font-size: 28px;
+//   text-decoration: none;
+//   color: #ffffcc;
+// }
+// #header a#logo:hover,
+// #header a#logo:active {
+//   color: #fff;
+// }
 
 #login-area {
   float: right;
 }
 #login-area a:link,
 #login-area a:visited {
-  color: #fff;
+  // color: #fff;
   text-decoration: none;
 }
 #login-area a:hover,
