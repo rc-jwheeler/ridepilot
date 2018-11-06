@@ -4,7 +4,8 @@
 
 // colors
 
-$brand-color: #073f92;
+$brand-primary: #073f92;
+$brand-secondary: #EC1C24;
 
 $white: #fff;
 
@@ -17,6 +18,8 @@ $gray-2: #b0bbc7;
 $gray-3: #cdd5df;
 
 $gray-4: #eef1f4;
+
+$red: $brand-secondary;
 
 
 // measurements
@@ -80,9 +83,23 @@ body {
 	min-height: 100vh;
 }
 
+.btn, .action-button {
+	color: $brand-primary;
+	border: 1px solid currentColor;
+	border-radius: 6px;
+	background-color: $white;
+	&:hover {
+		background-color: $white;
+	}
+}
+
+.btn.btn-danger {
+  color: $red;
+}
+
 #header {
 	background-color: $gray-3;
-	@include gradient-l-r($brand-color, $white, 1);
+	@include gradient-l-r($brand-primary, $white, 1);
 	@include box-shadow;
 	padding: 0;
 	position: relative;
@@ -129,7 +146,7 @@ body {
 }
 
 #user-nav {
-	color: $brand-color;
+	color: $brand-primary;
 	font-weight: 600;
 	display: inline-block;
 	float: right;
@@ -164,7 +181,7 @@ body {
 	  	font-size: 15px;
 	  	font-weight: 600;
 	  	display: inline-block;
-	  	color: $brand-color;
+	  	color: $brand-primary;
 	  	background: transparent;
 	  	transition: .25s ease-in-out;
 	  	line-height: 1.4;
@@ -185,11 +202,54 @@ body {
 
 #crossbar {
 	background: transparent;
-	padding: 2em 3em 0 3em;
+	padding: 2em $side-pad 0 $side-pad;
 }
 
 #main {
 	background-color: $white;
+}
+
+#page-header {
+	padding: 1.5em 0;
+	.page-title {
+		float: left;
+	}
+	.page-actions {
+		float: right;
+
+	}
+}
+
+
+#footer {
+	position: fixed;
+	z-index: 1000;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	background: $gray-3;
+	color: $gray-1;
+	font-size: .875em;
+	font-weight: 600;
+	height: 3em;
+	a {
+		color: $brand-primary;
+	}
+	.footer-text, .version-lang {
+		padding: 1em;
+	}
+	.footer-text {
+		float: left;
+	}
+	.version-lang {
+		float: right;
+		text-transform: uppercase;
+		.locale {
+			margin-left: 1em;
+		}
+	}
 }
 
 

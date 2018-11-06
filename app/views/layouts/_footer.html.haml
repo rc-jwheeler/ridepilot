@@ -1,21 +1,13 @@
-:css
-  #footer {
-    background: white;
-    position: fixed;
-    bottom: 0px;
-    z-index: 10000;
-  }
-.row.col-sm-12#footer{:role => "contentinfo", :aria => {:label => 'Footer'}}
-  .col-sm-12#footer_text
+#footer{:role => "contentinfo", :aria => {:label => 'Footer'}}
+  .footer-text
     = translate_helper("footer_content")
-  #versionLang.col-sm-12
-    .pull-left
+  .version-lang
+    %span.version
       - unless Rails.env.production?
-        %span#versionInfo
-          = "Version #{ENV['APP_VERSION'] || Rails.application.config.version}"
+        = "Version #{ENV['APP_VERSION'] || Rails.application.config.version}"
       - else
-        %span#versionInfo= "Version #{Rails.application.config.version}"
-    .pull-right
+        = "Version #{Rails.application.config.version}"
+    %span.locale
       - if current_user.present?
         = links_to_each_locale(can? :manage, Translation)
       -else
