@@ -1,6 +1,9 @@
 // ---------------------
 // Variables
 
+
+// colors
+
 $brand-color: #073f92;
 
 $white: #fff;
@@ -16,11 +19,30 @@ $gray-3: #cdd5df;
 $gray-4: #eef1f4;
 
 
+// measurements
+
+$header-height: 10rem;
+
+$side-pad: 4rem;
+
+
 // ---------------------
 // Mixins
 
 @mixin barlow {
   font-family: 'Barlow', sans-serif;
+}
+
+@mixin transform($properties) {
+	-webkit-transform: $properties;
+  -ms-transform: $properties;
+  transform: $properties;
+}
+
+@mixin vert-center {
+	position: relative;
+  top: 50%;
+  @include transform(translateY(-50%));
 }
 
 @mixin gradient-t-b($color, $color2: $color, $transparency2: 0) {
@@ -53,31 +75,64 @@ body {
 }
 
 #header {
+	background-color: $gray-3;
 	@include gradient-l-r($brand-color, $white, 1);
-	padding: 2em 3em;
+	padding: 0;
+	position: relative;
+	height: $header-height;
 	a#logo {
 		@include barlow;
 		font-weight: 800;
-		font-size: 28px;
 		color: $white;
 		transition: color .25s ease-in-out;
 		text-decoration: none;
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		height: 100%;
+		max-width: 50%;
 		&:hover {
 			color: $gray-3;
 		}
+
+		.logo, .name {
+			display: inline-block;
+			
+			padding: 0 $side-pad;
+		}
+		
+		.logo {
+			background-color: $white;
+			height: $header-height;
+			img {
+				height: 5rem;
+			  width: auto;
+			  @include vert-center;
+			}
+		}
+
+		.name {
+			font-size: 28px;
+			@include vert-center;
+		}
+
 	}
 }
 
 #login-area {
 	color: $brand-color;
 	font-weight: 600;
+	// padding: 2em 3em;
 	a {
 		color: currentColor;
 	}
+
 }
 
 .main-wrapper {
-	padding: 0 3em;
+	padding: 0 $side-pad;
 }
 
 #crossbar {
