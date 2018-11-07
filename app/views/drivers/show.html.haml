@@ -4,7 +4,7 @@
     = translate_helper("show_driver_heading")
     - if @driver.inactivated?
       %span{style: 'font-size: small; color: red;'}= @driver.active_status_text
-  .page-actions
+  .action-buttons
     = link_to translate_helper("driver_availability_link_title"), availability_driver_path(@driver), class: "btn"
     - if can? :manage, @driver
       = link_to translate_helper("driver_documents_add_link_title"), new_driver_document_path(@driver), class: "btn"

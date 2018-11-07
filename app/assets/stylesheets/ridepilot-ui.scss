@@ -1,76 +1,90 @@
+// becky says - i'll move variables and mixings into their own file eventually.
+
 // ---------------------
 // Variables
 
 
 // colors
 
-$brand-primary: #073f92;
-$brand-secondary: #EC1C24;
+	$brand-primary: #073f92;
+	$brand-secondary: #EC1C24;
 
-$white: #fff;
+	$white: #fff;
 
-$black: #3f4d55;
+	$black: #3f4d55;
 
-$gray-1: #728090;
+	$gray-1: #728090;
 
-$gray-2: #b0bbc7;
+	$gray-2: #b0bbc7;
 
-$gray-3: #cdd5df;
+	$gray-3: #cdd5df;
 
-$gray-4: #eef1f4;
+	$gray-4: #eef1f4;
 
-$red: $brand-secondary;
+	$red: $brand-secondary;
 
 
 // measurements
 
-$header-height: 10rem;
+	$header-height: 10rem;
 
-$side-pad: 4rem;
+	$layout-pad: 4rem;
+	$content-pad: 3rem;
+	$object-pad: 2.5rem;
+
+	$button-radius: 6px;
 
 
 // ---------------------
 // Mixins
 
-@mixin barlow {
-  font-family: 'Barlow', sans-serif;
-}
+	@mixin barlow {
+	  font-family: 'Barlow', sans-serif;
+	}
 
-@mixin transform($properties) {
-	-webkit-transform: $properties;
-  -ms-transform: $properties;
-  transform: $properties;
-}
+	@mixin transform($properties) {
+		-webkit-transform: $properties;
+	  -ms-transform: $properties;
+	  transform: $properties;
+	}
 
-@mixin box-shadow($blur: .5rem, $opacity: 0.5, $color: $black) {
-	-webkit-box-shadow: 0px 0px $blur 0px rgba($color, $opacity);
-	-moz-box-shadow: 0px 0px $blur 0px rgba($color, $opacity);
-	box-shadow: 0px 0px $blur 0px rgba($color, $opacity);
-}
+	@mixin box-shadow($blur: .5rem, $spread: 0px, $opacity: 0.5, $color: $black, $inset: null) {
+		@if $opacity <= 0 {
+		  -webkit-box-shadow: $inset 0px 0px $blur $spread rgba($color, $opacity);
+			-moz-box-shadow: $inset 0px 0px $blur $spread rgba($color, $opacity);
+			box-shadow: $inset 0px 0px $blur $spread rgba($color, $opacity);	
+		} @else {
+	    -webkit-box-shadow: $inset 0px 0px $blur $spread $color;
+			-moz-box-shadow: $inset 0px 0px $blur $spread $color;
+			box-shadow: $inset 0px 0px $blur $spread $color;
+		}
+	}
 
-@mixin vert-center {
-	position: relative;
-  top: 50%;
-  @include transform(translateY(-50%));
-}
 
-@mixin gradient-t-b($color, $color2: $color, $transparency2: 0) {
-	background: -moz-linear-gradient(top, rgba($color,1) 0%, rgba($color2,$transparency2) 100%); 
-	background: -webkit-linear-gradient(top, rgba($color,1) 0%,rgba($color2,$transparency2) 100%); 
-	background: linear-gradient(to bottom, rgba($color,1) 0%,rgba($color2,$transparency2) 100%); 
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$color}', endColorstr='#{$color2}',GradientType=0 );
-}
+	@mixin vert-center {
+		position: relative;
+	  top: 50%;
+	  @include transform(translateY(-50%));
+	}
 
-@mixin gradient-l-r($color, $color2: $color, $transparency2: 0) {
-	background: -moz-linear-gradient(left, rgba($color,1) 0%, rgba($color2,$transparency2) 100%); 
-	background: -webkit-linear-gradient(left, rgba($color,1) 0%,rgba($color2,$transparency2) 100%); 
-	background: linear-gradient(to right, rgba($color,1) 0%,rgba($color2,$transparency2) 100%); 
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$color}', endColorstr='#{$color2}',GradientType=1 );
-}
+	@mixin gradient-t-b($color, $color2: $color, $transparency2: 0, $percentage-1: 0%, $percentage-2: 100%) {
+		background: -moz-linear-gradient(top, rgba($color,1) $percentage-1, rgba($color2,$transparency2) $percentage-2); 
+		background: -webkit-linear-gradient(top, rgba($color,1) $percentage-1,rgba($color2,$transparency2) $percentage-2); 
+		background: linear-gradient(to bottom, rgba($color,1) $percentage-1,rgba($color2,$transparency2) $percentage-2); 
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$color}', endColorstr='#{$color2}',GradientType=0 );
+	}
+
+	@mixin gradient-l-r($color, $color2: $color, $transparency2: 0, $percentage-1: 0%, $percentage-2: 100%) {
+		background: -moz-linear-gradient(left, rgba($color,1) $percentage-1, rgba($color2,$transparency2) $percentage-2); 
+		background: -webkit-linear-gradient(left, rgba($color,1) $percentage-1,rgba($color2,$transparency2) $percentage-2); 
+		background: linear-gradient(to right, rgba($color,1) $percentage-1,rgba($color2,$transparency2) $percentage-2); 
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$color}', endColorstr='#{$color2}',GradientType=1 );
+	}
 
 
 // ---------------------
 
+// basic html
 
 html {
   min-height: 100vh
@@ -79,23 +93,117 @@ html {
 body {
 	color: $black;
 	@include barlow;
-	@include gradient-t-b($gray-3);
+	@include gradient-t-b($gray-3, $white, 1, 0%, 90%);
 	min-height: 100vh;
 }
+
+// overriding bootstrap 
 
 .btn, .action-button {
 	color: $brand-primary;
 	border: 1px solid currentColor;
-	border-radius: 6px;
+	border-radius: $button-radius;
 	background-color: $white;
+	transition: color .125s ease-in-out, box-shadow .125s ease-in-out;
+	@include barlow;
+	font-weight: 400;
+  // font-size: 1.125em;
+	padding: .625em 1em;
+	&:link, &:visited {
+		color: $brand-primary;
+	}
 	&:hover {
+		color: $brand-primary;
 		background-color: $white;
+		@include box-shadow($blur: 0px, $spread: 1px, $opacity: 1, $color: currentColor, $inset: inset);
+	}
+	&.btn-danger {
+	  color: $red;
+	  &:hover {
+	  	color: $red;
+	  }
 	}
 }
 
-.btn.btn-danger {
-  color: $red;
+.panel-primary {
+	border-radius: 0;
+	padding: 0 $object-pad;
+	border: 1px solid $gray-3;
+	position: relative;
+	margin: 0 0 $object-pad 0;
+	&::before {
+		content: '';
+		position: absolute;
+		background: $gray-3;
+		width: 100%;
+		height: 100%;
+		top: -.375em;
+		left: -.375em;
+		right: -.375em;
+		z-index: -1000;
+	}
+	.row > *:first-child &::before {
+		right: auto;
+	}
+	.row > *:last-child &::before {
+		left: auto;
+	}
+	.panel-heading, .panel-body {
+		padding: 0;
+	}
+	.panel-heading {
+		color: $brand-primary;
+		background-color: transparent;
+		border: none;
+		text-transform: uppercase;
+		font-weight: 600;
+		padding: $object-pad 0;
+	}
 }
+
+.form-horizontal {
+	display: table;
+	.form-group {
+		display: table-row;
+		margin: 0;
+		.form-label, .form-field {
+			display: table-cell;
+			vertical-align: center;
+			padding: 0 0 1.5em 0;
+		}
+		.form-label {
+			padding: 0;
+			text-align: left;
+			text-transform: uppercase;
+			width: 20%;
+			label {
+        font-size: .875em;
+				font-weight: 400;
+				padding: 0;
+				margin: 0;
+			}
+		}		
+		.form-field {
+			font-weight: 600;
+			padding-left: 1em;
+			.inline-edit {
+				display: inline-block;
+				padding: 0 .25em;
+				color: $brand-primary;
+				transform: translateY(0);
+				transition: transform .25s ease-in;
+				vertical-align: bottom;
+				&:hover {
+					transform: translateY(-.25em);
+				}
+			}
+			
+		}
+
+	}
+}
+
+// layout
 
 #header {
 	background-color: $gray-3;
@@ -123,7 +231,7 @@ body {
 
 		.logo, .name {
 			display: inline-block;
-			padding: 0 $side-pad;
+			padding: 0 $layout-pad;
 			float: left
 		}
 		
@@ -151,7 +259,7 @@ body {
 	display: inline-block;
 	float: right;
 	text-align: right;
-	padding: 1em $side-pad;
+	padding: 1em $layout-pad;
 	@include vert-center;
 	a {
 		color: currentColor;
@@ -178,7 +286,7 @@ body {
 	  @include gradient-t-b($white,$gray-3,1);
 	  a {
 	  	padding: .5em 1em;
-	  	font-size: 15px;
+	  	font-size: 16px;
 	  	font-weight: 600;
 	  	display: inline-block;
 	  	color: $brand-primary;
@@ -197,29 +305,27 @@ body {
 }
 
 .main-wrapper {
-	padding: 0 $side-pad;
+	padding: 0 $layout-pad;
 }
 
 #crossbar {
 	background: transparent;
-	padding: 2em $side-pad 0 $side-pad;
+	padding: 2em $layout-pad 0 $layout-pad;
 }
 
 #main {
 	background-color: $white;
+	padding: $content-pad;
 }
 
 #page-header {
-	padding: 1.5em 0;
+	padding: 0 0 $content-pad 0;
+	margin: 0;
+	color: $brand-primary;
 	.page-title {
 		float: left;
 	}
-	.page-actions {
-		float: right;
-
-	}
 }
-
 
 #footer {
 	position: fixed;
@@ -252,8 +358,31 @@ body {
 	}
 }
 
+// page elements
 
+.action-buttons {
+	float: right;
+  .btn {
+  	margin: 0;
+  	float: left;
+  	border-radius: 0px;
+  	border-right-width: 0px;
+  	&:last-child {
+		  border-right-width: 1px;
+		  border-radius: 0 $button-radius $button-radius 0;
+  	}
+  	&:first-child {
+		  border-radius: $button-radius 0 0 $button-radius;
+  	}
+  }
+}
 
-
+.panel-primary.driver-details {
+	.form-group.photo {
+		position: absolute;
+		top: $object-pad;
+		right: $object-pad;
+	}	
+}
 
 
