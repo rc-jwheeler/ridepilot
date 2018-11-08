@@ -6,7 +6,7 @@
   .panel-body.form-horizontal
     .form-group
       .form-label
-        = f.label :name, translate_helper("emergency_contact_name"), class: "col-md-2 control-label"
+        = f.label :name, translate_helper("emergency_contact_name")
       .form-field
         - if @readonly
           = emergency_contact.name
@@ -22,7 +22,7 @@
             = hidden_field_tag :lon, address.longitude, class: 'address_lon'
     .form-group
       .form-label
-        = label_tag "#{prefix}_full_address", translate_helper("full_address_name"), class: "col-md-2 control-label"
+        = label_tag "#{prefix}_full_address", translate_helper("full_address_name")
       .form-field
         - if @readonly
           = emergency_contact.geocoded_address.address + ", " + emergency_contact.geocoded_address.city + ", " + emergency_contact.geocoded_address.state + " " + emergency_contact.geocoded_address.zip
@@ -31,7 +31,7 @@
     = render 'addresses/google_place_autocomplete_js'
     .form-group
       .form-label
-        = f.label :phone_number, translate_helper("emergency_contact_phone_number"), class: "col-md-2 control-label"
+        = f.label :phone_number, translate_helper("emergency_contact_phone_number")
       .form-field
         - if @readonly
           = format_phone_number(emergency_contact.try(:phone_number))
@@ -39,7 +39,7 @@
           = f.text_field :phone_number
     .form-group
       .form-label
-        = f.label :relationship, translate_helper("emergency_contact_relationship"), class: "col-md-2 control-label"
+        = f.label :relationship, translate_helper("emergency_contact_relationship")
       .form-field
         - if @readonly
           = emergency_contact.relationship

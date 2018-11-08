@@ -87,6 +87,23 @@
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$color}', endColorstr='#{$color2}',GradientType=1 );
 	}
 
+	@mixin form-field {
+		max-width: 100%;
+		width: 100%;
+		border: 1px solid $gray-2;
+		border-radius: 0px;
+		@include un-box-shadow;
+		font-size: 1em;
+		line-height: 1.4;
+		padding: .5em.25em;
+		background-color: $gray-4
+	}
+
+	@mixin smaller-button {
+		font-size: 1em;
+		padding: .5em 1em;
+	}
+
 
 // ---------------------
 
@@ -178,6 +195,11 @@ body {
 		font-weight: 600;
 		padding-bottom: $object-pad;
 	}
+	.panel-footer {
+		border: none;
+		background: transparent;
+		padding: $object-pad 0 0 0;
+	}
 }
 
 .form-horizontal {
@@ -206,9 +228,8 @@ body {
 		.form-field {
 			font-weight: 600;
 			padding-left: .75em;
-			input {
-				max-width: 100%;
-
+			input, textarea {
+				@include form-field;
 			}
 			.inline-edit {
 				display: inline-block;
@@ -514,22 +535,35 @@ body {
 }
 
 .panel-primary {
+	.table {
+		margin: 0;
+	}
   &.driver-details {
-		.form-group.photo {
+		.form-group.driver-photo {
 			position: absolute;
 			width: auto;
 			top: $object-pad;
 			right: $object-pad;
 			max-width: 100px;
 			.form-field {
-				max-width: 100%
+				max-width: 100%;
+				padding: 0;
 			}
 			img {
 				border: 1px solid $gray-4;
 			}
 			.inputfile {
 				& + label {
+					margin-top: 1em;
 					width: 100px;
+				}
+			}
+		}
+		.form-group.driver-name, .form-group.driver-phone, .form-group.driver-alt-phone {
+			.form-field {
+				input {
+				  width: 670%;
+					width: calc(100% - 120px);
 				}
 			}
 		}
@@ -553,13 +587,22 @@ body {
 		}
 	}
 	.btn {
-		font-size: 1em
+		@include smaller-button
 	}
 }
 
-.table .fa-paperclip {
-	color: $gray-2;
+.table {
+	.fa-paperclip {
+		color: $gray-2;
+	}
+	.delete-row-btn {
+		color: $red;
+		&:hover {
+			opacity: .75;
+		}
+	}
 }
+
 
 
 

@@ -11,7 +11,7 @@
       .panel.panel-primary.driver-details
         .panel-heading= translate_helper("driver_form_details_heading")
         .panel-body.form-horizontal
-          .form-group.photo
+          .form-group.driver-photo
             .form-field
               - if @driver.photo.present? && !@driver.photo.new_record?
                 = image_tag @driver.photo.image.url(:thumb)
@@ -24,7 +24,7 @@
                     
                     
           - if @readonly
-            .form-group
+            .form-group.driver-name
               .form-label
                 = f.label :name, translate_helper("driver_form_name")
               .form-field
@@ -32,7 +32,7 @@
                 - if @driver.user.present? && !@driver.user.deleted? && can?(:edit, @driver.user)
                   = link_to edit_user_path(@driver.user), title: translate_helper("edit"), class: "inline-edit" do
                     <i class="fas fa-pencil-alt"></i>
-          .form-group
+          .form-group.driver-phone
             .form-label
               = f.label :phone_number, translate_helper("phone_number")
             .form-field
@@ -40,7 +40,7 @@
                 = format_phone_number(@driver.phone_number)
               - else
                 = f.text_field :phone_number
-          .form-group
+          .form-group.driver-alt-phone
             .form-label
               = f.label :alt_phone_number, translate_helper("alt_phone_number")
             .form-field
