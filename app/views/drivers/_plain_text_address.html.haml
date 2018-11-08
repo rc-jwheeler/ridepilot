@@ -1,0 +1,21 @@
+.form-group
+  .form-label
+    = label_tag :name, translate_helper("address_name")
+  .form-field
+    = use_address.name
+.form-group
+  .form-label
+    = label_tag :address, translate_helper("address")
+  .form-field
+    = use_address.address
+.form-group
+  .form-label
+    = label_tag :city, translate_helper("city_state_zip")
+  .form-field.row.no-gutters.city-state-zip
+    .col-md-5
+      = use_address.city
+.form-group
+  .form-label
+    = label_tag :notes, translate_helper("address_notes")
+  .form-field
+    = use_address.notes

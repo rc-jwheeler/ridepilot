@@ -60,6 +60,12 @@
 		}
 	}
 
+	@mixin un-box-shadow {
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
+		box-shadow: none;
+	}
+
 
 	@mixin vert-center {
 		position: relative;
@@ -127,7 +133,7 @@ body {
 
 .panel-primary {
 	border-radius: 0;
-	padding: 0 $object-pad;
+	padding: $object-pad;
 	border: 1px solid $gray-3;
 	position: relative;
 	margin: 0 0 $object-pad 0;
@@ -157,7 +163,7 @@ body {
 		border: none;
 		text-transform: uppercase;
 		font-weight: 600;
-		padding: $object-pad 0;
+		padding-bottom: $object-pad;
 	}
 }
 
@@ -166,10 +172,11 @@ body {
 	.form-group {
 		display: table-row;
 		margin: 0;
+		width: 100%;
 		.form-label, .form-field {
 			display: table-cell;
-			vertical-align: center;
-			padding: 0 0 1.5em 0;
+			vertical-align: middle;
+			padding: .75em 0;
 		}
 		.form-label {
 			padding: 0;
@@ -185,7 +192,11 @@ body {
 		}		
 		.form-field {
 			font-weight: 600;
-			padding-left: 1em;
+			padding-left: .75em;
+			input {
+				max-width: 100%;
+
+			}
 			.inline-edit {
 				display: inline-block;
 				padding: 0 .25em;
@@ -197,10 +208,31 @@ body {
 					transform: translateY(-.25em);
 				}
 			}
-			
+			&.city-state-zip {
+				>[class*="col-"] {
+					padding-right: .5em;
+					&:last-child {
+						padding-right: 0;
+					}
+				}
+			}
+			body.show & {
+				font-size: 1.25em;
+			}
+
 		}
 
 	}
+}
+
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+
+  >.col, > [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
 }
 
 // layout
@@ -380,9 +412,9 @@ body {
 .panel-primary.driver-details {
 	.form-group.photo {
 		position: absolute;
+		width: auto;
 		top: $object-pad;
 		right: $object-pad;
 	}	
 }
-
 

@@ -1,21 +1,27 @@
+
 = address_form.hidden_field :provider_id
 .form-group
-  = address_form.label :name, translate_helper("address_name"), class: "col-md-2 control-label"
-  .col-md-10
-    = address_form.text_field :name, class: "form-control", disabled: readonly, maxlength: 30
+  .form-label
+    = address_form.label :name, translate_helper("address_name")
+  .form-field
+    = address_form.text_field :name, maxlength: 30, disabled: readonly
 .form-group
-  = label_tag :address, translate_helper("address"), class: "col-md-2 control-label"
-  .col-md-10
-    = address_form.text_field :address, class: 'form-control', disabled: readonly
+  .form-label
+    = label_tag :address, translate_helper("address")
+  .form-field
+    = address_form.text_field :address, disabled: readonly
 .form-group
-  = label_tag :city, translate_helper("city_state_zip"), class: "col-md-2 control-label"
-  .col-md-4
-    = address_form.text_field :city, class: 'form-control', placeholder: 'City', disabled: readonly
-  .col-md-2
-    = address_form.text_field :state, class: 'form-control', size: 2, placeholder: 'UT', disabled: readonly, data: {convert: 'uppercase'}
-  .col-md-4
-    = address_form.text_field :zip, class: 'form-control', placeholder: 'Zip', disabled: readonly
+  .form-label
+    = label_tag :city, translate_helper("city_state_zip")
+  .form-field.row.no-gutters.city-state-zip
+    .col-md-5
+      = address_form.text_field :city, placeholder: 'City', disabled: readonly
+    .col-md-2
+      = address_form.text_field :state, size: 2, placeholder: 'UT', data: {convert: 'uppercase'}, disabled: readonly
+    .col-md-5
+      = address_form.text_field :zip, placeholder: 'Zip', disabled: readonly
 .form-group
-  = address_form.label :notes, translate_helper("address_notes"), class: "col-md-2 control-label"
-  .col-md-10
-    = address_form.text_area :notes, rows: 3, class: "form-control", disabled: readonly
+  .form-label
+    = address_form.label :notes, translate_helper("address_notes")
+  .form-field
+    = address_form.text_area :notes, rows: 3, disabled: readonly
