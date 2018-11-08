@@ -15,7 +15,7 @@ RSpec.describe API::V2::BaseController, type: :controller do
     it 'authenticates registered user if valid auth headers are passed' do
       request.headers.merge!(headers_reg_valid)
       get :touch_session, format: :json
-      expect(response).to be_success
+      expect(response).to be_successful
     end
     
     it 'throws 401 error if invalid auth headers are passed' do

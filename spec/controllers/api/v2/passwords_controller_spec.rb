@@ -21,7 +21,7 @@ RSpec.describe API::V2::PasswordsController, type: :controller do
     it 'sends password reset instructions to valid user email' do
       post :reset, format: :json, params: { user: { username: user.username } }
       
-      expect(response).to be_success
+      expect(response).to be_successful
     end
     
   end

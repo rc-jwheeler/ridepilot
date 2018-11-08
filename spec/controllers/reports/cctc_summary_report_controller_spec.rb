@@ -23,7 +23,7 @@ RSpec.describe ReportsController do
 
     it "is successful" do
       get :cctc_summary_report, params: {id: @cctc_custom_report.id}
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "assigns the proper instance variables" do

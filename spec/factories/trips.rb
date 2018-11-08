@@ -8,7 +8,7 @@ FactoryBot.define do
     customer
 
     factory :cab_trip do
-      cab true
+      cab { true }
     end
 
     trait :complete do

@@ -8,6 +8,6 @@ FactoryBot.define do
     provider
     user
     association :address, factory: :driver_address
-    phone_number '(801)4567890'
+    phone_number { '(801)4567890' }
   end
 end

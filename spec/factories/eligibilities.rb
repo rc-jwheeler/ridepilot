@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :eligibility do
     sequence(:code)  {|n| "eligibility_#{n}" }
-    description "MyString"
+    description { "MyString" }
   end
 
 end

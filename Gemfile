@@ -9,7 +9,7 @@ end
 
 ### DEFAULT RAILS GEMS ####################
 
-gem 'rails', '~> 5.1.4'
+gem 'rails', '~> 5.2.1'
 # Use SCSS for stylesheets
 gem 'sass-rails'
 # Use Uglifier as compressor for JavaScript assets
