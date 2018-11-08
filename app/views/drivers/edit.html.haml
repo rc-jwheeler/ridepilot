@@ -10,6 +10,9 @@
         = link_to translate_helper("cancel"), @driver, class: "btn action-button"
 = render partial: "form"
 
+= render partial: "shared/focused_form_panel_javascript"
+= render partial: "shared/custom_file_input_javascript"
+
 :javascript
   $(document).ready(function(){
     $("form.edit_driver .form-actions").hide();
@@ -17,4 +20,5 @@
     $("#driver_form_submit").on("click", function(){
       $("form.edit_driver").submit();
     });
+
   });

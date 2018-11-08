@@ -1,0 +1,16 @@
+:javascript
+  $(document).ready(function(){
+    
+    function focusedParentPanel(field) {
+      $(field).closest('.panel-primary').toggleClass('focused');      
+    }
+
+    $(".panel-primary input").on('focus blur', function(){
+      focusedParentPanel(this);
+    })
+
+    $(".panel-primary textarea").on('focus blur', function(){
+      focusedParentPanel(this);
+    })
+
+  });

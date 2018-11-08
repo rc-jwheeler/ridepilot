@@ -11,7 +11,7 @@
         - if @readonly
           = emergency_contact.name
         - else 
-          = f.text_field :name, class: "form-control", disabled: @readonly
+          = f.text_field :name, disabled: @readonly
           = f.fields_for :geocoded_address, address do |address_form|
             = address_form.hidden_field :provider_id
             = address_form.hidden_field :address, class: 'address_text'
@@ -36,7 +36,7 @@
         - if @readonly
           = format_phone_number(emergency_contact.try(:phone_number))
         - else
-          = f.text_field :phone_number, class: "form-control"
+          = f.text_field :phone_number
     .form-group
       .form-label
         = f.label :relationship, translate_helper("emergency_contact_relationship"), class: "col-md-2 control-label"
@@ -44,4 +44,4 @@
         - if @readonly
           = emergency_contact.relationship
         - else 
-          = f.text_field :relationship, class: "form-control", disabled: @readonly
+          = f.text_field :relationship, disabled: @readonly

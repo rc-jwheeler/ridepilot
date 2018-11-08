@@ -17,7 +17,12 @@
                 = image_tag @driver.photo.image.url(:thumb)
               - unless @readonly
                 = f.fields_for :photo do |image_upload|
-                  = image_upload.file_field :image
+                  = image_upload.file_field :image, class: 'inputfile'
+                  = label_tag 'driver_photo_attributes_image', class: 'btn' do
+                    <i class="fas fa-upload"></i><span>Browse</span>
+                  -# the above approach the the file field follows this demo https://tympanus.net/Tutorials/CustomFileInputs/
+                    
+                    
           - if @readonly
             .form-group
               .form-label

@@ -149,6 +149,7 @@ body {
 	border: 1px solid $gray-3;
 	position: relative;
 	margin: 0 0 $object-pad 0;
+	transition: border .25s ease-in-out;
 	&::before {
 		content: '';
 		position: absolute;
@@ -157,14 +158,14 @@ body {
 		height: 100%;
 		top: -.375em;
 		left: -.375em;
-		right: -.375em;
 		z-index: -1000;
+		transition: background .25s ease-in-out;
 	}
-	.row > *:first-child &::before {
-		right: auto;
-	}
-	.row > *:last-child &::before {
-		left: auto;
+	&.focused {
+		border-color: $brand-primary;
+		&::before {
+      background: $brand-primary;
+		}
 	}
 	.panel-heading, .panel-body {
 		padding: 0;
@@ -279,7 +280,8 @@ body {
 				font-weight: 600;
 				font-size: .875em;
 				text-transform: uppercase;
-				border-bottom: .75rem solid $white
+				border-bottom: .75rem solid $white;
+				vertical-align: middle
 			}
 		}
 	}
@@ -486,6 +488,31 @@ body {
   }
 }
 
+.inputfile {
+	// adapted from demo at https://tympanus.net/Tutorials/CustomFileInputs/
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+  & + label {
+	  text-overflow: ellipsis;
+	  white-space: nowrap;
+	  cursor: pointer;
+	  display: inline-block;
+	  overflow: hidden;	
+	  i {
+	  	margin-right: .5em
+	  }			
+	}
+	&:focus + label,
+	&.has-focus + label {
+	  outline: 1px dotted currentColor;
+	  outline: -webkit-focus-ring-color auto 5px;
+	}
+}
+
 .panel-primary {
   &.driver-details {
 		.form-group.photo {
@@ -493,8 +520,17 @@ body {
 			width: auto;
 			top: $object-pad;
 			right: $object-pad;
+			max-width: 100px;
+			.form-field {
+				max-width: 100%
+			}
 			img {
 				border: 1px solid $gray-4;
+			}
+			.inputfile {
+				& + label {
+					width: 100px;
+				}
 			}
 		}
 	}
@@ -516,9 +552,15 @@ body {
 			}
 		}
 	}
+	.btn {
+		font-size: 1em
+	}
 }
 
 .table .fa-paperclip {
 	color: $gray-2;
 }
+
+
+
 
