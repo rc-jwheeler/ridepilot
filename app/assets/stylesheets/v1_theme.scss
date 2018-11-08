@@ -489,31 +489,31 @@ form div.actions input[type="submit"]:hover {
   background: #264c73;
 }
 /* tables */
-table {
-  width: 100%;
-  margin-bottom: 10px;
-  border-top: 5px solid #2e6399;
-  border-bottom: 10px solid #f7f7f7;
-  border-collapse: separate;
-  background: #f7f7f7;
-  border-spacing: 0;
+// table {
+//   width: 100%;
+//   margin-bottom: 10px;
+//   border-top: 5px solid #2e6399;
+//   border-bottom: 10px solid #f7f7f7;
+//   border-collapse: separate;
+//   background: #f7f7f7;
+//   border-spacing: 0;
 
-  -webkit-border-top-right-radius: 5px;
-  -moz-border-radius-topright: 5px;
-  border-top-right-radius: 5px;
+//   -webkit-border-top-right-radius: 5px;
+//   -moz-border-radius-topright: 5px;
+//   border-top-right-radius: 5px;
 
-  -webkit-border-top-left-radius: 5px;
-  -moz-border-radius-topleft: 5px;
-  border-top-left-radius: 5px;
+//   -webkit-border-top-left-radius: 5px;
+//   -moz-border-radius-topleft: 5px;
+//   border-top-left-radius: 5px;
 
-  -webkit-border-bottom-right-radius: 5px;
-  -moz-border-radius-bottomright: 5px;
-  border-bottom-right-radius: 5px;
+//   -webkit-border-bottom-right-radius: 5px;
+//   -moz-border-radius-bottomright: 5px;
+//   border-bottom-right-radius: 5px;
 
-  -webkit-border-bottom-left-radius: 5px;
-  -moz-border-radius-bottomleft: 5px;
-  border-bottom-left-radius: 5px;
-}
+//   -webkit-border-bottom-left-radius: 5px;
+//   -moz-border-radius-bottomleft: 5px;
+//   border-bottom-left-radius: 5px;
+// }
 #calendar table {
   border: 0;
   border-collapse: collapse;
@@ -523,24 +523,24 @@ table {
   -moz-border-radius: 0;
   border-radius: 0;
 }
-tr {
-  background: #fff;
-}
-tr.odd {
-  background: #f7f7f7;
-}
-table td,
-table th {
-  padding: 4px 10px;
-}
-table th {
-  text-align: left;
-  background: #2e6399;
-  color: white;
-  a {
-    color: white;
-  }
-}
+// tr {
+//   background: #fff;
+// }
+// tr.odd {
+//   background: #f7f7f7;
+// }
+// table td,
+// table th {
+//   padding: 4px 10px;
+// }
+// table th {
+//   text-align: left;
+//   background: #2e6399;
+//   color: white;
+//   a {
+//     color: white;
+//   }
+// }
 table tr.day th {
   background: #86B4EA;
   color: #000;

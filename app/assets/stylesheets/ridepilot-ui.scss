@@ -237,6 +237,71 @@ body {
 	}
 }
 
+.table {
+	background: $white;
+	thead, tbody, tfoot {
+		tr {
+			td, th {
+				border: none;
+				padding: .5rem 1rem;
+				p {
+					line-height: 1.4;
+					min-height: auto;
+					&:first-of-type {
+						padding: 0;
+					}
+				}
+			}
+		}
+		> tr {
+      > td.danger,
+			> th.danger, 
+			&.danger > td, 
+			&.danger > th,
+			> td.danger,
+			> th.danger,
+			> tr.danger > td,
+			> tr.danger > th,
+			> td.danger,
+			> th.danger,
+			&.danger > td,
+			&.danger > th {
+				background: none;
+				opacity: .625;
+			}
+		}
+	}
+	thead {
+		tr {
+      td, th {
+				background-color: $gray-2;
+				color: $white;
+				font-weight: 600;
+				font-size: .875em;
+				text-transform: uppercase;
+				border-bottom: .75rem solid $white
+			}
+		}
+	}
+	tbody {
+		tr {
+			td {
+				font-weight: 600;
+			}
+		}
+	}
+}
+
+.table-striped {
+	tbody {
+		tr {
+			&:nth-of-type(2n+1) {
+				background: mix($white, $gray-4, 50)
+			}
+		}
+	}
+}
+
 .no-gutters {
   margin-right: 0;
   margin-left: 0;
@@ -421,15 +486,39 @@ body {
   }
 }
 
-.panel-primary.driver-details {
-	.form-group.photo {
-		position: absolute;
-		width: auto;
-		top: $object-pad;
-		right: $object-pad;
-		img {
-			border: 1px solid $gray-4;
+.panel-primary {
+  &.driver-details {
+		.form-group.photo {
+			position: absolute;
+			width: auto;
+			top: $object-pad;
+			right: $object-pad;
+			img {
+				border: 1px solid $gray-4;
+			}
 		}
-	}	
+	}
+	.panel-heading {
+		.checkbox {
+			float: right;
+			font-weight: 400;
+			font-size: .875em;
+			line-height: 1;
+			color: $black;
+			b {
+				font-weight: inherit;
+			}
+			label {
+				min-height: auto;
+			}
+			input {
+				margin-top: 0;
+			}
+		}
+	}
+}
+
+.table .fa-paperclip {
+	color: $gray-2;
 }
 

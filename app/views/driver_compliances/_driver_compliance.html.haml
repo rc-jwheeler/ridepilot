@@ -6,7 +6,7 @@
     %p.form-control-static
       = link_to driver_compliance.event, polymorphic_path([driver_compliance.driver, driver_compliance], action: @readonly ? nil : :edit), remote: true
       - if driver_compliance.documents.present?
-        %i.fa.fa-paperclip{'aria-hidden' => true}
+        %i.fas.fa-paperclip{'aria-hidden' => true}
   %td
     %p.form-control-static
       = driver_compliance.compliance_date.try(:to_s, :long)

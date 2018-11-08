@@ -6,7 +6,7 @@
     %p.form-control-static
       = link_to driver_history.event, polymorphic_path([driver_history.driver, driver_history], action: @readonly ? nil : :edit), remote: true
       - if driver_history.documents.present?
-        %i.fa.fa-paperclip{'aria-hidden' => true}
+        %i.fas.fa-paperclip{'aria-hidden' => true}
   - unless @readonly
     %td
       = link_to polymorphic_path([driver_history.driver, driver_history]), 

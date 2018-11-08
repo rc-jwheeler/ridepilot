@@ -10,7 +10,8 @@
       = number_to_human_size document.document_file_size
   %td
     - if @readonly
-      = link_to translate_helper("edit"), polymorphic_path([document.documentable, document], action: :edit), class: "btn action-button btn-sm pull-right"
+      = link_to polymorphic_path([document.documentable, document], action: :edit), title: translate_helper("edit"), class: "inline-edit" do
+        <i class="fas fa-pencil-alt"></i>
     - else
       = link_to polymorphic_path([document.documentable, document]), 
           remote: true, 
