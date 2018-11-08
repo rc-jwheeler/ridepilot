@@ -6,7 +6,7 @@
 
 // colors
 
-	$brand-primary: #073f92;
+	$brand-primary: #0055A4;
 	$brand-secondary: #EC1C24;
 
 	$white: #fff;
@@ -131,6 +131,18 @@ body {
 	}
 }
 
+.alert-info {
+	background: $brand-primary;
+	@include gradient-l-r($brand-primary);
+	border: none;
+	border-radius: 0px;
+	color: $white;
+	font-size: 1.5em;
+	font-weight: 600;
+	font-style: italic;
+	padding: $object-pad/3 $object-pad;
+}
+
 .panel-primary {
 	border-radius: 0;
 	padding: $object-pad;
@@ -239,7 +251,7 @@ body {
 
 #header {
 	background-color: $gray-3;
-	@include gradient-l-r($brand-primary, $white, 1);
+	@include gradient-l-r($brand-primary, $white, 1, 30%);
 	@include box-shadow;
 	padding: 0;
 	position: relative;
@@ -415,6 +427,9 @@ body {
 		width: auto;
 		top: $object-pad;
 		right: $object-pad;
+		img {
+			border: 1px solid $gray-4;
+		}
 	}	
 }
 
