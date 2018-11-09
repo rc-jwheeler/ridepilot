@@ -62,7 +62,7 @@
 	}
 
 	@mixin box-shadow($blur: .5rem, $spread: 0px, $opacity: 0.5, $color: $black, $inset: null) {
-		@if $opacity <= 0 {
+		@if $opacity < 1 {
 		  -webkit-box-shadow: $inset 0px 0px $blur $spread rgba($color, $opacity);
 			-moz-box-shadow: $inset 0px 0px $blur $spread rgba($color, $opacity);
 			box-shadow: $inset 0px 0px $blur $spread rgba($color, $opacity);	
@@ -892,6 +892,7 @@ body.dispatchers.index {
 			padding: 0;
 			border-right: 1px solid $brand-primary;
 			border-left: 1px solid $brand-primary;
+			@include box-shadow($blur: .5rem, $spread: 0px, $opacity: 0.5);
 			#unassigned_trips_panel {
 				border: none;
 				table {
@@ -917,6 +918,7 @@ body.dispatchers.index {
 			border-radius: 6px 6px 0 0;
 			text-align: center;
 			border-bottom: 1px solid $white;
+			@include box-shadow($blur: .5rem, $spread: 0px, $opacity: .75);
 			&::before {
 				@include font-awesome;
 				content: '\f58d';
