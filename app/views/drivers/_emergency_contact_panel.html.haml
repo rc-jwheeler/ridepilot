@@ -25,7 +25,7 @@
         = label_tag "#{prefix}_full_address", translate_helper("full_address_name")
       .form-field
         - if @readonly
-          = emergency_contact.geocoded_address.address + ", " + emergency_contact.geocoded_address.city + ", " + emergency_contact.geocoded_address.state + " " + emergency_contact.geocoded_address.zip
+          = emergency_contact.geocoded_address.try(:one_line_text)
         - else 
           = text_field_tag "#{prefix}_full_address", address.try(:address_text), disabled: @readonly, class: "address_search form-control"
     = render 'addresses/google_place_autocomplete_js'

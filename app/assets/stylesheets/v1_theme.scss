@@ -322,16 +322,16 @@ table div.error_explanation {
 }
 
 /* forms */
-form input[type="text"],
-form input[type="password"],
-form textarea {
-  padding: 0.25em;
-  background: #fff;
-  border: 1px solid #bbb;
-  -moz-box-shadow:inset 1px 2px 2px #ccc;
-  -webkit-box-shadow:inset 1px 2px 2px #ccc;
-  box-shadow:inset 1px 2px 2px #ccc;
-}
+// form input[type="text"],
+// form input[type="password"],
+// form textarea {
+//   padding: 0.25em;
+//   background: #fff;
+//   border: 1px solid #bbb;
+//   -moz-box-shadow:inset 1px 2px 2px #ccc;
+//   -webkit-box-shadow:inset 1px 2px 2px #ccc;
+//   box-shadow:inset 1px 2px 2px #ccc;
+// }
 ol.section {
   list-style: none;
   margin: 0;
@@ -1216,15 +1216,12 @@ body.trips #page-header h1 {
   float: left;
 }
 
-body.trips #weekday_select {
-  float: left;
-  white-space: nowrap;
-  //width: 500px; /* Wide enough for all 7 buttons without wrapping. */
-
-  .ui-button-text {
-    padding: 0.2em 0.5em;
-  }
-}
+// body.trips #weekday_select {
+//   float: left;
+//   .ui-button-text {
+//     padding: 0.2em 0.5em;
+//   }
+// }
 
 body.trips #weekday_select_buttons {
   //margin: 1em;

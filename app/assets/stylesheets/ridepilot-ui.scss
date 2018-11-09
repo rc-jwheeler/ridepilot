@@ -23,6 +23,10 @@
 
 	$red: $brand-secondary;
 
+	$brand-primary-muted: mix($white, $brand-primary, 33);
+
+	$input-bg: $gray-4;
+
 
 // measurements
 
@@ -40,6 +44,11 @@
 
 	@mixin barlow {
 	  font-family: 'Barlow', sans-serif;
+	}
+
+	@mixin font-awesome {
+		font-family: "Font Awesome 5 Free";
+		font-weight: 900;
 	}
 
 	@mixin transform($properties) {
@@ -88,6 +97,7 @@
 	}
 
 	@mixin form-field {
+		@include barlow;
 		max-width: 100%;
 		width: 100%;
 		border: 1px solid $gray-2;
@@ -96,12 +106,79 @@
 		font-size: 1em;
 		line-height: 1.4;
 		padding: .5em.25em;
-		background-color: $gray-4
+		background-color: $input-bg;
+		&:focus {
+			border-color: $brand-primary;
+			@include un-box-shadow;
+		}
+	}
+
+	@mixin form-label {
+		font-size: .875em;
+		font-weight: 400;
+		padding: 0;
+		margin: 0;
+		text-transform: uppercase;
 	}
 
 	@mixin smaller-button {
 		font-size: 1em;
 		padding: .5em 1em;
+	}
+
+	@mixin grouped-button {
+    margin: 0;
+  	float: left;
+  	border-radius: 0px;
+  	border-right-width: 0px;
+  	&:last-child {
+		  border-right-width: 1px;
+		  border-radius: 0 $button-radius $button-radius 0;
+  	}
+  	&:first-child {
+		  border-radius: $button-radius 0 0 $button-radius;
+  	}
+	}
+
+	@mixin cal-button {
+		@include font-awesome;
+		// padding-top: .51em;
+		// padding-bottom: .51em;
+    img {
+			display: none;
+		}
+		&::before {
+			content: "\f073";
+			font-size: 1.025em;
+		}
+	}
+
+	@mixin clear-before {
+		&:before {
+			content: '';
+			display: table;
+			width: 100%;
+		}
+	}
+	@mixin clear-after {
+		&:after {
+			content: '';
+			display: table;
+			width: 100%;
+		}
+	}
+	@mixin clear-both {
+		@include clear-before;
+		@include clear-after;
+	}
+
+	@mixin no-gutters {
+		margin-right: 0;
+	  margin-left: 0;
+	  >.col, > [class*="col-"] {
+	    padding-right: 0;
+	    padding-left: 0;
+	  }
 	}
 
 
@@ -120,6 +197,20 @@ body {
 	min-height: 100vh;
 }
 
+a, a:link, a:visited {
+	color: $brand-primary;
+}
+
+label {
+  @include form-label;
+}
+
+form {
+  input[type="text"], input[type="password"], textarea, .form-control {
+		@include form-field;
+	}
+}
+
 // overriding bootstrap 
 
 .btn, .action-button {
@@ -130,12 +221,11 @@ body {
 	transition: color .125s ease-in-out, box-shadow .125s ease-in-out;
 	@include barlow;
 	font-weight: 400;
-  // font-size: 1.125em;
 	padding: .625em 1em;
 	&:link, &:visited {
 		color: $brand-primary;
 	}
-	&:hover {
+	&:hover, &:focus {
 		color: $brand-primary;
 		background-color: $white;
 		@include box-shadow($blur: 0px, $spread: 1px, $opacity: 1, $color: currentColor, $inset: inset);
@@ -146,6 +236,28 @@ body {
 	  	color: $red;
 	  }
 	}
+}
+
+.input-group {
+	.btn {
+		border-color: $gray-2;
+		background-color: $gray-3;
+		border-radius: 0px;
+		height: 100%;
+	}
+	input, .form-control {
+		@include form-field;
+	}
+	&.datepicker-icon {
+		.btn {
+			@include cal-button;
+			display: table;
+			height: 100%;
+		}
+	}
+}
+.input-group-btn {
+	font-size: inherit;
 }
 
 .alert-info {
@@ -194,6 +306,7 @@ body {
 		text-transform: uppercase;
 		font-weight: 600;
 		padding-bottom: $object-pad;
+		font-size: 14px;
 	}
 	.panel-footer {
 		border: none;
@@ -216,21 +329,11 @@ body {
 		.form-label {
 			padding: 0;
 			text-align: left;
-			text-transform: uppercase;
 			width: 20%;
-			label {
-        font-size: .875em;
-				font-weight: 400;
-				padding: 0;
-				margin: 0;
-			}
 		}		
 		.form-field {
 			font-weight: 600;
 			padding-left: .75em;
-			input, textarea {
-				@include form-field;
-			}
 			.inline-edit {
 				display: inline-block;
 				padding: 0 .25em;
@@ -289,7 +392,10 @@ body {
 			&.danger > td,
 			&.danger > th {
 				background: none;
-				opacity: .625;
+				color: $gray-1;
+				a, a:link, a:visited {
+					color: $brand-primary-muted;
+				}
 			}
 		}
 	}
@@ -326,13 +432,7 @@ body {
 }
 
 .no-gutters {
-  margin-right: 0;
-  margin-left: 0;
-
-  >.col, > [class*="col-"] {
-    padding-right: 0;
-    padding-left: 0;
-  }
+  @include no-gutters;
 }
 
 // layout
@@ -451,11 +551,18 @@ body {
 }
 
 #page-header {
-	padding: 0 0 $content-pad 0;
+	padding: 0;
 	margin: 0;
 	color: $brand-primary;
-	.page-title {
+	.page-title, h1 {
 		float: left;
+		margin-bottom: $content-pad;
+		.date-span {
+			font-weight: 600;
+		}
+	}
+	.action-buttons {
+		margin-bottom: $content-pad;
 	}
 }
 
@@ -495,17 +602,7 @@ body {
 .action-buttons {
 	float: right;
   .btn {
-  	margin: 0;
-  	float: left;
-  	border-radius: 0px;
-  	border-right-width: 0px;
-  	&:last-child {
-		  border-right-width: 1px;
-		  border-radius: 0 $button-radius $button-radius 0;
-  	}
-  	&:first-child {
-		  border-radius: $button-radius 0 0 $button-radius;
-  	}
+  	@include grouped-button
   }
 }
 
@@ -587,7 +684,7 @@ body {
 		}
 	}
 	.btn {
-		@include smaller-button
+		@include smaller-button;
 	}
 }
 
@@ -603,6 +700,52 @@ body {
 	}
 }
 
+.filters-panel {
+  .panel-heading, .panel-title {
+  	font-weight: 600;
+  }
+  .btns {
+  	@include clear-both;
+  	.btn {
+  		@include smaller-button;
+      @include grouped-button;
+      text-transform: uppercase;
+      color: $white;
+      border-color: $gray-1;
+      background: $gray-2;
+      font-weight: 600;
+  	}
+  }
+  label {
+  	margin: 1.5em 0 .5em 0;
+  }
+  form, .filter-body, .trip_result-filter {
+  	@include no-gutters;
+  }
+  .trip_result-filter {
+  	> div {
+      @include form-label;
+  	}
+  }
+}
+
+#weekday_select {
+	width: 100%;
+	box-sizing: border-box;
+	white-space: normal;
+	.btn-group {
+    label {
+			width: 14.285%;
+			padding: .375em 0;
+		  margin: 0;
+		  background-color: $input-bg;
+		  @include un-box-shadow;
+		  &:not(:last-child) {
+			  border-right: 0px
+		  }
+		}
+	}
+}
 
 
 
