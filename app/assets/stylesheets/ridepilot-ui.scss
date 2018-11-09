@@ -747,6 +747,54 @@ form {
 	}
 }
 
+.ui-datepicker {
+	@include barlow;
+	button {
+		@include barlow;
+	}
+	.ui-datepicker-header {
+		font-weight: 600;
+		background: $brand-primary;
+		color: $white;
+		.ui-icon {
+			&.ui-icon-circle-triangle-e, &.ui-icon-circle-triangle-w {
+				background: transparent;
+				background-image: none;
+				text-indent: 0;
+				&:before {
+	        @include font-awesome;
+					color: $white;
+					padding-right: 200%;
+				}
+			}
+			&.ui-icon-circle-triangle-e {
+				&:before {
+					content: '\f0a9'
+				}
+			}
+			&.ui-icon-circle-triangle-w {
+				&:before {
+					content: '\f0a8'
+				}
+			}
+		} 
+	}
+	.ui-widget-content {
+		border: none;
+	}
+	.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+		text-align: center;
+		font-weight: 800;
+		color: $brand-primary;
+		border: none;
+		background-color: $gray-4;
+		background-image: none;
+	}
+	table th {
+		font-weight: 600;
+	}
+}
+
 
 
 
