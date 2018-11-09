@@ -11,7 +11,7 @@
   %td
     - if @readonly
       = link_to polymorphic_path([document.documentable, document], action: :edit), title: translate_helper("edit"), class: "inline-edit" do
-        <i class="fas fa-pencil-alt"></i>
+        %i.fas.fa-pencil-alt
     - else
       = link_to polymorphic_path([document.documentable, document]), 
           remote: true, 

@@ -19,7 +19,8 @@
                 = f.fields_for :photo do |image_upload|
                   = image_upload.file_field :image, class: 'inputfile'
                   = label_tag 'driver_photo_attributes_image', class: 'btn' do
-                    <i class="fas fa-upload"></i><span>Browse</span>
+                    %i.fas.fa-upload
+                    %span Browse
                   -# the above approach the the file field follows this demo https://tympanus.net/Tutorials/CustomFileInputs/
                     
                     
@@ -31,7 +32,7 @@
                 = @driver.user_name
                 - if @driver.user.present? && !@driver.user.deleted? && can?(:edit, @driver.user)
                   = link_to edit_user_path(@driver.user), title: translate_helper("edit"), class: "inline-edit" do
-                    <i class="fas fa-pencil-alt"></i>
+                    %i.fas.fa-pencil-alt
           .form-group.driver-phone
             .form-label
               = f.label :phone_number, translate_helper("phone_number")
@@ -56,7 +57,7 @@
                 = @driver.user.try(:email) || @driver.email
                 - if @driver.user.present? && !@driver.user.deleted? && can?(:edit, @driver.user)
                   = link_to edit_user_path(@driver.user), title: translate_helper("edit"), class: "inline-edit" do
-                    <i class="fas fa-pencil-alt"></i>
+                    %i.fas.fa-pencil-alt
           .form-group
             .form-label
               = f.label :paid, translate_helper("paid")
