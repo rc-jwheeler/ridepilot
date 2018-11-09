@@ -1363,6 +1363,7 @@ en:
   trip_result_modal_dismiss: "Skip Comment"
   trip_result_modal_cancel: "Cancel"
   trip_result_confirm_message: "Are you sure you want to change the trip result?"
+  total_trips_text: "%{trips_count} trips in total"
   
   #users
   new_user_heading: "Create New User"

@@ -6,7 +6,7 @@ RSpec.describe CabTripsController, type: :controller do
   describe "GET #index" do
     it "should be successful" do
       get 'index'
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -38,7 +38,7 @@ RSpec.describe CabTripsController, type: :controller do
 
     it "should be successful" do
       get :edit_multiple
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 

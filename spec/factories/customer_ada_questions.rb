@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :customer_ada_question do
     customer 
     ada_question 
-    answer false
+    answer { false }
   end
 
 end

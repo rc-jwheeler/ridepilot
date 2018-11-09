@@ -7,7 +7,7 @@ FactoryBot.define do
     
     # SCHEDULE ATTRS
     start_date { Date.today } # Set the schedule start date to equal date field
-    repetition_interval 1   # Setting this messes up the recurring_ride_coordinator shared examples 
+    repetition_interval { 1 }   # Setting this messes up the recurring_ride_coordinator shared examples 
     repeats_mondays { start_date.monday? }
     repeats_tuesdays { start_date.tuesday? }
     repeats_wednesdays { start_date.wednesday? }
@@ -17,35 +17,35 @@ FactoryBot.define do
     repeats_sundays { start_date.sunday? }
 
     trait :scheduled_morning do
-      scheduled_start_time "9:00 AM"
-      scheduled_end_time "11:00 AM"
+      scheduled_start_time { "9:00 AM" }
+      scheduled_end_time { "11:00 AM" }
     end
     
     trait :scheduled_afternoon do
-      scheduled_start_time "1:00 PM"
-      scheduled_end_time "3:00 PM"
+      scheduled_start_time { "1:00 PM" }
+      scheduled_end_time { "3:00 PM" }
     end
 
     trait :no_repeating_days do
-      repeats_mondays nil
-      repeats_tuesdays nil
-      repeats_wednesdays nil
-      repeats_thursdays nil
-      repeats_fridays nil
-      repeats_saturdays nil
-      repeats_sundays nil
+      repeats_mondays { nil }
+      repeats_tuesdays { nil }
+      repeats_wednesdays { nil }
+      repeats_thursdays { nil }
+      repeats_fridays { nil }
+      repeats_saturdays { nil }
+      repeats_sundays { nil }
     end
     
     trait :weekly do
-      repetition_interval 1
+      repetition_interval { 1 }
     end
     
     trait :biweekly do
-      repetition_interval 2
+      repetition_interval { 2 }
     end
     
     trait :triweekly do
-      repetition_interval 3
+      repetition_interval { 3 }
     end
     
     trait :last_week do

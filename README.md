@@ -21,13 +21,13 @@ Dependencies
 This application requires:
 
 - Ruby 2.5
-- Rails 5.1
+- Rails 5.2
 - Postgresql 9.3+
 - PostGIS 2.1+
 - Imagemagick
 - Redis
 
-Set up development environment
+Set up development environment (native, see below for docker setup)
 -------------
 
 1. Install the required versions of Postgresql, PostGIS, and any other system packages required for your setup
@@ -51,6 +51,26 @@ Set up development environment
 
 5. Start application
     - `rails s`
+
+Set up docker-based development environment
+-------------
+
+1. Install [docker and docker-compose](https://www.docker.com/products/docker-desktop)
+
+2. Configuration
+    - Copy `config/database.yml.docker` to `config/database.yml`
+    - Copy `config/application.example.yml` to `config/application.yml` and update the values.
+
+3. Build
+    - Under RidePilot root directory, run `docker-compose build` to build images
+    - Setup local database: `docker-compose run app rails db:setup`
+    - Might need to run `docker-compose run app rails ridepilot:load_locales` to add translations
+
+4. Start and stop app
+    - `docker-compose up` to start
+    - open `localhost` 
+    - `CTRL + C` to stop
+
 
 License
 -------

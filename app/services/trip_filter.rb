@@ -15,6 +15,7 @@ class TripFilter
     filter_by_customer!
     filter_by_run!
     filter_by_status!
+    filter_by_funding_source!
     filter_by_result!
 
     @trips
@@ -107,6 +108,18 @@ class TripFilter
       end
 
       @trips = @trips.where(trip_result_id: trip_result_ids) 
+    end
+  end
+
+  def filter_by_funding_source!
+    if @filters[:trip_funding_source_id].present?
+      funding_source_ids = @filters[:trip_funding_source_id].dup
+
+      if funding_source_ids.include?(FundingSource::SHOW_ALL_ID.to_s)
+        funding_source_ids[funding_source_ids.index(FundingSource::SHOW_ALL_ID.to_s)] = nil
+      end
+
+      @trips = @trips.where(funding_source_id: funding_source_ids) 
     end
   end
 
