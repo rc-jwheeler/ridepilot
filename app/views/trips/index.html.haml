@@ -21,19 +21,19 @@
 - else
   .col-md-9{style: 'padding: 0px;'}
     .cancel-selected-trips.dropdown{style: 'margin-bottom: 5px;'}
-      .pull-right
-        = link_to "Report", report_trips_path, class: 'btn action-button'
-      %button.btn.btn-primary.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}} 
-        =translate_helper(:change_selected_trips_result)
-        %span.caret
-      %ul.dropdown-menu
-        %li
-          %a{href: '#', 'data-trip-result-id' => "" }
-            No Result (Pending)
-        -@trip_results.each do |tr|
+      .table-action-buttons
+        %button.btn.btn-primary.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}} 
+          =translate_helper(:change_selected_trips_result)
+          %span.caret
+        %ul.dropdown-menu
           %li
-            %a{href: '#', 'data-trip-result-id' => tr[1] }
-              =tr[0]
+            %a{href: '#', 'data-trip-result-id' => "" }
+              No Result (Pending)
+          -@trip_results.each do |tr|
+            %li
+              %a{href: '#', 'data-trip-result-id' => tr[1] }
+                =tr[0]
+        = link_to "Report", report_trips_path, class: 'btn action-button'
     = render 'list'
 
   = render 'trips/trip_result_reason_dialog'

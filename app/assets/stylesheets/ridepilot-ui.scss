@@ -27,6 +27,8 @@
 
 	$input-bg: $gray-4;
 
+	$input-border: $gray-2;
+
 
 // measurements
 
@@ -100,7 +102,7 @@
 		@include barlow;
 		max-width: 100%;
 		width: 100%;
-		border: 1px solid $gray-2;
+		border: 1px solid $input-border;
 		border-radius: 0px;
 		@include un-box-shadow;
 		font-size: 1em;
@@ -131,6 +133,9 @@
   	float: left;
   	border-radius: 0px;
   	border-right-width: 0px;
+  	&.action-button, &.dropdown-toggle, &.btn-primary, .open > &.btn-primary.dropdown-toggle {
+  		border-right-width: 0px;
+  	}
   	&:last-child {
 		  border-right-width: 1px;
 		  border-radius: 0 $button-radius $button-radius 0;
@@ -213,9 +218,10 @@ form {
 
 // overriding bootstrap 
 
-.btn, .action-button {
+.btn, .action-button, .btn.dropdown-toggle, .btn-primary, .open > .btn-primary.dropdown-toggle {
 	color: $brand-primary;
 	border: 1px solid currentColor;
+	border-color: currentColor;
 	border-radius: $button-radius;
 	background-color: $white;
 	transition: color .125s ease-in-out, box-shadow .125s ease-in-out;
@@ -225,7 +231,7 @@ form {
 	&:link, &:visited {
 		color: $brand-primary;
 	}
-	&:hover, &:focus {
+	&:hover, &:focus, &:active {
 		color: $brand-primary;
 		background-color: $white;
 		@include box-shadow($blur: 0px, $spread: 1px, $opacity: 1, $color: currentColor, $inset: inset);
@@ -362,7 +368,7 @@ form {
 	}
 }
 
-.table {
+.table, table {
 	background: $white;
 	thead, tbody, tfoot {
 		tr {
@@ -375,6 +381,12 @@ form {
 					&:first-of-type {
 						padding: 0;
 					}
+				}
+				.label {
+					display: inline-block;
+					border-radius: 0px;
+					background-color: $gray-2;
+					text-transform: uppercase;
 				}
 			}
 		}
@@ -400,6 +412,7 @@ form {
 		}
 	}
 	thead {
+		position: relative;
 		tr {
       td, th {
 				background-color: $gray-2;
@@ -407,15 +420,38 @@ form {
 				font-weight: 600;
 				font-size: .875em;
 				text-transform: uppercase;
-				border-bottom: .75rem solid $white;
-				vertical-align: middle
+				padding-bottom: 1.5rem;
+				vertical-align: bottom;
+			}
+			&::after {
+				content: '';
+				position: absolute;
+				bottom: -1px;
+				left: 0;
+				width: 100%;
+				height: .75rem;
+				background: $white;
+				border-bottom: 1px solid $gray-2;
+				.panel & {
+					border: none;
+				}
 			}
 		}
 	}
 	tbody {
+		border: 1px solid $gray-2;
+		border-top: 0px;
 		tr {
 			td {
 				font-weight: 600;
+				vertical-align: top;
+				padding: 1rem;
+			}
+		}
+		.panel & {
+			border: none;
+			td {
+				padding: .5rem 1rem;
 			}
 		}
 	}
@@ -602,8 +638,17 @@ form {
 .action-buttons {
 	float: right;
   .btn {
-  	@include grouped-button
+  	@include grouped-button;
   }
+}
+
+.table-action-buttons {
+	margin-bottom: $content-pad/2;
+	@include clear-both;
+	.btn {
+		@include grouped-button;
+		color: $gray-1;
+	}
 }
 
 .inputfile {
@@ -688,7 +733,7 @@ form {
 	}
 }
 
-.table {
+.table, table {
 	.fa-paperclip {
 		color: $gray-2;
 	}
@@ -734,18 +779,24 @@ form {
 	box-sizing: border-box;
 	white-space: normal;
 	.btn-group {
-    label {
+    label.btn {
+    	opacity: .375;
 			width: 14.285%;
 			padding: .375em 0;
 		  margin: 0;
 		  background-color: $input-bg;
+		  color: $black;
 		  @include un-box-shadow;
 		  &:not(:last-child) {
 			  border-right: 0px
 		  }
+		  &.active {
+		  	opacity: 1;
+		  }
 		}
 	}
 }
+
 
 .ui-datepicker {
 	@include barlow;
