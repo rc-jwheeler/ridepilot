@@ -8,55 +8,73 @@
             %li= msg
   .row
     .col-sm-12.col-md-6
-      .panel.panel-primary
+      .panel.panel-primary.driver-details
         .panel-heading= translate_helper("driver_form_details_heading")
         .panel-body.form-horizontal
-          .form-group
-            = f.label :photo, translate_helper("driver_form_photo"), class: "col-md-2 control-label"
-            .col-md-10
+          .form-group.driver-photo
+            .form-field
               - if @driver.photo.present? && !@driver.photo.new_record?
                 = image_tag @driver.photo.image.url(:thumb)
               - unless @readonly
                 = f.fields_for :photo do |image_upload|
-                  = image_upload.file_field :image, class: "form-control"
+                  = image_upload.file_field :image, class: 'inputfile'
+                  = label_tag 'driver_photo_attributes_image', class: 'btn' do
+                    <i class="fas fa-upload"></i><span>Browse</span>
+                  -# the above approach the the file field follows this demo https://tympanus.net/Tutorials/CustomFileInputs/
+                    
+                    
           - if @readonly
-            .form-group
-              = f.label :name, translate_helper("driver_form_name"), class: "col-md-2 control-label"
-              .col-md-10
+            .form-group.driver-name
+              .form-label
+                = f.label :name, translate_helper("driver_form_name")
+              .form-field
                 = @driver.user_name
                 - if @driver.user.present? && !@driver.user.deleted? && can?(:edit, @driver.user)
-                  = link_to translate_helper("edit"), edit_user_path(@driver.user), class: "btn action-button"
-          .form-group
-            = f.label :phone_number, translate_helper("phone_number"), class: "col-md-2 control-label"
-            .col-md-10
+                  = link_to edit_user_path(@driver.user), title: translate_helper("edit"), class: "inline-edit" do
+                    <i class="fas fa-pencil-alt"></i>
+          .form-group.driver-phone
+            .form-label
+              = f.label :phone_number, translate_helper("phone_number")
+            .form-field
               - if @readonly
-                %p.form-control
-                  = format_phone_number(@driver.phone_number)
+                = format_phone_number(@driver.phone_number)
               - else
-                = f.text_field :phone_number, class: "form-control"
-          .form-group
-            = f.label :alt_phone_number, translate_helper("alt_phone_number"), class: "col-md-2 control-label"
-            .col-md-10
+                = f.text_field :phone_number
+          .form-group.driver-alt-phone
+            .form-label
+              = f.label :alt_phone_number, translate_helper("alt_phone_number")
+            .form-field
               - if @readonly
-                %p.form-control
-                  = format_phone_number(@driver.alt_phone_number)
+                = format_phone_number(@driver.alt_phone_number)
               - else
-                = f.text_field :alt_phone_number, class: "form-control"
+                = f.text_field :alt_phone_number
           - if @readonly
             .form-group
-              = f.label :email, translate_helper("driver_form_email"), class: "col-md-2 control-label"
-              .col-md-10
+              .form-label
+                = f.label :email, translate_helper("driver_form_email")
+              .form-field
                 = @driver.user.try(:email) || @driver.email
                 - if @driver.user.present? && !@driver.user.deleted? && can?(:edit, @driver.user)
-                  = link_to translate_helper("edit"), edit_user_path(@driver.user), class: "btn action-button"
+                  = link_to edit_user_path(@driver.user), title: translate_helper("edit"), class: "inline-edit" do
+                    <i class="fas fa-pencil-alt"></i>
           .form-group
-            = f.label :paid, translate_helper("paid"), class: "col-md-2 control-label"
-            .col-md-10
-              = f.select :paid, [["Paid", "true"], ["Volunteer", "false"]], { selected: @driver.paid.to_s }, class: "form-control", disabled: @readonly
+            .form-label
+              = f.label :paid, translate_helper("paid")
+            .form-field
+              - if @readonly && @driver.paid.to_s == "true"
+                Paid
+              - elsif @readonly && @driver.paid.to_s == "false"
+                Volunteer 
+              - else
+                = f.select :paid, [["Paid", "true"], ["Volunteer", "false"]], { selected: @driver.paid.to_s }
           .form-group
-            = f.label :user_id, translate_helper("driver_form_associated_user"), class: "col-md-2 control-label"
-            .col-md-10
-              = f.collection_select :user_id, @available_users, :id, :name_with_username, { include_blank: true }, { class: "form-control", disabled: @readonly }
+            .form-label
+              = f.label :user_id, translate_helper("driver_form_associated_user")
+            .form-field
+              - if @readonly
+                = @driver.user.name_with_username
+              - else
+                = f.collection_select :user_id, @available_users, :id, :name_with_username, { include_blank: true }
         / END .panel-body
       / END .panel
       = render 'address_panel', f: f
@@ -70,7 +88,7 @@
       - if @driver.persisted?
         .panel.panel-primary
           .panel-heading= translate_helper("driver_documents_heading")
-          %table#documents-table.table.table-striped.table-condensed
+          %table#documents-table.table.table-condensed
             %thead
               %tr
                 %th.col-sm-3= translate_helper("document_form_upload_date")
@@ -85,7 +103,7 @@
         / END .panel
         .panel.panel-primary
           .panel-heading= translate_helper("driver_histories_heading")
-          %table#driver_histories-table.table.table-striped.table-condensed
+          %table#driver_histories-table.table.table-condensed
             %thead
               %tr
                 %th.col-sm-3= translate_helper("driver_history_form_event_date")
@@ -118,5 +136,6 @@
 
 - if @readonly
   = render 'shared/readonly_modal_dialog', modal_id: "modal-dialog" 
+  / = render 'shared/selects_to_text_javascript'
 - else 
   = render 'shared/modal_dialog', modal_id: "modal-dialog" 

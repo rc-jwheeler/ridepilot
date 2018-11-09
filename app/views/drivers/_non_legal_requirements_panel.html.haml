@@ -1,12 +1,12 @@
 .panel.panel-primary
   .panel-heading
     = translate_helper("driver_compliances_heading")
+    .checkbox.show-past
+      %label
+        %input#show_past_legal{type: 'checkbox'}
+          %b= translate_helper(:show_past)
   .panel-body{style: 'padding: 0px;'}
     .col-sm-12
-      .checkbox.pull-right
-        %label
-          %input#show_past_non_legal{type: 'checkbox'}
-            %b= translate_helper(:show_past)
     = render 'driver_compliances_table', driver_compliances: @driver.driver_compliances.incomplete.non_legal.default_order, legal: false
   - unless @readonly
     .panel-footer

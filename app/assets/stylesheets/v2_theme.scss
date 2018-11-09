@@ -1,20 +1,20 @@
-.action-button {
-  @extend .btn-primary;
-  color: white !important;
-  text-shadow: none;
-  margin-right: 5px;
-  padding: 3px 6px;
-  min-width: 5em;
-  @media(min-width:$screen-md-min){
-    min-height:34px; //this is the height for breadcrumb;
-  }
-  font-weight: bold;
-}
+// .action-button {
+//   @extend .btn-primary;
+//   color: white !important;
+//   text-shadow: none;
+//   margin-right: 5px;
+//   padding: 3px 6px;
+//   min-width: 5em;
+//   @media(min-width:$screen-md-min){
+//     min-height:34px; //this is the height for breadcrumb;
+//   }
+//   font-weight: bold;
+// }
 
-a.btn-default
-{
-  color: #000;
-}
+// a.btn-default
+// {
+//   color: #000;
+// }
 
 #customer_providers
 {
