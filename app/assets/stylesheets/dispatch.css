@@ -30,26 +30,26 @@
   margin: 0px;
 }
 
-.dispatch-main table th, #unassigned_trips_panel table th {
+/*.dispatch-main table th, #unassigned_trips_panel table th {
   color: black !important;
   background-color: lightgrey !important;
-}
+}*/
 
 #unassigned_trips_table p {
   margin: 0px;
 }
 
-.panel-success > .panel-heading {
+/*.panel-success > .panel-heading {
   color: white;
   background-color: #8280ff;
   border-color: #8280ff;
-}
+}*/
 
-.panel-warning > .panel-heading {
+/*.panel-warning > .panel-heading {
   color: white;
   background-color: #8a6d3b;
   border-color: #8a6d3b;
-}
+}*/
 
 .drop-zone-active {
   -moz-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
@@ -81,5 +81,5 @@ span.run_summary .overdue-danger, span.run_summary .overdue-warning {
 }
 
 span.run_summary .overdue-warning {
-  color: black;
+  /*color: black;*/
 }

@@ -1,6 +1,5 @@
-.pull-left
-  = translate_helper("unassigned_trips")
-%span{style: 'font-size: small;'}
+= translate_helper("unassigned_trips")
+%span.trips-quantity
   - stats = []
   - total_count = @trips.count
   - unscheduled_count = @unscheduled_trips.count
