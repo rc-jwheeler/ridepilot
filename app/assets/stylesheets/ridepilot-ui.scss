@@ -40,6 +40,8 @@
 
 	$button-radius: 6px;
 
+	$input-height: 34px;
+
 
 // ---------------------
 // Mixins
@@ -108,6 +110,7 @@
 		font-size: 1em;
 		line-height: 1.4;
 		padding: .5em.25em;
+		height: $input-height;
 		background-color: $input-bg;
 		&:focus {
 			border-color: $brand-primary;
@@ -138,23 +141,25 @@
   	}
   	&:last-child {
 		  border-right-width: 1px;
-		  border-radius: 0 $button-radius $button-radius 0;
+		  border-top-right-radius: $button-radius;
+		  border-bottom-right-radius: $button-radius;
   	}
   	&:first-child {
-		  border-radius: $button-radius 0 0 $button-radius;
+		  border-top-left-radius: $button-radius;
+		  border-bottom-left-radius: $button-radius;
   	}
 	}
 
 	@mixin cal-button {
 		@include font-awesome;
-		// padding-top: .51em;
-		// padding-bottom: .51em;
+		height: $input-height;
+		padding-top: 0;
+		padding-bottom: 0;
     img {
 			display: none;
 		}
 		&::before {
 			content: "\f073";
-			font-size: 1.025em;
 		}
 	}
 
@@ -202,6 +207,25 @@ body {
 	min-height: 100vh;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-size: 25px;
+  margin: 0 0 1em;
+  line-height: 1.2;
+  color: $brand-primary;
+}
+h2 {
+  font-size: 18px;
+}
+h3 {
+  font-size: 16px;
+}
+h4 {
+  font-size: 14px;
+}
+h5, h6 {
+  font-size: 13px;
+}
+
 a, a:link, a:visited {
 	color: $brand-primary;
 }
@@ -214,11 +238,14 @@ form {
   input[type="text"], input[type="password"], textarea, .form-control {
 		@include form-field;
 	}
+	textarea {
+		height: auto;
+	}
 }
 
 // overriding bootstrap 
 
-.btn, .action-button, .btn.dropdown-toggle, .btn-primary, .open > .btn-primary.dropdown-toggle {
+.btn, .action-button, .btn.dropdown-toggle, .btn-primary, .open > .btn-primary.dropdown-toggle, input[type="submit"] {
 	color: $brand-primary;
 	border: 1px solid currentColor;
 	border-color: currentColor;
@@ -258,7 +285,7 @@ form {
 		.btn {
 			@include cal-button;
 			display: table;
-			height: 100%;
+			height: $input-height;
 		}
 	}
 }
@@ -266,7 +293,7 @@ form {
 	font-size: inherit;
 }
 
-.alert-info {
+.alert-info, .alert, .alert-danger {
 	background: $brand-primary;
 	@include gradient-l-r($brand-primary);
 	border: none;
@@ -843,6 +870,13 @@ form {
 	}
 	table th {
 		font-weight: 600;
+	}
+}
+
+form#new_user {
+	max-width: 400px;
+	label {
+		margin: 1em 0 .5em 0;
 	}
 }
 

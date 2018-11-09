@@ -12,11 +12,10 @@
   }
 
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'dispatchers'
-.col-sm-12{style: 'padding: 0px;'}
-  .pull-right
+#page-header
+  .action-buttons
     = link_to translate_helper(:recurring_scheduling), recurring_dispatchers_path, class: 'btn action-button'
   = render :partial => 'filters'
-%hr
 #dispatch_runs_trips.col-sm-12{style: 'padding: 0px;'}
   .col-sm-12.dispatch-main#dispatch_runs_container{style: 'padding: 0px;'}
     = render 'runs_panel'
