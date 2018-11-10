@@ -16,10 +16,10 @@
   .action-buttons
     = link_to translate_helper(:recurring_scheduling), recurring_dispatchers_path, class: 'btn action-button'
   = render :partial => 'filters'
-#dispatch_runs_trips.col-sm-12{style: 'padding: 0px;'}
-  .col-sm-12.dispatch-main#dispatch_runs_container{style: 'padding: 0px;'}
+#dispatch_runs_trips.col-sm-12
+  .col-sm-12.dispatch-main#dispatch_runs_container
     = render 'runs_panel'
-  .col-sm-12#unassigned_trips_container{style: 'padding: 0px; overflow: hidden;'}
+  .col-sm-12#unassigned_trips_container
     = render 'unassigned_trips_panel'
 
 = render 'trips/trip_result_reason_dialog'
