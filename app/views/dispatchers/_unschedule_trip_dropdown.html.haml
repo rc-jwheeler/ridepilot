@@ -5,7 +5,7 @@
   options[Run::CAB_RUN_ID] = 'Cab' if current_provider.try(:cab_enabled?)
 
 %span.dropdown.dispatch-action.unschedule_trip_dropdown{style: 'margin-bottom: 5px;'}
-  %a.dropdown-toggle.non_jump_top{href: '#', type: 'button', style: 'color: white; font-size: small;', data: {toggle: 'dropdown'}} 
+  %a.dropdown-toggle.non_jump_top{href: '#', type: 'button', style: 'font-size: small;', data: {toggle: 'dropdown'}} 
     Assign to
     %i.fa.fa-ellipsis-h
     %span.caret
