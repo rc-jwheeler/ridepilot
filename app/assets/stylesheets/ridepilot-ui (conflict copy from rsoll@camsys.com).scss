@@ -10,7 +10,7 @@ html {
 body {
 	color: $black;
 	@include barlow;
-	@include gradient-vert($gray-3, $white, 1, 1, 0%, 90%);
+	@include gradient-vert($gray-3, $white, 1, 0%, 90%);
 	min-height: 100vh;
 }
 
@@ -754,7 +754,7 @@ body.availability-forecast {
 				th {
 					background: transparent;
 					color: $black;
-					@include gradient-vert($white,$gray-3,1,1);
+					@mixin gradient-vert($white, $gray-2, 1, 1, '100%', '100%')
 					&.rotate-th {
 					  height: 7.5em;
 					  white-space: nowrap;

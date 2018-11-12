@@ -51,22 +51,8 @@
     end
   end
 
-:css
-  .lack_drivers, .has_unassigned_run {
-    padding: 10px;
-  }
-
-  table th {
-    background: transparent;
-    color: black;
-  }
-
-  table th, table td {
-    white-space: nowrap !important;
-  }
-
-.col-sm-12#daily_availability_forecast_view{style: 'padding: 0px;'}
-  %h4
+.col-sm-12#daily_availability_forecast_view
+  %h2
     = "Availability for #{date.strftime('%A, %B %d, %Y')}"
   - if lack_driver
     .col-sm-12.lack_drivers
