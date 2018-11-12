@@ -743,106 +743,235 @@ body.dispatchers.index {
 body.availability-forecast {
 
 	.forecast-col {
-	  padding-right: $object-pad;
-	  padding-top: $object-pad;
-	  padding-bottom: $object-pad;
+	  padding: $object-pad;
 	  @include gradient-horiz($gray-4, $gray-3, 1, 1);
-	}
-	table, .table {
-		white-space: nowrap !important;
-		border-collapse: separate;
-		thead, tbody, tfoot {
-			tr {
-				th {
-					background: transparent;
-					color: $black;
-					@include gradient-vert($white,$gray-3,1,1);
-					&.rotate-th {
-					  height: 7.5em;
-					  white-space: nowrap;
-					  .rotate-th-inner {
-						  transform: translate(-.5em) rotate(-75deg);
-						  width: 1em;
-						  .th-text {
-							  padding-right: .5em;
-							  font-size:  .875em;
+	  table, .table {
+			white-space: nowrap !important;
+			border-collapse: separate;
+			thead, tbody, tfoot {
+				tr {
+					th {
+						background: transparent;
+						color: $black;
+						@include gradient-vert($white,$gray-3,1,1);
+						&.rotate-th {
+						  height: 7.5em;
+						  white-space: nowrap;
+						  .rotate-th-inner {
+							  transform: translate(-.5em) rotate(-75deg);
+							  width: 1em;
+							  .th-text {
+								  padding-right: .5em;
+								  font-size:  .875em;
+								}
 							}
 						}
+						&.top-level {
+							text-align: center;
+						}
 					}
-					&.top-level {
-						text-align: center;
-					}
-				}
 
-				td {
-					background-color: $white;
-				}
-				th, td {
-					&.new-group {
-						border-left: 1px solid $gray-2!important;
+					td {
+						background-color: $white;
+						padding: .75rem .5rem .75rem .75rem;
 					}
-					&.date_cell {
-						background-color: transparent;
-						color: $black;
+					th, td {
+						&.new-group {
+							border-left: 1px solid $gray-2!important;
+						}
+						&.date_cell {
+							background-color: transparent;
+							color: $black;
+						}
+					}
+				}
+			}
+			tbody {
+				border: none;
+				tr {
+					&.is_disabled td.number_cell {
+				    background-color: $gray-3;
+				  }
+				  &.in_view td{
+				    border-top: 2px solid $brand-primary;
+				    border-bottom: 2px solid $brand-primary;
+				  }
+				  &:not(.is_disabled) td {
+				    cursor: pointer;
+				  }
+				  &.in_view td,
+				  &:not(.is_disabled):hover td{
+				    font-style: italic;
+				    border-top: 1px solid $brand-primary;
+				    border-bottom: 1px solid $brand-primary;
+				  }
+					td {
+						&.is_live {
+					    background-color: $brand-primary;
+					    color: $white;
+					  }
+					  &.out_of_live {
+					    background-color: $gray-1;
+					    color: $white;
+					  }
+					  &.disabled {
+					    color: $gray-2;
+					  }
+					}
+				}
+			}
+			thead {
+				position: static;
+				tr {
+					&::after {
+						height: 1px;
+						background: $gray-2
 					}
 				}
 			}
 		}
-		tbody {
-			border: none;
-			tr {
-				&.is_disabled td.number_cell {
-			    background-color: $gray-3;
-			  }
-			  &.in_view td{
-			    border-top: 2px solid $brand-primary;
-			    border-bottom: 2px solid $brand-primary;
-			  }
-			  &:not(.is_disabled) td {
-			    cursor: pointer;
-			  }
-			  &.in_view td,
-			  &:not(.is_disabled):hover td{
-			    font-style: italic;
-			    border-top: 1px solid $brand-primary;
-			    border-bottom: 1px solid $brand-primary;
-			  }
-				td {
-					&.is_live {
-				    background-color: $brand-primary;
-				    color: $white;
-				  }
-				  &.out_of_live {
-				    background-color: $gray-1;
-				    color: $white;
-				  }
-				  &.disabled {
-				    color: $gray-2;
-				  }
-				}
-			}
-			tr.lack_driver td.number_cell, div.lack_drivers {
-		    background-color: $orange;
-		    color: white;
-		  }
-		  tr.has_unassigned_run td.number_cell, div.has_unassigned_run {
-		    background-color: $yellow;
-		  }
-		}
-		thead {
-			position: static;
-			tr {
-				&::after {
-					height: 1px;
-					background: $gray-2
-				}
-			}
+		tr.lack_driver td.number_cell, div.lack_drivers {
+	    background-color: $orange;
+	    color: white;
+	  }
+	  tr.has_unassigned_run td.number_cell, div.has_unassigned_run {
+	    background-color: $yellow;
+	  }
+		.table-responsive {
+			max-height: 50em;
 		}
 	}
-	.table-responsive {
-		max-height: 50em;
-	}
-  
+
+  .availability-col {
+
+  	.panel-primary {
+  		padding: 0;
+  		.panel-heading, .panel-body {
+  			padding: $object-pad;
+  		}
+  		.panel-heading {
+			  background-color: $gray-4;
+  		}
+  		.panel-body {
+  			max-width: 100%;
+  		}
+  	}
+  	.table, table {
+  		tbody {
+  			td {
+  				vertical-align: middle;
+  			}
+  		}
+  	}
+  	.table-responsive {
+  		overflow: visible;
+  		width: 100%;
+  		max-width: 100%;
+  	}
+
+	  .run-availability-table {
+	    margin-bottom: 0px;
+	    border-collapse: separate !important;
+	    border-spacing: 0 1em !important;
+	  }
+
+	  .th-inner {
+    	width: 100%; 
+    	white-space:nowrap;
+    }
+
+    .hour_tick_label {
+	    display: inline-block;
+	    padding: 0px;
+	    margin: 0px 0px 0px -5px;
+	  }
+
+	  a.link_disabled {
+	    pointer-events: none;
+	    cursor: default;
+	  }
+
+	  a.link_disabled i {
+	    color: $gray-4;
+	  }
+		
+		// everything goes crazy if this goes away
+	  .run-availability-table td {
+	    padding: 0px 5px !important;
+	  }
+
+	  // .run-availability-table tr.odd {
+	  //   background: transparent;
+	  // }
+
+	  // .run-availability-table td {
+	  //   border-top: none !important;
+	  // }
+
+	  .run-availability-table td.disabled {
+	    color: $gray-4;
+	  }
+
+	  
+
+	  .run-availability-table td.chart_cell.is_filled {
+	    background-color: $purple-3;
+	  }
+
+	  .run-availability-table td.chart_cell.is_driver_filled {
+	    background-color: $purple;
+	  }
+
+	  .run-availability-table td.chart_cell.driver_not_available {
+	    background-color: $blue;
+	  }
+
+
+	  .run-availability-table a.link_disabled i {
+	    color: $gray-4;
+	  }
+
+	  .driver-availability-table {
+	    margin-bottom: 0px;
+	    border-collapse: separate !important;
+	    border-spacing: 0 1em !important;
+	    td {
+		    padding: 0px 5px !important;
+		  }
+	  }
+
+	  // .driver-availability-table tr.odd {
+	  //   background: transparent;
+	  // }
+
+	  // .driver-availability-table td {
+	  //   border-top: none !important;
+	  // }
+
+	  // .driver-availability-table td.disabled {
+	  //   color: lightgray;
+	  // }
+
+
+	  // .driver-availability-table td.chart_cell.is_filled {
+	  //   background-color: #9fdbef !important;
+	  // }
+
+	  // .driver-availability-table td.chart_cell.is_run_filled {
+	  //   background-color: #167ea0 !important;
+	  // }
+
+	  // .driver-availability-table td.chart_cell.driver_not_available {
+	  //   background-color: #f16969 !important;
+	  // }
+
+	  // .driver-availability-table td.chart_cell.is_disabled {
+	  //   background-color: lightgray !important;
+	  // }
+
+	  
+  }
+
   .panel-expand-collapse {
     cursor: pointer;
   }

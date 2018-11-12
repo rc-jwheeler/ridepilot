@@ -60,9 +60,9 @@
   - elsif has_unassigned_run
     .col-sm-12.has_unassigned_run
       There are runs without driver assigned
-  .col-sm-12{style: 'padding: 0px; margin-top: 10px;'}
+  .col-sm-12
     = render 'availability_forecast_run_view'
-  .col-sm-12{style: 'padding: 0px;'}
+  .col-sm-12
     = render 'availability_forecast_driver_view', date: date
 
 :javascript

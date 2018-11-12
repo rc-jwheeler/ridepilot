@@ -18,77 +18,23 @@
     }}
   end
 
-:css
-  .availability_forecast_run_view_panel .panel-heading{
-    background-color: gray;
-    border-color: gray;
-  }
-
-  .run-availability-table {
-    margin-bottom: 0px;
-    border-collapse: separate !important;
-    border-spacing: 0 1em !important;
-  }
-
-  .run-availability-table tr.odd {
-    background: transparent;
-  }
-
-  .run-availability-table td {
-    border-top: none !important;
-  }
-
-  .run-availability-table td.disabled {
-    color: lightgray;
-  }
-
-  .run-availability-table td {
-    padding: 0px 5px !important;
-  }
-
-  .run-availability-table td.chart_cell.is_filled {
-    background-color: #df96e2 !important;
-  }
-
-  .run-availability-table td.chart_cell.is_driver_filled {
-    background-color: #be10c5 !important;
-  }
-
-  .run-availability-table td.chart_cell.driver_not_available {
-    background-color: #f16969 !important;
-  }
-
-  .hour_tick_label {
-    display: inline-block;
-    padding: 0px;
-    margin: 0px 0px 0px -5px;
-  }
-
-  .run-availability-table a.link_disabled {
-    pointer-events: none;
-    cursor: default;
-  }
-
-  .run-availability-table a.link_disabled i {
-    color: lightgrey !important;
-  }
 
 
 .panel.panel-primary.availability_forecast_run_view_panel
   .panel-heading
-    .pull-right{style: 'padding-right: 0px;'}
+    .pull-right
       %span.panel-expand-collapse{title: 'Collapse/expand'}
         %i.fa.fa-chevron-up
     %b= "#{@runs.size} Runs: #{@total_assigned_run_count} Assigned, #{@total_unassigned_run_count} Unassigned"
-  .panel-body.form-horizontal{style: 'padding:0px;'}
-    .table-responsive{style: 'overflow: visible;'}
+  .panel-body.form-horizontal
+    .table-responsive
       - if @runs.any?
         %table.table.table-condensed.run-availability-table#run_availability_table
           %thead
             %th
             - tick_count = ticks.size
-            %th{colspan: tick_count, style: 'padding: 0px;'}
-              %div{style: 'width: 100%; white-space:nowrap;'}
+            %th{colspan: tick_count}
+              %div.th-inner
                 - label_tick_count = ticks.select{|x| !x[1].blank?}.size
                 - last_label_tick = ticks.reverse.select{|x| !x[1].blank?}.first
                 - divided_by = label_tick_count - 1 + (max_hour - last_label_tick[0]).to_f / get_availability_tick_hour_gap
