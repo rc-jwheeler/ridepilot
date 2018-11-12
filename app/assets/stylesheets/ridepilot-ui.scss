@@ -749,6 +749,8 @@ body.availability-forecast {
 	  @include gradient-horiz($gray-4, $gray-3, 1, 1);
 	}
 	table, .table {
+		white-space: nowrap !important;
+		border-collapse: separate;
 		thead, tbody, tfoot {
 			tr {
 				th {
@@ -786,7 +788,49 @@ body.availability-forecast {
 				}
 			}
 		}
+		tbody {
+			border: none;
+			tr {
+				&.is_disabled td.number_cell {
+			    background-color: $gray-3;
+			  }
+			  &.in_view td{
+			    border-top: 2px solid $brand-primary;
+			    border-bottom: 2px solid $brand-primary;
+			  }
+			  &:not(.is_disabled) td {
+			    cursor: pointer;
+			  }
+			  &.in_view td,
+			  &:not(.is_disabled):hover td{
+			    font-style: italic;
+			    border-top: 1px solid $brand-primary;
+			    border-bottom: 1px solid $brand-primary;
+			  }
+				td {
+					&.is_live {
+				    background-color: $brand-primary;
+				    color: $white;
+				  }
+				  &.out_of_live {
+				    background-color: $gray-1;
+				    color: $white;
+				  }
+				  &.disabled {
+				    color: $gray-2;
+				  }
+				}
+			}
+			tr.lack_driver td.number_cell, div.lack_drivers {
+		    background-color: $orange;
+		    color: white;
+		  }
+		  tr.has_unassigned_run td.number_cell, div.has_unassigned_run {
+		    background-color: $yellow;
+		  }
+		}
 		thead {
+			position: static;
 			tr {
 				&::after {
 					height: 1px;
@@ -798,71 +842,16 @@ body.availability-forecast {
 	.table-responsive {
 		max-height: 50em;
 	}
-		
-
-  // .lack_drivers, .has_unassigned_run {
-  //   padding: 10px;
-  // }
-  // table th {
-  //   background: transparent;
-  //   color: black;
-  // }
-  // table th, table td {
-  //   white-space: nowrap !important;
-  // }
-  // #daily_availability_forecast_view {
-  // 	padding: 0px;
-  // }
-  // .driver_availability_forecast_table td {
-  //   border: none !important;
-  // }
-  // .driver_availability_forecast_table th {
-  //   background: transparent !important;
-  //   color: black !important;
-  // }
-  // .driver_availability_forecast_table td.is_live {
-  //   background-color: #9ddaf3;
-  //   color: blue;
-  // }
-  // .driver_availability_forecast_table td.out_of_live {
-  //   background-color: #a6f39d;
-  //   color: blue;
-  // }
-  // .driver_availability_forecast_table td.disabled {
-  //   color: gray !important;
-  // }
-  // .driver_availability_forecast_table tr.is_disabled td.number_cell {
-  //   background-color: lightgray;
-  // }
-  // .driver_availability_forecast_table tr.lack_driver td.number_cell, div.lack_drivers {
-  //   background-color: #f16969;
-  //   color: white;
-  // }
-  // .driver_availability_forecast_table tr.has_unassigned_run td.number_cell, div.has_unassigned_run {
-  //   background-color: yellow;
-  // }
-  // .driver_availability_forecast_table tr.in_view td{
-  //   border-top: 2px solid black !important;
-  //   border-bottom: 2px solid black !important;
-  // }
-  // .driver_availability_forecast_table tr:not(.is_disabled) td {
-  //   cursor: pointer;
-  // }
-  // .driver_availability_forecast_table tr.in_view td,
-  // .driver_availability_forecast_table tr:not(.is_disabled):hover td{
-  //   font-style: italic !important;
-  //   font-weight: bold !important;
-  //   font-size: larger;
-  // }
-  // .panel-expand-collapse {
-  //   cursor: pointer;
-  // }
-  // #main {
-  //   z-index: 11000 !important;
-  // }
-  // .modal {
-  //   z-index: 12000 !important;
-  // }
+  
+  .panel-expand-collapse {
+    cursor: pointer;
+  }
+  #main {
+    z-index: 11000 !important;
+  }
+  .modal {
+    z-index: 12000 !important;
+  }
 }
 
 
