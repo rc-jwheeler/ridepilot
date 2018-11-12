@@ -16,29 +16,29 @@
             %i.fa.fa-cloud-upload.publish_manifest_icon{style: 'color: red;'}
         - if run.date.today? || run.date.future?
           %span.dispatch-action.calculate_eta
-            = link_to eta_dispatchers_path(run_id: run.id), title: 'Recalculate ETA', style: 'color: white;', remote: true do 
+            = link_to eta_dispatchers_path(run_id: run.id), title: 'Recalculate ETA', remote: true do 
               %i.fa.fa-clock-o.eta_icon
         - if can?(:cancel, run)  
           %span.dispatch-action
-            = link_to cancel_run_dispatchers_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: run_cancel_warning(run)} do 
+            = link_to cancel_run_dispatchers_path(run_id: run.id), title: 'Cancel run', remote: true, data: {confirm: run_cancel_warning(run)} do 
               %i.fa.fa-power-off
         - if can?(:edit, run)
           %span.dispatch-action
-            = link_to edit_run_path(run, from_dispatch: true), style: 'color: white;', title: 'Edit' do 
+            = link_to edit_run_path(run, from_dispatch: true), title: 'Edit' do 
               %i.fa.fa-pencil
 
         - if can?(:new, Trip)
           %span.dispatch-action
-            = link_to new_trip_path(from_dispatch: true, run_id: run.id), style: 'color: white;', title: translate_helper("new_trip_link_text") do 
+            = link_to new_trip_path(from_dispatch: true, run_id: run.id), title: translate_helper("new_trip_link_text") do 
               %i.fa.fa-plus
       %span.dispatch-action
-        = link_to run_path(run, from_dispatch: true), style: 'color: white;', title: "View details" do 
+        = link_to run_path(run, from_dispatch: true), title: "View details" do 
           %i.fa.fa-external-link
       - if run.trips.any?
         - manifest_report = CustomReport.find_by_name('manifest')
         - if manifest_report
           %span.dispatch-action
-            = link_to url_for(:controller => :reports, :action=>:manifest, id: manifest_report.id, query: {run_id: run.id}, format: :pdf), title: 'Print manifest', style: 'color: white;' do 
+            = link_to url_for(:controller => :reports, :action=>:manifest, id: manifest_report.id, query: {run_id: run.id}, format: :pdf), title: 'Print manifest' do 
               %i.fa.fa-print
       %span.panel-close.dispatch-action{title: 'Close'}
         %i.fa.fa-remove
