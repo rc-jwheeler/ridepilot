@@ -156,6 +156,9 @@ $input-height: 34px;
     border-color: $brand-primary;
     @include un-box-shadow;
   }
+  &[multiple="multiple"] {
+    height: $input-height*2;
+  }
 }
 
 @mixin form-label {

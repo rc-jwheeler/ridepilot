@@ -737,7 +737,9 @@ form {
 		background-image: none;
 	}
 	.ui-datepicker-today {
-		color: $yellow;
+		a {
+			background-color: $gray-3;
+		}
 	}
 	table th {
 		font-weight: 600;
