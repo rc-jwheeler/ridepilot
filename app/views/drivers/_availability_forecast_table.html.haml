@@ -26,75 +26,44 @@
 
   on_leave_drivers = PlannedLeave.joins("inner join drivers on drivers.id = planned_leaves.leavable_id and planned_leaves.leavable_type = 'Driver'")
 
-:css
-  .driver_availability_forecast_table td {
-    border: none !important;
-  }
-  .driver_availability_forecast_table th {
-    background: transparent !important;
-    color: black !important;
-  }
-
-  .driver_availability_forecast_table td.is_live {
-    background-color: #9ddaf3;
-    color: blue;
-  }
-
-  .driver_availability_forecast_table td.out_of_live {
-    background-color: #a6f39d;
-    color: blue;
-  }
-
-  .driver_availability_forecast_table td.disabled {
-    color: gray !important;
-  }
-
-  .driver_availability_forecast_table tr.is_disabled td.number_cell {
-    background-color: lightgray;
-  }
-
-  .driver_availability_forecast_table tr.lack_driver td.number_cell, div.lack_drivers {
-    background-color: #f16969;
-    color: white;
-  }
-
-  .driver_availability_forecast_table tr.has_unassigned_run td.number_cell, div.has_unassigned_run {
-    background-color: yellow;
-  }
-
-  .driver_availability_forecast_table tr.in_view td{
-    border-top: 2px solid black !important;
-    border-bottom: 2px solid black !important;
-  }
-
-  .driver_availability_forecast_table tr:not(.is_disabled) td {
-    cursor: pointer;
-  }
-
-  .driver_availability_forecast_table tr.in_view td,
-  .driver_availability_forecast_table tr:not(.is_disabled):hover td{
-    font-style: italic !important;
-    font-weight: bold !important;
-    font-size: larger;
-  }
-
-%h4
+%h2
   = translate_helper("driver_availability_forecast")
-.table-responsive{style: 'max-height: 500px; overflow-y: auto;'}
+.table-responsive
   %table.table.table-condensed.driver_availability_forecast_table
     %thead
       %tr
-        %th{rowspan: 2} Date
-        %th.text-center{colspan: 3} Runs
-        %th.text-center{colspan: 4} Drivers
+        %th.date_cell{rowspan: 2} Date
+        %th.group-1.top-level{colspan: 3} Runs
+        %th.group-2.top-level{colspan: 4} Drivers
       %tr
-        %th Tot.
-        %th As.
-        %th Un.
-        %th Tot.
-        %th As.
-        %th Un.
-        %th Ab.
+        %th.rotate-th.group-1
+          %div.rotate-th-inner
+            %span.th-text
+              Total
+        %th.rotate-th.group-1
+          %div.rotate-th-inner
+            %span.th-text
+              Assigned
+        %th.rotate-th.group-1
+          %div.rotate-th-inner
+            %span.th-text
+              Unassigned
+        %th.rotate-th.group-2.new-group 
+          %div.rotate-th-inner
+            %span.th-text
+              Total
+        %th.rotate-th.group-2 
+          %div.rotate-th-inner
+            %span.th-text
+              Assigned
+        %th.rotate-th.group-2 
+          %div.rotate-th-inner
+            %span.th-text
+              Unassigned
+        %th.rotate-th.group-2 
+          %div.rotate-th-inner
+            %span.th-text
+              Absent
     %tbody
       - days_ahead.times do
         - day_of_week = start_day.wday
@@ -122,13 +91,13 @@
           - tooltip = lack_driver ? "Not enough drivers" : (has_unassigned_run ? "Has run(s) without driver" : "")
           %tr{class: class_name, title: tooltip, data: {date_value: start_day}}
             %td.date_cell{class: is_live ? "is_live" : "out_of_live"}= start_day.strftime('%a %m/%d')
-            %td.number_cell.run_cell= runs_group_count[start_day].to_i
+            %td.number_cell.run_cell.new-group= runs_group_count[start_day].to_i
             %td.number_cell.run_cell= total_assigned_run_count
             %td.number_cell.run_cell= total_unassigned_run_count
-            %td.number_cell.driver_cell{style: 'border-left: 1px gray solid !important;'}= total_available_driver_count
+            %td.number_cell.driver_cell.new-group= total_available_driver_count
             %td.number_cell.driver_cell= total_assigned_driver_count
             %td.number_cell.driver_cell= total_unassigned_available_driver_count
-            %td.number_cell.driver_cell{style: 'border-left: 1px gray solid !important;'}= total_on_leave_driver_ids.size
+            %td.number_cell.driver_cell.new-group= total_on_leave_driver_ids.size
 
         - start_day += 1.day
 

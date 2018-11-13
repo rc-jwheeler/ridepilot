@@ -51,33 +51,17 @@
     end
   end
 
-:css
-  .lack_drivers, .has_unassigned_run {
-    padding: 10px;
-  }
-
-  table th {
-    background: transparent;
-    color: black;
-  }
-
-  table th, table td {
-    white-space: nowrap !important;
-  }
-
-.col-sm-12#daily_availability_forecast_view{style: 'padding: 0px;'}
-  %h4
+.col-sm-12#daily_availability_forecast_view
+  %h2
     = "Availability for #{date.strftime('%A, %B %d, %Y')}"
   - if lack_driver
-    .col-sm-12.lack_drivers
+    .lack_drivers
       Driver resources appear insufficient to handle all runs
   - elsif has_unassigned_run
-    .col-sm-12.has_unassigned_run
+    .has_unassigned_run
       There are runs without driver assigned
-  .col-sm-12{style: 'padding: 0px; margin-top: 10px;'}
-    = render 'availability_forecast_run_view'
-  .col-sm-12{style: 'padding: 0px;'}
-    = render 'availability_forecast_driver_view', date: date
+  = render 'availability_forecast_run_view'
+  = render 'availability_forecast_driver_view', date: date
 
 :javascript
   $(function() {

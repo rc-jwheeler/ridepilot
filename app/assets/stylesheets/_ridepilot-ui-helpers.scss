@@ -1,0 +1,228 @@
+// ---------------------
+// Variables
+
+
+// colors
+
+$white: #fff;
+
+$black: #3f4d55;
+
+$gray: #728090;
+$gray-1: $gray;
+$gray-2: #b0bbc7;
+$gray-3: #cdd5df;
+$gray-4: #eef1f4;
+
+$yellow: #FFDB5E;
+$yellow-1: $yellow;
+$yellow-2: mix($white, $yellow, 30);
+$yellow-3: mix($white, $yellow, 60);
+
+$green: #77CB8E;
+$green-1: $green;
+$green-2: mix($white, $green, 30);
+$green-3: mix($white, $green, 60);
+
+$blue: #77BCCB;
+$blue-1: $blue;
+$blue-2: mix($white, $blue, 30);
+$blue-3: mix($white, $blue, 60);
+
+$purple: #7D7BDF;
+$purple-1: $purple;
+$purple-2: mix($white, $purple, 30);
+$purple-3: mix($white, $purple, 60);
+
+$pink: #B7679C;
+$pink-1: $pink;
+$pink-2: mix($white, $pink, 30);
+$pink-3: mix($white, $pink, 60);
+
+$orange: #F4A256;
+$orange-1: $orange;
+$orange-2: mix($white, $orange, 30);
+$orange-3: mix($white, $orange, 60);
+
+
+
+$brand-primary: #0055A4;
+$brand-secondary: #EC1C24;
+
+$brand-primary-muted: mix($white, $brand-primary, 33);
+
+$input-bg: $gray-4;
+$input-border: $gray-2;
+
+$red: $brand-secondary;
+
+
+
+// measurements
+
+$header-height: 10rem;
+
+$layout-pad: 4rem;
+$content-pad: 3rem;
+$object-pad: 2.5rem;
+
+$button-radius: 6px;
+
+$input-height: 34px;
+
+
+// ---------------------
+// Mixins
+
+// TYPOGRAPHY
+
+@mixin barlow {
+  font-family: 'Barlow', sans-serif;
+}
+
+@mixin font-awesome {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+}
+
+@mixin transform($properties) {
+  -webkit-transform: $properties;
+  -ms-transform: $properties;
+  transform: $properties;
+}
+
+
+
+// BROWSER PREFIXES
+
+@mixin box-shadow($blur: .5rem, $spread: 0px, $opacity: 0.5, $color: $black, $inset: null) {
+  @if $opacity < 1 {
+    -webkit-box-shadow: $inset 0px 0px $blur $spread rgba($color, $opacity);
+    -moz-box-shadow: $inset 0px 0px $blur $spread rgba($color, $opacity);
+    box-shadow: $inset 0px 0px $blur $spread rgba($color, $opacity);  
+  } @else {
+    -webkit-box-shadow: $inset 0px 0px $blur $spread $color;
+    -moz-box-shadow: $inset 0px 0px $blur $spread $color;
+    box-shadow: $inset 0px 0px $blur $spread $color;
+  }
+}
+
+@mixin un-box-shadow {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+@mixin gradient-vert($color, $color2: $color, $transparency1: 1, $transparency2: 0, $percentage-1: 0%, $percentage-2: 100%) {
+  background: -moz-linear-gradient(top, rgba($color,$transparency1) $percentage-1, rgba($color2,$transparency2) $percentage-2); 
+  background: -webkit-linear-gradient(top, rgba($color,$transparency1) $percentage-1,rgba($color2,$transparency2) $percentage-2); 
+  background: linear-gradient(to bottom, rgba($color,$transparency1) $percentage-1,rgba($color2,$transparency2) $percentage-2); 
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$color}', endColorstr='#{$color2}',GradientType=0 );
+}
+
+@mixin gradient-horiz($color, $color2: $color, $transparency1: 1, $transparency2: 0, $percentage-1: 0%, $percentage-2: 100%) {
+  background: -moz-linear-gradient(left, rgba($color,$transparency1) $percentage-1, rgba($color2,$transparency2) $percentage-2); 
+  background: -webkit-linear-gradient(left, rgba($color,$transparency1) $percentage-1,rgba($color2,$transparency2) $percentage-2); 
+  background: linear-gradient(to right, rgba($color,$transparency1) $percentage-1,rgba($color2,$transparency2) $percentage-2); 
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$color}', endColorstr='#{$color2}',GradientType=1 );
+}
+
+// LAYOUT AND DESIGN
+
+@mixin vert-center {
+  position: relative;
+  top: 50%;
+  @include transform(translateY(-50%));
+}
+
+@mixin form-field {
+  @include barlow;
+  max-width: 100%;
+  width: 100%;
+  border: 1px solid $input-border;
+  border-radius: 0px;
+  @include un-box-shadow;
+  font-size: 1em;
+  line-height: 1.4;
+  padding: .5em .25em;
+  height: $input-height;
+  background-color: $input-bg;
+  &:focus {
+    border-color: $brand-primary;
+    @include un-box-shadow;
+  }
+}
+
+@mixin form-label {
+  font-size: .875em;
+  font-weight: 400;
+  padding: 0;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+@mixin smaller-button {
+  font-size: 1em;
+  padding: .5em 1em;
+}
+
+@mixin grouped-button {
+margin: 0;
+  float: left;
+  border-radius: 0px;
+  border-right-width: 0px;
+  &.action-button, &.dropdown-toggle, &.btn-primary, .open > &.btn-primary.dropdown-toggle {
+    border-right-width: 0px;
+  }
+  &:last-child {
+    border-right-width: 1px;
+    border-top-right-radius: $button-radius;
+    border-bottom-right-radius: $button-radius;
+  }
+  &:first-child {
+    border-top-left-radius: $button-radius;
+    border-bottom-left-radius: $button-radius;
+  }
+}
+
+@mixin cal-button {
+  @include font-awesome;
+  height: $input-height;
+  padding-top: 0;
+  padding-bottom: 0;
+img {
+    display: none;
+  }
+  &::before {
+    content: "\f073";
+  }
+}
+
+@mixin clear-before {
+  &:before {
+    content: '';
+    display: table;
+    width: 100%;
+  }
+}
+@mixin clear-after {
+  &:after {
+    content: '';
+    display: table;
+    width: 100%;
+  }
+}
+@mixin clear-both {
+  @include clear-before;
+  @include clear-after;
+}
+
+@mixin no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+  >.col, > [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
