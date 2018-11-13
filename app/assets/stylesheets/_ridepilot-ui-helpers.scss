@@ -144,9 +144,14 @@ $input-height: 34px;
   @include un-box-shadow;
   font-size: 1em;
   line-height: 1.4;
-  padding: .5em .25em;
   height: $input-height;
   background-color: $input-bg;
+  padding-left: .25em;
+  padding-right: .25em;
+  &:not(select) {
+    padding-top: .5em;
+    padding-bottom: .5em;
+  }
   &:focus {
     border-color: $brand-primary;
     @include un-box-shadow;

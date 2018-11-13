@@ -13,8 +13,9 @@
       = hidden_field_tag :lat, address.latitude, class: 'address_lat'
       = hidden_field_tag :lon, address.longitude, class: 'address_lon'
       .form-group
-        = label_tag "#{prefix}_full_address", translate_helper("full_address_name"), class: "col-md-2 control-label"
-        .col-md-10
+        .form-label
+          = label_tag "#{prefix}_full_address", translate_helper("full_address_name"), class: "col-md-2 control-label"
+        .form-field
           .form-inline.address_container
             - is_latlng_coded = address.try(:coded_by_lat_lng?)
             - is_latlng = is_latlng_coded || !params[:address_lat].blank? || !params[:address_lon].blank?
@@ -30,8 +31,9 @@
       = render 'addresses/google_place_autocomplete_js'
       = render 'addresses/latlng_address_switch_js'
     .form-group
-      = f.label :garage_phone_number, translate_helper("phone_number"), class: "col-md-2 control-label"
-      .col-md-10
+      .form-label
+        = f.label :garage_phone_number, translate_helper("phone_number"), class: "col-md-2 control-label"
+      .form-field
         - if @readonly
           = format_phone_number(@vehicle.garage_phone_number)
         - else
