@@ -447,6 +447,9 @@ form {
 	.action-buttons {
 		margin-bottom: $content-pad;
 	}
+	+ hr {
+		display: none;
+	}
 }
 
 #footer {
@@ -629,6 +632,9 @@ form {
 	width: 100%;
 	box-sizing: border-box;
 	white-space: normal;
+	>label {
+		margin-right: 1em;
+	}
 	.btn-group {
     label.btn {
     	opacity: .375;
@@ -644,6 +650,10 @@ form {
 		  &.active {
 		  	opacity: 1;
 		  }
+		  #page-header & {
+				padding-right: .5em;
+				padding-left: .5em;
+			}
 		}
 	}
 }
