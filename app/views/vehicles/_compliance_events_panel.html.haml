@@ -1,9 +1,14 @@
 .panel.panel-primary
-  .panel-heading= translate_helper("vehicle_maintenance_compliances_heading")
+  .panel-heading
+    = translate_helper("vehicle_maintenance_compliances_heading")
+    .checkbox.pull-right
+      %label
+        %input#show_all_compliances{type: 'checkbox'}
+          %b= translate_helper(:show_all_compliances)
   .form-group
-    .col-md-6.control-label
+    .form-label
       %label= translate_helper("vehicle_maintenance_schedule_type_label")
-    .col-md-6
+    .form-field
       - if @vehicle.vehicle_maintenance_schedule_type.present?
         = @vehicle.vehicle_maintenance_schedule_type.name 
       - elsif !@readonly
@@ -16,11 +21,7 @@
           });
       - else
         %b= "(#{translate_helper(:not_set)})"
-  .col-sm-12{style: "padding-top: 10px;"}
-    .checkbox.pull-right
-      %label
-        %input#show_all_compliances{type: 'checkbox'}
-          %b= translate_helper(:show_all_compliances)
+  .col-sm-12
   = render 'vehicle_maintenance_compliances_table', vehicle_maintenance_compliances: @vehicle.vehicle_maintenance_compliances.order(:due_mileage).incomplete.limit(3).default_order
   - unless @readonly
     .panel-footer

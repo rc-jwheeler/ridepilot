@@ -24,10 +24,9 @@
               = number_field_tag "address_lon", (is_latlng_coded && address.try(:longitude)) || params[:address_lon], class: "form-control", placeholder: "longitude", min: -180, max: 180, style: 'width: 40%;', disabled: @readonly
             .address_fields{style: is_latlng ? 'display: none;' : ""}
               = text_field_tag "#{prefix}_full_address", address.try(:address_text), disabled: @readonly, class: "address_search form-control", style: "width: 100%;"
-            .pull-right
-              %label.pull-right
-                %input.latlng_address_switch{type: 'checkbox', checked: ("true" if is_latlng), disabled: @readonly}
-                Lat/Lon
+            %label
+              %input.latlng_address_switch{type: 'checkbox', checked: ("true" if is_latlng), disabled: @readonly}
+              Lat/Lon
       = render 'addresses/google_place_autocomplete_js'
       = render 'addresses/latlng_address_switch_js'
     .form-group
