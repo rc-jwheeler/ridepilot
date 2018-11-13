@@ -55,15 +55,13 @@
   %h2
     = "Availability for #{date.strftime('%A, %B %d, %Y')}"
   - if lack_driver
-    .col-sm-12.lack_drivers
+    .lack_drivers
       Driver resources appear insufficient to handle all runs
   - elsif has_unassigned_run
-    .col-sm-12.has_unassigned_run
+    .has_unassigned_run
       There are runs without driver assigned
-  .col-sm-12
-    = render 'availability_forecast_run_view'
-  .col-sm-12
-    = render 'availability_forecast_driver_view', date: date
+  = render 'availability_forecast_run_view'
+  = render 'availability_forecast_driver_view', date: date
 
 :javascript
   $(function() {
