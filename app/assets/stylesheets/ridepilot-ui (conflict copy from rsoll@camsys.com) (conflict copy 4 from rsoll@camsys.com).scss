@@ -55,7 +55,7 @@ form {
 
 // overriding bootstrap 
 
-.btn, .action-button, .btn.dropdown-toggle, .btn-primary, .open > .btn-primary.dropdown-toggle, input[type="submit"], button[type="button"] {
+.btn, .action-button, .btn.dropdown-toggle, .btn-primary, .open > .btn-primary.dropdown-toggle, input[type="submit"] {
 	color: $brand-primary;
 	border: 1px solid currentColor;
 	border-color: currentColor;
@@ -498,10 +498,6 @@ form {
 	}
 }
 
-.fa-remove {
-	color: $red;
-}
-
 .inputfile {
 	// adapted from demo at https://tympanus.net/Tutorials/CustomFileInputs/
   width: 0.1px;
@@ -899,10 +895,6 @@ body.availability-forecast {
 	    margin: 0px 0px 0px -5px;
 	  }
 
-	  .pull-right a[class*="unassign_"] {
-	  	padding: 1em;
-	  }
-
 		
 		.run-availability-table, .driver-availability-table {
 
@@ -960,7 +952,7 @@ body.availability-forecast {
 			    background-color: $green;
 			  }
 			  &.driver_not_available {
-			    background-color: $blue;
+			    background-color: #f16969 !important;
 			  }
 			  &.is_disabled {
 			    background-color: $gray-4;

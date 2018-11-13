@@ -55,7 +55,7 @@ form {
 
 // overriding bootstrap 
 
-.btn, .action-button, .btn.dropdown-toggle, .btn-primary, .open > .btn-primary.dropdown-toggle, input[type="submit"], button[type="button"] {
+.btn, .action-button, .btn.dropdown-toggle, .btn-primary, .open > .btn-primary.dropdown-toggle, input[type="submit"] {
 	color: $brand-primary;
 	border: 1px solid currentColor;
 	border-color: currentColor;
@@ -249,6 +249,7 @@ form {
 		}
 	}
 	thead {
+		position: relative;
 		tr {
       td, th {
 				background-color: $gray-2;
@@ -256,15 +257,27 @@ form {
 				font-weight: 600;
 				font-size: .875em;
 				text-transform: uppercase;
+				padding-bottom: 1.5rem;
 				vertical-align: bottom;
+			}
+			&::after {
+				content: '';
+				position: absolute;
+				bottom: -1px;
+				left: 0;
+				width: 100%;
+				height: .75rem;
+				background: $white;
+				border-bottom: 1px solid $gray-2;
+				.panel & {
+					border: none;
+				}
 			}
 		}
 	}
 	tbody {
 		border: 1px solid $gray-2;
-		border-collapse: separate;
-		position: relative;
-		top: 2px;
+		border-top: 0px;
 		tr {
 			td {
 				font-weight: 600;
@@ -274,32 +287,6 @@ form {
 		}
 		.panel & {
 			border: none;
-		}
-	}
-	&.basic-table {
-		thead {
-			border: 1px solid $white;
-			border-bottom: .75em solid $white;
-		}
-		tbody {
-			tr {
-				&:first-of-type {
-					td {
-						position: relative;
-						&::before {
-							content: '';
-							position: absolute;
-							top: -2px;
-							left: 0;
-							right: 0;
-							display: block;
-							width: 100%;
-							height: 1px;
-							background-color: $gray-2
-						}
-					}
-				}
-			}
 		}
 	}
 }
@@ -496,10 +483,6 @@ form {
 		@include grouped-button;
 		color: $gray-1;
 	}
-}
-
-.fa-remove {
-	color: $red;
 }
 
 .inputfile {
@@ -888,6 +871,12 @@ body.availability-forecast {
   		max-width: 100%;
   	}
 
+	  .run-availability-table {
+	    margin-bottom: 0px;
+	    border-collapse: separate !important;
+	    border-spacing: 0 1em !important;
+	  }
+
 	  .th-inner {
     	width: 100%; 
     	white-space:nowrap;
@@ -899,74 +888,88 @@ body.availability-forecast {
 	    margin: 0px 0px 0px -5px;
 	  }
 
-	  .pull-right a[class*="unassign_"] {
-	  	padding: 1em;
+	  a.link_disabled {
+	    pointer-events: none;
+	    cursor: default;
 	  }
 
+	  a.link_disabled i {
+	    color: $gray-4;
+	  }
 		
-		.run-availability-table, .driver-availability-table {
+		// everything goes crazy if this goes away
+	  .run-availability-table td {
+	    padding: 0px 5px !important;
+	  }
 
-			margin-bottom: 0px;
+	  // .run-availability-table tr.odd {
+	  //   background: transparent;
+	  // }
+
+	  // .run-availability-table td {
+	  //   border-top: none !important;
+	  // }
+
+	  .run-availability-table td.disabled {
+	    color: $gray-4;
+	  }
+
+	  
+
+	  .run-availability-table td.chart_cell.is_filled {
+	    background-color: $purple-3;
+	  }
+
+	  .run-availability-table td.chart_cell.is_driver_filled {
+	    background-color: $purple;
+	  }
+
+	  .run-availability-table td.chart_cell.driver_not_available {
+	    background-color: $blue;
+	  }
+
+
+	  .run-availability-table a.link_disabled i {
+	    color: $gray-4;
+	  }
+
+	  .driver-availability-table {
+	    margin-bottom: 0px;
 	    border-collapse: separate !important;
 	    border-spacing: 0 1em !important;
-		
-			td {
+	    td {
 		    padding: 0px 5px !important;
 		  }
+	  }
 
-		  td.disabled {
-		    color: $gray-4;
-		  }
+	  // .driver-availability-table tr.odd {
+	  //   background: transparent;
+	  // }
 
-		  td.chart_cell {
-		  	white-space: nowrap !important; 
-			  &.driver_not_available {
-			    background-color: $blue;
-			  }
-		  }
+	  // .driver-availability-table td {
+	  //   border-top: none !important;
+	  // }
 
-		  a.link_disabled {
-		    pointer-events: none;
-		    cursor: default;
-		    i {
-			    color: $gray-4;
-			  }
-		  }
+	  // .driver-availability-table td.disabled {
+	  //   color: lightgray;
+	  // }
 
-		}
-		.run-availability-table {
 
-		  td.chart_cell {
-		  	white-space: nowrap !important; 
-		  	color: white;
-				&.is_filled {
-			    background-color: $purple-3;
-			  }
+	  // .driver-availability-table td.chart_cell.is_filled {
+	  //   background-color: #9fdbef !important;
+	  // }
 
-			  &.is_driver_filled {
-			    background-color: $purple;
-			  }
-			}
-		}
-		.driver-availability-table {
+	  // .driver-availability-table td.chart_cell.is_run_filled {
+	  //   background-color: #167ea0 !important;
+	  // }
 
-		  td.chart_cell {
-		  	white-space: nowrap !important; 
-		  	color: white;
-			  &.is_filled {
-			    background-color: $green-3;
-			  }
-			  &.is_run_filled {
-			    background-color: $green;
-			  }
-			  &.driver_not_available {
-			    background-color: $blue;
-			  }
-			  &.is_disabled {
-			    background-color: $gray-4;
-			  }
-			}
-		}
+	  // .driver-availability-table td.chart_cell.driver_not_available {
+	  //   background-color: #f16969 !important;
+	  // }
+
+	  // .driver-availability-table td.chart_cell.is_disabled {
+	  //   background-color: lightgray !important;
+	  // }
 
 	  
   }

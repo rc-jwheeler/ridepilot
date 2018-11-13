@@ -136,11 +136,11 @@
                     - last_run_name = run_name
                     - class_name += " name_cell"
                   
-                  %td.chart_cell{style: "white-space: nowrap !important; color: white;", title: title, class: class_name || "", data: {time_flag: tick[0], run_name: run_name, run_id: run && run[:id], run_start_time: run && run[:start_time_diff], run_end_time: run && run[:end_time_diff]}}
+                  %td.chart_cell{title: title, class: class_name || "", data: {time_flag: tick[0], run_name: run_name, run_id: run && run[:id], run_start_time: run && run[:start_time_diff], run_end_time: run && run[:end_time_diff]}}
                 - if can?(:edit, Run)
                   %td.pull-right
                     = link_to '#', class: has_run ? "unassign_run_link" : "unassign_run_link link_disabled" do 
-                      %i.fa.fa-remove{style: 'color: red;'}
+                      %i.fa.fa-remove
                     .dropdown{style: 'display: inline-block !important;'}
                       %button{type: 'button', data: {toggle: 'dropdown'}}
                         Assign
