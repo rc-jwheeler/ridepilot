@@ -1,30 +1,30 @@
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'runs'
-.clearfix.row#page-header{style: 'padding: 0px;'}
-  - if can? :create, Run
-    = link_to translate_helper("new_run_link_text"), new_run_path, :class=>'btn action-button pull-right'
-  - if can? :create, RepeatingRun
-    = link_to translate_helper("new_repeating_run_text"), new_repeating_run_path, :class=>'btn action-button pull-right'
-  - if can? :index, RepeatingRun
-    = link_to translate_helper("repeating_runs"), repeating_runs_path, :class=>'btn action-button pull-right'
-  %h1= translate_helper("runs")+ ": " + format_time_as_title_for_listing_day(@start_pickup_date) + " - " + format_time_as_title_for_listing_day(@end_pickup_date)
-  .clearfix
-
-.col-md-3{style: 'padding: 0px 15px 0px 0px;'}
+#page-header
+  %h1.page-title= translate_helper("runs")+ ": " + format_time_as_title_for_listing_day(@start_pickup_date) + " - " + format_time_as_title_for_listing_day(@end_pickup_date)
+  .action-buttons
+    - if can? :create, Run
+      = link_to translate_helper("new_run_link_text"), new_run_path, :class=>'btn action-button'
+    - if can? :create, RepeatingRun
+      = link_to translate_helper("new_repeating_run_text"), new_repeating_run_path, :class=>'btn action-button'
+    - if can? :index, RepeatingRun
+      = link_to translate_helper("repeating_runs"), repeating_runs_path, :class=>'btn action-button'
+.col-md-3
   = render :partial => 'filters'
 - unless can?(:edit, Run)
-  .col-md-9{style: 'padding: 0px;'}
+  .col-md-9
     = render :partial => 'list'
 - else
-  .col-md-9{style: 'padding: 0px;'}
-    .modify-selected-runs.dropdown{style: 'margin-bottom: 5px;'}
-      %button.btn.btn-primary.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}} 
-        =translate_helper(:modify_selected_runs)
-        %span.caret
-      %ul.dropdown-menu
-        -Run::BATCH_ACTIONS.each do |action|
-          %li
-            %a{href: '#', 'data-run-batch-action' => action.to_s }
-              =translate_helper("#{action}_run")
+  .col-md-9
+    .table-action-buttons
+      .modify-selected-runs.dropdown
+        %button.btn.btn-primary.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}} 
+          =translate_helper(:modify_selected_runs)
+          %span.caret
+        %ul.dropdown-menu
+          -Run::BATCH_ACTIONS.each do |action|
+            %li
+              %a{href: '#', 'data-run-batch-action' => action.to_s }
+                =translate_helper("#{action}_run")
 
     = render :partial => 'list'
 
