@@ -1,12 +1,14 @@
-%ul.provider-menu
-  %li{class: action_name == "show" ? 'active' : ''}
-    %a{href: provider_path(@provider)}
-      = translate_helper('provider_profile_label')
-  - ['general', 'users', 'drivers', 'vehicles', 'addresses', 'customers'].each_with_index do |section, index|
-    %li{class: action_name == section ? 'active' : ''}
-      %a{href: polymorphic_path(@provider, action: section)}
-        = "#{index + 1}." 
-        = translate_helper("provider_#{section}_label")
-        = show_provider_setting_alert(@provider, section)
+.panel.panel-primary
+  .panel-body
+    %ul.provider-menu
+      %li{class: action_name == "show" ? 'active' : ''}
+        %a{href: provider_path(@provider)}
+          = translate_helper('provider_profile_label')
+      - ['general', 'users', 'drivers', 'vehicles', 'addresses', 'customers'].each_with_index do |section, index|
+        %li{class: action_name == section ? 'active' : ''}
+          %a{href: polymorphic_path(@provider, action: section)}
+            = "#{index + 1}." 
+            = translate_helper("provider_#{section}_label")
+            = show_provider_setting_alert(@provider, section)
 
-  
+    
