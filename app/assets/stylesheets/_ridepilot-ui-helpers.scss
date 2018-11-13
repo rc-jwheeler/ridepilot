@@ -171,6 +171,17 @@ $input-height: 34px;
   padding: .5em 1em;
 }
 
+@mixin last-button {
+  border-right-width: 1px;
+  border-top-right-radius: $button-radius;
+  border-bottom-right-radius: $button-radius;
+}
+
+@mixin first-button {
+  border-top-left-radius: $button-radius;
+  border-bottom-left-radius: $button-radius;
+}
+
 @mixin grouped-button {
   margin: 0;
   float: left;
@@ -179,33 +190,11 @@ $input-height: 34px;
   &.action-button, &.dropdown-toggle, &.btn-primary, .open > &.btn-primary.dropdown-toggle {
     border-right-width: 0px;
   }
-  &:last-of-type {
-    border-right-width: 1px;
-    border-top-right-radius: $button-radius;
-    border-bottom-right-radius: $button-radius;
-  }
-  &:first-of-type {
-    border-top-left-radius: $button-radius;
-    border-bottom-left-radius: $button-radius;
-  }
-}
-
-@mixin grouped-button-mixed {
-  margin: 0;
-  float: left;
-  border-radius: 0px;
-  border-right-width: 0px;
-  &.action-button, &.dropdown-toggle, &.btn-primary, .open > &.btn-primary.dropdown-toggle {
-    border-right-width: 0px;
-  }
   &:last-child {
-    border-right-width: 1px;
-    border-top-right-radius: $button-radius;
-    border-bottom-right-radius: $button-radius;
+    @include last-button
   }
   &:first-child {
-    border-top-left-radius: $button-radius;
-    border-bottom-left-radius: $button-radius;
+    @include first-button
   }
 }
 

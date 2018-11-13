@@ -521,6 +521,12 @@ form {
 		@include grouped-button;
 		color: $gray-1;
 	}
+	.dropdown:last-child .btn {
+		@include last-button
+	}
+	.dropdown:first-child .btn {
+		@include first-button
+	}
 }
 
 .fa-remove {
@@ -629,7 +635,7 @@ form {
   	@include clear-both;
   	.btn {
   		@include smaller-button;
-      @include grouped-button-mixed;
+      @include grouped-button;
       text-transform: uppercase;
       color: $white;
       border-color: $gray-1;
@@ -1024,4 +1030,24 @@ select + .vehicle-capacity-configurations {
 	margin-top: 1em;
 }
 
+body.providers {
+	form {
+		width: 100%;
+	}
+}
 
+.provider_sidebar {
+    // display: none;
+  }
+@media (min-width: 768px) {
+  .provider_sidebar {
+    // position: fixed;
+    // z-index: 1000;
+    // display: block;
+    // overflow-x: hidden;
+    // overflow-y: auto;  
+    // // Scrollable contents if viewport is shorter than content. 
+    // background-color: #f5f5f5;
+    // border-right: 1px solid #eee;
+  }
+}
