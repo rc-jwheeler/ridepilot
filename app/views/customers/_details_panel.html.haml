@@ -6,118 +6,118 @@
       = translate_helper(:customer_details_panel)
   .panel-body{style: 'padding: 5px;'}
     - if @dup 
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = f.label :ignore_dups, translate_helper(:ignore_duplicates) 
-        .col-sm-9
+        .form-field
           = check_box_tag :ignore_dups 
     - if edit_mode == :show
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = f.label :id, translate_helper(:customer_id_label) 
-        .col-sm-9
+        .form-field
           = @customer.id
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = f.label :token, translate_helper(:customer_token_label) 
-        .col-sm-9
+        .form-field
           = @customer.token
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :photo, translate_helper(:customer_form_photo) 
-      .col-sm-9
+      .form-field
         - if @customer.photo.present? && !@customer.photo.new_record?
           = image_tag @customer.photo.image.url(:thumb)
         - unless edit_mode == :show
           = f.fields_for :photo do |image_upload| 
             = image_upload.file_field :image, class: "form-control"  
-    .form-group.col-sm-12.firstname
-      .col-sm-3
+    .form-group.firstname
+      .form-label
         = f.label :first_name, translate_helper(:first_name) 
-      .col-sm-9
+      .form-field
         = f.text_field :first_name, class: 'form-control'
-    .form-group.col-sm-12.middlename
-      .col-sm-3
+    .form-group.middlename
+      .form-label
         = f.label :middle_initial, translate_helper(:middle_initial) 
-      .col-sm-9
+      .form-field
         = f.text_field :middle_initial, class: 'form-control'
-    .form-group.col-sm-12.lastname
-      .col-sm-3
+    .form-group.lastname
+      .form-label
         = f.label :last_name, translate_helper(:last_name) 
-      .col-sm-9
+      .form-field
         = f.text_field :last_name, class: 'form-control'
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :gender, translate_helper(:gender) 
-      .col-sm-9
+      .form-field
         = f.collection_select :gender, [[:male, translate_helper(:male)], [:female, translate_helper(:female)], [:other, translate_helper(:other_gender)]], :first, :last, {include_blank: true}, {class: 'form-control'}
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :phone_number_1, translate_helper(:phone_number) 
-      .col-sm-9
+      .form-field
         - if edit_mode == :show
           = format_phone_number(@customer.phone_number_1)
         - else
           = f.text_field :phone_number_1, class: 'form-control'
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :phone_number_2, translate_helper(:alternate_phone_number) 
-      .col-sm-9
+      .form-field
         - if edit_mode == :show
           = format_phone_number(@customer.phone_number_2)
         - else
           = f.text_field :phone_number_2, class: 'form-control'
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :email, translate_helper(:email) 
-      .col-sm-9
+      .form-field
         = f.text_field :email, class: 'form-control'
-    .form-group.col-sm-12.birth_date
-      .col-sm-3
+    .form-group.birth_date
+      .form-label
         = f.label :birth_date, translate_helper(:date_of_birth) 
-      .col-sm-9
+      .form-field
         - date_order_parameters = translate_helper("date_order_parameter").split(",").collect do |param| param.to_sym end 
         = f.date_select :birth_date, :start_year => 1896, :use_short_month => true, :include_blank => true, order: date_order_parameters rescue nil
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :is_elderly, translate_helper(:is_elderly) 
-      .col-sm-9
+      .form-field
         = f.check_box :is_elderly
-    .form-group.col-sm-12.ethnicity
-      .col-sm-3
+    .form-group.ethnicity
+      .form-label
         = f.label :ethnicity, translate_helper(:ethnicity) 
-      .col-sm-9
+      .form-field
         = f.select :ethnicity, @ethnicity_names, {include_blank: true}, {class: 'form-control'}
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :default_service_level, translate_helper(:default_service_level) 
-      .col-sm-9
+      .form-field
         = f.select :service_level_id, @service_levels, {:include_blank => true}, {class: 'form-control'}
 
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :default_funding_source_id, translate_helper(:default_funding_source) 
-      .col-sm-9
+      .form-field
         = f.collection_select :default_funding_source_id, @funding_sources, :id, :name, {:include_blank => true }, { class: 'form-control' }
     - if is_admin_or_system_admin?
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = f.label :emergency_contact_notes, translate_helper(:emergency_contact_notes) 
-        .col-sm-9
+        .form-field
           = f.text_area :emergency_contact_notes, class: 'form-control'
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :private_notes, translate_helper(:private_notes) 
-      .col-sm-9
+      .form-field
         = f.text_area :private_notes, class: 'form-control'
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :public_notes, translate_helper(:public_notes) 
-      .col-sm-9
+      .form-field
         = f.text_area :public_notes, class: 'form-control'
     - if !@customer.active?
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = f.label :inactivated_reason, translate_helper(:inactivated_reason) 
-        .col-sm-9
+        .form-field
           = f.text_field :inactivated_reason, class: 'form-control'

@@ -5,13 +5,13 @@
     %h3.panel-title
       = translate_helper(:customer_others_panel)
   .panel-body{style: 'padding: 5px;'}
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :code, translate_helper(:customer_code) 
-      .col-sm-9
+      .form-field
         = f.text_field :code, class: 'form-control'
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :message, translate_helper(:customer_message) 
-      .col-sm-9
+      .form-field
         = f.text_area :message, class: 'form-control'

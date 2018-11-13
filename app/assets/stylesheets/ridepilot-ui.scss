@@ -45,6 +45,7 @@ label {
 }
 
 form {
+	width: 100%;
   input[type="text"], input[type="password"], textarea, .form-control {
 		@include form-field;
 	}
@@ -224,6 +225,7 @@ form {
 }
 
 .table, table {
+	width: 100%;
 	background: $white;
 	thead, tbody, tfoot {
 		tr {
@@ -339,6 +341,10 @@ form {
 
 .dropdown {
 	@include clear-after;
+}
+
+.overdue-danger {
+	background-color: $red!important;
 }
 
 // layout
