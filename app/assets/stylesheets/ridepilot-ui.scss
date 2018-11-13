@@ -156,6 +156,18 @@ form {
 		background: transparent;
 		padding: $object-pad 0 0 0;
 	}
+	&.expandable {
+		padding: 0;
+		.panel-heading, .panel-body {
+			padding: $object-pad;
+		}
+		.panel-heading {
+		  background-color: $gray-4;
+		}
+		.panel-body {
+			max-width: 100%;
+		}
+	}
 }
 
 .form-horizontal {
@@ -881,9 +893,6 @@ body.availability-forecast {
   		padding: 0;
   		.panel-heading, .panel-body {
   			padding: $object-pad;
-  		}
-  		.panel-heading {
-			  background-color: $gray-4;
   		}
   		.panel-body {
   			max-width: 100%;
