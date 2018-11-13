@@ -652,10 +652,11 @@ form {
 		  }
 		  &.active {
 		  	opacity: 1;
+		  	font-weight: 600;
 		  }
 		  #page-header & {
-				padding-right: .5em;
-				padding-left: .5em;
+				padding-right: 1em;
+				padding-left: 1em;
 			}
 		}
 	}
