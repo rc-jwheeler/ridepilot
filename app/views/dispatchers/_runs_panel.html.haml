@@ -9,10 +9,9 @@
         %i.fa.fa-remove
       %span.panel-expand-collapse.dispatch-action{title: 'Collapse/expand'}
         %i.fa.fa-chevron-up
-    %h3.panel-title.text-center
-      .pull-left
-        = translate_helper(:runs_panel_header)
-      %span{style: 'font-size: small;'}
+    %h3.panel-title
+      = translate_helper(:runs_panel_header)
+      %span.trips-stats
         - stats = []
         - stats << "#{@runs.recurring.count} recurring" if @runs.recurring.any?
         - stats << "#{@runs.daily.count} daily" if @runs.daily.any?

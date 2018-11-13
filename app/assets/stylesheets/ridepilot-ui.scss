@@ -483,6 +483,11 @@ form {
 	+ hr {
 		display: none;
 	}
+	.filter-form {
+		float: left;
+		display: inline-block;
+		max-width: 50%
+	}
 }
 
 #footer {
@@ -768,6 +773,18 @@ body.dispatchers.index {
 		padding-left: $content-pad;
 		padding-right: $content-pad;
 	}
+	.panel-heading {
+		.trips-quantity, .run-summary {
+			font-weight: 600;
+			display: inline-block;
+			margin-left: 1em;
+		}
+		.pull-right {
+			.dropdown {
+				display: inline-block;
+			}
+		}
+	}
 	#dispatch_runs_trips {
 		padding: 0;
 		#unassigned_trips_container {
@@ -785,11 +802,6 @@ body.dispatchers.index {
 				background-color: $brand-primary;
 				padding: 1em $object-pad;
 				color: $white;
-				.trips-quantity {
-					font-weight: 600;
-					display: inline-block;
-					margin-left: 1em;
-				}
 			}
 			
 		}

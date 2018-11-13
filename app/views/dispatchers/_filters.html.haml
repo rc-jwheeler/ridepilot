@@ -1,4 +1,4 @@
-= form_for :run_trip_filters, url: dispatchers_path, html: { :id => "run_trip_filter_form", class: 'form-inline' }, :method => :get do |f|
+= form_for :run_trip_filters, url: dispatchers_path, html: { :id => "run_trip_filter_form", class: 'form-inline filter-form' }, :method => :get do |f|
   .input-group.datepicker-icon
     = f.text_field :run_trip_day, :value => format_time_for_listing_day(@run_trip_day), class: "form-control datepicker", readonly: true
     .input-group-btn
