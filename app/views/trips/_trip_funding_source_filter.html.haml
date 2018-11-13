@@ -1,7 +1,7 @@
 - trip_funding_source_codes = [[FundingSource::SHOW_ALL_ID, 'Show All']] + FundingSource.by_provider(current_provider).order(:name).pluck(:id, :name)
 .trip_funding_source-filter{style: 'padding: 5px;'}
-  = f.label :trips_funding_source_id, translate_helper(:funding_source)
-  = f.collection_check_boxes :trips_funding_source_id, trip_funding_source_codes, :first, :last, { checked: session[:trips_funding_source_id] }, {class: 'trip-funding-source-filter', style: 'vertical-align: initial;'} do |b|
+  = f.label :funding_source_id, translate_helper(:funding_source)
+  = f.collection_check_boxes :funding_source_id, trip_funding_source_codes, :first, :last, { checked: session[:trips_funding_source_id] }, {class: 'trip-funding-source-filter', style: 'vertical-align: initial;'} do |b|
     .col-sm-12
       = b.check_box + " " + b.text
 

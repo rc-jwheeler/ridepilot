@@ -112,8 +112,8 @@ class TripFilter
   end
 
   def filter_by_funding_source!
-    if @filters[:trip_funding_source_id].present?
-      funding_source_ids = @filters[:trip_funding_source_id].dup
+    if @filters[:funding_source_id].present?
+      funding_source_ids = @filters[:funding_source_id].dup
 
       if funding_source_ids.include?(FundingSource::SHOW_ALL_ID.to_s)
         funding_source_ids[funding_source_ids.index(FundingSource::SHOW_ALL_ID.to_s)] = nil
