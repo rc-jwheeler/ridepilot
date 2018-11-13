@@ -21,7 +21,16 @@
     <%= translate_helper("session_timeout_warning") %>
   </div>
   <div id="header">
-      <%= translate_helper("header_content") %>
+      <span id="brand">
+        <span class="logo">
+          <%= translate_helper("header_content") %>
+        </span>
+        <span class="name">
+          <a href='/'>
+           <%= translate_helper("site_title") %>
+          </a>
+        </span>
+      </span>
       <div id="user-nav">
         <% if can_access_admin_tab(current_user) %>
           <%= link_to admin_path, title: translate_helper("application_admin_link_text") do %>

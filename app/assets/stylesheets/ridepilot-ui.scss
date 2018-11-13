@@ -327,22 +327,17 @@ form {
 	padding: 0;
 	position: relative;
 	height: $header-height;
-	a#logo {
+	#brand {
 		@include barlow;
 		font-weight: 800;
 		color: $white;
 		transition: color .25s ease-in-out;
-		text-decoration: none;
 		display: block;
 		position: absolute;
 		top: 0;
 		left: 0;
 		bottom: 0;
 		height: 100%;
-		// max-width: 50%;
-		&:hover {
-			color: $gray-3;
-		}
 
 		.logo, .name {
 			display: inline-block;
@@ -360,9 +355,17 @@ form {
 			}
 		}
 
-		.name {
+		.name{
 			font-size: 32px;
 			@include vert-center;
+
+			a {
+				color: $white;
+				text-decoration: none;
+				&:hover {
+					color: $gray-3;
+				}
+			}
 		}
 
 	}
