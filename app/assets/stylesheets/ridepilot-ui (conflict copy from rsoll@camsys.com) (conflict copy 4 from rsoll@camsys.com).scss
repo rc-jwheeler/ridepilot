@@ -55,7 +55,7 @@ form {
 
 // overriding bootstrap 
 
-.btn, .action-button, .btn.dropdown-toggle, .btn-primary, .open > .btn-primary.dropdown-toggle, input[type="submit"], button[type="button"] {
+.btn, .action-button, .btn.dropdown-toggle, .btn-primary, .open > .btn-primary.dropdown-toggle, input[type="submit"] {
 	color: $brand-primary;
 	border: 1px solid currentColor;
 	border-color: currentColor;
@@ -327,17 +327,22 @@ form {
 	padding: 0;
 	position: relative;
 	height: $header-height;
-	#brand {
+	a#logo {
 		@include barlow;
 		font-weight: 800;
 		color: $white;
 		transition: color .25s ease-in-out;
+		text-decoration: none;
 		display: block;
 		position: absolute;
 		top: 0;
 		left: 0;
 		bottom: 0;
 		height: 100%;
+		// max-width: 50%;
+		&:hover {
+			color: $gray-3;
+		}
 
 		.logo, .name {
 			display: inline-block;
@@ -355,17 +360,9 @@ form {
 			}
 		}
 
-		.name{
+		.name {
 			font-size: 32px;
 			@include vert-center;
-
-			a {
-				color: $white;
-				text-decoration: none;
-				&:hover {
-					color: $gray-3;
-				}
-			}
 		}
 
 	}
@@ -450,9 +447,6 @@ form {
 	.action-buttons {
 		margin-bottom: $content-pad;
 	}
-	+ hr {
-		display: none;
-	}
 }
 
 #footer {
@@ -502,10 +496,6 @@ form {
 		@include grouped-button;
 		color: $gray-1;
 	}
-}
-
-.fa-remove {
-	color: $red;
 }
 
 .inputfile {
@@ -635,9 +625,6 @@ form {
 	width: 100%;
 	box-sizing: border-box;
 	white-space: normal;
-	>label {
-		margin-right: 1em;
-	}
 	.btn-group {
     label.btn {
     	opacity: .375;
@@ -653,10 +640,6 @@ form {
 		  &.active {
 		  	opacity: 1;
 		  }
-		  #page-header & {
-				padding-right: .5em;
-				padding-left: .5em;
-			}
 		}
 	}
 }
@@ -912,10 +895,6 @@ body.availability-forecast {
 	    margin: 0px 0px 0px -5px;
 	  }
 
-	  .pull-right a[class*="unassign_"] {
-	  	padding: 1em;
-	  }
-
 		
 		.run-availability-table, .driver-availability-table {
 
@@ -973,7 +952,7 @@ body.availability-forecast {
 			    background-color: $green;
 			  }
 			  &.driver_not_available {
-			    background-color: $blue;
+			    background-color: #f16969 !important;
 			  }
 			  &.is_disabled {
 			    background-color: $gray-4;

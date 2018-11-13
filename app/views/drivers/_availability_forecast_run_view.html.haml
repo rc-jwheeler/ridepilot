@@ -66,7 +66,7 @@
                 - if can?(:edit, Run)
                   %td.pull-right
                     = link_to '#', method: 'patch', remote: true, class: r[:driver_id].blank? ? "unassign_driver_link link_disabled" : "unassign_driver_link" do 
-                      %i.fa.fa-remove{style: 'color: red;'}
+                      %i.fa.fa-remove
                     .dropdown{style: 'display: inline-block !important;'}
                       %button{type: 'button', data: {toggle: 'dropdown'}}
                         Assign
