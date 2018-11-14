@@ -2,7 +2,7 @@
   .panel-heading
     %h3.panel-title
       = translate_helper(:trip_useful_info_panel)
-  .panel-body{style: 'padding: 5px;'}
+  .panel-body
     - if !@is_repeating_trip && edit_mode == :show && @trip.is_linked?
       .form-group.col-sm-12
         .col-sm-3

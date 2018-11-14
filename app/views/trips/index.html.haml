@@ -16,10 +16,10 @@
 .col-md-3{style: 'padding: 0px 15px 0px 0px;'}
   = render :partial => 'filters'
 - unless can?(:edit, Trip)
-  .col-md-9{style: 'padding: 0px;'}
+  .col-md-9
     = render 'list'
 - else
-  .col-md-9{style: 'padding: 0px;'}
+  .col-md-9
     .cancel-selected-trips.dropdown{style: 'margin-bottom: 5px;'}
       .pull-right
         %span{style: 'font-size: large;'}

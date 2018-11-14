@@ -239,12 +239,19 @@ img {
   @include clear-after;
 }
 
-@mixin no-gutters {
+@mixin no-gutters-parent {
   margin-right: 0;
   margin-left: 0;
   >.col, > [class*="col-"] {
     padding-right: 0;
     padding-left: 0;
   }
+}
+
+@mixin no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+  padding-right: 0;
+  padding-left: 0;
 }
 

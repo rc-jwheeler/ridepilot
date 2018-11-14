@@ -369,7 +369,7 @@ form {
 }
 
 .no-gutters {
-  @include no-gutters;
+  @include no-gutters-parent;
 }
 
 .dropdown {
@@ -517,6 +517,9 @@ form {
 #main {
 	background-color: $white;
 	padding: $content-pad;
+	> div[class*="col-"] {
+	  overflow: scroll visible;
+	}
 }
 
 #page-header {
@@ -716,13 +719,11 @@ form {
   label {
   	margin: 1.5em 0 .5em 0;
   }
-  form, .filter-body, .trip_result-filter {
+  div[class*="col-"] {
   	@include no-gutters;
   }
-  .trip_result-filter {
-  	> div {
-      @include form-label;
-  	}
+  .filter-checks {
+    @include form-label;
   }
 }
 
