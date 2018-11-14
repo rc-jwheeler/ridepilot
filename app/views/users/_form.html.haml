@@ -43,8 +43,9 @@
               - editable_roles = Role.editable_role_array_by_user(current_user)
               - if editable_roles.any?
                 .form-group
-                  = f.label :permissions, translate_helper("permissions"), class: "col-md-2 control-label"
-                  .col-md-10
+                  .form-label
+                    = f.label :permissions, translate_helper("permissions"), class: "col-md-2 control-label"
+                  .form-field
                     = select :role, :level, editable_roles, {selected: role.try(:level)}, { class: "form-control" }
           .form-group
             .form-label
