@@ -825,10 +825,12 @@ form {
 	}
 }
 
-form#new_user {
-	max-width: 400px;
-	label {
-		margin: 1em 0 .5em 0;
+body.sessions.new {
+  form#new_user {
+		max-width: 400px;
+		label {
+			margin: 1em 0 .5em 0;
+		}
 	}
 }
 
