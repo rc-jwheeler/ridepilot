@@ -322,8 +322,6 @@ form {
 	tbody {
 		border: 1px solid $gray-2;
 		border-collapse: separate;
-		position: relative;
-		top: 2px;
 		tr {
 			td {
 				font-weight: 600;
@@ -335,11 +333,17 @@ form {
 			border: none;
 		}
 	}
-	&.basic-table {
+	&.basic-table, &.basic-table.dataTable {
 		width: 100%;
+		border: none;
+		border-collapse: collapse;
 		thead {
 			border: 1px solid $white;
 			border-bottom: .75em solid $white;
+			th {
+				border: none;
+				padding: .5rem 1rem;
+			}
 		}
 		tbody {
 			tr {
@@ -349,7 +353,7 @@ form {
 						&::before {
 							content: '';
 							position: absolute;
-							top: -2px;
+							top: 0px;
 							left: 0;
 							right: 0;
 							display: block;
@@ -1159,3 +1163,25 @@ body.providers {
 	display: none;
 }
 
+form.customer-search {
+	width: auto;
+	input {
+		width: auto;
+	}
+}
+
+.modal {
+	.bootbox-body {
+		min-height: 4em
+	}
+	button.close {
+		margin: 0;
+		font-size: 1.5em;
+		padding: .5em .75em;
+		opacity: 1;
+		background-color: $brand-primary;
+		color: $white;
+		font-weight: 600;
+
+	}
+}

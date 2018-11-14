@@ -1,17 +1,13 @@
 <%= render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: @parent.class.name.to_s.downcase.pluralize %>
 
 <div id="page-header" class="row">
-  <div class="col-sm-12 col-md-6">
-    <h1><%= translate_helper("document_form_edit_heading") %></h1>
-  </div>
-  <div class="col-sm-12 col-md-6">
+  <h1 class="page-title"><%= translate_helper("document_form_edit_heading") %></h1>
+  <div class="action-buttons">
     <% if can? :manage, @document %>
-      <div class="pull-right">
-        <button class="btn action-button" id="document_form_submit">
-          <%= translate_helper("save") %>
-        </button>
-        <%= link_to translate_helper("cancel"), @parent, class: "btn action-button" %>
-      </div>
+      <button class="btn action-button" id="document_form_submit">
+        <%= translate_helper("save") %>
+      </button>
+      <%= link_to translate_helper("cancel"), @parent, class: "btn action-button" %>
     <% end %>
   </div>
 </div>

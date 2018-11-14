@@ -4,7 +4,7 @@
   .panel-heading
     %h3.panel-title
       = translate_helper(:customer_eligibility_panel)
-  .panel-body{style: 'padding: 5px;'}
+  .panel-body
     - if edit_mode == :show
       = render 'view_customer_eligibilities'
     - else
