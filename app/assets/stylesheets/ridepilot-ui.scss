@@ -832,6 +832,44 @@ form#new_user {
 	}
 }
 
+#dispatch_runs_trips {
+	padding: 0;
+	#unassigned_trips_container {
+		padding: 0;
+		border-right: 1px solid $brand-primary;
+		border-left: 1px solid $brand-primary;
+		@include box-shadow($blur: .5rem, $spread: 0px, $opacity: 0.5);
+		#unassigned_trips_panel {
+			border: none;
+			table {
+				border: none;
+			}
+		}
+		.panel-heading {
+			background-color: $brand-primary;
+			padding: 1em $object-pad;
+			color: $white;
+		}
+		
+	}
+	.hsplitter {
+		background-color: $brand-primary;
+		height: 2em;
+		padding-top: .25em;
+		border-radius: 6px 6px 0 0;
+		text-align: center;
+		border-bottom: 1px solid $white;
+		@include box-shadow($blur: .5rem, $spread: 0px, $opacity: .75);
+		&::before {
+			@include font-awesome;
+			content: '\f58d';
+			display: inline-block;
+			height: 1em;
+			color: $white;
+		}
+	}
+}
+
 body.dispatchers.index {
 	#main {
 		padding-left: 0;
@@ -840,43 +878,6 @@ body.dispatchers.index {
 	#page-header, #dispatch_runs_container {
 		padding-left: $content-pad;
 		padding-right: $content-pad;
-	}
-	#dispatch_runs_trips {
-		padding: 0;
-		#unassigned_trips_container {
-			padding: 0;
-			border-right: 1px solid $brand-primary;
-			border-left: 1px solid $brand-primary;
-			@include box-shadow($blur: .5rem, $spread: 0px, $opacity: 0.5);
-			#unassigned_trips_panel {
-				border: none;
-				table {
-					border: none;
-				}
-			}
-			.panel-heading {
-				background-color: $brand-primary;
-				padding: 1em $object-pad;
-				color: $white;
-			}
-			
-		}
-		.hsplitter {
-			background-color: $brand-primary;
-			height: 2em;
-			padding-top: .25em;
-			border-radius: 6px 6px 0 0;
-			text-align: center;
-			border-bottom: 1px solid $white;
-			@include box-shadow($blur: .5rem, $spread: 0px, $opacity: .75);
-			&::before {
-				@include font-awesome;
-				content: '\f58d';
-				display: inline-block;
-				height: 1em;
-				color: $white;
-			}
-		}
 	}
 }
 
