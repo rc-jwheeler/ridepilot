@@ -30,56 +30,57 @@
   = f.hidden_field :direction
   = f.hidden_field :linking_trip_id if @trip.outbound_trip
 
-  - if @is_repeating_trip 
-    .col-sm-12.col-md-6
-      = render 'trips/required_trip_details_panel', f: f, edit_mode: edit_mode
-      = render 'trips/mobility_panel', f: f, edit_mode: edit_mode 
-      = render 'trips/notes_panel', f: f, edit_mode: edit_mode
-      = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
-    .col-sm-12.col-md-6
-      = render 'repeating_trips/repetition_panel', f: f
-      = render 'trips/eta_settings_panel', f: f, edit_mode: edit_mode
-      = render 'trips/eligibility_panel', f: f, edit_mode: edit_mode
-      = render 'trips/other_panel', f: f
-      - if edit_mode == :show
-        - logs = TrackerActionLog.for(@trip).order(created_at: :desc)
-        - if logs.any?
-          = render 'shared/action_log_panel', logs: logs
-  - else
-    .col-sm-12.col-md-6
-      = render 'trips/required_trip_details_panel', f: f, edit_mode: edit_mode
-      = render 'trips/mobility_panel', f: f, edit_mode: edit_mode 
-      = render 'trips/notes_panel', f: f, edit_mode: edit_mode
-      = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
-    .col-sm-12.col-md-6
-      = render 'trips/tracking_panel', f: f, edit_mode: edit_mode 
-      = render 'trips/eta_settings_panel', f: f, edit_mode: edit_mode
-      = render 'trips/eligibility_panel', f: f, edit_mode: edit_mode
-      = render 'trips/fare_panel', f: f, edit_mode: edit_mode
-      = render 'trips/other_panel', f: f
-      - if edit_mode == :show
-        - logs = TrackerActionLog.for(@trip).order(created_at: :desc)
-        - if logs.any?
-          = render 'shared/action_log_panel', logs: logs
+  .row
+    - if @is_repeating_trip 
+      .col-sm-12.col-md-6
+        = render 'trips/required_trip_details_panel', f: f, edit_mode: edit_mode
+        = render 'trips/mobility_panel', f: f, edit_mode: edit_mode 
+        = render 'trips/notes_panel', f: f, edit_mode: edit_mode
+        = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
+      .col-sm-12.col-md-6
+        = render 'repeating_trips/repetition_panel', f: f
+        = render 'trips/eta_settings_panel', f: f, edit_mode: edit_mode
+        = render 'trips/eligibility_panel', f: f, edit_mode: edit_mode
+        = render 'trips/other_panel', f: f
+        - if edit_mode == :show
+          - logs = TrackerActionLog.for(@trip).order(created_at: :desc)
+          - if logs.any?
+            = render 'shared/action_log_panel', logs: logs
+    - else
+      .col-sm-12.col-md-6
+        = render 'trips/required_trip_details_panel', f: f, edit_mode: edit_mode
+        = render 'trips/mobility_panel', f: f, edit_mode: edit_mode 
+        = render 'trips/notes_panel', f: f, edit_mode: edit_mode
+        = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
+      .col-sm-12.col-md-6
+        = render 'trips/tracking_panel', f: f, edit_mode: edit_mode 
+        = render 'trips/eta_settings_panel', f: f, edit_mode: edit_mode
+        = render 'trips/eligibility_panel', f: f, edit_mode: edit_mode
+        = render 'trips/fare_panel', f: f, edit_mode: edit_mode
+        = render 'trips/other_panel', f: f
+        - if edit_mode == :show
+          - logs = TrackerActionLog.for(@trip).order(created_at: :desc)
+          - if logs.any?
+            = render 'shared/action_log_panel', logs: logs
 
-- if edit_mode != :show
-  = render 'trips/customer_trip_summary_dialog'
-  - if @is_repeating_trip
-    :javascript
-      $(function() {
-        $('body').on('dblclick', '#customerTripSummaryTable td', function() {
-          var trip_id = $(this).parents('tr').data('trip-id');
-          window.location.href = "#{clone_from_daily_trip_repeating_trips_path}?trip_id=" + trip_id;
+  - if edit_mode != :show
+    = render 'trips/customer_trip_summary_dialog'
+    - if @is_repeating_trip
+      :javascript
+        $(function() {
+          $('body').on('dblclick', '#customerTripSummaryTable td', function() {
+            var trip_id = $(this).parents('tr').data('trip-id');
+            window.location.href = "#{clone_from_daily_trip_repeating_trips_path}?trip_id=" + trip_id;
+          });
         });
-      });
-  - else
-    :javascript
-      $(function() {
-        $('body').on('dblclick', '#customerTripSummaryTable td', function() {
-          var trip_id = $(this).parents('tr').data('trip-id');
-          window.location.href = "#{clone_trip_path('xxx')}".replace('xxx', trip_id);
+    - else
+      :javascript
+        $(function() {
+          $('body').on('dblclick', '#customerTripSummaryTable td', function() {
+            var trip_id = $(this).parents('tr').data('trip-id');
+            window.location.href = "#{clone_trip_path('xxx')}".replace('xxx', trip_id);
+          });
         });
-      });
 
 = render 'trips/customer_message_dialog'
 

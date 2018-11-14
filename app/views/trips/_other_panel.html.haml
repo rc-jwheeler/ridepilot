@@ -3,27 +3,27 @@
     %h3.panel-title
       = translate_helper(:other)
   .panel-body{style: 'padding: 5px;'}
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :customer_informed, translate_helper("trip_called_back")
-      .col-sm-9
+      .form-field
         = f.check_box :customer_informed
         - if !@is_repeating_trip &&@trip.customer_informed
           = "on #{@trip.called_back_at}" if @trip.called_back_at.present?
           = "by #{@trip.called_back_by.email}" if @trip.called_back_by.present?
     - unless @is_repeating_trip
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = f.label :trip_result, translate_helper("trip_result")
-        .col-sm-9
+        .form-field
           - if @trip.run && @trip.run.complete?
             = @trip.trip_result.try(:name)
           - else
             = f.select :trip_result_id, @trip_results,  { :include_blank => true }, {class: 'form-control'}
-      .form-group.col-sm-12.result_reason{style: @trip.result_need_reason? ? '' : 'display: none;'}
-        .col-sm-3
+      .form-group.result_reason{style: @trip.result_need_reason? ? '' : 'display: none;'}
+        .form-label
           = f.label :result_reason, translate_helper("trip_result_reason")
-        .col-sm-9
+        .form-field
           = f.text_area :result_reason, class: 'form-control'
 
       :javascript
@@ -39,14 +39,14 @@
           });
         });
 
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :funding_source_id, translate_helper("funding_source")
-      .col-sm-9
+      .form-field
         = f.collection_select :funding_source_id, @funding_sources, :id, :name, { :include_blank => true }, {class: 'form-control'}
 
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :service_level, translate_helper("trip_service_level")
-      .col-sm-9
+      .form-field
         = f.select :service_level_id, @service_levels, { :include_blank => true }, {class: 'form-control'}

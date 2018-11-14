@@ -1,14 +1,4 @@
-:css
-  span.run_summary p {
-    display: inline;
-    padding: 0px !important;
-    margin: 0px !important;
-  }
-
-  span.run_summary .overdue-danger, span.run_summary .overdue-warning {
-    padding: 5px !important;
-  }
-%span{style: 'font-size: small;'}
+%span.trip-status
   - if @trip.run
     = "#{translate_helper(:assigned_to)} "
     = link_to @trip.run.name, run_path(@trip.run), target: '_blank'
