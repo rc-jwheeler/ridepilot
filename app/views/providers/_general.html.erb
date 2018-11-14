@@ -4,7 +4,7 @@
     <i class="fa fa-exclamation-triangle" style='color: red'></i>
   <% end %>
 </h2>
-<fieldset style="padding: 0px;">
+<fieldset>
 <%= form_for current_provider, url: save_operating_hours_provider_path(current_provider) do |f| %>
   <% if current_provider.errors.any? %>
     <div class="panel panel-danger">
@@ -19,7 +19,7 @@
     </div>
   <% end %>
   <%= render 'shared/operating_hours' %>
-  <div style="padding: 10px 15px;">
+  <div>
     <%= submit_tag translate_helper("update_provider_operating_hours"), class: 'btn action-button' %>
   </div>
 <% end %>
@@ -146,7 +146,7 @@
 <% google_maps_callbacks = [] %>
 
 <h2 class="section-header"  id="region_map"><%= translate_helper("region_heading") %></h2>
-<fieldset style="padding: 0px;">
+<fieldset>
 <div id="region">
   <div id="region-form">
     <% if @provider.region_nw_corner
@@ -166,41 +166,43 @@
     %>
     <%= form_tag save_region_provider_path, class: "form-inline" do %>
       <table>
-      <tr>
-        <th colspan="2"><%= translate_helper("northwest_corner") %></th>
-      </tr>
-      <tr>
-        <td><%= label_tag translate_helper("latitude") %></td>
-        <td>
-          <%= text_field_tag :region_north, nw_y, class: 'form-control' %>
-          <span class="hint">(e.g. <%= GOOGLE_MAP_DEFAULTS[:bounds][:north] %>)</span>
-        </td>
-      <tr>
-        <td><%= label_tag translate_helper("longitude") %></td>
-        <td>
-          <%= text_field_tag :region_west, nw_x, class: 'form-control' %>
-          <span class="hint">(e.g. <%= GOOGLE_MAP_DEFAULTS[:bounds][:west] %>)</span>
-        </td>
-      </tr>
-      <tr><th colspan="2"><%= translate_helper("southeast_corner") %></th></tr>
-      <tr>
-        <td><%= label_tag translate_helper("latitude") %></td>
-        <td>
-          <%= text_field_tag :region_south, se_y, class: 'form-control' %>
-          <span class="hint">(e.g. <%= GOOGLE_MAP_DEFAULTS[:bounds][:south] %>)</span>
-        </td>
-      </tr>
-      <tr>
-        <td><%= label_tag translate_helper("longitude") %></td>
-        <td>
-          <%= text_field_tag :region_east, se_x, class: 'form-control' %>
-          <span class="hint">(e.g. <%= GOOGLE_MAP_DEFAULTS[:bounds][:east] %>)</span>
-        </td>
-      </tr>
-      <tr>
-        <td rowspan="2"><%= submit_tag translate_helper("save_region_submit"), class: 'btn action-button' %></td>
-      </tr>
+        <tbody style="border: none;">
+          <tr>
+            <th colspan="2"><%= translate_helper("northwest_corner") %></th>
+          </tr>
+          <tr>
+            <td><%= label_tag translate_helper("latitude") %></td>
+            <td>
+              <%= text_field_tag :region_north, nw_y, class: 'form-control' %>
+              <span class="hint">(e.g. <%= GOOGLE_MAP_DEFAULTS[:bounds][:north] %>)</span>
+            </td>
+          <tr>
+            <td><%= label_tag translate_helper("longitude") %></td>
+            <td>
+              <%= text_field_tag :region_west, nw_x, class: 'form-control' %>
+              <span class="hint">(e.g. <%= GOOGLE_MAP_DEFAULTS[:bounds][:west] %>)</span>
+            </td>
+          </tr>
+          <tr><th colspan="2"><%= translate_helper("southeast_corner") %></th></tr>
+          <tr>
+            <td><%= label_tag translate_helper("latitude") %></td>
+            <td>
+              <%= text_field_tag :region_south, se_y, class: 'form-control' %>
+              <span class="hint">(e.g. <%= GOOGLE_MAP_DEFAULTS[:bounds][:south] %>)</span>
+            </td>
+          </tr>
+          <tr>
+            <td><%= label_tag translate_helper("longitude") %></td>
+            <td>
+              <%= text_field_tag :region_east, se_x, class: 'form-control' %>
+              <span class="hint">(e.g. <%= GOOGLE_MAP_DEFAULTS[:bounds][:east] %>)</span>
+            </td>
+          </tr>
+        </tbody>
       </table>
+      <div class="actions">
+        <%= submit_tag translate_helper("save_region_submit"), class: 'btn action-button' %>
+      </div>
     <% end %>
   </div>
   <% if @provider.region_nw_corner and @provider.region_se_corner %>
