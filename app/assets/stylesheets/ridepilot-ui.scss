@@ -121,6 +121,26 @@ form {
 	padding: $object-pad/3 $object-pad;
 }
 
+.panel {
+	.panel-heading {
+	  .panel-title {
+	    .header-info {
+				font-weight: 600;
+				display: inline-block;
+				margin-left: 1em;
+			}
+		}
+		.pull-right {
+			padding: 0;
+			margin: 0 0 0 1em;
+			width: auto;
+			> * {
+				display: inline-block;
+			}
+		}
+	}
+}
+
 .panel-primary {
 	border-radius: 0;
 	padding: $object-pad;
@@ -157,6 +177,16 @@ form {
 		font-weight: 600;
 		padding-bottom: $object-pad;
 		font-size: 14px;
+		.header-info {
+			font-weight: 600;
+			display: inline-block;
+			margin-left: 1em;
+		}
+		.pull-right {
+			.dropdown {
+				display: inline-block;
+			}
+		}
 	}
 	.panel-footer {
 		border: none;
@@ -244,6 +274,9 @@ form {
 					border-radius: 0px;
 					background-color: $gray-2;
 					text-transform: uppercase;
+					&.label-danger {
+						background-color: $red;
+					}
 				}
 			}
 		}
@@ -357,8 +390,11 @@ form {
 	    color: $white;
 	  }
 	  .dropdown-menu {
+	  	li {
+	  		width: 100%;
+	  	}
 	  	a {
-	  		color: inherit;
+	  		color: $black;
 	  	}
 	  }
 	}
@@ -791,18 +827,6 @@ body.dispatchers.index {
 		padding-left: $content-pad;
 		padding-right: $content-pad;
 	}
-	.panel-heading {
-		.trips-quantity, .run-summary {
-			font-weight: 600;
-			display: inline-block;
-			margin-left: 1em;
-		}
-		.pull-right {
-			.dropdown {
-				display: inline-block;
-			}
-		}
-	}
 	#dispatch_runs_trips {
 		padding: 0;
 		#unassigned_trips_container {
@@ -1104,4 +1128,12 @@ body.providers {
   @media (max-width: 768px) { 
 		display: none;
   }
+}
+
+
+.new-trip-badge {
+  background-color: $red;
+}
+.capacity_warning {
+  background-color: $yellow;
 }

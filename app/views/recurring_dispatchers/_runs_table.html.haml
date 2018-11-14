@@ -30,13 +30,13 @@
           = run.weekday_assignments.for_wday(@day_of_week).count
         %td
           = link_to repeating_run_path(run, from_dispatch: true), style: 'padding-right: 5px;', title: "View details" do 
-            %i.fa.fa-external-link
+            %i.fas.fa-external-link-alt
           - if can?(:edit, run)
             = link_to edit_repeating_run_path(run, from_dispatch: true), style: 'padding-right: 5px;', title: 'Edit' do 
-              %i.fa.fa-pencil
+              %i.fas.fa-pencil-alt
           - if can?(:cancel, run)
             = link_to cancel_run_recurring_dispatchers_path(run_id: run.id), title: 'Cancel run', remote: true, data: {confirm: run_cancel_warning(run)} do 
-              %i.fa.fa-power-off
+              %i.fas.fa-power-off
 
 :javascript
   $(function() {

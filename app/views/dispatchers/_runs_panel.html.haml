@@ -4,14 +4,14 @@
       - if can?(:new, Run)
         %span.dispatch-action
           = link_to new_run_path(from_dispatch: true, date: @run_trip_day), title: translate_helper("new_run_link_text") do 
-            %i.fa.fa-plus
+            %i.fas.fa-plus
       %span.panel-close-all-runs.dispatch-action{title: 'Close opened run panels'}
-        %i.fa.fa-remove
+        %i.fas.fa-remove
       %span.panel-expand-collapse.dispatch-action{title: 'Collapse/expand'}
-        %i.fa.fa-chevron-up
+        %i.fas.fa-chevron-up
     %h3.panel-title
       = translate_helper(:runs_panel_header)
-      %span.trips-stats
+      %span.trips-stats.header-info
         - stats = []
         - stats << "#{@runs.recurring.count} recurring" if @runs.recurring.any?
         - stats << "#{@runs.daily.count} daily" if @runs.daily.any?

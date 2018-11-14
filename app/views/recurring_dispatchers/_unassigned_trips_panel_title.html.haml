@@ -1,6 +1,5 @@
-.pull-left
-  = translate_helper("unassigned_trips")
-%span{style: 'font-size: small;'}
+= translate_helper("unassigned_trips")
+%span.header-info
   - stats = []
   - total_count = @trips.count
   - if total_count > 0

@@ -7,7 +7,7 @@
 
 .panel.panel-success.run_trips_panel{id: "run_trips_panel_#{run.id}", data: {run_id: run.id}}
   .panel-heading
-    .pull-right{style: 'padding-right: 0px;'}
+    .pull-right
       - unless run.complete?
         = render 'trip_result_dropdown'
         = render 'unschedule_trip_dropdown'
@@ -25,15 +25,15 @@
         - if can?(:edit, run)
           %span.dispatch-action
             = link_to edit_run_path(run, from_dispatch: true), title: 'Edit' do 
-              %i.fa.fa-pencil
+              %i.fas.fa-pencil-alt
 
         - if can?(:new, Trip)
           %span.dispatch-action
             = link_to new_trip_path(from_dispatch: true, run_id: run.id), title: translate_helper("new_trip_link_text") do 
-              %i.fa.fa-plus
+              %i.fas.fa-plus
       %span.dispatch-action
         = link_to run_path(run, from_dispatch: true), title: "View details" do 
-          %i.fa.fa-external-link
+          %i.fas.fa-external-link-alt
       - if run.trips.any?
         - manifest_report = CustomReport.find_by_name('manifest')
         - if manifest_report
@@ -44,13 +44,12 @@
         %i.fa.fa-remove
       %span.panel-expand-collapse.dispatch-action{title: 'Collapse/expand'}
         %i.fa.fa-chevron-up
-    %h3.panel-title.text-center
-      .pull-left
-        = run.name
-        - if run.complete?
-          %span.label.label-warning
-            Completed
-      %span.run_summary{style: 'font-size: small;'}
+    %h3.panel-title
+      = run.name
+      - if run.complete?
+        %span.label.label-warning
+          Completed
+      %span.run_summary.header-info
         = simple_format run_summary(run)
   .panel-body
     = render 'dispatchers/slack_chart', run: run if run && (run.date.today? || run.date.future?)

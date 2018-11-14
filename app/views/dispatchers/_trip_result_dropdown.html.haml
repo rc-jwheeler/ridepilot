@@ -1,7 +1,7 @@
 %span.dropdown.dispatch-action.trip_results_dropdown{style: 'margin-bottom: 5px;'}
   %a.dropdown-toggle.non_jump_top{href: '#', type: 'button', style: 'font-size: small;', data: {toggle: 'dropdown'}} 
     Set trips as
-    %i.fa.fa-ellipsis-h
+    %i.fas.fa-ellipsis-h
     %span.caret
   %ul.dropdown-menu.pull-right  
     - trip_results = (TripResult.by_provider(current_provider).order(:name).pluck(:id, :name) + [[TripResult::UNSCHEDULED_ID, 'Pending']]).sort_by{|tr| tr[1]}  
