@@ -347,6 +347,24 @@ form {
 	background-color: $red!important;
 }
 
+.panel-success {
+  border-color: transparent;
+  > .panel-heading {
+	  color: $white;
+	  background-color: $green;
+	  border-color: $white;
+	  a {
+	    color: $white;
+	  }
+	  .dropdown-menu {
+	  	a {
+	  		color: inherit;
+	  	}
+	  }
+	}
+}
+
+
 // layout
 
 #header {
