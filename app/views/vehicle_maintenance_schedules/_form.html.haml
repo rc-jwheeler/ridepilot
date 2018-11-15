@@ -14,18 +14,21 @@
       .panel.panel-primary
         .panel-body.form-horizontal
           .form-group
-            = f.label :name, translate_helper("vehicle_maintenance_schedule_name"), class: "col-md-3 control-label"
-            .col-md-9
+            .form-label
+              = f.label :name, translate_helper("vehicle_maintenance_schedule_name"), class: "col-md-3 control-label"
+            .form-field
               = f.text_field :name, class: "form-control", required: true
           .form-group
-            = f.label :mileage, translate_helper("vehicle_maintenance_schedule_mileage"), class: "col-md-3 control-label"
-            .col-md-9
+            .form-label
+              = f.label :mileage, translate_helper("vehicle_maintenance_schedule_mileage"), class: "col-md-3 control-label"
+            .form-field
               = f.number_field :mileage, class: "form-control", required: true, min: 0
           =f.fields_for :document, @document do |doc_f|
             -if @document.persisted?
               .form-group
-                %label.col-md-3.control-label=translate_helper("vehicle_maintenance_schedule_document")
-                .col-md-9
+                .form-label
+                  %label.col-md-3.control-label=translate_helper("vehicle_maintenance_schedule_document")
+                .form-field
                   =link_to  @vehicle_maintenance_schedule.document.document_file_name, 
                             @vehicle_maintenance_schedule.document.document.url, 
                             target: :blank,
@@ -34,10 +37,11 @@
                     %i.fa.fa-remove{'aria-hidden' => true}
                 =doc_f.check_box :_destroy, class: 'destroy-document hidden'
             .form-group
-              = doc_f.label :document, 
+              .form-label
+                = doc_f.label :document, 
                   translate_helper("vehicle_maintenance_schedule_document_upload"), 
                   class: "col-md-3 control-label"
-              .col-md-9
+              .form-field
                 =doc_f.file_field :document, class: "form-control document-upload"
               =doc_f.hidden_field :description, 
                   class: "form-control", 

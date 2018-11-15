@@ -17,9 +17,9 @@
             = f.fields_for :vehicle_capacities, @vehicle_capacity_configuration.vehicle_capacities.build(capacity_type: ct) do |vc|
               = vc.hidden_field :capacity_type_id
               .form-group
-                .col-md-3.control-label
+                .form-label
                   = ct.name
-                .col-md-9
+                .form-field
                   = vc.number_field :capacity, class: "form-control", min: 0
 
 

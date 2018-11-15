@@ -12,17 +12,17 @@
               = translate_helper(:add_funding_authorization_number_dialog_title)
         .modal-body.row{:style => "text-align:left;"}
           .form-group.col-sm-12
-            .col-sm-3
+            .form-label
               = f.label :number, translate_helper("funding_authorization_number_name")
-            .col-sm-9  
+            .form-field
               = f.text_field :number, class: 'form-control', maxlength: 20, required: true
           .form-group.col-sm-12
-            .col-sm-3
+            .form-label
               = f.label :funding_source, translate_helper("funding_source")
-            .col-sm-9  
+            .form-field
               = f.select :funding_source, FundingSource.all.pluck(:name,:id), {include_blank: true}, {class: 'form-control', required: true}
           .form-group.col-sm-12
-            .col-sm-3
+            .form-label
               = f.label :contact_info, translate_helper(:funding_authorization_number_contact_info) 
-            .col-sm-9
+            .form-field
               = f.text_area :contact_info, class: 'form-control'

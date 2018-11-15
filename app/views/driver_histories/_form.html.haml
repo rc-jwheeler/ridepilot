@@ -16,16 +16,19 @@
       .panel.panel-primary
         .panel-body.form-horizontal
           .form-group
-            = f.label :event, translate_helper("driver_history_form_event"), class: "col-md-3 control-label"
-            .col-md-9
+            .form-label
+              = f.label :event, translate_helper("driver_history_form_event"), class: "col-md-3 control-label"
+            .form-field
               = f.text_field :event, class: "form-control", disabled: @readonly
           .form-group
-            = f.label :notes, translate_helper("driver_history_form_notes"), class: "col-md-3 control-label"
-            .col-md-9
+            .form-label
+              = f.label :notes, translate_helper("driver_history_form_notes"), class: "col-md-3 control-label"
+            .form-field
               = f.text_area :notes, class: "form-control", rows: 3, disabled: @readonly
           .form-group
-            = f.label :event_date, translate_helper("driver_history_form_event_date"), class: "col-md-3 control-label"
-            .col-md-9
+            .form-label
+              = f.label :event_date, translate_helper("driver_history_form_event_date"), class: "col-md-3 control-label"
+            .form-field
               .input-group.datepicker-icon
                 = f.text_field :event_date, class: "form-control datepicker", disabled: @readonly
                 - unless @readonly

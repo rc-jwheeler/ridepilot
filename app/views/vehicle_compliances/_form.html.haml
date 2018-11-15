@@ -15,21 +15,24 @@
       .panel.panel-primary
         .panel-body.form-horizontal
           .form-group
-            .col-md-3.control-label
+            .form-label
               %label= translate_helper("vehicle_requirement_template_field_label")
-            .col-md-9
+            .form-field
               = f.collection_select :vehicle_requirement_template_id, @vehicle_requirement_templates, :id, :name, { include_blank: true }, { class: "form-control", id: "vehicle_requirement_template", disabled: @readonly }
           .form-group
-            = f.label :event, translate_helper("vehicle_compliance_form_event"), class: "col-md-3 control-label"
-            .col-md-9
+            .form-label
+              = f.label :event, translate_helper("vehicle_compliance_form_event"), class: "col-md-3 control-label"
+            .form-field
               = f.text_field :event, class: "form-control", disabled: @readonly
           .form-group
-            = f.label :notes, translate_helper("vehicle_compliance_form_notes"), class: "col-md-3 control-label"
-            .col-md-9
+            .form-label
+              = f.label :notes, translate_helper("vehicle_compliance_form_notes"), class: "col-md-3 control-label"
+            .form-field
               = f.text_area :notes, class: "form-control", rows: 3, disabled: @readonly
           .form-group
-            = f.label :due_date, translate_helper("vehicle_compliance_form_due_date"), class: "col-md-3 control-label"
-            .col-md-9
+            .form-label
+              = f.label :due_date, translate_helper("vehicle_compliance_form_due_date"), class: "col-md-3 control-label"
+            .form-field
               .input-group.datepicker-icon
                 = f.text_field :due_date, class: "form-control datepicker", disabled: @readonly
                 - unless @readonly
@@ -37,8 +40,9 @@
                     %button.btn.btn-default{:type => "button"}
                       = image_tag "calendar-clock.png"
           .form-group
-            = f.label :compliance_date, translate_helper("vehicle_compliance_form_compliance_date"), class: "col-md-3 control-label"
-            .col-md-9
+            .form-label
+              = f.label :compliance_date, translate_helper("vehicle_compliance_form_compliance_date"), class: "col-md-3 control-label"
+            .form-field
               .input-group.datepicker-icon
                 = f.text_field :compliance_date, class: "form-control datepicker", disabled: @readonly
                 - unless @readonly

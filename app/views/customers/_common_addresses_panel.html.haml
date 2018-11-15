@@ -6,7 +6,7 @@
     %h3.panel-title
       = translate_helper(:customer_addresses_panel)
   .panel-body{style: 'padding: 5px;'}
-    %table.table.table-striped.table-bordered#customerCommonAddressTable{style: 'max-height: 300px; overflow-y: auto;'}
+    %table.table#customerCommonAddressTable{style: 'max-height: 300px; overflow-y: auto;'}
       %thead
         %tr
           - if is_editing
