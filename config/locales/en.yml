@@ -193,7 +193,7 @@ en:
   log_user: 'User'
   log_message: 'Message'
   #Shared
-  site_title: "Ridepilot"
+  site_title: "RidePilot"
   new_trip: "New Trip"
   new_repeating_trip: "New Subscription Trip"
   repeating_trips: "View Subscription Trip Templates"

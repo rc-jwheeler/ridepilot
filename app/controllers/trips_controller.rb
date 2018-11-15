@@ -9,6 +9,11 @@ class TripsController < ApplicationController
       session[:trips_trip_result_id] = [TripResult::UNSCHEDULED_ID, TripResult::SHOW_ALL_ID] + TripResult.pluck(:id).uniq
     end
     
+    unless session[:trips_funding_source_id].present?
+      session[:trips_funding_source_id] = [FundingSource::SHOW_ALL_ID] + FundingSource.by_provider(current_provider).pluck(:id).uniq
+    end
+    
+
     filter_trips
 
     @vehicles        = Vehicle.where(:provider_id => current_provider_id)
