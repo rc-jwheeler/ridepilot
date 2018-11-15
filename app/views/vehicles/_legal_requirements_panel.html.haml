@@ -1,12 +1,11 @@
 .panel.panel-primary
   .panel-heading
     = translate_helper("legal_vehicle_compliances_heading")
+    .checkbox.pull-right
+      %label
+        %input#show_past_legal{type: 'checkbox'}
+          %b= translate_helper(:show_past)
   .panel-body{style: 'padding: 0px;'}
-    .col-sm-12
-      .checkbox.pull-right
-        %label
-          %input#show_past_legal{type: 'checkbox'}
-            %b= translate_helper(:show_past)
     = render 'vehicle_compliances_table', vehicle_compliances: @vehicle.vehicle_compliances.incomplete.legal.default_order, legal: true
   - unless @readonly
     .panel-footer

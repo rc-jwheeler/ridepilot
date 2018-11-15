@@ -541,3 +541,10 @@ function format_hour(hour) {
         return this;
     };
 })(jQuery);
+
+$(document).ready(function() { 
+
+  $('.panel-primary').has('.panel-expand-collapse').addClass('expandable');
+
+});
+

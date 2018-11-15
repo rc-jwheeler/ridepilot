@@ -39,26 +39,27 @@
       </ul>
     </div>
   <% end %>
+  <div class="row">
+    <div class="col-sm-12 col-md-6">
+      <%= render 'details_panel', f: f, edit_mode: edit_mode %>
+      <%= render 'mobility_panel', f: f, edit_mode: edit_mode %>
+      <%= render 'eta_settings_panel', f: f, edit_mode: edit_mode %>
+      <%= render 'travel_trainings_panel', f:f, edit_mode: edit_mode %>
+      <%= render 'funding_authorization_numbers_panel', f:f, edit_mode: edit_mode %>
+    </div>
 
-  <div class="col-sm-12 col-md-6">
-    <%= render 'details_panel', f: f, edit_mode: edit_mode %>
-    <%= render 'mobility_panel', f: f, edit_mode: edit_mode %>
-    <%= render 'eta_settings_panel', f: f, edit_mode: edit_mode %>
-    <%= render 'travel_trainings_panel', f:f, edit_mode: edit_mode %>
-    <%= render 'funding_authorization_numbers_panel', f:f, edit_mode: edit_mode %>
-  </div>
-
-  <div class="col-sm-12 col-md-6">
-    <%= render 'common_addresses_panel', edit_mode: edit_mode %>
-    <%= render 'eligibility_panel', f: f, edit_mode: edit_mode %>
-    <%= render 'providers_panel', f: f, edit_mode: edit_mode %>
-    <%= render 'donations_panel', f: f, edit_mode: edit_mode  %>
-    <%= render 'comments_panel', f: f, edit_mode: edit_mode %>
-    <%= render 'others_panel', f: f, edit_mode: edit_mode %>
-    <% if edit_mode == :show %>
-      <% logs = TrackerActionLog.for(@customer).order(created_at: :desc) %>
-      <%= render 'shared/action_log_panel', logs: logs if logs.any? %>
-    <% end %>
+    <div class="col-sm-12 col-md-6">
+      <%= render 'common_addresses_panel', edit_mode: edit_mode %>
+      <%= render 'eligibility_panel', f: f, edit_mode: edit_mode %>
+      <%= render 'providers_panel', f: f, edit_mode: edit_mode %>
+      <%= render 'donations_panel', f: f, edit_mode: edit_mode  %>
+      <%= render 'comments_panel', f: f, edit_mode: edit_mode %>
+      <%= render 'others_panel', f: f, edit_mode: edit_mode %>
+      <% if edit_mode == :show %>
+        <% logs = TrackerActionLog.for(@customer).order(created_at: :desc) %>
+        <%= render 'shared/action_log_panel', logs: logs if logs.any? %>
+      <% end %>
+    </div>
   </div>
 <% end %>
 

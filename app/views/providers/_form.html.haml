@@ -12,35 +12,38 @@
         .panel-heading= translate_helper("provider_form_details_heading")
         .panel-body.form-horizontal
           .form-group
-            = f.label :name, translate_helper("provider_form_name"), class: "col-md-2 control-label"
-            .col-md-10
+            .form-label
+              = f.label :name, translate_helper("provider_form_name")
+            .form-field
               = f.text_field :name, class: 'form-control', disabled: @readonly
           .form-group
-            = f.label :logo, translate_helper("provider_form_logo"), class: "col-md-2 control-label"
-            .col-md-10
+            .form-label
+              = f.label :logo, translate_helper("provider_form_logo")
+            .form-field
               - if @provider.logo.present? && !@provider.new_record?
                 = image_tag @provider.logo.url(:small)
               - unless @readonly
                 = f.file_field :logo, class: 'form-control'
           .form-group
-            = f.label :phone_number, translate_helper("phone_number"), class: "col-md-2 control-label"
-            .col-md-10
+            .form-label
+              = f.label :phone_number, translate_helper("phone_number")
+            .form-field
               - if @readonly
-                %p.form-control
-                  = format_phone_number(@provider.phone_number)
+                = format_phone_number(@provider.phone_number)
               - else
                 = f.text_field :phone_number, class: "form-control"
           .form-group
-            = f.label :alt_phone_number, translate_helper("alt_phone_number"), class: "col-md-2 control-label"
-            .col-md-10
+            .form-label
+              = f.label :alt_phone_number, translate_helper("alt_phone_number")
+            .form-field
               - if @readonly
-                %p.form-control
-                  = format_phone_number(@provider.alt_phone_number)
+                = format_phone_number(@provider.alt_phone_number)
               - else
                 = f.text_field :alt_phone_number, class: "form-control"
           .form-group
-            = f.label :url, translate_helper("provider_form_website"), class: "col-md-2 control-label"
-            .col-md-10
+            .form-label
+              = f.label :url, translate_helper("provider_form_website")
+            .form-field
               - if @readonly
                 = link_to @provider.url, @provider.url if @provider.url
               - else
@@ -49,25 +52,28 @@
         .panel-heading= translate_helper("provider_form_primary_contact_heading")
         .panel-body.form-horizontal      
           .form-group
-            = f.label :primary_contact_name, translate_helper("provider_form_primary_contact_name"), class: "col-md-2 control-label"
-            .col-md-10
-              = f.text_field :primary_contact_name, class: 'form-control', disabled: @readonly
+            .form-label
+              = f.label :primary_contact_name, translate_helper("provider_form_primary_contact_name")
+            .form-field
+              = f.text_field :primary_contact_name, disabled: @readonly
           .form-group
-            = f.label :primary_contact_phone_number, translate_helper("provider_form_primary_contact_phone"), class: "col-md-2 control-label"
-            .col-md-10
+            .form-label
+              = f.label :primary_contact_phone_number, translate_helper("provider_form_primary_contact_phone")
+            .form-field
               - if @readonly
-                %p.form-control
-                  = format_phone_number(@provider.primary_contact_phone_number)
+                = format_phone_number(@provider.primary_contact_phone_number)
               - else
-                = f.text_field :primary_contact_phone_number, class: "form-control"
+                = f.text_field :primary_contact_phone_number
           .form-group
-            = f.label :primary_contact_email, translate_helper("provider_form_primary_contact_email"), class: "col-md-2 control-label"
-            .col-md-10
+            .form-label
+              = f.label :primary_contact_email, translate_helper("provider_form_primary_contact_email")
+            .form-field
               = f.email_field :primary_contact_email, class: 'form-control', disabled: @readonly
           .form-group
-            = f.label :admin_name, translate_helper("provider_form_admin_name"), class: "col-md-2 control-label"
-            .col-md-10
-              = f.text_field :admin_name, class: 'form-control', disabled: @readonly
+            .form-label
+              = f.label :admin_name, translate_helper("provider_form_admin_name")
+            .form-field
+              = f.text_field :admin_name, disabled: @readonly
 
     .col-sm-12.col-md-6
       - prefix = "provider_business_address_attributes"

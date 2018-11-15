@@ -1,12 +1,14 @@
 .clearfix.col-sm-12#page-header
   - if edit_mode == :new
-    .pull-right
+    %h1.page-title
+      = translate_helper("new_repeating_run")
+    .action-buttons
       = f.submit translate_helper(:save), class: 'btn action-button'
       = link_to translate_helper(:cancel), (params[:from_dispatch] == 'true' ? recurring_dispatchers_path(run_id: params[:run_id]) : repeating_runs_path), class: "btn btn-default"
-    %h1
-      = translate_helper("new_repeating_run")
   - else
-    .pull-right
+    %h1.page-title
+      = translate_helper("repeating_run")
+    .action-buttons
       - if edit_mode == :edit
         = f.submit translate_helper(:update), class: 'btn action-button'
         = link_to translate_helper(:cancel), (params[:from_dispatch] == 'true' ? recurring_dispatchers_path(run_id: params[:run_id]) : repeating_runs_path), class: "btn btn-default"
@@ -15,5 +17,3 @@
         = link_to translate_helper("edit"), edit_repeating_run_path(@run), :class=>'btn action-button' if !@run.new_record? && can?(:edit, @run)
 
         = link_to translate_helper(:back), (params[:from_dispatch] == 'true' ? recurring_dispatchers_path(run_id: params[:run_id]) : repeating_runs_path), class: "btn btn-default"
-    %h1
-      = translate_helper("repeating_run")

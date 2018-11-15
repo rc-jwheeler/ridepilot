@@ -3,26 +3,26 @@
     %h3.panel-title
       = translate_helper(:driver)
   .panel-body{style: 'padding: 5px;'}
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :driver, translate_helper("driver")
-      .col-sm-9
+      .form-field
         = f.collection_select :driver_id, @drivers, :id, :user_name, {include_blank: true}, {class: 'form-control'}
     - if @is_repeating_run || !current_provider.fields_required_for_run_completion.include?("unpaid_driver_break_time")
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = f.label :unpaid_driver_break_time, translate_helper("unpaid_break_time")
-        .col-sm-9
+        .form-field
           = f.text_field :unpaid_driver_break_time, class: 'form-control'
     - if @is_repeating_run || !current_provider.fields_required_for_run_completion.include?("paid")  
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = f.label :paid, translate_helper("paid")
-        .col-sm-9
+        .form-field
           = f.select :paid, [[translate_helper("yes"), "true"], [translate_helper("no"), "false"]], {:selected => @run.paid.to_s }, class: 'form-control'
     - if edit_mode == :show && !@is_repeating_run && !@run.driver_notes.blank?
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = f.label :driver_notes, translate_helper("driver_notes")
-        .col-sm-9
+        .form-field
           = @run.driver_notes

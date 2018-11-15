@@ -2,13 +2,14 @@
   .panel-heading
     %h3.panel-title
       = translate_helper(:trip_eligibility_panel)
-  .panel-body{style: 'padding: 5px;'}
-    .form-group.col-sm-12
-      %label.col-sm-3
-        = translate_helper("medicaid_eligible")  
-      .col-sm-9
+  .panel-body
+    .form-group
+      .form-label
+        %label
+          = translate_helper("medicaid_eligible")  
+      .form-field
         = f.check_box :medicaid_eligible
     .customer-eligibilities{style: (@customer ? "" : "display: none;")}
-      %h4.col-sm-12= translate_helper('customer_eligibilities')
-      .customer-eligibility-details
+      %h4= translate_helper('customer_eligibilities')
+      .customer-eligibility-details.form-group
         = render 'customers/view_customer_eligibilities'

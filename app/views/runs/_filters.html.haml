@@ -5,7 +5,7 @@
   .panel-body{style: 'padding: 5px;'}
     = form_for :run_filters, url: runs_path, html: { :id => "run_filter_form" }, :method => :get do |f|
       =f.hidden_field :days_of_week, class: 'days_of_week_hidden_field'
-      .btns.pull-right
+      .btns
         = f.submit  translate_helper(:ok), id: 'runFilters', class: 'btn action-button', role: 'button'
         = button_tag  translate_helper(:reset), id: 'resetFilters', class: 'btn action-button', role: 'button'
       .col-sm-12{style: 'padding: 5px;'}

@@ -1,15 +1,15 @@
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'customers'
 
 .clearfix.row#page-header{style: 'padding: 0px;'}
-  - if can? :create, Customer
-    .pull-right
-      = link_to translate_helper("new_group"), new_customer_path(group: true), :class=>'btn action-button'
-      = link_to translate_helper("new_customer"), new_customer_path, :class=>'btn action-button'
-  %h1
+  %h1.page-title
     - if @active_only
       =translate_helper("active_customer_listing")
     - else
       =translate_helper("customer_listing")
+  - if can? :create, Customer
+    .action-buttons
+      = link_to translate_helper("new_group"), new_customer_path(group: true), :class=>'btn action-button'
+      = link_to translate_helper("new_customer"), new_customer_path, :class=>'btn action-button'
 
 .row.col-sm-12
   = form_tag found_customers_path, :class=>'customer-search', :method=>:get do 

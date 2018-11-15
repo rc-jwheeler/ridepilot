@@ -1,10 +1,10 @@
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'vehicles'
-#page-header.row
-  .col-sm-12{style: 'padding: 0px;'}
+#page-header
+  .action-buttons
     - if can? :create, Vehicle
       .pull-right
         = link_to translate_helper("new_vehicle_link_text"), new_vehicle_path, class: "btn action-button"
-    %h1= translate_helper("index_vehicle_heading")
+  %h1.page-title= translate_helper("index_vehicle_heading")
 .row
   .col-sm-12.pull-right
     .checkbox
@@ -12,7 +12,7 @@
         %input#show_active_only{type: 'checkbox'}
           = translate_helper(:show_inactive)
   .col-sm-12
-    %table#vehicles-table.table.table-striped.table-bordered
+    %table#vehicles-table.basic-table
       %thead
         %tr
           %th= translate_helper("name")
@@ -47,12 +47,7 @@
               data: { confirm: translate_helper(:remove_vendor_list_confirm) } do
             %i.fa.fa-remove{'aria-hidden' => true}
     - else
-      .col-sm-12
-        %h5.text-muted.text-center= translate_helper(:no_vendor_list)
-    
-    %br
-    %br
-    %hr
+      %p.text-muted= translate_helper(:no_vendor_list)
         
     - if can? :manage, Vehicle
       = form_for current_provider, 
@@ -61,11 +56,13 @@
           html: {multipart: true} do |f|
         =f.hidden_field :name
         .form-group
-          = f.label :vendor_list, translate_helper(:vendor_list), class: "col-md-3 control-label"
-          .col-md-9
+          .form-label
+            = f.label :vendor_list, translate_helper(:vendor_list), class: "control-label"
+          .form-field
             =f.file_field :vendor_list, disabled: @readonly, class: "form-control"
         .form-group
-          =f.submit translate_helper(:upload_vendor_list), class: "btn action-button form-control"
+          .form-field
+            =f.submit translate_helper(:upload_vendor_list), class: "btn action-button form-control"
 
 :javascript
   $(function() {

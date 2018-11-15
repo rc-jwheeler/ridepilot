@@ -2,20 +2,20 @@
   .panel-heading
     %h3.panel-title
       = translate_helper(:number_of_passengers_tracking)
-  .panel-body{style: 'padding: 5px;'}         
-    .form-group.col-sm-12
-      .col-sm-3
+  .panel-body    
+    .form-group
+      .form-label
         = f.label :number_of_senior_passengers_served, translate_helper("number_of_senior_passengers_tracking_label")
-      .col-sm-9
+      .form-field
         = f.number_field :number_of_senior_passengers_served, min: 0, class: "form-control"
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :number_of_disabled_passengers_served, translate_helper("number_of_disabled_passengers_tracking_label")
-      .col-sm-9
+      .form-field
         = f.number_field :number_of_disabled_passengers_served, min: 0, class: "form-control"
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :number_of_low_income_passengers_served, translate_helper("number_of_low_income_passengers_tracking_label")
-      .col-sm-9
+      .form-field
         = f.number_field :number_of_low_income_passengers_served, min: 0, class: "form-control"
       

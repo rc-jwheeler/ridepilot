@@ -10,39 +10,45 @@ $black: #3f4d55;
 
 $gray: #728090;
 $gray-1: $gray;
-$gray-2: #b0bbc7;
+$gray-2: #A5B0BD;
 $gray-3: #cdd5df;
 $gray-4: #eef1f4;
 
 $yellow: #FFDB5E;
 $yellow-1: $yellow;
-$yellow-2: mix($white, $yellow, 30);
+$yellow-2: mix($white, $yellow, 40);
 $yellow-3: mix($white, $yellow, 60);
+$yellow-4: mix($white, $yellow, 80);
 
 $green: #59C276;
 $green-1: $green;
-$green-2: mix($white, $green, 30);
+$green-2: mix($white, $green, 40);
 $green-3: mix($white, $green, 60);
+$green-4: mix($white, $green, 80);
 
 $blue: #55AEC2;
 $blue-1: $blue;
-$blue-2: mix($white, $blue, 30);
+$blue-2: mix($white, $blue, 40);
 $blue-3: mix($white, $blue, 60);
+$blue-4: mix($white, $blue, 80);
 
 $purple: #7D7BDF;
 $purple-1: $purple;
-$purple-2: mix($white, $purple, 30);
+$purple-2: mix($white, $purple, 40);
 $purple-3: mix($white, $purple, 60);
+$purple-4: mix($white, $purple, 80);
 
 $pink: #B7679C;
 $pink-1: $pink;
-$pink-2: mix($white, $pink, 30);
+$pink-2: mix($white, $pink, 40);
 $pink-3: mix($white, $pink, 60);
+$pink-4: mix($white, $pink, 80);
 
 $orange: #F4A256;
 $orange-1: $orange;
-$orange-2: mix($white, $orange, 30);
+$orange-2: mix($white, $orange, 40);
 $orange-3: mix($white, $orange, 60);
+$orange-4: mix($white, $orange, 80);
 
 
 
@@ -144,12 +150,20 @@ $input-height: 34px;
   @include un-box-shadow;
   font-size: 1em;
   line-height: 1.4;
-  padding: .5em .25em;
   height: $input-height;
   background-color: $input-bg;
+  padding-left: .25em;
+  padding-right: .25em;
+  &:not(select) {
+    padding-top: .5em;
+    padding-bottom: .5em;
+  }
   &:focus {
     border-color: $brand-primary;
     @include un-box-shadow;
+  }
+  &[multiple="multiple"] {
+    height: $input-height*2;
   }
 }
 
@@ -166,8 +180,19 @@ $input-height: 34px;
   padding: .5em 1em;
 }
 
+@mixin last-button {
+  border-right-width: 1px;
+  border-top-right-radius: $button-radius;
+  border-bottom-right-radius: $button-radius;
+}
+
+@mixin first-button {
+  border-top-left-radius: $button-radius;
+  border-bottom-left-radius: $button-radius;
+}
+
 @mixin grouped-button {
-margin: 0;
+  margin: 0;
   float: left;
   border-radius: 0px;
   border-right-width: 0px;
@@ -175,13 +200,10 @@ margin: 0;
     border-right-width: 0px;
   }
   &:last-child {
-    border-right-width: 1px;
-    border-top-right-radius: $button-radius;
-    border-bottom-right-radius: $button-radius;
+    @include last-button
   }
   &:first-child {
-    border-top-left-radius: $button-radius;
-    border-bottom-left-radius: $button-radius;
+    @include first-button
   }
 }
 
@@ -217,12 +239,19 @@ img {
   @include clear-after;
 }
 
-@mixin no-gutters {
+@mixin no-gutters-parent {
   margin-right: 0;
   margin-left: 0;
   >.col, > [class*="col-"] {
     padding-right: 0;
     padding-left: 0;
   }
+}
+
+@mixin no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+  padding-right: 0;
+  padding-left: 0;
 }
 

@@ -1,9 +1,9 @@
-#page-header.row
-  .col-sm-12{style: 'padding: 0px;'}
+#page-header
+  %h1.page-title= translate_helper("provider_index_heading")
+  .action-buttons
     - if can? :create, Provider
       .pull-right
         = link_to translate_helper("new_provider_link_text"), new_provider_path, class: "btn action-button"
-    %h1= translate_helper("provider_index_heading")
 
 .row
   .col-sm-12.pull-right

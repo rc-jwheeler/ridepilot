@@ -45,11 +45,17 @@ label {
 }
 
 form {
+	width: 100%;
   input[type="text"], input[type="password"], textarea, .form-control {
 		@include form-field;
 	}
 	textarea {
 		height: auto;
+	}
+	fieldset {
+		width: 100%;
+		background-color: $gray-4;
+		padding: $object-pad;
 	}
 }
 
@@ -115,6 +121,26 @@ form {
 	padding: $object-pad/3 $object-pad;
 }
 
+.panel {
+	.panel-heading {
+	  .panel-title {
+	    .header-info {
+				font-weight: 600;
+				display: inline-block;
+				margin-left: 1em;
+			}
+		}
+		.pull-right {
+			padding: 0;
+			margin: 0 0 0 1em;
+			width: auto;
+			> * {
+				display: inline-block;
+			}
+		}
+	}
+}
+
 .panel-primary {
 	border-radius: 0;
 	padding: $object-pad;
@@ -141,6 +167,7 @@ form {
 	}
 	.panel-heading, .panel-body {
 		padding: 0;
+		width: 100%;
 	}
 	.panel-heading {
 		color: $brand-primary;
@@ -150,18 +177,50 @@ form {
 		font-weight: 600;
 		padding-bottom: $object-pad;
 		font-size: 14px;
+		h1, h2, h3, h4, h5, h6 {
+			font-weight: 600;
+		}
+		.header-info {
+			font-weight: 600;
+			display: inline-block;
+			margin-left: 1em;
+		}
+		.pull-right {
+			.dropdown {
+				display: inline-block;
+			}
+		}
+	}
+	.panel-body {
+		overflow: scroll auto;
 	}
 	.panel-footer {
 		border: none;
 		background: transparent;
 		padding: $object-pad 0 0 0;
 	}
+	&.expandable {
+		padding: 0;
+		.panel-heading, .panel-body {
+			padding: $object-pad;
+		}
+		.panel-heading {
+		  background-color: $gray-4;
+		}
+		.panel-body {
+			max-width: 100%;
+		}
+	}
 }
 
-.form-horizontal {
-	display: table;
+.form-horizontal, form {
+	// display: table;
+	// .form-table {
+	// 	display: block;
+	// 	width: 100%;
+	// }
 	.form-group {
-		display: table-row;
+		display: table;
 		margin: 0;
 		width: 100%;
 		.form-label, .form-field {
@@ -196,16 +255,13 @@ form {
 					}
 				}
 			}
-			body.show & {
-				font-size: 1.25em;
-			}
-
 		}
 
 	}
 }
 
 .table, table {
+	width: 100%;
 	background: $white;
 	thead, tbody, tfoot {
 		tr {
@@ -224,6 +280,9 @@ form {
 					border-radius: 0px;
 					background-color: $gray-2;
 					text-transform: uppercase;
+					&.label-danger {
+						background-color: $red;
+					}
 				}
 			}
 		}
@@ -263,8 +322,6 @@ form {
 	tbody {
 		border: 1px solid $gray-2;
 		border-collapse: separate;
-		position: relative;
-		top: 2px;
 		tr {
 			td {
 				font-weight: 600;
@@ -276,10 +333,17 @@ form {
 			border: none;
 		}
 	}
-	&.basic-table {
+	&.basic-table, &.basic-table.dataTable {
+		width: 100%;
+		border: none;
+		border-collapse: collapse;
 		thead {
 			border: 1px solid $white;
 			border-bottom: .75em solid $white;
+			th {
+				border: none;
+				padding: .5rem 1rem;
+			}
 		}
 		tbody {
 			tr {
@@ -289,7 +353,7 @@ form {
 						&::before {
 							content: '';
 							position: absolute;
-							top: -2px;
+							top: 0px;
 							left: 0;
 							right: 0;
 							display: block;
@@ -315,8 +379,37 @@ form {
 }
 
 .no-gutters {
-  @include no-gutters;
+  @include no-gutters-parent;
 }
+
+.dropdown {
+	@include clear-after;
+}
+
+.overdue-danger {
+	background-color: $red!important;
+}
+
+.panel-success {
+  border-color: transparent;
+  > .panel-heading {
+	  color: $white;
+	  background-color: $green;
+	  border-color: $white;
+	  a {
+	    color: $white;
+	  }
+	  .dropdown-menu {
+	  	li {
+	  		width: 100%;
+	  	}
+	  	a {
+	  		color: $black;
+	  	}
+	  }
+	}
+}
+
 
 // layout
 
@@ -434,12 +527,16 @@ form {
 #main {
 	background-color: $white;
 	padding: $content-pad;
+	> div[class*="col-"], >.row > div[class*="col-"] {
+	  overflow: scroll visible;
+	}
 }
 
 #page-header {
 	padding: 0;
 	margin: 0;
 	color: $brand-primary;
+	@include clear-after;
 	.page-title, h1 {
 		float: left;
 		margin-bottom: $content-pad;
@@ -452,6 +549,18 @@ form {
 	}
 	+ hr {
 		display: none;
+	}
+	.filter-form {
+		float: left;
+		display: inline-block;
+		max-width: 50%
+	}
+	.page-subtitle, h2 {
+		font-weight: 600;
+		display: block;
+		width: 100%;
+		color: $gray-1;
+		@include clear-both;
 	}
 }
 
@@ -501,6 +610,12 @@ form {
 	.btn {
 		@include grouped-button;
 		color: $gray-1;
+	}
+	.dropdown:last-child .btn {
+		@include last-button
+	}
+	.dropdown:first-child .btn {
+		@include first-button
 	}
 }
 
@@ -604,7 +719,7 @@ form {
 
 .filters-panel {
   .panel-heading, .panel-title {
-  	font-weight: 600;
+  	font-weight: 600!important;
   }
   .btns {
   	@include clear-both;
@@ -621,13 +736,11 @@ form {
   label {
   	margin: 1.5em 0 .5em 0;
   }
-  form, .filter-body, .trip_result-filter {
+  div[class*="col-"] {
   	@include no-gutters;
   }
-  .trip_result-filter {
-  	> div {
-      @include form-label;
-  	}
+  .filter-checks {
+    @include form-label;
   }
 }
 
@@ -652,10 +765,11 @@ form {
 		  }
 		  &.active {
 		  	opacity: 1;
+		  	font-weight: 600;
 		  }
 		  #page-header & {
-				padding-right: .5em;
-				padding-left: .5em;
+				padding-right: 1em;
+				padding-left: 1em;
 			}
 		}
 	}
@@ -705,15 +819,60 @@ form {
 		background-color: $gray-4;
 		background-image: none;
 	}
+	.ui-datepicker-today {
+		a {
+			background-color: $gray-3;
+		}
+	}
 	table th {
 		font-weight: 600;
 	}
 }
 
-form#new_user {
-	max-width: 400px;
-	label {
-		margin: 1em 0 .5em 0;
+body.sessions.new {
+  form#new_user {
+		max-width: 400px;
+		label {
+			margin: 1em 0 .5em 0;
+		}
+	}
+}
+
+#dispatch_runs_trips {
+	padding: 0;
+	#unassigned_trips_container {
+		padding: 0;
+		border-right: 1px solid $brand-primary;
+		border-left: 1px solid $brand-primary;
+		@include box-shadow($blur: .5rem, $spread: 0px, $opacity: 0.5);
+		#unassigned_trips_panel {
+			border: none;
+			table {
+				border: none;
+			}
+		}
+		.panel-heading {
+			background-color: $brand-primary;
+			padding: 1em $object-pad;
+			color: $white;
+		}
+		
+	}
+	.hsplitter {
+		background-color: $brand-primary;
+		height: 2em;
+		padding-top: .25em;
+		border-radius: 6px 6px 0 0;
+		text-align: center;
+		border-bottom: 1px solid $white;
+		@include box-shadow($blur: .5rem, $spread: 0px, $opacity: .75);
+		&::before {
+			@include font-awesome;
+			content: '\f58d';
+			display: inline-block;
+			height: 1em;
+			color: $white;
+		}
 	}
 }
 
@@ -725,48 +884,6 @@ body.dispatchers.index {
 	#page-header, #dispatch_runs_container {
 		padding-left: $content-pad;
 		padding-right: $content-pad;
-	}
-	#dispatch_runs_trips {
-		padding: 0;
-		#unassigned_trips_container {
-			padding: 0;
-			border-right: 1px solid $brand-primary;
-			border-left: 1px solid $brand-primary;
-			@include box-shadow($blur: .5rem, $spread: 0px, $opacity: 0.5);
-			#unassigned_trips_panel {
-				border: none;
-				table {
-					border: none;
-				}
-			}
-			.panel-heading {
-				background-color: $brand-primary;
-				padding: 1em $object-pad;
-				color: $white;
-				.trips-quantity {
-					font-weight: 600;
-					display: inline-block;
-					margin-left: 1em;
-				}
-			}
-			
-		}
-		.hsplitter {
-			background-color: $brand-primary;
-			height: 2em;
-			padding-top: .25em;
-			border-radius: 6px 6px 0 0;
-			text-align: center;
-			border-bottom: 1px solid $white;
-			@include box-shadow($blur: .5rem, $spread: 0px, $opacity: .75);
-			&::before {
-				@include font-awesome;
-				content: '\f58d';
-				display: inline-block;
-				height: 1em;
-				color: $white;
-			}
-		}
 	}
 }
 
@@ -881,9 +998,6 @@ body.availability-forecast {
   		.panel-heading, .panel-body {
   			padding: $object-pad;
   		}
-  		.panel-heading {
-			  background-color: $gray-4;
-  		}
   		.panel-body {
   			max-width: 100%;
   		}
@@ -995,4 +1109,79 @@ body.availability-forecast {
   }
 }
 
+.address_container {
+  .address_fields {
+  	& + label {
+  		margin-top: 1em;
+  	}
+  }
+}
 
+select + .vehicle-capacity-configurations {
+	margin-top: 1em;
+}
+
+body.providers {
+	form {
+		width: 100%;
+	}
+}
+
+.provider_sidebar {
+  overflow-x: hidden;
+  overflow-y: auto;  
+  // Scrollable contents if viewport is shorter than content. 
+  position: relative;
+  .panel {
+  	background: $gray-4;
+  }
+  .provider-menu {
+  	list-style: none;
+  	margin: 0;
+  	padding: 0;
+  	li {
+  		padding: .25em 0;
+  	}
+  	.active {
+  		font-weight: 600;
+  	}
+  }
+  @media (max-width: 768px) { 
+		display: none;
+  }
+}
+
+
+.new-trip-badge {
+  background-color: $red;
+}
+.capacity_warning {
+  background-color: $yellow;
+}
+
+.show .latlng_fields {
+	display: none;
+}
+
+form.customer-search {
+	width: auto;
+	input {
+		width: auto;
+	}
+}
+
+.modal {
+	.bootbox-body {
+		min-height: 4em
+	}
+	button.close {
+		margin: 0;
+		font-size: 1.5em;
+		padding: .5em .75em;
+		opacity: 1;
+		background-color: $brand-primary;
+		color: $white;
+		font-weight: 600;
+
+	}
+}

@@ -1,13 +1,16 @@
-.clearfix.col-sm-12#page-header
+#page-header
   - if edit_mode == :new
-    .pull-right
+    %h1.page-title
+      = translate_helper("new_trip")
+    .action-buttons
       = f.submit translate_helper(:save), class: 'btn action-button'
       = link_to translate_helper(:cancel), (params[:from_dispatch] == 'true' ? dispatchers_path(run_id: params[:run_id]) : :back), class: "btn btn-default"
-    %h1
-      = translate_helper("new_trip")
+    %h2.page-subtitle
       = render 'trips/trip_status_header'
   - else
-    .pull-right
+    %h1.page-title
+      = translate_helper("trip")
+    .action-buttons
       - if edit_mode == :edit
         = f.submit translate_helper(:update), class: 'btn action-button'
         = link_to translate_helper(:cancel), (params[:from_dispatch] == 'true' ? dispatchers_path(run_id: params[:run_id]) : :back), class: "btn btn-default"
@@ -17,6 +20,6 @@
         = link_to translate_helper("clone_trip"), clone_trip_path(@trip), :class=>'btn action-button' if can?(:create, Trip) && @trip.customer && @trip.customer.active?
         = link_to translate_helper("create_return_trip"), return_trip_path(@trip), :class=>'btn action-button' if can?(:create, Trip) && @trip.is_outbound? && !@trip.return_trip.present? && @trip.customer && !@trip.customer.deleted? && @trip.customer.active_for_date?(@trip.date)
         = link_to translate_helper(:back), (params[:from_dispatch] == 'true' ? dispatchers_path(run_id: params[:run_id]) : :back), class: "btn btn-default"
-    %h1
-      = translate_helper("trip")
+    %h2.page-subtitle
       = render 'trips/trip_status_header'
+    

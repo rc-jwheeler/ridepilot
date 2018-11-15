@@ -51,10 +51,10 @@
             = simple_format(phone.join('<br>')) unless phone.empty?
           %td
             = link_to repeating_trip_path(trip.id, from_dispatch: true, run_id: run_id), style: 'padding-right: 5px;', title: "View details" do 
-              %i.fa.fa-external-link
+              %i.fas.fa-external-link-alt
             - if can?(:edit, Trip)
               = link_to edit_repeating_trip_path(trip.id, from_dispatch: true, run_id: run_id), style: 'padding-right: 5px;', title: 'Edit' do 
-                %i.fa.fa-pencil
+                %i.fas.fa-pencil-alt
 
 :javascript
   $(function() {
