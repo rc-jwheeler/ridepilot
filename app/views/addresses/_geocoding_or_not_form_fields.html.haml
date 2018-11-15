@@ -67,12 +67,12 @@
   .form-label
     = form.label :default_trip_purpose, translate_helper("default_trip_purpose")
   .form-field
-    = form.select :trip_purpose_id, TripPurpose.by_provider(current_provider).map { |tp| [tp.name, tp.id] }, :include_blank => true, class: 'form-control'
+    = form.select :trip_purpose_id, TripPurpose.by_provider(current_provider).map { |tp| [tp.name, tp.id] },{:include_blank => true}, {class: 'form-control'}
 %li.form-group
   .form-label
     = form.label :in_district, translate_helper("in_district")
   .form-field
-    = form.select :in_district, [[translate_helper("unspecified"),nil], [translate_helper("yes"), true], [translate_helper("no"), false]], class: 'form-control'
+    = form.select :in_district, [[translate_helper("unspecified"),nil], [translate_helper("yes"), true], [translate_helper("no"), false]], {}, class: 'form-control' 
 %li.form-group
   .form-label
     = form.label :notes, translate_helper("address_notes")

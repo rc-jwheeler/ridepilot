@@ -12,11 +12,12 @@
           - @address.errors.full_messages.each do |msg|
             %li= msg
     = form.hidden_field :provider_id
-    %fieldset
-      %ol.section
-        = render 'provider_common_address_form_fields', :form => form, address: @address, prefix: 'address', edit_mode: :edit
-        %li.selfclear
+    %ol.section
+      = render 'provider_common_address_form_fields', :form => form, address: @address, prefix: 'address', edit_mode: :edit
+      %li.form-group
+        .form-label
           = form.label :inactive, translate_helper("inactive")
+        .form-field
           = form.check_box :inactive
     .actions
       = form.submit translate_helper("submit")
