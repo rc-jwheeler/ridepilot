@@ -21,10 +21,10 @@
 - else
   .col-md-9
     .cancel-selected-trips.dropdown{style: 'margin-bottom: 5px;'}
+      .pull-right
+        %span{style: 'font-size: large;'}
+          %b= translate_helper(:total_trips_text) % {trips_count: @trips.size}
       .table-action-buttons  
-        .pull-right
-          %span{style: 'font-size: large;'}
-            %b= translate_helper(:total_trips_text) % {trips_count: @trips.size}
         %button.btn.btn-primary.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}} 
           =translate_helper(:change_selected_trips_result)
           %span.caret
