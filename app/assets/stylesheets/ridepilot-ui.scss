@@ -52,11 +52,12 @@ form {
 	textarea {
 		height: auto;
 	}
-	fieldset {
-		width: 100%;
-		background-color: $gray-4;
-		padding: $object-pad;
-	}
+}
+
+fieldset {
+	width: 100%;
+	background-color: $gray-4;
+	padding: $object-pad;
 }
 
 // overriding bootstrap 
