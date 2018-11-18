@@ -192,7 +192,7 @@ form {
 		}
 	}
 	.panel-body {
-		overflow: scroll auto;
+		// overflow: scroll auto;
 	}
 	.panel-footer {
 		border: none;
@@ -528,7 +528,7 @@ form {
 	background-color: $white;
 	padding: $content-pad;
 	> div[class*="col-"], >.row > div[class*="col-"] {
-	  overflow: scroll visible;
+	  // overflow: scroll visible;
 	}
 }
 
@@ -1128,9 +1128,9 @@ body.providers {
 }
 
 .provider_sidebar {
-  overflow-x: hidden;
-  overflow-y: auto;  
-  // Scrollable contents if viewport is shorter than content. 
+  // overflow-x: hidden;
+  // overflow-y: auto;  
+  // // Scrollable contents if viewport is shorter than content. 
   position: relative;
   .panel {
   	background: $gray-4;
