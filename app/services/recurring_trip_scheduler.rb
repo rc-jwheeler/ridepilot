@@ -47,7 +47,6 @@ class RecurringTripScheduler
 
     if errors.empty?
       unschedule
-      @trip.weekday_assignments.create(wday: @wday, repeating_run: @run)
       @run.add_trip_manifest!(@trip.id, @wday)
     end
   end

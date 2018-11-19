@@ -1,13 +1,19 @@
 module ScheduleHelpers
   
   # Returns an array of the schedule's weekly rules
-  def schedule_weekly_rules
-    schedule.to_hash[:rrules].select {|rule| rule[:rule_type] == "IceCube::WeeklyRule" }
+  def schedule_weekly_rules(other_schedule_yaml = nil)
+    sched = if other_schedule_yaml
+      IceCube::Schedule.from_yaml(other_schedule_yaml)
+    else
+      schedule
+    end
+    sched.to_hash[:rrules].select {|rule| rule[:rule_type] == "IceCube::WeeklyRule" }
   end
   
   # Returns the days of the week that a schedule 
-  def schedule_weekdays
-    schedule_weekly_rules
+  def schedule_weekdays(other_schedule_yaml = nil)
+    weekly_rules = schedule_weekly_rules(other_schedule_yaml)
+    weekly_rules
       .map {|rule| rule[:validations][:day] }
       .flatten.compact
   end

@@ -76,11 +76,14 @@ class RepeatingTripsController < ApplicationController
     prev_schedule = @trip.schedule
     @trip.assign_attributes(trip_params)
 
+    is_run_disrupted = @trip.run_disrupted_by_trip_changes?
+
     edit_mobilities
     changes = @trip.changes
     respond_to do |format|
       if @trip.is_all_valid?(current_provider_id) && @trip.save
         TrackerActionLog.update_subscription_trip(@trip, current_user, changes, prev_schedule)
+        @trip.unschedule! if is_run_disrupted
         format.html { 
           if params[:from_dispatch] == 'true'
             redirect_to recurring_dispatchers_path(run_id: params[:run_id]), :notice => 'Trip was successfully updated.'  
