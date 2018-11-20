@@ -727,7 +727,7 @@ class Run < ApplicationRecord
   
   def repeating_driver_availability
     return true if provider.scheduler_window_covers?(date)
-    if RepeatingRun.where(driver: driver)   # same driver
+    if RepeatingRun.where(driver: driver).active   # same driver
         .not_the_parent_of(self)            # not the parent repeating run
         .overlaps_with_run(self)            # repeating run schedule occurs on this run's date and time
         .present?
@@ -753,7 +753,7 @@ class Run < ApplicationRecord
   
   def repeating_vehicle_availability
     return true if provider.scheduler_window_covers?(date)
-    if RepeatingRun.where(vehicle: vehicle)   # same vehicle
+    if RepeatingRun.where(vehicle: vehicle).active   # same vehicle
         .not_the_parent_of(self)              # not the parent repeating run
         .overlaps_with_run(self)              # repeating run schedule occurs on this run's date and time
         .present?

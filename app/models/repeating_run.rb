@@ -341,7 +341,7 @@ class RepeatingRun < ApplicationRecord
   end
   
   def repeating_driver_availability
-    if RepeatingRun.where(driver: driver)   # same driver
+    if RepeatingRun.where(driver: driver).active   # same driver
         .overlaps_with_repeating_run(self)  # schedules overlap by date and time
         .present?
       errors.add(:driver_id, TranslationEngine.translate_text(:assigned_to_overlapping_repeating_run))
@@ -367,7 +367,7 @@ class RepeatingRun < ApplicationRecord
   end
   
   def repeating_vehicle_availability
-    if RepeatingRun.where(vehicle: vehicle)   # same vehicle
+    if RepeatingRun.where(vehicle: vehicle).active   # same vehicle
         .overlaps_with_repeating_run(self)    # schedules overlap by date and time
         .present?
       errors.add(:vehicle_id, TranslationEngine.translate_text(:assigned_to_overlapping_repeating_run))
