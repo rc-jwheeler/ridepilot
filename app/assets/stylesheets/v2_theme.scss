@@ -128,15 +128,6 @@ table.dataTable tbody tr.selected {
   width: 100% !important;
 }
 
-.height-constraint-panel {
-  max-height: 300px;
-}
-
-.height-constraint-panel .panel-body {
-  max-height: 250px;
-  overflow-y: auto;
-}
-
 .overdue-danger {
   background-color: red !important;
   color: white !important;

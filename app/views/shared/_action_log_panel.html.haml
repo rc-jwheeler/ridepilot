@@ -1,8 +1,8 @@
-.panel.panel-primary.height-constraint-panel
+.panel.panel-primary
   .panel-heading
     %h3.panel-title
       = translate_helper(:action_log)
-  .panel-body
+  .panel-body{style: 'max-height: 250px; overflow-y: auto;'}
     %table.table
       %thead
         %tr
