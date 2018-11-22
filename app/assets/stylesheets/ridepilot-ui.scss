@@ -388,7 +388,17 @@ fieldset {
 }
 
 .overdue-danger {
-	background-color: $red!important;
+  background-color: $red !important;
+  color: $white !important;
+
+  a {
+  	color: $white !important;
+  }
+}
+
+.overdue-warning {
+  background-color: $yellow !important;
+  color: $blue !important;
 }
 
 .panel-success {
