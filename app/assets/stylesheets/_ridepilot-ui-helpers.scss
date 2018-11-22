@@ -19,6 +19,7 @@ $yellow-1: $yellow;
 $yellow-2: mix($white, $yellow, 40);
 $yellow-3: mix($white, $yellow, 60);
 $yellow-4: mix($white, $yellow, 80);
+$yellow-raw: yellow;
 
 $green: #59C276;
 $green-1: $green;
@@ -31,6 +32,7 @@ $blue-1: $blue;
 $blue-2: mix($white, $blue, 40);
 $blue-3: mix($white, $blue, 60);
 $blue-4: mix($white, $blue, 80);
+$blue-raw: blue;
 
 $purple: #7D7BDF;
 $purple-1: $purple;
@@ -50,8 +52,6 @@ $orange-2: mix($white, $orange, 40);
 $orange-3: mix($white, $orange, 60);
 $orange-4: mix($white, $orange, 80);
 
-
-
 $brand-primary: #0055A4;
 $brand-secondary: #EC1C24;
 
@@ -61,8 +61,6 @@ $input-bg: $gray-4;
 $input-border: $gray-2;
 
 $red: $brand-secondary;
-
-
 
 // measurements
 
