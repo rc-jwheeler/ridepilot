@@ -32,7 +32,7 @@
       </td>
       <td><%= role.name %></td>
       <td><%= role.user.last_sign_in_at %></td>
-      <td><%= link_to_if role.user != current_user, role.user.expires_at.present? ? role.user.expires_at : "N/A", show_change_expiration_path(id: role.user.id), :class=>'change-expiration' %></td>
+      <td><%= link_to_if role.user != current_user, role.user.expires_at.present? ? format_time_for_listing_day(role.user.expires_at) : "N/A", show_change_expiration_path(id: role.user.id), :class=>'change-expiration' %></td>
       <% if can?(:manage, role) %>
         <td>
           <%= form_for(role, :url=>provider_change_role_path(@provider.id), :html => { :method => :post }) do |f| %>

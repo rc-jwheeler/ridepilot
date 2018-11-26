@@ -830,11 +830,13 @@ fieldset {
 		background-color: $gray-4;
 		background-image: none;
 	}
-	.ui-datepicker-today {
-		a {
-			background-color: $gray-3;
-		}
+	.ui-state-highlight {
+		background-color: $gray-3;
 	}
+	.ui-state-active {
+		background-color: $gray-2;
+	}
+
 	table th {
 		font-weight: 600;
 	}
