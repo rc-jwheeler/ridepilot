@@ -227,6 +227,8 @@ class Run < ApplicationRecord
       self.public_itineraries.new(run: self, itinerary: itin, sequence: public_itin_count, eta: itin_eta).save
       public_itin_count += 1
     end
+    self.save(validate: false)
+    
     # update publish time
     self.manifest_published_at = DateTime.now
     self.manifest_changed = false
