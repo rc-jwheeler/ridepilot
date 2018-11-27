@@ -227,6 +227,8 @@ class Run < ApplicationRecord
       self.public_itineraries.new(run: self, itinerary: itin, sequence: public_itin_count, eta: itin_eta).save
       public_itin_count += 1
     end
+    self.save(validate: false)
+    
     # update publish time
     self.manifest_published_at = DateTime.now
     self.manifest_changed = false
@@ -727,7 +729,7 @@ class Run < ApplicationRecord
   
   def repeating_driver_availability
     return true if provider.scheduler_window_covers?(date)
-    if RepeatingRun.where(driver: driver)   # same driver
+    if RepeatingRun.where(driver: driver).active   # same driver
         .not_the_parent_of(self)            # not the parent repeating run
         .overlaps_with_run(self)            # repeating run schedule occurs on this run's date and time
         .present?
@@ -753,7 +755,7 @@ class Run < ApplicationRecord
   
   def repeating_vehicle_availability
     return true if provider.scheduler_window_covers?(date)
-    if RepeatingRun.where(vehicle: vehicle)   # same vehicle
+    if RepeatingRun.where(vehicle: vehicle).active   # same vehicle
         .not_the_parent_of(self)              # not the parent repeating run
         .overlaps_with_run(self)              # repeating run schedule occurs on this run's date and time
         .present?

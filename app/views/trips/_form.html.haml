@@ -30,272 +30,65 @@
   = f.hidden_field :direction
   = f.hidden_field :linking_trip_id if @trip.outbound_trip
 
-  - if @is_repeating_trip 
-    .col-sm-12.col-md-6
-      = render 'trips/required_trip_details_panel', f: f, edit_mode: edit_mode
-      = render 'trips/mobility_panel', f: f, edit_mode: edit_mode 
-      = render 'trips/notes_panel', f: f, edit_mode: edit_mode
-      = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
-    .col-sm-12.col-md-6
-      = render 'repeating_trips/repetition_panel', f: f
-      = render 'trips/eta_settings_panel', f: f, edit_mode: edit_mode
-      = render 'trips/eligibility_panel', f: f, edit_mode: edit_mode
-      = render 'trips/other_panel', f: f
-      - if edit_mode == :show
-        - logs = TrackerActionLog.for(@trip).order(created_at: :desc)
-        - if logs.any?
-          = render 'shared/action_log_panel', logs: logs
-  - else
-    .col-sm-12.col-md-6
-      = render 'trips/required_trip_details_panel', f: f, edit_mode: edit_mode
-      = render 'trips/mobility_panel', f: f, edit_mode: edit_mode 
-      = render 'trips/notes_panel', f: f, edit_mode: edit_mode
-      = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
-    .col-sm-12.col-md-6
-      = render 'trips/tracking_panel', f: f, edit_mode: edit_mode 
-      = render 'trips/eta_settings_panel', f: f, edit_mode: edit_mode
-      = render 'trips/eligibility_panel', f: f, edit_mode: edit_mode
-      = render 'trips/fare_panel', f: f, edit_mode: edit_mode
-      = render 'trips/other_panel', f: f
-      - if edit_mode == :show
-        - logs = TrackerActionLog.for(@trip).order(created_at: :desc)
-        - if logs.any?
-          = render 'shared/action_log_panel', logs: logs
+  .row
+    - if @is_repeating_trip 
+      .col-sm-12.col-md-6
+        = render 'trips/required_trip_details_panel', f: f, edit_mode: edit_mode
+        = render 'trips/mobility_panel', f: f, edit_mode: edit_mode 
+        = render 'trips/notes_panel', f: f, edit_mode: edit_mode
+        = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
+      .col-sm-12.col-md-6
+        = render 'repeating_trips/repetition_panel', f: f
+        = render 'trips/eta_settings_panel', f: f, edit_mode: edit_mode
+        = render 'trips/eligibility_panel', f: f, edit_mode: edit_mode
+        = render 'trips/other_panel', f: f
+        - if edit_mode == :show
+          - logs = TrackerActionLog.for(@trip).order(created_at: :desc)
+          - if logs.any?
+            = render 'shared/action_log_panel', logs: logs
+    - else
+      .col-sm-12.col-md-6
+        = render 'trips/required_trip_details_panel', f: f, edit_mode: edit_mode
+        = render 'trips/mobility_panel', f: f, edit_mode: edit_mode 
+        = render 'trips/notes_panel', f: f, edit_mode: edit_mode
+        = render 'trips/trip_parameters_panel', f: f, edit_mode: edit_mode
+      .col-sm-12.col-md-6
+        = render 'trips/tracking_panel', f: f, edit_mode: edit_mode 
+        = render 'trips/eta_settings_panel', f: f, edit_mode: edit_mode
+        = render 'trips/eligibility_panel', f: f, edit_mode: edit_mode
+        = render 'trips/fare_panel', f: f, edit_mode: edit_mode
+        = render 'trips/other_panel', f: f
+        - if edit_mode == :show
+          - logs = TrackerActionLog.for(@trip).order(created_at: :desc)
+          - if logs.any?
+            = render 'shared/action_log_panel', logs: logs
 
-- if edit_mode != :show
-  = render 'trips/customer_trip_summary_dialog'
-  - if @is_repeating_trip
-    :javascript
-      $(function() {
-        $('body').on('dblclick', '#customerTripSummaryTable td', function() {
-          var trip_id = $(this).parents('tr').data('trip-id');
-          window.location.href = "#{clone_from_daily_trip_repeating_trips_path}?trip_id=" + trip_id;
-        });
-      });
-  - else
-    :javascript
-      $(function() {
-        $('body').on('dblclick', '#customerTripSummaryTable td', function() {
-          var trip_id = $(this).parents('tr').data('trip-id');
-          window.location.href = "#{clone_trip_path('xxx')}".replace('xxx', trip_id);
-        });
-      });
-
-= render 'trips/customer_message_dialog'
-
-:javascript
-  // if customer has code, then need to verify the code first
-  function handle_client_code_verification(customer_id, form) {
-    var callback_fn = function(data) {
-      if (data.show_prompt) {
-        verify_client_code(data.code, "#{verify_code_customer_path('xxx')}".replace('xxx', customer_id), function() {
-          form.submit();
-        });
-      } else {
-        form.submit();
-      }
-    }
-
-    if(customer_id) {
-      var url = "#{prompt_code_customer_path('xxx')}".replace('xxx', customer_id);
-      check_if_verify_client_code(url, callback_fn);
-    } else {
-      callback_fn({});
-    }
-  }
-
-  // check if no mobility config
-  function checkMissingMobilities() {
-    var is_blank = true;
-    var cell_count = $('.editable-number').length;
-    for(var i =0; i<cell_count; i++) {
-      var value = parseInt($($('.editable-number')[i]).text());
-      if($.isNumeric(value) && value > 0) {
-        is_blank = false;
-        break;
-      }
-    }
-
-    return is_blank;
-  }
-
-  // serialize existing numbers to save
-  function getMobilities() {
-    var data = [];
-    $('.editable-number').each(function() {
-      var mobility_id = $(this).data('mobility-id');
-      var ridership_id = $(this).data('ridership-id');
-      var value = parseInt($(this).text());
-      if(!$.isNumeric(value)) {
-        value = 0;
-      }
-
-      data.push({mobility_id: mobility_id, ridership_id: ridership_id, capacity: value});
-    });
-
-    return data;
-  }
-
-  $('.trip_form input[type=submit]').click(function(e) {
-    e.preventDefault();
-
-    // form validation to warn user about blank mobilities
-    var is_mobility_blank = checkMissingMobilities();
-    if(is_mobility_blank) {
-      bootbox.confirm("You haven't configured trip mobilities. Are you sure to save the trip?", function(result) {
-        if(result) {
-          $('.trip_form').submit();
-        }
-      });
-    } else {
-      $('.trip_form').submit();
-    }
-  });
-
-  $('.trip_form').submit(function() {
-    // serializing mobilities
-    if($('.inline-editing-table .editable-unsaved').length > 0) {
-      $('.trip_form input[name=mobilities]').val(JSON.stringify(getMobilities()));
-    }
-  });
-
-- if @is_repeating_trip
-  = render 'shared/hide_invisible_form_fields_js', model_name: "repeatingtrip", table_name: 'repeating_trips', provider_id:  current_provider.try(:id)
-
-  :javascript
-    $(function() {
-      $('.trip_form').submit(function(e) {
-        var form = this;
-        e.preventDefault();
-        handle_client_code_verification($('#repeating_trip_customer_id').val(), form);
-      });
-    });
-- else
-  = render 'shared/hide_invisible_form_fields_js', model_name: "trip", table_name: 'trips', provider_id:  current_provider.try(:id)
-
-  - if @trip.run && !@trip.new_record?
-    :javascript
-      function check_run_disruption(callback) {
-        console.log('checking...');
-        var attrs = [];
-
-        if($('#trip_customer_id').val() != "#{@trip.customer_id}") {
-          attrs.push('customer');
-        }
-
-        var original_date = moment("#{@trip.date.to_s}");
-        var new_date = moment($('#trip_date').val());
-        
-        if(new_date - original_date != 0) {
-          attrs.push('date');
-        }
-
-        var today_str = moment(new Date()).format('YYYY-MM-DD');
-        var original_pickup_time = moment(today_str + " #{@trip.pickup_time.try(:to_s, :time_only)}", "YYYY-MM-DD HH:mm A");
-        var new_pickup_time = moment(today_str + " " +$('#trip_pickup_time').val(), "YYYY-MM-DD HH:mm A");
-        if(new_pickup_time - original_pickup_time != 0) {
-          attrs.push('pickup time');
-        }
-
-        var original_appointment_time = moment(today_str + " #{@trip.appointment_time.try(:to_s, :time_only)}", "YYYY-MM-DD HH:mm A");
-        var new_appointment_time = moment(today_str + " " + $('#trip_appointment_time').val(), "YYYY-MM-DD HH:mm A");
-        if(new_appointment_time - original_appointment_time != 0) {
-          attrs.push('appointment time');
-        }
-        if($('#trip_pickup_address_id').val() != "#{@trip.pickup_address_id}") {
-          attrs.push('pickup address');
-        }
-        if($('#trip_dropoff_address_id').val() != "#{@trip.dropoff_address_id}") {
-          attrs.push('dropoff address');
-        }
-
-        if(attrs.length == 0) {
-          if(callback) {
-            callback();
-          }
-        } else {
-          bootbox.confirm("<b>Changes in following fields (<span style='color: red;'>" + attrs.join(', ') + "</span>) are likely to disrupt the run and the trip would be unscheduled. Are you sure to continue?</b>", function(result) {
-            if(result) {
-              if(callback) {
-                callback();
-              }
-            }
-          });
-        }
-      }
-
-  - if @trip.is_return? 
-    - if @trip.run && !@trip.new_record?
+  - if edit_mode != :show
+    = render 'trips/customer_trip_summary_dialog'
+    - if @is_repeating_trip
       :javascript
         $(function() {
-          $('.trip_form').submit(function(e) {
-            var form = this;
-            e.preventDefault();
-            var callback = function() {
-              handle_client_code_verification($('#trip_customer_id').val(), form);
-            };
-            // first check run disruption warning
-            if(typeof check_run_disruption != 'undefined') {
-              check_run_disruption(callback);
-            } else {
-              callback();
-            }
+          $('body').on('dblclick', '#customerTripSummaryTable td', function() {
+            var trip_id = $(this).parents('tr').data('trip-id');
+            window.location.href = "#{clone_from_daily_trip_repeating_trips_path}?trip_id=" + trip_id;
           });
         });
     - else
       :javascript
         $(function() {
-          $('.trip_form').submit(function(e) {
-            var form = this;
-            e.preventDefault();
-            handle_client_code_verification($('#trip_customer_id').val(), form);
+          $('body').on('dblclick', '#customerTripSummaryTable td', function() {
+            var trip_id = $(this).parents('tr').data('trip-id');
+            window.location.href = "#{clone_trip_path('xxx')}".replace('xxx', trip_id);
           });
         });
-  - else
-    = render partial: 'trips/double_booked_trip_dialog'
-    :javascript
-      $(document).ready(function(){
 
-        var doubleBookedTripRowHtml = "#{escape_javascript(render partial: 'double_booked_trip_row')}"
-        var dbh = new DoubleBookedTripsHelper({
-          tableRowHtml: doubleBookedTripRowHtml,
-          url: "#{check_double_booked_trips_path}",
-          form: $('form.trip_form'),
-          modal: $('#doubleBookedTripDialog'),
-          table: $('#doubleBookedTripDialog #double-booked-trips-table')
-        });
+= render 'trips/customer_message_dialog'
 
-        // On form submit, check for potential double-booking before submitting form
-        dbh.form.submit(function(e) {
-          var form = this;
-          e.preventDefault();
-          var callback = function() {
-            var requestBody = dbh.requestBodyFromForm(#{@trip_id || 'null'});
+= render 'trips/shared_form_js'
 
-            dbh.checkDoubleBooked(requestBody, function(data) {
-              // If double booking exists, alert user and let them cancel or continue
-              if(data.trips.length > 0) {
-                dbh.populateTable(data.trips);
-                dbh.showModal();
-                // If modal submit button is clicked, submit form.
-                dbh.modal.find('.submit-double-book-modal').click(function() {
-                  handle_client_code_verification($('#trip_customer_id').val(), form);
-                });
-              // Else, submit form
-              } else {
-                handle_client_code_verification($('#trip_customer_id').val(), form);
-              }
-            });
-          }
-
-          // first check run disruption warning
-          if(typeof check_run_disruption != 'undefined') {
-            check_run_disruption(callback);
-          } else {
-            callback();
-          }
-          
-        });
-      });
+- if @is_repeating_trip
+  = render 'repeating_trips/form_js'
+- else
+  = render 'trips/form_js'
 
 = render 'shared/time_inputs_javascript' if edit_mode != :show

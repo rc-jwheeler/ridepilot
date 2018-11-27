@@ -2,12 +2,12 @@
   .panel-heading
     %h3.panel-title
       = translate_helper(:trip_useful_info_panel)
-  .panel-body{style: 'padding: 5px;'}
+  .panel-body
     - if !@is_repeating_trip && edit_mode == :show && @trip.is_linked?
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = label_tag :linked_trip, @trip.is_return? ?  translate_helper("outbound_trip_label") : translate_helper("return_trip_label")
-        .col-sm-9
+        .form-field
           - if @trip.is_return?
             %a{href: trip_path(@trip.outbound_trip) }
               = @trip.outbound_trip.id
@@ -15,23 +15,23 @@
             %a{href: trip_path(@trip.return_trip) }
               = @trip.return_trip.id
     - if @trip.provider && @trip.provider != current_provider
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = label_tag :trip_provider, translate_helper("trip_provider")
-        .col-sm-9
+        .form-field
           = @trip.provider.try(:name)
 
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         = f.label :direction, translate_helper("trip_direction")
-      .col-sm-9
+      .form-field
         = @trip.is_return? ? translate_helper("return_trip") : translate_helper("outbound_trip")
 
-    .form-group.col-sm-12
+    .form-group
       = f.fields_for :customer do |c|
-        .col-sm-3
+        .form-label
           = c.label :phone_number_1, translate_helper("customer_phone")
-        .col-sm-9
+        .form-field
           - if edit_mode != :show
             = c.text_field :phone_number_1, class: 'form-control'
           - else
@@ -40,16 +40,16 @@
       - if @trip.customer.try(:id).blank?
         %input#trip_customer_attributes_id{type:"hidden", name:"trip[customer_attributes][id]"}
 
-    .form-group.col-sm-12
-      .col-sm-3
+    .form-group
+      .form-label
         %label{for:"dropoff_phone"}
           = translate_helper("dropoff_phone")
-      .col-sm-9
+      .form-field
         %input.full.form-control#dropoff_phone{type:"text", size:"30", name:"dropoff_phone", value:"#{format_phone_number(@trip.dropoff_address.try(:phone_number))}", readonly:"readonly"}
 
     - if !@is_repeating_trip && edit_mode == :show
-      .form-group.col-sm-12
-        .col-sm-3
+      .form-group
+        .form-label
           = f.label :drive_distance, translate_helper("drive_distance")
-        .col-sm-9
+        .form-field
           = @trip.drive_distance ? pluralize(@trip.drive_distance.round(3), 'mile') : ''

@@ -15,24 +15,32 @@
   </div>
 <% end %>
 
-<%= form_for @user, :url => change_expiration_path(id: @user.id) do |f| %>
-<fieldset>
-  <ol class="section first">
-    <li>
+<div class="col-sm-6 col-md-4">
+  <%= form_for @user, :url => change_expiration_path(id: @user.id) do |f| %>
+    <div class="form-group">
+
       <%= f.label :expires_at, translate_helper("user_expires_at") %>
-      <%= f.text_field :expires_at, :value => @user.expires_at.try(:to_s, :form) %>
+      <div class="input-group datepicker-icon">
+        <%= f.text_field :expires_at, value: format_time_for_listing_day(@user.expires_at), class: "form-control datepicker"%>
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="button">
+            <%= image_tag "calendar-clock.png" %>
+          </button>
+        </div>
+      </div> 
       <p><small>Set an empty value to activate account</small></p>
-    </li>  
-    <li>
+    </div> 
+      
+    <div class="form-group">
       <%= f.label :inactivation_reason, translate_helper("user_inactivation_reason") %>
-      <%= f.text_field :inactivation_reason %>
-    </li>
-  </ol>
-  <div class="actions">
-    <%= f.submit translate_helper("change_expiration_submit") %>
-  </div>
-</fieldset>
-<% end %>
+      <%= f.text_area :inactivation_reason %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit translate_helper("change_expiration_submit") %>
+    </div>
+  <% end %>
+</div>
 
 <script type='text/javascript'>
 

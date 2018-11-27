@@ -11,20 +11,20 @@ FactoryBot.define do
     end
 
     trait :scheduled_morning do
-      scheduled_start_time "9:00 AM"
-      scheduled_end_time "11:00 AM"
+      scheduled_start_time { "9:00 AM" }
+      scheduled_end_time { "11:00 AM" }
     end
     
     trait :scheduled_afternoon do
-      scheduled_start_time "1:00 PM"
-      scheduled_end_time "3:00 PM"
+      scheduled_start_time { "1:00 PM" }
+      scheduled_end_time { "3:00 PM" }
     end
 
     trait :completed do
       scheduled_morning
-      start_odometer 100
-      end_odometer 200
-      complete true
+      start_odometer { 100 }
+      end_odometer { 200 }
+      complete { true }
     end
 
     trait :last_week do

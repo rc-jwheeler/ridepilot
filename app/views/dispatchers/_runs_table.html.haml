@@ -1,4 +1,4 @@
-%table.table.table-striped.table-condensed.table-bordered#runs_table
+%table.table.table-striped#runs_table
   %thead
     %tr
       %th= translate_helper(:run_table_header_name)
@@ -36,7 +36,7 @@
         %td.trips_count= run.trips.count
         %td
           = link_to run_path(run, from_dispatch: true), style: 'padding-right: 5px;', title: "View details" do 
-            %i.fa.fa-external-link
+            %i.fas.fa-external-link-alt
           - if run.repeating_run_id.present?
             = link_to recurring_dispatchers_path(run_id: run.repeating_run_id), style: 'padding-right: 5px;', title: "View Subscription Run Template" do 
               %i.fa.fa-repeat
@@ -47,10 +47,10 @@
           - unless run.complete?
             - if can?(:new, Trip)
               = link_to new_trip_path(from_dispatch: true, run_id: run.id), style: 'padding-right: 5px;', title: "New Trip" do 
-                %i.fa.fa-plus
+                %i.fas.fa-plus
             - if can?(:edit, run)
               = link_to edit_run_path(run, from_dispatch: true), style: 'padding-right: 5px;', title: 'Edit' do 
-                %i.fa.fa-pencil
+                %i.fas.fa-pencil-alt
             - if can?(:cancel, run)
               = link_to cancel_run_dispatchers_path(run_id: run.id), title: 'Cancel run', remote: true, data: {confirm: run_cancel_warning(run)} do 
                 %i.fa.fa-power-off

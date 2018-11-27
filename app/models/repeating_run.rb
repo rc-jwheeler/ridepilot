@@ -22,6 +22,9 @@ class RepeatingRun < ApplicationRecord
   
   validate :driver_availability
   validate :vehicle_availability
+
+  before_update :check_days_of_week_removed
+  after_update :process_days_of_week_removed
   
   has_many :runs # Child runs created by this RepeatingRun's scheduler
 
@@ -171,6 +174,7 @@ class RepeatingRun < ApplicationRecord
     # remove it first in case same trip was left over
     delete_trip_manifest!(trip_id, wday)
 
+    self.weekday_assignments.where(wday: wday, repeating_trip_id: trip_id).first_or_create
     manifest = self.repeating_run_manifest_orders.for_wday(wday).first_or_create
     trip = RepeatingTrip.find_by_id trip_id
     if trip
@@ -337,7 +341,7 @@ class RepeatingRun < ApplicationRecord
   end
   
   def repeating_driver_availability
-    if RepeatingRun.where(driver: driver)   # same driver
+    if RepeatingRun.where(driver: driver).active   # same driver
         .overlaps_with_repeating_run(self)  # schedules overlap by date and time
         .present?
       errors.add(:driver_id, TranslationEngine.translate_text(:assigned_to_overlapping_repeating_run))
@@ -363,12 +367,31 @@ class RepeatingRun < ApplicationRecord
   end
   
   def repeating_vehicle_availability
-    if RepeatingRun.where(vehicle: vehicle)   # same vehicle
+    if RepeatingRun.where(vehicle: vehicle).active   # same vehicle
         .overlaps_with_repeating_run(self)    # schedules overlap by date and time
         .present?
       errors.add(:vehicle_id, TranslationEngine.translate_text(:assigned_to_overlapping_repeating_run))
     end
   end
   ###
+
+  def check_days_of_week_removed
+    @days_of_week_removed = nil
+    if self.changes.include?("schedule_yaml")
+      prev_days_of_week = self.schedule_weekdays(self.changes["schedule_yaml"][0]).sort
+      current_days_of_week = self.schedule_weekdays.sort
+
+      @days_of_week_removed = prev_days_of_week - current_days_of_week
+    end
+  end
+
+  def process_days_of_week_removed
+    if @days_of_week_removed && @days_of_week_removed.length > 0
+      # remove weekday_assignments for the days
+      self.weekday_assignments.where(wday: @days_of_week_removed).destroy_all
+      self.repeating_itineraries.where(wday: @days_of_week_removed).destroy_all
+      self.repeating_run_manifest_orders.where(wday: @days_of_week_removed).destroy_all
+    end
+  end
   
 end

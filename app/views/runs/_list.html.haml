@@ -1,20 +1,21 @@
-%table.runs-list
-  %tr
-    -# first two columns are for select and view link
-    %th
-      %input.master-select-checkbox{type: "checkbox"}
-    %th
-    %th= translate_helper("run_name_column")
-    %th= translate_helper("run_date_column")
-    %th= translate_helper("run_start_time_column")
-    %th= translate_helper("run_end_time_column") 
-    %th= translate_helper("run_vehicle_column") 
-    %th= translate_helper("run_driver_column") 
-    %th= translate_helper("run_result_column") 
-    %th= translate_helper("trips_reimbursement_cost") 
-
-  - @runs.each do |run|
-    = render "row", :run => run
+%table.runs-list.basic-table
+  %thead
+    %tr
+      -# first two columns are for select and view link
+      %th
+        %input.master-select-checkbox{type: "checkbox"}
+      %th
+      %th= translate_helper("run_name_column")
+      %th= translate_helper("run_date_column")
+      %th= translate_helper("run_start_time_column")
+      %th= translate_helper("run_end_time_column") 
+      %th= translate_helper("run_vehicle_column") 
+      %th= translate_helper("run_driver_column") 
+      %th= translate_helper("run_result_column") 
+      %th= translate_helper("trips_reimbursement_cost") 
+  %tbody
+    - @runs.each do |run|
+      = render "row", :run => run
 
 -# Form for sending batch cancel requests
 = form_for :cancel_multiple_runs, url: cancel_multiple_runs_path, 

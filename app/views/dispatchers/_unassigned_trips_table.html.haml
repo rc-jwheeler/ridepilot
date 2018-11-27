@@ -1,4 +1,4 @@
-%table.table.table-striped.table-bordered#unassigned_trips_table
+%table.table.table-striped#unassigned_trips_table
   %thead
     %tr
       %th
@@ -37,10 +37,10 @@
         %td= trip.notes
         %td
           = link_to trip_path(trip, from_dispatch: true), style: 'padding-right: 5px;', title: "View details" do 
-            %i.fa.fa-external-link
+            %i.fas.fa-external-link-alt
           - if can?(:edit, trip)
             = link_to edit_trip_path(trip, from_dispatch: true), style: 'padding-right: 5px;', title: 'Edit' do 
-              %i.fa.fa-pencil
+              %i.fas.fa-pencil-alt
 
 :javascript
   $(function() {

@@ -2,44 +2,41 @@
   .panel-heading
     %h3.panel-title
       = translate_helper(:trip_filter)
-  .panel-body{style: 'padding: 5px;'}
+  .panel-body
     = form_for :trip_filters, url: trips_path, html: { :id => "trip_filter_form" }, :method => :get do |f|
       =f.hidden_field :days_of_week, class: 'days_of_week_hidden_field'
-      .btns.pull-right
+      .btns.filter-buttons
         = f.submit  translate_helper(:ok), id: 'runTripFilters', class: 'btn action-button', role: 'button'
         = button_tag  translate_helper(:reset), id: 'resetTripFilters', class: 'btn action-button', role: 'button'
       .filter-body
-        .col-sm-12{style: 'padding: 5px;'}
+        .col-sm-12
           = f.label :start, translate_helper("from_date")
           .input-group.datepicker-icon
             = f.text_field :start, :value => format_time_for_listing_day(@start_pickup_date), class: 'datepicker form-control', readonly: true
             .input-group-btn
               %button.btn.btn-default{:type => "button"}
                 = image_tag "calendar-clock.png"
-        .col-sm-12{style: 'padding: 5px;'}
+        .col-sm-12
           = f.label :end, translate_helper("to_date")
           .input-group.datepicker-icon
             = f.text_field :end, :value => format_time_for_listing_day(@end_pickup_date), class: 'datepicker form-control', readonly: true
             .input-group-btn
               %button.btn.btn-default{:type => "button"}
                 = image_tag "calendar-clock.png"
-        .col-sm-12{style: 'padding: 5px;'}
+        .col-sm-12
           = render partial: 'shared/weekday_select'
-        .col-sm-12{style: 'padding: 5px;'}
+        .col-sm-12
           = f.label :status_id, translate_helper(:status)
           = f.select :status_id, options_for_select( @run_listings, session[:trips_status_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }
-        .col-sm-12{style: 'padding: 5px;'}
-          = f.label :funding_source_id, translate_helper(:funding_source)
-          = f.select :funding_source_id, options_for_select( @funding_sources, session[:trips_funding_source_id]), {:include_blank => translate_helper(:all) }, { :class => 'form-control' }
-        .col-sm-12{style: 'padding: 5px;'}
+        .col-sm-12
           = f.label :customer_id, translate_helper(:customer)
           - customer_name = Customer.find_by_id(session[:trips_customer_id]).name unless session[:trips_customer_id].blank?
           = autocomplete_field_tag 'customer_name', customer_name, autocomplete_customers_path(active_only: true), :delay => 200, :id_element => "#customer_id", :class => 'form-control', :placeholder => 'type first or last name (2 chars min.)'
           = hidden_field_tag 'trip_filters[customer_id]', session[:trips_customer_id], id: 'customer_id'
-      .col-sm-12{style: 'padding: 0px;'}
-        .col-sm-6{style: 'padding: 0px;'}
+      .col-sm-12
+        .col-sm-6
           = render 'trips/trip_funding_source_filter', f: f
-        .col-sm-6{style: 'padding: 0px;'}
+        .col-sm-6
           = render 'trips/trip_result_filter', f: f, trip_result_session_name: :trips_trip_result_id
 
 = render "shared/date_time_picker_javascript"

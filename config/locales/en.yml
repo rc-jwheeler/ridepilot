@@ -20,7 +20,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  header_content: "<a href='/en' id='logo'>RidePilot</a>"
+  header_content: "<a href='https://www.rideuta.com/'><img src='/uta-logo.svg'></a>"
   #addresses
   address_name: "Address Name"
   address_nickname: "Nickname"
@@ -193,7 +193,7 @@ en:
   log_user: 'User'
   log_message: 'Message'
   #Shared
-  site_title: "Ridepilot"
+  site_title: "RidePilot"
   new_trip: "New Trip"
   new_repeating_trip: "New Subscription Trip"
   repeating_trips: "View Subscription Trip Templates"

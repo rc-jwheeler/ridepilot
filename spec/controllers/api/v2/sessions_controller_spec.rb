@@ -9,7 +9,7 @@ RSpec.describe API::V2::SessionsController, type: :controller do
       pw = attributes_for(:user)[:password]
       post :create, format: :json, params: { user: { username: user.username, password: pw } }
       
-      expect(response).to be_success
+      expect(response).to be_successful
       
       parsed_response = JSON.parse(response.body)
       
@@ -32,7 +32,7 @@ RSpec.describe API::V2::SessionsController, type: :controller do
       request.headers['X-USER-USERNAME'] = user.username
       delete :destroy, format: :json
       
-      expect(response).to be_success
+      expect(response).to be_successful
       
       # Expect user to have a new auth token after sign out
       user.reload

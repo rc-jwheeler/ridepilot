@@ -2,7 +2,7 @@
   %label
     = translate_helper("days_of_week")
   - days_abbr = translate_helper("date.day_name_initials").split(",")
-  #weekday_select_buttons.btn-group{"data-toggle" => "buttons", :style => "padding:0px;"}
+  #weekday_select_buttons.btn-group{"data-toggle" => "buttons", :style => "padding:0px; display: inline-block; vertical-align: middle;"}
     %label.btn.btn-default{:for => "weekday_sun"}
       = days_abbr[0]
       %input#weekday_sun{:autocomplete => "off", :type => "radio", :data => {wday: 0}}

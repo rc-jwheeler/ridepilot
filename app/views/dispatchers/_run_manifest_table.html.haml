@@ -1,13 +1,6 @@
 :ruby
   @capacity_types_hash = CapacityType.by_provider(current_provider).order(:name).pluck(:id,:name).to_h
   run_date_today_or_future = run.date.today? || run.date.future?
-:css
-  .new-trip-badge {
-    background-color: red;
-  }
-  .capacity_warning {
-    background-color: yellow;
-  }
 
 %table.table.table-striped.table-bordered.run-manifest-table
   %thead
@@ -51,11 +44,9 @@
             - if trip.ridership_mobilities.has_capacity.empty?
               %span.label.label-danger
                 Mobility?
-
-            .pull-right
-              - if trip.repeating_trip_id
-                %span.label.label-info
-                  Recur
+            - if trip.repeating_trip_id
+              %span.label.label-info
+                Recur
           %td= trip.customer.try(:name)
           %td= itin.address.try(:one_line_text)
           %td= format_time_for_listing(itin.time)
@@ -78,10 +69,10 @@
               = f.check_box :driver_notified, :onclick => "$(this).parents('form').submit()"
           %td
             = link_to trip_path(itin.trip_id, from_dispatch: true, run_id: run_id), style: 'padding-right: 5px;', title: "View details" do 
-              %i.fa.fa-external-link
+              %i.fas.fa-external-link-alt
             - if can?(:edit, Trip)
               = link_to edit_trip_path(itin.trip_id, from_dispatch: true, run_id: run_id), style: 'padding-right: 5px;', title: 'Edit' do 
-                %i.fa.fa-pencil
+                %i.fas.fa-pencil-alt
 
 :javascript
   $(function() {

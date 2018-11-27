@@ -12,22 +12,22 @@
               = translate_helper(:add_donation_dialog_title)
         .modal-body.row{:style => "text-align:left;"}
           .form-group.col-sm-12
-            .col-sm-3
+            .form-label
               = f.label :date, translate_helper("donation_date")
-            .col-sm-9  
+            .form-field
               .input-group.datepicker-icon
                 = f.text_field :date, :value => format_time_for_listing_day(Time.current), class: 'datepicker form-control', readonly: true
                 .input-group-btn
                   %button.btn.btn-default{:type => "button"}
                     = image_tag "calendar-clock.png"
           .form-group.col-sm-12
-            .col-sm-3
+            .form-label
               = f.label :amount, translate_helper(:donation_amount) 
-            .col-sm-9
+            .form-field
               = f.number_field :amount, min: 0, step: 0.01, size: 8, required: true, class: 'form-control'
           .form-group.col-sm-12
-            .col-sm-3
+            .form-label
               = f.label :notes, translate_helper(:donation_notes) 
-            .col-sm-9
+            .form-field
               = f.text_area :notes, class: 'form-control'
 

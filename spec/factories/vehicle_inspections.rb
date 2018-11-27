@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :vehicle_inspection do
-    description "MyString" 
+    description { "MyString" } 
     provider
   end
 end

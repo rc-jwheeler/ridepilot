@@ -1,21 +1,10 @@
-:css
-  .panel-expand-collapse {
-    cursor: pointer;
-  }
-
-  #main {
-    z-index: 11000 !important;
-  }
-
-  .modal {
-    z-index: 12000 !important;
-  }
-
 = render 'shared/highlight_active_tab_js', is_primary_nav: true, tab_class: 'drivers'
-.col-sm-12{style: 'padding-left: 0px; padding-right: 0px;'}
-  .col-sm-4.col-lg-3{style: 'padding-left: 0px;'}
+%h1.page-title
+  Availability Forecast
+.row.no-gutters
+  .col-sm-4.col-lg-3.forecast-col
     = render 'availability_forecast_table'
-  .col-sm-8.col-lg-9{style: 'padding-left: 0px; padding-right: 0px;'}
+  .col-sm-8.col-lg-9.availability-col
     = render 'daily_availability_summary_view', date: @default_date
 
 :javascript

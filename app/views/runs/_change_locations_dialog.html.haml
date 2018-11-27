@@ -31,8 +31,9 @@
                 = hidden_field_tag "#{address_field}_lat", address.latitude, class: 'address_lat'
                 = hidden_field_tag "#{address_field}_lon", address.longitude, class: 'address_lon'
                 .form-group.col-sm-12
-                  = label_tag "#{prefix}_full_address", translate_helper("#{address_field}_label"), class: "col-md-2 control-label"
-                  .col-md-10
+                  .form-label
+                    = label_tag "#{prefix}_full_address", translate_helper("#{address_field}_label"), class: "col-md-2 control-label"
+                  .form-field
                     = text_field_tag "#{prefix}_full_address", address.try(:address_text), required: true, class: "address_search form-control"
           = render 'addresses/google_place_autocomplete_js', container: '.garage_address'
 

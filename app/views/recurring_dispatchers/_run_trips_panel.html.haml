@@ -3,31 +3,30 @@
   trips = RepeatingTrip.where(id: assignments.pluck(:repeating_trip_id))
 .panel.panel-success.run_trips_panel{id: "run_trips_panel_#{run.id}", data: {run_id: run.id}}
   .panel-heading
-    .pull-right{style: 'padding-right: 0px;'}
+    .pull-right
       = render 'unschedule_trip_dropdown'
       - if assignments.any?
         %span.dispatch-action
           = link_to batch_update_daily_dispatch_action_recurring_dispatchers_path(run_id: run.id), remote: true, style: 'color: red;', title: "Apply manifest to daily runs" , data: {confirm: 'Have you finished trip scheduling for this run? Clicking this would apply the manifest to all daily runs. You can only use this button once.'}, class: 'batch_update_daily_dispatch_action' do 
-            %i.fa.fa-check-circle-o
+            %i.fas.fa-check-circle
       - if can?(:cancel, run)  
         %span.dispatch-action
-          = link_to cancel_run_recurring_dispatchers_path(run_id: run.id), title: 'Cancel run', style: 'color: white;', remote: true, data: {confirm: run_cancel_warning(run)} do 
-            %i.fa.fa-power-off
+          = link_to cancel_run_recurring_dispatchers_path(run_id: run.id), title: 'Cancel run', remote: true, data: {confirm: run_cancel_warning(run)} do 
+            %i.fas.fa-power-off
       %span.dispatch-action
-        = link_to repeating_run_path(run, from_dispatch: true), style: 'color: white;', title: "View details" do 
-          %i.fa.fa-external-link
+        = link_to repeating_run_path(run, from_dispatch: true), title: "View details" do 
+          %i.fas.fa-external-link-alt
       - if can?(:edit, run)
         %span.dispatch-action
-          = link_to edit_repeating_run_path(run, from_dispatch: true), style: 'color: white;', title: 'Edit' do 
-            %i.fa.fa-pencil
+          = link_to edit_repeating_run_path(run, from_dispatch: true), title: 'Edit' do 
+            %i.fas.fa-pencil-alt
       %span.panel-close.dispatch-action{title: 'Close'}
-        %i.fa.fa-remove
+        %i.fas.fa-remove
       %span.panel-expand-collapse.dispatch-action{title: 'Collapse/expand'}
-        %i.fa.fa-chevron-up
-    %h3.panel-title.text-center
-      .pull-left
-        = run.name
-      %span.run_summary{style: 'font-size: small;'}
+        %i.fas.fa-chevron-up
+    %h3.panel-title
+      = run.name
+      %span.run_summary.header-info
         = simple_format recurring_run_summary(run, @day_of_week)
   .panel-body.vertical-resizable-panel
     = render 'recurring_dispatchers/run_manifest_table', run: run, trips: trips

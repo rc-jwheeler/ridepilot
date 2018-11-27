@@ -48,7 +48,7 @@ class Driver < ApplicationRecord
 
   scope :users,         -> { where("drivers.user_id IS NOT NULL") }
   scope :for_provider,  -> (provider_id) { where(provider_id: provider_id) }
-  scope :default_order, -> { joins("left outer join users on users.id = drivers.user_id").reorder("lower(users.last_name)", "lower(users.first_name)") }
+  scope :default_order, -> { joins("left outer join users on users.id = drivers.user_id").reorder(Arel.sql("lower(users.last_name)"), Arel.sql("lower(users.first_name)")) }
 
   after_initialize :set_defaults
   

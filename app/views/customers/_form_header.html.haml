@@ -1,12 +1,14 @@
 .clearfix.col-sm-12#page-header
   - if edit_mode == :new
-    .pull-right
+    %h1.page-title
+      = translate_helper("new_customer")
+    .action-buttons
       = f.submit translate_helper(:save), class: 'btn action-button'
       = link_to translate_helper(:cancel), customers_path, class: "btn btn-default"
-    %h1
-      = translate_helper("new_customer")
   - else
-    .pull-right
+    %h1.page-title
+      = translate_helper("customer")
+    .action-buttons
       - if edit_mode == :edit
         = f.submit translate_helper(:update), class: 'btn action-button'
         = link_to translate_helper(:cancel), customers_path, class: "btn btn-default"
@@ -25,7 +27,5 @@
         = link_to translate_helper("delete_photo"), delete_photo_customer_path(@customer), data: {:confirm => translate_helper("delete_photo_confirm")}, :class=>'btn action-button btn-danger' if !@customer.new_record? && can?(:edit, @customer) && @customer.photo.present?
         = link_to translate_helper("edit"), edit_customer_path(@customer), :class=>'btn action-button' if !@customer.new_record? && can?(:edit, @customer)
         = link_to translate_helper(:back), customers_path, class: "btn btn-default"
-    %h1
-      = translate_helper("customer")
-      - if @customer.inactivated?
-        %span{style: 'font-size: small; color: red;'}= @customer.active_status_text
+    - if @customer.inactivated?
+      %h2.page-subtitle{style: 'font-size: small; color: red;'}= @customer.active_status_text

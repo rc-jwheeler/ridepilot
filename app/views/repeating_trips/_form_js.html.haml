@@ -1,0 +1,67 @@
+= render 'shared/hide_invisible_form_fields_js', model_name: "repeatingtrip", table_name: 'repeating_trips', provider_id:  current_provider.try(:id)
+
+- if !@trip.new_record? && @trip.weekday_assignments.any?
+  :javascript
+    $(function() {
+      function check_run_disruption(callback) {
+        var attrs = [];
+
+        var today_str = moment(new Date()).format('YYYY-MM-DD');
+        var original_pickup_time = moment(today_str + " #{@trip.pickup_time.try(:to_s, :time_only)}", "YYYY-MM-DD HH:mm A");
+        var new_pickup_time = moment(today_str + " " +$('#repeating_trip_pickup_time').val(), "YYYY-MM-DD HH:mm A");
+        if(new_pickup_time - original_pickup_time != 0) {
+          attrs.push('pickup time');
+        }
+
+        var original_appointment_time = moment(today_str + " #{@trip.appointment_time.try(:to_s, :time_only)}", "YYYY-MM-DD HH:mm A");
+        var new_appointment_time = moment(today_str + " " + $('#repeating_trip_appointment_time').val(), "YYYY-MM-DD HH:mm A");
+        if(new_appointment_time - original_appointment_time != 0) {
+          attrs.push('appointment time');
+        }
+        if($('#repeating_trip_pickup_address_id').val() != "#{@trip.pickup_address_id}") {
+          attrs.push('pickup address');
+        }
+        if($('#repeating_trip_dropoff_address_id').val() != "#{@trip.dropoff_address_id}") {
+          attrs.push('dropoff address');
+        }
+
+        if(attrs.length == 0) {
+          if(callback) {
+            callback();
+          }
+        } else {
+          bootbox.confirm("<b>Changes in following fields (<span style='color: red;'>" + attrs.join(', ') + "</span>) are likely to disrupt the run and the trip would be unscheduled. Are you sure to continue?</b>", function(result) {
+            if(result) {
+              if(callback) {
+                callback();
+              }
+            }
+          });
+        }
+      }
+
+      $('.trip_form').submit(function(e) {
+        var form = this;
+        e.preventDefault();
+
+        var callback = function() {
+          handle_client_code_verification($('#repeating_trip_customer_id').val(), form);
+        };
+        // first check run disruption warning
+        if(typeof check_run_disruption != 'undefined') {
+          check_run_disruption(callback);
+        } else {
+          callback();
+        }
+
+      });
+    });
+- else
+  :javascript
+    $(function() {
+      $('.trip_form').submit(function(e) {
+        var form = this;
+        e.preventDefault();
+        handle_client_code_verification($('#repeating_trip_customer_id').val(), form);
+      });
+    });

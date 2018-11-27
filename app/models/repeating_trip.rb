@@ -11,9 +11,14 @@ class RepeatingTrip < ApplicationRecord
 
   has_many :ridership_mobilities, class_name: "RepeatingTripRidershipMobility", foreign_key: :host_id, dependent: :destroy
   has_many :repeating_itineraries, dependent: :destroy
+  has_many :weekday_assignments, dependent: :destroy
 
   has_one    :return_trip, class_name: "RepeatingTrip", foreign_key: :linking_trip_id
   belongs_to :outbound_trip, class_name: 'RepeatingTrip', foreign_key: :linking_trip_id
+
+  before_destroy :unschedule!
+  before_update :check_days_of_week_removed
+  after_update :process_days_of_week_removed
 
   schedules_occurrences_with with_attributes: -> (trip) {
       {
@@ -72,6 +77,18 @@ class RepeatingTrip < ApplicationRecord
   validates :comments, :length => { :maximum => 30 } 
  
   scope :active, -> { where("end_date is NULL or end_date >= ?", Date.today) }
+
+  # List of attributes of which the change would affect the run
+  ATTRIBUTES_CAN_DISRUPT_RUN = [
+    'pickup_time',
+    'appointment_time',
+    'pickup_address_id',
+    'dropoff_address_id'
+  ]
+
+  def self.attributes_can_disrupt_run
+    ATTRIBUTES_CAN_DISRUPT_RUN
+  end
   
   def instantiate!
     return unless provider.try(:active?) && active? # Only build trips for active schedules
@@ -172,12 +189,53 @@ class RepeatingTrip < ApplicationRecord
     return_trip
   end
 
-  def unschedule!
-    weekday_assignments.each do |assignment|
+  def unschedule!(days_of_week = nil)
+    assignments = if days_of_week
+      weekday_assignments.for_wday(days_of_week)
+    else
+      weekday_assignments
+    end
+
+    assignments.each do |assignment|
       rr = assignment.repeating_run
       rr.delete_trip_manifest!(self.id, assignment.wday) if rr
     end
 
-    weekday_assignments.delete_all
+    assignments.delete_all
+  end
+
+  # check if any attribute change would disrupt a run
+  def run_disrupted_by_trip_changes?
+    disruption_attrs_changed = self.changes.keys & RepeatingTrip.attributes_can_disrupt_run
+    actual_changes = []
+
+    if disruption_attrs_changed.any?
+      actual_changes = disruption_attrs_changed
+      # filter out the case when you changed a nil to 0, in this case, we don't think it's a change
+      disruption_attrs_changed.each do |attr_key|
+        prev_val = self.try("#{attr_key}_was")
+        val = self.try(attr_key)
+        next unless (prev_val.blank? || prev_val == 0) && (val.blank? || val == 0)
+        actual_changes = actual_changes - [attr_key]
+      end
+    end
+
+    actual_changes.any?
+  end
+
+  def check_days_of_week_removed
+    @days_of_week_removed = nil
+    if self.changes.include?("schedule_yaml")
+      prev_days_of_week = self.schedule_weekdays(self.changes["schedule_yaml"][0]).sort
+      current_days_of_week = self.schedule_weekdays.sort
+
+      @days_of_week_removed = prev_days_of_week - current_days_of_week
+    end
+  end
+
+  def process_days_of_week_removed
+    if @days_of_week_removed && @days_of_week_removed.length > 0
+      self.unschedule!(@days_of_week_removed)
+    end
   end
 end
